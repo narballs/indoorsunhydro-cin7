@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Helpers\MailHelper;
+use App\Helpers\SettingHelper;
 use App\Models\ProductStockNotification;
 use App\Models\User;
 use Dompdf\Dompdf;
@@ -100,12 +101,11 @@ class StockRequest extends Command
         $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
 
         $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
-
         if ($users_with_role_admin->isNotEmpty()) {
             foreach ($users_with_role_admin as $role_admin) {
                 Mail::send([], [], function ($message) use ($pdfContent, $role_admin) {
                     $message->to($role_admin->email)
-                        ->from('engrdanishsabir00@gmail.com')
+                        ->from(SettingHelper::getSetting('noreply_email_address'))
                         ->subject('Stock Request Notifications')
                         ->attachData($pdfContent, 'stock_request_notifications.pdf')
                         ->setBody("Please find attached the stock request notifications.", 'text/plain');
