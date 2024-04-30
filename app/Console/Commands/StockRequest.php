@@ -46,7 +46,7 @@ class StockRequest extends Command
     public function handle()
     {
         // Fetch product stock notifications
-        $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->take(3)->get();
+        $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->get();
 
         // Generate PDF
         $pdfContent = $this->generatePdf($product_stock_notification_users);
