@@ -48,6 +48,11 @@ class StockRequest extends Command
         // Fetch product stock notifications
         $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->get();
 
+        if (count($product_stock_notification_users) === 0) {
+            $this->info('No stock request notifications found.');
+            return 0;
+        }
+
         // Generate PDF
         $pdfContent = $this->generatePdf($product_stock_notification_users);
 
