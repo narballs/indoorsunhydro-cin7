@@ -1450,10 +1450,12 @@
             });
 
             desktop_input.change(function() {
-                var input_qty = $(this).val();
-                var qty_stock_number = $(this).attr('max');
+                var input_qty = parseInt($(this).val());
+                var qty_stock_number = parseInt($(this).attr('max'));
                 if (input_qty >= qty_stock_number) {
                     $(this).val(qty_stock_number);
+                } else {
+                    $(this).val(input_qty);
                 }
             })
 
