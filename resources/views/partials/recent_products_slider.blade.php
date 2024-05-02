@@ -90,6 +90,10 @@
             min-height: 5.7rem;
         }
     }
+    
+    .notify_stock_btn_class {
+        font-size: 15px;
+    }
 </style>
 @if (!empty($product_views) && count($product_views) > 0)
     

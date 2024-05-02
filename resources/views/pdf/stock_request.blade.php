@@ -28,22 +28,24 @@
     <table>
         <thead>
             <tr>
-                <th>
-                    S.No
-                </th>
+                <th>S.No</th>
                 <th>Product Name</th>
                 <th>Sku</th>
+                <th>Date Notification Requested</th>
+                <th>Current Stock Level as of "Date"</th>
                 <th>Email</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($notifications as $notification)
-            <tr>
-                <td>{{$loop->iteration}}</td>
-                <td>{{$notification['product']['name']}}</td>
-                <td>{{$notification['product']['code']}}</td>
-                <td>{{$notification['email']}}</td>
-            </tr>
+            @foreach($product_stock_notification_users as $notification)
+                <tr>
+                    <td>{{$loop->iteration}}</td>
+                    <td>{{$notification->product->name}}</td>
+                    <td>{{$notification->product->code}}</td>
+                    <td>{{$notification->created_at}}</td>
+                    <td>{{$notification->product->options[0]->stockAvailable}}</td>
+                    <td>{{$notification->email}}</td>
+                </tr>
             @endforeach
         </tbody>
     </table>
