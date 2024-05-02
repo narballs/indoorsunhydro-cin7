@@ -1452,8 +1452,17 @@
             desktop_input.change(function() {
                 var input_qty = parseInt($(this).val());
                 var qty_stock_number = parseInt($(this).attr('max'));
-                if (input_qty >= qty_stock_number) {
+                if (input_qty > qty_stock_number) {
                     $(this).val(qty_stock_number);
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: 'Quantity must be less than or equal to stock quantity',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
                 } else {
                     $(this).val(input_qty);
                 }
@@ -1618,6 +1627,17 @@
                 var stock_number = $(this).attr('max');
                 if (input_value >= stock_number) {
                     $(this).val(stock_number);
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: 'Quantity must be less than or equal to stock quantity',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                } else {
+                    $(this).val(input_value);
                 }
             });
 
