@@ -36,6 +36,9 @@
         </thead>
         <tbody>
             @foreach($product_stock_notification_users as $notification)
+            @php
+                dd($notification);
+            @endphp
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>{{$notification->product->name}}</td>
