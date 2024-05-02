@@ -41,12 +41,22 @@ use App\Models\UsCity;
 use App\Models\UserLog;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 use PSpell\Config;
+use App\Helpers\DistanceCalculator;
 
 class CheckoutController extends Controller
 {
     
     public function index(Request $request) {
-       $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
+        // $api_key = env('Address_validator_api_key');
+        // $calculator = new DistanceCalculator($api_key);
+        // $distance = $calculator->calculate_distance('95826', '94102');
+        // if ($distance == 'Error') {
+        //     echo "Error in calculating distance";exit;
+        // } else {
+        //     echo "Distance between ZIPCODE1 and ZIPCODE2 is {$distance} kilometers.";exit;
+        // }
+        // echo "Distance between ZIPCODE1 and ZIPCODE2 is {$distance} kilometers.";exit;
+        $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
         if (!empty($new_checkout) && strtolower($new_checkout->option_value) == 'yes') {
             return $this->new_checkout($request);
         } else {
