@@ -31,19 +31,31 @@
                 <th>S.No</th>
                 <th>Product Name</th>
                 <th>Sku</th>
+                <th>Date Notification Requested</th>
+                <th>Current Stock Level as of "Date"</th>
                 <th>Email</th>
             </tr>
         </thead>
         <tbody>
             @foreach($product_stock_notification_users as $notification)
-            <tr>
-                <td>{{$loop->iteration}}</td>
-                <td>{{$notification->product->name}}</td>
-                <td>{{$notification->product->code}}</td>
-                <td>{{$notification->email}}</td>
-            </tr>
+                <tr>
+                    <td>{{$loop->iteration}}</td>
+                    <td>{{$notification->product->name}}</td>
+                    <td>{{$notification->product->code}}</td>
+                    <td>{{$notification->created_at}}</td>
+                    <td>{{$notification->product->options[0]->stockAvailable}}</td>
+                    <td>{{$notification->email}}</td>
+                </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td align="center">
+                    <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
+                    <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" />
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </body>
 </html>

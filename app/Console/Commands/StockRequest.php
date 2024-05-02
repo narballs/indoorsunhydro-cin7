@@ -46,7 +46,7 @@ class StockRequest extends Command
     public function handle()
     {
         // Fetch product stock notifications
-        $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->take(2)->get();
+        $product_stock_notification_users = ProductStockNotification::with('product', 'product.options')->where('status', 0)->get();
 
         if (count($product_stock_notification_users) === 0) {
             $this->info('No stock request notifications found.');
@@ -58,7 +58,7 @@ class StockRequest extends Command
 
         // Mark notifications as sent
         foreach ($product_stock_notification_users as $notification) {
-            $notification->status = 1;
+            $notification['status']= 1;
             $notification->save();
         }
 
@@ -66,41 +66,7 @@ class StockRequest extends Command
 
     }
 
-    /**
-     * Generate PDF from product stock notifications.
-     *
-     * @param  \Illuminate\Support\Collection  $notifications
-     * @return string
-     */
-    // private function generatePdf($notifications)
-    // {
-        
-    //     // Render the Blade view to HTML
-    //     $html = view('pdf.stock_request', ['notifications' => $notifications])->render();
-
-    //     // Create Dompdf instance
-    //     $pdf = new Dompdf();
-
-    //     // Load HTML content into Dompdf
-    //     $pdf->loadHtml($html);
-
-    //     // (Optional) Set paper size and orientation
-    //     $pdf->setPaper('A4', 'portrait');
-
-    //     // Render PDF (optional: you can save to a file using $pdf->save('filename.pdf'))
-    //     $pdf->render();
-
-    //     // Output the PDF as a string
-    //     return $pdf->output();
-    // }
-
-    /**
-     * Send email with PDF attachment.
-     *
-     * @param  string  $pdfContent
-     * @return void
-     */
-    public function sendEmail($product_stock_notification_users) {
+    private function sendEmail($product_stock_notification_users) {
         $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
         $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
 
