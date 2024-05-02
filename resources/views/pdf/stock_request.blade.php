@@ -37,7 +37,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($notifications as $notification)
+            @foreach($data as $notification)
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td>{{$notification['product']['name']}}</td>
