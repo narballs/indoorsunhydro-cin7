@@ -107,7 +107,7 @@
                                                 </span>
                                             </div>
                                             
-                                            <div class="col-md-4 col-xl-4">
+                                            <div class="col-md-4 ">
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
                                                     <div class="price d-flex flex-row align-items-center">
                                                         @if ($productOption->products->status != 'Inactive')
@@ -144,10 +144,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 col-xl-3">
+                                            <div class="col-md-8">
                                                 <button type="button" class="btn btn-light update_inventory_number" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
                                             </div>
-                                            <div class="col-md-4 col-xl-5">
+                                            <div class="col-md-12">
                                                 @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
                                                     @php
                                                         $image_src = [];
@@ -163,32 +163,32 @@
 
                                                     @endphp
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-6 text-right">
+                                                        <div class="col-md-3">
                                                             @if (isset($image_src['option1']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-6 text-right">
+                                                        <div class="col-md-9">
                                                         <p class="mb-0">{{ $productOption->option1 }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-6 text-right">
+                                                        <div class="col-md-3">
                                                             @if (isset($image_src['option2']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-6 text-right">
+                                                        <div class="col-md-9">
                                                         <p class="mb-0">{{ $productOption->option2 }}</p> 
                                                         </div>
                                                     </div>
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-6 text-right">
+                                                        <div class="col-md-3">
                                                             @if (isset($image_src['option3']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-6 text-right">
+                                                        <div class="col-md-9">
                                                         <p class="mb-0">{{ $productOption->option3 }}</p> 
                                                         </div>
                                                     </div>
