@@ -46,29 +46,24 @@ class StockRequest extends Command
     public function handle()
     {
         // Fetch product stock notifications
-        $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->take(1)->get();
+        $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->take(2)->get();
 
         if (count($product_stock_notification_users) === 0) {
             $this->info('No stock request notifications found.');
             return 0;
         }
 
-        // foreach ($product_stock_notification_users as $key => $notification) {
-        //     $data = [
-        //         'product_stock_notification_users' => $notification,
-        //     ];
-        // }
-
+         // Send email
         $this->sendEmail($product_stock_notification_users);
 
-        // Optionally, you can mark notifications as sent
+        // Mark notifications as sent
         foreach ($product_stock_notification_users as $notification) {
-            $notification['status'] = 1;
+            $notification->status = 1;
             $notification->save();
         }
 
-
         $this->info('Stock request notifications sent successfully.');
+
     }
 
     /**
@@ -105,18 +100,21 @@ class StockRequest extends Command
      * @param  string  $pdfContent
      * @return void
      */
-    private function sendEmail($data)
-    {
+    public function sendEmail($product_stock_notification_users) {
         $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
         $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
-        if (!empty($users_with_role_admin)) {
+
+        if ($users_with_role_admin->isNotEmpty()) {
             foreach ($users_with_role_admin as $role_admin) {
                 $subject = 'Stock Request Notifications';
-                $data['subject'] = $subject;
-                $data['email'] = $role_admin->email;
+                $data = [
+                    'subject' => $subject,
+                    'email' => $role_admin->email,
+                    'product_stock_notification_users' => $product_stock_notification_users,
+                    'from' => SettingHelper::getSetting('noreply_email_address'),
+                ];
                 MailHelper::sendMailNotification('pdf.stock_request', $data);
             }
         }
-
     }
 }
