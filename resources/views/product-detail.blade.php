@@ -163,32 +163,32 @@
 
                                                     @endphp
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 col-xl-2">
                                                             @if (isset($image_src['option1']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-9 col-xl-10">
                                                         <p class="mb-0">{{ $productOption->option1 }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 col-xl-2">
                                                             @if (isset($image_src['option2']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-9 col-xl-10">
                                                         <p class="mb-0">{{ $productOption->option2 }}</p> 
                                                         </div>
                                                     </div>
                                                     <div class="row align-items-center">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 col-xl-2">
                                                             @if (isset($image_src['option3']))
                                                                 <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}" style="max-width: 40px;" />
                                                             @endif
                                                         </div>
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-9 col-xl-10">
                                                         <p class="mb-0">{{ $productOption->option3 }}</p> 
                                                         </div>
                                                     </div>
