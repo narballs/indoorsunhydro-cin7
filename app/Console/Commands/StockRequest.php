@@ -56,12 +56,6 @@ class StockRequest extends Command
          // Send email
         $this->sendEmail($product_stock_notification_users);
 
-        // Mark notifications as sent
-        foreach ($product_stock_notification_users as $notification) {
-            $notification['status']= 1;
-            $notification->save();
-        }
-
         $this->info('Stock request notifications sent successfully.');
 
     }
