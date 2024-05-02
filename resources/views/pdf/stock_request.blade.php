@@ -48,14 +48,6 @@
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
-            <tr>
-                <td align="center">
-                    <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
-                    <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" />
-                </td>
-            </tr>
-        </tfoot>
     </table>
 </body>
 </html>
