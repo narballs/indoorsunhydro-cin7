@@ -2,9 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\MailHelper;
 use App\Helpers\SettingHelper;
 use App\Models\ProductStockNotification;
 use App\Models\User;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -43,70 +46,77 @@ class StockRequest extends Command
     public function handle()
     {
         // Fetch product stock notifications
-        $product_stock_notification_users = ProductStockNotification::with('product', 'product.options')->where('status', 0)->take(1)->get();
+        $product_stock_notification_users = ProductStockNotification::with('product')->where('status', 0)->take(1)->get();
 
-        // Compose email content
-        $emailContent = $this->composeEmailContent($product_stock_notification_users);
+        if (count($product_stock_notification_users) === 0) {
+            $this->info('No stock request notifications found.');
+            return 0;
+        }
 
-        // Send email
-        $this->sendEmail($emailContent);
+        // foreach ($product_stock_notification_users as $key => $notification) {
+        //     $data = [
+        //         'product_stock_notification_users' => $notification,
+        //     ];
+        // }
+
+        $this->sendEmail($product_stock_notification_users);
 
         // Optionally, you can mark notifications as sent
         foreach ($product_stock_notification_users as $notification) {
-            $notification->status = 1;
+            $notification['status'] = 1;
             $notification->save();
         }
 
-        return 0;
+
+        $this->info('Stock request notifications sent successfully.');
     }
 
     /**
-     * Compose email content with tabulated data.
+     * Generate PDF from product stock notifications.
      *
      * @param  \Illuminate\Support\Collection  $notifications
      * @return string
      */
-    private function composeEmailContent($notifications)
-    {
-        $tableRows = [];
+    // private function generatePdf($notifications)
+    // {
+        
+    //     // Render the Blade view to HTML
+    //     $html = view('pdf.stock_request', ['notifications' => $notifications])->render();
 
-        // Add table header
-        $tableRows[] = "| Product Name | Date Notification Requested | Current Stock Level as of Date | SKU | User Email |";
+    //     // Create Dompdf instance
+    //     $pdf = new Dompdf();
 
-        // Add table rows
-        foreach ($notifications as $notification) {
-            $tableRows[] = "| {$notification->product->name} | {$notification->created_at} | {$notification->product->options[0]->current_stock_level} | {$notification->product->sku} | {$notification->email} |";
-        }
+    //     // Load HTML content into Dompdf
+    //     $pdf->loadHtml($html);
 
-        // Join all table rows with newline character
-        $table = implode(PHP_EOL, $tableRows);
+    //     // (Optional) Set paper size and orientation
+    //     $pdf->setPaper('A4', 'portrait');
 
-        // Email content
-        $emailContent = "Dear User,\n\nPlease find below the stock request notifications:\n\n$table";
+    //     // Render PDF (optional: you can save to a file using $pdf->save('filename.pdf'))
+    //     $pdf->render();
 
-        return $emailContent;
-    }
+    //     // Output the PDF as a string
+    //     return $pdf->output();
+    // }
 
     /**
-     * Send email.
+     * Send email with PDF attachment.
      *
-     * @param  string  $emailContent
+     * @param  string  $pdfContent
      * @return void
      */
-    private function sendEmail($emailContent)
+    private function sendEmail($data)
     {
         $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
-
         $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
-
-        if ($users_with_role_admin->isNotEmpty()) {
+        if (!empty($users_with_role_admin)) {
             foreach ($users_with_role_admin as $role_admin) {
-                Mail::raw($emailContent, function ($message) use ($role_admin) {
-                    $message->to($role_admin->email)
-                        ->subject('Stock Request Notifications')
-                        ->from(SettingHelper::getSetting('noreply_email_address'));
-                });
+                $subject = 'Stock Request Notifications';
+                $data['subject'] = $subject;
+                $data['email'] = $role_admin->email;
+                MailHelper::sendMailNotification('pdf.stock_request', $data);
             }
         }
+
     }
 }
