@@ -697,7 +697,7 @@ $cart_price = 0;
                                                     </div>
                                                 @else
                                                 <div class="row my-2 justify-content-center border-bottom align-items-center py-2">
-                                                        <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
+                                                        {{-- <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p> --}}
                                                         <div class="col-md-9 col-8">
                                                             <span class="checkout_discount_rate_heading">
                                                                 @if ($discount_code->discount_variation === 'percentage')
@@ -807,7 +807,7 @@ $cart_price = 0;
                                                                     <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                                     <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}">
-                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
+                                                                    <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" shipping_cost_with_surcharge="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}"  value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
                                                                     <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                                                 </div>
                                                                 <div class="col-md-3 col-4 text-right">
@@ -2654,7 +2654,6 @@ $cart_price = 0;
                                                 $('.coupen_code_message').html(message);
                                                 $('.discount_form').addClass('d-none');
                                             } else if (response.discount_max_times == true && response.max_uses == true) {
-                                                
                                                 if (response.discount_variation == 'percentage') {
                                                     apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
                                                 } else {
@@ -2738,6 +2737,7 @@ $cart_price = 0;
                     var total_tax_price = 0;
                     var multi_shipping_price = 0;
                     var order_weight_greater_then_150 = 0;
+                    var get_subtotal_after_apply_discount = 0;
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
                     var admin_area_for_shipping = $('#admin_control_shipping').val();
                     $('.discount_variation').val('percentage');
@@ -2745,6 +2745,7 @@ $cart_price = 0;
                     if (admin_area_for_shipping === 'true') {
                         if (product_weight > 150) {
                             order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                            get_subtotal_after_apply_discount = productTotal - (productTotal *  response.discount_variation_value / 100);
                             // shipment_price = order_weight_greater_then_150 + (order_weight_greater_then_150 * order_weight_greater_then_150 / 100);
                             shipment_price = order_weight_greater_then_150; 
                             add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
@@ -2762,33 +2763,73 @@ $cart_price = 0;
                             $('#incl_tax').val(total.toFixed(2));
                             $('.checkout_total_price').html('$' + total.toFixed(2));
                             $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                            $('.checkout_subtotal_price').html('$' + get_subtotal_after_apply_discount.toFixed(2));
                             // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
                             $('#shipment_price_heavy_weight').next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
                         } else {
-                            $('.shipping_multi_price').each(function() {
-                                // multi_shipping_price = parseFloat($(this).val()) + (parseFloat($(this).val()) * response.discount_variation_value / 100);
-                                shipment_price = $(this).val();
-                                add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
-                                console.log(add_discount ,'discount');
+                            if ($('#charge_shipment_to_customer').val() == 1) {
+                                $('.shipping_multi_price').each(function() {
+                                    if ($(this).is(':checked')) {
+                                        // multi_shipping_price = parseFloat($(this).val()) + (parseFloat($(this).val()) * response.discount_variation_value / 100);
+                                        shipment_price = $(this).val();
+                                        add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                                        console.log(add_discount ,'discount');
+                                        $('#discount_amount').val(add_discount.toFixed(2));
+                                        $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                                        tax_discount = (total_tax * response.discount_variation_value / 100);
+                                        shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                                        
+                                        subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
+                                        console.log(subtotal ,'subtotal');
+                                        total = subtotal;
+                                        total_shipping_price = shipment_price - shipping_discount;
+                                        total_tax_price = total_tax - tax_discount;
+                                        $(this).val(total_shipping_price.toFixed(2));
+                                        $('.total_tax').val(total_tax_price.toFixed(2));
+                                        $('#incl_tax').val(total.toFixed(2));
+                                        $('.checkout_total_price').html('$' + total.toFixed(2));
+                                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                                        $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
+                                        // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                                        $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                                    } else {
+                                        shipment_price = $(this).val();
+                                        add_discount = ((productTotal + parseFloat(total_tax) )  * parseFloat(response.discount_variation_value) / 100);
+                                        console.log(add_discount ,'discount');
+                                        $('#discount_amount').val(add_discount.toFixed(2));
+                                        $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                                        tax_discount = (total_tax * response.discount_variation_value / 100);
+                                        shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                                        
+                                        subtotal = (productTotal + parseFloat(total_tax)) - add_discount;
+                                        total = subtotal;
+                                        total_shipping_price = shipment_price - shipping_discount;
+                                        total_tax_price = total_tax - tax_discount;
+                                        $(this).val(total_shipping_price.toFixed(2));
+                                        $('.total_tax').val(total_tax_price.toFixed(2));
+                                        $('#incl_tax').val(total.toFixed(2));
+                                        $('.checkout_total_price').html('$' + total.toFixed(2));
+                                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
+                                        $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
+                                        // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                                        $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                                    }
+                                });
+                            }   
+                            else {
+                                add_discount = ((productTotal + parseFloat(total_tax) )  * parseFloat(response.discount_variation_value) / 100);
                                 $('#discount_amount').val(add_discount.toFixed(2));
                                 $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                 tax_discount = (total_tax * response.discount_variation_value / 100);
-                                shipping_discount = (shipment_price * response.discount_variation_value / 100);
-                                
-                                subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
-                                console.log(subtotal ,'subtotal');
+                                subtotal = (productTotal + parseFloat(total_tax)) - add_discount;
                                 total = subtotal;
-                                total_shipping_price = shipment_price - shipping_discount;
                                 total_tax_price = total_tax - tax_discount;
-                                $(this).val(total_shipping_price.toFixed(2));
                                 $('.total_tax').val(total_tax_price.toFixed(2));
                                 $('#incl_tax').val(total.toFixed(2));
                                 $('.checkout_total_price').html('$' + total.toFixed(2));
                                 $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                                // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                                $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                            });
-                        
+                                $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
+                            }
                         }
                     } else {
                         shipment_price = shipment_price;
@@ -2809,6 +2850,7 @@ $cart_price = 0;
                         $('.checkout_total_price').html('$' + total.toFixed(2));
                         $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
                         $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                        $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
                     }
                     
                     
@@ -2932,7 +2974,9 @@ $cart_price = 0;
                 }
 
                 function assign_service_code(element) {
-                    var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
+                    var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
+                    var var_pro_total = p_total.replace(/\$/g, '');
+                    var product_total = var_pro_total != null ? parseFloat(var_pro_total) : 0;
                     var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
                     var total_including_shipping = 0;
                     $('.shipping_service_code').each(function() {
@@ -2944,6 +2988,8 @@ $cart_price = 0;
                         total_including_shipping =  product_total + tax + parseFloat($(element).val());
                         $('#incl_tax').val(total_including_shipping.toFixed(2));
                         $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                        let ship_cost = $(element).attr('shipping_cost_with_surcharge');
+                        $('#original_shipment_price').val(ship_cost).toFixed(2);
                     }
                 }
 

@@ -305,6 +305,9 @@ class CheckoutController extends Controller
 
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
             // $tax_class = TaxClass::where('is_default', 1)->first();
+            $allow_discount_for_new_user = false;
+            $allow_discount_for_all_customers  =  false;
+            $allow_discount_for_specific_customers = false;
             $shipment_prices = [];
             $user_address = null;
             $payment_methods = PaymentMethod::with('options')->get();
@@ -313,7 +316,7 @@ class CheckoutController extends Controller
             $user = User::where('id', $user_id)->first();
             $all_ids = UserHelper::getAllMemberIds($user);
             $pluck_default_user = Contact::whereIn('id', $all_ids)->where('contact_id' , $contact_id)->first();
-
+            $check_new_user_orders = ApiOrder::where('memberId' , $pluck_default_user->contact_id)->first();
             $shipping_quotes = ShippingQuote::with('selected_shipping_quote')->get();
             $selected_shipment_quotes = SelectedShippingQuote::with('shipping_quote')->get();
             $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
@@ -511,6 +514,26 @@ class CheckoutController extends Controller
             $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
             if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
                 $discount_code = Discount::where('end_date', '>=', $current_date)->where('status', 1)->first();
+                if (!empty($discount_code)) {
+                    if ($discount_code->customer_eligibility === 'All Customers') {
+                        $allow_discount_for_new_user = false;
+                        $allow_discount_for_all_customers = true;
+                        $allow_discount_for_specific_customers = false;
+                    } 
+                    elseif($discount_code->customer_eligibility === 'Specific Customers') {
+                        $allow_discount_for_new_user = false;
+                        $allow_discount_for_all_customers = false;
+                        $allow_discount_for_specific_customers = true;
+                    } 
+                    elseif(($discount_code->customer_eligibility === 'New User') && (empty($check_new_user_orders))) {
+                        $allow_discount_for_new_user = true;
+                        $allow_discount_for_all_customers = false;
+                        $allow_discount_for_specific_customers = true;
+                    }
+                    else {
+                        $discount_code = null;
+                    }
+                }
                 if (!empty($discount_code) ) {
                     $customer_discount_uses = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount_code->id)->count();
                     $max_usage_count = CustomerDiscountUses::where('discount_id', $discount_code->id)->count();
@@ -560,8 +583,10 @@ class CheckoutController extends Controller
                 'products_weight',
                 'shipping_quotes' , 
                 'admin_selected_shipping_quote','surcharge_settings',
-                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000','shipment_error'
-                
+                'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000','shipment_error',
+                'allow_discount_for_new_user',
+                'allow_discount_for_specific_customers',
+                'allow_discount_for_all_customers'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
