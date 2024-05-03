@@ -158,6 +158,11 @@
                                                                 <input type="radio" data-value="All Customers" value="{{$discount->customer_eligibility == 'All Customers' ? 'All Customers' : ''}}" class="customer_eligibility" id="all_customers" name="customer_eligibility" {{$discount->customer_eligibility == 'All Customers' ? 'checked' : ''}}>
                                                                 <label for="">All Customers</label>
                                                             </div>
+                                                            
+                                                            <div class="col-md-12">
+                                                                <input type="radio" data-value="New User" class="customer_eligibility" value="{{$discount->customer_eligibility == 'New User' ? 'New User' : ''}}" id="new_user" {{$discount->customer_eligibility == 'New User' ? 'checked' : ''}}  name="customer_eligibility">
+                                                                <label for="">New User Users Only (user with no prior orders)</label>
+                                                            </div>
                                                             <div class="col-md-12">
                                                                 <input type="radio" data-value="Specific Customers" class="customer_eligibility" value="{{$discount->customer_eligibility == 'Specific Customers' ? 'Specific Customers' : ''}}" name="customer_eligibility" id="specific_customers" {{$discount->customer_eligibility == 'Specific Customers' ? 'checked' : ''}}>
                                                                 <label for="">Specific Customers</label>
@@ -214,7 +219,7 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <label for="">Start Date</label>
-                                                                <input type="date" name="start_date" id="start_date" min="{{date("Y-m-d")}}" value="{{$discount->start_date != '' ? \Carbon\Carbon::parse($discount->start_date)->format('Y-m-d') : ''}}" class="form-control" onchange="check_start_date()">
+                                                                <input type="date" name="start_date" id="start_date" min="{{$discount->start_date != '' ? \Carbon\Carbon::parse($discount->start_date)->format('Y-m-d') : ''}}" value="{{$discount->start_date != '' ? \Carbon\Carbon::parse($discount->start_date)->format('Y-m-d') : ''}}" class="form-control" onchange="check_start_date()">
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="">End Date</label>
@@ -676,18 +681,34 @@
         $('.customer_eligibility').click(function() {
             if ($(this).attr('data-value') == 'Specific Customers') {
                 $('#all_customers').val('');
+                $('#new_user').val('');
                 $(this).val('Specific Customers');
                 $(this).attr('checked', true);
+                $('#new_user').attr('checked', false);
+                $('#all_customers').attr('checked', false);
                 $('#selected_customers_div').removeClass('d-none');
                 $('#modal_content').modal({
                     show: true
                 });
-            } else {
-                $('#Specific Customers').val('');
+            }
+            else if($(this).attr('data-value') == 'New User') {
+                $('#specific_customers').val('');
+                $('#all_customers').val('');
+                $('#contact_ids_array').val('');
+                $(this).val('New User');
+                $('#selected_customers_div').addClass('d-none');
+                $('#specific_customers').attr('checked', false);
+                $('#all_customers').attr('checked', false);
+                $(this).attr('checked', true);
+            } 
+            else {
+                $('#specific_customers').val('');
+                $('#new_user').val('');
                 $('#contact_ids_array').val('');
                 $(this).val('All Customers');
                 $('#selected_customers_div').addClass('d-none');
                 $('#specific_customers').attr('checked', false);
+                $('#new_user').attr('checked', false);
                 $(this).attr('checked', true);
             }
         });

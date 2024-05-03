@@ -157,9 +157,14 @@
                                                                 <label for="">All Customers</label>
                                                             </div>
                                                             <div class="col-md-12">
+                                                                <input type="radio" data-value="New User" value="New User" class="customer_eligibility" id="new_user" name="customer_eligibility">
+                                                                <label for="">New User Users Only (user with no prior orders)</label>
+                                                            </div>
+                                                            <div class="col-md-12">
                                                                 <input type="radio" data-value="Specific Customers" class="customer_eligibility" name="customer_eligibility" id="specific_customers">
                                                                 <label for="">Specific Customers</label>
                                                             </div>
+                                                            
                                                             <input type="hidden" name="contactids[]" id="contact_ids_array">
                                                         </div>
                                                     </div>
@@ -653,18 +658,35 @@
         $('.customer_eligibility').click(function() {
             if ($(this).attr('data-value') == 'Specific Customers') {
                 $('#all_customers').val('');
+                $('#new_user').val('');
                 $(this).val('Specific Customers');
                 $(this).attr('checked', true);
+                $('#new_user').attr('checked', false);
+                $('#all_customers').attr('checked', false);
                 $('#modal_content').modal({
                     show: true
                 });
-            } else {
-                $('#Specific Customers').val('');
+            }
+            else if($(this).attr('data-value') == 'New User') {
+                $('#specific_customers').val('');
+                $('#all_customers').val('');
+                $('#contact_ids_array').val('');
+                $(this).val('New User');
+                $('#selected_customers_div').addClass('d-none');
+                $('#specific_customers').attr('checked', false);
+                $('#all_customers').attr('checked', false);
+                $(this).attr('checked', true);
+            }  
+            else {
+                $('#specific_customers').val('');
+                $('#new_user').val('');
                 $('#contact_ids_array').val('');
                 $(this).val('All Customers');
                 $('#specific_customers').attr('checked', false);
+                $('#new_user').attr('checked', false);
                 $(this).attr('checked', true);
             }
+            
         });
 
         // search customer functionality
