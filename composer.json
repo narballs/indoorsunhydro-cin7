@@ -43,8 +43,7 @@
     },
     "autoload": {
         "files": [
-            "app/Helpers/NavHelper.php",
-            "app/Helpers/DistanceCalculator.php"
+            "app/Helpers/NavHelper.php"
         ],
         "psr-4": {
             "App\\": "app/",
