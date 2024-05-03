@@ -528,7 +528,7 @@ class CheckoutController extends Controller
                     elseif(($discount_code->customer_eligibility === 'New User') && (empty($check_new_user_orders))) {
                         $allow_discount_for_new_user = true;
                         $allow_discount_for_all_customers = false;
-                        $allow_discount_for_specific_customers = true;
+                        $allow_discount_for_specific_customers = false;
                     }
                     else {
                         $discount_code = null;
@@ -564,6 +564,7 @@ class CheckoutController extends Controller
             } else {
                 $discount_code = null;
             }
+            // dd($allow_discount_for_new_user, $allow_discount_for_specific_customers, $allow_discount_for_all_customers);
             return view('checkout/checkout_for_login', compact(
                 'user_address',
                 'states',
