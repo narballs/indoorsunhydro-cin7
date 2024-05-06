@@ -238,6 +238,21 @@
                                                     @endif
                                                 </div>
                                             @endif
+                                            <div class="col-md-12 mx-3">
+                                                @if (!empty($request_bulk_quantity_discount) && strtolower($request_bulk_quantity_discount->option_value) === 'yes')
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-xl-1 col-lg-3 mt-2 col-4">
+                                                            <i class="fa fa-tags" style="color: #007BFF;font-size: 20px;"></i>
+                                                        </div>
+                                                        <div class="col-md-9 col-xl-10 col-lg-9 col-8">
+                                                            <div class="row">
+                                                                <p class="bulk_discount">Bulk Discount</p>
+                                                                <p class="bulk_discount_text">Save More with Bulk Orders <a href="" class="bulk_discount_href">Request bulk quantity Discount</a></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1197,6 +1212,25 @@
 @include('partials.product-footer')
 @include('partials.footer')
 <style>
+    .bulk_discount {
+        font-family: 'Poppins';
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 33px;
+
+    }
+    .bulk_discount_text {
+        font-family: 'Poppins';
+        font-size: 18px;
+        font-weight: 400;
+    }
+    .bulk_discount_href {
+        font-family: 'Poppins';
+        font-size: 18px;
+        font-weight: 400;
+        text-decoration: none;
+        color:#7BC533;
+    }
     .greyed {
         background: #eaeaea;
     }
