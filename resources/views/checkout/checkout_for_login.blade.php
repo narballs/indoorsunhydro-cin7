@@ -2744,113 +2744,65 @@ $cart_price = 0;
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
                         if (product_weight > 150) {
-                            order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
-                            get_subtotal_after_apply_discount = productTotal - (productTotal *  response.discount_variation_value / 100);
-                            // shipment_price = order_weight_greater_then_150 + (order_weight_greater_then_150 * order_weight_greater_then_150 / 100);
-                            shipment_price = order_weight_greater_then_150; 
-                            add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                            shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                            add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
+                            subtotal = productTotal - add_discount;
+                            total = subtotal + shipment_price  +  parseFloat(total_tax);
                             $('#discount_amount').val(add_discount.toFixed(2));
                             $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                            tax_discount = (total_tax * response.discount_variation_value / 100);
-                            shipping_discount = (shipment_price * response.discount_variation_value / 100);
-                            
-                            subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
-                            total = subtotal;
-                            total_shipping_price = shipment_price - shipping_discount;
-                            total_tax_price = total_tax - tax_discount;
-                            $('#shipment_price_heavy_weight').val(total_shipping_price.toFixed(2));
-                            $('.total_tax').val(total_tax_price.toFixed(2));
-                            $('#incl_tax').val(total.toFixed(2));
-                            $('.checkout_total_price').html('$' + total.toFixed(2));
-                            $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                            $('.checkout_subtotal_price').html('$' + get_subtotal_after_apply_discount.toFixed(2));
-                            // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                            $('#shipment_price_heavy_weight').next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                            $('.checkout_subtotal_price').html('$' + subtotal.toFixed(2));
+                            $('#incl_tax').val(parseFloat(total).toFixed(2));
+                            $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                         } else {
                             if ($('#charge_shipment_to_customer').val() == 1) {
                                 $('.shipping_multi_price').each(function() {
                                     if ($(this).is(':checked')) {
-                                        // multi_shipping_price = parseFloat($(this).val()) + (parseFloat($(this).val()) * response.discount_variation_value / 100);
                                         shipment_price = $(this).val();
-                                        add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
-                                        console.log(add_discount ,'discount');
+                                        add_discount = productTotal * parseFloat(response.discount_variation_value) / 100
+                                        subtotal = productTotal  - add_discount;
+                                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
                                         $('#discount_amount').val(add_discount.toFixed(2));
                                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                                        tax_discount = (total_tax * response.discount_variation_value / 100);
-                                        shipping_discount = (shipment_price * response.discount_variation_value / 100);
-                                        
-                                        subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
-                                        console.log(subtotal ,'subtotal');
-                                        total = subtotal;
-                                        total_shipping_price = shipment_price - shipping_discount;
-                                        total_tax_price = total_tax - tax_discount;
-                                        $(this).val(total_shipping_price.toFixed(2));
-                                        $('.total_tax').val(total_tax_price.toFixed(2));
-                                        $('#incl_tax').val(total.toFixed(2));
-                                        $('.checkout_total_price').html('$' + total.toFixed(2));
-                                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                                        $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
-                                        // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                                        $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                                    } else {
+                                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                        $(this).parent().next().find('.checkout_shipping_price').html('$' + shipment_price.toFixed(2));
+                                        $('#incl_tax').val(parseFloat(total).toFixed(2));
+                                        $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
+                                    } 
+                                    else {
                                         shipment_price = $(this).val();
-                                        add_discount = ((productTotal + parseFloat(total_tax) )  * parseFloat(response.discount_variation_value) / 100);
-                                        console.log(add_discount ,'discount');
+                                        add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
+                                        subtotal = productTotal  - add_discount;
+                                        total = subtotal + parseFloat(total_tax);
                                         $('#discount_amount').val(add_discount.toFixed(2));
                                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                                        tax_discount = (total_tax * response.discount_variation_value / 100);
-                                        shipping_discount = (shipment_price * response.discount_variation_value / 100);
+                                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                        $('#incl_tax').val(parseFloat(total).toFixed(2));
+                                        $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                                         
-                                        subtotal = (productTotal + parseFloat(total_tax)) - add_discount;
-                                        total = subtotal;
-                                        total_shipping_price = shipment_price - shipping_discount;
-                                        total_tax_price = total_tax - tax_discount;
-                                        $(this).val(total_shipping_price.toFixed(2));
-                                        $('.total_tax').val(total_tax_price.toFixed(2));
-                                        $('#incl_tax').val(total.toFixed(2));
-                                        $('.checkout_total_price').html('$' + total.toFixed(2));
-                                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                                        $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
-                                        // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                                        $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
                                     }
                                 });
                             }   
                             else {
-                                add_discount = ((productTotal + parseFloat(total_tax) )  * parseFloat(response.discount_variation_value) / 100);
-                                $('#discount_amount').val(add_discount.toFixed(2));
+                                add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
+                                subtotal = productTotal  - add_discount;
+                                total = subtotal + parseFloat(total_tax);
+                                $('#discount_amount').val(add_discount).toFixed(2);
                                 $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                                tax_discount = (total_tax * response.discount_variation_value / 100);
-                                subtotal = (productTotal + parseFloat(total_tax)) - add_discount;
-                                total = subtotal;
-                                total_tax_price = total_tax - tax_discount;
-                                $('.total_tax').val(total_tax_price.toFixed(2));
-                                $('#incl_tax').val(total.toFixed(2));
-                                $('.checkout_total_price').html('$' + total.toFixed(2));
-                                $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                                $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
+                                $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                $('#incl_tax').val(parseFloat(total).toFixed(2));
+                                $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                             }
                         }
                     } else {
                         shipment_price = shipment_price;
-                        
-                        add_discount = ((productTotal + parseFloat(total_tax) + parseFloat(shipment_price))  * parseFloat(response.discount_variation_value) / 100);
+                        add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
+                        subtotal = productTotal  - add_discount;
+                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
                         $('#discount_amount').val(add_discount.toFixed(2));
                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                        tax_discount = (total_tax * response.discount_variation_value / 100);
-                        shipping_discount = (shipment_price * response.discount_variation_value / 100);
-                        
-                        subtotal = (productTotal + parseFloat(total_tax) + parseFloat(shipment_price)) - add_discount;
-                        total = subtotal;
-                        total_shipping_price = shipment_price - shipping_discount;
-                        total_tax_price = total_tax - tax_discount;
-                        $('#shipment_price').val(total_shipping_price.toFixed(2));
-                        $('.total_tax').val(total_tax_price.toFixed(2));
-                        $('#incl_tax').val(total.toFixed(2));
-                        $('.checkout_total_price').html('$' + total.toFixed(2));
-                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                        $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                        $('.checkout_subtotal_price').html('$' + (productTotal - (productTotal * response.discount_variation_value / 100)).toFixed(2));
+                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                        $('#incl_tax').val(parseFloat(total).toFixed(2));
+                        $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                     }
                     
                     
@@ -2863,112 +2815,87 @@ $cart_price = 0;
                     var admin_area_for_shipping = $('#admin_control_shipping').val();
                     $('.discount_variation').val('fixed');
                     $('.discount_variation_value').val(response.discount_variation_value);
-                    add_discount = response.discount_variation_value;
-                    tax_discount = parseInt(response.discount_variation_value);
-                    shipping_discount = parseInt(response.discount_variation_value);
-                    var  total_shipping_price = 0;
-                    var  total_tax_price = 0;
                     if (admin_area_for_shipping === 'true') {
                         if (product_weight > 150) {
-                            order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
-                            shipment_price = order_weight_greater_then_150; 
-                            if (tax_discount > total_tax) {
-                                total_tax_price = 0;
-                            } else {
-                                total_tax_price = total_tax - tax_discount;
-                            }
-                            if (shipping_discount > shipment_price) {
-                                total_shipping_price = 0;
-                            } else {
-                                total_shipping_price = shipment_price - shipping_discount;
-                            }
-
-                            if (add_discount > productTotal) {
+                            shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                            add_discount = parseFloat(response.discount_variation_value);
+                            if (add_discount >= productTotal) {
                                 subtotal = 0;
-                                total = 0;
-                            } else if(total_tax_price == 0  && total_shipping_price == 0) {
-                                subtotal = productTotal - add_discount;
-                                total = subtotal;
                             } else {
                                 subtotal = productTotal - add_discount;
-                                total = subtotal;
                             }
+                            total = subtotal + shipment_price  +  parseFloat(total_tax);
                             $('#discount_amount').val(add_discount.toFixed(2));
                             $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                            $('#shipment_price').val(total_shipping_price.toFixed(2));
-                            $('.total_tax').val(total_tax_price.toFixed(2));
-                            $('#incl_tax').val(total.toFixed(2));
-                            $('.checkout_total_price').html('$' + total.toFixed(2));
-                            $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                            // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                            $('#shipment_price_heavy_weight').next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                            $('.checkout_subtotal_price').html('$' + subtotal.toFixed(2));
+                            $('#incl_tax').val(parseFloat(total).toFixed(2));
+                            $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                         } else {
-                            $('.shipping_multi_price').each(function() {
-                                shipment_price = $(this).val();
-                                if (tax_discount > total_tax) {
-                                total_tax_price = 0;
-                                } else {
-                                    total_tax_price = total_tax - tax_discount;
-                                }
-                                if (shipping_discount > shipment_price) {
-                                    total_shipping_price = 0;
-                                } else {
-                                    total_shipping_price = shipment_price - shipping_discount;
-                                }
-
-                                if (add_discount > productTotal) {
+                            if ($('#charge_shipment_to_customer').val() == 1) {
+                                $('.shipping_multi_price').each(function() {
+                                    if ($(this).is(':checked')) {
+                                        shipment_price = $(this).val();
+                                        add_discount = parseFloat(response.discount_variation_value)
+                                        if (add_discount >= productTotal) {
+                                            subtotal = 0;
+                                        } else {
+                                            subtotal = productTotal - add_discount;
+                                        }
+                                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
+                                        $('#discount_amount').val(add_discount.toFixed(2));
+                                        $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                        $(this).parent().next().find('.checkout_shipping_price').html('$' + shipment_price.toFixed(2));
+                                        $('#incl_tax').val(parseFloat(total).toFixed(2));
+                                        $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
+                                    } 
+                                    else {
+                                        shipment_price = $(this).val();
+                                        add_discount = parseFloat(response.discount_variation_value);
+                                        if (add_discount >= productTotal) {
+                                            subtotal = 0;
+                                        } else {
+                                            subtotal = productTotal - add_discount;
+                                        }
+                                        total = subtotal + parseFloat(total_tax);
+                                        $('#discount_amount').val(add_discount.toFixed(2));
+                                        $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
+                                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                        $('#incl_tax').val(parseFloat(total).toFixed(2));
+                                        $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
+                                        
+                                    }
+                                });
+                            }   
+                            else {
+                                add_discount = parseFloat(response.discount_variation_value);
+                                if (add_discount >= productTotal) {
                                     subtotal = 0;
-                                    total = 0;
-                                } else if(total_tax_price == 0  && total_shipping_price == 0) {
-                                    subtotal = productTotal - add_discount;
-                                    total = subtotal;
                                 } else {
                                     subtotal = productTotal - add_discount;
-                                    total = subtotal;
                                 }
-                                $('#discount_amount').val(add_discount.toFixed(2));
+                                total = subtotal + parseFloat(total_tax);
+                                $('#discount_amount').val(add_discount).toFixed(2);
                                 $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                                $('#shipment_price').val(total_shipping_price.toFixed(2));
-                                $('.total_tax').val(total_tax_price.toFixed(2));
-                                $('#incl_tax').val(total.toFixed(2));
-                                $('.checkout_total_price').html('$' + total.toFixed(2));
-                                $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                                // $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                                $(this).parent().next().find('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
-                            });
-                            
+                                $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                $('#incl_tax').val(parseFloat(total).toFixed(2));
+                                $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
+                            }
                         }
-                    }
-                    else {
-                        if (tax_discount > total_tax) {
-                            total_tax_price = 0;
-                        } else {
-                            total_tax_price = total_tax - tax_discount;
-                        }
-                        if (shipping_discount > shipment_price) {
-                            total_shipping_price = 0;
-                        } else {
-                            total_shipping_price = shipment_price - shipping_discount;
-                        }
-
-                        if (add_discount > productTotal) {
+                    } else {
+                        shipment_price = shipment_price;
+                        add_discount = parseFloat(response.discount_variation_value);
+                        if (add_discount >= productTotal) {
                             subtotal = 0;
-                            total = 0;
-                        } else if(total_tax_price == 0  && total_shipping_price == 0) {
-                            subtotal = productTotal - add_discount;
-                            total = subtotal;
                         } else {
                             subtotal = productTotal - add_discount;
-                            total = subtotal;
                         }
+                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
                         $('#discount_amount').val(add_discount.toFixed(2));
                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                        $('#shipment_price').val(total_shipping_price.toFixed(2));
-                        $('.total_tax').val(total_tax_price.toFixed(2));
-                        $('#incl_tax').val(total.toFixed(2));
-                        $('.checkout_total_price').html('$' + total.toFixed(2));
-                        $('.checkout_tax_rate').html('$' + total_tax_price.toFixed(2));
-                        $('.checkout_shipping_price').html('$' + total_shipping_price.toFixed(2));
+                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                        $('#incl_tax').val(parseFloat(total).toFixed(2));
+                        $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                     }
                         
                 }

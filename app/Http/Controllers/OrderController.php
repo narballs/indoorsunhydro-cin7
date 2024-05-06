@@ -70,7 +70,7 @@ class OrderController extends Controller
                         $actual_shipping_price = $request->shipment_cost_single;
                         $shipping_service_code = $request->shipping_service_code;
                         $shipping_carrier_code = $request->shipping_carrier_code;
-                        $shipstation_shipment_value = $request->original_shipment_price;
+                        $shipstation_shipment_value = $actual_shipping_price;
                     } else {
                         if (empty($request->shipping_multi_price)) {
                             return back()->with('error', 'Shipping price is required. Please select shipping method.');
@@ -78,26 +78,26 @@ class OrderController extends Controller
                             $actual_shipping_price = $request->shipping_multi_price;
                             $shipping_service_code = $request->shipping_service_code;
                             $shipping_carrier_code = $request->shipping_carrier_code;
-                            $shipstation_shipment_value = $request->original_shipment_price;
+                            $shipstation_shipment_value = $actual_shipping_price;
                         }
                     }
                 } else {
                     $actual_shipping_price = $request->shipment_price;
                     $shipping_service_code = $request->shipping_service_code;
                     $shipping_carrier_code = $request->shipping_carrier_code;
-                    $shipstation_shipment_value = $request->original_shipment_price;
+                    $shipstation_shipment_value = $actual_shipping_price;
                 }
             } else {
                 $actual_shipping_price = $request->shipment_price;
                 $shipping_service_code = $request->shipping_service_code;
                 $shipping_carrier_code = $request->shipping_carrier_code;
-                $shipstation_shipment_value = $request->original_shipment_price;
+                $shipstation_shipment_value = $actual_shipping_price;
             }
         } else{
             $actual_shipping_price = $request->shipment_price;
             $shipping_service_code = $request->shipping_service_code;
             $shipping_carrier_code = $request->shipping_carrier_code;
-            $shipstation_shipment_value = $request->original_shipment_price;
+            $shipstation_shipment_value = $actual_shipping_price;
         }
         $address_1_shipping = $request->address_1_shipping;
         $state_shipping = $request->state_shipping;
@@ -1790,12 +1790,12 @@ class OrderController extends Controller
                 $unit_price = 0;
                 if ($discount_type == 'percentage') {
                     $percentage = 'percentage';
-                    $unit_price = $cart_item['price'] ;
+                    $unit_price = $cart_item['price'] -  ($cart_item['price'] * ($discount_variation_value / 100));
                 } else {
-                    $unit_price = $cart_item['price'] ;
+                    $unit_price = $cart_item['price'] - $discount_variation_value;
                 }
                 $productPrice = $stripe->prices->create([
-                    'unit_amount' => $unit_price * 100,
+                    'unit_amount' => $cart_item['price'] * 100,
                     'currency' => 'usd',
                     'product' => $products->id,
                     'metadata' => [
@@ -1855,6 +1855,25 @@ class OrderController extends Controller
                     'quantity' => '1',
                 ];
             }
+
+            // $discount= $stripe->products->create([
+            //     'name' => 'Discount',
+            // ]);
+
+            // $discount_price_value = number_format((floatval($discount_amount)) , 2);
+            // $discountValue = str_replace(',', '', $discount_price_value);
+            // $formatted_discount_value = number_format(($discountValue * 100) , 2);
+            // $discount_value_string = str_replace(',', '', $formatted_discount_value);
+            // $discount_total = $stripe->prices->create([
+            //     'unit_amount_decimal' => $discount_value_string,
+            //     'currency' => 'usd',
+            //     'product' => $discount->id,
+            //     'tax_behavior' => 'exclusive', // Set tax_behavior to exclusive if needed
+            // ]);
+            // $items[] = [
+            //     'price' => $discount_total->id,
+            //     'quantity' => '1',
+            // ];
     
             $line_items = [
                 'line_items' => 
@@ -1863,7 +1882,7 @@ class OrderController extends Controller
                 ]
             ];
             $adding_discount = $stripe->coupons->create([
-                'percent_off' => $discount_variation_value,
+                'amount_off' => round($discount_amount * 100),
                 'duration' => 'once',
                 'currency' => 'usd',
             ]);
