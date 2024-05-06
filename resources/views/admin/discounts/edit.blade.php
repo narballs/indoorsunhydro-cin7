@@ -92,12 +92,12 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-secondary discount_variation_btn"  {{$discount->discount_variation == 'percentage' ? 'checked' : ''}} id="percentage_btn" data-value="percentage">
+                                                                <button type="button" class="btn btn-secondary discount_variation_btn {{$discount->discount_variation == 'percentage' ? 'btn-secondary' : 'btn-light'}}" id="percentage_btn" data-value="percentage">
                                                                     Percentage
                                                                 </button>
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <button type="button" class="btn btn-light discount_variation_btn" id="fixed_btn" data-value="fixed" {{$discount->discount_variation == 'fixed' ? 'checked' : ''}}>
+                                                                <button type="button" class="btn  discount_variation_btn {{$discount->discount_variation == 'fixed' ? 'btn-secondary' : 'btn-light'}}" id="fixed_btn" data-value="fixed" >
                                                                     Fixed Amount
                                                                 </button>
                                                             </div>
