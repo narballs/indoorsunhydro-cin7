@@ -32,7 +32,7 @@
                 <th>Product Name</th>
                 <th>Sku</th>
                 <th>Date Notification Requested</th>
-                <th>Current Stock Level as of "Date"</th>
+                <th>Current Stock Level as of "todays date"</th>
                 <th>Email</th>
             </tr>
         </thead>
