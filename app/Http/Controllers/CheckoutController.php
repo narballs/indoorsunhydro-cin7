@@ -513,53 +513,55 @@ class CheckoutController extends Controller
             }
             $enable_discount_setting = AdminSetting::where('option_name', 'enable_discount')->first();
             if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes') {
-                $discount_code = Discount::where('end_date', '>=', $current_date)->where('status', 1)->first();
-                if (!empty($discount_code)) {
-                    if ($discount_code->customer_eligibility === 'All Customers') {
-                        $allow_discount_for_new_user = false;
-                        $allow_discount_for_all_customers = true;
-                        $allow_discount_for_specific_customers = false;
-                    } 
-                    elseif($discount_code->customer_eligibility === 'Specific Customers') {
-                        $allow_discount_for_new_user = false;
-                        $allow_discount_for_all_customers = false;
-                        $allow_discount_for_specific_customers = true;
-                    } 
-                    elseif(($discount_code->customer_eligibility === 'New User') && (empty($check_new_user_orders))) {
-                        $allow_discount_for_new_user = true;
-                        $allow_discount_for_all_customers = false;
-                        $allow_discount_for_specific_customers = false;
+                $discount_codes = Discount::where('end_date', '>=', $current_date)->where('status', 1)->get();
+                foreach($discount_codes as $discount_code) {
+                    if (!empty($discount_code)) {
+                        if ($discount_code->customer_eligibility === 'All Customers') {
+                            $allow_discount_for_new_user = false;
+                            $allow_discount_for_all_customers = true;
+                            $allow_discount_for_specific_customers = false;
+                        } 
+                        elseif($discount_code->customer_eligibility === 'Specific Customers') {
+                            $allow_discount_for_new_user = false;
+                            $allow_discount_for_all_customers = false;
+                            $allow_discount_for_specific_customers = true;
+                        } 
+                        elseif(($discount_code->customer_eligibility === 'New User') && (empty($check_new_user_orders))) {
+                            $allow_discount_for_new_user = true;
+                            $allow_discount_for_all_customers = false;
+                            $allow_discount_for_specific_customers = false;
+                        }
+                        else {
+                            $discount_code = null;
+                        }
                     }
-                    else {
+                    if (!empty($discount_code) ) {
+                        $customer_discount_uses = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount_code->id)->count();
+                        $max_usage_count = CustomerDiscountUses::where('discount_id', $discount_code->id)->count();
+                        if (strtolower($discount_code->max_discount_uses) === 'limit for user') {
+                            if (!empty($customer_discount_uses)) {
+                                if ($customer_discount_uses >= intval($discount_code->limit_per_user)) {
+                                    $discount_code = null;
+                                }
+                            } else {
+                                $discount_code = $discount_code;
+                            }
+                        }  
+                        elseif(strtolower($discount_code->max_discount_uses) === 'limit max times') {
+                            if (!empty($max_usage_count)) {
+                                $usage_count = !empty($discount_code->usage_count) ? $discount_code->usage_count : 0;
+                                if ($usage_count >= $discount_code->max_usage_count) {
+                                    $discount_code = null;
+                                }
+                            } else {
+                                $discount_code = $discount_code;
+                            }
+                            
+                        } 
+                        
+                    } else {
                         $discount_code = null;
                     }
-                }
-                if (!empty($discount_code) ) {
-                    $customer_discount_uses = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount_code->id)->count();
-                    $max_usage_count = CustomerDiscountUses::where('discount_id', $discount_code->id)->count();
-                    if (strtolower($discount_code->max_discount_uses) === 'limit for user') {
-                        if (!empty($customer_discount_uses)) {
-                            if ($customer_discount_uses >= intval($discount_code->limit_per_user)) {
-                                $discount_code = null;
-                            }
-                        } else {
-                            $discount_code = $discount_code;
-                        }
-                    }  
-                    elseif(strtolower($discount_code->max_discount_uses) === 'limit max times') {
-                        if (!empty($max_usage_count)) {
-                            $usage_count = !empty($discount_code->usage_count) ? $discount_code->usage_count : 0;
-                            if ($usage_count >= $discount_code->max_usage_count) {
-                                $discount_code = null;
-                            }
-                        } else {
-                            $discount_code = $discount_code;
-                        }
-                        
-                    } 
-                    
-                } else {
-                    $discount_code = null;
                 }
             } else {
                 $discount_code = null;
@@ -1283,6 +1285,8 @@ class CheckoutController extends Controller
             $total_discount_uses = CustomerDiscountUses::where('discount_id', $discount->id)->count();
             if (strtolower($discount->customer_eligibility) == 'specific customers')  {
                 $specific_customers = true;
+                $new_user = true;
+                $all_customers = false;
                 $customer_discount = CustomerDiscount::where('contact_id', $contact_id)->where('discount_id', $discount->id)->first();
                 if (empty($customer_discount)) {
                     $eligible = false;
@@ -1317,7 +1321,49 @@ class CheckoutController extends Controller
                         $message = 'Discount applied successfully';
                     }
                 }
-            } else {
+            }
+            elseif (strtolower($discount->customer_eligibility) == 'new user')  {
+                $all_customers = false;
+                $new_user = true;
+                $specific_customers = false;
+                $api_orders = ApiOrder::where('memberId', $contact_id)->first();
+                if (!empty($api_orders)) {
+                    $eligible = false;
+                    $message = 'You are not eligible for this discount';
+                } else {
+                    $eligible = true;
+                    if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
+                        $discount_per_user = true;
+                        $customer_discount_count = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount->id)->count();
+                        if ($customer_discount_count > $discount->limit_per_user) {
+                            $max_uses = false;
+                            $message = 'You have reached the maximum usage of this discount';   
+                        } else {
+                            $max_uses = true;
+                            $message = 'Discount applied successfully';
+                        }
+                    } elseif(!empty($discount->max_usage_count) && strtolower($discount->max_discount_uses) == 'limit max times') {
+                        $discount_max_times = true;
+                        $max_discont_count_in_total = $discount->usage_count == 'Null' ? 0 : $discount->usage_count;
+                        if ($max_discont_count_in_total > $discount->max_usage_count) {
+                            $max_uses = false;
+                            $message = 'Discount has reached the maximum usage';   
+                        } else {
+                            $max_uses = true;
+                            $message = 'Discount applied successfully';
+                        }
+                    } elseif(strtolower($discount->max_discount_uses) == 'none') {
+                        $max_uses = false;
+                        $discount_per_user = false;
+                        $discount_max_times = false;
+                        $max_discount_uses_none = true;
+                        $message = 'Discount applied successfully';
+                    }
+                }
+            } 
+            else {
+                $all_customers = true;
+                $new_user = false;
                 $specific_customers = false;
                 $eligible = true;
                 if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
@@ -1358,6 +1404,8 @@ class CheckoutController extends Controller
         return response()->json([
             'success' => $success,
             'specific_customers' => $specific_customers,
+            'new_user' => $new_user,
+            'all_customers'=> $all_customers,
             'eligible' => $eligible,
             'max_uses' => $max_uses,
             'discount_per_user' => $discount_per_user,
@@ -1365,7 +1413,8 @@ class CheckoutController extends Controller
             'message' => $message,
             'discount_variation' => $discount_variation,
             'discount_variation_value' => $discount_variation_value,
-            'max_discount_uses_none' => $max_discount_uses_none
+            'max_discount_uses_none' => $max_discount_uses_none,
+            'discount' => $discount
         ]);
     }
 

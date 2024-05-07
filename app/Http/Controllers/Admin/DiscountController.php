@@ -226,4 +226,20 @@ class DiscountController extends Controller
         $discount->delete();
         return redirect()->route('discounts.index')->with('success', 'Discount deleted successfully.');      
     }
+
+    public function discounts_duplicate(Request $request) {
+        $discount_id = $request->discount_id;
+        $discount =  Discount::findOrFail($discount_id);
+        $new_discount = $discount->replicate();
+        $new_discount->save();
+
+        $update_discount = Discount::findOrFail($new_discount->id);
+        $discount_code_name = $discount->discount_code.'-copy-' . $new_discount->id;
+        $update_discount->discount_code = $discount_code_name;
+        $update_discount->usage_count = 0;
+        $update_discount->save();
+
+        return redirect()->route('discounts.index')->with('success', 'Discount duplicated successfully.');
+                
+    }
 }

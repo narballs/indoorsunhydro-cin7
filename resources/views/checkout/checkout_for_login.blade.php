@@ -615,13 +615,13 @@ $cart_price = 0;
                                         @php
                                             $discount_amount = 0;
                                             $remove_discount = 0;
-                                            if (!empty($discount_code) && strtolower($discount_code->mode) === 'automatic') {
-                                                if ($discount_code->discount_variation === 'percentage') {
-                                                    $discount_amount = $cart_total * ($discount_code->discount_variation_value / 100);
-                                                } else {
-                                                    $discount_amount = $discount_code->discount_variation_value;
-                                                }
-                                            } 
+                                            // if (!empty($discount_code) && strtolower($discount_code->mode) === 'automatic') {
+                                            //     if ($discount_code->discount_variation === 'percentage') {
+                                            //         $discount_amount = $cart_total * ($discount_code->discount_variation_value / 100);
+                                            //     } else {
+                                            //         $discount_amount = $discount_code->discount_variation_value;
+                                            //     }
+                                            // } 
                                             $tax=0;
                                             if (!empty($tax_class)) {
                                                 $tax = $cart_total * ($tax_class->rate / 100);
@@ -656,13 +656,13 @@ $cart_price = 0;
                                             <div class="col-md-3  col-4 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
                                         </div>
                                         @if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) === 'yes')
-                                            @if (!empty($discount_code))
-                                                <input type="hidden" name="discount_id" class="" id="" value="{{$discount_code->id}}">
-                                                <input type="hidden" name="discount_mode" class="discount_mode" value="{{strtolower($discount_code->mode) === 'automatic' ?  'automatic' : 'manuall'}}">
+                                            {{-- @if (!empty($discount_code)) --}}
+                                                <input type="hidden" name="discount_id" class="discount_id" id="discount_id" value="">
+                                                <input type="hidden" name="discount_mode" class="discount_mode" value="">
                                                 <input type="hidden" name="user_contact_id" id="" class="user_contact_id" value="{{!empty($user_address->contact_id) ? $user_address->contact_id : ''}}">
-                                                <input type="hidden" name="discount_variation" id="" class="discount_variation" value="{{$discount_code->discount_variation}}">
-                                                <input type="hidden" name="discount_variation_value" id="" class="discount_variation_value" value="{{$discount_code->discount_variation_value}}">
-                                                @if (strtolower($discount_code->mode) === 'manuall')
+                                                <input type="hidden" name="discount_variation" id="" class="discount_variation" value="">
+                                                <input type="hidden" name="discount_variation_value" id="" class="discount_variation_value" value="">
+                                                {{-- @if (strtolower($discount_code->mode) === 'manuall') --}}
                                                     <div class="row my-3 align-items-center discount_form">
                                                         <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p>
                                                         <div class="col-md-9">
@@ -680,41 +680,22 @@ $cart_price = 0;
                                                     <div class="row justify-content-center border-bottom align-items-center py-2 manuall_discount d-none">
                                                         <div class="col-md-9 col-8">
                                                             <span class="checkout_discount_rate_heading_manuall">
-                                                                @if ($discount_code->discount_variation === 'percentage')
+                                                                {{-- @if ($discount_code->discount_variation === 'percentage')
                                                                     Discount ({{$discount_code->discount_variation_value . '%'}})
                                                                 @else
                                                                     Discount (${{ number_format($discount_code->discount_variation_value, 2) }})
-                                                                @endif
+                                                                @endif --}}
                                                             </span>
-                                                            <span class="coupen_code_name">(<label for="">Coupon Code : </label>{{!empty($discount_code) && !empty($discount_code->discount_code)  ? $discount_code->discount_code : ''}}</span>)
+                                                            <span class="coupen_code_name"></span>
                                                             <span class="remove_coupen_code"><a href="{{url('/checkout')}}">Remove Code</a></span>
                                                         </div>
                                                         <div class="col-md-3 col-4 text-right">
                                                             <span class="checkout_discount_rate_manuall">
-                                                                ${{ number_format($discount_amount, 2) }}
                                                             </span>
                                                         </div>
                                                     </div>
-                                                @else
-                                                <div class="row my-2 justify-content-center border-bottom align-items-center py-2">
-                                                        {{-- <p for="" class="checkout_product_heading mb-2 ml-0">Enter Promo Code</p> --}}
-                                                        <div class="col-md-9 col-8">
-                                                            <span class="checkout_discount_rate_heading">
-                                                                @if ($discount_code->discount_variation === 'percentage')
-                                                                    Discount ({{$discount_code->discount_variation_value . '%'}})
-                                                                @else
-                                                                    Discount (${{ number_format($discount_code->discount_variation_value, 2) }})
-                                                                @endif
-                                                            </span>
-                                                        </div>
-                                                        <div class="col-md-3 col-4 text-right">
-                                                            <span class="checkout_discount_rate">
-                                                                ${{ number_format($discount_amount, 2) }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @endif
+                                                {{-- @endif --}}
+                                            {{-- @endif --}}
                                         @endif
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-8">
@@ -2640,7 +2621,7 @@ $cart_price = 0;
                             },
                             success: function(response) {
                                 if (response.success == true) {
-                                    if (response.specific_customers == true) {
+                                    if (response.specific_customers == true && response.all_customers == false && response.new_user == false) {
                                         if (response.eligible == true) {
                                             $('.manuall_discount').removeClass('d-none');
                                             if (response.discount_per_user == true && response.max_uses == true) {
@@ -2681,7 +2662,8 @@ $cart_price = 0;
                                             message = response.message;
                                             $('.coupen_code_message').html(message);
                                         }
-                                    } else {
+                                    } 
+                                    else if(response.specific_customers == false && response.all_customers == false && response.new_user == true) {
                                         if (response.eligible == true) {
                                             $('.manuall_discount').removeClass('d-none');
                                             if (response.discount_per_user == true && response.max_uses == true) {
@@ -2723,7 +2705,54 @@ $cart_price = 0;
                                             $('.coupen_code_message').html(message);
                                         }
                                     }
-                                } else {
+                                    else if (response.specific_customers == false && response.all_customers == true && response.new_user == false){
+                                        if (response.eligible == true) {
+                                            $('.manuall_discount').removeClass('d-none');
+                                            if (response.discount_per_user == true && response.max_uses == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else if (response.discount_max_times == true && response.max_uses == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else if (response.discount_max_times == false && response.discount_per_user == false && response.max_uses == true && response.max_discount_uses_none == true) {
+                                                if (response.discount_variation == 'percentage') {
+                                                    apply_discount_to_percentage(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                } else {
+                                                    apply_discount_to_fixed(response , cart_total_including_tax_shipping, cartTotal , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal);
+                                                }
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                                $('.discount_form').addClass('d-none');
+                                            } else {
+                                                $('.manuall_discount').addClass('d-none');
+                                                message = response.message;
+                                                $('.coupen_code_message').html(message);
+                                            }
+                                        } else {
+                                            $('.manuall_discount').addClass('d-none');
+                                            message = response.message;
+                                            $('.coupen_code_message').html(message);
+                                        }
+                                    }
+                                    else {
+                                        message = response.message;
+                                        $('.coupen_code_message').html(message);
+                                    }
+                                } 
+                                else {
                                     message = response.message;
                                     $('.coupen_code_message').html(message);
                                 }
@@ -2732,6 +2761,11 @@ $cart_price = 0;
                     }
                 }
                 function apply_discount_to_percentage(response ,cartTotal ,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    console.log(response);
+                    $('.checkout_discount_rate_heading_manuall').html('Discount' + ' (' + response.discount_variation_value + '%)');
+                    $('.coupen_code_name').html(`(<label for="">Coupon Code : `+response.discount.discount_code+`</label>)`);
+                    $('.discount_id').val(response.discount.id);
+                    $('.discount_mode').val(response.discount.mode);
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
@@ -2808,6 +2842,10 @@ $cart_price = 0;
                     
                 }
                 function apply_discount_to_fixed(response , cartTotal,cart_total_including_tax_shipping , shipment_price , total_tax , add_discount , tax_discount , shipping_discount , total , subtotal) {
+                    $('.checkout_discount_rate_heading_manuall').html('Discount' + ' (' + response.discount_variation_value + ')');
+                    $('.coupen_code_name').html(`(<label for="">Coupon Code : `+response.discount.discount_code+`</label>)`);
+                    $('.discount_id').val(response.discount.id);
+                    $('.discount_mode').val(response.discount.mode);
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
                     var multi_shipping_price = 0;
                     var order_weight_greater_then_150 = 0;
@@ -2875,9 +2913,9 @@ $cart_price = 0;
                                     subtotal = productTotal - add_discount;
                                 }
                                 total = subtotal + parseFloat(total_tax);
-                                $('#discount_amount').val(add_discount).toFixed(2);
+                                $('#discount_amount').val(add_discount.toFixed(2));
                                 $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                                $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                                $('.checkout_subtotal_price').html('$' + (subtotal.toFixed(2)));
                                 $('#incl_tax').val(parseFloat(total).toFixed(2));
                                 $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                             }
@@ -2893,7 +2931,7 @@ $cart_price = 0;
                         total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
                         $('#discount_amount').val(add_discount.toFixed(2));
                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
-                        $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
+                        $('.checkout_subtotal_price').html('$' + (subtotal.toFixed(2)));
                         $('#incl_tax').val(parseFloat(total).toFixed(2));
                         $('.checkout_total_price').html('$' + parseFloat(total).toFixed(2));
                     }
