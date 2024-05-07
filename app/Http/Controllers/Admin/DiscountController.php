@@ -242,4 +242,9 @@ class DiscountController extends Controller
         return redirect()->route('discounts.index')->with('success', 'Discount duplicated successfully.');
                 
     }
+
+    public function redeemed_discount_users() {
+        $customerDiscountUses = CustomerDiscountUses::with('discount','contact')->paginate(10);
+        return view('admin.discounts.redeemed_discount_users', compact('customerDiscountUses'));
+    }
 }
