@@ -60,14 +60,14 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>
-                                @if (!empty($customer_discount->contact)  && !empty($customer_discount->contact->firstName))
+                                @if (!empty($customer_discount->contact)  && (!empty($customer_discount->contact->firstName)))
                                     {{ $customer_discount->contact->firstName }}
                                 @endif
-                                @if (!empty($customer_discount->contact)  && !empty($customer_discount->contact->lastName))
+                                @if (!empty($customer_discount->contact)  && (!empty($customer_discount->contact->lastName)))
                                     {{ ' ' . $customer_discount->contact->lastName }}
                                 @endif
                             </td>
-                            <td>{{ !empty($customer_discount->contact) && !empty($customer_discount->contact->email) ? $customer_discount->contact->email : '' }}</td>
+                            <td>{{ !empty($customer_discount->contact) && (!empty($customer_discount->contact->email)) ? $customer_discount->contact->email : '' }}</td>
                             <td>{{ $customer_discount->discount->discount_code }}</td>
                             <td>{{ $customer_discount->count() }}</td>
                             <td>{{ucfirst( $customer_discount->discount->discount_variation) }}</td>
