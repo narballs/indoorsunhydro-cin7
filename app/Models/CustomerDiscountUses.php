@@ -18,4 +18,9 @@ class CustomerDiscountUses extends Model
     {
         return $this->belongsTo(Discount::class);
     }
+
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
 }

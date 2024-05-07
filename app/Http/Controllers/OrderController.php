@@ -411,7 +411,7 @@ class OrderController extends Controller
                         if (!empty($order->discount_id)) {
                             $update_discount_count = Discount::where('id', $order->discount_id)->first();
                             if (!empty($update_discount_count)) {
-                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count ? $update_discount_count->usage_count : 0)  + 1;
+                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count) ? intval($update_discount_count->usage_count) + 1 : 0 + 1;
                                 $update_discount_count->save();
 
                                 $customer_discount_uses = new CustomerDiscountUses();
@@ -718,7 +718,7 @@ class OrderController extends Controller
                         if (!empty($order->discount_id)) {
                             $update_discount_count = Discount::where('id', $order->discount_id)->first();
                             if (!empty($update_discount_count)) {
-                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count ? $update_discount_count->usage_count : 0)  + 1;
+                                $update_discount_count->usage_count = !empty($update_discount_count->usage_count) ? intval($update_discount_count->usage_count) + 1 : 0 + 1;
                                 $update_discount_count->save();
 
                                 $customer_discount_uses = new CustomerDiscountUses();

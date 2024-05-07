@@ -1296,7 +1296,7 @@ class CheckoutController extends Controller
                     if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
                         $discount_per_user = true;
                         $customer_discount_count = CustomerDiscount::where('contact_id', $contact_id)->where('discount_id', $discount->id)->count();
-                        if ($customer_discount_count > $discount->limit_per_user) {
+                        if ($customer_discount_count >= $discount->limit_per_user) {
                             $max_uses = false;
                             $message = 'You have reached the maximum usage of this discount';   
                         } else {
@@ -1306,7 +1306,7 @@ class CheckoutController extends Controller
                     } elseif(!empty($discount->max_usage_count) && strtolower($discount->max_discount_uses) == 'limit max times') {
                         $discount_max_times = true;
                         $max_discont_count_in_total = $discount->usage_count == 'Null' ? 0 : $discount->usage_count;
-                        if ($max_discont_count_in_total > $discount->max_usage_count) {
+                        if ($max_discont_count_in_total >= $discount->max_usage_count) {
                             $max_uses = false;
                             $message = 'Discount has reached the maximum usage';   
                         } else {
@@ -1335,7 +1335,7 @@ class CheckoutController extends Controller
                     if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
                         $discount_per_user = true;
                         $customer_discount_count = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount->id)->count();
-                        if ($customer_discount_count > $discount->limit_per_user) {
+                        if ($customer_discount_count >= $discount->limit_per_user) {
                             $max_uses = false;
                             $message = 'You have reached the maximum usage of this discount';   
                         } else {
@@ -1345,7 +1345,7 @@ class CheckoutController extends Controller
                     } elseif(!empty($discount->max_usage_count) && strtolower($discount->max_discount_uses) == 'limit max times') {
                         $discount_max_times = true;
                         $max_discont_count_in_total = $discount->usage_count == 'Null' ? 0 : $discount->usage_count;
-                        if ($max_discont_count_in_total > $discount->max_usage_count) {
+                        if ($max_discont_count_in_total >= $discount->max_usage_count) {
                             $max_uses = false;
                             $message = 'Discount has reached the maximum usage';   
                         } else {
@@ -1369,7 +1369,7 @@ class CheckoutController extends Controller
                 if (!empty($discount->limit_per_user) && strtolower($discount->max_discount_uses) == 'limit for user') {
                     $discount_per_user = true;
                     $customer_discount_count = CustomerDiscountUses::where('contact_id', $contact_id)->where('discount_id', $discount->id)->count();
-                    if ($customer_discount_count > $discount->limit_per_user) {
+                    if ($customer_discount_count >= $discount->limit_per_user) {
                         $max_uses = false;
                         $message = 'You have reached the maximum usage of this discount';   
                     } else {
