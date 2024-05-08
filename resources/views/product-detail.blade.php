@@ -246,8 +246,8 @@
                                                         </div>
                                                         <div class="col-md-9 col-xl-10 col-lg-9 col-8">
                                                             <div class="row">
-                                                                <p class="bulk_discount">Bulk Discount</p>
-                                                                <p class="bulk_discount_text">Save More with Bulk Orders <a href="" class="bulk_discount_href">Request bulk quantity Discount</a></p>
+                                                                <p class="bulk_discount mb-0">Bulk Discount</p>
+                                                                <p class="bulk_discount_text">Save More with Bulk Orders <a href="" data-bs-toggle="modal" data-bs-target="#bulk_quantity_modal" class="bulk_discount_href">Request bulk quantity Discount</a></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1209,14 +1209,131 @@
     }
     // end
 </script>
+
+{{-- bulk qty modal --}}
+<div class="modal fade" id="bulk_quantity_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title bulk_head" id="exampleModalLabel">Request Bulk Quantity</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group border-bottom">
+                            <div class="row">
+                                <h5 class="bulk_head">
+                                    Use this form to request a bulk quote discount for commercial quantities.
+                                </h5>
+                                <p class="bulk_paragraph">
+                                    This bulk quote feature should not be used for purchases of less than $5,000.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="" class="bulk_label">
+                                    What item(s) are you interested in?
+                                </label>
+                                <p class="bulk_paragraph">
+                                    Please list any and all items you’re interested in. Example: Clonex Rooting Gel, FoxFarm Marine Cuisine Dry Fertilizer, 20 lbs..
+                                </p>
+                                <input type="text" name="items_list" id="" data-role="tagsinput" class="form-control bulk_input">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="" class="bulk_label">
+                                    What quantity would you like quoted out?
+                                </label>
+                                <input type="text" class="form-control bulk_input" name="quantity" id="" placeholder="e.g 1000">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="" class="bulk_label">
+                                    What is your phone number?
+                                </label>
+                                <input type="text" class="form-control bulk_input" name="phone_number" id="" placeholder="Type your phone number here...">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="" class="bulk_label">
+                                    What is your email address?
+                                </label>
+                                <input type="email" class="form-control bulk_input" name="email" id="" placeholder="name@example.com">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="" class="bulk_label">
+                                    What is your name?
+                                </label>
+                                <input type="text" class="form-control bulk_input" name="name" id="" placeholder="Type your name here...">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="" class="bulk_label">
+                                    Where will these items be delievered?
+                                </label>
+                                <p class="bulk_paragraph">
+                                    Please put City, State, and Country e.g. (California, USA)
+                                </p>
+                                <input type="text" class="form-control bulk_input" name="delievery" id="" placeholder="Type your answer here...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+    </div>
+</div>
+{{-- bulk qty modal end --}}
 @include('partials.product-footer')
 @include('partials.footer')
 <style>
+
+    .bulk_head {
+        font-family: 'Poppins';
+        font-size: 20px;
+        font-weight: 600;
+        color: #242424;
+
+    }
+    .bulk_paragraph {
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-weight: 400;
+        color: #828282;
+        paragraph-spacing: 16.02px;
+
+    }
+    .bulk_label {
+        font-family: 'Poppins';
+        font-size: 18px !important;
+        font-weight: 500;
+        color: #242424;
+    }
+    .bulk_input {
+        font-family: 'Poppins';
+        font-size: 18px;
+        font-weight: 400;
+        color: #828282;
+
+    } 
     .bulk_discount {
         font-family: 'Poppins';
         font-size: 22px;
         font-weight: 500;
-        line-height: 33px;
 
     }
     .bulk_discount_text {
