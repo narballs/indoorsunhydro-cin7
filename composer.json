@@ -9,6 +9,7 @@
         "barryvdh/laravel-dompdf": "^2.0",
         "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
+        "geocoder-php/google-maps-provider": "^4.6",
         "google/apiclient": "^2.7",
         "guzzlehttp/guzzle": "^7.4",
         "intervention/image": "^2.7",
@@ -49,6 +50,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Zendesk\\API\\": "vendor/zendesk/zendesk_api_client_php/src/"
+            
         }
     },
     "autoload-dev": {
@@ -79,7 +81,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

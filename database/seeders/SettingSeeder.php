@@ -297,6 +297,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'California',
             ],
+            [
+                'option_name' => 'request_bulk_quantity_discount', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];

@@ -41,18 +41,21 @@ class DiscountController extends Controller
     public function store(Request $request)
     {
         
+        
         $validated = $request->validate([
             // 'name' => 'required',
             'type' => 'required',
             'mode' => 'required',
             'discount_variation' => 'required',
             'discount_variation_value' => 'required',
-            'minimum_purchase_requirements' => 'required',
+            // 'minimum_purchase_requirements' => 'required',
             'customer_eligibility' => 'required',
             'status' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
+            'max_discount_uses' => 'required',
         ]);
+
         if (!empty($request->max_discount_uses)) {
             if ((strtolower($request->max_discount_uses)) == 'none') {
                 $limit_per_user = null;
@@ -63,8 +66,12 @@ class DiscountController extends Controller
             } elseif (strtolower($request->max_discount_uses) == 'limit max times') {
                 $limit_per_user = null;
                 $limit_max_times = $request->max_usage_count;
+                $request->validate([
+                    'max_usage_count' => 'required',
+                ]);
             }
         }
+        
         $discount = Discount::create([
             'name' => $request->name,
             'type' => $request->type,
@@ -137,16 +144,16 @@ class DiscountController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            // 'name' => 'required',
             'type' => 'required',
             'mode' => 'required',
             'discount_variation' => 'required',
             'discount_variation_value' => 'required',
-            'minimum_purchase_requirements' => 'required',
+            // 'minimum_purchase_requirements' => 'required',
             'customer_eligibility' => 'required',
             'status' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
+            'max_discount_uses' => 'required',
         ]);
 
         $limit_per_user = null;
@@ -162,7 +169,16 @@ class DiscountController extends Controller
             } elseif (strtolower($request->max_discount_uses) == 'limit max times') {
                 $limit_per_user = null;
                 $limit_max_times = $request->max_usage_count;
+                $request->validate([
+                    'max_usage_count' => 'required',
+                ]);
             }
+        }
+
+        if ($request->mode === 'Manuall') {
+            $request->validate([
+                'discount_code' => 'required',
+            ]);
         }
         $discount->update([
             'name' => $request->name,
@@ -225,5 +241,26 @@ class DiscountController extends Controller
         }
         $discount->delete();
         return redirect()->route('discounts.index')->with('success', 'Discount deleted successfully.');      
+    }
+
+    public function discounts_duplicate(Request $request) {
+        $discount_id = $request->discount_id;
+        $discount =  Discount::findOrFail($discount_id);
+        $new_discount = $discount->replicate();
+        $new_discount->save();
+
+        $update_discount = Discount::findOrFail($new_discount->id);
+        $discount_code_name = $discount->discount_code.'-copy-' . $new_discount->id;
+        $update_discount->discount_code = $discount_code_name;
+        $update_discount->usage_count = 0;
+        $update_discount->save();
+
+        return redirect()->route('discounts.index')->with('success', 'Discount duplicated successfully.');
+                
+    }
+
+    public function redeemed_discount_users() {
+        $customerDiscountUses = CustomerDiscountUses::with('discount','contact')->paginate(10);
+        return view('admin.discounts.redeemed_discount_users', compact('customerDiscountUses'));
     }
 }

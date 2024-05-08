@@ -188,6 +188,8 @@ Route::group(['middleware' => ['auth']], function () {
     
 
     Route::resource('admin/discounts', DiscountController::class);
+    Route::post('admin/discounts/duplicate', [DiscountController::class, 'discounts_duplicate'])->name('discounts_duplicate');
+    Route::get('admin/redeemed-discount-users', [DiscountController::class, 'redeemed_discount_users'])->name('redeemed_discount_users');
     Route::resource('admin/tax_classes', TaxClassController::class);
     Route::resource('admin/users', UserController::class);
     Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.view');

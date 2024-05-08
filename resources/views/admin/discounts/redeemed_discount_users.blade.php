@@ -25,12 +25,12 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                               Discounts
+                               Redeemed Discount Users
                             </p>
                         </div>
                         <div class="col-md-6 mobile_heading text-right">
                             <p class="product_heading">
-                                <a class="btn btn-primary text-white" href="{{ route('discounts.create') }}"> Create Discount</a>
+                                <a class="btn btn-primary text-white" href="{{ route('admin.view') }}"> Back</a>
                             </p>
                         </div>
                     </div>
@@ -43,86 +43,40 @@
                     <thead>
                         <tr>
                             <th>S.No</th>
-                            {{-- <th>Name</th> --}}
-                            <th>Type</th>
-                            <th>Mode</th>
-                            <th>Code</th>
-                            <th>Variation</th>
-                            <th>Value</th>
-                            {{-- <th>Min Purchase Requirements</th> --}}
-                            {{-- <th>Min Purchase Items Quantity</th> --}}
-                            {{-- <th>Min Purchase Amount</th> --}}
-                            <th>Eligibility</th>
-                            <th>Max Uses</th>
-                            <th>Max Uses Count</th>
-                            <th>Usage Count</th>
-                            <th>User Limit</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Discount Code</th>
+                            <th>Redemption Count</th>
+                            <th>Discount Variation</th>
+                            <th>Discount Value</th>
                         </tr>
                     </thead>
                     <tbody>
                         @php
                             $i =1; 
                         @endphp
-                        @if(count($discounts) > 0 )
-                        @foreach ($discounts as $discount)
+                        @if(count($customerDiscountUses) > 0 )
+                        @foreach ($customerDiscountUses as $customer_discount)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            {{-- <td>{{ $discount->name }}</td> --}}
-                            <td>{{ $discount->type }}</td>
-                            <td>{{ $discount->mode }}</td>
-                            <td>{{ $discount->discount_code }}</td>
-                            <td>{{ucfirst( $discount->discount_variation) }}</td>
-                            <td>{{ $discount->discount_variation_value }}</td>
-                            {{-- <td>{{ $discount->minimum_purchase_requirements }}</td> --}}
-                            {{-- <td>{{ $discount->minimum_quantity_items }}</td> --}}
-                            {{-- <td>{{ $discount->minimum_purchase_amount }}</td> --}}
-                            <td>{{ $discount->customer_eligibility }}</td>
-                            <td>{{ $discount->max_discount_uses }}</td>
-                            <td>{{ $discount->max_usage_count }}</td>
-                            <td>{{ $discount->usage_count }}</td>
-                            <td>{{ $discount->limit_per_user }}</td>
-                            <td>{{ $discount->start_date }}</td>
-                            <td>{{ $discount->end_date }}</td>
                             <td>
-                                @if ($discount->status == 1)
-                                    <span class="badge badge-success">Active</span>
-                                @else
-                                    <span class="badge badge-danger">Inactive</span>
+                                @if (!empty($customer_discount->contact)  && (!empty($customer_discount->contact->firstName)))
+                                    {{ $customer_discount->contact->firstName }}
+                                @endif
+                                @if (!empty($customer_discount->contact)  && (!empty($customer_discount->contact->lastName)))
+                                    {{ ' ' . $customer_discount->contact->lastName }}
                                 @endif
                             </td>
-                            <td>
-                                <div class="row mb-2 justify-content-center">
-                                    <a href="{{ route('discounts.edit', $discount->id) }}" class="border-0 btn-sm text-dark" style="background: #f0f0f0;"><i class="fa fa-edit"></i></a>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <form action="{{route('discounts_duplicate')}}" method="POST">
-                                        
-                                        @csrf
-                                        <input type="hidden" name="discount_id" value="{{ $discount->id }}">
-                                        <button type="submit" class="btn-sm bg-none border-0 mr-1" onclick="return confirm('Are you sure you want to duplicate this discount?');">
-                                            <i class="fa fa-clone"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('discounts.destroy', $discount->id) }}" method="POST" class="">
-                                        
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-none border-0 ml-1" onclick="return confirm('Are you sure you want to delete this discount?');">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                            <td>{{ !empty($customer_discount->contact) && (!empty($customer_discount->contact->email)) ? $customer_discount->contact->email : '' }}</td>
+                            <td>{{ $customer_discount->discount->discount_code }}</td>
+                            <td>{{ $customer_discount->count() }}</td>
+                            <td>{{ucfirst( $customer_discount->discount->discount_variation) }}</td>
+                            <td>{{ $customer_discount->discount->discount_variation_value }}</td>
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Discounts found</td>
+                            <td colspan="3">No Discount Redemption found</td>
                         </tr>
                         @endif
                     </tbody>
@@ -130,7 +84,7 @@
             </div>
             <div class="row">
                 <div class="col-md-10">
-                    {{ $discounts->links('pagination.custom_pagination') }}
+                    {{ $customerDiscountUses->links('pagination.custom_pagination') }}
                 </div>
             </div>
         </div>
