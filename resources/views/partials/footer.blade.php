@@ -9,6 +9,7 @@
 <script src="https://kit.fontawesome.com/ec19ec29f3.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script id="ze-snippet" src="{{asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475')}}"></script>
+<script src="{{ asset('theme/jquery/bootstrap-tagsinput.min.js') }}"></script>
 <script>
 	$(document).ready(function() {
 		var order_id = parseInt($('.getorderID').html());
