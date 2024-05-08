@@ -316,17 +316,19 @@ class CheckoutController extends Controller
             $user = User::where('id', $user_id)->first();
             $all_ids = UserHelper::getAllMemberIds($user);
             $pluck_default_user = Contact::whereIn('id', $all_ids)->where('contact_id' , $contact_id)->first();
-            $check_new_user_orders = ApiOrder::where('memberId' , $pluck_default_user->contact_id)->first();
+            $check_new_user_orders = null;
             $shipping_quotes = ShippingQuote::with('selected_shipping_quote')->get();
             $selected_shipment_quotes = SelectedShippingQuote::with('shipping_quote')->get();
             $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
             $surcharge_settings = SurchargeSetting::where('apply_surcharge', 1)->first(); 
             if (!empty($contact->contact_id)) {
                 $user_address = Contact::where('user_id', $user_id)->where('contact_id' , $contact->contact_id)->first();
+                $check_new_user_orders = ApiOrder::where('memberId' , $contact->contact_id)->first();
             } else {
                 if (!empty($contact->secondary_id)) {
                     $parent = Contact::where('secondary_id', $contact->secondary_id)->first();
                     $user_address = Contact::where('contact_id', $parent->parent_id)->first();
+                    $check_new_user_orders = ApiOrder::where('memberId' , $parent->parent_id)->first();
                 }
             }
             if (empty($user_address) && ($user_address->postalAddress1 == null  && $user_address->postalPostCode == null)) {
