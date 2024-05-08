@@ -111,7 +111,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card w-100">
+                                        {{-- <div class="card w-100">
                                             <div class="card-header">
                                                 <h3 class="card-title">
                                                     <label for="">
@@ -141,7 +141,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="card w-100">
                                             <div class="card-header">
                                                 <h3 class="card-title">

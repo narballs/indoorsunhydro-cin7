@@ -49,9 +49,9 @@
                             <th>Code</th>
                             <th>Variation</th>
                             <th>Value</th>
-                            <th>Min Purchase Requirements</th>
-                            <th>Min Purchase Items Quantity</th>
-                            <th>Min Purchase Amount</th>
+                            {{-- <th>Min Purchase Requirements</th> --}}
+                            {{-- <th>Min Purchase Items Quantity</th> --}}
+                            {{-- <th>Min Purchase Amount</th> --}}
                             <th>Eligibility</th>
                             <th>Max Uses</th>
                             <th>Max Uses Count</th>
@@ -77,9 +77,9 @@
                             <td>{{ $discount->discount_code }}</td>
                             <td>{{ucfirst( $discount->discount_variation) }}</td>
                             <td>{{ $discount->discount_variation_value }}</td>
-                            <td>{{ $discount->minimum_purchase_requirements }}</td>
-                            <td>{{ $discount->minimum_quantity_items }}</td>
-                            <td>{{ $discount->minimum_purchase_amount }}</td>
+                            {{-- <td>{{ $discount->minimum_purchase_requirements }}</td> --}}
+                            {{-- <td>{{ $discount->minimum_quantity_items }}</td> --}}
+                            {{-- <td>{{ $discount->minimum_purchase_amount }}</td> --}}
                             <td>{{ $discount->customer_eligibility }}</td>
                             <td>{{ $discount->max_discount_uses }}</td>
                             <td>{{ $discount->max_usage_count }}</td>

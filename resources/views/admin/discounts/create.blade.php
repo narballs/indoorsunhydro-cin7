@@ -69,7 +69,7 @@
                                                     <div class="row" id="discount_code_div">
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <input type="text" name="discount_code" id="discount_code" class="form-control">
+                                                                <input type="text" name="discount_code" id="discount_code" value="{{ isset($errors) ? old('discount_code') : '' }}" class="form-control">
                                                             </div>
                                                         </div>
                                                         <p class="ml-1">
@@ -80,6 +80,7 @@
                                             </div>
     
                                         </div>
+                                        
                                         <div class="card w-100">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -91,25 +92,25 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-secondary discount_variation_btn"  id="percentage_btn" data-value="percentage">
+                                                                <button type="button" class="btn discount_variation_btn {{ isset($errors) && old('discount_variation') == 'percentage' ? 'btn-secondary' : 'btn-light' }}"  id="percentage_btn" data-value="percentage">
                                                                     Percentage
                                                                 </button>
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <button type="button" class="btn btn-light discount_variation_btn" id="fixed_btn" data-value="fixed">
+                                                                <button type="button" class="btn discount_variation_btn {{ isset($errors) && old('discount_variation') == 'fixed' ? 'btn-secondary' : 'btn-light' }}" id="fixed_btn" data-value="fixed">
                                                                     Fixed Amount
                                                                 </button>
                                                             </div>
-                                                            <input type="hidden" value="percentage" name="discount_variation" id="discount_variation">
+                                                            <input type="hidden" value="{{ isset($errors) && old('discount_variation') == 'fixed' ? 'fixed' : 'percentage' }}" name="discount_variation" id="discount_variation">
                                                             <div class="col-md-7">
-                                                                <input type="number" min="1" class="form-control discount_variation_value" onchange="check_variration_value($(this)) id="discount_variation_value" placeholder="Percentage %" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
+                                                                <input type="number" min="1" class="form-control discount_variation_value" value="{{ isset($errors) ? old('discount_variation_value') : '' }}" onchange="check_variation_value($(this))" id="discount_variation_value" placeholder="Percentage %" name="discount_variation_value" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card w-100">
+                                        {{-- <div class="card w-100">
                                             <div class="card-header">
                                                 <h3 class="card-title">
                                                     <label for="">
@@ -122,24 +123,24 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input type="radio" value="none" name="minimum_purchase_requirements" class="purchase_requirements" checked>
+                                                                <input type="radio" value="none" name="minimum_purchase_requirements" class="purchase_requirements" {{ isset($errors) && old('minimum_purchase_requirements') == 'none' ? 'checked' : '' }}>
                                                                 <label for="">No minimum requirements</label>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <input type="radio" value="amount" name="minimum_purchase_requirements" class="purchase_requirements" id="add_amount">
+                                                                <input type="radio" value="amount" name="minimum_purchase_requirements" class="purchase_requirements" id="add_amount" {{ isset($errors) && old('minimum_purchase_requirements') == 'amount' ? 'checked' : '' }}>
                                                                 <label for="">Minimum purchase amount ($)</label>
                                                             </div>
-                                                            <input type="number" min="0" name="minimum_purchase_amount" id="minimum_purchase_amount" value="" class="form-control d-none" placeholder="Minimum Purchase Amount" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
+                                                            <input type="number" min="0" name="minimum_purchase_amount" id="minimum_purchase_amount" value="{{ isset($errors) ? old('minimum_purchase_amount') : '' }}" class="form-control {{ isset($errors) && old('minimum_purchase_requirements') == 'amount' ? '' : 'd-none' }}" placeholder="Minimum Purchase Amount" step="any" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
                                                             <div class="col-md-12">
-                                                                <input type="radio" value="quantity" name="minimum_purchase_requirements" class="purchase_requirements" id="add_item_qty">
+                                                                <input type="radio" value="quantity" name="minimum_purchase_requirements" class="purchase_requirements" id="add_item_qty" {{ isset($errors) && old('minimum_purchase_requirements') == 'quantity' ? 'checked' : '' }}>
                                                                 <label for="">Minimum quantity of items</label>
                                                             </div>
-                                                            <input type="number" min="1" name="minimum_quantity_items" id="minimum_quantity_items" value="" class="form-control d-none" placeholder="Minimum Items Quantity" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
+                                                            <input type="number" min="1" name="minimum_quantity_items" id="minimum_quantity_items" {{ isset($errors) && old('minimum_purchase_requirements') == 'quantity' ? '' : 'd-none' }} class="form-control d-none" placeholder="Minimum Items Quantity" onkeydown="removeAlpha($(this))" onkeyup="removeAlpha($(this))">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="card w-100">
                                             <div class="card-header">
                                                 <h3 class="card-title">
@@ -153,15 +154,15 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="All Customers" value="All Customers" class="customer_eligibility" id="all_customers" name="customer_eligibility" checked>
+                                                                <input type="radio" data-value="All Customers" value="All Customers" class="customer_eligibility" id="all_customers" name="customer_eligibility" {{ isset($errors) && old('customer_eligibility') == 'All Customers' ? 'checked' : '' }}>
                                                                 <label for="">All Customers</label>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="New User" value="New User" class="customer_eligibility" id="new_user" name="customer_eligibility">
+                                                                <input type="radio" data-value="New User" value="New User" class="customer_eligibility" id="new_user" name="customer_eligibility" {{ isset($errors) && old('customer_eligibility') == 'New User' ? 'checked' : '' }}>
                                                                 <label for="">New User Users Only (user with no prior orders)</label>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="Specific Customers" class="customer_eligibility" name="customer_eligibility" id="specific_customers">
+                                                                <input type="radio" data-value="Specific Customers" class="customer_eligibility" name="customer_eligibility" id="specific_customers" {{ isset($errors) && old('customer_eligibility') == 'New User' ? 'checked' : '' }}>
                                                                 <label for="">Specific Customers</label>
                                                             </div>
                                                             
@@ -184,19 +185,19 @@
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="none" name="max_discount_uses" class="discount_uses" name="" value="none" checked>
+                                                                <input type="radio" data-value="none" name="max_discount_uses" class="discount_uses" name="" value="none" {{ isset($errors) && old('max_discount_uses') == 'none' ? 'checked' : '' }}>
                                                                 <label for="">None</label>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <input type="radio" data-value="Limit Max Times" class="discount_uses" name="max_discount_uses" id="limit_max_times">
+                                                                <input type="radio" data-value="Limit Max Times" class="discount_uses" name="max_discount_uses" id="limit_max_times" value="Limit Max Times" {{ isset($errors) && old('max_discount_uses') == 'Limit Max Times' ? 'checked' : '' }}>
                                                                 <label for="">Limit number of times this discount can be used in total</label>
                                                             </div>
-                                                            <input type="number" name="max_usage_count" id="max_usage_count" class="form-control d-none" placeholder="Limit number of times this discount can be used in total">
+                                                            <input type="number" name="max_usage_count" id="max_usage_count" value="{{ isset($errors) ? old('max_usage_count') : '' }}" class="form-control {{ isset($errors) && old('max_discount_uses') == 'Limit Max Times' ? '' : 'd-none' }}" placeholder="Limit number of times this discount can be used in total">
                                                             <div class="col-md-12">
                                                                 <input type="radio" data-value="Limit For User" class="discount_uses" name="max_discount_uses" value="Limit For User">
                                                                 <label for="">Limit to one use per customer</label>
                                                             </div>
-                                                            <input type="number" name="limit_per_user" id="limit_per_user" class="form-control d-none" value="1" readonly>
+                                                            <input type="number" name="limit_per_user" id="limit_per_user" class="form-control {{ isset($errors) && old('max_discount_uses') == 'Limit For User' ? '' : 'd-none' }}" value="1" readonly >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -214,11 +215,11 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <label for="">Start Date</label>
-                                                                <input type="date" name="start_date"min="{{date("Y-m-d")}}" id="start_date" class="form-control" onchange="check_start_date()">
+                                                                <input type="date" name="start_date" min="{{date("d-m-Y")}}" id="start_date" value="{{ isset($errors) ? old('start_date') : '' }}" class="form-control" onchange="check_start_date()">
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <label for="">End Date</label>
-                                                                <input type="date" name="end_date" min="{{date("Y-m-d")}}" id="end_date" class="form-control" onchange="check_end_date()">
+                                                                <input type="date" name="end_date" min="{{date("d-m-Y")}}" id="end_date" value="{{ isset($errors) ? old('end_date') : '' }}" class="form-control" onchange="check_end_date()">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -237,8 +238,8 @@
                                                         <label for="status"></label>
                                                         <select name="status" id="status" class="form-control">
                                                             <option value="">Select Status</option>
-                                                            <option value="1">Active</option>
-                                                            <option value="0">Inactive</option>
+                                                            <option value="1" {{ isset($errors) && old('status') == '1' ? 'selected' : '' }}>Active</option>
+                                                            <option value="0" {{ isset($errors) && old('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -627,7 +628,7 @@
             }
         });
 
-        function check_variration_value(element) {
+        function check_variation_value(element) {
             var variation_value =  $('#discount_variation').val();
             if (variation_value === 'percentage') {
                 var value = element.val();
@@ -777,6 +778,5 @@
         });
         
     </script>
-    
 
     @stop
