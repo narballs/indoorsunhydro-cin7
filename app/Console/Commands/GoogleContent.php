@@ -62,6 +62,7 @@ class GoogleContent extends Command
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // Insert products to Google Merchant Center
+            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $result = $this->insertProducts($client, $token);
 
             if ($result) {
