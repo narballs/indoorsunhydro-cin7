@@ -312,31 +312,37 @@ class GoogleContent extends Command
         $pageToken = null;
         do {
             try {
-                $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 1, 'pageToken' => $pageToken]);
-                foreach ($products->getResources() as $product) {
-                    dd($product['status']);
-                    $productId = $product['id'];
-                    $status = $product['status']; // Assuming 'status' field represents the product status
-                    $productStatusList[$productId] = $status;
+                $productStatuses = $service->productstatuses->listProductstatuses(config('services.google.merchant_center_id'), [
+                    'destinations' => 'Shopping',
+                    'maxResults' => 3,
+                    'pageToken' => $pageToken
+                ]);
+
+                foreach ($productStatuses->getResources() as $productStatus) {
+                    dd($productStatus);
+                    // $productId = $productStatus->getProductId();
+                    // $status = $productStatus->getProductStatus();
+                    // $productStatusList[$productId] = $status;
                 }
-                $pageToken = $products->getNextPageToken();
+
+                $pageToken = $productStatuses->getNextPageToken();
             } catch (\Google\Service\Exception $e) {
                 report($e);
-                return $this->error('Failed to retrieve products from Google Merchant Center.');
+                return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
             }
         } while (!empty($pageToken));
 
         // Remove products with disapproved status
-        foreach ($productStatusList as $productId => $status) {
-            if ($status === 'disapproved') {
-                try {
-                    $service->products->delete(config('services.google.merchant_center_id'), $productId);
-                    $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-                } catch (\Google\Service\Exception $e) {
-                    report($e);
-                    $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
-                }
-            }
-        }
+        // foreach ($productStatusList as $productId => $status) {
+        //     if ($status === 'disapproved') {
+        //         try {
+        //             $service->products->delete(config('services.google.merchant_center_id'), $productId);
+        //             $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+        //         } catch (\Google\Service\Exception $e) {
+        //             report($e);
+        //             $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+        //         }
+        //     }
+        // }
     }
 }
