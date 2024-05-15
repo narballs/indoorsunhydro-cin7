@@ -62,10 +62,6 @@ class GoogleContent extends Command
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // Insert products to Google Merchant Center
-            
-            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
-            $responseDeleted = $this->delete_inactive_products($client, $token);
-            if($responseRemoved!=true && $responseDeleted!=true)
             $result = $this->insertProducts($client, $token);
 
             if ($result) {
@@ -73,6 +69,9 @@ class GoogleContent extends Command
             } else {
                 $this->error('Failed to insert products.');
             }
+
+            $responseDeleted = $this->delete_inactive_products($client, $token);
+            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
         } else {
             $this->error('Failed to retrieve access token.');
         }
