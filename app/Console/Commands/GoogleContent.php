@@ -160,6 +160,7 @@ class GoogleContent extends Command
         do {
             try {
                 $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 250, 'pageToken' => $pageToken]);
+                dd($products->getResources());
                 foreach ($products->getResources() as $product) {
                     $productId = $product['id'];
                     $mpn = $product['mpn'];
@@ -301,5 +302,36 @@ class GoogleContent extends Command
             $pageToken = $productsGMC->getNextPageToken();
         } while (!empty($pageToken));
     }
+
+    // private function removeProductsFromGMC($client, $productsToDelete, $token)
+    // {
+    //     $client->setAccessToken($token['access_token']);
+    //     $service = new ShoppingContent($client);
+
+    //     foreach ($productsToDelete as $productId) {
+    //         try {
+    //             $service->products->delete(config('services.google.merchant_center_id'), $productId);
+    //             $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+    //         } catch (\Google\Service\Exception $e) {
+    //             report($e);
+    //             $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+    //         }
+    //     }
+    // }
+
+    // private function findNotApprovedProducts($productStatusList)
+    // {
+    //     $notApprovedProducts = [];
+
+    //     foreach ($productStatusList as $product) {
+    //         // Add logic to identify products that are not approved
+    //         // For example: Check your database or other sources to determine if a product is not approved
+    //         if (!/* Check if product is approved */) {
+    //             $notApprovedProducts[] = $product['id'];
+    //         }
+    //     }
+
+    //     return $notApprovedProducts;
+    // }
     
 }
