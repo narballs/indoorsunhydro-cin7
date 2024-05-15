@@ -135,7 +135,7 @@ class GoogleContent extends Command
                             'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                             'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                             'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                            'price' => !empty($option->price[0]->$price_column) ? $option->price[0]->$price_column : 0,
+                            'price' => !empty($option->price[0]->$price_column) && $option->price[0]->$price_column > 0  ? $option->price[0]->$price_column : 0,
                             'condition' => 'new',
                             'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
                             'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
