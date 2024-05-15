@@ -62,6 +62,7 @@ class GoogleContent extends Command
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // Insert products to Google Merchant Center
+            $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
 
@@ -160,7 +161,6 @@ class GoogleContent extends Command
         do {
             try {
                 $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 250, 'pageToken' => $pageToken]);
-                dd($products->getResources());
                 foreach ($products->getResources() as $product) {
                     $productId = $product['id'];
                     $mpn = $product['mpn'];
@@ -302,36 +302,40 @@ class GoogleContent extends Command
             $pageToken = $productsGMC->getNextPageToken();
         } while (!empty($pageToken));
     }
+    private function removeDisapprovedProducts($client, $token)
+    {
+        $client->setAccessToken($token['access_token']); // Use the stored access token
 
-    // private function removeProductsFromGMC($client, $productsToDelete, $token)
-    // {
-    //     $client->setAccessToken($token['access_token']);
-    //     $service = new ShoppingContent($client);
+        $service = new ShoppingContent($client);
 
-    //     foreach ($productsToDelete as $productId) {
-    //         try {
-    //             $service->products->delete(config('services.google.merchant_center_id'), $productId);
-    //             $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-    //         } catch (\Google\Service\Exception $e) {
-    //             report($e);
-    //             $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
-    //         }
-    //     }
-    // }
+        $productStatusList = [];
+        $pageToken = null;
+        do {
+            try {
+                $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 250, 'pageToken' => $pageToken]);
+                foreach ($products->getResources() as $product) {
+                    $productId = $product['id'];
+                    $status = $product['product']['status']; // Assuming 'status' field represents the product status
+                    $productStatusList[$productId] = $status;
+                }
+                $pageToken = $products->getNextPageToken();
+            } catch (\Google\Service\Exception $e) {
+                report($e);
+                return $this->error('Failed to retrieve products from Google Merchant Center.');
+            }
+        } while (!empty($pageToken));
 
-    // private function findNotApprovedProducts($productStatusList)
-    // {
-    //     $notApprovedProducts = [];
-
-    //     foreach ($productStatusList as $product) {
-    //         // Add logic to identify products that are not approved
-    //         // For example: Check your database or other sources to determine if a product is not approved
-    //         if (!/* Check if product is approved */) {
-    //             $notApprovedProducts[] = $product['id'];
-    //         }
-    //     }
-
-    //     return $notApprovedProducts;
-    // }
-    
+        // Remove products with disapproved status
+        foreach ($productStatusList as $productId => $status) {
+            if ($status === 'disapproved') {
+                try {
+                    $service->products->delete(config('services.google.merchant_center_id'), $productId);
+                    $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+                } catch (\Google\Service\Exception $e) {
+                    report($e);
+                    $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+                }
+            }
+        }
+    }
 }
