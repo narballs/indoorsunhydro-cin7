@@ -319,7 +319,7 @@ class GoogleContent extends Command
                 ]);
 
                 foreach ($productStatuses->getResources() as $productStatus) {
-                    dd($productStatus);
+                    dd($productStatus->getItemLevelIssues());
                     // $productId = $productStatus->getProductId();
                     // $status = $productStatus->getProductStatus();
                     // $productStatusList[$productId] = $status;
