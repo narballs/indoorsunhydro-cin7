@@ -313,16 +313,26 @@ class GoogleContent extends Command
         do {
             try {
                 $productStatuses = $service->productstatuses->listProductstatuses(config('services.google.merchant_center_id'), [
-                    'destinations' => 'Shopping',
-                    'maxResults' => 3,
+                    'maxResults' => 250,
                     'pageToken' => $pageToken
                 ]);
 
                 foreach ($productStatuses->getResources() as $productStatus) {
-                    dd($productStatus->getItemLevelIssues());
-                    // $productId = $productStatus->getProductId();
-                    // $status = $productStatus->getProductStatus();
-                    // $productStatusList[$productId] = $status;
+                    if (!empty($productStatus && $productStatus->getItemLevelIssues())) {
+                        foreach ($productStatus->getItemLevelIssues() as $issue) {
+                            if ($issue->getServability() === 'disapproved') {
+                                $productId = $productStatus->getProductId();
+                                $productStatusList[] = $productId;
+                                try {
+                                    $service->products->delete(config('services.google.merchant_center_id'), $productId);
+                                    $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+                                } catch (\Google\Service\Exception $e) {
+                                    report($e);
+                                    $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+                                }
+                            }
+                        }
+                    }
                 }
 
                 $pageToken = $productStatuses->getNextPageToken();
@@ -331,18 +341,6 @@ class GoogleContent extends Command
                 return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
             }
         } while (!empty($pageToken));
-
-        // Remove products with disapproved status
-        // foreach ($productStatusList as $productId => $status) {
-        //     if ($status === 'disapproved') {
-        //         try {
-        //             $service->products->delete(config('services.google.merchant_center_id'), $productId);
-        //             $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-        //         } catch (\Google\Service\Exception $e) {
-        //             report($e);
-        //             $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
-        //         }
-        //     }
-        // }
     }
+
 }
