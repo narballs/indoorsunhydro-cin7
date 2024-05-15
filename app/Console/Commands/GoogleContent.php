@@ -313,8 +313,8 @@ class GoogleContent extends Command
         do {
             try {
                 $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 1, 'pageToken' => $pageToken]);
-                dd($products->getResources()->getStatus());
                 foreach ($products->getResources() as $product) {
+                    dd($product['status']);
                     $productId = $product['id'];
                     $status = $product['status']; // Assuming 'status' field represents the product status
                     $productStatusList[$productId] = $status;
