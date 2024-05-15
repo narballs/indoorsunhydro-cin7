@@ -57,6 +57,7 @@
     {{-- owl carasoul --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="{{asset('theme/css/bootstrap-tagsinput.css')}}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
