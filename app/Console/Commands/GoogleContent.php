@@ -355,37 +355,35 @@ class GoogleContent extends Command
 
         $service = new ShoppingContent($client);
 
-        $productStatusList = [];
+        $productPriceList = [];
         $pageToken = null;
         do {
             try {
-                $productStatuses = $service->products->listProducts(config('services.google.merchant_center_id'), [
+                $productPrices = $service->products->listProducts(config('services.google.merchant_center_id'), [
                     'maxResults' => 250,
                     'pageToken' => $pageToken
                 ]);
 
-                foreach ($productStatuses->getResources() as $productPrice) {
+                foreach ($productPrices->getResources() as $productPrice) {
                     if (!empty($productPrice) && (!empty($productPrice->getPrice()))) {
-                        dd($productPrice->getPrice()->getValue());
-                        foreach ($productPrice->getPrice() as $getPrice) {
-                            dd($getPrice);
-                            // if ($issue->getServability() === 'disapproved') {
-                            //     $productId = $productStatus->getProductId();
-                            //     $productStatusList[] = $productId;
-                            //     try {
-                            //         $service->products->delete(config('services.google.merchant_center_id'), $productId);
-                            //         $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-                            //     } catch (\Google\Service\Exception $e) {
-                            //         report($e);
-                            //         // $this->error('disapproved'.' '. $e);
-                            //         $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
-                            //     }
-                            // }
+                        $price_value = $productPrice->getPrice()->getValue();
+                        if (floatval($price_value) == 0) {
+                            $this->info('Product with ID ' . $productPrice['id'] . ' has a price of 0. Deleting from Google Merchant Center.');
+                            $productId = $productPrice['id'];
+                            $productPriceList[] = $productId;
+                            try {
+                                $service->products->delete(config('services.google.merchant_center_id'), $productId);
+                                $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+                            } catch (\Google\Service\Exception $e) {
+                                report($e);
+                                // $this->error('disapproved'.' '. $e);
+                                $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+                            }
                         }
                     }
                 }
 
-                $pageToken = $productStatuses->getNextPageToken();
+                $pageToken = $productPrices->getNextPageToken();
             } catch (\Google\Service\Exception $e) {
                 report($e);
                 return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
