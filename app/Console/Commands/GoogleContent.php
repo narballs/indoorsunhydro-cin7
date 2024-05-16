@@ -105,6 +105,7 @@ class GoogleContent extends Command
         ->where('optionWeight', '>', 0)
         ->pluck('option_id')->toArray();
         $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
+        ->where($price_column , '!=', null)
         ->where($price_column , '>' , 0)
         ->pluck('option_id')
         ->toArray();
