@@ -366,6 +366,7 @@ class GoogleContent extends Command
 
                 foreach ($productStatuses->getResources() as $productPrice) {
                     if (!empty($productPrice) && (!empty($productPrice->getPrice()))) {
+                        dd($productPrice->getPrice());
                         foreach ($productPrice->getPrice() as $getPrice) {
                             dd($getPrice);
                             // if ($issue->getServability() === 'disapproved') {
