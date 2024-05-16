@@ -323,7 +323,7 @@ class GoogleContent extends Command
                 ]);
 
                 foreach ($productStatuses->getResources() as $productStatus) {
-                    if (!empty($productStatus && $productStatus->getItemLevelIssues())) {
+                    if (!empty($productStatus) && (!empty($productStatus->getItemLevelIssues()))) {
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
                             if ($issue->getServability() === 'disapproved') {
                                 $productId = $productStatus->getProductId();
@@ -365,24 +365,23 @@ class GoogleContent extends Command
                 ]);
 
                 foreach ($productStatuses->getResources() as $productPrice) {
-
-                    dd($productPrice);
-                    // if (!empty($productStatus && $productStatus->getItemLevelIssues())) {
-                    //     foreach ($productStatus->getItemLevelIssues() as $issue) {
-                    //         if ($issue->getServability() === 'disapproved') {
-                    //             $productId = $productStatus->getProductId();
-                    //             $productStatusList[] = $productId;
-                    //             try {
-                    //                 $service->products->delete(config('services.google.merchant_center_id'), $productId);
-                    //                 $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-                    //             } catch (\Google\Service\Exception $e) {
-                    //                 report($e);
-                    //                 // $this->error('disapproved'.' '. $e);
-                    //                 $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    if (!empty($productPrice) && (!empty($productPrice->getPrice()))) {
+                        foreach ($productPrice->getPrice() as $getPrice) {
+                            dd($getPrice);
+                            // if ($issue->getServability() === 'disapproved') {
+                            //     $productId = $productStatus->getProductId();
+                            //     $productStatusList[] = $productId;
+                            //     try {
+                            //         $service->products->delete(config('services.google.merchant_center_id'), $productId);
+                            //         $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+                            //     } catch (\Google\Service\Exception $e) {
+                            //         report($e);
+                            //         // $this->error('disapproved'.' '. $e);
+                            //         $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+                            //     }
+                            // }
+                        }
+                    }
                 }
 
                 $pageToken = $productStatuses->getNextPageToken();
