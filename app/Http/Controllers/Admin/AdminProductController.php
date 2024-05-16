@@ -299,6 +299,7 @@ class AdminProductController extends Controller
                 $csv_data[] = [
                     'Product Name',
                     'Product Code',
+                    'Product Barcode',
                     'Product Status',
                     'Product Retail Price',
                     'Product Weight',
@@ -313,6 +314,7 @@ class AdminProductController extends Controller
                     $csv_data[] = [
                         $product->name,
                         $product->code,
+                        $product->barcode,
                         $product->status,
                         $retail_price,
                         isset($product->options[0]) ? $product->options[0]->optionWeight : '',
