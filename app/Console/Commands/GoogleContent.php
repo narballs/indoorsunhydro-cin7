@@ -296,8 +296,8 @@ class GoogleContent extends Command
                         $this->info('Product with MPN ' . $mpnGMC . ' deleted from Google Merchant Center.');
                     } catch (\Google\Service\Exception $e) {
                         report($e);
-                        $this->error('inactive'.' '. $e);
-                        // $this->error('Failed to delete product with MPN ' . $mpnGMC . ' from Google Merchant Center.');
+                        // $this->error('inactive'.' '. $e);
+                        $this->error('Failed to delete product with MPN ' . $mpnGMC . ' from Google Merchant Center.');
                     }
                 }
             }
@@ -332,8 +332,8 @@ class GoogleContent extends Command
                                     $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
                                 } catch (\Google\Service\Exception $e) {
                                     report($e);
-                                    $this->error('disapproved'.' '. $e);
-                                    // $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+                                    // $this->error('disapproved'.' '. $e);
+                                    $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
                                 }
                             }
                         }
