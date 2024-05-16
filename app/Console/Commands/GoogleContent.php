@@ -62,6 +62,7 @@ class GoogleContent extends Command
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // Insert products to Google Merchant Center
+            $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
             $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $result = $this->insertProducts($client, $token);
 
@@ -347,5 +348,50 @@ class GoogleContent extends Command
             }
         } while (!empty($pageToken));
     }
+
+    private function removeZeroPriceProducts($client, $token)
+    {
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+
+        $service = new ShoppingContent($client);
+
+        $productStatusList = [];
+        $pageToken = null;
+        do {
+            try {
+                $productStatuses = $service->products->listProducts(config('services.google.merchant_center_id'), [
+                    'maxResults' => 250,
+                    'pageToken' => $pageToken
+                ]);
+
+                foreach ($productStatuses->getResources() as $productPrice) {
+
+                    dd($productPrice);
+                    // if (!empty($productStatus && $productStatus->getItemLevelIssues())) {
+                    //     foreach ($productStatus->getItemLevelIssues() as $issue) {
+                    //         if ($issue->getServability() === 'disapproved') {
+                    //             $productId = $productStatus->getProductId();
+                    //             $productStatusList[] = $productId;
+                    //             try {
+                    //                 $service->products->delete(config('services.google.merchant_center_id'), $productId);
+                    //                 $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
+                    //             } catch (\Google\Service\Exception $e) {
+                    //                 report($e);
+                    //                 // $this->error('disapproved'.' '. $e);
+                    //                 $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                }
+
+                $pageToken = $productStatuses->getNextPageToken();
+            } catch (\Google\Service\Exception $e) {
+                report($e);
+                return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
+            }
+        } while (!empty($pageToken));
+    }
+
 
 }
