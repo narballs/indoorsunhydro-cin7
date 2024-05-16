@@ -12,6 +12,8 @@
     $free_shipping_value  = App\Models\AdminSetting::where('option_name', 'free_shipping_value')->first();
     $announcement_banner = App\Models\AdminSetting::where('option_name' , 'enable_announcement_banner')->first();
     $announcement_banner_text = App\Models\AdminSetting::where('option_name' , 'announcement_banner_text')->first();
+    $checkout_issue_banner = App\Models\AdminSetting::where('option_name' , 'checkout_issue_banner')->first();
+    $checkout_issue_banner_text = App\Models\AdminSetting::where('option_name' , 'checkout_issue_banner_text')->first();
     $shipment_for_selected_category  = false;
     
     if (!empty($user_id) && !empty($contact_id)) {
@@ -76,6 +78,13 @@
     }
 
 @endphp
+@if (!empty($checkout_issue_banner) && strtolower($checkout_issue_banner->option_value) == 'yes')
+<div class="row bg-dark">
+    <h6 class="text-white text-center top_header_banner mb-0">
+        {{!empty($checkout_issue_banner_text->option_value) ? $checkout_issue_banner_text->option_value : ''}}
+    </h6>
+</div>
+@endif
 @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes' && Floatval($cart_total) > 0))
     <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
         <p class="text-center promotional_banner_text mb-0">

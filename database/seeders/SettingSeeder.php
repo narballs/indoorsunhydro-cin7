@@ -302,6 +302,16 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'checkout_issue_banner', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'checkout_issue_banner_text', 
+                'type' => 'text',
+                'option_value' => 'We have an issue with checkout, our team is investigating it.  The issue will be resolved in 48hrs or less.',
+            ],
 
             
         ];
