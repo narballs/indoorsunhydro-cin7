@@ -368,6 +368,7 @@ class GoogleContent extends Command
                     if (!empty($productPrice) && (!empty($productPrice->getPrice()))) {
                         $price_value = $productPrice->getPrice()->getValue();
                         if (floatval($price_value) == 0) {
+                            $this->info('Product with ID ' . $productPrice['id'] . ' has a price of 0. Deleting from Google Merchant Center.');
                             $productId = $productPrice['id'];
                             $productPriceList[] = $productId;
                             try {
