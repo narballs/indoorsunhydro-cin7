@@ -2954,7 +2954,7 @@ $cart_price = 0;
                         $('#incl_tax').val(total_including_shipping.toFixed(2));
                         $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                         let ship_cost = $(element).attr('shipping_cost_with_surcharge');
-                        $('#original_shipment_price').val(ship_cost).toFixed(2);
+                        $('#original_shipment_price').val(ship_cost.toFixed(2));
                     }
                 }
 
