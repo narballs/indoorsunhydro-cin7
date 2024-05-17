@@ -72,7 +72,7 @@
                         <a href="{{ url('contact-us') }}" class="text-white">Customer Support</a>
                     </p>
                     <p class="card-text  sm-4-footer ms-5 mb-1">
-                        @php
+                        {{-- @php
                             $enable_wholesale_registration = App\Models\AdminSetting::where('option_name', 'enable_wholesale_registration')->first();
                         @endphp
                         @if (auth()->user())
@@ -92,7 +92,8 @@
                             @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
                                 <a href="{{route('create_wholesale_account')}}" class="text-white" >Apply for Wholesale Account</a>
                             @endif
-                        @endif
+                        @endif --}}
+                        <a href="{{url('contact-us')}}" class="text-white" >Apply for Wholesale Account</a>
                     </p>
                     {{-- <p class="card-text  sm-4-footer ms-5">
                         
