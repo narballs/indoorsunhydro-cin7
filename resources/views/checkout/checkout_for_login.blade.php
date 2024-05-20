@@ -946,6 +946,9 @@ $cart_price = 0;
                             <div class="col-md-12">
                                 <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
                                 <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()">Place Order</button>
+                                <p>
+                                    By placing this order you accept the <a href="{{ url('page/terms') }}" target="_blank">Terms and Conditions</a>, including the <a href="{{ url('page/returns') }}" target="_blank">Return Policy</a>.
+                                </p>
                             </div>
                         </div>
                     </div>
