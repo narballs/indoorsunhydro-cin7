@@ -1202,13 +1202,7 @@ class CheckoutController extends Controller
                     ];
                     $access = true;
                     if ($registration_status == true) {
-                        if ($is_guest_user == 1) {
-                            $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                            $data['email'] =  $created_contact->email;
-                            $data['content'] = $content;
-                            $data['subject'] = 'Your account registration request';
-                            MailHelper::sendMailNotification('emails.user_registration_notification', $data);
-                        } else {
+                        if ($is_guest_user == 0) {
                             if (!empty($users_with_role_admin)) {
                                 foreach ($users_with_role_admin as $role_admin) {
                                     $subject = 'New Register User';
