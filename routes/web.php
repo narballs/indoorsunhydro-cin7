@@ -50,6 +50,9 @@ use App\Models\User;
 |
 */
 
+Route::get('/500', function () {
+    return view('errors.500');
+});
 Route::get('/export', [ExportController::class, 'export'])->name('export');
 Route::get('/list_products', [GoogleContentController::class, 'list_products'])->name('list_products');
 Route::get('/insertProductsbatch', [GoogleContentController::class, 'insertProductsbatch'])->name('insertProductsbatch');
