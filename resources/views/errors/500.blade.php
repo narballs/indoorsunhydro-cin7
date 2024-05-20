@@ -36,10 +36,16 @@
 </head>
 <body>
     <div class="container full-height">
-        <div class="">
+        <div class="row justify-content-center">
+            <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); ?>
+            <div class="col-md-4">
+                <img src="{{ url('theme/img/' . $email_logo_name) }}" alt="" class="img-fluid">
+            </div>
+        </div>
+        <div class="row mt-5">
             <div class="alert alert-danger" role="alert">
                 <strong class="code text-dark">500 Internal Server Error</strong>
-                <p class="message text-dark">Oops! Something went wrong on our end. Our team has been notified and we're working to fix the issue as soon as possible. In the meantime, you can try the following options:</p>
+                <p class="message text-dark">Oops! Something went wrong on our end.  We're working to fix the issue as soon as possible. In the meantime, you can try the following options:</p>
                 <ul>
                     <li><strong>Logout:</strong> If you'd like to logout, click the button below.</li>
                     <li><strong>Return Home:</strong> Alternatively, you can return to the home page.</li>

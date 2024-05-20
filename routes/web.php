@@ -49,7 +49,6 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/export', [ExportController::class, 'export'])->name('export');
 Route::get('/list_products', [GoogleContentController::class, 'list_products'])->name('list_products');
 Route::get('/insertProductsbatch', [GoogleContentController::class, 'insertProductsbatch'])->name('insertProductsbatch');
