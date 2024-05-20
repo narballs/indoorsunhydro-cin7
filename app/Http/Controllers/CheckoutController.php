@@ -906,11 +906,13 @@ class CheckoutController extends Controller
                 // 'password' => 'required'
             ]);
         }   
-
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
+        else {
+            $request->validate([
+                'email' => 'required',
+                'password' => 'required'
+            ]);
+        }
+        
 
         if (!empty($request->is_guest) && $request->is_guest == 1) {
             $password = bcrypt('123456');
