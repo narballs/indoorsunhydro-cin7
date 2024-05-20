@@ -1015,9 +1015,25 @@ class CheckoutController extends Controller
                 return response()->json(['status' => 'error', 'message' => $message, 'access' => $access]);
             } else {
                 if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
+                    if ( $is_guest_user == 1) {
+                        $request->validate([
+                            'email' => 'required|email',
+                            // 'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                            'postal_address1' => 'required',
+                            'postal_state' => 'required',
+                            'postal_zip_code' => 'required',
+                        ]);
+                    }
                     $request->validate([
                         'email' => 'required|email',
-                        'password' => $is_guest_user == 1 ? '' : 'required',
+                        'password' =>'required',
                         'first_name' => 'required',
                         'company' => 'required',
                         'address' => 'required',
@@ -1030,9 +1046,22 @@ class CheckoutController extends Controller
                         'postal_zip_code' => 'required',
                     ]);
                 } else {
+                    if ( $is_guest_user == 1) {
+                        $request->validate([
+                            'email' => 'required|email',
+                            // 'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                        ]);
+                    }
                     $request->validate([
                         'email' => 'required|email',
-                        'password' => $is_guest_user == 1 ? '' : 'required',
+                        'password' =>'required',
                         'first_name' => 'required',
                         'company' => 'required',
                         'address' => 'required',
