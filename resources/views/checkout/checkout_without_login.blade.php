@@ -928,7 +928,7 @@ $cart_price = 0;
     });
 
     function not_register_user () {
-        if ($('#no_registration').is(':checked')) {
+        if ($('.is_guest').is(':checked')) {
             $('.password_group_input').addClass('d-none');
             $('.password_label').addClass('d-none');
         } else {
