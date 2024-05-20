@@ -900,11 +900,19 @@ class CheckoutController extends Controller
 
     public function authenticate_user(Request $request) {
 
-        
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
+        $is_guest_user = !empty($request->is_guest) && $request->is_guest == 1 ? 1 : 0;  
+
+        if ($is_guest_user == 1) {
+            $request->validate([
+                'email' => 'required',
+                // 'password' => 'required'
+            ]);
+        } else {
+            $request->validate([
+                'email' => 'required',
+                'password' => 'required'
+            ]);
+        }
 
         $credentials = $request->only('email', 'password');
         
@@ -920,7 +928,7 @@ class CheckoutController extends Controller
         $auto_approved = false;
         $address_validator = true;
         $content = null;
-        $is_guest_user = !empty($request->is_guest) && $request->is_guest == 1 ? 1 : 0;  
+       
         if (auth()->attempt($credentials)) {
             if (auth()->user()->allow_access == 0) {
                 Session::flush();
@@ -1031,22 +1039,25 @@ class CheckoutController extends Controller
                             'postal_zip_code' => 'required',
                         ]);
                     }
-                    $request->validate([
-                        'email' => 'required|email',
-                        'password' =>'required',
-                        'first_name' => 'required',
-                        'company' => 'required',
-                        'address' => 'required',
-                        // 'city' => 'required',
-                        'state' => 'required',
-                        'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                        'phone' => 'required',
-                        'postal_address1' => 'required',
-                        'postal_state' => 'required',
-                        'postal_zip_code' => 'required',
-                    ]);
+                    else {
+                        $request->validate([
+                            'email' => 'required|email',
+                            'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                            'postal_address1' => 'required',
+                            'postal_state' => 'required',
+                            'postal_zip_code' => 'required',
+                        ]);
+                    }
+                   
                 } else {
-                    if ( $is_guest_user == 1) {
+                    if ($is_guest_user == 1) {
                         $request->validate([
                             'email' => 'required|email',
                             // 'password' =>'required',
@@ -1059,17 +1070,19 @@ class CheckoutController extends Controller
                             'phone' => 'required',
                         ]);
                     }
-                    $request->validate([
-                        'email' => 'required|email',
-                        'password' =>'required',
-                        'first_name' => 'required',
-                        'company' => 'required',
-                        'address' => 'required',
-                        // 'city' => 'required',
-                        'state' => 'required',
-                        'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                        'phone' => 'required',
-                    ]);
+                    else {
+                        $request->validate([
+                            'email' => 'required|email',
+                            'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                        ]);
+                    }
                 }
 
                 
@@ -1124,7 +1137,7 @@ class CheckoutController extends Controller
                         'email' => strtolower($request->get('email')),
                         "first_name" => $first_name,
                         "last_name" => $last_name,
-                        "password" => bcrypt($request->get('password'))
+                        "password" => !empty($is_guest_user)  && $is_guest_user == 1 ? bcrypt('123456') : bcrypt($request->get('password'))
                     ]);
                     $user_id = $user->id;
                     

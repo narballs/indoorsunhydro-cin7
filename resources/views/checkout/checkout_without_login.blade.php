@@ -816,7 +816,7 @@ $cart_price = 0;
                             if (response.registration_status == true) {
                                 if (response.auto_approved == true) {
                                     $('.update_checkout_loader').addClass('d-none');
-                                    $('.error_div').text(response.message);
+                                    $('.error_div').text('Thankyou for entering your details. Now you can place order');
                                     window.location.href = '/checkout';
                                 } else {
                                     $('.update_checkout_loader').addClass('d-none');
