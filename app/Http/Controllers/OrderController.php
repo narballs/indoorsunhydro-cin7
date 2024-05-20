@@ -762,14 +762,6 @@ class OrderController extends Controller
                     $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                         ->where('order_id', $order_id)
                         ->get();
-                    // $user_default = User::where('id', Auth::id())->first();
-                    // $all_ids = UserHelper::getAllMemberIds($user_default);
-                    // $check_default_user = Contact::whereIn('id', $all_ids)->where('is_default' , 1)->first();
-                    // if (!empty($check_default_user)) {
-                    //     $contact = Contact::where('id', $check_default_user->id)->first();
-                    // } else {
-                    //     $contact = Contact::where('user_id', auth()->id())->first();
-                    // }
                     $user = User::where('id', $currentOrder->user_id)->first();
                     $all_ids = UserHelper::getAllMemberIds($user);
                     $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
@@ -780,20 +772,6 @@ class OrderController extends Controller
                     ->with('apiOrderItem.product')
                     ->where('id' , $order_id)
                     ->first();
-                    // $go_to_shipstation = false;
-                    // if (!empty($order_contact) && !empty($order_contact->is_parent == 1) && !empty($order_contact->address1) && !empty($order_contact->postalAddress1)) {
-                    //     $go_to_shipstation = true;
-                    // }
-                    // $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
-                    // if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && ($go_to_shipstation == true)) {
-                    //     $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                    //     if ($shiping_order['statusCode'] == 200) {
-                    //         $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                    //             'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                    //         ]);
-                    //     }
-                    // }
-                    
                     $user_email = Auth::user();
                     $count = $order_items->count();
                     $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
