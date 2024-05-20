@@ -360,8 +360,18 @@ $cart_price = 0;
                                 </div>
                             </div>
                             <div class="col-md-12 password_div d-none">
-                                <label for="" class="update_checkout_labels">Password</label>
-                                <div class="form-group">
+                                <div class="row justify-content-between">
+                                    <div class="col-xl-2 col-md-4 col-lg-4 col-12">
+                                        <label for="" class="update_checkout_labels password_label">Password</label>   
+                                    </div>
+                                    <div class="col-xl-10  col-md-8 col-lg-8 col-12">  
+                                        <span class="d-flex align-items-center justify-content-start justify-content-md-end">
+                                            <input type="checkbox" name="is_guest"  id="is_guest" class="is_guest" onclick="not_register_user()">
+                                            <label for="" class="update_checkout_labels mb-0 ml-2">I do not want to register for an account</label>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group password_group_input">
                                     <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
                                     <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
@@ -753,6 +763,7 @@ $cart_price = 0;
             var postal_state= $('.postalState').val();
             var postal_city= $('.postalCity').val();
             var postal_zip_code= $('.postalpostCode').val();
+            var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
             var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
             $('.address_validator').html('');
             if (email != '' && password != '') {
@@ -779,6 +790,7 @@ $cart_price = 0;
                         postal_state: postal_state,
                         postal_city: postal_city,
                         postal_zip_code: postal_zip_code,
+                        is_guest: is_guest,
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
@@ -914,5 +926,15 @@ $cart_price = 0;
             }
         });
     });
+
+    function not_register_user () {
+        if ($('#no_registration').is(':checked')) {
+            $('.password_group_input').addClass('d-none');
+            $('.password_label').addClass('d-none');
+        } else {
+            $('.password_group_input').removeClass('d-none');
+            $('.password_label').removeClass('d-none');
+        }
+    }
     
 </script>

@@ -899,11 +899,25 @@ class CheckoutController extends Controller
     }
 
     public function authenticate_user(Request $request) {
+
+        if (!empty($request->is_guest) && $request->is_guest == 1) {
+            $request->validate([
+                'email' => 'required',
+                // 'password' => 'required'
+            ]);
+        }   
+
         $request->validate([
             'email' => 'required',
             'password' => 'required'
         ]);
-        $credentials = $request->only('email', 'password');
+
+        if (!empty($request->is_guest) && $request->is_guest == 1) {
+            $password = bcrypt('123456');
+            $credentials = $request->only('email' , $password);
+        } else {
+            $credentials = $request->only('email', 'password');
+        }
         
         $user = User::where('email', $request->email)->first();
         $main_contact = Contact::where('email', $request->email)->first();
@@ -917,6 +931,7 @@ class CheckoutController extends Controller
         $auto_approved = false;
         $address_validator = true;
         $content = null;
+        $is_guest_user = !empty($request->is_guest) && $request->is_guest == 1 ? 1 : 0;  
         if (auth()->attempt($credentials)) {
             if (auth()->user()->allow_access == 0) {
                 Session::flush();
@@ -1095,6 +1110,7 @@ class CheckoutController extends Controller
                         "password" => bcrypt($request->get('password'))
                     ]);
                     $user_id = $user->id;
+                    
 
                     $contact = new Contact([
                         // 'website' => $request->input('company_website'),
@@ -1103,6 +1119,7 @@ class CheckoutController extends Controller
                         'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                         'priceColumn' => $price_column,
                         'user_id' => $user_id,
+                        'is_guest' => $is_guest_user,
                         'firstName' => $user->first_name,
                         'type' => 'Customer',
                         'lastName' => $user->last_name,
@@ -1197,29 +1214,37 @@ class CheckoutController extends Controller
                     ];
                     $access = true;
                     if ($registration_status == true) {
-                        if (!empty($users_with_role_admin)) {
-                            foreach ($users_with_role_admin as $role_admin) {
-                                $subject = 'New Register User';
-                                $data['email'] = $role_admin->email;
-                                MailHelper::sendMailNotification('emails.admin_notification', $data);
+                        if ($is_guest_user == 1) {
+                            $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['email'] =  $created_contact->email;
+                            $data['content'] = $content;
+                            $data['subject'] = 'Your account registration request';
+                            MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+                        } else {
+                            if (!empty($users_with_role_admin)) {
+                                foreach ($users_with_role_admin as $role_admin) {
+                                    $subject = 'New Register User';
+                                    $data['email'] = $role_admin->email;
+                                    MailHelper::sendMailNotification('emails.admin_notification', $data);
+                                }
                             }
-                        }
-
-                        if (!empty($created_contact)) {
-                            if ($auto_approved == true) {
-                                $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                                $data['contact_email'] = $created_contact->email;
-                                $data['content'] = $content;
-                                $data['subject'] = $content;
-                                MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                            } else {
-                                $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                                $data['email'] =  $created_contact->email;
-                                $data['content'] = $content;
-                                $data['subject'] = 'Your account registration request';
-                                MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+    
+                            if (!empty($created_contact)) {
+                                if ($auto_approved == true) {
+                                    $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                                    $data['contact_email'] = $created_contact->email;
+                                    $data['content'] = $content;
+                                    $data['subject'] = $content;
+                                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                                } else {
+                                    $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                                    $data['email'] =  $created_contact->email;
+                                    $data['content'] = $content;
+                                    $data['subject'] = 'Your account registration request';
+                                    MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+                                }
                             }
-                        }
+                        }                       
     
                     }
 
