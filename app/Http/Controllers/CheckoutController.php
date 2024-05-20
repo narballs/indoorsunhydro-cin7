@@ -900,26 +900,13 @@ class CheckoutController extends Controller
 
     public function authenticate_user(Request $request) {
 
-        if (!empty($request->is_guest) && $request->is_guest == 1) {
-            $request->validate([
-                'email' => 'required',
-                // 'password' => 'required'
-            ]);
-        }   
-        else {
-            $request->validate([
-                'email' => 'required',
-                'password' => 'required'
-            ]);
-        }
         
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required'
+        ]);
 
-        if (!empty($request->is_guest) && $request->is_guest == 1) {
-            $password = bcrypt('123456');
-            $credentials = $request->only('email' , $password);
-        } else {
-            $credentials = $request->only('email', 'password');
-        }
+        $credentials = $request->only('email', 'password');
         
         $user = User::where('email', $request->email)->first();
         $main_contact = Contact::where('email', $request->email)->first();
@@ -1027,11 +1014,10 @@ class CheckoutController extends Controller
                 $message = 'Invalid credentials';
                 return response()->json(['status' => 'error', 'message' => $message, 'access' => $access]);
             } else {
-                
                 if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
                     $request->validate([
                         'email' => 'required|email',
-                        'password' => 'required',
+                        'password' => $is_guest_user == 1 ? '' : 'required',
                         'first_name' => 'required',
                         'company' => 'required',
                         'address' => 'required',
@@ -1046,7 +1032,7 @@ class CheckoutController extends Controller
                 } else {
                     $request->validate([
                         'email' => 'required|email',
-                        'password' => 'required',
+                        'password' => $is_guest_user == 1 ? '' : 'required',
                         'first_name' => 'required',
                         'company' => 'required',
                         'address' => 'required',
