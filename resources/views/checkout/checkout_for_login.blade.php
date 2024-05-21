@@ -962,11 +962,17 @@ $cart_price = 0;
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
-                                <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()">Place Order</button>
-                                <p>
-                                    By placing this order you accept the <a href="{{ url('page/terms') }}" target="_blank">Terms and Conditions</a>, including the <a href="{{ url('page/returns') }}" target="_blank">Return Policy</a>.
+                                <p class="mt-2">
+                                    <span>
+                                        <input type="checkbox" name="condition_check" id="condition_check" class="condition_check" onclick="terms_and_condition_check(this)">
+                                        By placing this order you accept the <a href="{{ url('page/terms') }}" target="_blank">Terms and Conditions</a>, including the <a href="{{ url('page/returns') }}" target="_blank">Return Policy</a>.
+                                    </span>
                                 </p>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
+                                <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()" disabled>Place Order</button>
+                                
                             </div>
                         </div>
                     </div>
@@ -1576,6 +1582,13 @@ $cart_price = 0;
                 Valid first name is required.
             </div>
             <script>
+                function terms_and_condition_check(element) {
+                    if ($(element).is(':checked')) {
+                        $('.check_out_pay_now').removeAttr('disabled');
+                    } else {
+                        $('.check_out_pay_now').attr('disabled', 'disabled');
+                    }
+                }
                 function select_payment_method(element) {
                     $('#payment_type_errors').html('');
                     $('.payment-custom-radio').removeClass('selected');
