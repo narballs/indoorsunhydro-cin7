@@ -184,6 +184,23 @@
                                             </tr>
                                             <tr>
                                                 <td class="order_detail_page_prices">
+                                                    ParcelGuard
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+    
+                                                </td>
+                                                <td class="my_account_all_items">
+                                                    ${{!empty($order_detail->parcel_guard) ? number_format($order_detail->parcel_guard , 2) : number_format(0 , 2)}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="order_detail_page_prices">
                                                     Discount
                                                 </td>
                                                 <td class="my_account_all_items">

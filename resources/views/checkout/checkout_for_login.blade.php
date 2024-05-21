@@ -148,7 +148,7 @@
         font-weight: 500;
         line-height: 36px; /* 150% */
     }
-    .checkout_tax_rate_heading , .checkout_discount_rate_heading , .checkout_discount_rate_heading_manuall {
+    .checkout_tax_rate_heading , .checkout_discount_rate_heading , .checkout_discount_rate_heading_manuall , .parcel_guard_heading {
         color: #555;
         font-family: 'Poppins';
         font-size: 17px;
@@ -177,6 +177,14 @@
         line-height: 36px; /* 150% */
     }
     .checkout_shipping_price{
+        color: #111;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 36px; /* 150% */
+    }
+    .parcel_guard_price{
         color: #111;
         font-family: 'Poppins';
         font-size: 16px;
@@ -639,6 +647,7 @@ $cart_price = 0;
                                         <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
                                         <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">
+                                        <input type="hidden" name="old_incl_tax" id="old_incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">
                                         <input type="hidden" name="original_shipment_price" id="original_shipment_price" value="{{ $shipment_price }}">
                                         <input type="hidden" name="shipment_price" id="shipment_price" value="{{ $shipment_price }}">
                                         <input type="hidden" name="discount_amount" class="discount_amount" id="discount_amount" value="{{ number_format($discount_amount , 2, '.', '') }}">
@@ -812,6 +821,15 @@ $cart_price = 0;
                                                 <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                             </div>
                                         @endif
+                                        <div class="row justify-content-center  align-items-center py-2 border-bottom">
+                                            <div class="col-md-9 col-8">
+                                                <input type="checkbox" name="parcel_guard" class="parcel_guard" value="{{ number_format($parcel_guard , 2, '.', '')}}" onclick="add_parcel_guard_value(this)">
+                                                <span class="parcel_guard_heading">ParcelGuard (Optional)</span>
+                                            </div>
+                                            <div class="col-md-3 col-4 text-right">
+                                                <span class="parcel_guard_price" id="parcel_guard_price">${{ number_format($parcel_guard, 2) }}</span>
+                                            </div>
+                                        </div>
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-8"><span class="checkout_total_heading">Total</span></div>
                                             <div class="col-md-3 col-4 text-right"><span class="checkout_total_price" id="checkout_order_total">${{ number_format($total_including_tax, 2) }}</span></div>
@@ -2770,6 +2788,7 @@ $cart_price = 0;
                     $('.discount_id').val(response.discount.id);
                     $('.discount_mode').val(response.discount.mode);
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
+                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
                     var multi_shipping_price = 0;
@@ -2797,7 +2816,7 @@ $cart_price = 0;
                                         shipment_price = $(this).val();
                                         add_discount = productTotal * parseFloat(response.discount_variation_value) / 100
                                         subtotal = productTotal  - add_discount;
-                                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
+                                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax) + parseFloat(parcel_guard);
                                         $('#discount_amount').val(add_discount.toFixed(2));
                                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                         $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
@@ -2809,7 +2828,7 @@ $cart_price = 0;
                                         shipment_price = $(this).val();
                                         add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
                                         subtotal = productTotal  - add_discount;
-                                        total = subtotal + parseFloat(total_tax);
+                                        total = subtotal + parseFloat(total_tax) + parseFloat(parcel_guard);
                                         $('#discount_amount').val(add_discount.toFixed(2));
                                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                         $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
@@ -2822,7 +2841,7 @@ $cart_price = 0;
                             else {
                                 add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
                                 subtotal = productTotal  - add_discount;
-                                total = subtotal + parseFloat(total_tax);
+                                total = subtotal + parseFloat(total_tax) + parseFloat(parcel_guard);
                                 $('#discount_amount').val(add_discount).toFixed(2);
                                 $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                 $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
@@ -2834,7 +2853,7 @@ $cart_price = 0;
                         shipment_price = shipment_price;
                         add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
                         subtotal = productTotal  - add_discount;
-                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
+                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax) + parseFloat(parcel_guard);
                         $('#discount_amount').val(add_discount.toFixed(2));
                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                         $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
@@ -2849,6 +2868,7 @@ $cart_price = 0;
                     $('.coupen_code_name').html(`(<label for="">Coupon Code : `+response.discount.discount_code+`</label>)`);
                     $('.discount_id').val(response.discount.id);
                     $('.discount_mode').val(response.discount.mode);
+                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
                     var multi_shipping_price = 0;
                     var order_weight_greater_then_150 = 0;
@@ -2865,7 +2885,7 @@ $cart_price = 0;
                             } else {
                                 subtotal = productTotal - add_discount;
                             }
-                            total = subtotal + shipment_price  +  parseFloat(total_tax);
+                            total = subtotal + shipment_price  +  parseFloat(total_tax) + parseFloat(parcel_guard);
                             $('#discount_amount').val(add_discount.toFixed(2));
                             $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                             $('.checkout_subtotal_price').html('$' + subtotal.toFixed(2));
@@ -2882,7 +2902,7 @@ $cart_price = 0;
                                         } else {
                                             subtotal = productTotal - add_discount;
                                         }
-                                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
+                                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax) + parseFloat(parcel_guard);
                                         $('#discount_amount').val(add_discount.toFixed(2));
                                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                         $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
@@ -2898,7 +2918,7 @@ $cart_price = 0;
                                         } else {
                                             subtotal = productTotal - add_discount;
                                         }
-                                        total = subtotal + parseFloat(total_tax);
+                                        total = subtotal + parseFloat(total_tax) + parseFloat(parcel_guard);
                                         $('#discount_amount').val(add_discount.toFixed(2));
                                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                         $('.checkout_subtotal_price').html('$' + (subtotal).toFixed(2));
@@ -2915,7 +2935,7 @@ $cart_price = 0;
                                 } else {
                                     subtotal = productTotal - add_discount;
                                 }
-                                total = subtotal + parseFloat(total_tax);
+                                total = subtotal + parseFloat(total_tax) + parseFloat(parcel_guard);
                                 $('#discount_amount').val(add_discount.toFixed(2));
                                 $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                                 $('.checkout_subtotal_price').html('$' + (subtotal.toFixed(2)));
@@ -2931,7 +2951,7 @@ $cart_price = 0;
                         } else {
                             subtotal = productTotal - add_discount;
                         }
-                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax);
+                        total = subtotal + parseFloat(shipment_price) + parseFloat(total_tax) + parseFloat(parcel_guard);
                         $('#discount_amount').val(add_discount.toFixed(2));
                         $('.checkout_discount_rate_manuall').html('$' + add_discount.toFixed(2));
                         $('.checkout_subtotal_price').html('$' + (subtotal.toFixed(2)));
@@ -2946,6 +2966,7 @@ $cart_price = 0;
                     var var_pro_total = p_total.replace(/\$/g, '');
                     var product_total = var_pro_total != null ? parseFloat(var_pro_total) : 0;
                     var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
                     var total_including_shipping = 0;
                     $('.shipping_service_code').each(function() {
                         $(this).removeAttr('checked');
@@ -2953,7 +2974,7 @@ $cart_price = 0;
                     if ($(element).is(':checked')) {
                         $(element).parent().find('.shipping_service_code').removeClass('d-none').attr('checked', 'checked');
                         $(element).parent().find('.shipping_service_code').addClass('d-none');
-                        total_including_shipping =  product_total + tax + parseFloat($(element).val());
+                        total_including_shipping =  product_total + tax + parseFloat($(element).val())  +  parseFloat(parcel_guard);
                         $('#incl_tax').val(total_including_shipping.toFixed(2));
                         $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                         let ship_cost = $(element).attr('shipping_cost_with_surcharge');
@@ -2964,12 +2985,13 @@ $cart_price = 0;
                 function update_total_with_shipping_selected() {
                     var single_shipping_quote = $('#single_shipping_quote');
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
+                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
                     if (admin_area_for_shipping_check === 'true') { 
                         if (single_shipping_quote.attr('checked')) {
                             var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
                             var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
                             var total_including_shipping = 0;
-                            total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val());
+                            total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val()) +  parseFloat(parcel_guard);
                             $('#incl_tax').val(total_including_shipping.toFixed(2));
                             $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                         }
@@ -2980,10 +3002,29 @@ $cart_price = 0;
                     var order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                     var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
                     var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
                     var total_including_shipping = 0;
-                    total_including_shipping =  product_total + tax + order_weight_greater_then_150;
+                    total_including_shipping =  product_total + tax + order_weight_greater_then_150 +  parseFloat(parcel_guard);
                     $('#incl_tax').val(total_including_shipping.toFixed(2));
                     $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                }
+
+                function add_parcel_guard_value (element) {
+                    var parcel_guard = element.value;
+                    var total_value = $('#incl_tax').val();
+                    var total = parseFloat(total_value) + parseFloat(parcel_guard);
+                    if ($(element).is(':checked')) {
+                        var total = parseFloat(total_value) + parseFloat(parcel_guard);
+                        $('#incl_tax').val(total.toFixed(2));
+                        $('#checkout_order_total').html(''); 
+                        $('#checkout_order_total').html('$' + total.toFixed(2));
+                    } else {
+                        var total = parseFloat(total_value) - parseFloat(parcel_guard);
+                        $('#incl_tax').val(total.toFixed(2));
+                        $('#checkout_order_total').html(''); 
+                        $('#checkout_order_total').html('$' + total.toFixed(2));
+                    }
+
                 }
             </script>
             @include('partials.footer')
