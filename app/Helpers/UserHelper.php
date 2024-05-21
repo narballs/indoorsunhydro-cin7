@@ -296,7 +296,7 @@ class UserHelper
                 'value' => $produts_weight,
                 'units' => 'pounds'
             ],
-            'insurance' => [
+            'insuranceOptions' => [
                 'provider' => 'parcelguard', 
                 'insureShipment' => !empty($currentOrder->parcel_guard) ? true : false,
                 'insuredValue' => $currentOrder->parcel_guard
