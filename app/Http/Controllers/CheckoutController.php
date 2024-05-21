@@ -568,6 +568,7 @@ class CheckoutController extends Controller
             } else {
                 $discount_code = null;
             }
+            $parcel_guard = 5.00;
             // dd($allow_discount_for_new_user, $allow_discount_for_specific_customers, $allow_discount_for_all_customers);
             return view('checkout/checkout_for_login', compact(
                 'user_address',
@@ -591,7 +592,8 @@ class CheckoutController extends Controller
                 'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000','shipment_error',
                 'allow_discount_for_new_user',
                 'allow_discount_for_specific_customers',
-                'allow_discount_for_all_customers'
+                'allow_discount_for_all_customers',
+                'parcel_guard'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
