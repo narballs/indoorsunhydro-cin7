@@ -53,6 +53,7 @@ class ApiOrder extends Model
         'tax_rate',
         'shipping_carrier_code',
         'shipping_service_code',
+        'parcel_guard',
     ];
     public function contact()
     {
