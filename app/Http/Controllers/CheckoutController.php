@@ -366,6 +366,23 @@ class CheckoutController extends Controller
             }
             $shipment_price = 0;
             $shipping_free_over_1000 = 0;
+            $calculator = new DistanceCalculator();
+            $allow_pickup = 0;
+            $distance = $calculator->calculate_distance('95826', $user_address->postCode);
+
+            if (empty($distance)) {
+                $allow_pickup = 0;
+            }
+            else {
+                if ($distance == 'Error') {
+                    $allow_pickup = 0;
+                } else {
+                    if ($distance <= 200) {
+                        $allow_pickup = 1;
+                    }
+                }
+            }
+
             $sub_total_of_cart = $sub_total_of_cart + ($sub_total_of_cart * $get_tax_rate / 100);
             $free_shipping_state = AdminSetting::where('option_name', 'free_shipping_state')->first();
             if ($shipment_for_selected_category == true) {
@@ -593,7 +610,9 @@ class CheckoutController extends Controller
                 'allow_discount_for_new_user',
                 'allow_discount_for_specific_customers',
                 'allow_discount_for_all_customers',
-                'parcel_guard'
+                'parcel_guard',
+                'allow_pickup',
+                'distance'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');

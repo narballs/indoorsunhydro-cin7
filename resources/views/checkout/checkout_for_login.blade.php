@@ -560,6 +560,7 @@ $cart_price = 0;
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="row justify-content-between">
+                                                    <input type="hidden" name="distance_calculator" id="distance_calculator" value="{{!empty($distance) ? $distance : ''}}">
                                                     @foreach ($payment_methods as $payment_method)
                                                         @php
                                                             $session_contact_id = Session::get('contact_id');
@@ -567,19 +568,38 @@ $cart_price = 0;
                                                         @csrf
                                                         @foreach ($payment_method->options as $payment_option)
                                                             <div class="col-md-12">
-                                                                <input type="hidden" value="{{ $payment_method->name }}"
-                                                                    name="method_name">
-                                                                <input type="radio" id="local_delivery_{{ $payment_option->id }}"
-                                                                    name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
-                                                                    value="{{ $payment_option->option_name }}" style="background: #008BD3;">
-                                                                <label for="local_delivery payment-option-label"
-                                                                    class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
-                                                                
-                                                                </label>
-                                                                @if (strtolower($payment_option->option_name) == 'pickup order')
-                                                                    <span class="mx-2">
-                                                                        (Monday - Friday 9:00 AM - 5:00 PM only)
-                                                                    </span>
+                                                                @if ($allow_pickup != 1)
+                                                                    @if (strtolower($payment_option->option_name) != 'pickup order')
+                                                                        <input type="hidden" value="{{ $payment_method->name }}"
+                                                                            name="method_name">
+                                                                        <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                                            name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
+                                                                            value="{{ $payment_option->option_name }}" style="background: #008BD3;">
+                                                                        <label for="local_delivery payment-option-label"
+                                                                            class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
+                                                                        
+                                                                        </label>
+                                                                        @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                            <span class="mx-2">
+                                                                                (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                                            </span>
+                                                                        @endif
+                                                                    @endif
+                                                                @else
+                                                                    <input type="hidden" value="{{ $payment_method->name }}"
+                                                                        name="method_name">
+                                                                    <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                                        name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
+                                                                        value="{{ $payment_option->option_name }}" style="background: #008BD3;">
+                                                                    <label for="local_delivery payment-option-label"
+                                                                        class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
+                                                                    
+                                                                    </label>
+                                                                    @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                        <span class="mx-2">
+                                                                            (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                                        </span>
+                                                                    @endif
                                                                 @endif
                                                             </div>
                                                         @endforeach
