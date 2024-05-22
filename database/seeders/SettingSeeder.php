@@ -313,6 +313,17 @@ class SettingSeeder extends Seeder
                 'option_value' => 'We have an issue with checkout, our team is investigating it.  The issue will be resolved in 48hrs or less.',
             ],
 
+            [
+                'option_name' => 'toggle_shipment_insurance', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'shipment_insurance_fee', 
+                'type' => 'text',
+                'option_value' => '5.00',
+            ],
+
             
         ];
 

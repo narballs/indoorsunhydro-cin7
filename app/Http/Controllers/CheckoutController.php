@@ -585,7 +585,14 @@ class CheckoutController extends Controller
             } else {
                 $discount_code = null;
             }
-            $parcel_guard = 5.00;
+            $parcel_guard = 0.00;
+            $toggle_shipment_insurance = AdminSetting::where('option_name', 'toggle_shipment_insurance')->first();
+            $shipment_insurance_fee = AdminSetting::where('option_name', 'shipment_insurance_fee')->first();
+            if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') {
+                $parcel_guard = !empty($shipment_insurance_fee->option_value) ? $shipment_insurance_fee->option_value : 0.00;
+            } else {
+                $parcel_guard = 0.00;
+            }
             // dd($allow_discount_for_new_user, $allow_discount_for_specific_customers, $allow_discount_for_all_customers);
             return view('checkout/checkout_for_login', compact(
                 'user_address',
@@ -612,7 +619,8 @@ class CheckoutController extends Controller
                 'allow_discount_for_all_customers',
                 'parcel_guard',
                 'allow_pickup',
-                'distance'
+                'distance',
+                'toggle_shipment_insurance'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
