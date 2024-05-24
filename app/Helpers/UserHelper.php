@@ -298,7 +298,7 @@ class UserHelper
             ],
             'insuranceOptions' => [
                 'provider' => 'parcelguard', 
-                'insureShipment' => !empty($currentOrder->parcel_guard) ? true : false,
+                'insureShipment' => true,
                 'insuredValue' => floatval($currentOrder->total_including_tax)
             ],
             'confirmation' => floatval($currentOrder->total_including_tax) >= 500 ? 'signature' : 'delivery',
