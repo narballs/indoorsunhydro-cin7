@@ -241,6 +241,7 @@
         font-weight: 500;
         line-height: 17px; /* 94.444% */
         color: #FFF;
+        padding: 0.60rem;
     }
 
     .check_out_pay_now:hover {
@@ -568,7 +569,7 @@ $cart_price = 0;
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                <button class="btn check_out_pay_now w-100  d-flex align-items-center justify-content-center" type="button" id="checkout">
                                     <span>Save & Next</span>
                                     <span class="update_checkout_loader d-none mx-2">
                                         <div class="spinner-border text-white update_checkout_loader" role="status">
@@ -652,7 +653,7 @@ $cart_price = 0;
                         {{-- </div> --}}
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                <button class="btn check_out_pay_now w-100  d-flex align-items-center justify-content-center" type="button" id="checkout">
                                     <span>Save & Next</span>
                                     <span class="update_checkout_loader d-none mx-2">
                                         <div class="spinner-border text-white update_checkout_loader" role="status">
