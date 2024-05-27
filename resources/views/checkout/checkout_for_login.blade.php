@@ -849,7 +849,7 @@ $cart_price = 0;
                                                 <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{'0.00'}}</span></div>
                                             </div>
                                         </div>
-                                        @if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') 
+                                        {{-- @if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') 
                                             <div class="row justify-content-center  align-items-center py-2 border-bottom">
                                                 <div class="col-md-9 col-8">
                                                     <input type="checkbox" name="parcel_guard" class="parcel_guard" value="{{ number_format($parcel_guard , 2, '.', '')}}" onclick="add_parcel_guard_value(this)">
@@ -859,7 +859,7 @@ $cart_price = 0;
                                                     <span class="parcel_guard_price" id="parcel_guard_price">${{ number_format($parcel_guard, 2) }}</span>
                                                 </div>
                                             </div>
-                                        @endif
+                                        @endif --}}
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-8"><span class="checkout_total_heading">Total</span></div>
                                             <div class="col-md-3 col-4 text-right"><span class="checkout_total_price" id="checkout_order_total">${{ number_format($total_including_tax, 2) }}</span></div>
