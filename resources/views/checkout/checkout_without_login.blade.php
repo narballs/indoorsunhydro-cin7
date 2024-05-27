@@ -1089,6 +1089,7 @@ $cart_price = 0;
         if ($('.is_guest').is(':checked')) {
             $('.password_group_input').addClass('d-none');
             $('.password_label').addClass('d-none');
+            $('.error_div').text('');
         } else {
             $('.password_group_input').removeClass('d-none');
             $('.password_label').removeClass('d-none');
