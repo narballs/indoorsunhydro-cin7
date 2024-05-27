@@ -305,7 +305,7 @@ class AdminSettingsController extends Controller
         } else {
             $auto_notify = false;
         }
-        $product_stock_notification_users = ProductStockNotification::orderBy('created_at' , 'Desc')->paginate(10);
+        $product_stock_notification_users = ProductStockNotification::with('product' , 'productStockNotificationAlternatives')->orderBy('created_at' , 'Desc')->paginate(10);
         return view ('admin.product_stock_notification_users', compact('product_stock_notification_users' , 'auto_notify'));
     }
 

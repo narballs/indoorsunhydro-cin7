@@ -7,9 +7,11 @@ use App\Helpers\SettingHelper;
 use Illuminate\Http\Request;
 use App\Models\ProductStockNotification;
 use App\Models\Product;
+use App\Models\ProductStockNotificationAlternative;
 use App\Models\User;
 use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductStockNotificationController extends Controller
 {
@@ -66,6 +68,79 @@ class ProductStockNotificationController extends Controller
             'message' => 'You will be notified when the product is back in stock.',
             'product_stock_notification' => $product_stock_notification,
             'status' => $status
+        ]);
+    }
+
+    public function search_alternate_products(Request $request) {
+        $searchvalue = $request->search;
+        $replace_special_characters = preg_replace('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', ' ', $searchvalue);
+        $explode_search_value = explode(' ', $replace_special_characters);
+        $pricing = 'RetailUSD';
+        $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+        }])
+        ->where(function (Builder $query) use ($explode_search_value) {
+            foreach ($explode_search_value as $searchvalue) {
+                $query->where('name', 'LIKE', '%' . $searchvalue . '%')
+                ->where('status', '!=', 'Inactive');
+            }
+        })
+        ->orWhere(function (Builder $query) use ($searchvalue) {
+            $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+            ->where('status', '!=', 'Inactive');
+        })
+        ->orWhereExists(function ($q) use ($searchvalue) {
+            $q->select(DB::raw(1))
+            ->from('product_options')
+            ->whereColumn('products.product_id', 'product_options.product_id')
+            ->where('code',  $searchvalue )
+            ->where('status', '!=', 'Disabled');
+        })
+        ->where('status', '!=', 'Inactive')
+        ->whereHas('options.defaultPrice' , function($q) use ($pricing){
+            $q->where($pricing , '>' , 0)->where($pricing , '!=' , null);
+        })
+        ->get();
+
+        return response()->json([
+            'products' => $products,
+            'success' => true
+        ]);
+
+    }
+
+    public function add_alternative_product(Request $request) {
+        $product_ids = $request->product_ids;
+        $product_stock_notification_id = $request->product_stock_notification_id;
+
+        foreach ($product_ids as $product_id) {
+            $check_product_stock_notification_alternative = ProductStockNotificationAlternative::where('product_id', $product_id)->where('product_stock_notification_id', $product_stock_notification_id)->first();
+            if (!empty($check_product_stock_notification_alternative)) {
+                return response()->json([
+                    'message' => 'You have already added this product as an alternative.',
+                    'status' => true
+                ]);
+            }
+            $product_stock_notification_alternative = ProductStockNotificationAlternative::create([
+                'product_id' => $product_id,
+                'product_stock_notification_id' => $product_stock_notification_id,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Alternative products added successfully.',
+            'product_stock_notification_alternative' => $product_stock_notification_alternative,
+            'status' => true
+        ]);
+    
+    }
+
+    public function alternate_products_history (Request $request) {
+        $product_stock_notification_id = $request->product_stock_notification_id;
+        $product_stock_notification_alternatives = ProductStockNotificationAlternative::with('product', 'productStockNotification')->where('product_stock_notification_id', $product_stock_notification_id)->get();
+        return response()->json([
+            'product_stock_notification_alternatives' => $product_stock_notification_alternatives,
+            'status' => true
         ]);
     }
 }
