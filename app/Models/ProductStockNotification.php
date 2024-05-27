@@ -22,4 +22,9 @@ class ProductStockNotification extends Model
     {
         return $this->belongsTo(Product::class , 'product_id' , 'id');
     }
+
+    public function productStockNotificationAlternatives()
+    {
+        return $this->hasMany(ProductStockNotificationAlternative::class);
+    }
 }
