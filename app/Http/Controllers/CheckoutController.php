@@ -439,9 +439,18 @@ class CheckoutController extends Controller
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
                             $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
-                            $shipment_price = $get_shipping_rates['shipment_price'];
-                            $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
-                            $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                            if (($get_shipping_rates['shipment_prices'] === null)) {
+                                $shipment_error = 1;
+                            }
+                            else {
+                                $shipment_price = $get_shipping_rates['shipment_price'];
+                                $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                                $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                            }
+                            // $shipment_price = $get_shipping_rates['shipment_price'];
+                            // $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                            // $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                            
                         }
                         // $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
                         // $shipment_price = $get_shipping_rates['shipment_price'];
@@ -585,14 +594,14 @@ class CheckoutController extends Controller
             } else {
                 $discount_code = null;
             }
-            $parcel_guard = 0.00;
-            $toggle_shipment_insurance = AdminSetting::where('option_name', 'toggle_shipment_insurance')->first();
-            $shipment_insurance_fee = AdminSetting::where('option_name', 'shipment_insurance_fee')->first();
-            if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') {
-                $parcel_guard = !empty($shipment_insurance_fee->option_value) ? $shipment_insurance_fee->option_value : 0.00;
-            } else {
-                $parcel_guard = 0.00;
-            }
+            // $parcel_guard = 0.00;
+            // $toggle_shipment_insurance = AdminSetting::where('option_name', 'toggle_shipment_insurance')->first();
+            // $shipment_insurance_fee = AdminSetting::where('option_name', 'shipment_insurance_fee')->first();
+            // if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') {
+            //     $parcel_guard = !empty($shipment_insurance_fee->option_value) ? $shipment_insurance_fee->option_value : 0.00;
+            // } else {
+            //     $parcel_guard = 0.00;
+            // }
             // dd($allow_discount_for_new_user, $allow_discount_for_specific_customers, $allow_discount_for_all_customers);
             return view('checkout/checkout_for_login', compact(
                 'user_address',
@@ -617,10 +626,10 @@ class CheckoutController extends Controller
                 'allow_discount_for_new_user',
                 'allow_discount_for_specific_customers',
                 'allow_discount_for_all_customers',
-                'parcel_guard',
+                // 'parcel_guard',
                 'allow_pickup',
                 'distance',
-                'toggle_shipment_insurance'
+                // 'toggle_shipment_insurance'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
@@ -1506,6 +1515,7 @@ class CheckoutController extends Controller
         $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
         $shipping_carrier_code = null;
+        $error = false;
     
         foreach ($shipping_quotes as $quote) {
             if (!empty($quote->selected_shipping_quote)) {
@@ -1538,11 +1548,21 @@ class CheckoutController extends Controller
                     $shipping_response = json_decode($responseBody);
                     $shipment_prices[] = $shipping_response;
                     $shipment_price = $shipping_response->shipmentCost + $shipping_response->otherCost;
+
                 } catch (\Exception $e) {
+                    // $error = true;
+                    $shipment_prices[] = null;
                     $e->getMessage();
                 }
             } 
         }
+        // if ($shipment_prices == null) {
+        //     return [
+        //         'shipment_prices' => null,
+        //         'shipment_price' => 0,
+        //         'shipping_carrier_code' => $carrier_code_2->option_value,    
+        //     ];
+        // }
         return [
             'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
             'shipment_price' => $shipment_price,
