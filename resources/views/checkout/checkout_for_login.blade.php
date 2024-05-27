@@ -999,7 +999,7 @@ $cart_price = 0;
                                     </span>
                                 </p>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 mb-2">
                                 <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
                                 <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()" disabled>Place Order</button>
                                 

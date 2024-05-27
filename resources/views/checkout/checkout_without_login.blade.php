@@ -241,7 +241,7 @@
         font-weight: 500;
         line-height: 17px; /* 94.444% */
         color: #FFF;
-        padding: 0.60rem;
+        padding: 0.55rem;
     }
 
     .check_out_pay_now:hover {
