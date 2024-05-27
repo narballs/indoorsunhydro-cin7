@@ -2831,7 +2831,7 @@ $cart_price = 0;
                     $('.discount_id').val(response.discount.id);
                     $('.discount_mode').val(response.discount.mode);
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
-                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
+                    var parcel_guard = 0;
                     var total_shipping_price = 0;
                     var total_tax_price = 0;
                     var multi_shipping_price = 0;
@@ -2911,7 +2911,7 @@ $cart_price = 0;
                     $('.coupen_code_name').html(`(<label for="">Coupon Code : `+response.discount.discount_code+`</label>)`);
                     $('.discount_id').val(response.discount.id);
                     $('.discount_mode').val(response.discount.mode);
-                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
+                    var parcel_guard = 0;
                     var productTotal = $('.items_total_price').val() != null ?  parseFloat($('.items_total_price').val()) : 0;
                     var multi_shipping_price = 0;
                     var order_weight_greater_then_150 = 0;
@@ -3007,9 +3007,10 @@ $cart_price = 0;
                 function assign_service_code(element) {
                     var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
                     var var_pro_total = p_total.replace(/\$/g, '');
-                    var product_total = var_pro_total != null ? parseFloat(var_pro_total) : 0;
+                    var p_total_new = var_pro_total.split(',').join('');
+                    var product_total = p_total_new != null ? parseFloat(p_total_new) : 0;
                     var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
-                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
+                    var parcel_guard = 0;
                     var total_including_shipping = 0;
                     $('.shipping_service_code').each(function() {
                         $(this).removeAttr('checked');
@@ -3028,7 +3029,7 @@ $cart_price = 0;
                 function update_total_with_shipping_selected() {
                     var single_shipping_quote = $('#single_shipping_quote');
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
-                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
+                    var parcel_guard = 0;
                     if (admin_area_for_shipping_check === 'true') { 
                         if (single_shipping_quote.attr('checked')) {
                             var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
@@ -3045,30 +3046,30 @@ $cart_price = 0;
                     var order_weight_greater_then_150 = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                     var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
                     var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
-                    var parcel_guard = $('.parcel_guard').is(':checked') ? $('.parcel_guard').val() : 0;
+                    var parcel_guard = 0;
                     var total_including_shipping = 0;
                     total_including_shipping =  product_total + tax + order_weight_greater_then_150 +  parseFloat(parcel_guard);
                     $('#incl_tax').val(total_including_shipping.toFixed(2));
                     $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                 }
 
-                function add_parcel_guard_value (element) {
-                    var parcel_guard = element.value;
-                    var total_value = $('#incl_tax').val();
-                    var total = parseFloat(total_value) + parseFloat(parcel_guard);
-                    if ($(element).is(':checked')) {
-                        var total = parseFloat(total_value) + parseFloat(parcel_guard);
-                        $('#incl_tax').val(total.toFixed(2));
-                        $('#checkout_order_total').html(''); 
-                        $('#checkout_order_total').html('$' + total.toFixed(2));
-                    } else {
-                        var total = parseFloat(total_value) - parseFloat(parcel_guard);
-                        $('#incl_tax').val(total.toFixed(2));
-                        $('#checkout_order_total').html(''); 
-                        $('#checkout_order_total').html('$' + total.toFixed(2));
-                    }
+                // function add_parcel_guard_value (element) {
+                //     var parcel_guard = element.value;
+                //     var total_value = $('#incl_tax').val();
+                //     var total = parseFloat(total_value) + parseFloat(parcel_guard);
+                //     if ($(element).is(':checked')) {
+                //         var total = parseFloat(total_value) + parseFloat(parcel_guard);
+                //         $('#incl_tax').val(total.toFixed(2));
+                //         $('#checkout_order_total').html(''); 
+                //         $('#checkout_order_total').html('$' + total.toFixed(2));
+                //     } else {
+                //         var total = parseFloat(total_value) - parseFloat(parcel_guard);
+                //         $('#incl_tax').val(total.toFixed(2));
+                //         $('#checkout_order_total').html(''); 
+                //         $('#checkout_order_total').html('$' + total.toFixed(2));
+                //     }
 
-                }
+                // }
                 function pickup_order(element) {
                     if ($(element).is(':checked')) {
                         var delievery_value = element.value;
