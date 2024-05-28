@@ -112,7 +112,7 @@ class ProductStockNotificationController extends Controller
     public function add_alternative_product(Request $request) {
         $product_ids = $request->product_ids;
         $product_stock_notification_id = $request->product_stock_notification_id;
-        $get_user_email = ProductStockNotification::where('id', $product_stock_notification_id)->first();
+        $get_user_email = ProductStockNotification::with('product')->where('id', $product_stock_notification_id)->first();
 
         try {
             foreach ($product_ids as $product_id) {
@@ -129,7 +129,7 @@ class ProductStockNotificationController extends Controller
                 $product_stock_notification_alternative->product_stock_notification_id = $product_stock_notification_id;
                 $product_stock_notification_alternative->save();
 
-                $user_notify = ProductStockNotification::where('email', $get_user_email->email)->where('product_id', $product_id)->first();
+                $user_notify = ProductStockNotification::with('product')->where('email', $get_user_email->email)->where('product_id', $product_id)->first();
                 $find_product = Product::with('options')->where('product_id', $product_id)->first();
                 if (empty($user_notify)) {
                     $product_stock_notification = ProductStockNotification::create([
@@ -144,6 +144,7 @@ class ProductStockNotificationController extends Controller
                     'product_options' => $find_product->product_options,
                     'email' => $get_user_email->email,
                     'subject' => 'Product Stock Notification',
+                    'request_title' => $get_user_email->product->name . ' is out of stock. Try this Instead !',
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
@@ -184,7 +185,7 @@ class ProductStockNotificationController extends Controller
         $product_id = $request->product_id;
         $sku = $request->sku;
         $email = $request->email;
-        $check_product_stock_notification = ProductStockNotification::where('product_id', $product_id)->where('sku', $sku)->where('email', $email)->first();
+        $check_product_stock_notification = ProductStockNotification::with('product')->where('product_id', $product_id)->where('sku', $sku)->where('email', $email)->first();
         if (!empty($check_product_stock_notification)) {
             return response()->json([
                 'message' => 'User already requested for this product stock notification.',
@@ -208,6 +209,7 @@ class ProductStockNotificationController extends Controller
                 'product' => $product_stock_notification_users->product,
                 'product_options' => $product_stock_notification_users->product->options,
                 'subject' => 'Product Stock Notification',
+                'request_title' => 'The product you requested is out of stock but we have an alternative for you. Please check the product below',
                 'from' => SettingHelper::getSetting('noreply_email_address')
             ];
 
