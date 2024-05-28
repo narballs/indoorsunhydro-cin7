@@ -85,7 +85,7 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{$product_stock_notification_user->email}}</td>
-                            <td>{{$product_stock_notification_user->product->name}}</td>
+                            <td>{{ \Illuminate\Support\Str::limit($product_stock_notification_user->product->name, 33) }}</td>
                             <td>{{$product_stock_notification_user->sku}}</td>
                             <td>{{$product_stock_notification_user->created_at}}</td>
                             <td>{{$product_stock_notification_user->updated_at}}</td>
