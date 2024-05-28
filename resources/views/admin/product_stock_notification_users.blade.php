@@ -103,19 +103,19 @@
                                             
                                             @csrf
                                             <input type="hidden" name="product_stock_notification_user" id="" class="" value="{{$product_stock_notification_user->id}}">
-                                            <button type="submit" class="btn btn-primary text-white text-white" onclick="return confirm('Are you sure you want to Notify this Contact?');">Notify</button>
-                                            <button type="button" class="btn btn-info" id="openModalBtn" onclick="open_alternative_modal('{{$product_stock_notification_user->id}}')">
+                                            <button type="submit" class=" btn btn-primary text-white text-white" onclick="return confirm('Are you sure you want to Notify this Contact?');"><i class="fa fa-bell"></i></button>
+                                            <button type="button" class="btn btn-sm btn-info" id="openModalBtn" onclick="open_alternative_modal('{{$product_stock_notification_user->id}}')">
                                                 Offer Alternative
                                             </button>
                                             @if (count($product_stock_notification_user->productStockNotificationAlternatives) > 0)
-                                            <button type="button" class="btn btn-warning" id="openModalBtn" onclick="openAlternativeHistoryModal('{{$product_stock_notification_user->id}}')">
+                                            <button type="button" class=" btn btn-sm btn-warning" id="openModalBtn" onclick="openAlternativeHistoryModal('{{$product_stock_notification_user->id}}')">
                                                 Offer Alternative History
                                             </button>
                                             @endif
                                         </form>
                                     @else
                                         <form action="">
-                                            <button type="button" class="btn btn-success text-white text-white"> Notified</button>
+                                            <button type="button" class="btn btn-sm btn-success text-white text-white"> <i class="fa fa-bell-slash"></i></button>
                                         </form>
                                     @endif
                                 </div>
@@ -439,6 +439,7 @@
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-md-12">
+                            <span class="selection_count"></span>
                             <input type="hidden" name="product_stock_notification_id" id="product_stock_notification_id" value="">
                             <input type="text" name="search_products" class="form-control" placeholder="Search ..." id="search_products" onchange="searchProducts()"  onkeydown="searchProducts()">
                         </div>
@@ -568,18 +569,23 @@
 
     function checked_by_name (product_id) {
         if ($('#product_id_'+product_id).prop('checked') == true) {
+            // $('.selection_count').text('Selected Products: ' + $('.product_id:checked').length);
             $('#product_id_'+product_id).prop('checked', false);
+
         } else {
             $('#product_id_'+product_id).prop('checked', true);
+            // $('.selection_count').text('Selected Products: ' + $('.product_id:checked').length);
         }
 
     }
 
     function checked_by_image (product_id) {
         if ($('#product_id_'+product_id).prop('checked') == true) {
+            // $('.selection_count').text('Selected Products: ' + $('.product_id:checked').length);
             $('#product_id_'+product_id).prop('checked', false);
         } else {
             $('#product_id_'+product_id).prop('checked', true);
+            // $('.selection_count').text('Selected Products: ' + $('.product_id:checked').length);
         }
     }
 
@@ -589,6 +595,7 @@
         var product_stock_notification_id = $('#product_stock_notification_id').val();
         $('.product_id').each(function() {
             if ($(this).prop('checked') == true) {
+                // $('.selection_count').text('Selected Products: ' + $('.product_id:checked').length);
                 product_ids.push($(this).val());
             }
         });
