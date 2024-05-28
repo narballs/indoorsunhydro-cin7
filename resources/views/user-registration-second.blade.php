@@ -505,7 +505,7 @@
                     </div>
                     
                     <div class="col-md-12 text-center mt-5 continue_account_wholesale">
-                        <a href="{{ route('create_wholesale_account') }}" class="continue_sign_up_shopping d-flex justify-content-center">
+                        <a href="{{ url('contact-us') }}" class="continue_sign_up_shopping d-flex justify-content-center">
                             <input style="color: #7BC533;" type="button" value="Apply For Wholesale account" class="continue-shoping-mbl border-0 sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0"></a>
                     </div>
                 </div>
