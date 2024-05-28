@@ -2366,7 +2366,7 @@ class UserController extends Controller
         $user = User::where('hash', $request->hash)->first();
         if (empty($user)) {
             Auth::logout();
-            return redirect()->route('user')->with('error', 'Invalid Link');
+            return redirect()->route('user')->with('error', 'Invalid Link ! Please try again. '  );
         }
         Auth::login($user);
 
