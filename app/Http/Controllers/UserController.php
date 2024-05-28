@@ -326,7 +326,15 @@ class UserController extends Controller
 
     public function recover_password(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+        
         $user = User::where('email', $request->email)->first();
+
+        if (empty($user)) {
+            return redirect()->back()->with('error', 'Email not found!');
+        }
 
         $plain_password = Str::random(10) . date('YmdHis');
         $encrypted_password = bcrypt($plain_password);
@@ -2360,6 +2368,10 @@ class UserController extends Controller
     {
 
         $user = User::where('hash', $request->hash)->first();
+        if (empty($user)) {
+            Auth::logout();
+            return redirect()->route('user')->with('error', 'Invalid Link ! Please try again. '  );
+        }
         Auth::login($user);
 
         return view('reset-password', compact('user'));

@@ -1,7 +1,21 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
-
+@if (\Session::has('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+        {!! \Session::get('success') !!}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @elseif (\Session::has('error'))
+    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+        {!! \Session::get('error') !!}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
 @if ($message = Session::get('message'))
     <div class="alert alert-danger alert-block">
@@ -491,7 +505,7 @@
                     </div>
                     
                     <div class="col-md-12 text-center mt-5 continue_account_wholesale">
-                        <a href="{{ route('create_wholesale_account') }}" class="continue_sign_up_shopping d-flex justify-content-center">
+                        <a href="{{ url('contact-us') }}" class="continue_sign_up_shopping d-flex justify-content-center">
                             <input style="color: #7BC533;" type="button" value="Apply For Wholesale account" class="continue-shoping-mbl border-0 sing-up-label d-flex justify-content-center align-items-center w-50 mb-0 p-0"></a>
                     </div>
                 </div>
