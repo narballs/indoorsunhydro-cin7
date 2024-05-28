@@ -67,6 +67,7 @@
                         <tr>
                             <th>S.No</th>
                             <th>Email</th>
+                            <th>Product Name</th>
                             <th>Product Code</th>
                             <th>Date Requested</th>
                             <th>Date Sent</th>
@@ -84,6 +85,7 @@
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{{$product_stock_notification_user->email}}</td>
+                            <td>{{$product_stock_notification_user->product->name}}</td>
                             <td>{{$product_stock_notification_user->sku}}</td>
                             <td>{{$product_stock_notification_user->created_at}}</td>
                             <td>{{$product_stock_notification_user->updated_at}}</td>
@@ -603,6 +605,7 @@
                     product_stock_notification_id: product_stock_notification_id
                 },
                 success: function(response) {
+                    console.log(response)
                     if (response.status == true) {
                         $('.offer_alternative_spinner').addClass('d-none');
                         $('.offer_alternative_div').removeClass('d-none');
@@ -702,16 +705,16 @@
                         notifyButton.onclick = function() {
                             // Notify the user
                             $.ajax({
-                                url: '/admin/product-stock-notification',
-                                method: 'POST',
+                                url: '/admin/notify/user/product/history',
+                                method: 'post',
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    product_id: [value.product.id],
-                                    product_stock_notification_id: notificationId,
-                                    email: [value.product_stock_notification.email],
-                                    sku: [value.product.code]
+                                    product_id: value.product.id,
+                                    email: value.product_stock_notification.email,
+                                    sku: value.product.code
                                 },
                                 success: function(response) {
+                                    
                                     if (response.status == true) {
                                         Swal.fire({
                                             toast: true,
@@ -735,10 +738,11 @@
                                     }
                                 },
                                 error: function(error) {
+                                    console.log(error);
                                     Swal.fire({
                                         toast: true,
                                         icon: 'error',
-                                        title: 'An error occurred while sending notification.',
+                                        title: 'An error occurred while sending notifications.',
                                         timer: 3000,
                                         showConfirmButton: false,
                                         position: 'top',
