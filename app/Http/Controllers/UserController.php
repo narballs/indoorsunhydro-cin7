@@ -326,6 +326,10 @@ class UserController extends Controller
 
     public function recover_password(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+        
         $user = User::where('email', $request->email)->first();
 
         $plain_password = Str::random(10) . date('YmdHis');
@@ -2360,6 +2364,9 @@ class UserController extends Controller
     {
 
         $user = User::where('hash', $request->hash)->first();
+        if (empty($user)) {
+            return redirect('/')->with('error', 'The link Expires! Please try again.');
+        }
         Auth::login($user);
 
         return view('reset-password', compact('user'));
