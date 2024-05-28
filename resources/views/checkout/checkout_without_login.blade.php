@@ -241,6 +241,7 @@
         font-weight: 500;
         line-height: 17px; /* 94.444% */
         color: #FFF;
+        padding: 0.55rem;
     }
 
     .check_out_pay_now:hover {
@@ -360,8 +361,18 @@ $cart_price = 0;
                                 </div>
                             </div>
                             <div class="col-md-12 password_div d-none">
-                                <label for="" class="update_checkout_labels">Password</label>
-                                <div class="form-group">
+                                <div class="row justify-content-between">
+                                    <div class="col-xl-2 col-md-4 col-lg-4 col-12">
+                                        <label for="" class="update_checkout_labels password_label">Password</label>   
+                                    </div>
+                                    <div class="col-xl-10  col-md-8 col-lg-8 col-12">  
+                                        <span class="d-flex align-items-center justify-content-start justify-content-md-end">
+                                            <input type="checkbox" name="is_guest"  id="is_guest" class="is_guest" onclick="not_register_user()">
+                                            <label for="" class="update_checkout_labels mb-0 ml-2">I do not want to register for an account</label>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group password_group_input">
                                     <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
                                     <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
@@ -558,7 +569,7 @@ $cart_price = 0;
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                <button class="btn check_out_pay_now w-100  d-flex align-items-center justify-content-center" type="button" id="checkout">
                                     <span>Save & Next</span>
                                     <span class="update_checkout_loader d-none mx-2">
                                         <div class="spinner-border text-white update_checkout_loader" role="status">
@@ -642,7 +653,7 @@ $cart_price = 0;
                         {{-- </div> --}}
                         <div class="row mt-3">
                             <div class="col-md-12">
-                                <button class="btn check_out_pay_now w-100 p-3 d-flex align-items-center justify-content-center" type="button" id="checkout">
+                                <button class="btn check_out_pay_now w-100  d-flex align-items-center justify-content-center" type="button" id="checkout">
                                     <span>Save & Next</span>
                                     <span class="update_checkout_loader d-none mx-2">
                                         <div class="spinner-border text-white update_checkout_loader" role="status">
@@ -736,6 +747,7 @@ $cart_price = 0;
         });
         $('.check_out_pay_now').on('click', function(e) {
             e.preventDefault();
+            var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
             var email = $('.email_address_checkout').val();
             var password = $('.password_checkout').val();
             var company_name = $('.company_name').val();
@@ -753,9 +765,11 @@ $cart_price = 0;
             var postal_state= $('.postalState').val();
             var postal_city= $('.postalCity').val();
             var postal_zip_code= $('.postalpostCode').val();
+            var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
             var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
             $('.address_validator').html('');
-            if (email != '' && password != '') {
+            
+            if (email != '' && is_guest == 1) {
                 $('.update_checkout_loader').removeClass('d-none');
                 $.ajax({
                     url: '/authenticate-user',
@@ -779,6 +793,162 @@ $cart_price = 0;
                         postal_state: postal_state,
                         postal_city: postal_city,
                         postal_zip_code: postal_zip_code,
+                        is_guest: is_guest,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        
+                        if (response.status == 'success') {
+                            if (response.access === true) {
+                                if (response.auto_approved == true) {
+                                    if (response.is_admin === true) {
+                                        window.location.href = '/admin/dashboard';
+                                    } else {
+                                        window.location.href = '/checkout';
+                                    }
+                                } else {
+                                    window.location.href = '/cart';
+                                }
+                            } else {
+                                $('.update_checkout_loader').addClass('d-none');
+                                $('.error_div').text(response.message);
+                            }
+                        } else {
+                            if (response.registration_status == true) {
+                                if (response.auto_approved == true) {
+                                    $('.update_checkout_loader').addClass('d-none');
+                                    $('.error_div').text('Thankyou for entering your details. Now you can place order');
+                                    window.location.href = '/checkout';
+                                } else {
+                                    $('.update_checkout_loader').addClass('d-none');
+                                    $('.error_div').text(response.message);
+                                    window.location.href = '/cart';
+                                }
+                                
+                            } else {
+                                $('.update_checkout_loader').addClass('d-none');
+                                $('.error_div').text(response.message);
+                            }
+                        }
+                    },
+                    error: function(response) {
+                        // console.log(response);
+                        // if (response.responseJSON.address_validator == false) {
+                        //     $('.update_checkout_loader').addClass('d-none');
+                        //     $('.address_validator').html(response.responseJSON.validator_message);
+                        // }
+                        $('.update_checkout_loader').addClass('d-none');
+                        var errors = response.responseJSON.errors;
+                        if (errors) {
+                            if (errors.email) {
+                                error_email = errors.email[0];
+                                $('.email_errors').html(error_email);
+                            }
+                            else {
+                                $('.email_errors').html('');
+                            }
+                            if (errors.first_name) {
+                                error_first_name = errors.first_name[0];
+                                $('.first_name_errors').html(error_first_name);
+                            }
+                            else {
+                                $('.first_name_errors').html('');
+                            }
+
+                            if (errors.address) {
+                                var error_billing_address = errors.address[0];
+                                $('.street_address_errors').html(error_billing_address);
+                            }
+                            else {
+                                $('.street_address_errors').html('');
+                            }
+
+                            if (errors.state) {
+                                var error_billing_state = errors.state[0];
+                                $('.state_errors').html(error_billing_state);
+                            }
+                            else {
+                                $('.state_errors').html('');
+                            }
+
+                            if (errors.company) {
+                                var error_company = errors.company[0];
+                                $('.company_name_errors').html(error_company);
+                            }
+                            else {
+                                $('.company_name_errors').html('');
+                            }
+
+                            if (errors.zip_code) {
+                                var error_zip_code = errors.zip_code[0];
+                                $('.post_code_errors').html(error_zip_code);
+                            }
+                            else {
+                                $('.post_code_errors').html('');
+                            }
+
+                            if (errors.phone) {
+                                var error_phone = errors.phone[0];
+                                $('.phone_errors').html(error_phone);
+                            }
+                            else {
+                                $('.phone_errors').html('');
+                            }
+                            
+                            if (errors.postal_address1) {
+                                var error_postal_address = errors.postal_address1[0];
+                                $('.postal_address_errors').html(error_postal_address);
+                            }
+                            else {
+                                $('.postal_address_errors').html('');
+                            }
+
+                            
+
+                            if (errors.postal_state) {
+                                var error_state = errors.postal_state[0];
+                                $('.postal_state_errors').html(error_state);
+                            }
+                            else {
+                                $('.postal_state_errors').html('');
+                            }
+
+                            if (errors.postal_zip_code) {
+                                var error_text_postal_code = errors.postal_zip_code[0];
+                                $('.postalpostCode_errors').html(error_text_postal_code);
+                            }
+                            else {
+                                $('.postalpostCode_errors').html('');
+                            }
+                        }
+                    }
+                });
+            } 
+            else if (email != '' && password != '' && is_guest == 0) {
+                $('.update_checkout_loader').removeClass('d-none');
+                $.ajax({
+                    url: '/authenticate-user',
+                    type: 'post',
+                    data: {
+                        email: email,
+                        password: password,
+                        different_shipping_address: different_shipping_address,
+                        company: company_name,
+                        first_name: first_name,
+                        last_name: last_name,
+                        address: address,
+                        address_2: address_2,
+                        country: country,
+                        state: state,
+                        city: city,
+                        zip_code: zip_code,
+                        phone: phone,
+                        postal_address1: postal_address1,
+                        postal_address2: postal_address2,
+                        postal_state: postal_state,
+                        postal_city: postal_city,
+                        postal_zip_code: postal_zip_code,
+                        is_guest: is_guest,
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
@@ -908,11 +1078,23 @@ $cart_price = 0;
                         }
                     }
                 });
-            } else {
+            } 
+            else {
                 $('.error_div').text('Please enter your email and password');
                 return false;
             }
         });
     });
+
+    function not_register_user () {
+        if ($('.is_guest').is(':checked')) {
+            $('.password_group_input').addClass('d-none');
+            $('.password_label').addClass('d-none');
+            $('.error_div').text('');
+        } else {
+            $('.password_group_input').removeClass('d-none');
+            $('.password_label').removeClass('d-none');
+        }
+    }
     
 </script>

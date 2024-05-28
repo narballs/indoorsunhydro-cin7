@@ -26,6 +26,13 @@ class DistanceCalculator
         if ($data['status'] !== 'OK') {
             return $distance;
         } else {
+            $response_data = $data['rows'][0]['elements'][0]['status'];
+            if ($response_data === 'ZERO_RESULTS') {
+                return $distance;
+            }
+            elseif ($response_data === 'NOT_FOUND') {
+                return $distance;
+            }
             $response_data = $data['rows'][0]['elements'][0]['distance']['value'];
             $calculate_in_kms_distance = $response_data / 1000;
             $calculate_in_miles_distance = round($calculate_in_kms_distance * 0.621371, 2);

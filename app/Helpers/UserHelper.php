@@ -296,6 +296,12 @@ class UserHelper
                 'value' => $produts_weight,
                 'units' => 'pounds'
             ],
+            'insuranceOptions' => [
+                'provider' => 'parcelguard', 
+                'insureShipment' => true,
+                'insuredValue' => floatval($currentOrder->total_including_tax)
+            ],
+            'confirmation' => floatval($currentOrder->total_including_tax) >= 500 ? 'signature' : 'delivery',
             'items'=> $items
         ];
         $headers = [

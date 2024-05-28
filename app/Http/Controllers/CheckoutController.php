@@ -366,6 +366,23 @@ class CheckoutController extends Controller
             }
             $shipment_price = 0;
             $shipping_free_over_1000 = 0;
+            $calculator = new DistanceCalculator();
+            $allow_pickup = 0;
+            $distance = $calculator->calculate_distance('95826', $user_address->postCode);
+
+            if (empty($distance)) {
+                $allow_pickup = 0;
+            }
+            else {
+                if ($distance == 'Error') {
+                    $allow_pickup = 0;
+                } else {
+                    if ($distance <= 200) {
+                        $allow_pickup = 1;
+                    }
+                }
+            }
+
             $sub_total_of_cart = $sub_total_of_cart + ($sub_total_of_cart * $get_tax_rate / 100);
             $free_shipping_state = AdminSetting::where('option_name', 'free_shipping_state')->first();
             if ($shipment_for_selected_category == true) {
@@ -422,9 +439,18 @@ class CheckoutController extends Controller
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
                             $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
-                            $shipment_price = $get_shipping_rates['shipment_price'];
-                            $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
-                            $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                            if (($get_shipping_rates['shipment_prices'] === null)) {
+                                $shipment_error = 1;
+                            }
+                            else {
+                                $shipment_price = $get_shipping_rates['shipment_price'];
+                                $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                                $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                            }
+                            // $shipment_price = $get_shipping_rates['shipment_price'];
+                            // $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
+                            // $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
+                            
                         }
                         // $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
                         // $shipment_price = $get_shipping_rates['shipment_price'];
@@ -568,6 +594,14 @@ class CheckoutController extends Controller
             } else {
                 $discount_code = null;
             }
+            $parcel_guard = 0.00;
+            // $toggle_shipment_insurance = AdminSetting::where('option_name', 'toggle_shipment_insurance')->first();
+            // $shipment_insurance_fee = AdminSetting::where('option_name', 'shipment_insurance_fee')->first();
+            // if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') {
+            //     $parcel_guard = 0.00;
+            // } else {
+            //     $parcel_guard = 0.00;
+            // }
             // dd($allow_discount_for_new_user, $allow_discount_for_specific_customers, $allow_discount_for_all_customers);
             return view('checkout/checkout_for_login', compact(
                 'user_address',
@@ -591,7 +625,11 @@ class CheckoutController extends Controller
                 'shipping_carrier_code' , 'shipping_service_code', 'shipstation_shipment_prices' , 'charge_shipment_to_customer', 'shipping_free_over_1000','shipment_error',
                 'allow_discount_for_new_user',
                 'allow_discount_for_specific_customers',
-                'allow_discount_for_all_customers'
+                'allow_discount_for_all_customers',
+                'parcel_guard',
+                'allow_pickup',
+                'distance',
+                // 'toggle_shipment_insurance'
             ));
         } else {
             return redirect()->back()->with('message', 'Your account is disabled. You can not proceed with checkout. Please contact us.');
@@ -899,10 +937,21 @@ class CheckoutController extends Controller
     }
 
     public function authenticate_user(Request $request) {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ]);
+
+        $is_guest_user = !empty($request->is_guest) && $request->is_guest == 1 ? 1 : 0;  
+
+        if ($is_guest_user == 1) {
+            $request->validate([
+                'email' => 'required',
+                // 'password' => 'required'
+            ]);
+        } else {
+            $request->validate([
+                'email' => 'required',
+                'password' => 'required'
+            ]);
+        }
+
         $credentials = $request->only('email', 'password');
         
         $user = User::where('email', $request->email)->first();
@@ -917,6 +966,7 @@ class CheckoutController extends Controller
         $auto_approved = false;
         $address_validator = true;
         $content = null;
+       
         if (auth()->attempt($credentials)) {
             if (auth()->user()->allow_access == 0) {
                 Session::flush();
@@ -1010,34 +1060,67 @@ class CheckoutController extends Controller
                 $message = 'Invalid credentials';
                 return response()->json(['status' => 'error', 'message' => $message, 'access' => $access]);
             } else {
-                
                 if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
-                    $request->validate([
-                        'email' => 'required|email',
-                        'password' => 'required',
-                        'first_name' => 'required',
-                        'company' => 'required',
-                        'address' => 'required',
-                        // 'city' => 'required',
-                        'state' => 'required',
-                        'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                        'phone' => 'required',
-                        'postal_address1' => 'required',
-                        'postal_state' => 'required',
-                        'postal_zip_code' => 'required',
-                    ]);
+                    if ( $is_guest_user == 1) {
+                        $request->validate([
+                            'email' => 'required|email',
+                            // 'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                            'postal_address1' => 'required',
+                            'postal_state' => 'required',
+                            'postal_zip_code' => 'required',
+                        ]);
+                    }
+                    else {
+                        $request->validate([
+                            'email' => 'required|email',
+                            'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                            'postal_address1' => 'required',
+                            'postal_state' => 'required',
+                            'postal_zip_code' => 'required',
+                        ]);
+                    }
+                   
                 } else {
-                    $request->validate([
-                        'email' => 'required|email',
-                        'password' => 'required',
-                        'first_name' => 'required',
-                        'company' => 'required',
-                        'address' => 'required',
-                        // 'city' => 'required',
-                        'state' => 'required',
-                        'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                        'phone' => 'required',
-                    ]);
+                    if ($is_guest_user == 1) {
+                        $request->validate([
+                            'email' => 'required|email',
+                            // 'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                        ]);
+                    }
+                    else {
+                        $request->validate([
+                            'email' => 'required|email',
+                            'password' =>'required',
+                            'first_name' => 'required',
+                            'company' => 'required',
+                            'address' => 'required',
+                            // 'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                            'phone' => 'required',
+                        ]);
+                    }
                 }
 
                 
@@ -1092,9 +1175,10 @@ class CheckoutController extends Controller
                         'email' => strtolower($request->get('email')),
                         "first_name" => $first_name,
                         "last_name" => $last_name,
-                        "password" => bcrypt($request->get('password'))
+                        "password" => !empty($is_guest_user)  && $is_guest_user == 1 ? bcrypt('123456') : bcrypt($request->get('password'))
                     ]);
                     $user_id = $user->id;
+                    
 
                     $contact = new Contact([
                         // 'website' => $request->input('company_website'),
@@ -1103,6 +1187,7 @@ class CheckoutController extends Controller
                         'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                         'priceColumn' => $price_column,
                         'user_id' => $user_id,
+                        'is_guest' => $is_guest_user,
                         'firstName' => $user->first_name,
                         'type' => 'Customer',
                         'lastName' => $user->last_name,
@@ -1197,29 +1282,31 @@ class CheckoutController extends Controller
                     ];
                     $access = true;
                     if ($registration_status == true) {
-                        if (!empty($users_with_role_admin)) {
-                            foreach ($users_with_role_admin as $role_admin) {
-                                $subject = 'New Register User';
-                                $data['email'] = $role_admin->email;
-                                MailHelper::sendMailNotification('emails.admin_notification', $data);
+                        if ($is_guest_user == 0) {
+                            if (!empty($users_with_role_admin)) {
+                                foreach ($users_with_role_admin as $role_admin) {
+                                    $subject = 'New Register User';
+                                    $data['email'] = $role_admin->email;
+                                    MailHelper::sendMailNotification('emails.admin_notification', $data);
+                                }
                             }
-                        }
-
-                        if (!empty($created_contact)) {
-                            if ($auto_approved == true) {
-                                $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                                $data['contact_email'] = $created_contact->email;
-                                $data['content'] = $content;
-                                $data['subject'] = $content;
-                                MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                            } else {
-                                $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                                $data['email'] =  $created_contact->email;
-                                $data['content'] = $content;
-                                $data['subject'] = 'Your account registration request';
-                                MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+    
+                            if (!empty($created_contact)) {
+                                if ($auto_approved == true) {
+                                    $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                                    $data['contact_email'] = $created_contact->email;
+                                    $data['content'] = $content;
+                                    $data['subject'] = $content;
+                                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                                } else {
+                                    $data['name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                                    $data['email'] =  $created_contact->email;
+                                    $data['content'] = $content;
+                                    $data['subject'] = 'Your account registration request';
+                                    MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+                                }
                             }
-                        }
+                        }                       
     
                     }
 
@@ -1428,6 +1515,7 @@ class CheckoutController extends Controller
         $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
         $shipping_carrier_code = null;
+        $error = false;
     
         foreach ($shipping_quotes as $quote) {
             if (!empty($quote->selected_shipping_quote)) {
@@ -1460,11 +1548,21 @@ class CheckoutController extends Controller
                     $shipping_response = json_decode($responseBody);
                     $shipment_prices[] = $shipping_response;
                     $shipment_price = $shipping_response->shipmentCost + $shipping_response->otherCost;
+
                 } catch (\Exception $e) {
+                    // $error = true;
+                    $shipment_prices[] = null;
                     $e->getMessage();
                 }
             } 
         }
+        // if ($shipment_prices == null) {
+        //     return [
+        //         'shipment_prices' => null,
+        //         'shipment_price' => 0,
+        //         'shipping_carrier_code' => $carrier_code_2->option_value,    
+        //     ];
+        // }
         return [
             'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
             'shipment_price' => $shipment_price,

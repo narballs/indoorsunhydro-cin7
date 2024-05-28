@@ -366,7 +366,11 @@
                                             <td class="text-center"><span class="order-item-price">${{ number_format($order->shipment_price, 2) }}</span></td>
                                         </tr>
                                         <tr class="border-bottom">
-                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Add Tax</span></td>
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">ParcelGuard</span></td>
+                                            <td class="text-center"><span class="order-item-price">${{ number_format($order->parcel_guard, 2) }}</span></td>
+                                        </tr>
+                                        <tr class="border-bottom">
+                                            <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Added Tax</span></td>
                                             <td class="text-center"><span class="order-item-price" id="tax_text">${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}</span>
                                             </td>
                                         </tr>
