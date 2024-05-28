@@ -417,7 +417,7 @@
 
     </style>
 @stop
-    <div class="modal fade" id="alternative_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="alternative_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -457,7 +457,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -700,9 +700,16 @@
 
                         // Create the notify button
                         const notifyButton = document.createElement('button');
-                        notifyButton.className = 'btn btn-info';
+                        notifyButton.className = 'btn btn-info notify-user-btn';
                         notifyButton.innerText = 'Notify';
+                        const loader = document.createElement('div');
+                        loader.className = 'ml-2 alternate_history_loader spinner-border spinner-border-sm d-none';
+                        notifyButton.appendChild(loader);
+
                         notifyButton.onclick = function() {
+                            document.querySelectorAll('.notify-user-btn').forEach(btn => btn.disabled = true);
+                            // Show the loader
+                            loader.classList.remove('d-none');
                             // Notify the user
                             $.ajax({
                                 url: '/admin/notify/user/product/history',
@@ -714,7 +721,8 @@
                                     sku: value.product.code
                                 },
                                 success: function(response) {
-                                    
+                                    loader.classList.add('d-none');
+                                    document.querySelectorAll('.notify-user-btn').forEach(btn => btn.disabled = false);
                                     if (response.status == true) {
                                         Swal.fire({
                                             toast: true,
@@ -726,6 +734,7 @@
                                             timerProgressBar: true
                                         });
                                     } else {
+                                        
                                         Swal.fire({
                                             toast: true,
                                             icon: 'error',
@@ -738,7 +747,9 @@
                                     }
                                 },
                                 error: function(error) {
-                                    console.log(error);
+                                   // Hide the loader
+                                    loader.classList.add('d-none');
+                                    document.querySelectorAll('.notify-btn').forEach(btn => btn.disabled = false);
                                     Swal.fire({
                                         toast: true,
                                         icon: 'error',
@@ -770,6 +781,7 @@
                     // Show the modal
                     $('#productModal').modal('show');
                 } else {
+                    $('.alternate_history_loader').addClass('d-none');
                     Swal.fire({
                         toast: true,
                         icon: 'error',
@@ -782,6 +794,7 @@
                 }
             },
             error: function(error) {
+                $('.alternate_history_loader').addClass('d-none');
                 Swal.fire({
                     toast: true,
                     icon: 'error',
