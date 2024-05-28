@@ -321,6 +321,7 @@ class AdminSettingsController extends Controller
                 'product' => $product_stock_notification->product,
                 'product_options' => $product_stock_notification->product->options,
                 'subject' => 'Product Stock Notification',
+                'request_title' => 'The Item you have been waiting for is back in stock',
                 'from' => SettingHelper::getSetting('noreply_email_address')
             ];
 
