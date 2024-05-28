@@ -726,7 +726,7 @@
                                     if (response.status == true) {
                                         Swal.fire({
                                             toast: true,
-                                            icon: 'error',
+                                            icon: 'success',
                                             title: response.message,
                                             timer: 3000,
                                             showConfirmButton: false,
