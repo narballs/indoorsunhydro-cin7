@@ -332,6 +332,10 @@ class UserController extends Controller
         
         $user = User::where('email', $request->email)->first();
 
+        if (empty($user)) {
+            return redirect()->back()->with('error', 'Email not found!');
+        }
+
         $plain_password = Str::random(10) . date('YmdHis');
         $encrypted_password = bcrypt($plain_password);
         $hash = Str::random(10000) . $user->first_name . date('YmdHis');
