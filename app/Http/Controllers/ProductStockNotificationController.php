@@ -112,26 +112,62 @@ class ProductStockNotificationController extends Controller
     public function add_alternative_product(Request $request) {
         $product_ids = $request->product_ids;
         $product_stock_notification_id = $request->product_stock_notification_id;
+        $get_user_email = ProductStockNotification::where('id', $product_stock_notification_id)->first();
 
-        foreach ($product_ids as $product_id) {
-            $check_product_stock_notification_alternative = ProductStockNotificationAlternative::where('product_id', $product_id)->where('product_stock_notification_id', $product_stock_notification_id)->first();
-            if (!empty($check_product_stock_notification_alternative)) {
-                return response()->json([
-                    'message' => 'You have already added this product as an alternative.',
-                    'status' => true
-                ]);
+        try {
+            foreach ($product_ids as $product_id) {
+                $check_product_stock_notification_alternative = ProductStockNotificationAlternative::where('product_id', $product_id)->where('product_stock_notification_id', $product_stock_notification_id)->first();
+                if (!empty($check_product_stock_notification_alternative)) {
+                    return response()->json([
+                        'message' => 'You have already added this product as an alternative.',
+                        'status' => true
+                    ]);
+                }
+
+                $product_stock_notification_alternative = new ProductStockNotificationAlternative();
+                $product_stock_notification_alternative->product_id = $product_id;
+                $product_stock_notification_alternative->product_stock_notification_id = $product_stock_notification_id;
+                $product_stock_notification_alternative->save();
+
+                $user_notify = ProductStockNotification::where('email', $get_user_email->email)->where('product_id', $product_id)->first();
+                $find_product = Product::with('options')->where('product_id', $product_id)->first();
+                if (empty($user_notify)) {
+                    $product_stock_notification = ProductStockNotification::create([
+                        'product_id' => $find_product->id,
+                        'sku' => $find_product->code,
+                        'email' => $get_user_email->email,
+                    ]);
+                }
+
+                $data = [
+                    'product' => $find_product,
+                    'product_options' => $find_product->product_options,
+                    'email' => $get_user_email->email,
+                    'subject' => 'Product Stock Notification',
+                    'from' => SettingHelper::getSetting('noreply_email_address')
+                ];
+
+                $mail = MailHelper::stockMailNotification('emails.user-stock-notification', $data);
+
+                if ($mail) {
+                    $product_stock_notification->is_notified = 1;
+                    $product_stock_notification->status = 1;
+                    $product_stock_notification->save();
+                }
             }
-            $product_stock_notification_alternative = ProductStockNotificationAlternative::create([
-                'product_id' => $product_id,
-                'product_stock_notification_id' => $product_stock_notification_id,
+
+            return response()->json([
+                'message' => 'Product added as an alternative successfully to the user and user notified.',
+                'status' => true
             ]);
         }
-
-        return response()->json([
-            'message' => 'Alternative products added successfully.',
-            'product_stock_notification_alternative' => $product_stock_notification_alternative,
-            'status' => true
-        ]);
+        catch (\Exception $e) 
+        {
+            return response()->json([
+                'message' => 'Something went wrong.',
+                'status' => false
+            ]);
+        }
     
     }
 
@@ -142,5 +178,62 @@ class ProductStockNotificationController extends Controller
             'product_stock_notification_alternatives' => $product_stock_notification_alternatives,
             'status' => true
         ]);
+    }
+
+    public function notify_users_from_alternate_history(Request $request) {
+        $product_id = $request->product_id;
+        $sku = $request->sku;
+        $email = $request->email;
+        $check_product_stock_notification = ProductStockNotification::where('product_id', $product_id)->where('sku', $sku)->where('email', $email)->first();
+        if (!empty($check_product_stock_notification)) {
+            return response()->json([
+                'message' => 'User already requested for this product stock notification.',
+                'status' => true
+            ]);
+        }
+        $product_stock_notification = ProductStockNotification::create([
+            'product_id' => $product_id,
+            'sku' => $sku,
+            'email' => $email,
+            'status' => 1,
+            'is_notified' => 1
+        ]);
+        $product_stock_notification_users = ProductStockNotification::with('product' , 'product.options')
+        ->where('id', $product_stock_notification->id)
+        ->first();
+        if ($product_stock_notification_users) {
+            
+            $data = [
+                'email' => $product_stock_notification_users->email,
+                'product' => $product_stock_notification_users->product,
+                'product_options' => $product_stock_notification_users->product->options,
+                'subject' => 'Product Stock Notification',
+                'from' => SettingHelper::getSetting('noreply_email_address')
+            ];
+
+            $mail = MailHelper::stockMailNotification('emails.user-stock-notification', $data);
+            if ($mail) {
+                $product_stock_notification->is_notified = 1;
+                $product_stock_notification->status = 1;
+                $product_stock_notification->save();
+                return response()->json([
+                    'message' => 'User notified successfully.',
+                    'product_stock_notification' => $product_stock_notification,
+                    'status' => true
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Something went wrong.',
+                    'status' => false
+                ]);
+            }
+        } else {
+            return response()->json([
+                'message' => 'Product not found.',
+                'status' => false
+            ]);
+        }
+
+        
     }
 }

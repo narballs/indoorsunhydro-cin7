@@ -435,4 +435,5 @@ Route::get('get-product-dimension', [GetProductDimensionController::class, 'get_
 Route::post('admin/search/aletrnative/products', [ProductStockNotificationController::class, 'search_alternate_products'])->name('search_alternate_products');
 Route::post('admin/send/alternative/notification', [ProductStockNotificationController::class, 'add_alternative_product'])->name('add_alternative_product');
 Route::post('admin/alternative/products/history', [ProductStockNotificationController::class, 'alternate_products_history'])->name('alternate_products_history');
+Route::post('admin/notify/user/product/history', [ProductStockNotificationController::class, 'notify_users_from_alternate_history'])->name('notify_users_from_alternate_history');
 
