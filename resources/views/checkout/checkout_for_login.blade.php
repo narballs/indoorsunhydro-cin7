@@ -747,6 +747,15 @@ $cart_price = 0;
                                                 <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
                                                 <input type="hidden" name="shipment_error" value="{{$shipment_error}}">
                                                 @if (!empty($products_weight) && $products_weight > 150)
+                                                @php
+                                                    $shipment_price = !empty($shipment_price) ? $shipment_price : 0;
+                                                    if ($shipment_price > 0) {
+                                                        $parcel_guard_price = (ceil($shipment_price / 100) * 0.99);
+                                                        $shipment_price = $shipment_price + $parcel_guard_price;
+                                                    } else {
+                                                        $shipment_price = $shipment_price;
+                                                    }
+                                                @endphp
                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                     <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
                                                     <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{!empty($shipment_price) ? number_format($shipment_price , 2, '.', '')  : 0 }}">
@@ -782,6 +791,14 @@ $cart_price = 0;
                                                                         }
                                                                         $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
                                                                         $adding_shipping_cost_to_total = 0;
+                                                                        $parcel_guard_price = 0 ;
+                                                                        if ($shipment_cost_with_surcharge > 0) {
+                                                                            $parcel_guard_price = (ceil($shipment_cost_with_surcharge / 100) * 0.99);
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price;
+                                                                        } else {
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge;
+                                                                        }
+                                                                        
                                                                         if (!empty($shipment_cost_with_surcharge)) {
                                                                             $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_with_surcharge;
                                                                         } else {
@@ -813,6 +830,15 @@ $cart_price = 0;
                                                                             }
                                                                         }
                                                                         $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
+
+                                                                        $parcel_guard_price = 0 ;
+                                                                        if ($shipment_cost_with_surcharge > 0) {
+                                                                            $parcel_guard_price = (ceil($shipment_cost_with_surcharge / 100) * 0.99);
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price;
+                                                                        } else {
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge;
+                                                                        }
+                                                                        // dd($parcel_guard_price);
                                                                     @endphp
                                                                     <div class="col-md-9 col-8">
                                                                         <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
