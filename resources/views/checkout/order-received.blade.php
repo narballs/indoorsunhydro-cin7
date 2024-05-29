@@ -709,13 +709,12 @@
 									${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 								</p>
 							</div>
-							<div class="col-md-3">
+							{{-- <div class="col-md-3">
 								<p class="order-confirmation-page-order-number-title">ParcelGuard</p>
 								<p class="order-confirmation-page-order-number-item">
-									{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }} --}}
 									${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
 								</p>
-							</div>
+							</div> --}}
 							<div class="col-md-3">
 								<input type="hidden" name="getorderTotal" value="{{number_format($order->total_including_tax, 2)}}" class="getorderTotal" id="">
 								<p class="order-confirmation-page-order-number-title">Total</p>
@@ -784,13 +783,12 @@
 											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 										</p>
 									</div>
-									<div class="col-md-3">
+									{{-- <div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">ParcelGuard</p>
 										<p class="order-confirmation-page-order-number-item">
-											{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }} --}}
 											${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
 										</p>
-									</div>
+									</div> --}}
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Total</p>
 										<p class="order-confirmation-page-order-number-item">
@@ -861,13 +859,12 @@
 										${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 									</p>
 								</div>
-								<div class="col-md-6 col-lg-4">
+								{{-- <div class="col-md-6 col-lg-4">
 									<p class="order-confirmation-page-order-number-title">ParcelGuard</p>
 									<p class="order-confirmation-page-order-number-item">
-										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }} --}}
 										${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
 									</p>
-								</div>
+								</div> --}}
 								<div class="col-md-6 col-lg-4">
 									<p class="order-confirmation-page-order-number-title">Total</p>
 									<p class="order-confirmation-page-order-number-item">
@@ -933,13 +930,12 @@
 										${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
 									</p>
 								</div>
-								<div class="d-flex justify-content-between">
+								{{-- <div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">ParcelGuard</p>
 									<p class="order-confirmation-page-tax-item">
-										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }} --}}
 										${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
 									</p>
-								</div>
+								</div> --}}
 							</div>
 						</div>
 						<div class="col-sm-12">

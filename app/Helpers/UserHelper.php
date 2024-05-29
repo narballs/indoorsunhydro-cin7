@@ -299,7 +299,7 @@ class UserHelper
             'insuranceOptions' => [
                 'provider' => 'parcelguard', 
                 'insureShipment' => true,
-                'insuredValue' => floatval($currentOrder->shipment_price)
+                'insuredValue' => floatval(floatval($currentOrder->shipment_price)  - floatval($currentOrder->parcel_guard))
             ],
             'confirmation' => floatval($currentOrder->total_including_tax) >= 500 ? 'signature' : 'delivery',
             'items'=> $items

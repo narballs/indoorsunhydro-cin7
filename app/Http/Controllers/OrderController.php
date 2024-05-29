@@ -101,6 +101,14 @@ class OrderController extends Controller
             $shipping_carrier_code = $request->shipping_carrier_code;
             $shipstation_shipment_value = $actual_shipping_price;
         }
+
+
+        $parcel_guard = 0;
+        if (floatval($actual_shipping_price) > 0) {
+            $parcel_guard_price = (ceil($actual_shipping_price / 100) * 0.99);
+            $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
+        }
+
         $address_1_shipping = $request->address_1_shipping;
         $state_shipping = $request->state_shipping;
         $zip_code_shipping = $request->zip_code_shipping;
@@ -715,6 +723,7 @@ class OrderController extends Controller
                     $order->discount_id = $discount_id;
                     $order->discount_amount = $discount_amount;
                     $order->tax_rate = $total_tax_rate;
+                    $order->parcel_guard = $parcel_guard;
                     $order->save();
 
 
@@ -1838,24 +1847,24 @@ class OrderController extends Controller
                 ];
             }
 
-            if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
-                $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
-                $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
-                $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
-                $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
-                $parcel_guard = $stripe->products->create([
-                    'name' => 'Parcel Guard',
-                ]);
-                $parcel_guard_price = $stripe->prices->create([
-                    'unit_amount_decimal' => $parcel_guard_string,
-                    'currency' => 'usd',
-                    'product' => $parcel_guard->id
-                ]);
-                $items[] = [
-                    'price' => $parcel_guard_price->id,
-                    'quantity' => '1',
-                ];
-            }
+            // if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
+            //     $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
+            //     $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
+            //     $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
+            //     $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
+            //     $parcel_guard = $stripe->products->create([
+            //         'name' => 'Parcel Guard',
+            //     ]);
+            //     $parcel_guard_price = $stripe->prices->create([
+            //         'unit_amount_decimal' => $parcel_guard_string,
+            //         'currency' => 'usd',
+            //         'product' => $parcel_guard->id
+            //     ]);
+            //     $items[] = [
+            //         'price' => $parcel_guard_price->id,
+            //         'quantity' => '1',
+            //     ];
+            // }
 
             // $discount= $stripe->products->create([
             //     'name' => 'Discount',
@@ -1992,24 +2001,24 @@ class OrderController extends Controller
             ];
         }
 
-        if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
-            $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
-            $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
-            $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
-            $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
-            $parcel_guard = $stripe->products->create([
-                'name' => 'Parcel Guard',
-            ]);
-            $parcel_guard_price = $stripe->prices->create([
-                'unit_amount_decimal' => $parcel_guard_string,
-                'currency' => 'usd',
-                'product' => $parcel_guard->id
-            ]);
-            $items[] = [
-                'price' => $parcel_guard_price->id,
-                'quantity' => '1',
-            ];
-        }
+        // if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
+        //     $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
+        //     $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
+        //     $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
+        //     $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
+        //     $parcel_guard = $stripe->products->create([
+        //         'name' => 'Parcel Guard',
+        //     ]);
+        //     $parcel_guard_price = $stripe->prices->create([
+        //         'unit_amount_decimal' => $parcel_guard_string,
+        //         'currency' => 'usd',
+        //         'product' => $parcel_guard->id
+        //     ]);
+        //     $items[] = [
+        //         'price' => $parcel_guard_price->id,
+        //         'quantity' => '1',
+        //     ];
+        // }
 
         
 
