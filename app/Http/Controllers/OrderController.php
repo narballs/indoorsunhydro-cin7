@@ -105,8 +105,8 @@ class OrderController extends Controller
 
         $parcel_guard = 0;
         if (floatval($actual_shipping_price) > 0) {
-            $parcel_guard_price = (ceil($actual_shipping_price / 100) * 0.99);
-            $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
+            $parcel_guard = (ceil($actual_shipping_price / 100) * 0.99);
+            // $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
         }
 
         $address_1_shipping = $request->address_1_shipping;
