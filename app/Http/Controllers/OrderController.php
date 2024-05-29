@@ -1915,7 +1915,7 @@ class OrderController extends Controller
                 ],
                 // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
                 'customer' => $customer->id,
-                'customer_email' => auth()->user()->email,
+                // 'customer_email' => auth()->user()->email,
                 
             ]);
     
@@ -2054,7 +2054,7 @@ class OrderController extends Controller
             ],
             // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
             'customer' => $customer->id,
-            'customer_email' => auth()->user()->email,
+            // 'customer_email' => auth()->user()->email,
         ]);
 
         return $checkout_session;
