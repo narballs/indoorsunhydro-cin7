@@ -1476,6 +1476,7 @@ class OrderController extends Controller
     public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value , $parcel_guard) {
         $discount_variation_value  = $discount_variation_value;
         $percentage = null;
+        
         if ($discount_variation_value >= 100  && $discount_type == 'percentage') {
             foreach ($cart_items as $cart_item) {
                 $OrderItem = new ApiOrderItem;
@@ -1765,6 +1766,12 @@ class OrderController extends Controller
             }            
         } 
         else {
+            $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $customer = $stripe->customers->create([
+                'name' => $order_contact->firstName . ' ' . $order_contact->lastName,
+                'email' => $order_contact->email,
+            ]);    
             foreach ($cart_items as $cart_item) {
                 $OrderItem = new ApiOrderItem;
                 $OrderItem->order_id = $order_id;
@@ -1773,8 +1780,7 @@ class OrderController extends Controller
                 $OrderItem->price = $cart_item['price'];
                 $OrderItem->option_id = $cart_item['option_id'];
                 $OrderItem->save();
-    
-                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+
                 $products = $stripe->products->create([
                     'name' => $cart_item['name'],
                 ]);
@@ -1908,6 +1914,7 @@ class OrderController extends Controller
                     ]
                 ],
                 // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+                'customer' => $customer->id,
                 'customer_email' => auth()->user()->email,
                 
             ]);
@@ -1927,7 +1934,13 @@ class OrderController extends Controller
         //     }
         // } else {
         //     $original_shipment_price = $request->original_shipment_price;
-        // }    
+        // }
+        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $customer = $stripe->customers->create([
+            'name' => $order_contact->firstName . ' ' . $order_contact->lastName,
+            'email' => $order_contact->email,
+        ]);    
         foreach ($cart_items as $cart_item) {
             $OrderItem = new ApiOrderItem;
             $OrderItem->order_id = $order_id;
@@ -1937,7 +1950,7 @@ class OrderController extends Controller
             $OrderItem->option_id = $cart_item['option_id'];
             $OrderItem->save();
 
-            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            
             $products = $stripe->products->create([
                 'name' => $cart_item['name'],
             ]);
@@ -2040,6 +2053,7 @@ class OrderController extends Controller
                 ]
             ],
             // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+            'customer' => $customer->id,
             'customer_email' => auth()->user()->email,
         ]);
 
