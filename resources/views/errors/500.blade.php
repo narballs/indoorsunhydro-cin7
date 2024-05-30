@@ -54,7 +54,7 @@
             <div class="text-center">
                 <a  class="btn btn-danger" href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">Logout</a>
-                <a href="/" class="btn btn-primary">Return Home</a>
+                <a href="{{url('/user')}}" class="btn btn-primary">Return Home</a>
             </div>
         </div>
 

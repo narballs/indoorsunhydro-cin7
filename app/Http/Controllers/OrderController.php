@@ -101,6 +101,14 @@ class OrderController extends Controller
             $shipping_carrier_code = $request->shipping_carrier_code;
             $shipstation_shipment_value = $actual_shipping_price;
         }
+
+
+        $parcel_guard = 0;
+        if (floatval($actual_shipping_price) > 0) {
+            $parcel_guard = (ceil($actual_shipping_price / 100) * 0.99);
+            // $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
+        }
+
         $address_1_shipping = $request->address_1_shipping;
         $state_shipping = $request->state_shipping;
         $zip_code_shipping = $request->zip_code_shipping;
@@ -715,6 +723,7 @@ class OrderController extends Controller
                     $order->discount_id = $discount_id;
                     $order->discount_amount = $discount_amount;
                     $order->tax_rate = $total_tax_rate;
+                    $order->parcel_guard = $parcel_guard;
                     $order->save();
 
 
@@ -1467,6 +1476,7 @@ class OrderController extends Controller
     public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value , $parcel_guard) {
         $discount_variation_value  = $discount_variation_value;
         $percentage = null;
+        
         if ($discount_variation_value >= 100  && $discount_type == 'percentage') {
             foreach ($cart_items as $cart_item) {
                 $OrderItem = new ApiOrderItem;
@@ -1756,6 +1766,12 @@ class OrderController extends Controller
             }            
         } 
         else {
+            $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $customer = $stripe->customers->create([
+                'name' => $order_contact->firstName . ' ' . $order_contact->lastName,
+                'email' => $order_contact->email,
+            ]);    
             foreach ($cart_items as $cart_item) {
                 $OrderItem = new ApiOrderItem;
                 $OrderItem->order_id = $order_id;
@@ -1764,8 +1780,7 @@ class OrderController extends Controller
                 $OrderItem->price = $cart_item['price'];
                 $OrderItem->option_id = $cart_item['option_id'];
                 $OrderItem->save();
-    
-                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+
                 $products = $stripe->products->create([
                     'name' => $cart_item['name'],
                 ]);
@@ -1838,24 +1853,24 @@ class OrderController extends Controller
                 ];
             }
 
-            if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
-                $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
-                $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
-                $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
-                $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
-                $parcel_guard = $stripe->products->create([
-                    'name' => 'Parcel Guard',
-                ]);
-                $parcel_guard_price = $stripe->prices->create([
-                    'unit_amount_decimal' => $parcel_guard_string,
-                    'currency' => 'usd',
-                    'product' => $parcel_guard->id
-                ]);
-                $items[] = [
-                    'price' => $parcel_guard_price->id,
-                    'quantity' => '1',
-                ];
-            }
+            // if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
+            //     $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
+            //     $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
+            //     $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
+            //     $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
+            //     $parcel_guard = $stripe->products->create([
+            //         'name' => 'Parcel Guard',
+            //     ]);
+            //     $parcel_guard_price = $stripe->prices->create([
+            //         'unit_amount_decimal' => $parcel_guard_string,
+            //         'currency' => 'usd',
+            //         'product' => $parcel_guard->id
+            //     ]);
+            //     $items[] = [
+            //         'price' => $parcel_guard_price->id,
+            //         'quantity' => '1',
+            //     ];
+            // }
 
             // $discount= $stripe->products->create([
             //     'name' => 'Discount',
@@ -1899,7 +1914,8 @@ class OrderController extends Controller
                     ]
                 ],
                 // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
-                'customer_email' => auth()->user()->email,
+                'customer' => $customer->id,
+                // 'customer_email' => auth()->user()->email,
                 
             ]);
     
@@ -1918,7 +1934,13 @@ class OrderController extends Controller
         //     }
         // } else {
         //     $original_shipment_price = $request->original_shipment_price;
-        // }    
+        // }
+        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $customer = $stripe->customers->create([
+            'name' => $order_contact->firstName . ' ' . $order_contact->lastName,
+            'email' => $order_contact->email,
+        ]);    
         foreach ($cart_items as $cart_item) {
             $OrderItem = new ApiOrderItem;
             $OrderItem->order_id = $order_id;
@@ -1928,7 +1950,7 @@ class OrderController extends Controller
             $OrderItem->option_id = $cart_item['option_id'];
             $OrderItem->save();
 
-            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            
             $products = $stripe->products->create([
                 'name' => $cart_item['name'],
             ]);
@@ -1992,24 +2014,24 @@ class OrderController extends Controller
             ];
         }
 
-        if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
-            $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
-            $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
-            $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
-            $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
-            $parcel_guard = $stripe->products->create([
-                'name' => 'Parcel Guard',
-            ]);
-            $parcel_guard_price = $stripe->prices->create([
-                'unit_amount_decimal' => $parcel_guard_string,
-                'currency' => 'usd',
-                'product' => $parcel_guard->id
-            ]);
-            $items[] = [
-                'price' => $parcel_guard_price->id,
-                'quantity' => '1',
-            ];
-        }
+        // if (!empty($parcel_guard) && floatval($parcel_guard) > 0) {
+        //     $parcel_guard_price = number_format((floatval($parcel_guard)) , 2);
+        //     $parcel_guard_value = str_replace(',', '', $parcel_guard_price);
+        //     $formatted_parcel_guard_value = number_format(($parcel_guard_value * 100) , 2);
+        //     $parcel_guard_string = str_replace(',', '', $formatted_parcel_guard_value);
+        //     $parcel_guard = $stripe->products->create([
+        //         'name' => 'Parcel Guard',
+        //     ]);
+        //     $parcel_guard_price = $stripe->prices->create([
+        //         'unit_amount_decimal' => $parcel_guard_string,
+        //         'currency' => 'usd',
+        //         'product' => $parcel_guard->id
+        //     ]);
+        //     $items[] = [
+        //         'price' => $parcel_guard_price->id,
+        //         'quantity' => '1',
+        //     ];
+        // }
 
         
 
@@ -2031,7 +2053,8 @@ class OrderController extends Controller
                 ]
             ],
             // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
-            'customer_email' => auth()->user()->email,
+            'customer' => $customer->id,
+            // 'customer_email' => auth()->user()->email,
         ]);
 
         return $checkout_session;
