@@ -30,7 +30,7 @@
 </script>
 <script>
     function adding_quantity(product_id , option_id) {
-        updateBodyClickEventStatus(false);
+        // updateBodyClickEventStatus(false);
         var plus = parseInt($('.swap_qty_number_' + product_id).val()) === '' ? 1 : parseInt($('.swap_qty_number_' + product_id).val());
         var stock_number = $('.swap_qty_number_'+product_id).attr('max');
         var result = plus + 1;
@@ -50,33 +50,34 @@
         }
         else {
             var new_qty = $('.swap_qty_number_' + product_id).val(result);
-            increasingQuantity(product_id , option_id)
+            // increasingQuantity(product_id , option_id)
             $('.swap_qty_number_' + product_id).val(result)
         } 
     }
     function subtracting_quantity(product_id , option_id) {
-        updateBodyClickEventStatus(false);
+        // updateBodyClickEventStatus(false);
         var minus = $('.swap_qty_number_' + product_id).val() == '' ? 1 : parseInt($('.swap_qty_number_' + product_id).val());
         if (minus > 1) {
             var result = minus - 1;
             $('.swap_qty_number_' + product_id).val(result);
-            decreasingQuantity(product_id , option_id)
+            // decreasingQuantity(product_id , option_id)
         } else {
             var result = minus - 1;
             
             if (minus == 1) {
                 result = 1;
                 // $('.cart-total-number-' + product_id).css('display' , 'none');
-                $('.button_swap_quantity_'+product_id).addClass('d-none');
-                $('.original_cart_btn_'+product_id).removeClass('d-none');
-                $('.swap_qty_number_' + product_id).val(0);
-                decreasingQuantity(product_id , option_id)
+                // $('.button_swap_quantity_'+product_id).addClass('d-none');
+                // $('.original_cart_btn_'+product_id).removeClass('d-none');
+                // $('.swap_qty_number_' + product_id).val(0);
+                $('.swap_qty_number_' + product_id).val(result);
+                // decreasingQuantity(product_id , option_id)
             }
             else{
                 // $('.cart-total-number-' + product_id).css('display' , 'none');
-                $('.button_swap_quantity_'+product_id).addClass('d-none');
-                $('.original_cart_btn_'+product_id).removeClass('d-none');
-                $('.swap_qty_number_' + product_id).val(0);
+                // $('.button_swap_quantity_'+product_id).addClass('d-none');
+                // $('.original_cart_btn_'+product_id).removeClass('d-none');
+                $('.swap_qty_number_' + product_id).val(1);
             
             }
         }
@@ -296,7 +297,7 @@
         return false;
     }
     function update_qty_text(id , option_id) {
-        updateBodyClickEventStatus(false);
+        // updateBodyClickEventStatus(false);
         var stock_number = $('.swap_qty_number_'+id).attr('max');
         var qty = parseInt($('.swap_qty_number_' + id).val()) == 0 || $('.swap_qty_number_' + id).val() === '' ? 1 : parseInt($('.swap_qty_number_' + id).val());
         var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
@@ -427,9 +428,9 @@
         }
         
     }
-    function button_swap_quantity (id , option_id) {
-        updateBodyClickEventStatus(false);
-    }
+    // function button_swap_quantity (id , option_id) {
+    //     updateBodyClickEventStatus(false);
+    // }
 </script>
 
 <script type="text/javascript">
@@ -497,21 +498,21 @@
             }
         });
     }
-    function updateBodyClickEventStatus(newStatus) {
-      bodyClickEventActive = newStatus;
-    }
+    // function updateBodyClickEventStatus(newStatus) {
+    //   bodyClickEventActive = newStatus;
+    // }
 
     $(document).ready(function() {
-        $('body').click(function() {
-            if (bodyClickEventActive) {
-                bodyClickHandler();
-            }
+        // $('body').click(function() {
+        //     if (bodyClickEventActive) {
+        //         bodyClickHandler();
+        //     }
 
-        });
+        // });
 
-        $('body').on('click', function() {
-            updateBodyClickEventStatus(true);
-        });
+        // $('body').on('click', function() {
+        //     updateBodyClickEventStatus(true);
+        // });
 
         $(document).on('click', '#copyUrl', function() {
             $('#custom_loader').removeClass('d-none');
