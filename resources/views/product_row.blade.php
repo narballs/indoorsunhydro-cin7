@@ -114,6 +114,18 @@
                     <div class="col-md-12 add-to-cart-button-section">
                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
                             @if ($option->stockAvailable > 0)
+                                <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend custom-border qty_minus_mobile">
+                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
+                                        </div>
+                                        {{-- <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}"> --}}
+                                        <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
+                                        <div class="input-group-prepend custom-border qty_plus_mobile">
+                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <button 
                                     class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
                                     type="submit" 
@@ -122,21 +134,11 @@
                                 >
                                     Add to cart
                                 </button>
-                                <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} d-none" id="button_swap_{{ $product->id }}">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend custom-border qty_minus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
-                                        </div>
-                                        <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
-                                        <div class="input-group-prepend custom-border qty_plus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
+                                
+                                {{-- <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
                                     <span class="cart-total-number-{{$product->id }} mr-2"></span>
                                     Added to cart
-                                </div>
+                                </div> --}}
                             @else
                                 
                                 @if (auth()->user())
@@ -162,6 +164,18 @@
                             @endif
                         @else
                             @if ($enable_add_to_cart)
+                                <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend custom-border qty_minus_mobile">
+                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
+                                        </div>
+                                        {{-- <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}"> --}}
+                                        <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
+                                        <div class="input-group-prepend custom-border qty_plus_mobile">
+                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <button 
                                     class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
                                     type="submit" 
@@ -170,21 +184,11 @@
                                 >
                                     Add to cart
                                 </button>
-                                <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} d-none" id="button_swap_{{ $product->id }}">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend custom-border qty_minus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
-                                        </div>
-                                        <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
-                                        <div class="input-group-prepend custom-border qty_plus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
+                                
+                                {{-- <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
                                     <span class="cart-total-number-{{$product->id }} mr-2"></span>
                                     Added to cart
-                                </div>
+                                </div> --}}
                             @else
                                 <button 
                                     class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
@@ -390,40 +394,58 @@
         var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
         var tax = 0;
         var tax_rate = parseFloat($('#tax_rate_number').val());
-        updateBodyClickEventStatus(false);
-        $('#last_button_clicked').val(id);
+        // updateBodyClickEventStatus(false);
+        // $('#last_button_clicked').val(id);
 
-        $('.cart-total-' + id).addClass('added-to-cart');
-        $('#button_swap_' + id).addClass('btn-added-to-cart');
+        // $('.cart-total-' + id).addClass('added-to-cart');
+        // $('#button_swap_' + id).addClass('btn-added-to-cart');
+        // $('.added-to-cart').css('display', 'inline-flex');
+        // $('.btn-added-to-cart').css('display', 'none');
 
-        //$('.quantity_count_circle').css('visibility', 'visible');
-        $('.added-to-cart').css('display', 'inline-flex');
-        $('.btn-added-to-cart').css('display', 'none');
-
-        $('.cart-total-' + id).css('display', 'none');
-        $('#button_swap_' + id).css('display', 'block');
+        // $('.cart-total-' + id).css('display', 'none');
+        // $('#button_swap_' + id).css('display', 'block');
         
-        $('#ajaxSubmit_'+id).addClass('d-none');
-        $('#button_swap_'+id).removeClass('d-none');
+        // $('#ajaxSubmit_'+id).addClass('d-none');
+        // $('#button_swap_'+id).removeClass('d-none');
 
-        $('#swap_qty_number_'+id).val(1);
-        $('.quantity_count_circle').each(function() {
-            // var html = $(this).html();
-            var html = $(this);
-            var spanContent = $(html).find('span');
-            if (parseInt($(html).find('span').html()) > 0) {
-                spanContent.parent().css('display', 'inline-flex');
-            } else {
-                spanContent.parent().css('display', 'none');
-            }
-        });
+        // $('#swap_qty_number_'+id).val(1);
+        // $('.quantity_count_circle').each(function() {
+        //     var html = $(this);
+        //     var spanContent = $(html).find('span');
+        //     if (parseInt($(html).find('span').html()) > 0) {
+        //         spanContent.parent().css('display', 'inline-flex');
+        //     } else {
+        //         spanContent.parent().css('display', 'none');
+        //     }
+        // });
+        var itemnumberQuantity = $('.swap_qty_number_'+id).val();
+        var newValue = itemnumberQuantity.replace(/^0+/, ''); // Remove leading zeros
+        if (newValue === "") {
+            newValue = 0; // Handle case where all characters were zeros
+        }
+        $('.swap_qty_number_'+id).val(newValue);
+        var itemQuantity = $('.swap_qty_number_'+id).val();
+        if (parseInt(itemQuantity) <= 0 || itemQuantity === '' || itemQuantity === null) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Quantity must be greater than 0 and not Empty!',
+                timer: 3000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+            $('.swap_qty_number_'+id).val(1);
+            return false;
+        }
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
                 p_id: jQuery('#p_' + id).val(),
-                quantity: 1
+                // quantity: 1
+                quantity: itemQuantity
             },
             success: function(response) {
                 if (response.status == 'errror') {
@@ -497,7 +519,7 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + product_name +
+                        title: itemQuantity + ' X ' + product_name +
                             ' added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
@@ -513,33 +535,33 @@
 
         return false;
     }
-    function swap_quantity_input(id) {
-      updateBodyClickEventStatus(false);
-      $('.quantity_count_circle').each(function() {
-            // var html = $(this).html();
-            var html = $(this);
-            var spanContent = $(html).find('span');
-            if (parseInt($(html).find('span').html()) > 0) {
-                spanContent.parent().css('display', 'inline-flex');
-            } else {
-                spanContent.parent().css('display', 'none');
-            }
-        });
-      $('.cart-total-'+id).css('display', 'none');
-      $('.btn-added-to-cart').css('display', 'none');
-      $('.quantity_count_circle').each(function() {
-            // var html = $(this).html();
-            var html = $(this);
-            var spanContent = $(html).find('span');
-            if (parseInt($(html).find('span').html()) > 0) {
-                spanContent.parent().css('display', 'inline-flex');
-            } else {
-                spanContent.parent().css('display', 'none');
-            }
-        });
-      $('#button_swap_'+id).css('display', 'block');
-      $('.cart-total-'+id).css('display', 'none');
-   }
+//     function swap_quantity_input(id) {
+//       updateBodyClickEventStatus(false);
+//       $('.quantity_count_circle').each(function() {
+//             // var html = $(this).html();
+//             var html = $(this);
+//             var spanContent = $(html).find('span');
+//             if (parseInt($(html).find('span').html()) > 0) {
+//                 spanContent.parent().css('display', 'inline-flex');
+//             } else {
+//                 spanContent.parent().css('display', 'none');
+//             }
+//         });
+//       $('.cart-total-'+id).css('display', 'none');
+//       $('.btn-added-to-cart').css('display', 'none');
+//       $('.quantity_count_circle').each(function() {
+//             // var html = $(this).html();
+//             var html = $(this);
+//             var spanContent = $(html).find('span');
+//             if (parseInt($(html).find('span').html()) > 0) {
+//                 spanContent.parent().css('display', 'inline-flex');
+//             } else {
+//                 spanContent.parent().css('display', 'none');
+//             }
+//         });
+//       $('#button_swap_'+id).css('display', 'block');
+//       $('.cart-total-'+id).css('display', 'none');
+//    }
 
     function addToList(product_id, option_id, status) {
         var list_id = $("input[name='list_id']:checked").val();
