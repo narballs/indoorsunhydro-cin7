@@ -61,19 +61,13 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
-            // Insert products to Google Merchant Center
-            $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
-            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $result = $this->insertProducts($client, $token);
-
-            if ($result) {
-                $this->info('Products inserted successfully.');
-            } else {
-                $this->error('Failed to insert products.');
-            }
 
             $responseDeleted = $this->delete_inactive_products($client, $token);
             $responseRemoved = $this->removeDisapprovedProducts($client, $token);
+            $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
+
+           return $this->info('Products inserted successfully.'); 
         } else {
             $this->error('Failed to retrieve access token.');
         }
