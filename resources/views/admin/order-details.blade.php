@@ -412,8 +412,11 @@
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>
                                         <address>
+                                            @if (!empty($customer->contact->company ))
+                                                Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
+                                            @endif
                                             @if (!empty($customer->contact->firstName && $customer->contact->lastName))
-                                                <strong>{{ $customer->contact->firstName }}&nbsp;{{ $customer->contact->lastName }}</strong><br>
+                                                {{ $customer->contact->firstName }}&nbsp;{{ $customer->contact->lastName }}<br>
                                             @endif
                                             @if(!empty($customer->contact->postalAddress1))
                                                 {{$customer->contact->postalAddress1 . ','}} <br>
