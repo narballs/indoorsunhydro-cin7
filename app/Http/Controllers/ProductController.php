@@ -1216,7 +1216,7 @@ class ProductController extends Controller
                 ->first();
             
         } else {
-            $contact = Contact::where('user_id', $user_id)->first();
+            $contact = Contact::where('user_id', $user_id)->where('status' , 1)->first();
         }
 
         if (!empty($contact) && $contact->is_parent == 0) {
