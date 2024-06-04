@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
+use Google\Service\Dfareporting\OrderContact;
 
 /*
 |--------------------------------------------------------------------------
@@ -436,4 +437,5 @@ Route::post('admin/search/aletrnative/products', [ProductStockNotificationContro
 Route::post('admin/send/alternative/notification', [ProductStockNotificationController::class, 'add_alternative_product'])->name('add_alternative_product');
 Route::post('admin/alternative/products/history', [ProductStockNotificationController::class, 'alternate_products_history'])->name('alternate_products_history');
 Route::post('admin/notify/user/product/history', [ProductStockNotificationController::class, 'notify_users_from_alternate_history'])->name('notify_users_from_alternate_history');
-
+Route::get('/order/cin7-payment/{order_reference}', [OrderController::class, 'cin7_payments'])->name('cin7_payments');
+Route::get('/cin7/payment/success/{orderId}', [OrderController::class, 'cin7_payments_success'])->name('cin7_payments_success');
