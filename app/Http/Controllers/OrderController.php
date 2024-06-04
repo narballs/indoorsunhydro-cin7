@@ -2059,5 +2059,215 @@ class OrderController extends Controller
 
         return $checkout_session;
     }
+
+    public function cin7_payments($order_reference) {
+        $product_prices = [];
+        $order = ApiOrder::with('apiOrderItem' , 'apiOrderItem.product')->where('reference', $order_reference)->first();
+        $order_id = $order->id;
+        if (empty($order)) {
+            return abort(404);
+        }
+        $order_contact = Contact::where('contact_id', $order->memberId)->orWhere('parent_id' , $order->memberId)->first();
+        $first_name = !empty($order_contact->firstName) ? $order_contact->firstName : '';
+        $last_name = !empty($order_contact->lastName) ? $order_contact->lastName : '';
+
+        $order_items = ApiOrderItem::with('order.texClasses','product' ,'product.options')->where('order_id', $order_id)->get();
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $customer = $stripe->customers->create([
+            'name' => $first_name . ' ' . $last_name,
+            'email' => !empty($order_contact->email) ? $order_contact->email : '',
+            'metadata' => [
+                'order_id' => $order['id'], // Include order ID metadata
+                // You can include more metadata here if needed
+            ]
+        ]);
+        
+
+        if (count($order_items) > 0) {
+            foreach ($order_items as $order_item) {
+                $products = $stripe->products->create([
+                    'name' => !empty($order_item->product['name']) ? $order_item->product['name'] : '',
+                ]);
+                
+                $productPrice = $stripe->prices->create([
+                    'unit_amount' => $order_item['price'] * 100,
+                    'currency' => 'usd',
+                    'product' => $products->id,
+                    'metadata' => [
+                        'quantity'=> $order_item['quantity']
+                    ]
+                ]);
+                array_push($product_prices, $productPrice);
+            }
+        }
+
+        if (!empty($order->tax_rate) && floatval($order->tax_rate) > 0) {
+            $formatted_tax = number_format($order->tax_rate, 2);
+            $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+            $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+            $tax_value = str_replace(',', '', $formatted_tax_value);
+            $products_tax= $stripe->products->create([
+                'name' => 'Tax',
+            ]);
+
+            $taxproductPrice = $stripe->prices->create([
+                'unit_amount_decimal' => $tax_value,
+                'currency' => 'usd',
+                'product' => $products_tax->id
+            ]);
+        }
+
+        for ($i = 0; $i <= count($product_prices) - 1; $i++){
+            $items[] = [
+                'price' => $product_prices[$i]->id,
+                'quantity' => $product_prices[$i]['metadata']['quantity'],
+            ];  
+        }
+        if (!empty($tax_rate) && $tax_rate > 0) {
+            $items[] = [
+                'price' => $taxproductPrice->id,
+                'quantity' => '1',
+            ];
+        }
+
+
+        if (!empty($order->shipment_price) &&  floatval($order->shipment_price) > 0) {
+            $shipment_price = number_format(($order->shipment_price * 100) , 2);
+            $shipment_value = str_replace(',', '', $shipment_price);
+            $shipment_product = $stripe->products->create([
+                'name' => 'Shipment',
+            ]);
+            $shipment_product_price = $stripe->prices->create([
+                'unit_amount_decimal' => $shipment_value,
+                'currency' => 'usd',
+                'product' => $shipment_product->id
+            ]);
+            $items[] = [
+                'price' => $shipment_product_price->id,
+                'quantity' => '1',
+            ];
+        }
+
+        $line_items = [
+            'line_items' => 
+            [
+                $items
+            ]
+        ];
+        
+
+        try {
+            $checkout_session = $stripe->checkout->sessions->create([
+                'success_url' => url('/cin7/payment/success/'. $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
+                'line_items' => $items,
+                'mode' => 'payment',
+                'customer' => $customer->id,
+            ]);
+            return redirect($checkout_session->url);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+    
+    public function cin7_payments_success(Request $request , $order_id) {
+        $session_id = $request->query('session_id');
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+    
+        try {
+            $session = $stripe->checkout->sessions->retrieve($session_id);
+            $customer = $stripe->customers->retrieve($session->customer);
+            $order_id = $customer->metadata->order_id;
+            $order = ApiOrder::with('apiOrderItem', 'apiOrderItem.product')->where('id', $order_id)->first();
+            if (empty($order)) {
+                return abort(404);
+            }
+            $order_reference = $order->reference;
+
+            $order_contact = Contact::where('contact_id', $order->memberId)->orWhere('parent_id', $order->memberId)->first();
+            $first_name = $order_contact->firstName ?? '';
+            $last_name = $order_contact->lastName ?? '';
+            $email = $order_contact->email ?? '';
+
+            $items = [];
+            $subtotal = 0;
+
+            foreach ($order->apiOrderItem as $order_item) {
+                $unit_price = $order_item->price * 100;
+                $total = $unit_price * $order_item->quantity;
+                $subtotal += $total;
+
+                $items[] = [
+                    'name' => $order_item->product->name,
+                    'quantity' => $order_item->quantity,
+                    'unit_price' => $unit_price,
+                    'total' => $total,
+                ];
+            }
+
+            $tax = $order->tax_rate * 100;
+            $shipment = $order->shipment_price * 100;
+            $total = $subtotal + $tax + $shipment;
+
+
+            return view('cin7.invoice', [
+                'order_reference' => $order_reference,
+                'customer_name' => trim($first_name . ' ' . $last_name),
+                'customer_email' => $email,
+                'items' => $items,
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'shipment' => $shipment,
+                'total' => $total,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function showcin7Invoice($order_id) {
+        $order = ApiOrder::with('apiOrderItem', 'apiOrderItem.product')->where('id', $order_id)->first();
+        if (empty($order)) {
+            return abort(404);
+        }
+        $order_reference = $order->reference;
+
+        $order_contact = Contact::where('contact_id', $order->memberId)->orWhere('parent_id', $order->memberId)->first();
+        $first_name = $order_contact->firstName ?? '';
+        $last_name = $order_contact->lastName ?? '';
+        $email = $order_contact->email ?? '';
+
+        $items = [];
+        $subtotal = 0;
+
+        foreach ($order->apiOrderItem as $order_item) {
+            $unit_price = $order_item->price * 100;
+            $total = $unit_price * $order_item->quantity;
+            $subtotal += $total;
+
+            $items[] = [
+                'name' => $order_item->product->name,
+                'quantity' => $order_item->quantity,
+                'unit_price' => $unit_price,
+                'total' => $total,
+            ];
+        }
+
+        $tax = $order->tax_rate * 100;
+        $shipment = $order->shipment_price * 100;
+        $total = $subtotal + $tax + $shipment;
+
+
+        return view('cin7.invoice', [
+            'order_reference' => $order_reference,
+            'customer_name' => trim($first_name . ' ' . $last_name),
+            'customer_email' => $email,
+            'items' => $items,
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'shipment' => $shipment,
+            'total' => $total,
+        ]);
+    }
 }
 
