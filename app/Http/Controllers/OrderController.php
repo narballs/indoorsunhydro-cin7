@@ -117,7 +117,7 @@ class OrderController extends Controller
         $state_billing = $request->state_billing;
         $zip_code_billing = $request->zip_code_billing;
         if (empty($address_1_shipping) || empty($state_shipping) || empty($zip_code_shipping) || empty($address_1_billing) || empty($state_billing) || empty($zip_code_billing)) {
-            return back()->with('error', 'Blilling and Shipping address is required.');
+            return back()->with('error', 'Billing and Shipping address is required.');
         }
         
         $paymentMethod = $request->input('method_name');
