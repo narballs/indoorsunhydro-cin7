@@ -5,12 +5,34 @@
     <link href=" https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap4.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap4.css" rel="stylesheet">
+    <style>
+        .dt-info {
+            display: none !important;
+        }
+
+        .dt-buttons {
+            margin-bottom: 10px;
+        }
+
+        .dt-buttons .btn {
+            margin-right: 10px;
+        }
+
+        .invoice {
+            margin: 0 auto;
+            padding: 20px;
+            width: 80%;
+        }
+        .dt-paging {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
     <div class="invoice">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">
+                <h3 class="card-title ">
                     Invoice {{$order_reference}}
                 </h3> 
             </div>
@@ -22,7 +44,6 @@
                                 <th>Product Name</th>
                                 <th>Quantity</th>
                                 <th>Item Price</th>
-                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,23 +51,13 @@
                             <tr>
                                 <td>{{ $item['name'] }}</td>
                                 <td>{{ $item['quantity'] }}</td>
-                                <td>${{ number_format($item['unit_price'] / 100, 2) }}</td>
-                                <td>${{ number_format($item['total'] / 100, 2) }}</td>
+                                <td>${{ number_format($item['price'] , 2) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4" style="text-align: right !important"><strong>Subtotal:</strong><strong>  ${{ number_format($subtotal / 100, 2) }}</strong></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" style="text-align: right !important"><strong>Tax:</strong><strong><strong>  ${{ number_format($tax / 100, 2) }}</strong></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" style="text-align: right !important"><strong>Shipment:</strong><strong>  ${{ number_format($shipment / 100, 2) }}</strong></td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" style="text-align: right !important"><strong><strong>Total:</strong>  ${{ number_format($total / 100, 2) }}</strong></td>
+                                <td colspan="3" style="text-align: right !important"><strong><strong>Total:</strong>  ${{ number_format($total , 2) }}</strong></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -121,12 +132,14 @@
                     ]
                 },
                 topEnd: false,
-                ordering: false,
+                ordering: false, // Disable global ordering and sorting
                 search: false,
                 info: false,
                 lengthChange: false,
                 paging: false
-            }
+            },
+            columnDefs: [{ orderable: false, targets: 0 }],
+            order: [[1, 'asc']]
         });
     </script>
 </body>
