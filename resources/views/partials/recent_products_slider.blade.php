@@ -225,7 +225,7 @@
                                                             <button 
                                                                 class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                                onclick="update_sliderCart('{{ $product->id }}', '{{ $option->option_id }}')"
                                                             >
                                                                 Add to cart
                                                             </button>
@@ -256,7 +256,7 @@
                                                             <button 
                                                                 class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                                onclick="update_sliderCart('{{ $product->id }}', '{{ $option->option_id }}')"
                                                             >
                                                                 Add to cart
                                                             </button>
@@ -266,7 +266,7 @@
                                                                 tabindex="-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"
                                                                 disabled 
-                                                                onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                                onclick="return update_sliderCart('{{ $product->id }}')">Out of Stock</button>
                                                         @endif
                                                     @endif
                                                 </div>
@@ -411,7 +411,7 @@
                                                             <button 
                                                                 class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                                onclick="update_sliderCart('{{ $product->id }}', '{{ $option->option_id }}')"
                                                             >
                                                                 Add to cart
                                                             </button>
@@ -442,7 +442,7 @@
                                                             <button 
                                                                 class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"
-                                                                onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                                                onclick="update_sliderCart('{{ $product->id }}', '{{ $option->option_id }}')"
                                                             >
                                                                 Add to cart
                                                             </button>
@@ -452,7 +452,7 @@
                                                                 tabindex="-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"
                                                                 disabled 
-                                                                onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
+                                                                onclick="return update_sliderCart('{{ $product->id }}')">Out of Stock</button>
                                                         @endif
                                                     @endif
                                                 </div>

@@ -47,6 +47,7 @@ return [
         'get_contact_url' => env('Cin7_GET_CONTACT_URL'),
         'get_stripe_public_key' => env('Cin7_STRIPE_PUBLIC_KEY'),
         'get_stripe_secret_key' => env('Cin7_STRIPE_SECRET_KEY'),
+        'wholesale_payment_configuration' => env('wholesale_payment_confirmation_key'),
     ],
     'google_address_validator' => [
         'address_validator_google_key' => env('Address_validator_api_key'),

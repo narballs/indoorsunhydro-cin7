@@ -2060,6 +2060,8 @@ class OrderController extends Controller
         return $checkout_session;
     }
 
+
+    //cin 7 wholesale payments
     public function cin7_payments($order_reference) {
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
@@ -2167,6 +2169,7 @@ class OrderController extends Controller
                 'line_items' => $items,
                 'mode' => 'payment',
                 'customer' => $customer->id,
+                'payment_method_configuration' => config('services.cin7.wholesale_payment_configuration'), 
             ]);
             return redirect($checkout_session->url);
         } catch (\Exception $e) {
