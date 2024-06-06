@@ -374,7 +374,7 @@
             $('.notify_text').html('');
             $('.notify_user_div').addClass('d-none');
         }
-        function updateCart(id, option_id) {
+        function update_sliderCart (id, option_id) {
             var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
             var tax = 0;
             var tax_rate = parseFloat($('#tax_rate_number').val());
