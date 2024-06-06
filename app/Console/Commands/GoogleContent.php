@@ -63,9 +63,9 @@ class GoogleContent extends Command
         if (isset($token['access_token'])) {
             $result = $this->insertProducts($client, $token);
 
-            $responseDeleted = $this->delete_inactive_products($client, $token);
-            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
-            $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
+            // $responseDeleted = $this->delete_inactive_products($client, $token);
+            // $responseRemoved = $this->removeDisapprovedProducts($client, $token);
+            // $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
 
            return $this->info('Products inserted successfully.'); 
         } else {
