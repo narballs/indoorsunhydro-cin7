@@ -108,7 +108,7 @@ class GoogleContent extends Command
         ->pluck('product_id')->toArray();
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
-        // ->where('barcode' , '!=' , '')
+        ->where('barcode' , '!=' , '')
         ->get();
         if (count($products) > 0) {
             foreach ($products as $product) {
