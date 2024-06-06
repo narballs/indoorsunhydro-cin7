@@ -229,6 +229,7 @@ class CheckoutController extends Controller
     public function new_checkout(Request $request)
     {
         $shipment_error = 0;
+        $discount_code = null;
         $states = UsState::all();
         $cart_items = UserHelper::switch_price_tier($request);
         $cart_total = 0;
