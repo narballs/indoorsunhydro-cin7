@@ -116,34 +116,36 @@ class GoogleContent extends Command
                 if (count($product->options) > 0) {
                     foreach ($product->options as $option) {
                         if ((count($option->price) > 0)  ) {
-                            if ((!empty($option->price->$price_column)) && $option->price->$price_column > 0) {
-                                $category = 'General > General';
-                                if (!empty($product->categories)) {
-                                    if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
-                                        $category = $product->categories->category_id;
-                                    } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
-                                        $category = $product->categories->parent_id;
-                                    }
-                                }
-                                else {
+                            foreach ($option->price as $price)  {
+                                if ((!empty($price->$price_column)) && $price->$price_column > 0) {
                                     $category = 'General > General';
+                                    if (!empty($product->categories)) {
+                                        if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
+                                            $category = $product->categories->category_id;
+                                        } else if (!empty($product->categories->parent_id) && !empty($product->categories->category_id) && $product->categories->parent_id != 0) {
+                                            $category = $product->categories->parent_id;
+                                        }
+                                    }
+                                    else {
+                                        $category = 'General > General';
+                                    }
+                                    
+                                    $product_array[] = [
+                                        'id' => $product->id,
+                                        'title' => $product->name,
+                                        'code' => $product->code,
+                                        'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
+                                        'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
+                                        'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
+                                        'price' => !empty($price->$price_column) && $price->$price_column > 0  ? $price->$price_column : 0,
+                                        'condition' => 'new',
+                                        'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
+                                        'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
+                                        'barcode' => $product->barcode,
+                                        'google_product_category' => $category,
+                                        'product_weight' => $option->optionWeight,
+                                    ];
                                 }
-                                
-                                $product_array[] = [
-                                    'id' => $product->id,
-                                    'title' => $product->name,
-                                    'code' => $product->code,
-                                    'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
-                                    'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                                    'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                                    'price' => !empty($option->price->$price_column) && $option->price->$price_column > 0  ? $option->price->$price_column : 0,
-                                    'condition' => 'new',
-                                    'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
-                                    'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
-                                    'barcode' => $product->barcode,
-                                    'google_product_category' => $category,
-                                    'product_weight' => $option->optionWeight,
-                                ];
                             }
                         }
                         
