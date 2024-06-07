@@ -54,7 +54,7 @@
                                     {{-- <a href="{{route('google.authorize')}}" type="button" class="btn btn-info text-white">
                                         Google Sync +
                                     </a> --}}
-                                    Last Google Merchant Center Sync: {{ !empty($last_google_sync) ? $last_google_sync : 'Null'}}
+                                   <strong> Last Google Merchant Center Sync: {{ !empty($last_google_sync) ? $last_google_sync->last_updated_at : 'Null'}}</strong>
 
                                 </span>
                             </div>
