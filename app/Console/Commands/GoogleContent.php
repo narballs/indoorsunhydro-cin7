@@ -66,17 +66,20 @@ class GoogleContent extends Command
             $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
             $result = $this->insertProducts($client, $token);
-
+            $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
+            if (!empty($gmcLog)) {
+                $gmcLog->last_updated_at = now();
+                $gmcLog->save();
+            } else {
+                $create_gmc_log = new GmcLog();
+                $create_gmc_log->last_updated_at = now();
+                $create_gmc_log->save();
+            }
             $responseDeleted = $this->delete_inactive_products($client, $token);
             $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
 
-            $gmcLog = GmcLog::first();
-            if ($gmcLog) {
-                $gmcLog->update(['last_updated_at' => now()]);
-            } else {
-                GmcLog::create(['last_updated_at' => now()]);
-            }
+            
 
            return $this->info('Products inserted successfully.'); 
         } else {
