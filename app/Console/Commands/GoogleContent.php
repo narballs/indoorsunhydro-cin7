@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\AdminSetting;
 use App\Models\Category;
+use App\Models\GmcLog;
 use App\Models\Pricingnew;
 use App\Models\Product;
 use App\Models\ProductOption;
@@ -69,6 +70,13 @@ class GoogleContent extends Command
             $responseDeleted = $this->delete_inactive_products($client, $token);
             $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
+
+            $gmcLog = GmcLog::first();
+            if ($gmcLog) {
+                $gmcLog->update(['last_updated_at' => now()]);
+            } else {
+                GmcLog::create(['last_updated_at' => now()]);
+            }
 
            return $this->info('Products inserted successfully.'); 
         } else {

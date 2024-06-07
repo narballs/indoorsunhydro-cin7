@@ -51,9 +51,11 @@
                         <div class="col-md-2 d-flex align-items-center">
                             <div class="d-flex align-items-center ">
                                 <span class="">
-                                    <a href="{{route('google.authorize')}}" type="button" class="btn btn-info text-white">
+                                    {{-- <a href="{{route('google.authorize')}}" type="button" class="btn btn-info text-white">
                                         Google Sync +
-                                    </a>
+                                    </a> --}}
+                                    Last Google Merchant Center Sync: {{ !empty($last_google_sync) ? $last_google_sync : 'Null'}}
+
                                 </span>
                             </div>
                         </div>
