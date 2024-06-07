@@ -2170,6 +2170,7 @@ class OrderController extends Controller
                 'mode' => 'payment',
                 'customer' => $customer->id,
                 'payment_method_configuration' => config('services.cin7.wholesale_payment_configuration'), 
+                'payment_method_types'=> ['us_bank_account']
             ]);
             return redirect($checkout_session->url);
         } catch (\Exception $e) {
