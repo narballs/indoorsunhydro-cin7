@@ -29,7 +29,7 @@
                                             
                                             <p class="product_name mb-1">
                                                 @if(!empty($product->name))
-                                                    <a class="product_name" id="prd_name_{{$product->id }}" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">{{$product->name }}</a>
+                                                    <a class="product_name" data-title="{{$product->name }}" id="prd_name_{{$product->id }}" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">{{$product->name }}</a>
                                                 @endif
                                             </p>
                                             
