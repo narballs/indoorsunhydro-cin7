@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use \App\Http\Controllers\Controller;
 use App\Http\Middleware\IsAdmin;
+use App\Models\GmcLog;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -15,6 +16,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('admin/dashboard');
+        $last_google_sync =  GmcLog::first();
+        return view('admin/dashboard' , compact('last_google_sync'));
     }
 }
