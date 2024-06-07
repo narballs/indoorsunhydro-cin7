@@ -48,13 +48,13 @@
                 <p class="message text-dark">Oops! Something went wrong on our end.  We're working to fix the issue as soon as possible. In the meantime, you can try the following options:</p>
                 <ul>
                     <li><strong>Logout:</strong> If you'd like to logout, click the button below.</li>
-                    <li><strong>Return Home:</strong> Alternatively, you can return to the home page.</li>
+                    {{-- <li><strong>Return Home:</strong> Alternatively, you can return to the home page.</li> --}}
                 </ul>
             </div>
             <div class="text-center">
                 <a  class="btn btn-danger" href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">Logout</a>
-                <a href="{{url('/user')}}" class="btn btn-primary">Return Home</a>
+                {{-- <a href="{{url('/user')}}" class="btn btn-primary">Return Home</a> --}}
             </div>
         </div>
 
