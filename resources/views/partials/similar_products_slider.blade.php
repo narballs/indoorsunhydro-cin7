@@ -228,7 +228,7 @@
                                             </a>
                                         @endif
                                         <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy p-0">
-                                            <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+                                            <h5 class="card-title card_product_title tooltip-product" data-title="{{$product->name}}" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
                                                 <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                                                     {{ \Illuminate\Support\Str::limit($product->name, 20) }}
                                                     <div class="tooltip-product-text bg-white text-primary">
@@ -498,7 +498,7 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
-
+                    var productName = $('#product_name_' + id).attr('data-title');
                     var grand_total = 0;
                     var grand_total = parseFloat(cart_total);
                     var tax = cart_total * (tax_rate / 100);
@@ -515,12 +515,13 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + product_name +
+                        title: jQuery('#quantity').val() + ' X ' + productName +
                             ' added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);

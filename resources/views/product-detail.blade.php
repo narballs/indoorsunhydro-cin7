@@ -84,7 +84,7 @@
                                         id="product_name">
                                         <div class="row">
                                             <div class="col-md-11">
-                                                <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
+                                                <h3 class="product-detail-heading" data-title="{{$productOption->products->name}}" id="product-detail-id">{{$productOption->products->name}}</h3>
                                             </div>
                                             @if (!empty($contact_id))
                                             <div class="col-md-1 d-flex justify-content-center">
@@ -1485,12 +1485,12 @@
                     $src = $('#main-image').attr('src');
                     var product_name = document.getElementById("product_name").innerHTML;
                     var product_price = document.getElementById("product_price").innerHTML;
+                   
                     Swal.fire({
                         toast: true,
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        imageUrl: $src,
                         showConfirmButton: false,
                         position: 'top',
                         timerProgressBar: true
@@ -1514,7 +1514,7 @@
                     $src = $('#main-image').attr('src');
                     var product_name = document.getElementById("product_name").innerHTML;
                     var product_price = document.getElementById("product_price").innerHTML;
-                    
+                    var productName = $('#product-detail-id').attr('data-title');
                     var grand_total = 0;
                     var grand_total = parseFloat(cart_total);
                     var tax = cart_total * (tax_rate / 100);
@@ -1531,12 +1531,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
+                        title: jQuery('#quantity').val() + ' X ' + productName + ' added to your cart',
                         timer: 3000,
-                        imageUrl: $src,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -1886,7 +1886,7 @@
                         jQuery('#subtotal_' + product_id).html('$' + subtotal);
                         var product_name = jQuery('#prd_name_' + id).html();
                     }
-
+                    var productName = jQuery('#prd_name_' + id).attr('data-title');
                     var grand_total = 0;
                     var grand_total = parseFloat(cart_total);
                     var tax = cart_total * (tax_rate / 100);
@@ -1904,12 +1904,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: 1 + ' X ' + product_name +
-                            ' added to your cart',
+                        title: 1 + ' X ' + productName +' added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -2025,7 +2025,7 @@
                 dataHtml += '                <div class="row">';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_name mb-1">';
-                dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
+                dataHtml += '                            <a class="product_name" data-title="'+productData.name+'" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
                 dataHtml += '                        </p>';
                 dataHtml += '                    </div>';
                 dataHtml += '                    <div class="col-md-10">';
