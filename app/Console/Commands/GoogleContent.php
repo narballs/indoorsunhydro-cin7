@@ -61,6 +61,9 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
+            $responseDeleted = $this->delete_inactive_products($client, $token);
+            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
+            $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
             $result = $this->insertProducts($client, $token);
 
             $responseDeleted = $this->delete_inactive_products($client, $token);
