@@ -866,7 +866,7 @@
 
                         var product_id = item.prd_id;
                         var price = parseFloat(item.price);
-                        var quantity = parseFloat(item.quantity);
+                        var quantity = parseInt(item.quantity);
 
                         var subtotal = parseFloat(price * quantity);
                         var cart_total = cart_total + subtotal;
@@ -878,8 +878,7 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: quantity + ' X ' + document.getElementById('prd_name_' + id).value +
-                            ' added to your cart',
+                        title: quantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' Added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',

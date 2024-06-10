@@ -790,7 +790,7 @@
                      Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: itemQuantity + ' X ' + productName + ' added to your cart',
+                        title: itemQuantity + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
@@ -917,8 +917,7 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + productName +
-                            ' added to your cart',
+                        title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
@@ -932,8 +931,8 @@
             }
         });
 
-        return false;
-    }
+      return false;
+   }
 </script>
 
 <!-- Remove the container if you want to extend the Footer to full width. -->

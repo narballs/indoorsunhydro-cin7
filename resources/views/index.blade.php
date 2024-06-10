@@ -411,7 +411,7 @@
                             toast: true,
                             icon: 'error',
                             title: response.message,
-                            timer: 300000,
+                            timer: 3000,
                             showConfirmButton: false,
                             position: 'top',
                             timerProgressBar: true
@@ -454,7 +454,7 @@
                         Swal.fire({
                             toast: true,
                             icon: 'success',
-                            title: jQuery('#quantity').val() + ' X ' + productName + ' added to your cart',
+                            title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
                             timer: 3000,
                             showConfirmButton: false,
                             position: 'top',
