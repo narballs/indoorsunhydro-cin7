@@ -744,7 +744,7 @@
                   }
                   // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
                   jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
-                  
+                  var productName = $("#product_name_" + id).attr('data-title');
                   var grand_total = 0;
                   var grand_total = parseFloat(cart_total);
                   var tax = cart_total * (tax_rate / 100);
@@ -761,11 +761,12 @@
                   Swal.fire({
                      toast: true,
                      icon: 'success',
-                     title: itemQuantity + ' X ' + product_name + ' added to your cart',
+                     title: itemQuantity + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
                      timer: 3000,
                      showConfirmButton: false,
                      position: 'top',
-                     timerProgressBar: true
+                     timerProgressBar: true,
+                     customClass: {popup: 'short-toast-popup'}
                   });
                      
                }
@@ -957,6 +958,7 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+                    var productName = $("#product_name_" + id).attr('data-title');
                     var grand_total = 0;
                     var grand_total = parseFloat(cart_total);
                     var tax = cart_total * (tax_rate / 100);
@@ -973,12 +975,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + product_name +
-                            ' added to your cart',
+                        title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);

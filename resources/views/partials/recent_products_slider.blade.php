@@ -149,7 +149,7 @@
                                                 </a>
                                             @endif
                                             <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy p-0">
-                                                <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+                                                <h5 class="card-title card_product_title tooltip-product" data-title="{{$product->name}}" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
                                                     <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                                                         {{ \Illuminate\Support\Str::limit($product->name, 20) }}
                                                         <div class="tooltip-product-text bg-white text-primary">
@@ -335,7 +335,7 @@
                                                 </a>
                                             @endif
                                             <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy p-0">
-                                                <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
+                                                <h5 class="card-title card_product_title tooltip-product" data-title="{{$product->name}}"  style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
                                                     <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
                                                         {{ \Illuminate\Support\Str::limit($product->name, 20) }}
                                                         <div class="tooltip-product-text bg-white text-primary">
