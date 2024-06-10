@@ -323,6 +323,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => '5.00',
             ],
+            [
+                'option_name' => 'enable_newsletter', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];

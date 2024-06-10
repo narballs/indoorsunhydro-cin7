@@ -29,7 +29,50 @@
 
 }
 
+.btn-newsletter {
+    font-family: 'Poppins' !important;
+    font-weight: 600;
+    font-size: 14px;
+    background-color: #212121;
+    border-color: #212121;
+    color: #fff;
+    letter-spacing: 0.05em;
+    border-radius: 0px, 5px, 5px, 0px;
+  
+}
 
+.btn-newsletter:hover {
+    background-color: #212121;
+    border-color: #212121;
+    color: #fff;
+  
+}
+
+.newsletter_title {
+    font-family: 'Poppins' !important;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 24px;
+    color: #000000;
+    letter-spacing: 0.05em;
+
+}
+
+.newsletter_para {
+    font-family: 'Poppins' !important;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    color: #7B7B7B;
+
+}
+.newsletter_email {
+    font-family: 'Poppins' !important;
+    font-weight: 500;
+    font-size: 18px;
+    color: #878787;
+
+}
 .remove-cart-page-button {
     font-family: 'Poppins';
     font-style: normal;
