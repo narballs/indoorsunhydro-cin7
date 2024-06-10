@@ -10,6 +10,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductView;
 use App\Models\BuyList;
+use App\Models\NewsletterSubscription;
 use App\Models\ProductBuyList;
 use Session;
 use Illuminate\Http\Request;
@@ -93,6 +94,23 @@ class HomeController extends Controller
         $page = Page::where('slug' , $slug)->first();
         $pages = Page::where('status', 1)->get();
         return view('partials.show_page', compact('page' , 'pages'));
+    }
+
+
+    public function subscribe_newsletter(Request $request) {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $flag_newsletter = NewsletterSubscription::where('email' , $request->email)->first();
+        if($flag_newsletter) {
+            return redirect()->back()->with('error' , 'You are already subscribed to our newsletter');
+        }
+        $email = $request->email;
+        $newsletter = new NewsletterSubscription();
+        $newsletter->email = $email;
+        $newsletter->save();
+        return redirect()->back()->with('success' , 'You have been subscribed to our newsletter');
     }
 
     

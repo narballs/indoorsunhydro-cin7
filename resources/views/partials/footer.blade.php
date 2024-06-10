@@ -933,3 +933,14 @@
         }
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const newsletterDiv = document.getElementById('newsletter_div');
+        if (newsletterDiv) {
+            newsletterDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+</script>
+
+
