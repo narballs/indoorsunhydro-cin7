@@ -1,3 +1,33 @@
+@php
+   $enable_newsletter = \App\Models\AdminSetting::where('option_name', 'enable_newsletter')->first(); 
+@endphp
+@if ((!empty($enable_newsletter) && $enable_newsletter->option_value == 'yes'))
+    <div class="row justify-content-center p-5" style="background-color:#F7F7F7">
+        <div class="col-md-8">
+            <h2 class="text-center newsletter_title">Subscribe to our Newsletter</h2>
+        </div>
+        <div class="col-md-8">
+        <p class="text-center newsletter_para">Get the latest updates and offers directly in your inbox.</p>
+        </div>
+        <div class="col-md-8">
+            <form action="{{route('subscribe_newsletter')}}" method="post" class="" id="newsletter-subscribe-form">
+                @csrf
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <div class="input-group">
+                                <input type="email" name="email" required class="form-control newsletter_email border-0" placeholder="Enter your email address">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-newsletter">Subscribe</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endif
 <footer class="text-white text-lg-start footer-container-product-footer h-900 mt-5 desktop-view">
     <div class="container-fluid p-0">
         <div class="container">
@@ -263,4 +293,3 @@
     <input type="hidden" id="last_button_clicked" value="" />
     <input type="hidden" id="body_flag" value="0" />
 </footer>
-

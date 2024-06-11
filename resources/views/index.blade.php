@@ -455,7 +455,7 @@
                             toast: true,
                             icon: 'success',
                             title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
-                            timer: 3000,
+                            timer: 300000,
                             showConfirmButton: false,
                             position: 'top',
                             timerProgressBar: true,

@@ -104,6 +104,24 @@
     </div>
 </div>
 
+
+<div class="w-100 mb-2 newsletter_div d-none ">
+    @if (\Session::has('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-2 text-center d-none" role="alert">
+            {!! \Session::get('success') !!}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @elseif (\Session::has('error'))
+        <div class="alert alert-danger alert-dismissible fade show mt-2 text-center d-none" role="alert">
+            {!! \Session::get('error') !!}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+</div>
 <style>
     .main_search_filter{
         /* accent-color: #7BC533; */

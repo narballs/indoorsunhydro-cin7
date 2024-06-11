@@ -439,3 +439,4 @@ Route::post('admin/alternative/products/history', [ProductStockNotificationContr
 Route::post('admin/notify/user/product/history', [ProductStockNotificationController::class, 'notify_users_from_alternate_history'])->name('notify_users_from_alternate_history');
 Route::get('/order/cin7-payment/{order_reference}', [OrderController::class, 'cin7_payments'])->name('cin7_payments');
 Route::get('/cin7/payment/success/{orderId}', [OrderController::class, 'cin7_payments_success'])->name('cin7_payments_success');
+Route::post('/subscribe/newsletter', [HomeController::class, 'subscribe_newsletter'])->name('subscribe_newsletter');

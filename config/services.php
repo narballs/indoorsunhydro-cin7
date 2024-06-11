@@ -32,6 +32,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
         'refund_webhook_secret' => env('STRIPE_REFUND_WEBHOOK_SECRET'),
+        'wholesale_secret' => env('STRIPE_WHOLESALE_SECRET'),
     ],
     'shipstation' => [
         'key' => env('SHIPMENT_KEY'),

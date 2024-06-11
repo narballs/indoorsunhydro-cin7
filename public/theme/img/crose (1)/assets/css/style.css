@@ -162,6 +162,18 @@ h6 {
   max-height: 40px;
 }
 
+.btn-newsletter {
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-weight: 600;
+  display: inline-block;
+  border: 2px solid #ffc451;
+  color: #fff;
+
+}
+
 /*--------------------------------------------------------------
 #  Get Startet Button
 --------------------------------------------------------------*/
