@@ -2101,7 +2101,7 @@ class OrderController extends Controller
         }
         $product_prices = [];
         
-        $stripe = new \Stripe\StripeClient(config('services.cin7.get_stripe_secret_key'));
+        $stripe = new \Stripe\StripeClient(config('services.stripe.wholesale_secret'));
         $customer = $stripe->customers->create([
             'name' => $first_name . ' ' . $last_name,
             'email' => $email,
@@ -2181,7 +2181,7 @@ class OrderController extends Controller
     
     public function cin7_payments_success(Request $request , $order_id) {
         $session_id = $request->query('session_id');
-        $stripe = new \Stripe\StripeClient(config('services.cin7.get_stripe_secret_key'));
+        $stripe = new \Stripe\StripeClient(config('services.stripe.wholesale_secret'));
         $get_line_items = [];
     
         try {
