@@ -1109,6 +1109,13 @@ class ProductController extends Controller
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price) {
                 $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+                if ($price == 0) {
+                    $price = $price->sacramentoUSD;
+                }
+
+                if ($price == 0) {
+                    $price = $price->retailUSD;
+                }
             }
         }
 
@@ -1364,6 +1371,13 @@ class ProductController extends Controller
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price) {
                 $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+                if ($price == 0) {
+                    $price = $price->sacramentoUSD;
+                }
+
+                if ($price == 0) {
+                    $price = $price->retailUSD;
+                }
             }
         }
         if ($subtraction == true) {
