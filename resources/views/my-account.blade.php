@@ -635,11 +635,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: 1 + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' Added to your cart',
-                        timer: 3000,
+                        title: 1 + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+  '<div class="added_tocart">Added to your cart</div>',
+                        timer: 300000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
