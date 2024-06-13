@@ -97,6 +97,55 @@
         window.location.href = '/product-detail/' + id + '/' + option_id + '/' + slug;
     }
     function updateCart(id, option_id) {
+        var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
+        var tax = 0;
+        var tax_rate = parseFloat($('#tax_rate_number').val());
+        // updateBodyClickEventStatus(false);
+        // $('#last_button_clicked').val(id);
+
+        // $('.cart-total-' + id).addClass('added-to-cart');
+        // $('.button_swap_quantity_' + id).addClass('btn-added-to-cart');
+
+        // //$('.quantity_count_circle').css('visibility', 'visible');
+        // $('.added-to-cart').css('display', 'inline-flex');
+        // $('.btn-added-to-cart').css('display', 'none');
+
+        // $('.cart-total-' + id).css('display', 'none');
+        // $('.button_swap_quantity_' + id).css('display', 'block');
+        // $('.original_cart_btn_'+id).addClass('d-none');
+        // $('.button_swap_quantity_'+id).removeClass('d-none');
+
+        // $('.swap_qty_number_'+id).val(1);
+
+        // $('.quantity_count_circle').each(function() {
+        //     var html = $(this);
+        //     var spanContent = $(html).find('span');
+        //     if (parseInt($(html).find('span').html()) > 0) {
+        //         spanContent.parent().css('display', 'inline-flex');
+        //     } else {
+        //         spanContent.parent().css('display', 'none');
+        //     }
+        // });
+        var itemnumberQuantity = $('.swap_qty_number_'+id).val();
+        var newValue = itemnumberQuantity.replace(/^0+/, ''); // Remove leading zeros
+        if (newValue === "") {
+            newValue = 0; // Handle case where all characters were zeros
+        }
+        $('.swap_qty_number_'+id).val(newValue);
+        var itemQuantity = $('.swap_qty_number_'+id).val();
+        if (parseInt(itemQuantity) <= 0 || itemQuantity === '' || itemQuantity === null) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Quantity must be greater than 0 and not Empty!',
+                timer: 3000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+            $('.swap_qty_number_'+id).val(1);
+            return false;
+        }
         jQuery.ajax({
             url: "{{ url('/add-to-cart/') }}",
             method: 'post',
@@ -104,7 +153,7 @@
                 "_token": "{{ csrf_token() }}",
                 p_id: jQuery('#p_' + id).val(),
                 option_id: option_id,
-                quantity: 1
+                quantity: itemQuantity
             },
             success: function(response) {
                 if (response.status == 'error') {
@@ -127,6 +176,7 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
+                    
 
                     Swal.fire({
                         toast: true,
@@ -158,16 +208,16 @@
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
-
+                    var productName = $("#product_name_" + id).attr('data-title');
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + product_name +
-                            ' added to your cart',
+                        title: itemQuantity + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ '<div class="added_tocart">Added to your cart</div>',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -262,12 +312,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: jQuery('#quantity').val() + ' X ' + product_name +
-                            ' added to your cart',
+                        title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ '<div class="added_tocart">Added to your cart</div>',
                         timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);

@@ -68,6 +68,10 @@ class ContactPriceColumnSeeder extends Seeder
                 'site_id' => 1,
                 'price_column' => 'specialPrice',
             ],
+            [ 
+                'site_id' => 1,
+                'price_column' => 'webPriceUSD',
+            ],
 
             // Price Column for site - 2
 

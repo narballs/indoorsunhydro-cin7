@@ -114,11 +114,11 @@
                                         </div>
                                         <div class="col-md-12 p-1 price-category-view-section">
                                             <?php
-                                            $retail_price = 0;
-                                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
-                                            foreach ($option->price as $price) {
-                                                $retail_price = $price->$user_price_column;
-                                            }
+                                            // $retail_price = 0;
+                                            // $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                            // foreach ($option->price as $price) {
+                                            //     $retail_price = $price->$user_price_column;
+                                            // }
                                             ?>
                                             <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                                                 ${{ number_format($retail_price, 2) }}</h4>
@@ -133,18 +133,18 @@
                                             @endif
                                             <?php 
                                                 // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); 
-                                                $enable_add_to_cart = true;
-                                                $last_month_views = null;
-                                                $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
-                                                if ($views_count > 20) {
-                                                    $last_month_views = $views_count . '+ views in last month';
-                                                } 
-                                                else if ($views_count <= 20 && $views_count > 0) {
-                                                    $last_month_views = $views_count . ' view(s) in last month';
-                                                }
+                                                // $enable_add_to_cart = true;
+                                                // $last_month_views = null;
+                                                // $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
+                                                // if ($views_count > 20) {
+                                                //     $last_month_views = $views_count . '+ views in last month';
+                                                // } 
+                                                // else if ($views_count <= 20 && $views_count > 0) {
+                                                //     $last_month_views = $views_count . ' view(s) in last month';
+                                                // }
                                                 
-                                                $past_30_days = $date = Carbon\Carbon::today()->subDays(30);
-                                                $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
+                                                // $past_30_days = $date = Carbon\Carbon::today()->subDays(30);
+                                                // $bought_products_count = $product->apiorderItem->where('created_at','>=',$date)->count();
                                             ?>
                                             @if (!empty($last_month_views))
                                                 <p class="text-dark mb-0 ft-size ft-size-slider-product">{{$last_month_views}}</p>
@@ -263,6 +263,12 @@
                                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                                 foreach ($option->price as $price) {
                                                     $retail_price = $price->$user_price_column;
+                                                    if ($retail_price == 0) {
+                                                        $retail_price = $price->sacramentoUSD;
+                                                    }
+                                                    if ($retail_price == 0) {
+                                                        $retail_price = $price->retailUSD;
+                                                    }
                                                 }
                                                 ?>
                                                 <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">

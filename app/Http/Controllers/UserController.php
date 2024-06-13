@@ -2061,6 +2061,7 @@ class UserController extends Controller
         $active_contact_id = null;
         $active_company = null;
         $get_company_address = null;
+        $productPrice = 0;
         $cart = [];
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
@@ -2087,7 +2088,14 @@ class UserController extends Controller
             Session::forget('cart');
             foreach ($cartItems as $cartItem){
                 $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-                $productPrice = $productPricing->$getPriceColumn;
+                $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
+                if ($productPrice == 0) { 
+                    $productPrice = $productPricing['sacramentoUSD'];
+                }
+                
+                if ($productPrice == 0) { 
+                    $productPrice = $productPricing['retaillUSD'];
+                }
                 $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
                 if (!empty($cart)) {
                     $cart->price = $productPrice;

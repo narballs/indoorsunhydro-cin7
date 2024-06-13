@@ -1092,10 +1092,12 @@ class ProductController extends Controller
 
     public function addToCart(Request $request)
     {
+        
         $id = $request->p_id;
         $option_id = $request->option_id;
         $status = null;
         $message = null;
+        $price = 0;
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
         if (Auth::id() !== null) {
@@ -1107,11 +1109,17 @@ class ProductController extends Controller
         $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
         $user_price_column = UserHelper::getUserPriceColumn();
         foreach ($productOption->products->options as $option) {
-            foreach ($option->price as $price) {
-                $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+            foreach ($option->price as $price_get) {
+                $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                if ($price == 0) {
+                    $price = $price_get['sacramentoUSD'];
+                }
+
+                if ($price == 0) {
+                    $price = $price_get['retaillUSD'];
+                }
             }
         }
-
         if (isset($cart[$id])) {
             $hash_cart = session()->get('cart_hash');
             $product_in_active_cart = Cart::where('qoute_id', $id)->first();
@@ -1362,8 +1370,15 @@ class ProductController extends Controller
         }
         $user_price_column = UserHelper::getUserPriceColumn();
         foreach ($productOption->products->options as $option) {
-            foreach ($option->price as $price) {
-                $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+            foreach ($option->price as $price_get) {
+                $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                if ($price == 0) {
+                    $price = $price_get['sacramentoUSD'];
+                }
+
+                if ($price == 0) {
+                    $price = $price_get['retaillUSD'];
+                }
             }
         }
         if ($subtraction == true) {
@@ -2067,8 +2082,15 @@ class ProductController extends Controller
 
                 $user_price_column = UserHelper::getUserPriceColumn();
                 foreach ($productOption->products->options as $option) {
-                    foreach ($option->price as $price) {
-                        $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+                    foreach ($option->price as $price_get) {
+                        $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                        if ($price == 0) {
+                            $price = $price_get['sacramentoUSD'];
+                        }
+        
+                        if ($price == 0) {
+                            $price = $price_get['retaillUSD'];
+                        }
                     }
                 }
 
@@ -2162,8 +2184,15 @@ class ProductController extends Controller
 
                 $user_price_column = UserHelper::getUserPriceColumn();
                 foreach ($productOption->products->options as $option) {
-                    foreach ($option->price as $price) {
-                        $price = isset($price[$user_price_column]) ? $price[$user_price_column] : 0;
+                    foreach ($option->price as $price_get) {
+                        $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                        if ($price == 0) {
+                            $price = $price_get['sacramentoUSD'];
+                        }
+        
+                        if ($price == 0) {
+                            $price = $price_get['retaillUSD'];
+                        }
                     }
                 }
 

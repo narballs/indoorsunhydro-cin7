@@ -99,11 +99,19 @@ class UserHelper
             $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
             $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
             $all_cart_items = [];
+            $productPrice = 0;
             $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
             if (count($cartItems) > 0) {
                 foreach ($cartItems as $cartItem) {
                     $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-                    $productPrice = $productPricing->$getPriceColumn;
+                    $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
+                    if ($productPrice == 0) {
+                        $productPrice = $productPricing['sacramentoUSD'];
+                    }
+                    
+                    if ($productPrice == 0) { 
+                        $productPrice = $productPricing['retaillUSD'];
+                    }
                     $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
                     if (!empty($cart)) {
                         $cart->price = $productPrice;
@@ -332,13 +340,21 @@ class UserHelper
             $cart_items = $request->session()->get('cart');
         } else {
             $getSelectedContact = Contact::where('company' , $company)->where('user_id' , $user_id)->first();
+            $productPrice = 0;
             $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
             $cart_items = [];
             $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
             if (count($cartItems) > 0) {
                 foreach ($cartItems as $cartItem) {
                     $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-                    $productPrice = $productPricing->$getPriceColumn;
+                    $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
+                    if ($productPrice == 0) { 
+                        $productPrice = $productPricing['sacramentoUSD'];
+                    }
+                    
+                    if ($productPrice == 0) { 
+                        $productPrice = $productPricing['retaillUSD'];
+                    }
                     $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
                     if (!empty($cart)) {
                         $cart->price = $productPrice;

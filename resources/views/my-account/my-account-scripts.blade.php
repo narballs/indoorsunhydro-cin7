@@ -728,11 +728,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: 'Product(s) added to cart successfully',
-                        timer: 2000,
+                        title: '<span class="text-dark toast_title">Product(s) added to cart successfully</span><br/><div class="added_tocart">Added to your cart</div>',
+                        timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
             }
@@ -878,11 +879,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: quantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' Added to your cart',
-                        timer: 3000,
+                        title: quantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' <div class="added_tocart">Added to your cart</div>',
+                        timer: 3000000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -1032,11 +1034,12 @@
                     Swal.fire({
                         toast: true,
                         icon: 'success',
-                        title: 'Product(s) added to cart successfully',
-                        timer: 2000,
+                        title: '<span class="text-dark toast_title">Product(s) added to cart successfully</span><br/><div class="added_tocart">Added to your cart</div>',
+                        timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        timerProgressBar: true,
+                        customClass: {popup: 'short-toast-popup'}
                     });
                     window.location.href = '/checkout';
                 }

@@ -3,6 +3,12 @@
     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
     foreach ($option->price as $price) {
         $product_price = $price->$user_price_column;
+        if ($product_price == 0) {
+            $product_price = $price->sacramentoUSD;
+        } 
+        if ($product_price == 0) {
+            $product_price = $price->retailUSD;
+        }
     }
 ?>
 @if (!empty($product->categories) && ($product->categories->is_active == 1))
@@ -62,6 +68,12 @@
                         $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                         foreach ($option->price as $price) {
                             $retail_price = $price->$user_price_column;
+                            if ($retail_price == 0) {
+                                $retail_price = $price->sacramentoUSD;
+                            }
+                            if ($retail_price == 0) {
+                                $retail_price = $price->retailUSD;
+                            }
                         }
                         ?>
                         @if (!empty($option) && $option->stockAvailable > 0)
