@@ -78,6 +78,12 @@
                                         $retail_price = 0;
                                         foreach($productOption->price as $price) {
                                             $retail_price = $price->$user_price_column;
+                                            if ($retail_price == 0) {
+                                                $retail_price = $price->sacramentoUSD;
+                                            } 
+                                            if ($retail_price == 0) {
+                                                $retail_price = $price->retailUSD;
+                                            }
                                         }
                                     ?>
                                     <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12 mb-2"
@@ -830,6 +836,12 @@
                                                     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                                     foreach ($option->price as $price) {
                                                         $retail_price = $price->$user_price_column;
+                                                        if ($retail_price == 0) {
+                                                            $retail_price = $price->sacramentoUSD;
+                                                        }
+                                                        if ($retail_price == 0) {
+                                                            $retail_price = $price->retailUSD;
+                                                        }
                                                     }
                                                     ?>
                                                     <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
@@ -2020,6 +2032,12 @@
                     text_class = 'text-danger';
                 }
                 retail_price = productData.options[i].default_price[column];
+                if (retail_price == 0) {
+                    retail_price = productData.options[i].default_price.sacramentoUSD;
+                }
+                if (retail_price == 0) {
+                    retail_price = productData.options[i].default_price.retailUSD;
+                }
 
                 var dataHtml = '            <div class="col-md-8 col-lg-8 col-xl-7 data-div data-div-account">';
                 dataHtml += '                <div class="row">';

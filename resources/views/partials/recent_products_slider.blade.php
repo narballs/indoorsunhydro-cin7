@@ -112,6 +112,12 @@
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->sacramentoUSD;
+                                    } 
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->retailUSD;
+                                    }
                                 } 
                             @endphp
                             @if (!empty($product->categories) && $product->categories->is_active == 1)
@@ -184,6 +190,12 @@
                                                     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                                     foreach ($option->price as $price) {
                                                         $retail_price = $price->$user_price_column;
+                                                        if ($retail_price == 0) {
+                                                            $retail_price = $price->sacramentoUSD;
+                                                        } 
+                                                        if ($retail_price == 0) {
+                                                            $retail_price = $price->retailUSD;
+                                                        }
                                                     }
                                                     ?>
                                                     <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
@@ -298,6 +310,12 @@
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->sacramentoUSD;
+                                    } 
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->retailUSD;
+                                    }
                                 }  
                             @endphp
                             @if (!empty($product->categories) && $product->categories->is_active == 1)
@@ -370,6 +388,12 @@
                                                     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                                     foreach ($option->price as $price) {
                                                         $retail_price = $price->$user_price_column;
+                                                        if ($retail_price == 0) {
+                                                            $retail_price = $price->sacramentoUSD;
+                                                        } 
+                                                        if ($retail_price == 0) {
+                                                            $retail_price = $price->retailUSD;
+                                                        }
                                                     }
                                                     ?>
                                                     <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">

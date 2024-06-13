@@ -39,6 +39,12 @@
                                             $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                             foreach ($option->price as $price) {
                                                 $retail_price = $price->$user_price_column;
+                                                if ($retail_price == 0) {
+                                                    $retail_price = $price->sacramentoUSD;
+                                                } 
+                                                if ($retail_price == 0) {
+                                                    $retail_price = $price->retailUSD;
+                                                }
                                             }
                                         ?>
                                         <div class="col-md-10">
