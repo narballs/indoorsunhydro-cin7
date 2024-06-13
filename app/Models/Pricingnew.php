@@ -22,6 +22,7 @@ class Pricingnew extends Model
         'costUSD',
         'specialPrice',
         'webPriceUSD',
+        'sacramentoUSD',
     ];
     public function option()
     {
