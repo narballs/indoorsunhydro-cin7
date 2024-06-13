@@ -19,6 +19,11 @@
     display: flex !important;
 }
 
+
+.added_tocart {
+    text-align: center !important;
+}
+
 .toast_title {
     font-family: 'Poppins';
     font-style: normal;

@@ -454,8 +454,8 @@
                         Swal.fire({
                             toast: true,
                             icon: 'success',
-                            title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' Added to your cart',
-                            timer: 300000,
+                            title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ ' <div class="added_tocart">Added to your cart</div>',
+                            timer: 3000,
                             showConfirmButton: false,
                             position: 'top',
                             timerProgressBar: true,
