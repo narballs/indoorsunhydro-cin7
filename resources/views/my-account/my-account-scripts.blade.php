@@ -880,7 +880,7 @@
                         toast: true,
                         icon: 'success',
                         title: quantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' <div class="added_tocart">Added to your cart</div>',
-                        timer: 3000000,
+                        timer: 3000,
                         showConfirmButton: false,
                         position: 'top',
                         timerProgressBar: true,
