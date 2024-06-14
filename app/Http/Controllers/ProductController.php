@@ -1895,6 +1895,7 @@ class ProductController extends Controller
         //check if user have list already
         $contact_id = session()->get('contact_id');
         $contact =  Contact::where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first();
+        $active_price = 0;
 
         if (empty($contact_id) || empty($user_id)) {
             return response()->json([
@@ -1908,16 +1909,21 @@ class ProductController extends Controller
             $contact =  Contact::where('secondary_id', $contact->secondary_id)->first();
             $parent_id = $contact->parent_id;
             $contact_pricing =  Contact::where('contact_id', $parent_id)->first();
-            $contact_pricing = $contact->priceColumn;
+            $contact_pricing = lcfirst($contact->priceColumn);
         } else {
-            $contact_pricing = $contact->priceColumn;
+            $contact_pricing = lcfirst($contact->priceColumn);
         }
-        $prices = Pricingnew::where('option_id', $request->option_id)->pluck($contact_pricing);
+
+        $prices = Pricingnew::where('option_id', $request->option_id)->get();
         foreach ($prices as $price) {
-            $active_price = $price;
+            $active_price = $price->$contact_pricing;
+            if ($active_price == 0) {
+                $active_price = $price->sacramentoUSD;
+            } 
+            if ($active_price == 0) {
+                $active_price = $price->retaillUSD;
+            } 
         }
-
-
         $user_lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->where('title', 'My Favorites')->exists();
         if ($user_lists == false) {
             $wishlist = new BuyList();
