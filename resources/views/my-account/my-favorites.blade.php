@@ -115,11 +115,11 @@
                                                                         <div class="my_favorite_product_img p-1"
                                                                             style="width:67px">
                                                                             @if ($product->product->images)
-                                                                                <img src="{{ $option->image }}"
+                                                                                <img src="{{ $product->product->images }}"
                                                                                     class="" height="50px"
                                                                                     width="58px">
                                                                             @else
-                                                                                <img src="/theme/image_not_available.png"
+                                                                                <img src=" {{ asset('theme/img/image_not_available.png') }}"
                                                                                     class="" height="50px">
                                                                             @endif
                                                                         </div>
