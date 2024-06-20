@@ -277,6 +277,9 @@ class CheckoutController extends Controller
         $current_date = Carbon::now()->format('Y-m-d');
         
         $products_weight = 0;
+        $product_width = 0;
+        $product_height = 0;
+        $product_length = 0;
         $sub_total_of_cart = 0;
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
@@ -294,9 +297,14 @@ class CheckoutController extends Controller
                 $shipment_for_selected_category = false;
             }
             $sub_total_of_cart += $cart_item['quantity'] * $cart_item['price'];
-            $product_options = ProductOption::where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
+            $product_options = ProductOption::with('products')->where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
             foreach ($product_options as $product_option) {
                 $products_weight += $product_option->optionWeight * $cart_item['quantity'];
+                if (!empty($product_option->products)) {
+                    $product_width += !empty($product_option->products->width) ? $product_option->products->width : 0;
+                    $product_height += !empty($product_option->products->height) ? $product_option->products->height : 0;
+                    $product_length += !empty($product_option->products->length) ? $product_option->products->length : 0;
+                }
             }
         }
         if ($contact) {
@@ -423,7 +431,7 @@ class CheckoutController extends Controller
                         if ($products_weight > 150) {
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
-                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
+                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length);
                             // dd($get_shipping_rates_greater);
                             if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
                                 $shipment_error = 1;
@@ -439,7 +447,7 @@ class CheckoutController extends Controller
                         else {
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
-                            $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price);
+                            $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length);
                             if (($get_shipping_rates['shipment_prices'] === null)) {
                                 $shipment_error = 1;
                             }
@@ -1508,7 +1516,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function get_shipping_rate($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price) {
+    public function get_shipping_rate($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length) {
         $client = new \GuzzleHttp\Client();
         $ship_station_host_url = config('services.shipstation.host_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -1530,6 +1538,12 @@ class CheckoutController extends Controller
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
+                    ],
+                    'dimensions' => [
+                        'units' => 'inches',
+                        'length' => $product_height,
+                        'width' => $product_width,
+                        'height' => $product_length,
                     ],
                 ];
         
@@ -1571,7 +1585,7 @@ class CheckoutController extends Controller
         ];
     }
 
-    public function get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price) {
+    public function get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price ,$product_width , $product_height , $product_length) {
         $client = new \GuzzleHttp\Client();
         $ship_station_host_url = config('services.shipstation.host_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -1588,6 +1602,12 @@ class CheckoutController extends Controller
             'weight' => [
                 'value' => $products_weight,
                 'units' => 'pounds'
+            ],
+            'dimensions' => [
+                'units' => 'inches',
+                'length' => $product_height,
+                'width' => $product_width,
+                'height' => $product_length,
             ],
         ];
 
