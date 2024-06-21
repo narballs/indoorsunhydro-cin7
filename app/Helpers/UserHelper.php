@@ -219,6 +219,9 @@ class UserHelper
         
 
         $produts_weight = 0;
+        $product_width = 0;
+        $product_height = 0;
+        $product_length = 0;
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -226,9 +229,14 @@ class UserHelper
                 'quantity' => $order_item->quantity,
                 'unitPrice' => $order_item->price,
             ];
-            $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+            $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
                 $produts_weight += $product_option->optionWeight * $order_item['quantity'];
+                if (!empty($product_option->products)) {
+                    $product_width += !empty($product_option->products->width) ? $product_option->products->width : 0;
+                    $product_height += !empty($product_option->products->height) ? $product_option->products->height : 0;
+                    $product_length += !empty($product_option->products->length) ? $product_option->products->length : 0;
+                }
             }
         }
         $client = new \GuzzleHttp\Client();
@@ -304,10 +312,16 @@ class UserHelper
                 'value' => $produts_weight,
                 'units' => 'pounds'
             ],
+            'dimensions' => [
+                'units' => 'inches',
+                'length' => $product_height,
+                'width' => $product_width,
+                'height' => $product_length,
+            ],
             'insuranceOptions' => [
                 'provider' => 'parcelguard', 
                 'insureShipment' => true,
-                'insuredValue' => floatval(floatval($currentOrder->shipment_price)  - floatval($currentOrder->parcel_guard))
+                'insuredValue' => floatval($currentOrder->productTotal),
             ],
             'confirmation' => floatval($currentOrder->total_including_tax) >= 500 ? 'signature' : 'delivery',
             'items'=> $items
