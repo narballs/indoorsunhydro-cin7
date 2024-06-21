@@ -30,9 +30,13 @@ use App\Http\Controllers\Admin\WholesaleApplicationController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\GoogleContentController;
+use App\Http\Controllers\EmailListController;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ProductStockNotificationController;
 use App\Http\Controllers\GetProductDimensionController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\NewsletterTemplateController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -439,4 +443,16 @@ Route::post('admin/alternative/products/history', [ProductStockNotificationContr
 Route::post('admin/notify/user/product/history', [ProductStockNotificationController::class, 'notify_users_from_alternate_history'])->name('notify_users_from_alternate_history');
 Route::get('/order/cin7-payment/{order_reference}', [OrderController::class, 'cin7_payments'])->name('cin7_payments');
 Route::get('/cin7/payment/success/{orderId}', [OrderController::class, 'cin7_payments_success'])->name('cin7_payments_success');
+
+// newsletter module 
+Route::get('/newsletter/dashboard', [NewsletterController::class, 'newsletter_dashboard'])->name('newsletter_dashboard');
+Route::get('/newsletter/subscribers', [NewsletterController::class, 'newsletter_subscriptions'])->name('newsletter_subscriptions');
 Route::post('/subscribe/newsletter', [HomeController::class, 'subscribe_newsletter'])->name('subscribe_newsletter');
+
+
+
+// Newsletter Template routes
+Route::get('/newsletter-templates', [NewsletterTemplateController::class, 'index'])->name('newsletter-templates.index');
+Route::get('/newsletter-templates/create', [NewsletterTemplateController::class, 'create'])->name('newsletter-templates.create');
+Route::post('/newsletter-templates', [NewsletterTemplateController::class, 'store'])->name('newsletter-templates.store');
+Route::post('/newsletter-templates/upload/image', [NewsletterTemplateController::class, 'upload_newsletterImage'])->name('upload_newsletterImage');
