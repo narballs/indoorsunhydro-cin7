@@ -2171,7 +2171,7 @@ class OrderController extends Controller
                 'customer' => $customer->id,
                 'payment_intent_data'=> [
                     'metadata' => [
-                        'order_id'=> $order_reference,
+                        'order_id'=> $order->reference,
                     ]
                 ],
 
