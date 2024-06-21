@@ -2169,6 +2169,12 @@ class OrderController extends Controller
                 'line_items' => $items,
                 'mode' => 'payment',
                 'customer' => $customer->id,
+                'payment_intent_data'=> [
+                    'metadata' => [
+                        'order_id'=> $order_id,
+                    ]
+                ],
+
                 // 'payment_method_configuration' => config('services.cin7.wholesale_payment_configuration'), 
                 'payment_method_types'=> ['us_bank_account']
             ]);
