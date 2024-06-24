@@ -7,6 +7,11 @@ use App\Models\OperationalZipCode;
 
 class OperationalZipCodeController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+    }
+    
     /**
      * Display a listing of the resource.
      *

@@ -11,6 +11,7 @@ use Artisan;
 
 class AdminCommandsController extends Controller
 {
+    
     public function import_contacts(Request $request) {
 
         try {
