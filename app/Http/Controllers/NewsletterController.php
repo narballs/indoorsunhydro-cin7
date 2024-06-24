@@ -37,7 +37,7 @@ class NewsletterController extends Controller
     }
     public function newsletter_subscriptions (Request $request)
     {
-        $newsletter_subscriptions = NewsletterSubscription::all();
+        $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc')->paginate(10);
         return view('newsletter_layout.newsletter_subscribers.index', compact('newsletter_subscriptions'));
     }
 
