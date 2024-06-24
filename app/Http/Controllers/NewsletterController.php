@@ -37,23 +37,8 @@ class NewsletterController extends Controller
     }
     public function newsletter_subscriptions (Request $request)
     {
-        // $user_id = Auth::id();
-        
-        // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
-        // $newsletter_users = DB::table('model_has_roles')->where('role_id', 5)->pluck('model_id')->toArray();
-
-
-        $user_id = Auth::id();
-        $model_has_roles = DB::table('model_has_roles')->where('model_id', $user_id)->first();
-        $role_id = $model_has_roles->role_id;
-        $role = DB::table('roles')->where('id', $role_id)->first();
-        $role_name = $role->name;
-        
-        if ($role_name == 'Newsletter') {
-            return view('newsletter_layout.dashboard');
-        } else {
-            return redirect()->route('home');
-        }
+        $newsletter_subscriptions = NewsletterSubscription::all();
+        return view('newsletter_layout.newsletter_subscribers.index', compact('newsletter_subscriptions'));
     }
 
 
