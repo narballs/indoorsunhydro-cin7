@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Mail;
 
 class NewsletterController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware(['role:Newsletter']);
+    }
     public function newsletter_dashboard (Request $request)
     {
         $user_id = Auth::id();
