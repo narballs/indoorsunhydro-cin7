@@ -46,7 +46,7 @@
                                         @csrf
                                         <input type="hidden" name="subscriber_id" value="{{ $template->subscriber->id }}">
                                         <input type="hidden" name="template_id" value="{{ $template->template->id }}">
-                                        <button type="submit" class="btn btn-info">Send Newspaper</button>
+                                        <button type="submit" class="btn btn-info">Send Newsletter</button>
                                     </form>
                                 </td>
                             </tr>
