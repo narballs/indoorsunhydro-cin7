@@ -12,4 +12,9 @@ class NewsletterSubscription extends Model
     protected $fillable = [
         'email',
     ];
+
+    public function templates()
+    {
+        return $this->belongsToMany(NewsletterTemplate::class, 'newsletter_subscriber_template', 'newsletter_subscription_id', 'newsletter_template_id');
+    }
 }
