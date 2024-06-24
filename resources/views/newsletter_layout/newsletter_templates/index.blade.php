@@ -16,9 +16,9 @@
                             <tr>
                                 <th>S.No</th>
                                 <th>Name</th>
-                                {{-- <th>Add Subscriber</th> --}}
-                                {{-- <th>View Subscribers</th> --}}
-
+                                <th>
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,15 +30,14 @@
                             <tr>
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $template->name }}</td>
-                                {{-- <td>
-                                    <a href="{{ route('email_lists.addSubscriberForm', $emailList) }}" class="btn btn-primary">Add
-                                        Subscriber</a>
-                                        
-                                </td>
                                 <td>
-                                    <a href="{{ url('email_lists/' . $emailList->id) }}" class="btn btn-primary">View Subscribers</a>
-
-                                </td> --}}
+                                    <form action="{{ route('delete_newsletter_template', $template->id) }}" method="POST" style="display: inline-block;">
+                                        <a href="{{ route('newsletter_templates_detail', $template->id) }}" class="btn btn-info">View</a>
+                                        <a href="{{ route('edit_newsletter_template', $template->id) }}" class="btn btn-primary">Edit</a>
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                             @endforeach
                             @else
@@ -51,7 +50,6 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            {{-- {{ $emailLists->links() }} --}}
                         </div>
                     </div>
                 </div>

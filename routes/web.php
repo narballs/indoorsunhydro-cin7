@@ -454,5 +454,19 @@ Route::post('/subscribe/newsletter', [HomeController::class, 'subscribe_newslett
 // Newsletter Template routes
 Route::get('/newsletter-templates', [NewsletterTemplateController::class, 'index'])->name('newsletter-templates.index');
 Route::get('/newsletter-templates/create', [NewsletterTemplateController::class, 'create'])->name('newsletter-templates.create');
+Route::get('/newsletter-templates/detail/{id}', [NewsletterTemplateController::class, 'newsletter_templates_detail'])->name('newsletter_templates_detail');
+Route::post('/newsletter-templates/delete/{id}', [NewsletterTemplateController::class, 'delete_newsletter_template'])->name('delete_newsletter_template');
+Route::get('/newsletter-templates/edit/{id}', [NewsletterTemplateController::class, 'edit_newsletter_template'])->name('edit_newsletter_template');
+Route::post('/newsletter-templates/update/{id}', [NewsletterTemplateController::class, 'update_newsletter_template'])->name('update_newsletter_template');
 Route::post('/newsletter-templates', [NewsletterTemplateController::class, 'store'])->name('newsletter-templates.store');
 Route::post('/newsletter-templates/upload/image', [NewsletterTemplateController::class, 'upload_newsletterImage'])->name('upload_newsletterImage');
+
+
+// Assign templates to users
+Route::get('/assign/template', [NewsletterController::class, 'showAssignForm'])->name('assign_template_form');
+Route::post('/assign', [NewsletterController::class, 'assignTemplates'])->name('assign.templates');
+Route::get('/assign-templates-view', [NewsletterController::class, 'view_assigned_templates'])->name('view_assigned_templates');
+Route::get('/edit-assigned-template/{id}', [NewsletterController::class, 'edit_assigned_template'])->name('edit_assigned_template');
+Route::post('/edit-assigned-template/{id}', [NewsletterController::class, 'update_assigned_template'])->name('update_assigned_template');
+Route::post('/delete-assigned-template/{id}', [NewsletterController::class, 'delete_assigned_template'])->name('delete_assigned_template');
+Route::post('/send-newspaper/{id}', [NewsletterController::class, 'send_newspaper'])->name('send_newspaper');

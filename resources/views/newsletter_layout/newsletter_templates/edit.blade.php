@@ -5,22 +5,24 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Create Newsletter Template</h3>
-                <a href="{{ route('newsletter-templates.index') }}" class="btn btn-primary float-right">Back</a>
+                <h3 class="card-title">Edit Newsletter Template</h3>
+                <a href="{{route('newsletter-templates.index')}}" class="btn btn-primary float-right">Back</a>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="{{ route('newsletter-templates.store') }}" method="POST">
+                <form action="{{ route('update_newsletter_template' , $newsletterTemplate->id) }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" class="form-control">
+                        <input type="text" id="name" name="name" value="{{!empty($newsletterTemplate->name) ? $newsletterTemplate->name : ''}}" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="content">Content:</label>
-                        <textarea id="newsletter_content" name="content" class="form-control"></textarea>
+                        <textarea id="newsletter_content_edit" name="content" class="form-control">
+                            {{!empty($newsletterTemplate->content) ? $newsletterTemplate->content : ''}}
+                        </textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
             <!-- /.card-body -->
@@ -33,7 +35,7 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/35.3.0/classic/ckeditor.js"></script>
 <script>
     ClassicEditor
-        .create(document.querySelector('#newsletter_content'), {
+        .create(document.querySelector('#newsletter_content_edit'), {
             toolbar: {
                 items: [
                     'heading', '|',

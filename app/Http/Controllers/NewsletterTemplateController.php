@@ -35,6 +35,41 @@ class NewsletterTemplateController extends Controller
         return redirect()->route('newsletter-templates.index')->with('success', 'Newsletter template created successfully!');
     }
 
+
+    public function edit_newsletter_template($id)
+    {
+        $newsletterTemplate = NewsletterTemplate::find($id);
+        return view('newsletter_layout.newsletter_templates.edit', compact('newsletterTemplate'));
+    }
+
+    public function update_newsletter_template(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required',
+            'content' => 'required',
+        ]);
+
+        $newsletterTemplate = NewsletterTemplate::find($id);
+        $newsletterTemplate->name = $request->name;
+        $newsletterTemplate->content = $request->content;
+        $newsletterTemplate->save();
+
+        return redirect()->route('newsletter-templates.index')->with('success', 'Newsletter template updated successfully!');
+    }
+
+
+    public function delete_newsletter_template($id)
+    {
+        $newsletterTemplate = NewsletterTemplate::find($id);
+        $newsletterTemplate->delete();
+        return redirect()->route('newsletter-templates.index')->with('success', 'Newsletter template deleted successfully!');
+    }
+
+    public function newsletter_templates_detail($id) {
+        $newsletter_template = NewsletterTemplate::find($id);
+        return view('newsletter_layout.newsletter_templates.detail', compact('newsletter_template'));
+    }
+
     public function upload_newsletterImage(Request $request)
     {
         if ($request->hasFile('upload')) {

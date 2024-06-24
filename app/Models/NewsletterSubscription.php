@@ -13,8 +13,8 @@ class NewsletterSubscription extends Model
         'email',
     ];
 
-    public function emailLists()
+    public function templates()
     {
-        return $this->belongsToMany(EmailList::class, 'email_list_subscribers', 'subscriber_id', 'email_list_id');
+        return $this->belongsToMany(NewsletterTemplate::class, 'newsletter_subscriber_template', 'newsletter_subscription_id', 'newsletter_template_id');
     }
 }
