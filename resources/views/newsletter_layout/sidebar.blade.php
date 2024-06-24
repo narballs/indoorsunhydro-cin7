@@ -30,14 +30,6 @@
 					</a>
 					<ul class="nav nav-treeview">
 						<li class="nav-item  ">
-							<a href="{{route('newsletter_subscriptions')}}" class="nav-link ">
-								<i class="nav-icon fas fa-user"></i>
-								<p>
-									 Subscribers
-								</p>
-							</a>
-						</li>
-						<li class="nav-item  ">
 							<a href="{{route('newsletter-templates.index')}}" class="nav-link ">
 								<i class="nav-icon fas fa-file"></i>
 								<p>
@@ -70,6 +62,15 @@
 							</a>
 						</li>
 					</ul>
+				</li>
+
+				<li class="nav-item  ">
+					<a href="{{route('newsletter_subscriptions')}}" class="nav-link ">
+						<i class="nav-icon fas fa-user"></i>
+						<p>
+							 Subscribers
+						</p>
+					</a>
 				</li>
 
 				<li class="nav-item  ">
