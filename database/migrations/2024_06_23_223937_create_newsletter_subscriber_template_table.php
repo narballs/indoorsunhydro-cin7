@@ -22,7 +22,7 @@ class CreateNewsletterSubscriberTemplateTable extends Migration
 
             // Use shorter foreign key constraint names
             $table->foreign('list_id', 'fk_list_id') // Change foreign key name to 'fk_list_id'
-                  ->references('id')->on('newsletter_subscriptions')->onDelete('cascade');
+                  ->references('id')->on('subscriber_lists')->onDelete('cascade');
             $table->foreign('newsletter_template_id', 'fk_template_id')
                   ->references('id')->on('newsletter_templates')->onDelete('cascade');
         });
