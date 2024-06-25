@@ -6,10 +6,18 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                    <h3 class="card-title">Subscribers</h3>
-                    <button class="btn btn-info mx-3 d-none list_pop_up_btn" type="button" data-toggle="modal" data-target="#email_list_pop_up">
-                        Add To List
-                    </button>
+                    <div class="col-md-8 d-flex align-items-center">
+                        <h3 class="card-title">Subscribers</h3>
+                        <button class="btn btn-info mx-3 d-none list_pop_up_btn" type="button" data-toggle="modal" data-target="#email_list_pop_up">
+                            Add To List
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <form method="get" class="">
+                            <input type="text" class="form-control" id="search" name="search"
+                                placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                        </form>
+                    </div>
                 </div>
             </div>
             <!-- /.card-header -->
