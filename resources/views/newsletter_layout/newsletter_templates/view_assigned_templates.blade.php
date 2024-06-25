@@ -11,12 +11,24 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ session('error') }}
+                        </div>
+                    @endif
                     <table id="example2" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>S.NO</th>
-                                <th>Subscriber Email</th>
+                                <th>List Name</th>
                                 <th>Template Name</th>
                                 <th>Sent Status</th>
                                 <th>
@@ -32,7 +44,7 @@
                             @foreach ($assigned_templates as $template)
                             <tr>
                                 <td>{{ $i++ }}</td>
-                                <td>{{ $template->subscriber->email }}</td>
+                                <td>{{ $template->subscriber_email_list->name }}</td>
                                 <td>{{ $template->template->name }}</td>
                                 <td>{{ $template->sent ? 'Sent' : 'Not Sent' }}</td>
                                 <td>
@@ -44,7 +56,7 @@
                                     </form>
                                     <form action="{{ route('send_newspaper', $template->id) }}" method="POST" style="display: inline-block;">
                                         @csrf
-                                        <input type="hidden" name="subscriber_id" value="{{ $template->subscriber->id }}">
+                                        <input type="hidden" name="subscriber_email_list_id" value="{{ $template->subscriber_email_list->id }}">
                                         <input type="hidden" name="template_id" value="{{ $template->template->id }}">
                                         <button type="submit" class="btn btn-info">Send Newsletter</button>
                                     </form>

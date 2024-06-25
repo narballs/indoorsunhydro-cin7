@@ -11,6 +11,19 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                {{ session('error') }}
+                        </div>
+                    @endif
                     <table id="example2" class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -35,7 +48,7 @@
                                         <a href="{{ route('newsletter_templates_detail', $template->id) }}" class="btn btn-info">View</a>
                                         <a href="{{ route('edit_newsletter_template', $template->id) }}" class="btn btn-primary">Edit</a>
                                         @csrf
-                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Template?');">Delete</button>
                                     </form>
                                 </td>
                             </tr>

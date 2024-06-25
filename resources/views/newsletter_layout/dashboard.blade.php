@@ -17,3 +17,4 @@
         ***********************************-->
 @include('newsletter_layout.footer')
 @include('newsletter_layout.footerscripts')
+@stack('scripts')
