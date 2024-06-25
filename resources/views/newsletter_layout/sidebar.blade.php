@@ -72,7 +72,41 @@
 						</p>
 					</a>
 				</li>
-
+				<li class="nav-item  ">
+					<a href="{{route('all_contacts')}}" class="nav-link ">
+						<i class="nav-icon fas fa-user"></i>
+						<p>
+							Contacts
+						</p>
+					</a>
+				</li>
+				<li class="nav-item has-treeview">
+					<a href="#" class="nav-link">
+						<i class="nav-icon fas fa-copy"></i>
+						<p>
+							Lists
+							<i class="fas fa-angle-left right"></i>
+						</p>
+					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item  ">
+							<a href="{{route('subscribers_list')}}" class="nav-link ">
+								<i class="nav-icon fas fa-file"></i>
+								<p>
+									Show Lists
+								</p>
+							</a>
+						</li>
+						<li class="nav-item  ">
+							<a href="{{route('subscribers_list_create')}}" class="nav-link ">
+								<i class="nav-icon fas fa-book"></i>
+								<p>
+									Create List
+								</p>
+							</a>
+						</li>
+					</ul>
+				</li>
 				<li class="nav-item  ">
 					<a href="{{url('admin/logout')}}" class="nav-link ">
 						<i class="nav-icon fas fa-sign-out-alt"></i>

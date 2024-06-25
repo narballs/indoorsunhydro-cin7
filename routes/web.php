@@ -469,4 +469,20 @@ Route::get('/assign-templates-view', [NewsletterController::class, 'view_assigne
 Route::get('/edit-assigned-template/{id}', [NewsletterController::class, 'edit_assigned_template'])->name('edit_assigned_template');
 Route::post('/edit-assigned-template/{id}', [NewsletterController::class, 'update_assigned_template'])->name('update_assigned_template');
 Route::post('/delete-assigned-template/{id}', [NewsletterController::class, 'delete_assigned_template'])->name('delete_assigned_template');
-Route::post('/send-newspaper/{id}', [NewsletterController::class, 'send_newspaper'])->name('send_newspaper');
+Route::post('/send-newsletter/{id}', [NewsletterController::class, 'send_newspaper'])->name('send_newspaper');
+Route::get('/all-contacts', [NewsletterController::class, 'all_contacts'])->name('all_contacts');
+
+// subscribers list
+Route::get('subscribers/list/index', [NewsletterController::class, 'subscribers_list'])->name('subscribers_list');
+Route::get('subscribers/list/create', [NewsletterController::class, 'subscribers_list_create'])->name('subscribers_list_create');
+Route::post('subscribers/list/store', [NewsletterController::class, 'subscribers_list_store'])->name('subscribers_list_store');
+Route::get('subscribers/list/edit/{id}', [NewsletterController::class, 'subscribers_list_edit'])->name('subscribers_list_edit');
+Route::post('subscribers/list/update/{id}', [NewsletterController::class, 'subscribers_list_update'])->name('subscribers_list_update');
+Route::post('subscribers/list/delete/{id}', [NewsletterController::class, 'subscribers_list_delete'])->name('subscribers_list_delete');
+Route::get('/list/show/users/{id}', [NewsletterController::class, 'subscribers_list_show_users'])->name('subscribers_list_show_users');
+
+
+// save users to list
+
+Route::post('save-users-to-list', [NewsletterController::class, 'save_users_to_list'])->name('save_users_to_list');
+Route::post('user/list/delete/{id}', [NewsletterController::class, 'delete_user_from_list'])->name('delete_user_from_list');

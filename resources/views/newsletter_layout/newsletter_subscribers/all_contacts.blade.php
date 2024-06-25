@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                    <h3 class="card-title">Subscribers</h3>
+                    <h3 class="card-title">Contacts</h3>
                     <button class="btn btn-info mx-3 d-none list_pop_up_btn" type="button" data-toggle="modal" data-target="#email_list_pop_up">
                         Add To List
                     </button>
@@ -34,34 +34,33 @@
                                 <input type="checkbox" name="select_all" id="select_all">
                             </th>
                             <th>Email</th>
-
                         </tr>
                     </thead>
                     <tbody>
                         @php
                         $i =1;
                         @endphp
-                        @if(count($newsletter_subscriptions) > 0 )
-                        @foreach ($newsletter_subscriptions as $newsletter_subscription)
+                        @if(count($all_contacts) > 0 )
+                        @foreach ($all_contacts as $contact)
                         <tr>
                             <td>
-                                <input type="checkbox" name="select_one" id="select_one_{{$newsletter_subscription->id}}" data-email="{{$newsletter_subscription->email}}" class="select_one">
+                                <input type="checkbox" name="select_one" id="select_one_{{$contact->id}}" data-email="{{$contact->email}}" class="select_one">
                             </td>
-                            <td>{{ $newsletter_subscription->email }}</td>
+                            <td>{{ $contact->email }}</td>
 
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Subscribers Found</td>
+                            <td colspan="3">No Contacts Found</td>
                         </tr>
                         @endif
                     </tbody>
                 </table>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ $newsletter_subscriptions->links() }}
+                <div class="row mt-2 justify-content-center">
+                    <div class="col-md-6">
+                        {{ $all_contacts->links() }}
                     </div>
                 </div>
             </div>
@@ -71,7 +70,6 @@
     </div>
     <!-- /.col -->
 </div>
-
 <div class="modal fade" id="email_list_pop_up" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
