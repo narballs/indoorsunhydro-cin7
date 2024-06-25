@@ -252,7 +252,7 @@
                             });
                         } else {
                             Swal.fire({
-                                title: `<div style="display: flex; align-items: center;font-size:20px"><i class="fas fa-exclamation-circle mr-2"></i>Failed to save users. User already exists.</div>`,
+                                title: `<div style="display: flex; align-items: center;font-size:20px"><i class="fas fa-exclamation-circle mr-2"></i>Failed to add user(s). User(s) already exists.</div>`,
                                 customClass: {
                                     popup: 'swal2-small', // Apply custom CSS class to make the dialog smaller
                                 },
@@ -265,7 +265,7 @@
                     },
                     error: function(xhr, status, error) {
                         Swal.fire({
-                            title: `<div style="display: flex; align-items: center;font-size:20px"><i class="fas fa-exclamation-circle mr-2"></i>Failed to save users. Please try again.</div>`,
+                            title: `<div style="display: flex; align-items: center;font-size:20px"><i class="fas fa-exclamation-circle mr-2"></i>Failed to add user(s). User(s) already exists.</div>`,
                             customClass: {
                                 popup: 'swal2-small', // Apply custom CSS class to make the dialog smaller
                             },
@@ -279,7 +279,7 @@
             } else {
                 
                 Swal.fire({
-                    title: `<div style="display: flex; align-items: center;font-size:20px"><i class="fas fa-exclamation-circle mr-2"></i>Please select users and list</div>`,
+                    title: `<div style="display: flex; align-items: center;font-size:20px"><i class="fas fa-exclamation-circle mr-2"></i>Please select user(s) and list</div>`,
                     customClass: {
                         popup: 'swal2-small', // Apply custom CSS class to make the dialog smaller
                     },
