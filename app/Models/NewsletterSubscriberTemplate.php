@@ -6,11 +6,11 @@ use App\Mail\Subscribe;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NewsletterSubsciberTemplate extends Model
+class NewsletterSubscriberTemplate extends Model
 {
     use HasFactory;
     protected $table = 'newsletter_subscriber_template';
-    protected $fillable = ['list_id', 'newsletter_template_id'];
+    protected $fillable = ['list_id', 'newsletter_template_id' , 'sent'];
 
     public function subscriber_email_list()
     {

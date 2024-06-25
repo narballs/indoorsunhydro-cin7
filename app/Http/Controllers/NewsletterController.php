@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewsletterMail;
-use App\Models\NewsletterSubsciberTemplate;
+use App\Models\NewsletterSubscriberTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,7 +62,7 @@ class NewsletterController extends Controller
             'template_id' => 'required|exists:newsletter_templates,id',
         ]);
 
-        if (NewsletterSubsciberTemplate::where('list_id', $request->subscriber_email_list_id)->where('newsletter_template_id', $request->template_id)->exists()) {
+        if (NewsletterSubscriberTemplate::where('list_id', $request->subscriber_email_list_id)->where('newsletter_template_id', $request->template_id)->exists()) {
             return redirect()->back()->with('error', 'Template already assigned to list!');
         }
 
@@ -74,20 +74,20 @@ class NewsletterController extends Controller
 
     public function view_assigned_templates()
     {
-        $assigned_templates = NewsletterSubsciberTemplate::with('subscriber_email_list', 'template')->get();
+        $assigned_templates = NewsletterSubscriberTemplate::with('subscriber_email_list', 'template')->get();
         return view('newsletter_layout.newsletter_templates.view_assigned_templates', compact('assigned_templates'));
     }
 
     public function delete_assigned_template($id)
     {
-        $assigned_template = NewsletterSubsciberTemplate::findOrFail($id);
+        $assigned_template = NewsletterSubscriberTemplate::findOrFail($id);
         $assigned_template->delete();
 
         return redirect()->back()->with('success', 'Assigned template removed successfully!');
     }
 
     public function edit_assigned_template($id) {
-        $assigned_template = NewsletterSubsciberTemplate::findOrFail($id);
+        $assigned_template = NewsletterSubscriberTemplate::findOrFail($id);
         $lists = SubscriberList::all();
         $templates = NewsletterTemplate::all();
 
@@ -101,7 +101,7 @@ class NewsletterController extends Controller
             'template_id' => 'required|exists:newsletter_templates,id',
         ]);
 
-        $assigned_template = NewsletterSubsciberTemplate::findOrFail($id);
+        $assigned_template = NewsletterSubscriberTemplate::findOrFail($id);
         $assigned_template->update([
             'list_id' => $request->list_id,
             'newsletter_template_id' => $request->template_id,
@@ -110,23 +110,29 @@ class NewsletterController extends Controller
         return redirect()->route('view_assigned_templates')->with('success', 'Assigned template updated successfully!');
     }
 
-    public function send_newspaper(Request $request, $id)
-    {
+    public function send_newspaper(Request $request, $id) {
         $subscriber_email_list_id = $request->subscriber_email_list_id;
         $template_id = $request->template_id;
 
-        // Fetch subscriber and template
-        $subscriber_emails = SubscriberEmailList::where('subscriber_lists_id', $subscriber_email_list_id)->get();
+        // Fetch template
         $template = NewsletterTemplate::findOrFail($template_id);
 
-        if (count($subscriber_emails) === 0) {
+        // Fetch subscriber emails associated with the selected list
+        $subscriber_emails = SubscriberEmailList::where('subscriber_lists_id', $subscriber_email_list_id)->get();
+
+        if ($subscriber_emails->isEmpty()) {
             return redirect()->back()->with('error', 'No subscribers found in the selected list!');
         }
-        
+
         foreach ($subscriber_emails as $subscriber_email) {
+            // Send email using Laravel Mail
             Mail::to($subscriber_email->email)->send(new NewsletterMail($template));
-            $subscriber_email->templates()->attach($template_id);
-            $subscriber_email->templates()->updateExistingPivot($template_id, ['sent' => true]);
+
+            // Update or create record in the pivot table (newsletter_subscriber_template)
+            NewsletterSubscriberTemplate::updateOrCreate(
+                ['list_id' => $subscriber_email_list_id, 'newsletter_template_id' => $template->id],
+                ['sent' => true]
+            );
         }
 
         return redirect()->back()->with('success', 'Newsletter sent successfully!');
