@@ -41,9 +41,16 @@ class NewsletterController extends Controller
     }
     public function newsletter_subscriptions (Request $request)
     {
-        $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc')->paginate(10);
+        
+        $search = $request->search;
+        $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc');
+        if (!empty($search)) {
+            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->paginate(10);
+        } else {
+            $newsletter_subscriptions = $newsletter_subscriptions->paginate(10);
+        }
         $subscribers_list = SubscriberList::orderBy('id', 'desc')->get();
-        return view('newsletter_layout.newsletter_subscribers.index', compact('newsletter_subscriptions' , 'subscribers_list'));
+        return view('newsletter_layout.newsletter_subscribers.index', compact('newsletter_subscriptions' , 'subscribers_list' , 'search'));
     }
 
 
@@ -139,10 +146,18 @@ class NewsletterController extends Controller
     }
 
 
-    public function all_contacts() {
-        $all_contacts = User::orderBy('id', 'desc')->paginate(10);
+    public function all_contacts(Request $request) {
+        $search = $request->search;
+        $all_contacts_query = User::orderBy('id', 'desc');
+
+        if (!empty($search)) {
+            $all_contacts_query->where('email', 'like', '%' . $search . '%');
+        }
+
+        $all_contacts = $all_contacts_query->paginate(10);
         $subscribers_list = SubscriberList::orderBy('id', 'desc')->get();
-        return view('newsletter_layout.newsletter_subscribers.all_contacts', compact('all_contacts' , 'subscribers_list'));
+        $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc')->get();
+        return view('newsletter_layout.newsletter_subscribers.all_contacts', compact('all_contacts' , 'subscribers_list' , 'search' , 'newsletter_subscriptions'));
     }
 
     public function subscribers_list() {
