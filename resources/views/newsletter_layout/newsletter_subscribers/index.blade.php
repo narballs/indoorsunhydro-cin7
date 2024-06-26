@@ -403,7 +403,7 @@
                     console.log('Error:', error);
                     swal.fire({
                         title: 'Error',
-                        text: response.message,
+                        text: 'Failed to upload emails. Your data is invalid.'
                         icon: 'error'
                     });
                 }
@@ -449,7 +449,7 @@
             error: function(xhr, status, error) {
                 swal.fire({
                     title: 'Error',
-                    text: response.message,
+                    text: 'Failed to upload emails. Your data is invalid.'
                     icon: 'error'
                 });
             }
