@@ -30,7 +30,7 @@
                                 <th>S.NO</th>
                                 <th>List Name</th>
                                 <th>Template Name</th>
-                                <th>Sent Status</th>
+                                {{-- <th>Sent Status</th> --}}
                                 <th>
                                     Action
                                 </th>
@@ -46,7 +46,7 @@
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $template->subscriber_email_list->name }}</td>
                                 <td>{{ $template->template->name }}</td>
-                                <td>{{ $template->sent ? 'Sent' : 'Not Sent' }}</td>
+                                {{-- <td>{{ $template->sent ? 'Sent' : 'Not Sent' }}</td> --}}
                                 <td>
                                     <form action="{{ route('delete_assigned_template', $template->id) }}" method="POST" style="display: inline-block;">
                                         <a href="{{ route('edit_assigned_template', $template->id) }}" class="btn btn-primary">Edit</a>

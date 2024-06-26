@@ -42,6 +42,15 @@ class NewsletterTemplateController extends Controller
         return view('newsletter_layout.newsletter_templates.edit', compact('newsletterTemplate'));
     }
 
+    public function duplicate_newsletter_template($id) {
+        $newsletterTemplate = NewsletterTemplate::find($id);
+        $newNewsletterTemplate = $newsletterTemplate->replicate();
+        $newNewsletterTemplate->name = $newsletterTemplate->name . ' (Copy)';
+        $newNewsletterTemplate->save();
+
+        return redirect()->route('newsletter-templates.index')->with('success', 'Newsletter template duplicated successfully!');
+    }
+
     public function update_newsletter_template(Request $request, $id)
     {
         $request->validate([
