@@ -362,7 +362,7 @@ class NewsletterController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Emails uploaded successfully.']);
         } catch (ValidationException $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            return response()->json(['success' => false, 'message' => 'Your data is invalid . Please add the valid data'], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'An error occurred while processing the request.'], 500);
         }
@@ -448,7 +448,7 @@ class NewsletterController extends Controller
                 return response()->json(['success' => false, 'message' => 'File does not contain a recognized email column header.'], 400);
             }
         } catch (ValidationException $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+            return response()->json(['success' => false, 'message' => 'Your data is invalid . Please add the valid data'], 400);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'An error occurred while processing the file.'], 500);
         }
