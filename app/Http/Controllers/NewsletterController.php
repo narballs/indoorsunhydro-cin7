@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Twilio\Rest\Events\V1\SubscriptionList;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
 
@@ -321,111 +322,137 @@ class NewsletterController extends Controller
     }
 
 
-    // bulk upload users to subscribers
-
-    public function bulk_upload(Request $request) {
-        // Extract emails from input, trim whitespace
-        $emails = explode("\n", $request->input('bulk_upload_emails'));
-        $emails = array_map('trim', $emails);
-
-        // Get existing emails from the database
-        $existingEmails = NewsletterSubscription::pluck('email')->toArray();
-
-        $data = [];
-        foreach ($emails as $email) {
-            // Validate email format and check if it's not in the database already
-            if (filter_var($email, FILTER_VALIDATE_EMAIL) && !in_array($email, $existingEmails)) {
-                $data[] = ['email' => $email, 'created_at' => now(), 'updated_at' => now()];
-            }
-        }
-
-        // Insert new emails into the database
-        if (!empty($data)) {
-            NewsletterSubscription::insert($data);
-        }
-
-        return response()->json(['success' => true, 'message' => 'Emails uploaded successfully.']);
-    }
-
-
+    
     // upload csv 
 
-    public function showImportForm()
+    public function bulk_upload(Request $request)
     {
-        return view('import_subscribers');
-    }
+        try {
+            // Validate the request input
+            $validator = Validator::make($request->all(), [
+                'bulk_upload_emails' => 'required|string',
+            ]);
 
-    public function importSubscribers(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:csv,xlsx,xls,txt',
-        ]);
-
-        $path = $request->file('file')->getRealPath();
-        $extension = $request->file('file')->getClientOriginalExtension();
-
-        // Define possible variations of email column headers
-        $emailHeaders = ['Email', 'email', 'E-mail', 'e-mail'];
-
-        // Initialize variables
-        $header = null;
-        $emailIndex = null;
-        $emails = [];
-
-        // Read file based on extension
-        if (in_array($extension, ['csv', 'txt'])) {
-            $file = fopen($path, 'r');
-            $header = fgetcsv($file);
-        } else {
-            $header = (new HeadingRowImport)->toArray($path)[0][0];
-        }
-
-        // Find the correct email column index based on header case insensitivity
-        if ($header) {
-            foreach ($emailHeaders as $emailHeader) {
-                $emailIndex = array_search($emailHeader, $header);
-                if ($emailIndex !== false) {
-                    break;
-                }
-            }
-        }
-
-        // Process the file based on the found email index
-        if ($emailIndex !== false) {
-            if (in_array($extension, ['csv', 'txt'])) {
-                while ($columns = fgetcsv($file)) {
-                    if (isset($columns[$emailIndex]) && filter_var($columns[$emailIndex], FILTER_VALIDATE_EMAIL)) {
-                        $emails[] = trim($columns[$emailIndex]);
-                    }
-                }
-                fclose($file);
-            } else {
-                $rows = Excel::toArray([], $path)[0];
-                foreach ($rows as $key => $row) {
-                    if ($key > 0 && isset($row[$emailIndex]) && filter_var($row[$emailIndex], FILTER_VALIDATE_EMAIL)) {
-                        $emails[] = trim($row[$emailIndex]);
-                    }
-                }
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
             }
 
-            $emails = array_unique($emails);
+            // Extract emails from input, trim whitespace
+            $emails = explode("\n", $request->input('bulk_upload_emails'));
+            $emails = array_map('trim', $emails);
 
-            $existingEmails = NewsletterSubscription::whereIn('email', $emails)->pluck('email')->toArray();
-            $newEmails = array_diff($emails, $existingEmails);
+            // Get existing emails from the database
+            $existingEmails = NewsletterSubscription::pluck('email')->toArray();
 
             $data = [];
-            foreach ($newEmails as $email) {
-                $data[] = ['email' => $email, 'created_at' => now(), 'updated_at' => now()];
+            foreach ($emails as $email) {
+                // Validate email format
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // Check if email already exists in database
+                    if (!in_array($email, $existingEmails)) {
+                        $data[] = ['email' => $email, 'created_at' => now(), 'updated_at' => now()];
+                    }
+                }
+                // Invalid emails are silently skipped
             }
 
+            // Insert new emails into the database
             if (!empty($data)) {
                 NewsletterSubscription::insert($data);
             }
 
             return response()->json(['success' => true, 'message' => 'Emails uploaded successfully.']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'File does not contain a recognized email column header.'], 400);
+        } catch (ValidationException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred while processing the request.'], 500);
         }
     }
-      
+
+    
+    public function importSubscribers(Request $request)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|mimes:csv,xlsx,xls,txt',
+            ]);
+
+            $path = $request->file('file')->getRealPath();
+            $extension = $request->file('file')->getClientOriginalExtension();
+
+            // Define possible variations of email column headers
+            $emailHeaders = ['Email', 'email', 'E-mail', 'e-mail'];
+
+            // Initialize variables
+            $header = null;
+            $emailIndex = null;
+            $validEmails = [];
+
+            // Read file based on extension
+            if (in_array($extension, ['csv', 'txt'])) {
+                $file = fopen($path, 'r');
+                $header = fgetcsv($file);
+            } else {
+                $header = (new HeadingRowImport)->toArray($path)[0][0];
+            }
+
+            // Find the correct email column index based on header case insensitivity
+            if ($header) {
+                foreach ($emailHeaders as $emailHeader) {
+                    $emailIndex = array_search($emailHeader, $header);
+                    if ($emailIndex !== false) {
+                        break;
+                    }
+                }
+            }
+
+            // Process the file based on the found email index
+            if ($emailIndex !== false) {
+                if (in_array($extension, ['csv', 'txt'])) {
+                    while ($columns = fgetcsv($file)) {
+                        if (isset($columns[$emailIndex])) {
+                            $email = trim($columns[$emailIndex]);
+                            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $validEmails[] = $email;
+                            }
+                        }
+                    }
+                    fclose($file);
+                } else {
+                    $rows = Excel::toArray([], $path)[0];
+                    foreach ($rows as $key => $row) {
+                        if ($key > 0 && isset($row[$emailIndex])) {
+                            $email = trim($row[$emailIndex]);
+                            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $validEmails[] = $email;
+                            }
+                        }
+                    }
+                }
+
+                $validEmails = array_unique($validEmails);
+
+                $existingEmails = NewsletterSubscription::whereIn('email', $validEmails)->pluck('email')->toArray();
+                $newEmails = array_diff($validEmails, $existingEmails);
+
+                $data = [];
+                foreach ($newEmails as $email) {
+                    $data[] = ['email' => $email, 'created_at' => now(), 'updated_at' => now()];
+                }
+
+                if (!empty($data)) {
+                    NewsletterSubscription::insert($data);
+                }
+
+                return response()->json(['success' => true, 'message' => 'Emails uploaded successfully.']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'File does not contain a recognized email column header.'], 400);
+            }
+        } catch (ValidationException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred while processing the file.'], 500);
+        }
+    }
+        
 }
