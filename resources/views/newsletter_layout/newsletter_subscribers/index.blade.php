@@ -380,7 +380,7 @@
                     if (response.success) {
                         swal.fire({
                             title: 'Success',
-                            text: 'Emails uploaded successfully.',
+                            text: response.message,
                             icon: 'success'
                         }).then((result) => {
                             if (result.isConfirmed) {
@@ -394,7 +394,7 @@
                     } else {
                         swal.fire({
                             title: 'Error',
-                            text: 'Failed to upload emails.',
+                            text: response.message,
                             icon: 'error'
                         });
                     }
@@ -403,7 +403,7 @@
                     console.log('Error:', error);
                     swal.fire({
                         title: 'Error',
-                        text: 'Failed to upload emails.',
+                        text: response.message,
                         icon: 'error'
                     });
                 }
@@ -428,7 +428,7 @@
                 if (response.success) {
                     swal.fire({
                         title: 'Success',
-                        text: 'File uploaded successfully.',
+                        text: response.message,
                         icon: 'success'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -441,16 +441,15 @@
                 } else {
                     swal.fire({
                         title: 'Error',
-                        text: 'Failed to upload file.',
+                        text: response.message,
                         icon: 'error'
                     });
                 }
             },
             error: function(xhr, status, error) {
-                console.log('Error:', error);
                 swal.fire({
                     title: 'Error',
-                    text: 'Failed to upload file.',
+                    text: response.message,
                     icon: 'error'
                 });
             }
