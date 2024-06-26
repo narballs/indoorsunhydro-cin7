@@ -901,6 +901,162 @@ class CheckoutController extends Controller
                     }
                 }
             break;
+            case 'payout.paid':
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                $payment_succeeded = $stripe->events->retrieve(
+                    $event->id,
+                    []
+                );
+                $charge = $event->data->object;
+                $chargeId = $charge->id;
+                $dateCreated = Carbon::now();
+                $createdDate = Carbon::now();
+                $session_contact_id = Session::get('contact_id');
+                $active_contact_id = null;
+                $is_primary = null;
+                if (!empty($session_contact_id)) {
+                    $contact = Contact::where('contact_id', $session_contact_id)->first();
+                    if ($contact) {
+                        $active_contact_id = $contact->contact_id;
+                    } else {
+                        $contact = Contact::where('secondary_id', $session_contact_id)->first();
+                        $active_contact_id = $contact->parent_id;
+                    }
+                }
+                if ($active_contact_id) {
+                    $is_primary = Contact::where('contact_id', $session_contact_id)->first();
+                }
+                $order_id = $payment_succeeded->data->object->metadata->order_id;
+                $currentOrder = ApiOrder::where('id', $order_id)->with(
+                        'user.contact',
+                        'apiOrderItem.product.options',
+                        'texClasses'
+                    )->first();
+                
+                if(!empty($currentOrder)) {
+                    if ($payment_succeeded->data->object->paid == true) {
+                        $currentOrder->payment_status = 'paid';
+                        $currentOrder->charge_id = $chargeId;
+                        $currentOrder->save();
+    
+                        $order_comment = new OrderComment;
+                        $order_comment->order_id = $order_id;
+                        $order_comment->comment = 'Order marked as paid through webhook. (charge.succeeded)';
+                        $order_comment->save();
+
+                        
+    
+                    } else {
+                        $currentOrder->payment_status = 'unpaid';
+                        $currentOrder->charge_id = $chargeId;
+                        $currentOrder->save();
+    
+    
+                        $order_comment = new OrderComment;
+                        $order_comment->order_id = $order_id;
+                        $order_comment->comment = 'Order marked as unpaid through webhook, unable to verify payment. Although (charge.succeeded).';
+                        $order_comment->save();
+                    }
+    
+                  
+                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    ->where('order_id', $order_id)
+                    ->get();
+                    
+                    $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                    if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+                        if (!empty($order_contact)) {
+                            // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            if ($shiping_order['statusCode'] == 200) {
+                                $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                    'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                ]);
+                            }
+                        }
+                    }
+                    $customer_email = Contact::where('contact_id', $currentOrder->memberId)->first();
+                    // $customer_email  = $payment_succeeded->data->object->billing_details->email;
+                    if (!empty($customer_email)) {
+                        $contact = Contact::where('email', $customer_email->email)->first();
+                    }
+                    $user_email = Auth::user();
+                    $count = $order_items->count();
+                    $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+                    $addresses = [
+                        'billing_address' => [
+                            'firstName' => $contact->firstName,
+                            'lastName' => $contact->lastName,
+                            'address1' => $contact->address1,
+                            'address2' => $contact->address2,
+                            'city' => $contact->city,
+                            'state' => $contact->state,
+                            'zip' => $contact->postCode,
+                            'mobile' => $contact->mobile,
+                            'phone' => $contact->phone,
+                        ],
+                        'shipping_address' => [
+                            'postalAddress1' =>$contact->postalAddress1,
+                            'postalAddress2' =>$contact->postalAddress2,
+                            'postalCity' =>$contact->postalCity,
+                            'postalState' =>$contact->postalState,
+                            'postalPostCode' =>$contact->postalPostCode,
+                        ],
+                        'payment_terms' =>  'Stripe',
+                        'shipping_fee' => !empty($currentOrder->shipment_price) ? $currentOrder->shipment_price : '',
+                        'best_product' => $best_products,
+                        'user_email' =>   $user_email,
+                        'currentOrder' => $currentOrder,
+                        'count' => $count,
+                        'order_id' => $order_id,
+                        'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
+                        'order_status' => '',
+                        'delievery_method' => $currentOrder->logisticsCarrier,
+                    ];
+                    $name = $contact->firstName;
+                    $email =  $contact->email;
+                    $reference  =  $currentOrder->reference;
+                    $template = 'emails.admin-order-received';
+                    $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+    
+                    $admin_users = $admin_users->toArray();
+    
+                    $users_with_role_admin = User::select("email")
+                        ->whereIn('id', $admin_users)
+                        ->get();
+                    $parent_email = Contact::where('contact_id', $active_contact_id)->first();
+                    $data = [
+                        'name' =>  $name,
+                        'email' => $email,
+                        'subject' => 'New order received',
+                        'reference' => $reference,
+                        'order_items' => $order_items,
+                        'dateCreated' => $dateCreated,
+                        'addresses' => $addresses,
+                        'best_product' => $best_products,
+                        'currentOrder' => $currentOrder,
+                        'user_email' => $user_email,
+                        'count' => $count,
+                        'from' => SettingHelper::getSetting('noreply_email_address')
+                    ];
+    
+                    if (!empty($users_with_role_admin)) {
+                        foreach ($users_with_role_admin as $role_admin) {
+                            $subject = 'New order received';
+                            $adminTemplate = 'emails.admin-order-received';
+                            $data['email'] = $role_admin->email;
+                            MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                        }
+                    }
+    
+                    if (!empty($customer_email->email)) {
+                        $data['email'] = $customer_email->email;
+                        $data['subject'] = 'Your order has been received';
+                        MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    }
+                }
+            break;
             case 'charge.failed':
                 $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
                 $payment_failed = $stripe->events->retrieve(
