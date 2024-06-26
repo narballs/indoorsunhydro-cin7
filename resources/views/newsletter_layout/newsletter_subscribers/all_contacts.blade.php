@@ -245,7 +245,7 @@
                                 customClass: {
                                     popup: 'swal2-small', // Apply custom CSS class to make the dialog smaller
                                 },
-                                timer: 3000000,
+                                timer: 3000,
                                 showConfirmButton: false,
                                 position: 'top',
                                 timerProgressBar: true
