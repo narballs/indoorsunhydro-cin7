@@ -6,13 +6,25 @@
         <div class="card">
             <div class="card-header">
                 <div class="row align-items-center">
-                    <div class="col-md-8 d-flex align-items-center">
+                    <div class="col-md-6 d-flex align-items-center">
                         <h3 class="card-title">Subscribers</h3>
                         <button class="btn btn-info mx-3 d-none list_pop_up_btn" type="button" data-toggle="modal" data-target="#email_list_pop_up">
                             Add To List
                         </button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#upload_file_modal">Upload CSV or Excel</a>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#bulk_upload_pop_up">
+                                    Bulk Upload
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <form method="get" class="">
                             <input type="text" class="form-control" id="search" name="search"
                                 placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
@@ -35,43 +47,43 @@
                             {{ session('error') }}
                     </div>
                 @endif
-                <table id="example2" class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" name="select_all" id="select_all">
-                            </th>
-                            <th>Email</th>
+                @if (count($newsletter_subscriptions) > 0 )
+                    <table id="example2" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" name="select_all" id="select_all">
+                                </th>
+                                <th>Email</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                        $i =1;
-                        @endphp
-                        @if(count($newsletter_subscriptions) > 0 )
-                        @foreach ($newsletter_subscriptions as $newsletter_subscription)
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="select_one" id="select_one_{{$newsletter_subscription->id}}" data-email="{{$newsletter_subscription->email}}" class="select_one">
-                            </td>
-                            <td>{{ $newsletter_subscription->email }}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                            $i =1;
+                            @endphp
+                            @foreach ($newsletter_subscriptions as $newsletter_subscription)
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="select_one" id="select_one_{{$newsletter_subscription->id}}" data-email="{{$newsletter_subscription->email}}" class="select_one">
+                                </td>
+                                <td>{{ $newsletter_subscription->email }}</td>
 
-                        </tr>
-                        @endforeach
-                        @else
-                        <tr>
-                            <td colspan="3">No Subscribers Found</td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ $newsletter_subscriptions->links() }}
+                    <div class="row mt-3 justify-content-center align-items-center">
+                        <div class="col-md-12">
+                            {{ $newsletter_subscriptions->links() }}
+                        </div>
                     </div>
-                </div>
+                @else
+                    <h5>
+                        No Subscribers Found
+                    </h5>
+                @endif
             </div>
             <!-- /.card-body -->
         </div>
@@ -112,6 +124,60 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="save_list_users">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="bulk_upload_pop_up" tabindex="-1" role="dialog" aria-labelledby="bulk_upload_pop_up" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Bulk Upload</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="">Bulk Upload (Enter email one per line)</label>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <textarea class="form-control" id="bulk_upload_emails" name="bulk_upload_emails" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="save_bulk_upload">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="upload_file_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="upload_file_modal_label">Upload CSV or Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="upload_file_form" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="file">Choose CSV or Excel File</label>
+                        <input type="file" name="file" class="form-control" id="file" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="upload_file_button">Upload</button>
             </div>
         </div>
     </div>
@@ -201,6 +267,8 @@
         });
     });
 </script>
+
+{{-- adding scripts on pop ups --}}
 
 <script>
     $(document).ready(function() {
@@ -292,8 +360,101 @@
                 });
             }
         });
+
+        // bulk upload emails
+        $('#save_bulk_upload').click(function() {
+            var emails = $('#bulk_upload_emails').val();
+
+            $.ajax({
+                url: "{{ route('subscribers_bulk_upload') }}",
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({
+                    bulk_upload_emails: emails
+                }),
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        swal.fire({
+                            title: 'Success',
+                            text: 'Emails uploaded successfully.',
+                            icon: 'success'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#bulk_upload_pop_up').modal('hide');
+                                $('#bulk_upload_emails').val(''); // Clear the textarea
+                                setTimeout(function() {
+                                    window.location.href = '/newsletter/subscribers';
+                                }, 1000); // Delay of 1 second (1000 milliseconds)
+                            }
+                        });
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Failed to upload emails.',
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                    swal.fire({
+                        title: 'Error',
+                        text: 'Failed to upload emails.',
+                        icon: 'error'
+                    });
+                }
+            });
+        });
+    });
+   
+</script>
+<script>
+    $('#upload_file_button').click(function() {
+        var formData = new FormData($('#upload_file_form')[0]);
+        $.ajax({
+            url: "{{ route('subscribers.import') }}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    swal.fire({
+                        title: 'Success',
+                        text: 'File uploaded successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#upload_file_modal').modal('hide');
+                            setTimeout(function() {
+                                window.location.href = '/newsletter/subscribers';
+                            }, 1000); // Delay of 1 second
+                        }
+                    });
+                } else {
+                    swal.fire({
+                        title: 'Error',
+                        text: 'Failed to upload file.',
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', error);
+                swal.fire({
+                    title: 'Error',
+                    text: 'Failed to upload file.',
+                    icon: 'error'
+                });
+            }
+        });
     });
 </script>
-
-
 @endpush

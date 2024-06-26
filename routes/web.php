@@ -456,6 +456,7 @@ Route::get('/newsletter-templates', [NewsletterTemplateController::class, 'index
 Route::get('/newsletter-templates/create', [NewsletterTemplateController::class, 'create'])->name('newsletter-templates.create');
 Route::get('/newsletter-templates/detail/{id}', [NewsletterTemplateController::class, 'newsletter_templates_detail'])->name('newsletter_templates_detail');
 Route::post('/newsletter-templates/delete/{id}', [NewsletterTemplateController::class, 'delete_newsletter_template'])->name('delete_newsletter_template');
+Route::post('/newsletter-templates/duplicate/{id}', [NewsletterTemplateController::class, 'duplicate_newsletter_template'])->name('duplicate_newsletter_template');
 Route::get('/newsletter-templates/edit/{id}', [NewsletterTemplateController::class, 'edit_newsletter_template'])->name('edit_newsletter_template');
 Route::post('/newsletter-templates/update/{id}', [NewsletterTemplateController::class, 'update_newsletter_template'])->name('update_newsletter_template');
 Route::post('/newsletter-templates', [NewsletterTemplateController::class, 'store'])->name('newsletter-templates.store');
@@ -486,3 +487,5 @@ Route::get('/list/show/users/{id}', [NewsletterController::class, 'subscribers_l
 
 Route::post('save-users-to-list', [NewsletterController::class, 'save_users_to_list'])->name('save_users_to_list');
 Route::post('user/list/delete/{id}', [NewsletterController::class, 'delete_user_from_list'])->name('delete_user_from_list');
+Route::post('/import-subscribers', [NewsletterController::class, 'importSubscribers'])->name('subscribers.import');
+Route::post('/bulk/upload', [NewsletterController::class, 'bulk_upload'])->name('subscribers_bulk_upload');

@@ -44,12 +44,18 @@
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $template->name }}</td>
                                 <td>
-                                    <form action="{{ route('delete_newsletter_template', $template->id) }}" method="POST" style="display: inline-block;">
-                                        <a href="{{ route('newsletter_templates_detail', $template->id) }}" class="btn btn-info">View</a>
-                                        <a href="{{ route('edit_newsletter_template', $template->id) }}" class="btn btn-primary">Edit</a>
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Template?');">Delete</button>
-                                    </form>
+                                    <div class="d-flex">
+                                        <form action="{{ route('delete_newsletter_template', $template->id) }}" method="POST" style="display: inline-block;">
+                                            <a href="{{ route('newsletter_templates_detail', $template->id) }}" class="btn btn-info">View</a>
+                                            <a href="{{ route('edit_newsletter_template', $template->id) }}" class="btn btn-primary">Edit</a>
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Template?');">Delete</button>
+                                        </form>
+                                        <form action="{{ route('duplicate_newsletter_template', $template->id) }}" method="POST" class="mx-1">
+                                            @csrf
+                                            <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to duplicate this Template?');">Duplicate</button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach

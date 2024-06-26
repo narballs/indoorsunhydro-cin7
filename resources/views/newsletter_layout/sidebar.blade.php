@@ -57,7 +57,7 @@
 							<a href="{{route('view_assigned_templates')}}" class="nav-link ">
 								<i class="nav-icon fas fa-th"></i>
 								<p>
-									Assigned Templates
+									Sent Newsletters
 								</p>
 							</a>
 						</li>
