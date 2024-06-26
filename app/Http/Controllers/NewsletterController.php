@@ -325,8 +325,7 @@ class NewsletterController extends Controller
     
     // upload csv 
 
-    public function bulk_upload(Request $request)
-    {
+    public function bulk_upload(Request $request) {
         try {
             // Validate the request input
             $validator = Validator::make($request->all(), [
@@ -370,9 +369,9 @@ class NewsletterController extends Controller
     }
 
     
-    public function importSubscribers(Request $request)
-    {
+    public function importSubscribers(Request $request) {
         try {
+            // Validate the file input
             $request->validate([
                 'file' => 'required|mimes:csv,xlsx,xls,txt',
             ]);
