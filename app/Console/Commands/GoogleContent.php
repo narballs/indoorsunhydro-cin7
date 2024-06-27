@@ -100,7 +100,7 @@ class GoogleContent extends Command
             $price_column = $default_price_column->option_value;
         }
         else {
-            $price_column = 'retailUSD';
+            $price_column = 'sacramentoUSD';
         }
         $product_array = [];
         $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
@@ -111,16 +111,17 @@ class GoogleContent extends Command
         ->where('optionWeight', '>', 0)
         ->pluck('option_id')->toArray();
         $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
-        ->where($price_column , '!=', null)
-        ->where($price_column , '>' , 0)
+        // ->where($price_column , '!=', null)
+        // ->where($price_column , '>' , 0)
         ->pluck('option_id')
         ->toArray();
         $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
         ->pluck('product_id')->toArray();
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
-        ->where('barcode' , '!=' , '')
+        // ->where('barcode' , '!=' , '')
         ->get();
+        // dd($products->count());
         if (count($products) > 0) {
             foreach ($products as $product) {
                 
@@ -128,7 +129,20 @@ class GoogleContent extends Command
                     foreach ($product->options as $option) {
                         if ((count($option->price) > 0)  ) {
                             foreach ($option->price as $price)  {
-                                if ((!empty($price->$price_column)) && $price->$price_column > 0) {
+                                $product_price = 0;
+                                if ($price->$price_column == null) {
+                                    $price->$price_column = 0;
+                                } 
+                                if ($price->$price_column > 0) {
+                                    $product_price = $price->$price_column;
+                                } elseif ($price->sacramentoUSD > 0) {
+                                    $product_price = $price->sacramentoUSD;
+                                } elseif($price->retailUSD > 0) {
+                                    $product_price = $price->retailUSD;
+                                } else {
+                                    $product_price = 0;
+                                }
+                                if ((!empty($product_price)) && $product_price > 0) {
                                     $category = 'General > General';
                                     if (!empty($product->categories)) {
                                         if (!empty($product->categories->category_id) && $product->categories->parent_id == 0) {
@@ -148,7 +162,7 @@ class GoogleContent extends Command
                                         'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                                         'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                                         'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                                        'price' => !empty($price->$price_column) && $price->$price_column > 0  ? $price->$price_column : 0,
+                                        'price' => !empty($product_price) && $product_price > 0  ? $product_price : 0,
                                         'condition' => 'new',
                                         'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
                                         'brand' => !empty($product->product_brand->name) ? $product->product_brand->name : 'General brand',
