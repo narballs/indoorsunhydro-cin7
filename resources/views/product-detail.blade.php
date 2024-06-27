@@ -745,10 +745,12 @@
                 </div>
             </div>
             <div class="row ml-2 mt-2">
-                <h5 class="category-description">Description</h5>
-                <p class="about product-details-description category-pra d-flex justify-content-center align-items-center product_description">
-                    {!! $productOption->products->description !!}
-                </p>
+                <div class="col-12">
+                    <h5 class="category-description">Description</h5>
+                    <p class="about product-details-description category-pra d-flex justify-content-center align-items-center product_description">
+                        {!! $productOption->products->description !!}
+                    </p>
+                </div>
             </div>
         </div>
     </div>
