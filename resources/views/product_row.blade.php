@@ -10,8 +10,19 @@
             $product_price = $price->retailUSD;
         }
     }
+
+    $product_by_category = false;
+    if (!empty($product->categories)) {
+        if ($product->categories->is_active == 1) {
+            $product_by_category = true;
+        } else {
+            $product_by_category = false;
+        }
+    } else {
+        $product_by_category = true;
+    }
 ?>
-@if (!empty($product->categories) && ($product->categories->is_active == 1))
+@if ($product_by_category == true)
     @if ($product_price > 0)
         <div class="col-md-6 col-xl-3 col-lg-4 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
             <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;
