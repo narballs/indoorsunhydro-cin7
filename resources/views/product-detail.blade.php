@@ -389,7 +389,7 @@
                                         <div class="category-description category-description mt-1  lh-lg"><span>Description</span></div>
                                         <div class="">
                                             <span class="about product-details-description mt-2">
-                                                {{ strip_tags( $productOption->products->description ) }}
+                                                {!! $productOption->products->description !!}
                                             </span>
                                         </div>
                                     </div>
@@ -747,7 +747,7 @@
             <div class="row ml-2 mt-2">
                 <h5 class="category-description">Description</h5>
                 <p class="about product-details-description category-pra d-flex justify-content-center align-items-center">
-                    {{ strip_tags( $productOption->products->description ) }}
+                    {!! $productOption->products->description !!}
                 </p>
             </div>
         </div>
