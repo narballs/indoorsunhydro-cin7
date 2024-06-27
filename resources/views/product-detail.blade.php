@@ -388,7 +388,7 @@
                                     <div class="col-md-12">
                                         <div class="category-description category-description mt-1  lh-lg"><span>Description</span></div>
                                         <div class="">
-                                            <span class="about product-details-description mt-2">
+                                            <span class="about product-details-description mt-2 product_description">
                                                 {!! $productOption->products->description !!}
                                             </span>
                                         </div>
@@ -746,7 +746,7 @@
             </div>
             <div class="row ml-2 mt-2">
                 <h5 class="category-description">Description</h5>
-                <p class="about product-details-description category-pra d-flex justify-content-center align-items-center">
+                <p class="about product-details-description category-pra d-flex justify-content-center align-items-center product_description">
                     {!! $productOption->products->description !!}
                 </p>
             </div>
@@ -1036,8 +1036,8 @@
                     <div class="product-detail-content-dec">
                         <div class="category-description"><span>Description</span></div>
                         <span
-                            class="about product-details-description category-pra d-flex justify-content-center aling-items-center">
-                            {{ strip_tags( $productOption->products->description ) }}
+                            class="about product-details-description category-pra d-flex justify-content-center aling-items-center product_description">
+                            {!! $productOption->products->description !!}
                         </span>
                     </div>
                 </div>
@@ -1313,7 +1313,22 @@
 @include('partials.product-footer')
 @include('partials.footer')
 <style>
-
+    .product_description , p , h5 , h4 , h3 , h2 , h1 {
+        font-family: 'Poppins';
+        border: none;
+        font-style: normal;
+    }
+    .product_description , h5 , h4 , h3 , h2 , h1 {
+        font-size: 1rem;
+        border: none;
+        font-style: normal;
+    }
+    .product_description , em {
+        font-style: normal;
+    }
+    .product_description , p {
+        margin-bottom: 0rem !important;
+    }
     .bulk_head {
         font-family: 'Poppins';
         font-size: 20px;
