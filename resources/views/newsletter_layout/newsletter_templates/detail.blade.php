@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Template Detail</h3>
@@ -16,6 +16,7 @@
 
                 <div class="mt-4">
                     @if (!empty($newsletter_template->content))
+                        {{-- {!! $newsletter_template->content !!} --}}
                         {!! $newsletter_template->content !!}
                     @endif
                 </div>

@@ -1,4 +1,3 @@
-
 @extends('newsletter_layout.dashboard')
 @section('content')
 <div class="row">
@@ -8,128 +7,117 @@
                 <h3 class="card-title">Edit Newsletter Template</h3>
                 <a href="{{route('newsletter-templates.index')}}" class="btn btn-primary float-right">Back</a>
             </div>
-            <!-- /.card-header -->
             <div class="card-body">
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            {{ session('success') }}
+                        {{ session('success') }}
                     </div>
                 @endif
 
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            {{ session('error') }}
+                        {{ session('error') }}
                     </div>
                 @endif
-                <form action="{{ route('update_newsletter_template' , $newsletterTemplate->id) }}" method="POST">
+                <form action="{{ route('update_newsletter_template', $newsletterTemplate->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" value="{{!empty($newsletterTemplate->name) ? $newsletterTemplate->name : ''}}" class="form-control">
+                        <input type="text" id="name" name="name" value="{{ old('name', $newsletterTemplate->name) }}" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="content">Content:</label>
-                        <textarea id="newsletter_content_edit" name="content" class="form-control">
-                            {{!empty($newsletterTemplate->content) ? $newsletterTemplate->content : ''}}
-                        </textarea>
+                        <textarea id="newsletter_content_edit" name="content" class="form-control">{{ old('content', $newsletterTemplate->content) }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.col -->
 </div>
-
 
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
 <script>
     class MyUploadAdapter {
-        constructor( loader ) {
+        constructor(loader) {
             this.loader = loader;
         }
-    
+
         upload() {
-            return this.loader.file
-                .then( file => new Promise( ( resolve, reject ) => {
-                    this._initRequest();
-                    this._initListeners( resolve, reject, file );
-                    this._sendRequest( file );
-                } ) );
+            return this.loader.file.then(file => new Promise((resolve, reject) => {
+                this._initRequest();
+                this._initListeners(resolve, reject, file);
+                this._sendRequest(file);
+            }));
         }
-    
+
         abort() {
-            if ( this.xhr ) {
+            if (this.xhr) {
                 this.xhr.abort();
             }
         }
-    
+
         _initRequest() {
             const xhr = this.xhr = new XMLHttpRequest();
-    
-            xhr.open( 'POST', "{{route('upload_newsletterImage', ['_token' => csrf_token() ])}}", true );
+            xhr.open('POST', "{{ route('upload_newsletterImage', ['_token' => csrf_token()]) }}", true);
             xhr.responseType = 'json';
         }
-    
-        _initListeners( resolve, reject, file ) {
+
+        _initListeners(resolve, reject, file) {
             const xhr = this.xhr;
             const loader = this.loader;
-            const genericErrorText = `Couldn't upload file: ${ file.name }.`;
-    
-            xhr.addEventListener( 'error', () => reject( genericErrorText ) );
-            xhr.addEventListener( 'abort', () => reject() );
-            xhr.addEventListener( 'load', () => {
+            const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+            xhr.addEventListener('error', () => reject(genericErrorText));
+            xhr.addEventListener('abort', () => reject());
+            xhr.addEventListener('load', () => {
                 const response = xhr.response;
-    
-                if ( !response || response.error ) {
-                    return reject( response && response.error ? response.error.message : genericErrorText );
+
+                if (!response || response.error) {
+                    return reject(response && response.error ? response.error.message : genericErrorText);
                 }
-    
-                resolve( response );
-            } );
-    
-            if ( xhr.upload ) {
-                xhr.upload.addEventListener( 'progress', evt => {
-                    if ( evt.lengthComputable ) {
+
+                resolve({
+                    default: response.url
+                });
+            });
+
+            if (xhr.upload) {
+                xhr.upload.addEventListener('progress', evt => {
+                    if (evt.lengthComputable) {
                         loader.uploadTotal = evt.total;
                         loader.uploaded = evt.loaded;
                     }
-                } );
+                });
             }
         }
-    
-        _sendRequest( file ) {
+
+        _sendRequest(file) {
             const data = new FormData();
-    
-            data.append( 'upload', file );
-    
-            this.xhr.send( data );
+            data.append('upload', file);
+            this.xhr.send(data);
         }
     }
-    
-    function MyCustomUploadAdapterPlugin( editor ) {
-        editor.plugins.get( 'FileRepository' ).createUploadAdapter = ( loader ) => {
-            return new MyUploadAdapter( loader );
+
+    function MyCustomUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new MyUploadAdapter(loader);
         };
     }
-    
-</script>
-<script>
+
     CKEDITOR.ClassicEditor.create(document.getElementById("newsletter_content_edit"), {
+        extraPlugins: [MyCustomUploadAdapterPlugin],
         toolbar: {
             items: [
-                'exportPDF','exportWord', '|',
+                'exportPDF', 'exportWord', '|',
                 'findAndReplace', 'selectAll', '|',
                 'heading', '|',
                 'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
                 'bulletedList', 'numberedList', 'todoList', '|',
                 'outdent', 'indent', '|',
-                'undo', 'redo',
-                '-',
+                'undo', 'redo', '-',
                 'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
                 'alignment', '|',
                 'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
@@ -154,7 +142,7 @@
             supportAllValues: true
         },
         fontSize: {
-            options: [ 10, 12, 14, 'default', 18, 20, 22 ],
+            options: [10, 12, 14, 'default', 18, 20, 22],
             supportAllValues: true
         },
         htmlSupport: {
@@ -170,7 +158,6 @@
         htmlEmbed: {
             showPreviews: true
         },
-        
         removePlugins: [
             'ExportPdf',
             'ExportWord',
