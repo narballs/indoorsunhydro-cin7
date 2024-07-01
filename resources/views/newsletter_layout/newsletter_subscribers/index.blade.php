@@ -141,6 +141,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="tags">Tags</label>
+                            <input type="text" data-role="tagsinput" class="form-control"  name="tags" id="bulk_tags">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
                         <label for="">Bulk Upload (Enter email one per line)</label>
                     </div>
                     <div class="col-md-12">
@@ -157,7 +163,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="upload_file_modal_label" aria-hidden="true">
+<div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="upload_file_modal_label" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -170,9 +176,14 @@
                 <form id="upload_file_form" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" data-role="tagsinput" class="form-control"  name="tags">
+                    </div>
+                    <div class="form-group">
                         <label for="file">Choose CSV or Excel File</label>
                         <input type="file" name="file" class="form-control" id="file" required>
                     </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -364,6 +375,7 @@
         // bulk upload emails
         $('#save_bulk_upload').click(function() {
             var emails = $('#bulk_upload_emails').val();
+            var tags = $('#bulk_tags').val();
 
             $.ajax({
                 url: "{{ route('subscribers_bulk_upload') }}",
@@ -371,7 +383,8 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify({
-                    bulk_upload_emails: emails
+                    bulk_upload_emails: emails,
+                    tags: tags
                 }),
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -452,6 +465,17 @@
                     text: 'Failed to upload emails. Your data is invalid.',
                     icon: 'error'
                 });
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.bootstrap-tagsinput input[type=text]').on('keydown', function(e) {
+            if (event.which == 13) {
+                $(this).append(',');
+                //return false;
             }
         });
     });

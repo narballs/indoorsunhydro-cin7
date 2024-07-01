@@ -20,6 +20,7 @@
 <script src="/newsletter_panel/admin/pluginss/chart.js/Chart.min.js"></script>
 
 <!-- PAGE SCRIPTS -->
+<script src="{{ asset('newsletter_panel/admin/distt/js/bootstrap-tagsinput.min.js') }}"></script>
 {{-- <script src="/newsletter_panel/admin/distt/js/pages/dashboard2.js"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

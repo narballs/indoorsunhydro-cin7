@@ -18,6 +18,7 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
   {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10"> --}}
+  <link rel="stylesheet" href="{{ asset('newsletter_panel/admin/distt/css/bootstrap-tagsinput.css') }}">
 </head>
 
     

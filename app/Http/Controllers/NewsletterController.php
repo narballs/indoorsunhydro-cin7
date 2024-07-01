@@ -49,7 +49,7 @@ class NewsletterController extends Controller
         $search = $request->search;
         $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc');
         if (!empty($search)) {
-            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->paginate(10);
+            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->orWhere('tags', 'like', '%' . $search . '%')->paginate(10);
         } else {
             $newsletter_subscriptions = $newsletter_subscriptions->paginate(10);
         }
@@ -323,7 +323,7 @@ class NewsletterController extends Controller
 
 
     
-    // upload csv 
+    // bulk upload emails
 
     public function bulk_upload(Request $request) {
         try {
@@ -331,35 +331,36 @@ class NewsletterController extends Controller
             $validator = Validator::make($request->all(), [
                 'bulk_upload_emails' => 'required|string',
             ]);
-
+    
             if ($validator->fails()) {
                 throw new ValidationException($validator);
             }
-
+    
             // Extract emails from input, trim whitespace
+            $tags = $request->tags;
             $emails = explode("\n", $request->input('bulk_upload_emails'));
             $emails = array_map('trim', $emails);
-
+    
             // Get existing emails from the database
             $existingEmails = NewsletterSubscription::pluck('email')->toArray();
-
+    
             $data = [];
             foreach ($emails as $email) {
                 // Validate email format
                 if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     // Check if email already exists in database
                     if (!in_array($email, $existingEmails)) {
-                        $data[] = ['email' => $email, 'created_at' => now(), 'updated_at' => now()];
+                        $data[] = ['email' => $email, 'tags' => $tags, 'created_at' => now(), 'updated_at' => now()];
                     }
                 }
                 // Invalid emails are silently skipped
             }
-
+    
             // Insert new emails into the database
             if (!empty($data)) {
                 NewsletterSubscription::insert($data);
             }
-
+    
             return response()->json(['success' => true, 'message' => 'Emails uploaded successfully.']);
         } catch (ValidationException $e) {
             return response()->json(['success' => false, 'message' => 'Failed to upload emails. Your data is invalid.'], 400);
@@ -367,26 +368,28 @@ class NewsletterController extends Controller
             return response()->json(['success' => false, 'message' => 'An error occurred while processing the request.'], 500);
         }
     }
-
     
+    // import subscribers
     public function importSubscribers(Request $request) {
         try {
-            // Validate the file input
+            // Validate the file and tags input
             $request->validate([
                 'file' => 'required|mimes:csv,xlsx,xls,txt',
+                // 'tags' => 'nullable|string'
             ]);
-
+    
             $path = $request->file('file')->getRealPath();
             $extension = $request->file('file')->getClientOriginalExtension();
-
+    
             // Define possible variations of email column headers
             $emailHeaders = ['Email', 'email', 'E-mail', 'e-mail'];
-
+    
             // Initialize variables
             $header = null;
             $emailIndex = null;
             $validEmails = [];
-
+            $tags = $request->input('tags', ''); // Retrieve tags input
+    
             // Read file based on extension
             if (in_array($extension, ['csv', 'txt'])) {
                 $file = fopen($path, 'r');
@@ -394,7 +397,7 @@ class NewsletterController extends Controller
             } else {
                 $header = (new HeadingRowImport)->toArray($path)[0][0];
             }
-
+    
             // Find the correct email column index based on header case insensitivity
             if ($header) {
                 foreach ($emailHeaders as $emailHeader) {
@@ -404,7 +407,7 @@ class NewsletterController extends Controller
                     }
                 }
             }
-
+    
             // Process the file based on the found email index
             if ($emailIndex !== false) {
                 if (in_array($extension, ['csv', 'txt'])) {
@@ -428,21 +431,26 @@ class NewsletterController extends Controller
                         }
                     }
                 }
-
+    
                 $validEmails = array_unique($validEmails);
-
+    
                 $existingEmails = NewsletterSubscription::whereIn('email', $validEmails)->pluck('email')->toArray();
                 $newEmails = array_diff($validEmails, $existingEmails);
-
+    
                 $data = [];
                 foreach ($newEmails as $email) {
-                    $data[] = ['email' => $email, 'created_at' => now(), 'updated_at' => now()];
+                    $data[] = [
+                        'email' => $email, 
+                        'tags' => $tags, // Add tags to each new email
+                        'created_at' => now(), 
+                        'updated_at' => now()
+                    ];
                 }
-
+    
                 if (!empty($data)) {
                     NewsletterSubscription::insert($data);
                 }
-
+    
                 return response()->json(['success' => true, 'message' => 'Emails uploaded successfully.']);
             } else {
                 return response()->json(['success' => false, 'message' => 'File does not contain a recognized email column header.'], 400);
@@ -453,5 +461,45 @@ class NewsletterController extends Controller
             return response()->json(['success' => false, 'message' => 'An error occurred while processing the file.'], 500);
         }
     }
-        
+
+    // add specific user to list 
+    public function add_subscriber_to_list(Request $request) {
+        try {
+            $request->validate([
+                'email' => 'required|email|unique:newsletter_subscriptions,email',
+                'tags' => 'nullable|string',
+                // 'list_id' => 'required|exists:newsletter_lists,id'
+            ]);
+    
+            $email = $request->input('email');
+            $tags = $request->input('tags', '');
+            $listId = $request->input('list_id');
+    
+            NewsletterSubscription::create([
+                'email' => $email,
+                'tags' => $tags,
+                // 'list_id' => $listId, // Ensure your table has this column
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+
+            $subscriber_email_list = SubscriberEmailList::where('email', $email)->where('subscriber_lists_id', $listId)->first();
+            if (!$subscriber_email_list) {
+                SubscriberEmailList::create([
+                    'email' => $email,
+                    'subscriber_lists_id' => $listId,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+    
+            return response()->json(['success' => true, 'message' => 'Subscriber added successfully.']);
+        } catch (ValidationException $e) {
+            return response()->json(['success' => false, 'message' => 'Validation error. Please check your input.'], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred while adding the subscriber.'], 500);
+        }
+    }
+                
 }
