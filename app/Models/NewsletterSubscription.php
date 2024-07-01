@@ -10,7 +10,7 @@ class NewsletterSubscription extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email',
+        'email', 'tags'
     ];
 
     public function templates()

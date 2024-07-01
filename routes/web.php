@@ -489,3 +489,8 @@ Route::post('save-users-to-list', [NewsletterController::class, 'save_users_to_l
 Route::post('user/list/delete/{id}', [NewsletterController::class, 'delete_user_from_list'])->name('delete_user_from_list');
 Route::post('/import-subscribers', [NewsletterController::class, 'importSubscribers'])->name('subscribers.import');
 Route::post('/bulk/upload', [NewsletterController::class, 'bulk_upload'])->name('subscribers_bulk_upload');
+
+
+// add new user to list 
+Route::post('/list/subscribers/add', [NewsletterController::class, 'add_subscriber_to_list'])->name('add_subscriber_to_list');
+
