@@ -21,10 +21,10 @@ class CreateNewsletterSubscriberTemplateTable extends Migration
             $table->timestamps();
 
             // Use shorter foreign key constraint names
-            // $table->foreign('list_id', 'fk_list_id') // Change foreign key name to 'fk_list_id'
-            //       ->references('id')->on('subscriber_lists')->onDelete('cascade');
-            // $table->foreign('newsletter_template_id', 'fk_template_id')
-            //       ->references('id')->on('newsletter_templates')->onDelete('cascade');
+            $table->foreign('list_id', 'fk_list_id') // Change foreign key name to 'fk_list_id'
+                  ->references('id')->on('subscriber_lists')->onDelete('cascade');
+            $table->foreign('newsletter_template_id', 'fk_template_id')
+                  ->references('id')->on('newsletter_templates')->onDelete('cascade');
         });
     }
 
@@ -35,11 +35,11 @@ class CreateNewsletterSubscriberTemplateTable extends Migration
      */
     public function down()
     {
-        // Schema::table('newsletter_subscriber_template', function (Blueprint $table) {
-        //     $table->dropForeign('fk_list_id'); // Drop foreign key constraint 'fk_list_id'
-        //     $table->dropForeign('fk_template_id'); // Drop foreign key constraint 'fk_template_id'
-        // });
+        Schema::table('newsletter_subscriber_template', function (Blueprint $table) {
+            $table->dropForeign('fk_list_id'); // Drop foreign key constraint 'fk_list_id'
+            $table->dropForeign('fk_template_id'); // Drop foreign key constraint 'fk_template_id'
+        });
 
-        // Schema::dropIfExists('newsletter_subscriber_template');
+        Schema::dropIfExists('newsletter_subscriber_template');
     }
 }
