@@ -188,34 +188,70 @@ class GoogleContent extends Command
         $productStatusList = [];
         $feedIds = [];
         $pageToken = null;
-        do {
-            try {
-                $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 250, 'pageToken' => $pageToken]);
-                foreach ($products->getResources() as $product) {
-                    $productId = $product['id'];
-                    $mpn = $product['mpn'];
-                    $productStatusList[] = [
-                        'id' => $productId,
-                        'mpn' => $mpn,
-                    ];
-                }
-                $pageToken = $products->getNextPageToken();
-            } catch (\Google\Service\Exception $e) {
-                report($e);
-                return $this->error('Failed to retrieve products from Google Merchant Center.');
-            }
-        } while (!empty($pageToken));
+        // do {
+        //     try {
+        //         $products = $service->products->listProducts(config('services.google.merchant_center_id'), ['maxResults' => 250, 'pageToken' => $pageToken]);
+        //         foreach ($products->getResources() as $product) {
+        //             $productId = $product['id'];
+        //             $mpn = $product['mpn'];
+        //             $productStatusList[] = [
+        //                 'id' => $productId,
+        //                 'mpn' => $mpn,
+        //             ];
+        //         }
+        //         $pageToken = $products->getNextPageToken();
+        //     } catch (\Google\Service\Exception $e) {
+        //         report($e);
+        //         return $this->error('Failed to retrieve products from Google Merchant Center.');
+        //     }
+        // } while (!empty($pageToken));
         if (!empty($product_array)) {
             foreach ($product_array as $index => $add_product) {
-                $isDuplicate = false;
+                // $isDuplicate = false;
 
-                foreach ($productStatusList as $existingProduct) {
-                    if ($add_product['code'] === $existingProduct['mpn']) {
-                        $isDuplicate = true;
-                        break;
-                    }
-                }
-                if (!$isDuplicate) {
+                // foreach ($productStatusList as $existingProduct) {
+                //     if ($add_product['code'] === $existingProduct['mpn']) {
+                //         $isDuplicate = true;
+                //         break;
+                //     }
+                // }
+                // if (!$isDuplicate) {
+                //     $product = new ServiceProduct();
+                //     $product->setOfferId(substr($add_product['code'], 0, 50));
+                //     $product->setTitle($add_product['title']);
+                //     $product->setDescription($add_product['description']);
+                //     $product->setLink($add_product['link']);
+                //     $product->setImageLink($add_product['image_link']);
+                //     $product->setContentLanguage('en');
+                //     $product->setTargetCountry('US');
+                //     $product->setChannel('online');
+                //     $product->setAvailability($add_product['availability']);
+                //     $product->setCondition($add_product['condition']);
+                //     $product->setBrand($add_product['brand']);
+                //     // $product->setGoogleProductCategory($add_product['google_product_category']);
+                //     $product->setGtin($add_product['barcode']);
+                //     // $product->setmultipack('5000');
+                //     // $product->setIdentifierExists(false);
+                //     $product->setMpn($add_product['code']);
+                //     $product->setAgeGroup('adult');
+                //     // $product->setColor('universal');
+                //     $product->setGender('unisex');
+                //     // $product->setSizes(['Large']);
+
+                //     $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
+                //     $shippingWeight->setValue($add_product['product_weight']);
+                //     $shippingWeight->setUnit('lb');
+                //     $product->setShippingWeight($shippingWeight);
+
+                //     $price = new Price();
+                //     $price->setValue($add_product['price']);
+                //     $price->setCurrency('USD');
+            
+                //     $product->setPrice($price);
+                //     $merchant_id = config('services.google.merchant_center_id');
+                //     $result = $service->products->insert($merchant_id, $product);
+                // } 
+                // else {
                     $product = new ServiceProduct();
                     $product->setOfferId(substr($add_product['code'], 0, 50));
                     $product->setTitle($add_product['title']);
@@ -250,42 +286,7 @@ class GoogleContent extends Command
                     $product->setPrice($price);
                     $merchant_id = config('services.google.merchant_center_id');
                     $result = $service->products->insert($merchant_id, $product);
-                } else {
-                    $product = new ServiceProduct();
-                    $product->setOfferId(substr($add_product['code'], 0, 50));
-                    $product->setTitle($add_product['title']);
-                    $product->setDescription($add_product['description']);
-                    $product->setLink($add_product['link']);
-                    $product->setImageLink($add_product['image_link']);
-                    $product->setContentLanguage('en');
-                    $product->setTargetCountry('US');
-                    $product->setChannel('online');
-                    $product->setAvailability($add_product['availability']);
-                    $product->setCondition($add_product['condition']);
-                    $product->setBrand($add_product['brand']);
-                    // $product->setGoogleProductCategory($add_product['google_product_category']);
-                    $product->setGtin($add_product['barcode']);
-                    // $product->setmultipack('5000');
-                    // $product->setIdentifierExists(false);
-                    $product->setMpn($add_product['code']);
-                    $product->setAgeGroup('adult');
-                    // $product->setColor('universal');
-                    $product->setGender('unisex');
-                    // $product->setSizes(['Large']);
-
-                    $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
-                    $shippingWeight->setValue($add_product['product_weight']);
-                    $shippingWeight->setUnit('lb');
-                    $product->setShippingWeight($shippingWeight);
-
-                    $price = new Price();
-                    $price->setValue($add_product['price']);
-                    $price->setCurrency('USD');
-            
-                    $product->setPrice($price);
-                    $merchant_id = config('services.google.merchant_center_id');
-                    $result = $service->products->insert($merchant_id, $product);
-                }
+                // }
 
             }
             $this->info('Products inserted successfully.');
