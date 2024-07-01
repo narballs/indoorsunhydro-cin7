@@ -62,6 +62,9 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
+            $responseDeleted = $this->delete_inactive_products($client, $token);
+            $responseRemoved = $this->removeDisapprovedProducts($client, $token);
+            $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
             $result = $this->insertProducts($client, $token);
             $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
             if (!empty($gmcLog)) {
@@ -76,9 +79,7 @@ class GoogleContent extends Command
             $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
 
-            
-
-           return $this->info('Products inserted successfully.'); 
+            return $this->info('Products inserted successfully.'); 
         } else {
             $this->error('Failed to retrieve access token.');
         }
