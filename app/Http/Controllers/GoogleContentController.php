@@ -20,6 +20,10 @@ class GoogleContentController extends Controller
 {
     
 
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+    }
     public function authorizeGoogle()
     {
         $client = new Google_Client();

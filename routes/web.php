@@ -30,9 +30,13 @@ use App\Http\Controllers\Admin\WholesaleApplicationController;
 use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\GoogleContentController;
+use App\Http\Controllers\EmailListController;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ProductStockNotificationController;
 use App\Http\Controllers\GetProductDimensionController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\NewsletterTemplateController;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -439,4 +443,54 @@ Route::post('admin/alternative/products/history', [ProductStockNotificationContr
 Route::post('admin/notify/user/product/history', [ProductStockNotificationController::class, 'notify_users_from_alternate_history'])->name('notify_users_from_alternate_history');
 Route::get('/order/cin7-payment/{order_reference}', [OrderController::class, 'cin7_payments'])->name('cin7_payments');
 Route::get('/cin7/payment/success/{orderId}', [OrderController::class, 'cin7_payments_success'])->name('cin7_payments_success');
+
+// newsletter module 
+Route::get('/newsletter/dashboard', [NewsletterController::class, 'newsletter_dashboard'])->name('newsletter_dashboard');
+Route::get('/newsletter/subscribers', [NewsletterController::class, 'newsletter_subscriptions'])->name('newsletter_subscriptions');
 Route::post('/subscribe/newsletter', [HomeController::class, 'subscribe_newsletter'])->name('subscribe_newsletter');
+
+
+
+// Newsletter Template routes
+Route::get('/newsletter-templates', [NewsletterTemplateController::class, 'index'])->name('newsletter-templates.index');
+Route::get('/newsletter-templates/create', [NewsletterTemplateController::class, 'create'])->name('newsletter-templates.create');
+Route::get('/newsletter-templates/detail/{id}', [NewsletterTemplateController::class, 'newsletter_templates_detail'])->name('newsletter_templates_detail');
+Route::post('/newsletter-templates/delete/{id}', [NewsletterTemplateController::class, 'delete_newsletter_template'])->name('delete_newsletter_template');
+Route::post('/newsletter-templates/duplicate/{id}', [NewsletterTemplateController::class, 'duplicate_newsletter_template'])->name('duplicate_newsletter_template');
+Route::get('/newsletter-templates/edit/{id}', [NewsletterTemplateController::class, 'edit_newsletter_template'])->name('edit_newsletter_template');
+Route::post('/newsletter-templates/update/{id}', [NewsletterTemplateController::class, 'update_newsletter_template'])->name('update_newsletter_template');
+Route::post('/newsletter-templates', [NewsletterTemplateController::class, 'store'])->name('newsletter-templates.store');
+Route::post('/newsletter-templates/upload/image', [NewsletterTemplateController::class, 'upload_newsletterImage'])->name('upload_newsletterImage');
+
+
+// Assign templates to users
+Route::get('/assign/template', [NewsletterController::class, 'showAssignForm'])->name('assign_template_form');
+Route::post('/assign', [NewsletterController::class, 'assignTemplates'])->name('assign.templates');
+Route::get('/assign-templates-view', [NewsletterController::class, 'view_assigned_templates'])->name('view_assigned_templates');
+Route::get('/edit-assigned-template/{id}', [NewsletterController::class, 'edit_assigned_template'])->name('edit_assigned_template');
+Route::post('/edit-assigned-template/{id}', [NewsletterController::class, 'update_assigned_template'])->name('update_assigned_template');
+Route::post('/delete-assigned-template/{id}', [NewsletterController::class, 'delete_assigned_template'])->name('delete_assigned_template');
+Route::post('/send-newsletter/{id}', [NewsletterController::class, 'send_newspaper'])->name('send_newspaper');
+Route::get('/all-contacts', [NewsletterController::class, 'all_contacts'])->name('all_contacts');
+
+// subscribers list
+Route::get('subscribers/list/index', [NewsletterController::class, 'subscribers_list'])->name('subscribers_list');
+Route::get('subscribers/list/create', [NewsletterController::class, 'subscribers_list_create'])->name('subscribers_list_create');
+Route::post('subscribers/list/store', [NewsletterController::class, 'subscribers_list_store'])->name('subscribers_list_store');
+Route::get('subscribers/list/edit/{id}', [NewsletterController::class, 'subscribers_list_edit'])->name('subscribers_list_edit');
+Route::post('subscribers/list/update/{id}', [NewsletterController::class, 'subscribers_list_update'])->name('subscribers_list_update');
+Route::post('subscribers/list/delete/{id}', [NewsletterController::class, 'subscribers_list_delete'])->name('subscribers_list_delete');
+Route::get('/list/show/users/{id}', [NewsletterController::class, 'subscribers_list_show_users'])->name('subscribers_list_show_users');
+
+
+// save users to list
+
+Route::post('save-users-to-list', [NewsletterController::class, 'save_users_to_list'])->name('save_users_to_list');
+Route::post('user/list/delete/{id}', [NewsletterController::class, 'delete_user_from_list'])->name('delete_user_from_list');
+Route::post('/import-subscribers', [NewsletterController::class, 'importSubscribers'])->name('subscribers.import');
+Route::post('/bulk/upload', [NewsletterController::class, 'bulk_upload'])->name('subscribers_bulk_upload');
+
+
+// add new user to list 
+Route::post('/list/subscribers/add', [NewsletterController::class, 'add_subscriber_to_list'])->name('add_subscriber_to_list');
+

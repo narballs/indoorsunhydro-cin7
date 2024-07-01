@@ -386,6 +386,10 @@ class UserController extends Controller
                 return redirect()->back();
             } else {
                 $user_id = auth()->user()->id;
+                if ($user->hasRole(['Newsletter'])) {
+                    session()->flash('message', 'Successfully Logged in');
+                    return redirect()->route('newsletter_dashboard');
+                }
                 if ($request->session()->has('cart_hash')) {
                     $cart_hash = $request->session()->get('cart_hash');
                     $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();

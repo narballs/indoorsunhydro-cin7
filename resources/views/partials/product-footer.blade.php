@@ -1,7 +1,7 @@
 @php
    $enable_newsletter = \App\Models\AdminSetting::where('option_name', 'enable_newsletter')->first(); 
 @endphp
-@if ((!empty($enable_newsletter) && $enable_newsletter->option_value == 'yes'))
+@if ((!empty($enable_newsletter) && $enable_newsletter->option_value == 'Yes'))
     <div class="row justify-content-center p-5" style="background-color:#F7F7F7">
         <div class="col-md-8">
             <h2 class="text-center newsletter_title">Subscribe to our Newsletter</h2>

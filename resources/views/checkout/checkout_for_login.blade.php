@@ -607,6 +607,7 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
+                                        @if (strtolower($user_address->paymentTerms) !== 'pay in advanced')
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
                                                 <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
@@ -628,18 +629,19 @@ $cart_price = 0;
                                                     </textarea>
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center border-bottom py-3">
+                                        @endif
+                                        {{-- <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mb-3">
                                                 <p class="checkout_product_heading mb-2 ml-0">Payment Terms</p>
                                                 <select name="paymentTerms" id="pay_terms" class="form-control checkout_product_heading">
-                                                    @if(strtolower($user_address->paymentTerms) == "pay in advanced" )
+                                                    @if( )
                                                         <option value="Pay in Advanced" selected>Pay in Advanced</option>
                                                     @else
                                                         <option value="30 days from invoice" selected>30 days from invoice</option>
                                                     @endif
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         @php
                                             $discount_amount = 0;
                                             $remove_discount = 0;
@@ -658,6 +660,7 @@ $cart_price = 0;
                                             $total_including_tax = $tax + $remove_discount  + $shipment_price;
                                             
                                         @endphp
+                                        <input type="hidden" name="paymentTerms" value="{{strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
                                         <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
                                         <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
                                         <input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">

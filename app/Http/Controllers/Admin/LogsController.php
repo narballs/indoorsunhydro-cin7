@@ -8,6 +8,11 @@ use App\Models\ApiSyncLog;
 
 class LogsController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware(['role:Admin']);
+    }
+    
     public function index() {
         $api_logs = ApiSyncLog::all();
         return view('admin/logs', compact('api_logs'));

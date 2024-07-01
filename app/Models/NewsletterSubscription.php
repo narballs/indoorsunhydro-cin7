@@ -10,6 +10,11 @@ class NewsletterSubscription extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email',
+        'email', 'tags'
     ];
+
+    public function templates()
+    {
+        return $this->belongsToMany(NewsletterTemplate::class, 'newsletter_subscriber_template', 'newsletter_subscription_id', 'newsletter_template_id');
+    }
 }
