@@ -407,4 +407,27 @@ class UserHelper
 
         return $data['status'];
     }
+
+    public static function  cleanDescription($description) {
+        // Step 1: Decode HTML entities
+        $decodedDescription = html_entity_decode($description);
+    
+        // Step 2: Remove specific unwanted characters
+        // List of unwanted characters to remove
+        $unwantedCharacters = ['&nbsp;', ':', '', '?', '�', '*']; // Add any other unwanted characters here
+    
+        // Replace unwanted characters with a space
+        $cleanedDescription = str_replace($unwantedCharacters, ' ', $decodedDescription);
+    
+        // Step 3: Remove extra spaces, tabs, and newlines
+        $cleanedDescription = preg_replace('/\s+/', ' ', $cleanedDescription);
+    
+        // Step 4: Sanitize the content
+        // Allow specific HTML tags and attributes
+        $allowedTags = '<p><a><b><i><strong><em><br><ul><ol><li>';
+        $cleanedDescription = strip_tags($cleanedDescription, $allowedTags);
+    
+        return trim($cleanedDescription); // Trim any leading or trailing spaces
+    }
+    
 }
