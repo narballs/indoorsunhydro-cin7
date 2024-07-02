@@ -1,12 +1,12 @@
-
 @extends('newsletter_layout.dashboard')
 @section('content')
-
+    
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Newsletter Templates List</h3>
+                    <h3 class="card-title
+                    ">Newsletter Templates List</h3>
                     <a href="{{ route('newsletter-templates.create') }}" class="btn btn-primary float-right">Create New</a>
                 </div>
                 <!-- /.card-header -->
@@ -63,21 +63,16 @@
                             @endforeach
                             @else
                             <tr>
-                                <td colspan="3">No Newsletter Template list Found</td>
+                                <td colspan="4">No Newsletter Template list Found</td>
                             </tr>
                             @endif
+
                         </tbody>
                     </table>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                        </div>
-                    </div>
                 </div>
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
         </div>
-        <!-- /.col -->
     </div>
 @endsection
