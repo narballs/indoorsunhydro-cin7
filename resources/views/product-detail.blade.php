@@ -748,7 +748,7 @@
                 <div class="col-12">
                     <h5 class="category-description">Description</h5>
                     <p class="about product-details-description category-pra d-flex justify-content-center align-items-center product_description">
-                        {!! $productOption->products->description !!}
+                        {{ !empty($productOption->products->description) ? App\Helpers\UserHelper::cleanDescription($productOption->products->description) : ''}}
                     </p>
                 </div>
             </div>
