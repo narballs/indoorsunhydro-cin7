@@ -1702,6 +1702,23 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+@media screen and (min-width: 821px) {
+    .quantity input {
+       height: 46px !important;     
+    }
+    
+    .quantity-nav {
+        height: 46px !important;
+    }
+}
+
+@media screen and (min-width: 280px)  and (max-width: 820px){
+    
+    .quantity-nav {
+        height: 67px !important;
+    }
+}
+
 .quantity input {
     width: 144px;
     height: 74px;
@@ -1714,7 +1731,7 @@ input[type=number] {
     border: none;
     color: #7CC633;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-    font-size: 2rem;
+    font-size: 1.5rem;
     border-radius: 4px;
 }
 
@@ -1738,7 +1755,7 @@ input[type=number] {
     color: #333;
     font-size: 13px;
     font-family: "FontAwesome" !important;
-    line-height: 2.5 !important;
+    line-height: 1.5rem !important;
     padding: 0;
     background: #FAFAFA;
     -webkit-transform: translateX(-100%);
@@ -3015,7 +3032,7 @@ input[type=number] {
     
     .quantity input {
         width: 208px ;
-        height: 51px !important;
+        height: 44px !important;
         line-height: 1.65 !important;
         float: left !important;
         display: block !important;

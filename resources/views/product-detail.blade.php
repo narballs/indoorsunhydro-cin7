@@ -280,7 +280,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-8 mt-2">
+                                        <div class="col-md-8">
                                             
                                             @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                                 @if ($total_stock > 0)
@@ -748,7 +748,8 @@
                 <div class="col-12">
                     <h5 class="category-description">Description</h5>
                     <p class="about product-details-description category-pra d-flex justify-content-center align-items-center product_description">
-                        {{ !empty($productOption->products->description) ? App\Helpers\UserHelper::cleanDescription($productOption->products->description) : ''}}
+                        {{-- {{ !empty($productOption->products->description) ? App\Helpers\UserHelper::cleanDescription($productOption->products->description) : ''}} --}}
+                        {!! $productOption->products->description !!}
                     </p>
                 </div>
             </div>
