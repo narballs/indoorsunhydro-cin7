@@ -39,6 +39,9 @@
                                 Name
                             </th>
                             <th>
+                                Created at
+                            </th>
+                            <th>
                                 Action
                             </th>
                         </tr>
@@ -52,15 +55,21 @@
                                 <tr>
                                     <td>{{$i++}}</td>
                                     <td>{{ $list->name }}</td>
+                                    <td>{{ $list->created_at }}</td>
                                     <td>
                                         <form action="{{route('subscribers_list_delete' , $list->id)}}" method="post">
                                             @csrf
-                                            <a href="{{ route('subscribers_list_edit', $list->id) }}" class="btn btn-primary">Edit</a>
+                                            <a href="{{ route('subscribers_list_edit', $list->id) }}" class="btn btn-secondary">Edit</a>
                                             <a href="{{ route('subscribers_list_show_users', $list->id) }}" class="btn btn-info">Show User(s)</a>
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this list?');">Delete</button>
+                                            
                                             <button class="btn btn-default add-user-to-list-btn" type="button" data-toggle="modal" data-target="#add_user_list" data-id="{{ $list->id }}">
                                                 Add User To List
                                             </button>
+                                            <button class="btn btn-primary bulk_upload_btn" type="button" data-toggle="modal" data-target="#bulk_upload_pop_up" data-id="{{ $list->id }}">
+                                                Bulk Upload
+                                            </button>
+                                            <button type="button" class="btn btn-success csv_upload_btn" data-toggle="modal" data-target="#upload_file_modal" data-id="{{ $list->id }}">Upload CSV or Excel</button>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this list?');">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -115,15 +124,84 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="bulk_upload_pop_up" tabindex="-1" role="dialog" aria-labelledby="bulk_upload_pop_up" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Bulk Upload</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="bulk_upload_file_form" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="list_id" id="bulk_list_id">
+                    <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" data-role="tagsinput" class="form-control"  name="tags" id="bulk_tags">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Bulk Upload (Enter email one per line)</label>
+                        <textarea class="form-control" id="bulk_upload_emails" name="bulk_upload_emails" rows="5"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="save_bulk_upload">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="upload_file_modal" tabindex="-1" role="dialog" aria-labelledby="upload_file_modal_label" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="upload_file_modal_label">Upload CSV or Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="upload_file_form" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="list_id" id="upload_list_id">
+                    <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" data-role="tagsinput" class="form-control"  name="tags" id="tags">
+                    </div>
+                    <div class="form-group">
+                        <label for="file">Choose CSV or Excel File</label>
+                        <input type="file" name="file" class="form-control" id="file" required>
+                    </div>
 
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="upload_file_button">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @push('scripts')
     <script>
-            $(document).ready(function() {
+        $(document).ready(function() {
             // Set the list ID in the modal when "Add User To List" button is clicked
             $('.add-user-to-list-btn').click(function() {
                 var listId = $(this).data('id');
                 $('#list_id').val(listId);
+            });
+            $('.bulk_upload_btn').click(function() {
+                var listId = $(this).data('id');
+                $('#bulk_list_id').val(listId);
+            });
+            $('.csv_upload_btn').click(function() {
+                var listId = $(this).data('id');
+                $('#upload_list_id').val(listId);
             });
 
             // Handle form submission
@@ -169,6 +247,108 @@
                     }
                 });
             });
+            // save bulk upload emails
+            $('#save_bulk_upload').click(function() {
+                var emails = $('#bulk_upload_emails').val();
+                var tags = $('#bulk_tags').val();
+                var listId = $('#bulk_list_id').val();
+
+                $.ajax({
+                    url: "{{ route('bulk_upload_to_list') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        bulk_upload_emails: emails,
+                        tags: tags,
+                        list_id: listId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            swal.fire({
+                                title: 'Success',
+                                text: response.message,
+                                icon: 'success'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $('#bulk_upload_pop_up').modal('hide');
+                                    $('#bulk_upload_emails').val(''); // Clear the textarea
+                                    setTimeout(function() {
+                                        window.location.href = '/subscribers/list/index';
+                                    }, 1000); // Delay of 1 second (1000 milliseconds)
+                                }
+                            });
+                        } else {
+                            swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error:', error);
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Failed to upload emails. Your data is invalid.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
+
+            // save import users
+            $('#upload_file_button').click(function() {
+                var formData = new FormData($('#upload_file_form')[0]);
+                var listId = $('#upload_list_id').val(); // Fetch list_id from hidden input
+                var tags = $('#tags').val();
+
+                // Append list_id to formData
+                formData.append('list_id', listId);
+                formData.append('tags', tags);
+
+                $.ajax({
+                    url: "{{ route('import_users_to_list') }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            swal.fire({
+                                title: 'Success',
+                                text: response.message,
+                                icon: 'success'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $('#upload_file_modal').modal('hide');
+                                    setTimeout(function() {
+                                        window.location.href = '/subscribers/list/index';
+                                    }, 1000); // Delay of 1 second
+                                }
+                            });
+                        } else {
+                            swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Failed to upload file. Your data is invalid.',
+                            icon: 'error'
+                        });
+                    }
+                });
+            });
+
         });
     </script>
 @endpush

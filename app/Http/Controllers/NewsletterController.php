@@ -38,7 +38,8 @@ class NewsletterController extends Controller
         // }
 
         if ($role_name == 'Newsletter') {
-            return view('newsletter_layout.dashboard');
+            $templates = NewsletterTemplate::all();
+            return view('newsletter_layout.newsletter_dashboard' , compact('templates'));
         } else {
             return redirect()->route('home');
         }
@@ -501,5 +502,229 @@ class NewsletterController extends Controller
             return response()->json(['success' => false, 'message' => 'An error occurred while adding the subscriber.'], 500);
         }
     }
-                
+
+    // bulk upload to list 
+    public function bulk_upload_to_list(Request $request)
+    {
+        try {
+            // Validate the request data
+            $validator = Validator::make($request->all(), [
+                'bulk_upload_emails' => 'required|string',
+                'tags' => 'nullable|string',
+                // 'list_id' => 'required|exists:newsletter_lists,id'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+            }
+
+            $listId = $request->input('list_id');
+            $tags = $request->input('tags', '');
+            $bulkEmails = explode("\n", $request->input('bulk_upload_emails'));
+
+            $validEmails = [];
+            foreach ($bulkEmails as $email) {
+                $email = trim($email);
+                if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // Check if email already exists in NewsletterSubscription
+                    $existingSubscription = NewsletterSubscription::where('email', $email)->first();
+
+                    if (!$existingSubscription) {
+                        // Email does not exist in NewsletterSubscription, so insert it
+                        NewsletterSubscription::create([
+                            'email' => $email,
+                            'tags' => $tags,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+
+                    // Check if email exists in SubscriberEmailList for the current list_id
+                    $existingEmailList = SubscriberEmailList::where('email', $email)
+                        ->where('subscriber_lists_id', $listId)
+                        ->first();
+
+                    if (!$existingEmailList) {
+                        // Email does not exist in SubscriberEmailList for the current list_id, so add it
+                        $validEmails[] = [
+                            'email' => $email,
+                            'subscriber_lists_id' => $listId,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+                    }
+                }
+            }
+
+            // Insert valid emails into database
+            if (!empty($validEmails)) {
+                SubscriberEmailList::insert($validEmails);
+
+                return response()->json(['success' => true, 'message' => 'Bulk upload successful.']);
+            }
+
+            return response()->json(['success' => false, 'message' => 'No valid emails to upload.'], 400);
+        } catch (ValidationException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'An error occurred while processing the request.'], 500);
+        }
+    }
+
+    // import subscribers to list
+    public function importUsersToList(Request $request)
+    {
+        try {
+            // Validate the request data
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|mimes:csv,xls,xlsx', // Validate file type
+                'tags' => 'nullable|string',
+                // 'list_id' => 'required|exists:subscriber_email_lists,id' // Validate list_id exists in newsletter_lists table
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+            }
+    
+            $listId = $request->input('list_id');
+            $tags = $request->input('tags', '');
+            $file = $request->file('file');
+    
+            // Process the uploaded file
+            $importedEmails = $this->processImportedFile($file);
+    
+            // Initialize arrays for emails to insert and skipped emails
+            $emailsToInsert = [];
+            $skippedEmails = [];
+    
+            // Iterate over imported emails
+            foreach ($importedEmails as $email) {
+                if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // Check if email exists in NewsletterSubscription
+                    $existingSubscription = NewsletterSubscription::where('email', $email)->first();
+    
+                    if (!$existingSubscription) {
+                        // Email does not exist in NewsletterSubscription, so insert it
+                        NewsletterSubscription::create([
+                            'email' => $email,
+                            'tags' => $tags,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+    
+                    // Check if email exists in SubscriberEmailList for the current list_id
+                    $existingEmailList = SubscriberEmailList::where('email', $email)
+                        ->where('subscriber_lists_id', $listId)
+                        ->first();
+    
+                    if (!$existingEmailList) {
+                        // Email does not exist in SubscriberEmailList for the current list_id, so add it
+                        $emailsToInsert[] = [
+                            'email' => $email,
+                            'subscriber_lists_id' => $listId,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+                    } else {
+                        // Email exists in SubscriberEmailList for the current list_id, skip it
+                        $skippedEmails[] = $email;
+                    }
+                } else {
+                    // Invalid email format, skip it
+                    $skippedEmails[] = $email;
+                }
+            }
+    
+            // Insert emails into SubscriberEmailList
+            if (!empty($emailsToInsert)) {
+                SubscriberEmailList::insert($emailsToInsert);
+            }
+    
+            // Prepare response messages
+            $successMessage = count($emailsToInsert) . ' emails imported successfully.';
+            $skippedMessage = count($skippedEmails) . ' emails skipped due to invalid format or already existing.';
+    
+            // Return response
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage,
+                'skipped_emails' => $skippedMessage,
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e], 500);
+        }
+    }
+
+    private function processImportedFile($file)
+    {
+        $importedEmails = [];
+
+        try {
+            $path = $file->getRealPath();
+            $extension = $file->getClientOriginalExtension();
+
+            // Define possible variations of email column headers
+            $emailHeaders = ['Email', 'email', 'E-mail', 'e-mail'];
+
+            // Initialize variables
+            $header = null;
+            $emailIndex = null;
+
+            // Read file based on extension
+            if (in_array($extension, ['csv', 'txt'])) {
+                $file = fopen($path, 'r');
+                $header = fgetcsv($file);
+            } else {
+                // Use Laravel Excel package to get headers from Excel file
+                $header = (new HeadingRowImport)->toArray($path)[0][0];
+            }
+
+            // Find the correct email column index based on header case insensitivity
+            if ($header) {
+                foreach ($emailHeaders as $emailHeader) {
+                    $emailIndex = array_search($emailHeader, $header);
+                    if ($emailIndex !== false) {
+                        break;
+                    }
+                }
+            }
+
+            // Process the file based on the found email index
+            if ($emailIndex !== false) {
+                if (in_array($extension, ['csv', 'txt'])) {
+                    while ($columns = fgetcsv($file)) {
+                        if (isset($columns[$emailIndex])) {
+                            $email = trim($columns[$emailIndex]);
+                            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $importedEmails[] = $email;
+                            }
+                        }
+                    }
+                    fclose($file);
+                } else {
+                    $rows = Excel::toArray([], $path)[0];
+                    foreach ($rows as $key => $row) {
+                        if ($key > 0 && isset($row[$emailIndex])) {
+                            $email = trim($row[$emailIndex]);
+                            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $importedEmails[] = $email;
+                            }
+                        }
+                    }
+                }
+
+                $importedEmails = array_unique($importedEmails);
+            } else {
+                throw new \Exception('File does not contain a recognized email column header.');
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('An error occurred while processing the file.');
+        }
+
+        return $importedEmails;
+    }
+                    
 }
