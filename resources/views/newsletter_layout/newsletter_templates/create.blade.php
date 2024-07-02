@@ -27,10 +27,22 @@
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" class="form-control">
                     </div>
+                    @if (count($subscriber_email_lists) > 0)
+                        <div class="form-group">
+                            <label for="subscriber_email_list_id">Select List</label>
+                            <select name="subscriber_email_list_id" id="subscriber_email_list_id" class="form-control" required>
+                                <option value="">-- Select List --</option>
+                                @foreach($subscriber_email_lists as $subscriber_email_list)
+                                    <option value="{{ $subscriber_email_list->id }}">{{ $subscriber_email_list->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label for="content">Content:</label>
                         <textarea id="newsletter_content" name="content" class="form-control"></textarea>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>

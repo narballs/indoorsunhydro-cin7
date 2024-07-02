@@ -27,6 +27,17 @@
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" value="{{ old('name', $newsletterTemplate->name) }}" class="form-control">
                     </div>
+                    @if (count($subscriber_email_lists) > 0)
+                        <div class="form-group">
+                            <label for="subscriber_email_list_id">Select List</label>
+                            <select name="subscriber_email_list_id" id="subscriber_email_list_id" class="form-control">
+                                <option value="">-- Select List --</option>
+                                @foreach($subscriber_email_lists as $subscriber_email_list) 
+                                    <option value="{{ $subscriber_email_list->id }}"  {{!empty($selected_id) && ($subscriber_email_list->id == $selected_id) ? 'selected' : ''}}>{{ $subscriber_email_list->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <label for="content">Content:</label>
                         <textarea id="newsletter_content_edit" name="content" class="form-control">{{ old('content', $newsletterTemplate->content) }}</textarea>

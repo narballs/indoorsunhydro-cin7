@@ -33,7 +33,7 @@
 							<a href="{{route('newsletter-templates.index')}}" class="nav-link ">
 								<i class="nav-icon fas fa-file"></i>
 								<p>
-									 Template List
+									Newsletter Templates List
 								</p>
 							</a>
 						</li>
@@ -41,7 +41,7 @@
 							<a href="{{route('newsletter-templates.create')}}" class="nav-link ">
 								<i class="nav-icon fas fa-book"></i>
 								<p>
-									Create Template
+									Create Newsletter
 								</p>
 							</a>
 						</li>
@@ -49,7 +49,7 @@
 							<a href="{{route('assign_template_form')}}" class="nav-link ">
 								<i class="nav-icon far fa-plus-square"></i>
 								<p>
-									Assign Template
+									Assign Newsletter
 								</p>
 							</a>
 						</li>
@@ -57,7 +57,7 @@
 							<a href="{{route('view_assigned_templates')}}" class="nav-link ">
 								<i class="nav-icon fas fa-th"></i>
 								<p>
-									Sent Newsletters
+									Send Newsletters
 								</p>
 							</a>
 						</li>
