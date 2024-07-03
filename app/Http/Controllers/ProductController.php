@@ -2296,7 +2296,7 @@ class ProductController extends Controller
             }
     
             // Send confirmation email to user
-            MailHelper::send_discount_mail_request('emails.user_bulk_request_confirmation', [
+            MailHelper::send_discount_mail_request('emails.user_bulk_request', [
                 'from' => SettingHelper::getSetting('noreply_email_address'),
                 'email' => $validatedData['email'],
                 'subject' => 'Bulk Products Request Confirmation',
