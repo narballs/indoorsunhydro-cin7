@@ -2287,7 +2287,7 @@ class ProductController extends Controller
             if (!empty($adminsEmails)) {
                 foreach ($adminsEmails as $adminEmail) {
                     MailHelper::send_discount_mail_request('emails.admin_bulk_request', [
-                        'from' => $validatedData['email'], // Replace with your email address or use config
+                        'from' => SettingHelper::getSetting('noreply_email_address'),
                         'email' => $adminEmail,
                         'subject' => 'New Bulk Products Request Received',
                         'data' => $validatedData,
