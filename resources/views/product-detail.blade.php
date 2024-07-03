@@ -1226,89 +1226,92 @@
 </script>
 
 {{-- bulk qty modal --}}
-<div class="modal fade" id="bulk_quantity_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="bulk_quantity_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title bulk_head" id="exampleModalLabel">Request Bulk Quantity</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+            <div class="modal-header">
+                <h5 class="modal-title bulk_head" id="exampleModalLabel">Request Bulk Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
             <form action="">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group border-bottom">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group border-bottom">
+                                <div class="row">
+                                    <h5 class="bulk_head">
+                                        Use this form to request a bulk quote discount for commercial quantities.
+                                    </h5>
+                                    <p class="bulk_paragraph">
+                                        This bulk quote feature should not be used for purchases of less than $5,000.
+                                    </p>
+                                </div>
+                            </div>
                             <div class="row">
-                                <h5 class="bulk_head">
-                                    Use this form to request a bulk quote discount for commercial quantities.
-                                </h5>
-                                <p class="bulk_paragraph">
-                                    This bulk quote feature should not be used for purchases of less than $5,000.
-                                </p>
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What item(s) are you interested in?
+                                    </label>
+                                    <p class="bulk_paragraph">
+                                        Please list any and all items you’re interested in. Example: Clonex Rooting Gel, FoxFarm Marine Cuisine Dry Fertilizer, 20 lbs..
+                                    </p>
+                                    <span>
+                                        <strong class="text-danger mb-1">(Separate each item with a comma)</strong>
+                                    </span>
+                                    <input type="text" name="items_list" id="bulk_product_list" data-role="tagsinput" class="form-control bulk_input">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What item(s) are you interested in?
-                                </label>
-                                <p class="bulk_paragraph">
-                                    Please list any and all items you’re interested in. Example: Clonex Rooting Gel, FoxFarm Marine Cuisine Dry Fertilizer, 20 lbs..
-                                </p>
-                                <input type="text" name="items_list" id="" data-role="tagsinput" class="form-control bulk_input">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What quantity would you like quoted out?
+                                    </label>
+                                    <input type="text" class="form-control bulk_input" name="quantity" id="bulk_quantity" placeholder="e.g 1000">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What quantity would you like quoted out?
-                                </label>
-                                <input type="text" class="form-control bulk_input" name="quantity" id="" placeholder="e.g 1000">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What is your phone number?
+                                    </label>
+                                    <input type="text" class="form-control bulk_input" name="phone_number" id="bulk_phone_number" placeholder="Type your phone number here...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What is your phone number?
-                                </label>
-                                <input type="text" class="form-control bulk_input" name="phone_number" id="" placeholder="Type your phone number here...">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What is your email address?
+                                    </label>
+                                    <input type="email" class="form-control bulk_input" name="email" id="bulk_email" placeholder="name@example.com">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What is your email address?
-                                </label>
-                                <input type="email" class="form-control bulk_input" name="email" id="" placeholder="name@example.com">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What is your name?
+                                    </label>
+                                    <input type="text" class="form-control bulk_input" name="name" id="bulk_name" placeholder="Type your name here...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What is your name?
-                                </label>
-                                <input type="text" class="form-control bulk_input" name="name" id="" placeholder="Type your name here...">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    Where will these items be delievered?
-                                </label>
-                                <p class="bulk_paragraph">
-                                    Please put City, State, and Country e.g. (California, USA)
-                                </p>
-                                <input type="text" class="form-control bulk_input" name="delievery" id="" placeholder="Type your answer here...">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        Where will these items be delievered?
+                                    </label>
+                                    <p class="bulk_paragraph">
+                                        Please put City, State, and Country e.g. (California, USA)
+                                    </p>
+                                    <input type="text" class="form-control bulk_input" name="delievery" id="bulk_delievery" placeholder="Type your answer here...">
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="saveBulkQuantityDiscount()">Save changes</button>
+                    </div>
                 </div>
             </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" type="submit" class="btn btn-primary">Save changes</button>
-        </div>
         </div>
     </div>
 </div>
@@ -1950,7 +1953,84 @@
             }
         });
     }
+
+    function saveBulkQuantityDiscount() {
+        // Retrieve form field values manually
+        var items_list = $('#bulk_product_list').val();
+        var quantity = $('#bulk_quantity').val();
+        var phone_number = $('#bulk_phone_number').val();
+        var email = $('#bulk_email').val();
+        var name = $('#bulk_name').val();
+        var delievery = $('#bulk_delievery').val();
+
+        // Prepare data for AJAX submission
+        var formData = {
+            _token: '{{ csrf_token() }}',
+            items_list: items_list,
+            quantity: quantity,
+            phone_number: phone_number,
+            email: email,
+            name: name,
+            delievery: delievery,
+        };
+
+        // AJAX POST request
+        $.ajax({
+            type: "POST",
+            url: "{{ route('bulk_products_request') }}", // Laravel route
+            data: formData,
+            dataType: "json",
+            success: function(response) {
+                // Handle success response
+                console.log('Form data submitted successfully:', response);
+                // Optionally, close the modal after successful submission
+                $('#bulk_quantity_modal').modal('hide');
+                // Example: Show success message to user
+                alert('Form data submitted successfully.');
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error('Error:', status, error);
+                // Example: Show error message to user
+                alert('There was an error submitting the form. Please try again later.');
+            }
+        });
+    }
     
+    function saveBulkQuantityDiscount() {
+        var formData = {
+            items_list: $('#bulk_product_list').val(),
+            quantity: $('#bulk_quantity').val(),
+            phone_number: $('#bulk_phone_number').val(),
+            email: $('#bulk_email').val(),
+            name: $('#bulk_name').val(),
+            delievery: $('#bulk_delievery').val(),
+            _token: '{{ csrf_token() }}'
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('bulk_products_request') }}",
+            data: formData,
+            dataType: "json",
+            success: function(response) {
+                $('#bulk_quantity_modal').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: response.message
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', status, error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'There was an error submitting the form. Please try again later.'
+                });
+            }
+        });
+    }
 
     
 </script>

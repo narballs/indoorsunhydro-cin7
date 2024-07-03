@@ -496,3 +496,8 @@ Route::post('/list/subscribers/add', [NewsletterController::class, 'add_subscrib
 Route::post('/bulk/upload/users/list', [NewsletterController::class, 'bulk_upload_to_list'])->name('bulk_upload_to_list');
 Route::post('/import/users/list', [NewsletterController::class, 'importUsersToList'])->name('import_users_to_list');
 
+
+// submit bulk products request 
+
+Route::post('/bulk/products/request', [ProductController::class, 'bulk_products_request'])->name('bulk_products_request');
+
