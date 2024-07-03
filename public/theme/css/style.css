@@ -5625,7 +5625,7 @@ select.list-dt:focus {
         color: gray;
         border: 1px solid gray !important;
         padding: 3px !important;
-        background-color: #fff !important;
+        /* background-color: #fff !important; */
     }
 
     .fa-minus:before,
@@ -5634,7 +5634,7 @@ select.list-dt:focus {
         color: gray;
         padding: 3px;
         border: 1px solid gray;
-        background-color: #ffff !important;
+        /* background-color: #ffff !important; */
     }
 
     .total-cart-button {
