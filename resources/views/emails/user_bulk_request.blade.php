@@ -40,19 +40,19 @@
         <h2 class="text-center">Bulk Products Request Confirmation</h2>
         
         <div class="email-content">
-            <p>Dear {{ $name }},</p>
+            <p>Dear {{ $data['name'] }},</p>
             <p>Thank you for submitting your bulk products request. We will review your request shortly.</p>
-            <hr>
-            <p><strong>Items List:</strong> {{ $items_list }}</p>
-            <p><strong>Quantity:</strong> {{ $quantity }}</p>
-            <p><strong>Delivery Location:</strong> {{ $delievery }}</p>
+            <p><strong>Items List:</strong> {{ $data['items_list'] }}</p>
+            <p><strong>Quantity:</strong> {{ $data['quantity'] }}</p>
+            <p><strong>Delivery Location:</strong> {{ $data['delievery'] }}</p>
+            <p><em>This is an automated message, please do not reply.</em></p>
         </div>
-
-        <p class="text-muted">This is an automated message, please do not reply.</p>
         
         <div class="footer">
-            <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
-            <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" />
+            <p>
+                <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
+                <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" />
+            </p>
         </div>
     </div>
 </body>

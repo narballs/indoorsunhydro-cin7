@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bulk Products Request Notification</title>
+    <title>New Bulk Products Request Received</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Additional custom styles can be added here */
@@ -37,16 +37,16 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="text-center">Bulk Products Request Received</h2>
+        <h2 class="text-center">New Bulk Products Request Received</h2>
         
         <div class="email-content">
-            <p><strong>Name:</strong> {{ $name }}</p>
-            <p><strong>Email:</strong> {{ $email }}</p>
-            <p><strong>Phone Number:</strong> {{ $phone_number }}</p>
-            <p><strong>Delivery Location:</strong> {{ $delivery }}</p>
+            <p><strong>Name:</strong> {{ $data['name'] }}</p>
+            <p><strong>Email:</strong> {{ $data['email'] }}</p>
+            <p><strong>Phone Number:</strong> {{ $data['phone_number'] }}</p>
+            <p><strong>Delivery Location:</strong> {{ $data['delievery'] }}</p>
             <hr>
-            <p><strong>Items List:</strong> {{ $items_list }}</p>
-            <p><strong>Quantity:</strong> {{ $quantity }}</p>
+            <p><strong>Items List:</strong> {{ $data['items_list'] }}</p>
+            <p><strong>Quantity:</strong> {{ $data['quantity'] }}</p>
         </div>
         
         <div class="footer">
