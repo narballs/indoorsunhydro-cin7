@@ -26,12 +26,17 @@ use App\Models\ApiOrder;
 use App\Models\User;
 
 use App\Helpers\UtilHelper;
+use App\Mail\AdminBulkRequestNotification;
+use App\Mail\UserBulkRequestConfirmation;
 use App\Models\ApiOrderItem;
+use App\Models\BulkQuantityDiscount;
 use App\Models\ProductStock;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ProductController extends Controller
 {
@@ -2247,6 +2252,53 @@ class ProductController extends Controller
                 'cart_items' => $cart_items,
                 'cart' => $cart,
             ]);
+        }
+    }
+
+    // request bulk quantity 
+    public function bulk_products_request(Request $request) {
+        try {
+            // Validate incoming request data
+            $validatedData = $request->validate([
+                'items_list' => 'required',
+                'quantity' => 'required|numeric',
+                'phone_number' => 'required',
+                'email' => 'required|email',
+                'name' => 'required|string',
+                'delievery' => 'required|string',
+            ]);
+
+            $bulkQuantity = new BulkQuantityDiscount();
+            $bulkQuantity->items_list = $validatedData['items_list']; // Save the raw list
+            $bulkQuantity->quantity = $validatedData['quantity'];
+            $bulkQuantity->phone_number = $validatedData['phone_number'];
+            $bulkQuantity->email = $validatedData['email'];
+            $bulkQuantity->name = $validatedData['name'];
+            $bulkQuantity->delievery = $validatedData['delievery'];
+            $bulkQuantity->save();
+
+            $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+            $admin_users = $admin_users->toArray();
+
+            $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
+
+            if (!empty($users_with_role_admin)) {
+                foreach ($users_with_role_admin as $role_admin) {
+                    Mail::to($role_admin->email)->send(new AdminBulkRequestNotification($validatedData));
+                }
+            }
+
+            
+            Mail::to($validatedData['email'])->send(new UserBulkRequestConfirmation($validatedData));
+
+
+            return response()->json(['message' => 'Your request has been recieved , We will get back to you soon!'], 200);
+        } 
+        catch (\Exception $e) {
+            // Log the error
+            Log::error('Error submitting bulk product request: ' . $e->getMessage());
+            return response()->json(['message' => 'Error submitting bulk product request'], 500);
         }
     }
 }
