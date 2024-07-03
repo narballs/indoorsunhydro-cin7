@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MailHelper;
+use App\Helpers\SettingHelper;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
@@ -2281,16 +2283,26 @@ class ProductController extends Controller
 
             $admin_users = $admin_users->toArray();
 
-            $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
-
-            if (!empty($users_with_role_admin)) {
-                foreach ($users_with_role_admin as $role_admin) {
-                    Mail::to($role_admin->email)->send(new AdminBulkRequestNotification($validatedData));
+            $adminsEmails = User::whereIn('id', $admin_users)->pluck('email')->toArray();
+            if (!empty($adminsEmails)) {
+                foreach ($adminsEmails as $adminEmail) {
+                    MailHelper::send_discount_mail_request('emails.admin_bulk_request', [
+                        'from' => $validatedData['email'], // Replace with your email address or use config
+                        'email' => $adminEmail,
+                        'subject' => 'New Bulk Products Request Received',
+                        'data' => $validatedData,
+                    ]);
                 }
             }
-
-            
-            Mail::to($validatedData['email'])->send(new UserBulkRequestConfirmation($validatedData));
+    
+            // Send confirmation email to user
+            MailHelper::send_discount_mail_request('emails.user_bulk_request_confirmation', [
+                'from' => SettingHelper::getSetting('noreply_email_address'),
+                'email' => $validatedData['email'],
+                'subject' => 'Bulk Products Request Confirmation',
+                'data' => $validatedData,
+            ]);
+    
 
 
             return response()->json(['message' => 'Your request has been recieved , We will get back to you soon!'], 200);
