@@ -149,7 +149,7 @@
                                                             </td>
                                                             <td class="align-middle">
                                                                 <div class="mt-4 ml-1">
-                                                                    <div class="quantity">
+                                                                    <div class="quantity cart_qty">
                                                                         <input type="number" name="quantity" class="quantity_calculator" id={{ 'row_quantity_' . $pk_product_id }}
                                                                             min="1" max="{{$stock_per_product}}" step="1" data-old = "{{ $cart['quantity'] }}"
                                                                             value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
@@ -157,7 +157,7 @@
                                                                             value="{{ $cart['product_id'] }}">
                                                                         <input type="hidden" name="p_id" id="option_id"
                                                                             value="{{ $cart['option_id'] }}">
-                                                                        <div class="quantity-nav">
+                                                                        <div class="quantity-nav cart-quantity-nav">
                                                                             <div class="quantity-div quantity-up"
                                                                                 onclick="increase_qty({{ $pk_product_id }})">
                                                                                 
@@ -1371,7 +1371,7 @@
         -moz-appearance: textfield;
     }
 
-    .quantity input {
+    .cart_qty input {
         width: 96px;
         height: 49px;
         font-size: 16px;
@@ -1387,14 +1387,20 @@
         border-radius: 1px;
     }
 
-    .quantity input:focus {
+    .cart_qty input:focus {
         outline: 0;
     }
 
-    .quantity-nav {
+    @media only screen and (max-width: 820px) and (min-width: 280px) {
+        .cart_qty input {
+            height: 47px !important;
+        }
+    }
+
+    .cart-quantity-nav {
         float: left;
         position: relative;
-        height: 74px;
+        height: 72px !important;
     }
 
     .quantity-div {
