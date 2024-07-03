@@ -3089,7 +3089,7 @@ input[type=number] {
         color: gray;
         border: 1px solid gray !important;
         padding: 3px !important;
-        background-color: #fff !important;
+        /* background-color: #fff !important; */
     }
 
     .fa-minus:before,
@@ -3098,7 +3098,7 @@ input[type=number] {
         color: gray;
         padding: 3px;
         border: 1px solid gray;
-        background-color: #ffff !important;
+        /* background-color: #ffff !important; */
     }
 
     .total-cart-button {
@@ -4809,6 +4809,18 @@ select.list-dt:focus {
         width: 32%;
     }
  }
+@media only screen and (max-width: 820) and (min-width: 551px) {
+    .image-height-mbl {
+        max-height: 250px !important;
+        min-height: 250px !important;
+    }
+}
+@media only screen and (max-width: 767) and (min-width: 280px) {
+    .button-cards {
+        font-size: 15px !important;
+    }
+    
+}
 @media only screen and (max-width: 550px) and (min-width: 280px) {
     .my_account_order_detail_page_table_title , .order_detail_page_prices , .order_detail_page_product_name ,  
     .my_account_all_items , .my_account_order_details_page_date_title , 
@@ -4999,6 +5011,8 @@ select.list-dt:focus {
     
     .image-height-mbl {
         height: auto !important;
+        max-height: 150px !important;
+        min-height: 150px !important;
     }
     .card_product_title {
         height: 2rem !important;

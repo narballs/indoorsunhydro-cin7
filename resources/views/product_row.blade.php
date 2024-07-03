@@ -66,7 +66,7 @@
                 <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy">
                     <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500;font-size: 16px;" data-title="{{$product->name}}" id="product_name_{{ $product->id }}">
                         <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                            {{ \Illuminate\Support\Str::limit($product->name, 33) }}
+                            {{ \Illuminate\Support\Str::limit($product->name, 30) }}
                             {{-- <div class="tooltip-product-text">
                                 <span class="">{{$product->name}}</span>
                             </div> --}}
@@ -96,11 +96,11 @@
                         }
                         ?>
                         @if (!empty($option) && $option->stockAvailable > 0)
-                            <div>
+                            <div class="mt-1 mb-1">
                                 <span class="text-success">{{'In Stock'}}</span>
                             </div>
                         @else
-                            <div>
+                            <div class="mt-1 mb-1">
                                 <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
                                     }}</span>
                             </div>
