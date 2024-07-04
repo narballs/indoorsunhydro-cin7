@@ -2103,7 +2103,8 @@
                     confirmButtonColor: '#7CC633'
                 });
                 // Clear input fields
-                $('#bulk_product_list').val('');
+                // $('#bulk_product_list').val('');
+                $('#bulk_product_list').tagsinput('removeAll');
                 $('#bulk_quantity').val('');
                 $('#bulk_phone_number').val('');
                 $('#bulk_email').val('');
