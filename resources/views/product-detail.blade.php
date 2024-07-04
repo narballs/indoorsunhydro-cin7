@@ -248,12 +248,12 @@
                                                 @if (!empty($request_bulk_quantity_discount) && strtolower($request_bulk_quantity_discount->option_value) === 'yes')
                                                     <div class="row">
                                                         <div class="col-md-3 col-xl-1 col-lg-3 mt-2 col-4">
-                                                            <i class="fa fa-tags" style="color: #007BFF;font-size: 20px;"></i>
+                                                            <i class="fa fa-tags fs-4 fs-sm-3 fs-md-2 fs-lg-1" style="color: #007BFF"></i>
                                                         </div>
                                                         <div class="col-md-9 col-xl-10 col-lg-9 col-8">
                                                             <div class="row">
-                                                                <p class="bulk_discount mb-0">Bulk Discount</p>
-                                                                <p class="bulk_discount_text">Save More with Bulk Orders <a href="" data-bs-toggle="modal" data-bs-target="#bulk_quantity_modal" class="bulk_discount_href">Request bulk quantity Discount</a></p>
+                                                                <p class="bulk_discount mb-0">Buy more & save</p>
+                                                                <p class="bulk_discount_text"><a href="" data-bs-toggle="modal" data-bs-target="#bulk_quantity_modal" class="bulk_discount_href">Request bulk quantity Discount</a></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -630,6 +630,21 @@
                             </div>
                         </div>
                     @endif
+                    <div class="col-md-12">
+                        @if (!empty($request_bulk_quantity_discount) && strtolower($request_bulk_quantity_discount->option_value) === 'yes')
+                            <div class="row">
+                                <div class="col-md-3 col-xl-1 col-lg-3 mt-2 col-4">
+                                    <i class="fa fa-tags fs-4 fs-sm-3 fs-md-2 fs-lg-1" style="color: #007BFF"></i>
+                                </div>
+                                <div class="col-md-9 col-xl-10 col-lg-9 col-8">
+                                    <div class="row">
+                                        <p class="bulk_discount mb-0">Buy more & save</p>
+                                        <p class="bulk_discount_text"><a href="" data-bs-toggle="modal" data-bs-target="#bulk_quantity_modal" class="bulk_discount_href">Request bulk quantity Discount</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                     <form id="cart">
                         @csrf
                         <div class="cart d-flex  justify-content-between align-items-center">
@@ -983,6 +998,21 @@
                             </div>
                         </div>
                     @endif
+                    <div class="col-md-12">
+                        @if (!empty($request_bulk_quantity_discount) && strtolower($request_bulk_quantity_discount->option_value) === 'yes')
+                            <div class="row">
+                                <div class="col-md-3 col-xl-1 col-lg-3 mt-2 col-4">
+                                    <i class="fa fa-tags fs-4 fs-sm-3 fs-md-2 fs-lg-1" style="color: #007BFF"></i>
+                                </div>
+                                <div class="col-md-9 col-xl-10 col-lg-9 col-8">
+                                    <div class="row">
+                                        <p class="bulk_discount mb-0">Buy more & save</p>
+                                        <p class="bulk_discount_text"><a href="" data-bs-toggle="modal" data-bs-target="#bulk_quantity_modal" class="bulk_discount_href">Request bulk quantity Discount</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                     <form id="cart">
                         @csrf
                         <div class="cart row  align-items-center">
@@ -1226,89 +1256,96 @@
 </script>
 
 {{-- bulk qty modal --}}
-<div class="modal fade" id="bulk_quantity_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title bulk_head" id="exampleModalLabel">Request Bulk Quantity</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+<div class="modal fade" id="bulk_quantity_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content p-3">
+            <div class="modal-header border-0">
+                <button class="btn btn-sm modal-title bg-white bulk_close_btn"  type="button" data-bs-dismiss="modal" aria-label="Close"> <i class="fa fa-angle-left mr-2"></i>Back to Product</button>
+                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+            </div>
             <form action="">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group border-bottom">
+                <div class="modal-body">
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group border-bottom">
+                                <div class="row">
+                                    <h5 class="bulk_head">
+                                        Use this form to request a bulk quote discount for commercial quantities.
+                                    </h5>
+                                    <p class="bulk_paragraph">
+                                        This bulk quote feature should not be used for purchases of less than $5,000.
+                                    </p>
+                                </div>
+                            </div>
                             <div class="row">
-                                <h5 class="bulk_head">
-                                    Use this form to request a bulk quote discount for commercial quantities.
-                                </h5>
-                                <p class="bulk_paragraph">
-                                    This bulk quote feature should not be used for purchases of less than $5,000.
-                                </p>
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What item(s) are you interested in?
+                                    </label>
+                                    <p class="bulk_paragraph">
+                                        Please list any and all items you’re interested in. Example: Clonex Rooting Gel, FoxFarm Marine Cuisine Dry Fertilizer, 20 lbs..
+                                    </p>
+                                    <span>
+                                        <strong class="text-danger mb-1">(Separate each item with a comma)</strong>
+                                    </span>
+                                    <input type="text" name="items_list" id="bulk_product_list" data-role="tagsinput" class="form-control bulk_input">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What item(s) are you interested in?
-                                </label>
-                                <p class="bulk_paragraph">
-                                    Please list any and all items you’re interested in. Example: Clonex Rooting Gel, FoxFarm Marine Cuisine Dry Fertilizer, 20 lbs..
-                                </p>
-                                <input type="text" name="items_list" id="" data-role="tagsinput" class="form-control bulk_input">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What quantity would you like quoted out?
+                                    </label>
+                                    <input type="text" class="form-control bulk_input" name="quantity" id="bulk_quantity" placeholder="e.g 1000">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What quantity would you like quoted out?
-                                </label>
-                                <input type="text" class="form-control bulk_input" name="quantity" id="" placeholder="e.g 1000">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What is your phone number?
+                                    </label>
+                                    <input type="text" class="form-control bulk_input" name="phone_number" id="bulk_phone_number" placeholder="Type your phone number here...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What is your phone number?
-                                </label>
-                                <input type="text" class="form-control bulk_input" name="phone_number" id="" placeholder="Type your phone number here...">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What is your email address?
+                                    </label>
+                                    <input type="email" class="form-control bulk_input" name="email" id="bulk_email" placeholder="name@example.com">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What is your email address?
-                                </label>
-                                <input type="email" class="form-control bulk_input" name="email" id="" placeholder="name@example.com">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        What is your name?
+                                    </label>
+                                    <input type="text" class="form-control bulk_input" name="name" id="bulk_name" placeholder="Type your name here...">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    What is your name?
-                                </label>
-                                <input type="text" class="form-control bulk_input" name="name" id="" placeholder="Type your name here...">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <label for="" class="bulk_label">
-                                    Where will these items be delievered?
-                                </label>
-                                <p class="bulk_paragraph">
-                                    Please put City, State, and Country e.g. (California, USA)
-                                </p>
-                                <input type="text" class="form-control bulk_input" name="delievery" id="" placeholder="Type your answer here...">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="" class="bulk_label">
+                                        Where will these items be delievered?
+                                    </label>
+                                    <p class="bulk_paragraph">
+                                        Please put City, State, and Country e.g. (California, USA)
+                                    </p>
+                                    <input type="text" class="form-control bulk_input" name="delievery" id="bulk_delievery" placeholder="Type your answer here...">
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer border-0">
+                        {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
+                        <div class="spinner-border bulk_loader d-none" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <button type="button" class="btn btn-primary submit_bulk_discount" onclick="saveBulkQuantityDiscount()">Submit</button>
+                    </div>
                 </div>
             </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" type="submit" class="btn btn-primary">Save changes</button>
-        </div>
         </div>
     </div>
 </div>
@@ -1316,6 +1353,39 @@
 @include('partials.product-footer')
 @include('partials.footer')
 <style>
+    .bulk_close_btn {
+        border: 1px solid #CDCDCD;
+        border-radius: 6px;
+        font-size: 18px;
+        color:#8F8F8F;
+        font-family: 'poppins';
+        font-weight: 400;
+    }
+
+    .bulk_close_btn:hover {
+        color:#8F8F8F;
+    }
+    .submit_bulk_discount:hover {
+        background-color:#7CC633;
+        border-color: #7CC633;
+        color:#fff;
+    }
+
+    .submit_bulk_discount:focus {
+        background-color:#7CC633;
+        border-color: #7CC633;
+        color:#fff;
+    }
+    .submit_bulk_discount:active {
+        background-color:#7CC633;
+        border-color: #7CC633;
+        color:#fff;
+    }
+    .submit_bulk_discount {
+        background-color:#7CC633;
+        border-color: #7CC633;
+        color:#fff;
+    }
     .product_description , p , h5 , h4 , h3 , h2 , h1 {
         font-family: 'Poppins';
         border: none;
@@ -1474,6 +1544,59 @@
         .update_inventory_number:hover {
             color:#7bc533;
         }
+
+        .bulk_discount {
+            font-family: 'Poppins';
+            font-size: 15px;
+            font-weight: 500;
+
+        }
+        .bulk_discount_text {
+            font-family: 'Poppins';
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .bulk_discount_href {
+            font-family: 'Poppins';
+            font-size: 12px;
+            font-weight: 400;
+            text-decoration: none;
+            color:#7BC533;
+        }
+
+        .bulk_head {
+            font-family: 'Poppins';
+            font-size: 15px;
+            font-weight: 600;
+            color: #242424;
+
+        }
+        .bulk_paragraph {
+            font-family: 'Poppins';
+            font-size: 12px;
+            font-weight: 400;
+            color: #828282;
+            paragraph-spacing: 16.02px;
+
+        }
+        .bulk_label {
+            font-family: 'Poppins';
+            font-size: 12px !important;
+            font-weight: 500;
+            color: #242424;
+        }
+        .bulk_input {
+            font-family: 'Poppins';
+            font-size: 12px;
+            font-weight: 400;
+            color: #828282;
+
+        } 
+        
+    }
+
+    .my-actions-class {
+        margin: 0.2rem !important;
     }
 </style>
 <script>
@@ -1950,7 +2073,58 @@
             }
         });
     }
-    
+    function saveBulkQuantityDiscount() {
+        $('.bulk_loader').removeClass('d-none');
+        var formData = {
+            items_list: $('#bulk_product_list').val(),
+            quantity: $('#bulk_quantity').val(),
+            phone_number: $('#bulk_phone_number').val(),
+            email: $('#bulk_email').val(),
+            name: $('#bulk_name').val(),
+            delievery: $('#bulk_delievery').val(),
+            _token: '{{ csrf_token() }}'
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('bulk_products_request') }}",
+            data: formData,
+            dataType: "json",
+            success: function(response) {
+                $('#bulk_quantity_modal').modal('hide');
+                $('.bulk_loader').addClass('d-none');
+                Swal.fire({
+                    html: '<i class="fa-solid fa-circle-check" style="color:#7CC633;font-size:40px;margin-bottom:10px;"></i><br><strong style="font-family:poppins">Bulk order request has been submitted.</strong><br/><span style="font-size:16px;font-family:poppins">We will get in touch with you as soon as we can.</span><br/><span style="font-size:16px;font-family:poppins">Thank you for your patience</span>',
+                    customClass: {
+                        popup: 'my-popup-class',
+                        actions: 'my-actions-class'
+                    },
+                    confirmButtonText: 'Continue Shopping',
+                    confirmButtonColor: '#7CC633'
+                });
+                // Clear input fields
+                // $('#bulk_product_list').val('');
+                $('#bulk_product_list').tagsinput('removeAll');
+                $('#bulk_quantity').val('');
+                $('#bulk_phone_number').val('');
+                $('#bulk_email').val('');
+                $('#bulk_name').val('');
+                $('#bulk_delievery').val('');
+            },
+            error: function(xhr, status, error) {
+                $('.bulk_loader').addClass('d-none');
+                Swal.fire({
+                    html: '<i class="fa-solid fa-circle-xmark" style="color:#d33;font-size:40px;margin-bottom:10px;"></i><br><span style="font-size:16px;font-family:poppins">There was an error submitting the form</span>.<br/> <span style="font-size:16px;font-family:poppins"> Please try again later.</span>',
+                    customClass: {
+                        popup: 'my-popup-class',
+                        actions: 'my-actions-class'
+                    },
+                    confirmButtonText: 'Try Again',
+                    confirmButtonColor: '#d33'
+                });
+            }
+        });
+    }
 
     
 </script>

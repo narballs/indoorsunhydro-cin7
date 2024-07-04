@@ -59,4 +59,12 @@ class MailHelper
         }
        
     }
+    
+
+    public static function send_discount_mail_request($template, $data) {
+        Mail::send($template, $data, function($message) use ($data){
+            $message->from($data['from']);
+            $message->to($data['email'])->subject($data['subject']);
+        });
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MailHelper;
+use App\Helpers\SettingHelper;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
@@ -26,12 +28,19 @@ use App\Models\ApiOrder;
 use App\Models\User;
 
 use App\Helpers\UtilHelper;
+use App\Mail\AdminBulkRequestNotification;
+use App\Mail\UserBulkRequestConfirmation;
 use App\Models\ApiOrderItem;
+use App\Models\BulkQuantityDiscount;
 use App\Models\ProductStock;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Services\ZendeskService;
+use Zendesk\API\HttpClient as ZendeskClient;
 
 class ProductController extends Controller
 {
@@ -2247,6 +2256,88 @@ class ProductController extends Controller
                 'cart_items' => $cart_items,
                 'cart' => $cart,
             ]);
+        }
+    }
+
+    // request bulk quantity 
+    public function bulk_products_request(Request $request) {
+        try {
+            // Validate incoming request data
+            $validatedData = $request->validate([
+                'items_list' => 'required',
+                'quantity' => 'required|numeric',
+                'phone_number' => 'required',
+                'email' => 'required|email',
+                'name' => 'required|string',
+                'delievery' => 'required|string',
+            ]);
+
+            $bulkQuantity = new BulkQuantityDiscount();
+            $bulkQuantity->items_list = $validatedData['items_list']; // Save the raw list
+            $bulkQuantity->quantity = $validatedData['quantity'];
+            $bulkQuantity->phone_number = $validatedData['phone_number'];
+            $bulkQuantity->email = $validatedData['email'];
+            $bulkQuantity->name = $validatedData['name'];
+            $bulkQuantity->delievery = $validatedData['delievery'];
+            $bulkQuantity->save();
+
+            // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+
+            // $admin_users = $admin_users->toArray();
+
+            // $adminsEmails = User::whereIn('id', $admin_users)->pluck('email')->toArray();
+            // if (!empty($adminsEmails)) {
+            //     foreach ($adminsEmails as $adminEmail) {
+            //         MailHelper::send_discount_mail_request('emails.admin_bulk_request', [
+            //             'from' => SettingHelper::getSetting('noreply_email_address'),
+            //             'email' => $adminEmail,
+            //             'subject' => 'New Bulk Products Request Received',
+            //             'data' => $validatedData,
+            //         ]);
+            //     }
+            // }
+    
+            // // Send confirmation email to user
+            // MailHelper::send_discount_mail_request('emails.user_bulk_request', [
+            //     'from' => SettingHelper::getSetting('noreply_email_address'),
+            //     'email' => $validatedData['email'],
+            //     'subject' => 'Bulk Products Request Confirmation',
+            //     'data' => $validatedData,
+            // ]);
+
+
+            $subdomain = env('ZENDESK_SUBDOMAIN'); 
+            $username = env('ZENDESK_USERNAME'); 
+            $token =  env('ZENDESK_TOKEN'); 
+            $auth = [
+                'token' => $token, 
+            ];
+            
+            $client = new ZendeskClient($subdomain);
+            $client->setAuth('basic', ['username' => $username, 'token' => $token]);
+
+            $subject = 'New Bulk Products Request Received';
+            $description = "Items: " . $validatedData['items_list'] . "\nQuantity: " . $validatedData['quantity'] . "\nPhone Number: " . $validatedData['phone_number'] . "\nDelivery: " . $validatedData['delievery'];
+            $requesterName = $validatedData['name'];
+            $requesterEmail = $validatedData['email'];
+
+            $ticketData = [
+                'subject' => $subject,
+                'description' => $description,
+                'requester' => [
+                    'email' => $requesterEmail,
+                    'name' => $requesterName,
+                ],
+            ];
+
+
+            $response = $client->tickets()->create($ticketData);
+            return response()->json(['message' => 'Your request has been recieved , We will get back to you soon!'], 200);
+        } 
+        catch (\Exception $e) {
+            // Log the error
+            Log::error('Error submitting bulk product request: ' . $e->getMessage());
+            return response()->json(['message' => 'Error submitting bulk product request'], 500);
         }
     }
 }
