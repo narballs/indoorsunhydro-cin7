@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Services\ZendeskService;
+use Zendesk\API\HttpClient as ZendeskClient;
 
 class ProductController extends Controller
 {
@@ -2279,32 +2281,57 @@ class ProductController extends Controller
             $bulkQuantity->delievery = $validatedData['delievery'];
             $bulkQuantity->save();
 
-            $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+            // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
 
-            $admin_users = $admin_users->toArray();
+            // $admin_users = $admin_users->toArray();
 
-            $adminsEmails = User::whereIn('id', $admin_users)->pluck('email')->toArray();
-            if (!empty($adminsEmails)) {
-                foreach ($adminsEmails as $adminEmail) {
-                    MailHelper::send_discount_mail_request('emails.admin_bulk_request', [
-                        'from' => SettingHelper::getSetting('noreply_email_address'),
-                        'email' => $adminEmail,
-                        'subject' => 'New Bulk Products Request Received',
-                        'data' => $validatedData,
-                    ]);
-                }
-            }
+            // $adminsEmails = User::whereIn('id', $admin_users)->pluck('email')->toArray();
+            // if (!empty($adminsEmails)) {
+            //     foreach ($adminsEmails as $adminEmail) {
+            //         MailHelper::send_discount_mail_request('emails.admin_bulk_request', [
+            //             'from' => SettingHelper::getSetting('noreply_email_address'),
+            //             'email' => $adminEmail,
+            //             'subject' => 'New Bulk Products Request Received',
+            //             'data' => $validatedData,
+            //         ]);
+            //     }
+            // }
     
-            // Send confirmation email to user
-            MailHelper::send_discount_mail_request('emails.user_bulk_request', [
-                'from' => SettingHelper::getSetting('noreply_email_address'),
-                'email' => $validatedData['email'],
-                'subject' => 'Bulk Products Request Confirmation',
-                'data' => $validatedData,
-            ]);
-    
+            // // Send confirmation email to user
+            // MailHelper::send_discount_mail_request('emails.user_bulk_request', [
+            //     'from' => SettingHelper::getSetting('noreply_email_address'),
+            //     'email' => $validatedData['email'],
+            //     'subject' => 'Bulk Products Request Confirmation',
+            //     'data' => $validatedData,
+            // ]);
 
 
+            $subdomain = env('ZENDESK_SUBDOMAIN'); 
+            $username = env('ZENDESK_USERNAME'); 
+            $token =  env('ZENDESK_TOKEN'); 
+            $auth = [
+                'token' => $token, 
+            ];
+            
+            $client = new ZendeskClient($subdomain);
+            $client->setAuth('basic', ['username' => $username, 'token' => $token]);
+
+            $subject = 'New Bulk Products Request Received';
+            $description = "Items: " . $validatedData['items_list'] . "\nQuantity: " . $validatedData['quantity'] . "\nPhone Number: " . $validatedData['phone_number'] . "\nDelivery: " . $validatedData['delievery'];
+            $requesterName = $validatedData['name'];
+            $requesterEmail = $validatedData['email'];
+
+            $ticketData = [
+                'subject' => $subject,
+                'description' => $description,
+                'requester' => [
+                    'email' => $requesterEmail,
+                    'name' => $requesterName,
+                ],
+            ];
+
+
+            $response = $client->tickets()->create($ticketData);
             return response()->json(['message' => 'Your request has been recieved , We will get back to you soon!'], 200);
         } 
         catch (\Exception $e) {
