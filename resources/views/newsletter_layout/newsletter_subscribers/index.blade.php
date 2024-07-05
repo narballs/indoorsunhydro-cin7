@@ -400,7 +400,7 @@
                                 $('#bulk_upload_pop_up').modal('hide');
                                 $('#bulk_upload_emails').val(''); // Clear the textarea
                                 setTimeout(function() {
-                                    window.location.href = '/newsletter/subscribers';
+                                    window.location.href = '/subscribers/list/index';
                                 }, 1000); // Delay of 1 second (1000 milliseconds)
                             }
                         });
@@ -447,7 +447,7 @@
                         if (result.isConfirmed) {
                             $('#upload_file_modal').modal('hide');
                             setTimeout(function() {
-                                window.location.href = '/newsletter/subscribers';
+                                window.location.href = '/subscribers/list/index';
                             }, 1000); // Delay of 1 second
                         }
                     });
