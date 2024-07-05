@@ -45,33 +45,33 @@
 								</p>
 							</a>
 						</li>
-						<li class="nav-item  ">
+						{{-- <li class="nav-item  ">
 							<a href="{{route('assign_template_form')}}" class="nav-link ">
 								<i class="nav-icon far fa-plus-square"></i>
 								<p>
 									Assign Newsletter
 								</p>
 							</a>
-						</li>
-						<li class="nav-item  ">
+						</li> --}}
+						{{-- <li class="nav-item  ">
 							<a href="{{route('view_assigned_templates')}}" class="nav-link ">
 								<i class="nav-icon fas fa-th"></i>
 								<p>
 									Send Newsletters
 								</p>
 							</a>
-						</li>
+						</li> --}}
 					</ul>
 				</li>
 
-				<li class="nav-item  ">
+				{{-- <li class="nav-item  ">
 					<a href="{{route('newsletter_subscriptions')}}" class="nav-link ">
 						<i class="nav-icon fas fa-user"></i>
 						<p>
 							 Subscribers
 						</p>
 					</a>
-				</li>
+				</li> --}}
 				<li class="nav-item  ">
 					<a href="{{route('all_contacts')}}" class="nav-link ">
 						<i class="nav-icon fas fa-user"></i>

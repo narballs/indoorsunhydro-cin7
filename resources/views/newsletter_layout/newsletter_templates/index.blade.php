@@ -30,6 +30,7 @@
                                 <th>S.No</th>
                                 <th>Name</th>
                                 <th>Created at</th>
+                                <th>Sent date</th>
                                 <th>
                                     Action
                                 </th>
@@ -45,18 +46,34 @@
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $template->name }}</td>
                                 <td>{{ $template->created_at }}</td>
+                                <td>{{!empty($template->sent_newsletter[0]) &&  (!empty($template->sent_newsletter[0]->sent_date))  ?  $template->sent_newsletter[0]->sent_date : ''  }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <form action="{{ route('delete_newsletter_template', $template->id) }}" method="POST" style="display: inline-block;">
-                                            <a href="{{ route('newsletter_templates_detail', $template->id) }}" class="btn btn-info">View</a>
-                                            <a href="{{ route('edit_newsletter_template', $template->id) }}" class="btn btn-primary">Edit</a>
+                                            <a href="{{ route('newsletter_templates_detail', $template->id) }}" class="btn btn-info">Preview</a>
+                                            @if (empty($template->sent_newsletter[0]) || ($template->sent_newsletter[0]->sent == 0))
+                                                <a href="{{ route('edit_newsletter_template', $template->id) }}" class="btn btn-primary">Edit</a>
+                                            @endif
                                             @csrf
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Template?');">Delete</button>
                                         </form>
                                         <form action="{{ route('duplicate_newsletter_template', $template->id) }}" method="POST" class="mx-1">
                                             @csrf
                                             <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to duplicate this Template?');">Duplicate</button>
+                                            
                                         </form>
+                                        @if (!empty($template->sent_newsletter[0]))
+                                            @if ($template->sent_newsletter[0]->sent == 0)
+                                                <form action="{{ route('send_newspaper', $template->sent_newsletter[0]->id) }}" method="POST" style="display: inline-block;">
+                                                    @csrf
+                                                <input type="hidden" name="subscriber_email_list_id" value="{{ $template->sent_newsletter[0]->subscriber_email_list->id }}">
+                                                <input type="hidden" name="template_id" value="{{ $template->id }}">
+                                                <button type="submit" class="btn btn-secondary">Send Now</button>
+                                            </form>
+                                            @else 
+                                                <button type="button" class="btn btn-success" title="Completed">Completed</button>
+                                            @endif
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

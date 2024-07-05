@@ -24,4 +24,9 @@ class NewsletterTemplate extends Model
     {
         return $this->belongsToMany(SubscriberList::class, 'newsletter_subscriber_template', 'list_id', 'newsletter_template_id');
     }
+
+    public function sent_newsletter()
+    {
+        return $this->hasMany(NewsletterSubscriberTemplate::class, 'newsletter_template_id');
+    }
 }
