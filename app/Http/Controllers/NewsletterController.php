@@ -142,8 +142,14 @@ class NewsletterController extends Controller
 
             // Update or create record in the pivot table (newsletter_subscriber_template)
             NewsletterSubscriberTemplate::updateOrCreate(
-                ['list_id' => $subscriber_email_list_id, 'newsletter_template_id' => $template->id],
-                ['sent' => true]
+                [   
+                    'list_id' => $subscriber_email_list_id, 
+                    'newsletter_template_id' => $template->id
+                ],
+                [   
+                    'sent' => true, 
+                    'sent_date' => now()
+                ]
             );
         }
 

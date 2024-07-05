@@ -13,7 +13,7 @@ class NewsletterTemplateController extends Controller
 {
     public function index()
     {
-        $templates = NewsletterTemplate::all();
+        $templates = NewsletterTemplate::with('sent_newsletter' , 'sent_newsletter.subscriber_email_list')->orderBy('created_at' , 'DESC')->get();
         return view('newsletter_layout.newsletter_templates.index', compact('templates'));
     }
 
