@@ -687,7 +687,7 @@ class NewsletterController extends Controller
                 $header = fgetcsv($file);
             } else {
                 // Use Laravel Excel package to get headers from Excel file
-                $header = (new HeadingRowImport)->toArray($path)[0][0];
+                $header = (new HeadingRowImport)->toArray($file)[0][0];
             }
 
             // Find the correct email column index based on header case insensitivity
@@ -713,7 +713,7 @@ class NewsletterController extends Controller
                     }
                     fclose($file);
                 } else {
-                    $rows = Excel::toArray([], $path)[0];
+                    $rows = Excel::toArray([], $file)[0];
                     foreach ($rows as $key => $row) {
                         if ($key > 0 && isset($row[$emailIndex])) {
                             $email = trim($row[$emailIndex]);
@@ -735,5 +735,6 @@ class NewsletterController extends Controller
 
         return $importedEmails;
     }
+
                  
 }
