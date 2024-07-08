@@ -13,4 +13,9 @@ class MobileNumber extends Model
         'mobile_number',
         'tags'
     ];
+
+    public function templates()
+    {
+        return $this->belongsToMany(SmsTemplate::class, 'mobile_number_campaigns', 'mobile_number_id', 'sms_template_id');
+    }
 }

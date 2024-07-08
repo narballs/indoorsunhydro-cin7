@@ -14,4 +14,15 @@ class MobileNumberCampaign extends Model
         'sent_date',
         'sent'
     ];
+
+
+    public function sms_template()
+    {
+        return $this->belongsTo(SmsTemplate::class, 'sms_template_id');
+    }
+
+    public function mobile_number_list()
+    {
+        return $this->belongsTo(MobileNumberList::class, 'mobile_number_list_id');
+    }
 }

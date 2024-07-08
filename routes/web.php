@@ -515,4 +515,27 @@ Route::post('/sms/list/delete/{id}', [SmsController::class, 'sms_list_delete'])-
 
 //add mobile number to list
 Route::post('/list/numbers/add', [SmsController::class, 'add_mobile_numbers_to_list'])->name('add_mobile_numbers_to_list');
-Route::get('/sms/campaigns', [SmsController::class, 'sms_campaigns'])->name('sms_campaigns');
+
+// add sms template
+Route::get('/sms/templates', [SmsController::class, 'list_sms_templates'])->name('list_sms_templates');
+Route::get('/sms/templates/create', [SmsController::class, 'create_sms_templates'])->name('create_sms_templates');
+Route::get('/sms/templates/edit/{id}', [SmsController::class, 'edit_sms_templates'])->name('edit_sms_templates');
+Route::post('/sms/templates/update/{id}', [SmsController::class, 'update_sms_templates'])->name('update_sms_templates');
+Route::post('/sms/templates/store', [SmsController::class, 'store_sms_templates'])->name('store_sms_templates');
+Route::post('/sms/templates/delete/{id}', [SmsController::class, 'delete_sms_templates'])->name('delete_sms_templates');
+
+Route::post('/sms-template/upload/image', [SmsController::class, 'upload_sms_templateImage'])->name('upload_sms_templateImage');
+
+
+//adding numbers to list
+Route::post('add_mobile_numbers_to_list', [SmsController::class, 'add_mobile_numbers_to_list'])->name('add_mobile_numbers_to_list');
+Route::post('number/list/delete/{id}', [SmsController::class, 'delete_number_from_list'])->name('delete_number_from_list');
+Route::get('/list/show/numbers/{id}', [SmsController::class, 'show_numbers_from_list'])->name('show_numbers_from_list');
+
+
+
+
+Route::post('bulk-upload-numbers-to-list', [SmsController::class, 'bulk_upload_numbers_to_list'])->name('bulk_upload_numbers_to_list');
+Route::post('import-numbers-to-list', [SmsController::class, 'import_numbers_to_list'])->name('import_numbers_to_list');
+
+Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sms');

@@ -60,7 +60,7 @@
                                         <form action="{{route('sms_list_delete' , $list->id)}}" method="post">
                                             @csrf
                                             <a href="{{ route('sms_list_edit', $list->id) }}" class="btn btn-secondary">Edit</a>
-                                            {{-- <a href="{{ route('subscribers_list_show_users', $list->id) }}" class="btn btn-info">Show User(s)</a> --}}
+                                            <a href="{{ route('show_numbers_from_list', $list->id) }}" class="btn btn-info">Show Mobile Number(s)</a>
                                             
                                             <button class="btn btn-default add-user-to-list-btn" type="button" data-toggle="modal" data-target="#add_number_list" data-id="{{ $list->id }}">
                                                 Add Mobile Number To List
@@ -119,7 +119,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="add_user_to_list_btn">Add User</button>
+                <button type="button" class="btn btn-primary" id="add_user_to_list_btn">Add Number</button>
             </div>
         </div>
     </div>
@@ -249,7 +249,7 @@
             });
             // save bulk upload emails
             $('#save_bulk_upload').click(function() {
-                var emails = $('#bulk_upload_numbers').val();
+                var numbers = $('#bulk_upload_numbers').val();
                 var tags = $('#bulk_tags').val();
                 var listId = $('#bulk_list_id').val();
 
@@ -258,7 +258,7 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        bulk_upload_numbers: emails,
+                        bulk_upload_numbers: numbers,
                         tags: tags,
                         list_id: listId,
                         _token: '{{ csrf_token() }}'

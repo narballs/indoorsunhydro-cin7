@@ -134,13 +134,32 @@
 						</li>
 					</ul>
 				</li>
-				<li class="nav-item  ">
-					<a href="{{route('all_contacts')}}" class="nav-link ">
-						<i class="nav-icon fas fa-user"></i>
+				<li class="nav-item has-treeview">
+					<a href="#" class="nav-link">
+						<i class="nav-icon fas fa-copy"></i>
 						<p>
-							Sms Campaigns
+							Sms Templates
+							<i class="fas fa-angle-left right"></i>
 						</p>
 					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item  ">
+							<a href="{{route('list_sms_templates')}}" class="nav-link ">
+								<i class="nav-icon fas fa-file"></i>
+								<p>
+									Show Sms Templates
+								</p>
+							</a>
+						</li>
+						<li class="nav-item  ">
+							<a href="{{route('create_sms_templates')}}" class="nav-link ">
+								<i class="nav-icon fas fa-book"></i>
+								<p>
+									Create Sms Templates
+								</p>
+							</a>
+						</li>
+					</ul>
 				</li>
 				<li class="nav-item  ">
 					<a href="{{url('admin/logout')}}" class="nav-link ">
@@ -150,7 +169,6 @@
 						</p>
 					</a>
 				</li> 
-
 			</ul>
 		</nav>
 		<!-- /.sidebar-menu -->
