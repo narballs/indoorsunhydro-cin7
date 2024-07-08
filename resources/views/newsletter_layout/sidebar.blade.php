@@ -107,6 +107,41 @@
 						</li>
 					</ul>
 				</li>
+				<li class="nav-item has-treeview">
+					<a href="#" class="nav-link">
+						<i class="nav-icon fas fa-copy"></i>
+						<p>
+							Sms Lists
+							<i class="fas fa-angle-left right"></i>
+						</p>
+					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item  ">
+							<a href="{{route('sms_list')}}" class="nav-link ">
+								<i class="nav-icon fas fa-file"></i>
+								<p>
+									Show Sms Lists
+								</p>
+							</a>
+						</li>
+						<li class="nav-item  ">
+							<a href="{{route('sms_list_create')}}" class="nav-link ">
+								<i class="nav-icon fas fa-book"></i>
+								<p>
+									Create Sms List
+								</p>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li class="nav-item  ">
+					<a href="{{route('all_contacts')}}" class="nav-link ">
+						<i class="nav-icon fas fa-user"></i>
+						<p>
+							Sms Campaigns
+						</p>
+					</a>
+				</li>
 				<li class="nav-item  ">
 					<a href="{{url('admin/logout')}}" class="nav-link ">
 						<i class="nav-icon fas fa-sign-out-alt"></i>
