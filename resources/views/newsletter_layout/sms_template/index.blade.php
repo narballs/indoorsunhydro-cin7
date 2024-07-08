@@ -64,14 +64,14 @@
                                         </form> --}}
                                         @if (!empty($template->sent_sms[0]))
                                             @if ($template->sent_sms[0]->sent == 0)
-                                                <form action="{{ route('send_sms', $template->sent_sms[0]->id) }}" method="POST" style="display: inline-block;">
+                                                <form action="{{ route('send_sms', $template->sent_sms[0]->id) }}" method="POST" class="mx-2" style="display: inline-block;">
                                                     @csrf
                                                 <input type="hidden" name="mobile_number_list_id" value="{{ $template->sent_sms[0]->mobile_number_list->id }}">
                                                 <input type="hidden" name="sms_template_id" value="{{ $template->sent_sms[0]->sms_template->id }}">
                                                 <button type="submit" class="btn btn-secondary">Send Now</button>
                                             </form>
                                             @else 
-                                                <button type="button" class="btn btn-success" title="Completed">Completed</button>
+                                                <button type="button" class="btn btn-success mx-2" title="Completed">Completed</button>
                                             @endif
                                         @endif
                                     </div>

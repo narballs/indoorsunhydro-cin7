@@ -23,6 +23,6 @@ class MobileNumberCampaign extends Model
 
     public function mobile_number_list()
     {
-        return $this->belongsTo(MobileNumberList::class, 'mobile_number_list_id');
+        return $this->belongsTo(NumberList::class, 'mobile_number_list_id');
     }
 }
