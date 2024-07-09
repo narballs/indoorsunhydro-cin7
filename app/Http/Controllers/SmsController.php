@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\AdminSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -11,13 +11,13 @@ use App\Models\MobileNumberCampaign;
 use App\Models\MobileNumberList;
 use App\Models\NumberList;
 use App\Models\SmsTemplate;
-use Facade\FlareClient\Http\Client;
 use Illuminate\Support\Facades\Log;
 use Twilio\TwiML\Voice\Sms;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
+use GuzzleHttp\Client;
 
 class SmsController extends Controller
 { 
@@ -519,40 +519,68 @@ class SmsController extends Controller
     }
 
 
-    public function send_sms(Request $request)
+    public function send_sms(Request $request , $id)
     {
-        $request->validate([
-            'phone' => 'required|string',
-            'message' => 'required|string',
+        $mobile_number_list_id = $request->mobile_number_list_id;
+        $template_id = $request->sms_template_id;
+
+        // Fetch template
+        $template = SmsTemplate::findOrFail($template_id);
+        $number_list = MobileNumberList::with('number_list')->where('number_list_id' , $mobile_number_list_id)->get();
+        if (count($number_list) == 0 ) {
+            return redirect()->back()->with('error', 'No Numbers found in the selected list!');
+        }
+
+        $twilio_sid = AdminSetting::where('option_name', 'twilio_sid')->first();
+        $twilio_token = AdminSetting::where('option_name', 'twilio_token')->first();
+        $twilio_number = AdminSetting::where('option_name', 'twilio_number')->first();
+
+        $client = new Client([
+            'base_uri' => 'https://api.twilio.com',
+            'auth' => [$twilio_sid->option_value, $twilio_token->option_value],
         ]);
 
-        $phone = $request->input('phone');
-        $message = $request->input('message');
+        $errors = [];
+        $success_count = 0;
 
-        // $client = new Client([
-        //     'base_uri' => 'https://api.twilio.com',
-        //     'auth' => [$this->twilioSid, $this->twilioToken],
-        // ]);
+        foreach ($number_list as $list_number) {
+            try {
+                $response = $client->post("/2010-04-01/Accounts/{$twilio_sid->option_value}/Messages.json", [
+                    'form_params' => [
+                        'From' => $twilio_number->option_value,
+                        'To' => $list_number->mobile_number,
+                        'Body' => $template->description,
+                    ],
+                ]);
 
-        // try {
-        //     $response = $client->post("/2010-04-01/Accounts/{$this->twilioSid}/Messages.json", [
-        //         'form_params' => [
-        //             'From' => $this->twilioFrom,
-        //             'To' => $phone,
-        //             'Body' => $message,
-        //         ],
-        //     ]);
+                if ($response->getStatusCode() == 201 || $response->getStatusCode() == 200) {
+                    $success_count++;
+                    MobileNumberCampaign::updateOrCreate(
+                        [
+                            'mobile_number_list_id' => $mobile_number_list_id, 
+                            'sms_template_id' => $template->id
+                        ],
+                        [
+                            'sent' => true, 
+                            'sent_date' => now()
+                        ]
+                    );
+                } else {
+                    $errors[] = "Failed to send SMS to {$list_number->mobile_number}.";
+                }
+            } catch (\Exception $e) {
+                Log::error('Twilio SMS Error: ' . $e->getMessage());
+                $errors[] = "Failed to send SMS to {$list_number->mobile_number}.";
+            }
+        }
 
-        //     if ($response->getStatusCode() == 201) {
-        //         return response()->json(['success' => 'SMS sent successfully.']);
-        //     } else {
-        //         return response()->json(['error' => 'Failed to send SMS.'], $response->getStatusCode());
-        //     }
-        // } catch (\Exception $e) {
-        //     Log::error('Twilio SMS Error: ' . $e->getMessage());
-        //     return response()->json(['error' => 'Failed to send SMS.'], 500);
-        // }
+        if ($success_count > 0) {
+            return redirect()->back()->with('success', "$success_count SMS sent successfully.");
+        } else {
+            return redirect()->back()->with('error', 'Failed to send SMS.')->with('detailed_errors', $errors);
+        }
     }
+
 
 
 

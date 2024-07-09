@@ -328,6 +328,21 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'twilio_sid', 
+                'type' => 'text',
+                'option_value' => 'AC0ff2fa526f96986995654144a7f6706b',
+            ],
+            [
+                'option_name' => 'twilio_token', 
+                'type' => 'text',
+                'option_value' => '670e4e7b83a204a34af1f9c69b722825',
+            ],
+            [
+                'option_name' => 'twilio_number', 
+                'type' => 'text',
+                'option_value' => '+923155730007',
+            ],
 
             
         ];

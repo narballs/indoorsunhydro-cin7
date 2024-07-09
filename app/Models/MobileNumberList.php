@@ -13,4 +13,9 @@ class MobileNumberList extends Model
         'number_list_id',
         'mobile_number'
     ];
+
+
+    public function number_list() {
+        return $this->belongsTo(NumberList::class , 'number_list_id');
+    }
 }
