@@ -11,6 +11,9 @@
                         <button class="btn btn-info mx-3 d-none list_pop_up_btn" type="button" data-toggle="modal" data-target="#email_list_pop_up">
                             Add To List
                         </button>
+                        <button class="btn btn-danger mx-3 d-none delete_selected" type="button">
+                           Delete
+                        </button>
                     </div>
                     <div class="col-md-3">
                         <div class="row">
@@ -48,7 +51,7 @@
                     </div>
                 @endif
                 @if (count($newsletter_subscriptions) > 0 )
-                    <table id="example2" class="table table-bordered table-hover">
+                    <table id="subscibers_table" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>
@@ -74,11 +77,11 @@
                         </tbody>
                     </table>
 
-                    <div class="row mt-3 justify-content-center align-items-center">
+                    {{-- <div class="row mt-3 justify-content-center align-items-center">
                         <div class="col-md-12">
                             {{ $newsletter_subscriptions->links() }}
                         </div>
-                    </div>
+                    </div> --}}
                 @else
                     <h5>
                         No Subscribers Found
@@ -251,17 +254,21 @@
             if ($(this).is(':checked')) {  // Add missing parentheses here
                 $('.select_one').prop('checked', true);
                 $('.list_pop_up_btn').removeClass('d-none');
+                $('.delete_selected').removeClass('d-none');
             } else {
                 $('.select_one').prop('checked', false);
                 $('.list_pop_up_btn').addClass('d-none');
+                $('.delete_selected').addClass('d-none');
             }
         });
 
         $('.select_one').on('click', function() {
             if ($('.select_one:checked').length > 0) {
                 $('.list_pop_up_btn').removeClass('d-none');
+                $('.delete_selected').removeClass('d-none');
             } else {
                 $('.list_pop_up_btn').addClass('d-none');
+                $('.delete_selected').addClass('d-none');
             }
         });
 
@@ -468,6 +475,62 @@
             }
         });
     });
+
+    // delete selected emails
+    $('.delete_selected').click(function() {
+        var selected_emails = [];
+        $('.select_one:checked').each(function() {
+            selected_emails.push($(this).data('email'));
+        });
+
+        if (selected_emails.length > 0) {
+            $.ajax({
+                url: "{{ route('delete_selected_emails') }}",
+                type: 'POST',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "emails": selected_emails // Send selected_emails as an array
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                setTimeout(function() {
+                                    window.location.href = '/subscribers/list/index';
+                                }, 1000); // Delay of 1 second
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Failed to delete emails. Your data is invalid.',
+                        icon: 'error'
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Error',
+                text: 'Please select emails to delete.',
+                icon: 'error'
+            });
+        }
+    });
+
+
+
 </script>
 <script type="text/javascript">
     $(document).ready(function() {

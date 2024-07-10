@@ -1,4 +1,4 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-light-primary elevation-4">
 
 
 	<!-- Sidebar -->
@@ -17,11 +17,60 @@
 						</p>
 					</a>
 				</li>
-				
-				
+				<li class="nav-item  ">
+					<a href="#" class="nav-link ">
+						<i class="nav-icon fas fa-book"></i>
+						<p>
+							Newsletter Campaigns
+						</p>
+					</a>
+				</li>
+				<li class="nav-item  ">
+					<a href="{{route('newsletter_subscriptions')}}" class="nav-link ">
+						<i class="nav-icon fas fa-user"></i>
+						<p>
+							Subscribers
+						</p>
+					</a>
+				</li>
+				{{-- <li class="nav-item  ">
+					<a href="{{route('all_contacts')}}" class="nav-link ">
+						<i class="nav-icon fas fa-user"></i>
+						<p>
+							Contacts
+						</p>
+					</a>
+				</li> --}}
+				<li class="nav-item has-treeview">
+					<a href="#" class="nav-link ">
+						<i class="nav-icon fas fa-copy"></i>
+						<p>
+							Lists
+							<i class="fas fa-angle-left right"></i>
+						</p>
+					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item  ">
+							<a href="{{route('subscribers_list')}}" class="nav-link ">
+								<i class="nav-icon fas fa-file"></i>
+								<p>
+									Show Lists
+								</p>
+							</a>
+						</li>
+						<li class="nav-item  ">
+							<a href="{{route('subscribers_list_create')}}" class="nav-link ">
+								<i class="nav-icon fas fa-book"></i>
+								<p>
+									Create List
+								</p>
+							</a>
+						</li>
+					</ul>
+				</li>
 
 				<li class="nav-item has-treeview">
-					<a href="#" class="nav-link">
+					<a href="#" class="nav-link ">
 						<i class="nav-icon fas fa-copy"></i>
 						<p>
 							Newsletters
@@ -63,59 +112,76 @@
 						</li> --}}
 					</ul>
 				</li>
-
-				{{-- <li class="nav-item  ">
-					<a href="{{route('newsletter_subscriptions')}}" class="nav-link ">
-						<i class="nav-icon fas fa-user"></i>
-						<p>
-							 Subscribers
-						</p>
-					</a>
-				</li> --}}
 				<li class="nav-item  ">
-					<a href="{{route('all_contacts')}}" class="nav-link ">
-						<i class="nav-icon fas fa-user"></i>
+					<a href="#" class="nav-link">
+						<i class="nav-icon fas fa-envelope"></i>
 						<p>
-							Contacts
+							Sms Campaigns
 						</p>
 					</a>
 				</li>
 				<li class="nav-item has-treeview">
-					<a href="#" class="nav-link">
+					<a href="#" class="nav-link ">
 						<i class="nav-icon fas fa-copy"></i>
 						<p>
-							Lists
+							Sms Lists
 							<i class="fas fa-angle-left right"></i>
 						</p>
 					</a>
 					<ul class="nav nav-treeview">
 						<li class="nav-item  ">
-							<a href="{{route('subscribers_list')}}" class="nav-link ">
+							<a href="{{route('sms_list')}}" class="nav-link ">
 								<i class="nav-icon fas fa-file"></i>
 								<p>
-									Show Lists
+									Show Sms Lists
 								</p>
 							</a>
 						</li>
 						<li class="nav-item  ">
-							<a href="{{route('subscribers_list_create')}}" class="nav-link ">
+							<a href="{{route('sms_list_create')}}" class="nav-link ">
 								<i class="nav-icon fas fa-book"></i>
 								<p>
-									Create List
+									Create Sms List
+								</p>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li class="nav-item has-treeview">
+					<a href="#" class="nav-link ">
+						<i class="nav-icon fas fa-copy"></i>
+						<p>
+							Sms Templates
+							<i class="fas fa-angle-left right"></i>
+						</p>
+					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item  ">
+							<a href="{{route('list_sms_templates')}}" class="nav-link ">
+								<i class="nav-icon fas fa-file"></i>
+								<p>
+									Show Sms Templates
+								</p>
+							</a>
+						</li>
+						<li class="nav-item  ">
+							<a href="{{route('create_sms_templates')}}" class="nav-link ">
+								<i class="nav-icon fas fa-book"></i>
+								<p>
+									Create Sms Templates
 								</p>
 							</a>
 						</li>
 					</ul>
 				</li>
 				<li class="nav-item  ">
-					<a href="{{url('admin/logout')}}" class="nav-link ">
+					<a href="{{url('admin/logout')}}" class="nav-link">
 						<i class="nav-icon fas fa-sign-out-alt"></i>
 						<p>
 							Logout
 						</p>
 					</a>
 				</li> 
-
 			</ul>
 		</nav>
 		<!-- /.sidebar-menu -->
