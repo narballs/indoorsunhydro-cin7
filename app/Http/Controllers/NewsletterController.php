@@ -51,9 +51,9 @@ class NewsletterController extends Controller
         $search = $request->search;
         $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc');
         if (!empty($search)) {
-            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->orWhere('tags', 'like', '%' . $search . '%')->paginate(10);
+            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->orWhere('tags', 'like', '%' . $search . '%')->get();
         } else {
-            $newsletter_subscriptions = $newsletter_subscriptions->paginate(10);
+            $newsletter_subscriptions = $newsletter_subscriptions->get();
         }
         $subscribers_list = SubscriberList::orderBy('id', 'desc')->get();
         return view('newsletter_layout.newsletter_subscribers.index', compact('newsletter_subscriptions' , 'subscribers_list' , 'search'));
@@ -734,6 +734,13 @@ class NewsletterController extends Controller
         }
 
         return $importedEmails;
+    }
+
+    public function delete_selected_emails(Request $request) {
+        $emails = $request->emails; // directly get the array of emails
+        NewsletterSubscription::whereIn('email', $emails)->delete();
+        SubscriberEmailList::whereIn('email', $emails)->delete();
+        return response()->json(['success' => true, 'message' => 'Selected emails deleted successfully.']);
     }
 
                  

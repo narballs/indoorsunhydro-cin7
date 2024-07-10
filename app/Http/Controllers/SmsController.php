@@ -159,6 +159,11 @@ class SmsController extends Controller
         return view('newsletter_layout.sms_template.edit', compact('smsTemplate' , 'number_lists' , 'selected_id'));
     }
 
+    public function sms_detail($id) {
+        $smsTemplate = SmsTemplate::find($id);
+        return view('newsletter_layout.sms_template.detail', compact('smsTemplate'));
+    }
+
     public function update_sms_templates(Request $request , $id) {
         $request->validate([
             'name' => 'required',
@@ -230,52 +235,59 @@ class SmsController extends Controller
 
     //add mobile number to list 
 
-    public function add_mobile_numbers_to_list (Request $request) {
+    public function add_mobile_numbers_to_list(Request $request)
+    {
         try {
             $request->validate([
-                'mobile_number' => 'required',
+                'mobile_number' => [
+                    'required',
+                    'string',
+                    'regex:/^[^a-zA-Z]*$/'
+                ],
                 'tags' => 'nullable|string',
+                'list_id' => 'required|exists:number_lists,id' // Validate list_id exists in number_lists table
             ]);
-    
-            $mobile_number = $request->input('mobile_number');
+
+            $mobileNumber = $request->input('mobile_number');
             $tags = $request->input('tags', '');
             $listId = $request->input('list_id');
 
-            $check_mobile_number = MobileNumber::where('mobile_number', $mobile_number)->first();
-            // if (!empty($check_mobile_number)) {
-            //     return response()->json(['success' => false, 'message' => 'Mobile Number already exists.'], 400);
-            // }
-    
-            
+            // Check if the mobile number already exists in MobileNumberList for the given list_id
+            $existingNumberList = MobileNumberList::where('mobile_number', $mobileNumber)
+                ->where('number_list_id', $listId)
+                ->first();
 
-
-            $mobile_numbers_list = MobileNumberList::where('mobile_number', $mobile_number)->where('number_list_id', $listId)->first();
-            if (!$mobile_numbers_list) {
+            // If mobile number does not exist in MobileNumberList for the list_id, add it
+            if (!$existingNumberList) {
                 MobileNumberList::create([
-                    'mobile_number' => $mobile_number,
+                    'mobile_number' => $mobileNumber,
                     'number_list_id' => $listId,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
             }
 
-            $check_mobile_number = MobileNumber::where('mobile_number', $mobile_number)->first();
-            if (!$check_mobile_number) {
+            // Check if the mobile number already exists in MobileNumber
+            $existingMobileNumber = MobileNumber::where('mobile_number', $mobileNumber)->first();
+
+            // If mobile number does not exist in MobileNumber, add it
+            if (!$existingMobileNumber) {
                 MobileNumber::create([
-                    'mobile_number' => $mobile_number,
+                    'mobile_number' => $mobileNumber,
                     'tags' => $tags,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
             }
-    
+
             return response()->json(['success' => true, 'message' => 'Mobile Number added successfully.']);
         } catch (ValidationException $e) {
-            return response()->json(['success' => false, 'message' => 'Validation error. Please check your input.'], 400);
+            return response()->json(['error' => true, 'message' => 'Validation error. Please check your input.'], 400);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Something went wrong !'], 500);
+            return response()->json(['success' => false, 'message' => 'Something went wrong!'], 500);
         }
     }
+
 
     public function show_numbers_from_list($id) {
         $mobile_number_lists = MobileNumberList::where('number_list_id', $id)->paginate(10);
@@ -293,6 +305,8 @@ class SmsController extends Controller
 
     // addign and importing bulk and import 
     // bulk upload to list 
+    
+
     public function bulk_upload_numbers_to_list(Request $request)
     {
         try {
@@ -300,26 +314,27 @@ class SmsController extends Controller
             $validator = Validator::make($request->all(), [
                 'bulk_upload_numbers' => 'required|string',
                 'tags' => 'nullable|string',
-                // 'list_id' => 'required|exists:newsletter_lists,id'
             ]);
 
+            // Return validation errors if validation fails
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
             }
 
+            // Retrieve data from the request
             $listId = $request->input('list_id');
             $tags = $request->input('tags', '');
             $bulkNumbers = explode("\n", $request->input('bulk_upload_numbers'));
 
-            $validEmails = [];
+            $validNumbers = [];
             foreach ($bulkNumbers as $number) {
                 $number = trim($number);
-                if (!empty($number) && filter_var($number, FILTER_VALIDATE_EMAIL)) {
-                    // Check if email already exists in NewsletterSubscription
+                if (!empty($number) && (preg_match('/^[^a-zA-Z]*$/', $number))) { // Adjust validation as per your requirements
+                    // Check if number already exists in MobileNumber
                     $existingNumber = MobileNumber::where('mobile_number', $number)->first();
 
                     if (!$existingNumber) {
-                        // Email does not exist in MobileNumber, so insert it
+                        // Number does not exist in MobileNumber, so insert it
                         MobileNumber::create([
                             'mobile_number' => $number,
                             'tags' => $tags,
@@ -328,14 +343,14 @@ class SmsController extends Controller
                         ]);
                     }
 
-                    // Check if email exists in SubscriberEmailList for the current list_id
-                    $existingMobileNumberList = MobileNumberList::where('mobile_number', $number)
+                    // Check if number exists in MobileNumberList for the current list_id
+                    $existingListNumber = MobileNumberList::where('mobile_number', $number)
                         ->where('number_list_id', $listId)
                         ->first();
 
-                    if (!$existingMobileNumberList) {
-                        // Email does not exist in SubscriberEmailList for the current list_id, so add it
-                        $validEmails[] = [
+                    if (!$existingListNumber) {
+                        // Number does not exist in MobileNumberList for the current list_id, so add it
+                        $validNumbers[] = [
                             'mobile_number' => $number,
                             'number_list_id' => $listId,
                             'created_at' => now(),
@@ -345,9 +360,9 @@ class SmsController extends Controller
                 }
             }
 
-            // Insert valid emails into database
-            if (!empty($validEmails)) {
-                MobileNumberList::insert($validEmails);
+            // Insert valid numbers into database
+            if (!empty($validNumbers)) {
+                MobileNumberList::insert($validNumbers);
 
                 return response()->json(['success' => true, 'message' => 'Bulk upload successful.']);
             }
@@ -368,9 +383,10 @@ class SmsController extends Controller
             $validator = Validator::make($request->all(), [
                 'file' => 'required|mimes:csv,xls,xlsx', // Validate file type
                 'tags' => 'nullable|string',
-                // 'list_id' => 'required|exists:subscriber_email_lists,id' // Validate list_id exists in newsletter_lists table
+                // 'list_id' => 'required|exists:number_list,id' // Validate list_id exists in number_lists table
             ]);
 
+            // Return validation errors if validation fails
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
             }
@@ -379,21 +395,21 @@ class SmsController extends Controller
             $tags = $request->input('tags', '');
             $file = $request->file('file');
 
-            // Process the uploaded file
+            // Process the uploaded file to retrieve valid numbers
             $importedNumbers = $this->processImportedFile($file);
 
-            // Initialize arrays for emails to insert and skipped emails
+            // Initialize arrays for numbers to insert and skipped numbers
             $numbersToInsert = [];
             $skippedNumbers = [];
 
-            // Iterate over imported emails
+            // Iterate over imported numbers
             foreach ($importedNumbers as $number) {
-                if (!empty($number) && filter_var($number, FILTER_VALIDATE_EMAIL)) {
-                    // Check if email exists in NewsletterSubscription
+                if (!empty($number)) {
+                    // Check if number exists in MobileNumber
                     $existingNumber = MobileNumber::where('mobile_number', $number)->first();
 
                     if (!$existingNumber) {
-                        // Email does not exist in NewsletterSubscription, so insert it
+                        // Number does not exist in MobileNumber, so insert it
                         MobileNumber::create([
                             'mobile_number' => $number,
                             'tags' => $tags,
@@ -402,13 +418,13 @@ class SmsController extends Controller
                         ]);
                     }
 
-                    // Check if email exists in SubscriberEmailList for the current list_id
+                    // Check if number exists in MobileNumberList for the current list_id
                     $existingNumberList = MobileNumberList::where('mobile_number', $number)
                         ->where('number_list_id', $listId)
                         ->first();
 
                     if (!$existingNumberList) {
-                        // Email does not exist in SubscriberEmailList for the current list_id, so add it
+                        // Number does not exist in MobileNumberList for the current list_id, so add it
                         $numbersToInsert[] = [
                             'mobile_number' => $number,
                             'number_list_id' => $listId,
@@ -416,16 +432,16 @@ class SmsController extends Controller
                             'updated_at' => now()
                         ];
                     } else {
-                        // Email exists in SubscriberEmailList for the current list_id, skip it
+                        // Number exists in MobileNumberList for the current list_id, skip it
                         $skippedNumbers[] = $number;
                     }
                 } else {
-                    // Invalid email format, skip it
+                    // Invalid number format, skip it
                     $skippedNumbers[] = $number;
                 }
             }
 
-            // Insert emails into SubscriberEmailList
+            // Insert valid numbers into MobileNumberList
             if (!empty($numbersToInsert)) {
                 MobileNumberList::insert($numbersToInsert);
             }
@@ -438,10 +454,8 @@ class SmsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => $successMessage,
-                'skipped_emails' => $skippedMessage,
+                'skipped_numbers' => $skippedMessage,
             ]);
-        } catch (ValidationException $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         } catch (\Exception $e) {
             Log::error('File processing error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'An error occurred while processing the file.'], 500);
@@ -456,8 +470,8 @@ class SmsController extends Controller
             $path = $file->getRealPath();
             $extension = $file->getClientOriginalExtension();
 
-            // Define possible variations of email column headers
-            $numberHeaders = ['numbers', 'Numbers', 'Mobile Number', 'Mobile Numbers'];
+            // Define possible variations of number column headers
+            $numberHeaders = ['mobile_number', 'numbers', 'Numbers', 'Mobile Number', 'Mobile Numbers', 'mobile numbers' ,'mobile number'];
 
             // Initialize variables
             $header = null;
@@ -465,51 +479,75 @@ class SmsController extends Controller
 
             // Read file based on extension
             if ($extension === 'csv') {
-                $file = fopen($path, 'r');
-                $header = fgetcsv($file);
-            } else {
-                // Use Laravel Excel package to get headers from Excel file
+                $fileHandle = fopen($path, 'r'); // Open file handle
+                if (!$fileHandle) {
+                    throw new \Exception('Failed to open CSV file.');
+                }
+                $header = fgetcsv($fileHandle); // Read headers
+
+                // Reset file pointer to beginning for Excel processing
+                fseek($fileHandle, 0);
+
+                // Process CSV file
+                while ($columns = fgetcsv($fileHandle)) {
+                    if ($header === null) {
+                        $header = $columns;
+                        continue; // Skip header line
+                    }
+
+                    // Find the correct number column index based on header case insensitivity
+                    foreach ($numberHeaders as $numberHeader) {
+                        $numberIndex = array_search($numberHeader, $header, true);
+                        if ($numberIndex !== false) {
+                            break;
+                        }
+                    }
+
+                    if ($numberIndex !== false && isset($columns[$numberIndex])) {
+                        $number = trim($columns[$numberIndex]);
+                        // Validate number format and disallow both lowercase and uppercase alphabetic characters
+                        if (preg_match('/^[^a-zA-Z]*$/', $number)) {
+                            $importedNumbers[] = $number;
+                        }
+                    }
+                }
+                fclose($fileHandle);
+            } 
+            else {
                 $header = (new HeadingRowImport())->toArray($file)[0][0];
-            }
-
-            // Find the correct email column index based on header case insensitivity
-            if ($header) {
-                foreach ($numberHeaders as $numberlHeader) {
-                    $numberIndex = array_search($numberlHeader, $header);
-                    if ($numberIndex !== false) {
-                        break;
+                // Process Excel file   
+                $rows = Excel::toArray([], $file)[0];
+                foreach ($rows as $key => $row) {
+                    if ($key === 0) {
+                        continue; // Skip header row
                     }
-                }
-            }
 
-            // Process the file based on the found email index
-            if ($numberIndex !== false) {
-                if ($extension === 'csv') {
-                    while ($columns = fgetcsv($file)) {
-                        if (isset($columns[$numberIndex])) {
-                            $number = trim($columns[$numberIndex]);
-                            if (filter_var($number, FILTER_VALIDATE_EMAIL)) {
-                                $importedNumbers[] = $number;
-                            }
+                    // Find the correct number column index based on header case insensitivity
+                    foreach ($numberHeaders as $numberHeader) {
+                        $numberIndex = array_search($numberHeader, $header);
+                        if ($numberIndex !== false) {
+                            break;
                         }
                     }
-                    fclose($file);
-                } else {
-                    $rows = Excel::toArray([], $file)[0];
-                    foreach ($rows as $key => $row) {
-                        if ($key > 0 && isset($row[$numberIndex])) {
-                            $number = trim($row[$numberIndex]);
-                            if (filter_var($number, FILTER_VALIDATE_EMAIL)) {
-                                $importedNumbers[] = $number;
-                            }
+
+                    if ($numberIndex !== false && isset($row[$numberIndex])) {
+                        $number = trim($row[$numberIndex]);
+                        // Validate number format and disallow both lowercase and uppercase alphabetic characters
+                        if (preg_match('/^[^a-zA-Z]*$/', $number)) {
+                            $importedNumbers[] = $number;
                         }
                     }
                 }
-
-                $importedNumbers = array_unique($importedNumbers);
-            } else {
-                throw new \Exception('File does not contain a recognized number column header.');
             }
+
+            // Remove duplicates from imported numbers
+            $importedNumbers = array_unique($importedNumbers);
+
+
+            if (empty($importedNumbers)) {
+                throw new \Exception('No valid numbers found in the file.');
+            }
+
         } catch (\Exception $e) {
             Log::error('Error processing file: ' . $e->getMessage());
             throw new \Exception('An error occurred while processing the file.');
@@ -517,6 +555,8 @@ class SmsController extends Controller
 
         return $importedNumbers;
     }
+
+
 
 
     public function send_sms(Request $request , $id)
@@ -534,40 +574,30 @@ class SmsController extends Controller
         $twilio_sid = AdminSetting::where('option_name', 'twilio_sid')->first();
         $twilio_token = AdminSetting::where('option_name', 'twilio_token')->first();
         $twilio_number = AdminSetting::where('option_name', 'twilio_number')->first();
+        // $twilio_number ='+12512921422';
 
-        $client = new Client([
-            'base_uri' => 'https://api.twilio.com',
-            'auth' => [$twilio_sid->option_value, $twilio_token->option_value],
-        ]);
+        $client = new \Twilio\Rest\Client($twilio_sid->option_value, $twilio_token->option_value);
+            
 
         $errors = [];
         $success_count = 0;
 
         foreach ($number_list as $list_number) {
             try {
-                $response = $client->post("/2010-04-01/Accounts/{$twilio_sid->option_value}/Messages.json", [
-                    'form_params' => [
-                        'From' => $twilio_number->option_value,
-                        'To' => $list_number->mobile_number,
-                        'Body' => $template->description,
-                    ],
+                $response =  $client->messages->create($list_number->mobile_number, [
+                    'from' =>$twilio_number->option_value,
+                    'body' => strip_tags($template->description),
                 ]);
 
-                if ($response->getStatusCode() == 201 || $response->getStatusCode() == 200) {
-                    $success_count++;
-                    MobileNumberCampaign::updateOrCreate(
-                        [
-                            'mobile_number_list_id' => $mobile_number_list_id, 
-                            'sms_template_id' => $template->id
-                        ],
-                        [
-                            'sent' => true, 
-                            'sent_date' => now()
-                        ]
-                    );
-                } else {
-                    $errors[] = "Failed to send SMS to {$list_number->mobile_number}.";
-                }
+                MobileNumberCampaign::updateOrCreate(
+                    ['mobile_number_list_id' => $mobile_number_list_id, 'sms_template_id' => $template_id],
+                    [   
+                        'sent' => true, 
+                        'sent_date' => now()
+                    ]
+                );
+
+                $success_count++;
             } catch (\Exception $e) {
                 Log::error('Twilio SMS Error: ' . $e->getMessage());
                 $errors[] = "Failed to send SMS to {$list_number->mobile_number}.";
@@ -579,6 +609,24 @@ class SmsController extends Controller
         } else {
             return redirect()->back()->with('error', 'Failed to send SMS.')->with('detailed_errors', $errors);
         }
+    }
+
+
+    public function sms_template_duplicate (Request $request , $id) {
+        $sms_template = SmsTemplate::find($id);
+        $sms_template = $sms_template->replicate();
+        $sms_template->name = $sms_template->name . ' (Copy)';
+        $sms_template->save();
+
+
+        if (!empty($request->subscriber_list_id)) {
+            $sms_template_campaign = new MobileNumberCampaign();
+            $sms_template_campaign->mobile_number_list_id = $request->subscriber_list_id;
+            $sms_template_campaign->sms_template_id = $sms_template->id;
+            $sms_template_campaign->save();
+        }
+
+        return redirect()->route('list_sms_templates')->with('success', 'Sms template duplicated successfully!');
     }
 
 

@@ -42,6 +42,7 @@ use App\Models\UserLog;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 use PSpell\Config;
 use App\Helpers\DistanceCalculator;
+use App\Models\NewsletterSubscription;
 
 class CheckoutController extends Controller
 {
@@ -1347,7 +1348,11 @@ class CheckoutController extends Controller
                         "password" => !empty($is_guest_user)  && $is_guest_user == 1 ? bcrypt('123456') : bcrypt($request->get('password'))
                     ]);
                     $user_id = $user->id;
-                    
+                    $newsletter_subscriber = NewsletterSubscription::where('email', $user->email)->first();
+                    if (empty($newsletter_subscriber)) {
+                        $newsletter_subscriber->email = $user->email;
+                        $newsletter_subscriber->save();
+                    }
 
                     $contact = new Contact([
                         // 'website' => $request->input('company_website'),

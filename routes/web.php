@@ -491,6 +491,9 @@ Route::post('user/list/delete/{id}', [NewsletterController::class, 'delete_user_
 Route::post('/import-subscribers', [NewsletterController::class, 'importSubscribers'])->name('subscribers.import');
 Route::post('/bulk/upload', [NewsletterController::class, 'bulk_upload'])->name('subscribers_bulk_upload');
 
+// delete selected emails 
+
+Route::post('delete-selected-emails', [NewsletterController::class, 'delete_selected_emails'])->name('delete_selected_emails');
 
 // add new user to list 
 Route::post('/list/subscribers/add', [NewsletterController::class, 'add_subscriber_to_list'])->name('add_subscriber_to_list');
@@ -523,6 +526,8 @@ Route::get('/sms/templates/edit/{id}', [SmsController::class, 'edit_sms_template
 Route::post('/sms/templates/update/{id}', [SmsController::class, 'update_sms_templates'])->name('update_sms_templates');
 Route::post('/sms/templates/store', [SmsController::class, 'store_sms_templates'])->name('store_sms_templates');
 Route::post('/sms/templates/delete/{id}', [SmsController::class, 'delete_sms_templates'])->name('delete_sms_templates');
+Route::get('/sms/templates/detail/{id}', [SmsController::class, 'sms_detail'])->name('sms_detail');
+Route::post('/sms/templates/duplicate/{id}', [SmsController::class, 'sms_template_duplicate'])->name('sms_template_duplicate');
 
 Route::post('/sms-template/upload/image', [SmsController::class, 'upload_sms_templateImage'])->name('upload_sms_templateImage');
 

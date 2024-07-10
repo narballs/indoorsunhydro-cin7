@@ -68,11 +68,19 @@ class NewsletterTemplateController extends Controller
         return view('newsletter_layout.newsletter_templates.edit', compact('newsletterTemplate' , 'subscriber_email_lists' , 'selected_id'));
     }
 
-    public function duplicate_newsletter_template($id) {
+    public function duplicate_newsletter_template(Request $request , $id) {
         $newsletterTemplate = NewsletterTemplate::find($id);
         $newNewsletterTemplate = $newsletterTemplate->replicate();
         $newNewsletterTemplate->name = $newsletterTemplate->name . ' (Copy)';
         $newNewsletterTemplate->save();
+
+
+        if (!empty($request->subscriber_list_id)) {
+            $newsletter_subscriber_template = new NewsletterSubscriberTemplate();
+            $newsletter_subscriber_template->list_id = $request->subscriber_list_id;
+            $newsletter_subscriber_template->newsletter_template_id = $newNewsletterTemplate->id;
+            $newsletter_subscriber_template->save();
+        }
 
         return redirect()->route('newsletter-templates.index')->with('success', 'Newsletter template duplicated successfully!');
     }
@@ -112,7 +120,9 @@ class NewsletterTemplateController extends Controller
     {
         $newsletterTemplate = NewsletterTemplate::find($id);
         $delete_newsletter_subscriber_template = NewsletterSubscriberTemplate::where('newsletter_template_id', $newsletterTemplate->id)->first();
-        $delete_newsletter_subscriber_template->delete();
+        if (!empty($delete_newsletter_subscriber_template)) {
+            $delete_newsletter_subscriber_template->delete();
+        }
         $newsletterTemplate->delete();
         return redirect()->route('newsletter-templates.index')->with('success', 'Newsletter template deleted successfully!');
     }

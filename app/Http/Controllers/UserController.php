@@ -36,6 +36,7 @@ use App\Models\Cart;
 use App\Models\AdminSetting;
 use App\Models\Category;
 use App\Models\DailyApiLog;
+use App\Models\NewsletterSubscription;
 use App\Models\Pricing;
 use App\Models\Pricingnew;
 use App\Models\ProductBuyList;
@@ -755,6 +756,11 @@ class UserController extends Controller
                 ]);
                 
                 $user_id = $user->id;
+                $newsletter_subscriber = NewsletterSubscription::where('email', $request->email)->first();
+                if (empty($newsletter_subscriber)) {
+                    $newsletter_subscriber->email = $user->email;
+                    $newsletter_subscriber->save();
+                }
                 $contact = new Contact([
                     'website' => $request->input('company_website'),
                     'company' => $request->input('company_name'),

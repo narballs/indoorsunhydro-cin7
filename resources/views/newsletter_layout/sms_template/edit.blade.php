@@ -39,8 +39,8 @@
                         </div>
                     @endif
                     <div class="form-group">
-                        <label for="content">Content:</label>
-                        <textarea id="newsletter_content_edit" name="content" class="form-control">{{ old('content', $smsTemplate->content) }}</textarea>
+                        <label for="description">Description:</label>
+                        <textarea id="sms_description_edit" name="description" class="form-control">{{ old('description', $smsTemplate->description) }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
@@ -118,7 +118,7 @@
         };
     }
 
-    CKEDITOR.ClassicEditor.create(document.getElementById("newsletter_content_edit"), {
+    CKEDITOR.ClassicEditor.create(document.getElementById("sms_description_edit"), {
         extraPlugins: [MyCustomUploadAdapterPlugin],
         toolbar: {
             items: [

@@ -59,6 +59,7 @@
                                         </form>
                                         <form action="{{ route('duplicate_newsletter_template', $template->id) }}" method="POST" class="mx-1">
                                             @csrf
+                                            <input type="hidden" name="subscriber_list_id" id="" value="{{ count($template->sent_newsletter) > 0 ? $template->sent_newsletter[0]->subscriber_email_list->id : '' }}">
                                             <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to duplicate this Template?');">Duplicate</button>
                                             
                                         </form>

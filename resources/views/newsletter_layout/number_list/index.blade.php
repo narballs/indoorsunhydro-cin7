@@ -254,7 +254,7 @@
                 var listId = $('#bulk_list_id').val();
 
                 $.ajax({
-                    url: "{{ route('bulk_upload_to_list') }}",
+                    url: "{{ route('bulk_upload_numbers_to_list') }}",
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -290,7 +290,7 @@
                         console.log('Error:', error);
                         swal.fire({
                             title: 'Error',
-                            text: 'Failed to upload emails. Your data is invalid.',
+                            text: 'Failed to upload numbers. Your data is invalid.',
                             icon: 'error'
                         });
                     }
@@ -309,7 +309,7 @@
                 formData.append('tags', tags);
 
                 $.ajax({
-                    url: "{{ route('import_users_to_list') }}",
+                    url: "{{ route('import_numbers_to_list') }}",
                     type: 'POST',
                     data: formData,
                     processData: false,
