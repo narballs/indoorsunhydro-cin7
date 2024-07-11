@@ -344,6 +344,7 @@ class UserController extends Controller
 
         $user->password = $encrypted_password;
         $user->hash = $hash;
+        $user->hash_date = Carbon::now();
         $user->save();
         $base_url = url('/');
 
@@ -2389,10 +2390,21 @@ class UserController extends Controller
         if (empty($user)) {
             Auth::logout();
             return redirect()->route('user')->with('error', 'Invalid Link ! Please try again. '  );
+        } 
+        elseif (!empty($user)) {
+            $expire_date = !empty($user->hash_date) ? $user->hash_date : $user->updated_at;
+            $expiration = config('auth.passwords.users.expire');
+            $tokenCreationTime = Carbon::parse($expire_date);
+            $tokenExpirationTime = $tokenCreationTime->addMinutes($expiration);
+            if (Carbon::now()->greaterThan($tokenExpirationTime)) {
+                return redirect()->route('lost.password')->with('error', 'Your link had been expired !');
+            }
+    
+        } else {
+            Auth::login($user);
+            return view('reset-password', compact('user'));
         }
-        Auth::login($user);
 
-        return view('reset-password', compact('user'));
     }
 
     public function account_profile_update(Request $request)

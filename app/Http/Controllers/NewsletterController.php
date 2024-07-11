@@ -82,7 +82,7 @@ class NewsletterController extends Controller
         $subscriber_email_lists = SubscriberList::findOrFail($request->subscriber_email_list_id);
         $subscriber_email_lists->templates()->attach($request->template_id);
 
-        return redirect()->back()->with('success', 'Template assigned to list successfully!');
+        return redirect()->route('newsletter-templates.index')->with('success', 'Template and list attached successfully!');
     }
 
     public function view_assigned_templates()
@@ -134,7 +134,7 @@ class NewsletterController extends Controller
         $subscriber_emails = SubscriberEmailList::where('subscriber_lists_id', $subscriber_email_list_id)->get();
 
         if ($subscriber_emails->isEmpty()) {
-            return redirect()->back()->with('error', 'No subscribers found in the selected list!');
+            return redirect()->route('subscribers_list')->with('error', 'No subscribers found in the selected list, Please add subscribers from here !.');
         }
 
         foreach ($subscriber_emails as $subscriber_email) {
