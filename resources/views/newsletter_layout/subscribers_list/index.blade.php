@@ -238,10 +238,10 @@
                             });
                         }
                     },
-                    error: function(xhr, status, error , response) {
+                    error: function(xhr, status, error) {
                         Swal.fire({
                             title: 'Error',
-                            text: response.message,
+                            text: 'Failed to add user. Please check your input or Subscriber already exists in the list.',
                             icon: 'error'
                         });
                     }
