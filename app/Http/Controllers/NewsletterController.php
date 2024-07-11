@@ -485,6 +485,12 @@ class NewsletterController extends Controller
 
             // Check if email already exists in NewsletterSubscription
             $existingSubscription = NewsletterSubscription::where('email', $email)->first();
+            $subscriber_email_list = SubscriberEmailList::where('email', $email)->where('subscriber_lists_id', $listId)->first();
+
+
+            if (!empty($existingSubscription) && !empty($subscriber_email_list)) {
+                return response()->json(['success' => false, 'message' => 'Subscriber already exists in the list.'], 400);
+            }
 
     
             if (empty($existingSubscription)) {
@@ -498,7 +504,7 @@ class NewsletterController extends Controller
             }
 
 
-            $subscriber_email_list = SubscriberEmailList::where('email', $email)->where('subscriber_lists_id', $listId)->first();
+            
             if (!$subscriber_email_list) {
                 SubscriberEmailList::create([
                     'email' => $email,
@@ -506,6 +512,8 @@ class NewsletterController extends Controller
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Subscriber already exists in the list.'], 400);
             }
     
             return response()->json(['success' => true, 'message' => 'Subscriber added successfully.']);
