@@ -2397,7 +2397,7 @@ class UserController extends Controller
             $tokenCreationTime = Carbon::parse($expire_date);
             $tokenExpirationTime = $tokenCreationTime->addMinutes($expiration);
             if (Carbon::now()->greaterThan($tokenExpirationTime)) {
-                return redirect()->route('lost.password')->with('error', 'Your link had been expired !');
+                return redirect()->route('lost.password')->with('error', 'Your link has been expired . Please try again.');
             }
     
         } else {
