@@ -241,7 +241,7 @@
                     error: function(xhr, status, error) {
                         Swal.fire({
                             title: 'Error',
-                            text: 'Failed to add user. Please check your input.',
+                            text: error.message,
                             icon: 'error'
                         });
                     }
