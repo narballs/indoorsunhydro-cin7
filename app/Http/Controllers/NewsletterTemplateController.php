@@ -13,22 +13,33 @@ class NewsletterTemplateController extends Controller
 {
     public function index()
     {
-        $templates = NewsletterTemplate::with('sent_newsletter' , 'sent_newsletter.subscriber_email_list')->orderBy('created_at' , 'DESC')->get();
+        $templates = NewsletterTemplate::with('sent_newsletter' , 'sent_newsletter.subscriber_email_list' , 'sent_newsletter.subscriber_email_list.subscriberEmailList')->orderBy('created_at' , 'DESC')->get();
         return view('newsletter_layout.newsletter_templates.index', compact('templates'));
     }
 
     public function create()
     {
-        $subscriber_email_lists = SubscriberList::all();
-        return view('newsletter_layout.newsletter_templates.create', compact('subscriber_email_lists'));
+        $subscriber_email_lists = SubscriberList::with('subscriberEmailList')->orderBy('id' , 'Desc')->get();
+        if (count($subscriber_email_lists) ==  0 ) {
+            return redirect()->route('subscribers_list_create')->with('error', 'Please create a subscriber list first!');
+        }
+        else {
+            return view('newsletter_layout.newsletter_templates.create', compact('subscriber_email_lists'));
+        }
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'content' => 'required',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required',
+                'content' => 'required',
+                'subscriber_email_list_id' => 'required'
+            ] , 
+            [
+                'subscriber_email_list_id.required' => 'Please select a subscriber list!'
+            ]
+        );
         $newsletter_template = new NewsletterTemplate();
         $newsletter_template->name = $request->name;
         $newsletter_template->content = $request->content;
