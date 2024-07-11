@@ -488,7 +488,7 @@ class NewsletterController extends Controller
             $subscriber_email_list = SubscriberEmailList::where('email', $email)->where('subscriber_lists_id', $listId)->first();
 
 
-            if (!empty($existingSubscription) && !empty($subscriber_email_list)) {
+            if (!empty($existingSubscription) && (!empty($subscriber_email_list))) {
                 return response()->json(['success' => false, 'message' => 'Subscriber already exists in the list.'], 400);
             }
 
