@@ -5668,7 +5668,7 @@ select.list-dt:focus {
         line-height: 27px !important;
         font-family: 'Poppins';
         font-style: normal;
-        font-size: 10.0772px;
+        font-size: 10.0772px !important;
         line-height: 15px;
         letter-spacing: 0.05em;
         text-transform: uppercase;
