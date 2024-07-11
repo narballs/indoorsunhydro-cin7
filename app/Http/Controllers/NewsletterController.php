@@ -474,7 +474,7 @@ class NewsletterController extends Controller
     public function add_subscriber_to_list(Request $request) {
         try {
             $request->validate([
-                'email' => 'required|email|unique:newsletter_subscriptions,email',
+                'email' => 'required|email',
                 'tags' => 'nullable|string',
                 // 'list_id' => 'required|exists:newsletter_lists,id'
             ]);
@@ -482,14 +482,20 @@ class NewsletterController extends Controller
             $email = $request->input('email');
             $tags = $request->input('tags', '');
             $listId = $request->input('list_id');
+
+            // Check if email already exists in NewsletterSubscription
+            $existingSubscription = NewsletterSubscription::where('email', $email)->first();
+
     
-            NewsletterSubscription::create([
-                'email' => $email,
-                'tags' => $tags,
-                // 'list_id' => $listId, // Ensure your table has this column
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            if (empty($existingSubscription)) {
+                NewsletterSubscription::create([
+                    'email' => $email,
+                    'tags' => $tags,
+                    // 'list_id' => $listId, // Ensure your table has this column
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
 
 
             $subscriber_email_list = SubscriberEmailList::where('email', $email)->where('subscriber_lists_id', $listId)->first();
