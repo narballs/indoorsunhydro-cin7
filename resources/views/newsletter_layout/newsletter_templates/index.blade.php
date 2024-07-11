@@ -50,9 +50,7 @@
                                 <td>{{!empty($template->sent_newsletter[0]) &&  (!empty($template->sent_newsletter[0]->sent_date))  ?  $template->sent_newsletter[0]->sent_date : ''  }}</td>
                                 <td>
                                     {{-- @if (!empty($template->sent_newsletter[0]) &&  (empty($template->sent_newsletter[0]->subscriber_email_list))) --}}
-                                    @if (!empty($template->sent_newsletter[0]))
-                                        <a href="{{ route('edit_assigned_template', $template->sent_newsletter[0]->id) }}" class="btn btn-info">Attach List</a>  
-                                    @else
+                                    @if (!empty($template->sent_newsletter) && $template->sent_newsletter[0]->subscriber_email_list->name)
                                         {{ $template->sent_newsletter[0]->subscriber_email_list->name }}
                                         @if (($template->sent_newsletter[0]->subscriber_email_list->subscriberEmailList->count() == 0))
                                             <span class="text-muted" style="font-size: 14px;">(Subscribers Missing)</span>
