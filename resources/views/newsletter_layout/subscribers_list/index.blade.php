@@ -238,10 +238,10 @@
                             });
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function(xhr, status, error , response) {
                         Swal.fire({
                             title: 'Error',
-                            text: error.message,
+                            text: response.message,
                             icon: 'error'
                         });
                     }
