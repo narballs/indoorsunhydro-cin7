@@ -2398,12 +2398,12 @@ class UserController extends Controller
             $tokenExpirationTime = $tokenCreationTime->addMinutes($expiration);
             if (Carbon::now()->greaterThan($tokenExpirationTime)) {
                 return redirect()->route('lost.password')->with('error', 'Your link has been expired . Please try again.');
+            } else {
+                Auth::login($user);
+                return view('reset-password', compact('user'));
             }
     
-        } else {
-            Auth::login($user);
-            return view('reset-password', compact('user'));
-        }
+        } 
 
     }
 
