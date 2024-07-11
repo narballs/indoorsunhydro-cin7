@@ -6301,6 +6301,19 @@ select.list-dt:focus {
     }
 
 
+    @media only screen and (max-width: 700px)  and (min-width: 280px){
+        .searchFilter {
+            display: none;
+        }
+    }
+
+    @media only screen and (min-width: 701px) {
+        .searchFilter {
+            display: block;
+        }
+    }
+
+
 
     /* ****************   Mobile Filter end   ********************** */
 
