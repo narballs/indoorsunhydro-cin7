@@ -637,7 +637,7 @@ class CheckoutController extends Controller
                 'allow_discount_for_specific_customers',
                 'allow_discount_for_all_customers',
                 'parcel_guard',
-                'allow_pickup',
+                // 'allow_pickup',
                 'distance',
                 // 'toggle_shipment_insurance'
             ));

@@ -568,7 +568,7 @@ $cart_price = 0;
                                                         @csrf
                                                         @foreach ($payment_method->options as $payment_option)
                                                             <div class="col-md-12">
-                                                                @if ($allow_pickup != 1)
+                                                                {{-- @if ($allow_pickup != 1)
                                                                     @if (strtolower($payment_option->option_name) != 'pickup order')
                                                                         <input type="hidden" value="{{ $payment_method->name }}"
                                                                             name="method_name">
@@ -585,10 +585,10 @@ $cart_price = 0;
                                                                             </span>
                                                                         @endif
                                                                     @endif
-                                                                @else
+                                                                @else --}}
                                                                     <input type="hidden" value="{{ $payment_method->name }}"
                                                                         name="method_name">
-                                                                    <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                                    <input type="radio" class="d_options" id="local_delivery_{{ $payment_option->id }}"
                                                                         name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
                                                                         value="{{ $payment_option->option_name }}" style="background: #008BD3;" onclick="pickup_order(this)">
                                                                     <label for="local_delivery payment-option-label"
@@ -600,7 +600,7 @@ $cart_price = 0;
                                                                             (Monday - Friday 9:00 AM - 5:00 PM only)
                                                                         </span>
                                                                     @endif
-                                                                @endif
+                                                                {{-- @endif --}}
                                                             </div>
                                                         @endforeach
                                                     @endforeach
@@ -1042,7 +1042,40 @@ $cart_price = 0;
     </div>
 </div>
 
+{{-- pick up pop up --}}
+<div class="modal fade" id="pick_up_modal" tabindex="-1" role="dialog" aria-labelledby="pickUp_modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pickUp_modal">Pick Up Availability</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <p>
+                Pick up is available only at the address below
+                <br/>
+                <strong>
+                    5671 Warehouse Way Sacramento CA 95826
+                </strong>
+                <br/>
 
+                Pick up window is any working day between 
+                <strong>10:30Am - 4:30Am</strong>
+                <br/>
+
+                All orders are available to be picked up <strong>1hr</strong> after the order is placed and paid for
+            </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
+          <button type="button" class="btn btn-primary" onclick="accept_pickUp()">Accept</button>
+        </div>
+      </div>
+    </div>
+</div>
+{{-- pick up pop up end --}}
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -3107,12 +3140,27 @@ $cart_price = 0;
                             $('#charge_shipment_to_customer').val(0);
                             $('.shipping_main_div').addClass('d-none');
                             $('.remove_shipping_price').removeClass('d-none');
+                            $('#pick_up_modal').modal('show');
                         } else {
                             $('#charge_shipment_to_customer').val(charge_shipment_to_customer);
                             $('.shipping_main_div').removeClass('d-none');
                             $('.remove_shipping_price').addClass('d-none');
+                            $('#pick_up_modal').modal('hide');
                         }
                     } 
+                }
+                function reject_pickUp() {
+                    $('.d_options').each(function() {
+                        $(this).prop('checked', false); // Uncheck all options
+                        if ($(this).val() == 'Delivery') {
+                            $(this).prop('checked', true); // Check only the Delivery option
+                        }
+                    });
+                    $('#pick_up_modal').modal('hide');
+                }
+
+                function accept_pickUp() {
+                    $('#pick_up_modal').modal('hide');
                 }
             </script>
             @include('partials.footer')
