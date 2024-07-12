@@ -7,10 +7,10 @@
             <div class="card-header">
                 <div class="row align-items-center jusfy-content-between">
                     <div class="col-md-8">
-                        <h3 class="card-title">Lists</h3>
+                        <h3 class="card-title">Mobile Number Lists</h3>
                     </div>
                     <div class="col-md-4 text-right">
-                        <a href="{{route('subscribers_list_create')}}" class="btn btn-info">Create List</a>
+                        <a href="{{route('sms_list_create')}}" class="btn btn-info">Create Mobile Number List</a>
                     </div>
                 </div>
             </div>
@@ -50,20 +50,20 @@
                         @php
                         $i =1;
                         @endphp
-                        @if(count($subscribers_list) > 0 )
-                            @foreach ($subscribers_list as $list)
+                        @if(count($number_lists) > 0 )
+                            @foreach ($number_lists as $list)
                                 <tr>
                                     <td>{{$i++}}</td>
                                     <td>{{ $list->name }}</td>
                                     <td>{{ $list->created_at }}</td>
                                     <td>
-                                        <form action="{{route('subscribers_list_delete' , $list->id)}}" method="post">
+                                        <form action="{{route('sms_list_delete' , $list->id)}}" method="post">
                                             @csrf
-                                            <a href="{{ route('subscribers_list_edit', $list->id) }}" class="btn btn-secondary">Edit</a>
-                                            <a href="{{ route('subscribers_list_show_users', $list->id) }}" class="btn btn-info">Show User(s)</a>
+                                            <a href="{{ route('sms_list_edit', $list->id) }}" class="btn btn-secondary">Edit</a>
+                                            <a href="{{ route('show_numbers_from_list', $list->id) }}" class="btn btn-info">Show Mobile Number(s)</a>
                                             
-                                            <button class="btn btn-default add-user-to-list-btn" type="button" data-toggle="modal" data-target="#add_user_list" data-id="{{ $list->id }}">
-                                                Add User To List
+                                            <button class="btn btn-default add-user-to-list-btn" type="button" data-toggle="modal" data-target="#add_number_list" data-id="{{ $list->id }}">
+                                                Add Mobile Number To List
                                             </button>
                                             <button class="btn btn-primary bulk_upload_btn" type="button" data-toggle="modal" data-target="#bulk_upload_pop_up" data-id="{{ $list->id }}">
                                                 Bulk Upload
@@ -84,7 +84,7 @@
 
                 <div class="row mt-2 justify-content-center">
                     <div class="col-md-6">
-                        {{ $subscribers_list->links() }}
+                        {{ $number_lists->links() }}
                     </div>
                 </div>
             </div>
@@ -94,11 +94,11 @@
     </div>
     <!-- /.col -->
 </div>
-<div class="modal fade" id="add_user_list" tabindex="-1" role="dialog" aria-labelledby="add_user_list_label" aria-hidden="true" data-backdrop="static">
+<div class="modal fade" id="add_number_list" tabindex="-1" role="dialog" aria-labelledby="add_number_list_label" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="add_user_list_label">Add User To List</h5>
+                <h5 class="modal-title" id="add_number_list_label">Add Number To List</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -112,14 +112,14 @@
                         <input type="text" data-role="tagsinput" class="form-control" name="tags">
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" required>
+                        <label for="mobile_number">Mobile Number</label>
+                        <input type="text" name="mobile_number" class="form-control" id="mobile_number" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="add_user_to_list_btn">Add User</button>
+                <button type="button" class="btn btn-primary" id="add_user_to_list_btn">Add Number</button>
             </div>
         </div>
     </div>
@@ -143,8 +143,8 @@
                         <input type="text" data-role="tagsinput" class="form-control"  name="tags" id="bulk_tags">
                     </div>
                     <div class="form-group">
-                        <label for="">Bulk Upload (Enter email one per line)</label>
-                        <textarea class="form-control" id="bulk_upload_emails" name="bulk_upload_emails" rows="5"></textarea>
+                        <label for="">Bulk Upload (Enter Mobile Number one per line)</label>
+                        <textarea class="form-control" id="bulk_upload_numbers" name="bulk_upload_numbers" rows="5"></textarea>
                     </div>
                 </form>
             </div>
@@ -208,7 +208,7 @@
             $('#add_user_to_list_btn').click(function() {
                 var formData = new FormData($('#add_user_to_list')[0]);
                 $.ajax({
-                    url: "{{ route('add_subscriber_to_list') }}", // Update this URL to match your route
+                    url: "{{ route('add_mobile_numbers_to_list') }}", // Update this URL to match your route
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -224,9 +224,9 @@
                                 icon: 'success'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    $('#add_user_list').modal('hide');
+                                    $('#add_number_list').modal('hide');
                                     setTimeout(function() {
-                                        window.location.href = '/subscribers/list/index'; // Redirect or update as necessary
+                                        window.location.href = '/sms/list/index'; // Redirect or update as necessary
                                     }, 1000); // Delay of 1 second
                                 }
                             });
@@ -241,7 +241,7 @@
                     error: function(xhr, status, error) {
                         Swal.fire({
                             title: 'Error',
-                            text: 'Failed to add user. Please check your input or Subscriber already exists in the list.',
+                            text: 'Failed to add user. Please check your input.',
                             icon: 'error'
                         });
                     }
@@ -249,16 +249,16 @@
             });
             // save bulk upload emails
             $('#save_bulk_upload').click(function() {
-                var emails = $('#bulk_upload_emails').val();
+                var numbers = $('#bulk_upload_numbers').val();
                 var tags = $('#bulk_tags').val();
                 var listId = $('#bulk_list_id').val();
 
                 $.ajax({
-                    url: "{{ route('bulk_upload_to_list') }}",
+                    url: "{{ route('bulk_upload_numbers_to_list') }}",
                     type: 'POST',
                     dataType: 'json',
                     data: {
-                        bulk_upload_emails: emails,
+                        bulk_upload_numbers: numbers,
                         tags: tags,
                         list_id: listId,
                         _token: '{{ csrf_token() }}'
@@ -272,9 +272,9 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     $('#bulk_upload_pop_up').modal('hide');
-                                    $('#bulk_upload_emails').val(''); // Clear the textarea
+                                    $('#bulk_upload_numbers').val(''); // Clear the textarea
                                     setTimeout(function() {
-                                        window.location.href = '/subscribers/list/index';
+                                        window.location.href = '/sms/list/index';
                                     }, 1000); // Delay of 1 second (1000 milliseconds)
                                 }
                             });
@@ -290,7 +290,7 @@
                         console.log('Error:', error);
                         swal.fire({
                             title: 'Error',
-                            text: 'Failed to upload emails. Your data is invalid.',
+                            text: 'Failed to upload numbers. Your data is invalid.',
                             icon: 'error'
                         });
                     }
@@ -309,7 +309,7 @@
                 formData.append('tags', tags);
 
                 $.ajax({
-                    url: "{{ route('import_users_to_list') }}",
+                    url: "{{ route('import_numbers_to_list') }}",
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -327,7 +327,7 @@
                                 if (result.isConfirmed) {
                                     $('#upload_file_modal').modal('hide');
                                     setTimeout(function() {
-                                        window.location.href = '/subscribers/list/index';
+                                        window.location.href = '/sms/list/index';
                                     }, 1000); // Delay of 1 second
                                 }
                             });

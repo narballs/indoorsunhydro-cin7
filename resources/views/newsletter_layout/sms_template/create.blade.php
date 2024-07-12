@@ -4,8 +4,8 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Create Newsletter Template</h3>
-                <a href="{{ route('newsletter-templates.index') }}" class="btn btn-primary float-right">Back</a>
+                <h3 class="card-title">Create Sms Template</h3>
+                <a href="{{ route('list_sms_templates') }}" class="btn btn-primary float-right">Back</a>
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -33,26 +33,26 @@
                         {{ session('error') }}
                     </div>
                 @endif
-                <form action="{{ route('newsletter-templates.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store_sms_templates') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" class="form-control">
                     </div>
-                    @if (count($subscriber_email_lists) > 0)
+                    @if (count($number_lists) > 0)
                         <div class="form-group">
-                            <label for="subscriber_email_list_id">Select List</label>
-                            <select name="subscriber_email_list_id" id="subscriber_email_list_id" class="form-control" required>
+                            <label for="number_list_id">Select List</label>
+                            <select name="number_list_id" id="number_list_id" class="form-control" required>
                                 <option value="">-- Select List --</option>
-                                @foreach($subscriber_email_lists as $subscriber_email_list)
-                                    <option value="{{ $subscriber_email_list->id }}">{{ $subscriber_email_list->name }}</option>
+                                @foreach($number_lists as $number_list)
+                                    <option value="{{ $number_list->id }}">{{ $number_list->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                     @endif
                     <div class="form-group">
                         <label for="content">Content:</label>
-                        <textarea id="newsletter_content" name="content" class="form-control"></textarea>
+                        <textarea id="sms_template_content" name="description" class="form-control"></textarea>
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Create</button>
@@ -85,7 +85,7 @@
 
         _initRequest() {
             const xhr = this.xhr = new XMLHttpRequest();
-            xhr.open('POST', "{{ route('upload_newsletterImage', ['_token' => csrf_token()]) }}", true);
+            xhr.open('POST', "{{ route('upload_sms_templateImage', ['_token' => csrf_token()]) }}", true);
             xhr.responseType = 'json';
         }
 
@@ -131,7 +131,7 @@
         };
     }
 
-    CKEDITOR.ClassicEditor.create(document.getElementById("newsletter_content"), {
+    CKEDITOR.ClassicEditor.create(document.getElementById("sms_template_content"), {
         extraPlugins: [MyCustomUploadAdapterPlugin],
         toolbar: {
             items: [

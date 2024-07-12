@@ -10,7 +10,7 @@ class NewsletterSubscriberTemplate extends Model
 {
     use HasFactory;
     protected $table = 'newsletter_subscriber_template';
-    protected $fillable = ['list_id', 'newsletter_template_id' , 'sent'];
+    protected $fillable = ['list_id', 'newsletter_template_id' , 'sent' , 'sent_date'];
 
     public function subscriber_email_list()
     {

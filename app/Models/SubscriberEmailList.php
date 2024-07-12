@@ -16,6 +16,6 @@ class SubscriberEmailList extends Model
 
     public function subscriberList()
     {
-        return $this->belongsTo(SubscriberList::class);
+        return $this->belongsTo(SubscriberList::class , 'subscriber_lists_id');
     }
 }

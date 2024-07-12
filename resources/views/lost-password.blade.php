@@ -18,14 +18,14 @@
 </div>
 @endif
 
-@if(Session::has('success'))
+{{-- @if(Session::has('success'))
 <div class="alert alert-success">
 	{{ Session::get('success') }}
 	@php
 		Session::forget('success');
 	@endphp
 </div>
-@endif
+@endif --}}
 
 
 <form action="{{url('recover-password')}}" method="POST">

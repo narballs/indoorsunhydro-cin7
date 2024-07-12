@@ -7,10 +7,10 @@
             <div class="card-header">
                 <div class="row align-items-center jusfy-content-between">
                     <div class="col-md-8">
-                        <h3 class="card-title">Create List</h3>
+                        <h3 class="card-title">Create Numbers List</h3>
                     </div>
                     <div class="col-md-4 text-right">
-                        <a href="{{ route('subscribers_list') }}" class="btn btn-primary">Back</a>
+                        <a href="{{ route('sms_list') }}" class="btn btn-primary">Back</a>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                             {{ session('error') }}
                     </div>
                 @endif
-                <form action="{{ route('subscribers_list_store') }}" method="POST">
+                <form action="{{ route('sms_list_store') }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>

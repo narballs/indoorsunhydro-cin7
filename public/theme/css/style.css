@@ -5668,7 +5668,7 @@ select.list-dt:focus {
         line-height: 27px !important;
         font-family: 'Poppins';
         font-style: normal;
-        font-size: 10.0772px;
+        font-size: 10.0772px !important;
         line-height: 15px;
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -6298,6 +6298,19 @@ select.list-dt:focus {
             left: 2rem !important;
         }
 
+    }
+
+
+    @media only screen and (max-width: 700px)  and (min-width: 280px){
+        .searchFilter {
+            display: none;
+        }
+    }
+
+    @media only screen and (min-width: 701px) {
+        .searchFilter {
+            display: block;
+        }
     }
 
 

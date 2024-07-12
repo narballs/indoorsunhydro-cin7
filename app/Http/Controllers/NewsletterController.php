@@ -11,6 +11,7 @@ use App\Models\NewsletterTemplate;
 use App\Models\SubscriberEmailList;
 use App\Models\SubscriberList;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Twilio\Rest\Events\V1\SubscriptionList;
 use Illuminate\Support\Facades\Validator;
@@ -50,9 +51,9 @@ class NewsletterController extends Controller
         $search = $request->search;
         $newsletter_subscriptions = NewsletterSubscription::orderBy('id', 'desc');
         if (!empty($search)) {
-            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->orWhere('tags', 'like', '%' . $search . '%')->paginate(10);
+            $newsletter_subscriptions = $newsletter_subscriptions->where('email', 'like', '%' . $search . '%')->orWhere('tags', 'like', '%' . $search . '%')->get();
         } else {
-            $newsletter_subscriptions = $newsletter_subscriptions->paginate(10);
+            $newsletter_subscriptions = $newsletter_subscriptions->get();
         }
         $subscribers_list = SubscriberList::orderBy('id', 'desc')->get();
         return view('newsletter_layout.newsletter_subscribers.index', compact('newsletter_subscriptions' , 'subscribers_list' , 'search'));
@@ -81,7 +82,7 @@ class NewsletterController extends Controller
         $subscriber_email_lists = SubscriberList::findOrFail($request->subscriber_email_list_id);
         $subscriber_email_lists->templates()->attach($request->template_id);
 
-        return redirect()->back()->with('success', 'Template assigned to list successfully!');
+        return redirect()->route('newsletter-templates.index')->with('success', 'Template and list attached successfully!');
     }
 
     public function view_assigned_templates()
@@ -133,7 +134,7 @@ class NewsletterController extends Controller
         $subscriber_emails = SubscriberEmailList::where('subscriber_lists_id', $subscriber_email_list_id)->get();
 
         if ($subscriber_emails->isEmpty()) {
-            return redirect()->back()->with('error', 'No subscribers found in the selected list!');
+            return redirect()->route('subscribers_list')->with('error', 'No subscribers found in the selected list, Please add subscribers from here !.');
         }
 
         foreach ($subscriber_emails as $subscriber_email) {
@@ -142,8 +143,14 @@ class NewsletterController extends Controller
 
             // Update or create record in the pivot table (newsletter_subscriber_template)
             NewsletterSubscriberTemplate::updateOrCreate(
-                ['list_id' => $subscriber_email_list_id, 'newsletter_template_id' => $template->id],
-                ['sent' => true]
+                [   
+                    'list_id' => $subscriber_email_list_id, 
+                    'newsletter_template_id' => $template->id
+                ],
+                [   
+                    'sent' => true, 
+                    'sent_date' => now()
+                ]
             );
         }
 
@@ -467,7 +474,7 @@ class NewsletterController extends Controller
     public function add_subscriber_to_list(Request $request) {
         try {
             $request->validate([
-                'email' => 'required|email|unique:newsletter_subscriptions,email',
+                'email' => 'required|email',
                 'tags' => 'nullable|string',
                 // 'list_id' => 'required|exists:newsletter_lists,id'
             ]);
@@ -475,17 +482,29 @@ class NewsletterController extends Controller
             $email = $request->input('email');
             $tags = $request->input('tags', '');
             $listId = $request->input('list_id');
-    
-            NewsletterSubscription::create([
-                'email' => $email,
-                'tags' => $tags,
-                // 'list_id' => $listId, // Ensure your table has this column
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
 
-
+            // Check if email already exists in NewsletterSubscription
+            $existingSubscription = NewsletterSubscription::where('email', $email)->first();
             $subscriber_email_list = SubscriberEmailList::where('email', $email)->where('subscriber_lists_id', $listId)->first();
+
+
+            if (!empty($existingSubscription) && (!empty($subscriber_email_list))) {
+                return response()->json(['success' => false, 'message' => 'Subscriber already exists in the list.'], 400);
+            }
+
+    
+            if (empty($existingSubscription)) {
+                NewsletterSubscription::create([
+                    'email' => $email,
+                    'tags' => $tags,
+                    // 'list_id' => $listId, // Ensure your table has this column
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+
+            
             if (!$subscriber_email_list) {
                 SubscriberEmailList::create([
                     'email' => $email,
@@ -493,6 +512,8 @@ class NewsletterController extends Controller
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Subscriber already exists in the list.'], 400);
             }
     
             return response()->json(['success' => true, 'message' => 'Subscriber added successfully.']);
@@ -581,28 +602,28 @@ class NewsletterController extends Controller
                 'tags' => 'nullable|string',
                 // 'list_id' => 'required|exists:subscriber_email_lists,id' // Validate list_id exists in newsletter_lists table
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
             }
-    
+
             $listId = $request->input('list_id');
             $tags = $request->input('tags', '');
             $file = $request->file('file');
-    
+
             // Process the uploaded file
             $importedEmails = $this->processImportedFile($file);
-    
+
             // Initialize arrays for emails to insert and skipped emails
             $emailsToInsert = [];
             $skippedEmails = [];
-    
+
             // Iterate over imported emails
             foreach ($importedEmails as $email) {
                 if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     // Check if email exists in NewsletterSubscription
                     $existingSubscription = NewsletterSubscription::where('email', $email)->first();
-    
+
                     if (!$existingSubscription) {
                         // Email does not exist in NewsletterSubscription, so insert it
                         NewsletterSubscription::create([
@@ -612,12 +633,12 @@ class NewsletterController extends Controller
                             'updated_at' => now()
                         ]);
                     }
-    
+
                     // Check if email exists in SubscriberEmailList for the current list_id
                     $existingEmailList = SubscriberEmailList::where('email', $email)
                         ->where('subscriber_lists_id', $listId)
                         ->first();
-    
+
                     if (!$existingEmailList) {
                         // Email does not exist in SubscriberEmailList for the current list_id, so add it
                         $emailsToInsert[] = [
@@ -635,16 +656,16 @@ class NewsletterController extends Controller
                     $skippedEmails[] = $email;
                 }
             }
-    
+
             // Insert emails into SubscriberEmailList
             if (!empty($emailsToInsert)) {
                 SubscriberEmailList::insert($emailsToInsert);
             }
-    
+
             // Prepare response messages
             $successMessage = count($emailsToInsert) . ' emails imported successfully.';
             $skippedMessage = count($skippedEmails) . ' emails skipped due to invalid format or already existing.';
-    
+
             // Return response
             return response()->json([
                 'success' => true,
@@ -654,7 +675,8 @@ class NewsletterController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e], 500);
+            Log::error('File processing error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'An error occurred while processing the file.'], 500);
         }
     }
 
@@ -674,12 +696,12 @@ class NewsletterController extends Controller
             $emailIndex = null;
 
             // Read file based on extension
-            if (in_array($extension, ['csv', 'txt'])) {
+            if ($extension === 'csv') {
                 $file = fopen($path, 'r');
                 $header = fgetcsv($file);
             } else {
                 // Use Laravel Excel package to get headers from Excel file
-                $header = (new HeadingRowImport)->toArray($path)[0][0];
+                $header = (new HeadingRowImport)->toArray($file)[0][0];
             }
 
             // Find the correct email column index based on header case insensitivity
@@ -694,7 +716,7 @@ class NewsletterController extends Controller
 
             // Process the file based on the found email index
             if ($emailIndex !== false) {
-                if (in_array($extension, ['csv', 'txt'])) {
+                if ($extension === 'csv') {
                     while ($columns = fgetcsv($file)) {
                         if (isset($columns[$emailIndex])) {
                             $email = trim($columns[$emailIndex]);
@@ -705,7 +727,7 @@ class NewsletterController extends Controller
                     }
                     fclose($file);
                 } else {
-                    $rows = Excel::toArray([], $path)[0];
+                    $rows = Excel::toArray([], $file)[0];
                     foreach ($rows as $key => $row) {
                         if ($key > 0 && isset($row[$emailIndex])) {
                             $email = trim($row[$emailIndex]);
@@ -721,10 +743,19 @@ class NewsletterController extends Controller
                 throw new \Exception('File does not contain a recognized email column header.');
             }
         } catch (\Exception $e) {
+            Log::error('Error processing file: ' . $e->getMessage());
             throw new \Exception('An error occurred while processing the file.');
         }
 
         return $importedEmails;
     }
-                    
+
+    public function delete_selected_emails(Request $request) {
+        $emails = $request->emails; // directly get the array of emails
+        NewsletterSubscription::whereIn('email', $emails)->delete();
+        SubscriberEmailList::whereIn('email', $emails)->delete();
+        return response()->json(['success' => true, 'message' => 'Selected emails deleted successfully.']);
+    }
+
+                 
 }

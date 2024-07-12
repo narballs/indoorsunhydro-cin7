@@ -34,6 +34,6 @@ class SubscriberList extends Model
 
     public function subscriberEmailList()
     {
-        return $this->hasMany(SubscriberEmailList::class);
+        return $this->hasMany(SubscriberEmailList::class , 'subscriber_lists_id');
     }
 }
