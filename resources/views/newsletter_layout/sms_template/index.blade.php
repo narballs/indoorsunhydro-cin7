@@ -57,13 +57,14 @@
                                             @csrf
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Template?');">Delete</button>
                                         </form>
-                                        <form action="{{ route('sms_template_duplicate', $template->id) }}" method="POST" class="mx-1">
-                                            @csrf
-                                            <input type="hidden" name="subscriber_list_id" id="" value="{{ count($template->sent_sms) > 0 ? $template->sent_sms[0]->mobile_number_list->id : '' }}">
-                                            <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to duplicate this Template?');">Duplicate</button>
-                                            
-                                            
-                                        </form>
+                                        @if (count($template->sent_sms) > 0)
+                                            <form action="{{ route('sms_template_duplicate', $template->id) }}" method="POST" class="mx-1">
+                                                @csrf
+                                                <input type="hidden" name="subscriber_list_id" id="" value="{{ count($template->sent_sms) > 0 ? $template->sent_sms[0]->mobile_number_list->id : '' }}">
+                                                <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to duplicate this Template?');">Duplicate</button>
+                                              
+                                            </form>
+                                        @endif
                                         @if (!empty($template->sent_sms[0]))
                                             @if ($template->sent_sms[0]->sent == 0)
                                                 <form action="{{ route('send_sms', $template->sent_sms[0]->id) }}" method="POST" class="mx-2" style="display: inline-block;">
