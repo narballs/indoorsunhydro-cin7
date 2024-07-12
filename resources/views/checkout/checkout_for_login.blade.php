@@ -494,15 +494,25 @@
         color: #FFF;
         border-color: #7BC533;
     }
+    .reject_pickup_order {
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        text-transform: uppercase;
+        border-radius: 3px;
+    }
 
     .accept_pickup_order:hover {
         color: #FFF;
         background-color: #7BC533;
+        border-color: #7BC533;
     }
 
     .accept_pickup_order:focus {
         color: #FFF;
         background-color: #7BC533;
+        border-color: #7BC533;
     }
 </style>
 <div class="mb-4 desktop-view">
@@ -1091,7 +1101,7 @@ $cart_price = 0;
             </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
+          <button type="button" class="btn btn-danger reject_pickup_order" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
           <button type="button" class="btn btn-primary accept_pickup_order" onclick="accept_pickUp()">Accept</button>
         </div>
       </div>
