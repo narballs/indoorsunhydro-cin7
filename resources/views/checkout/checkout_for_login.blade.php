@@ -482,6 +482,28 @@
     .payment-custom-radio {
         cursor: pointer;
     }
+
+    .accept_pickup_order {
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        text-transform: uppercase;
+        border-radius: 3px;
+        background-color: #7BC533;
+        color: #FFF;
+        border-color: #7BC533;
+    }
+
+    .accept_pickup_order:hover {
+        color: #FFF;
+        background-color: #7BC533;
+    }
+
+    .accept_pickup_order:focus {
+        color: #FFF;
+        background-color: #7BC533;
+    }
 </style>
 <div class="mb-4 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
@@ -1043,14 +1065,14 @@ $cart_price = 0;
 </div>
 
 {{-- pick up pop up --}}
-<div class="modal fade" id="pick_up_modal" tabindex="-1" role="dialog" aria-labelledby="pickUp_modal" aria-hidden="true">
+<div class="modal fade" id="pick_up_modal" tabindex="-1" role="dialog" aria-labelledby="pickUp_modal" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="pickUp_modal">Pick Up Availability</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-          </button>
+          </button> --}}
         </div>
         <div class="modal-body">
             <p>
@@ -1062,7 +1084,7 @@ $cart_price = 0;
                 <br/>
 
                 Pick up window is any working day between 
-                <strong>10:30Am - 4:30Am</strong>
+                <strong>10:30Am - 4:30Pm</strong>
                 <br/>
 
                 All orders are available to be picked up <strong>1hr</strong> after the order is placed and paid for
@@ -1070,14 +1092,14 @@ $cart_price = 0;
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
-          <button type="button" class="btn btn-primary" onclick="accept_pickUp()">Accept</button>
+          <button type="button" class="btn btn-primary accept_pickup_order" onclick="accept_pickUp()">Accept</button>
         </div>
       </div>
     </div>
 </div>
 {{-- pick up pop up end --}}
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content py-4" style="width:70% ;margin: auto;">
