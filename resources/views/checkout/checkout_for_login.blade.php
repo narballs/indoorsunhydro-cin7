@@ -1091,7 +1091,7 @@ $cart_price = 0;
             </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
           <button type="button" class="btn btn-primary accept_pickup_order" onclick="accept_pickUp()">Accept</button>
         </div>
       </div>
