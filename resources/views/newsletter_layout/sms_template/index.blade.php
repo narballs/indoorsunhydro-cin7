@@ -57,7 +57,7 @@
                                             @csrf
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Template?');">Delete</button>
                                         </form>
-                                        @if (count($template->sent_sms) > 0 && (!empty($template->sent_sms[0])))
+                                        @if (count($template->sent_sms) > 0 && (!empty($template->sent_sms[0])) && (!empty($template->sent_sms[0]->mobile_number_list)))
                                             <form action="{{ route('sms_template_duplicate', $template->id) }}" method="POST" class="mx-1">
                                                 @csrf
                                                 <input type="hidden" name="subscriber_list_id" id="" value="{{ count($template->sent_sms) > 0 ? $template->sent_sms[0]->mobile_number_list->id : '' }}">
