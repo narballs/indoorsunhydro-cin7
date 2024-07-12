@@ -494,15 +494,35 @@
         color: #FFF;
         border-color: #7BC533;
     }
+    .reject_pickup_order {
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        text-transform: uppercase;
+        border-radius: 3px;
+    }
 
     .accept_pickup_order:hover {
         color: #FFF;
         background-color: #7BC533;
+        border-color: #7BC533;
     }
 
     .accept_pickup_order:focus {
         color: #FFF;
         background-color: #7BC533;
+        border-color: #7BC533;
+    }
+    .pick_up_text {
+        font-size: 14px;
+        font-family: 'poppins';
+        line-height: 25px;
+    }
+    .pickUp_modal_head {
+        font-family: 'poppins';
+        font-size: 20px;
+        font-weight: 600;
     }
 </style>
 <div class="mb-4 desktop-view">
@@ -1069,13 +1089,13 @@ $cart_price = 0;
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="pickUp_modal">Pick Up Availability</h5>
+          <h5 class="modal-title pickUp_modal_head" id="pickUp_modal">Pick Up Availability</h5>
           {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button> --}}
         </div>
         <div class="modal-body">
-            <p>
+            <p class="mb-0 pick_up_text">
                 Pick up is available only at the address below
                 <br/>
                 <strong>
@@ -1091,7 +1111,7 @@ $cart_price = 0;
             </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
+          <button type="button" class="btn btn-danger reject_pickup_order" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
           <button type="button" class="btn btn-primary accept_pickup_order" onclick="accept_pickUp()">Accept</button>
         </div>
       </div>
