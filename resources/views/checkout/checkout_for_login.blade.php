@@ -3150,12 +3150,16 @@ $cart_price = 0;
                     } 
                 }
                 function reject_pickUp() {
+                    var charge_shipment_to_customer = $('#charge_shipment_to_customer').val();
                     $('.d_options').each(function() {
                         $(this).prop('checked', false); // Uncheck all options
                         if ($(this).val() == 'Delivery') {
                             $(this).prop('checked', true); // Check only the Delivery option
                         }
                     });
+                    $('#charge_shipment_to_customer').val(charge_shipment_to_customer);
+                    $('.shipping_main_div').removeClass('d-none');
+                    $('.remove_shipping_price').addClass('d-none');
                     $('#pick_up_modal').modal('hide');
                 }
 
