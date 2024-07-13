@@ -947,7 +947,7 @@
                 position: 'top',
                 timerProgressBar: true
             });
-            $('#row_quantity_' + pk_product_id).val(old_qty);
+            // $('#row_quantity_' + pk_product_id).val(old_qty);
             return false;
         }
         var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
