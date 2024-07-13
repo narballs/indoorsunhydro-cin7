@@ -1119,14 +1119,24 @@ class ProductController extends Controller
         $user_price_column = UserHelper::getUserPriceColumn();
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
-                $price = !empty($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                if (empty($price) || $price == 0 || $price == null || $price == '' || $price == '0') {
+                // $price = !empty($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                // if (empty($price) || $price == 0 || $price == null || $price == '' || $price == '0') {
+                //     $price = $price_get['sacramentoUSD'];
+                // } else {
+                //     $price = $price_get['retailUSD'];
+                // }
+
+                if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+                    $price = $price_get[$user_price_column];
+                } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
                     $price = $price_get['sacramentoUSD'];
-                } else {
+                } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
                     $price = $price_get['retailUSD'];
                 }
+        
             }
         }
+        
         if (isset($cart[$id])) {
             $hash_cart = session()->get('cart_hash');
             $product_in_active_cart = Cart::where('qoute_id', $id)->first();
