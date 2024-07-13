@@ -1107,89 +1107,103 @@ class ProductController extends Controller
         $status = null;
         $message = null;
         $price = 0;
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-        $cart = session()->get('cart');
-        if (Auth::id() !== null) {
-            $user_id = Auth::id();
-        } else {
-            $user_id = '';
-        }
-        $actual_stock = 0;
-        $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
-        $user_price_column = UserHelper::getUserPriceColumn();
-        foreach ($productOption->products->options as $option) {
-            foreach ($option->price as $price_get) {
-                $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                if ($price == 0) {
-                    $price = $price_get['sacramentoUSD'];
-                }
+        try {
+            $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+            $cart = session()->get('cart');
+            if (Auth::id() !== null) {
+                $user_id = Auth::id();
+            } else {
+                $user_id = '';
+            }
+            $actual_stock = 0;
+            $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
+            $user_price_column = UserHelper::getUserPriceColumn();
+            foreach ($productOption->products->options as $option) {
+                foreach ($option->price as $price_get) {
+                    $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                    if ($price == 0) {
+                        $price = $price_get['sacramentoUSD'];
+                    }
 
-                if ($price == 0) {
-                    $price = $price_get['retailUSD'];
+                    if ($price == 0) {
+                        $price = $price_get['retailUSD'];
+                    }
                 }
             }
-        }
-        if (isset($cart[$id])) {
-            $hash_cart = session()->get('cart_hash');
-            $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-            if ($product_in_active_cart) {
-                $current_quantity = $product_in_active_cart->quantity;
-                if ($current_quantity + $request->quantity > intval($actual_stock)) {
+            if (isset($cart[$id])) {
+                $hash_cart = session()->get('cart_hash');
+                $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+                if ($product_in_active_cart) {
+                    $current_quantity = $product_in_active_cart->quantity;
+                    if ($current_quantity + $request->quantity > intval($actual_stock)) {
+                        $status = 'error';
+                        $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
+                    } 
+                    else {
+
+                        $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+                        $product_in_active_cart->save();
+                        $status = 'success';
+                        $message = 'Product added to cart successfully';
+                        $cart[$id]['quantity'] += $request->quantity;
+                    }
+                }
+            } else {
+                $hash_cart = $request->session()->get('cart_hash');
+                $cart_hash_exist = session()->has('cart_hash');
+
+
+                if ($cart_hash_exist == false) {
+                    $request->session()->put('cart_hash', Str::random(10));
+                }
+                if ($request->quantity > intval($actual_stock)) {
                     $status = 'error';
-                    $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
+                    $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
                 } 
                 else {
+                    $cart[$id] = [
+                        "product_id" => $productOption->products->product_id,
+                        "name" => $productOption->products->name,
+                        "quantity" => $request->quantity,
+                        "price" => $price,
+                        "code" => $productOption->code,
+                        "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
+                        'option_id' => $productOption->option_id,
+                        "slug" => $productOption->products->slug,
+                        "cart_hash" => session()->get('cart_hash')
+                    ];
+                    $cart[$id]['user_id'] = $user_id;
+                    $cart[$id]['is_active'] = 1;
+                    $cart[$id]['qoute_id'] = $id;
 
-                    $product_in_active_cart->quantity = $current_quantity + $request->quantity;
-                    $product_in_active_cart->save();
+                    $qoute = Cart::create($cart[$id]);
                     $status = 'success';
                     $message = 'Product added to cart successfully';
-                    $cart[$id]['quantity'] += $request->quantity;
                 }
             }
-        } else {
-            $hash_cart = $request->session()->get('cart_hash');
-            $cart_hash_exist = session()->has('cart_hash');
 
-
-            if ($cart_hash_exist == false) {
-                $request->session()->put('cart_hash', Str::random(10));
-            }
-            if ($request->quantity > intval($actual_stock)) {
-                $status = 'error';
-                $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
-            } 
-            else {
-                $cart[$id] = [
-                    "product_id" => $productOption->products->product_id,
-                    "name" => $productOption->products->name,
-                    "quantity" => $request->quantity,
-                    "price" => $price,
-                    "code" => $productOption->code,
-                    "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
-                    'option_id' => $productOption->option_id,
-                    "slug" => $productOption->products->slug,
-                    "cart_hash" => session()->get('cart_hash')
-                ];
-                $cart[$id]['user_id'] = $user_id;
-                $cart[$id]['is_active'] = 1;
-                $cart[$id]['qoute_id'] = $id;
-
-                $qoute = Cart::create($cart[$id]);
-                $status = 'success';
-                $message = 'Product added to cart successfully';
-            }
+            $request->session()->put('cart', $cart);
+            $cart_items = session()->get('cart');
+            return response()->json([
+                'status' => $status,
+                'cart_items' => $cart_items,
+                'cart' => $cart,
+                'message' => $message,
+                'actual_stock' => $actual_stock,
+            ]);
         }
-
-        $request->session()->put('cart', $cart);
-        $cart_items = session()->get('cart');
-        return response()->json([
-            'status' => $status,
-            'cart_items' => $cart_items,
-            'cart' => $cart,
-            'message' => $message,
-            'actual_stock' => $actual_stock,
-        ]);
+        catch (\Exception $e) {
+            $status = 'error';
+            $message = $e->getMessage();
+            return response()->json([
+                'status' => $status,
+                'cart_items' => $cart_items,
+                'cart' => $cart,
+                'message' => $message,
+                'actual_stock' => $actual_stock,
+            ]);
+        }
+        
     }
 
     public function removeProductByCategory(Request $request)
