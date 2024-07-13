@@ -1699,7 +1699,21 @@
                 $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
                 var total = document.getElementById('#top_cart_quantity');
                     
-            }});
+            }, error: function(response) {
+                console.log(response.responseJSON);
+                var error_message = response.responseJSON;
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: error_message.message,
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+            });
+        });
 
         });
         //   jQuery('<div class="quantity-nav"><div class="quantity-div quantity-up">&#xf106;</div><div class="quantity-div quantity-down">&#xf107</div></div>').insertAfter('.quantity input');
@@ -1946,7 +1960,7 @@
             });
 
         // });
-    });
+    // });
     function addToList(product_id, option_id, status) {
         var list_id = $("input[name='list_id']:checked").val();
         var option_id = option_id;

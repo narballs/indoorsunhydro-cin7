@@ -1125,7 +1125,7 @@ class ProductController extends Controller
                 }
 
                 if ($price == 0) {
-                    $price = $price_get['retaillUSD'];
+                    $price = $price_get['retailUSD'];
                 }
             }
         }
@@ -1386,7 +1386,7 @@ class ProductController extends Controller
                 }
 
                 if ($price == 0) {
-                    $price = $price_get['retaillUSD'];
+                    $price = $price_get['retailUSD'];
                 }
             }
         }
@@ -1930,7 +1930,7 @@ class ProductController extends Controller
                 $active_price = $price->sacramentoUSD;
             } 
             if ($active_price == 0) {
-                $active_price = $price->retaillUSD;
+                $active_price = $price->retailUSD;
             } 
         }
         $user_lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->where('title', 'My Favorites')->exists();
@@ -2104,7 +2104,7 @@ class ProductController extends Controller
                         }
         
                         if ($price == 0) {
-                            $price = $price_get['retaillUSD'];
+                            $price = $price_get['retailUSD'];
                         }
                     }
                 }
@@ -2206,7 +2206,7 @@ class ProductController extends Controller
                         }
         
                         if ($price == 0) {
-                            $price = $price_get['retaillUSD'];
+                            $price = $price_get['retailUSD'];
                         }
                     }
                 }
