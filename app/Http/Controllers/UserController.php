@@ -757,11 +757,11 @@ class UserController extends Controller
                 ]);
                 
                 $user_id = $user->id;
-                $newsletter_subscriber = NewsletterSubscription::where('email', $request->email)->first();
-                if (empty($newsletter_subscriber)) {
-                    $newsletter_subscriber->email = $user->email;
-                    $newsletter_subscriber->save();
-                }
+                // $newsletter_subscriber = NewsletterSubscription::where('email', $request->email)->first();
+                // if (empty($newsletter_subscriber)) {
+                //     $newsletter_subscriber->email = $user->email;
+                //     $newsletter_subscriber->save();
+                // }
                 $contact = new Contact([
                     'website' => $request->input('company_website'),
                     'company' => $request->input('company_name'),
