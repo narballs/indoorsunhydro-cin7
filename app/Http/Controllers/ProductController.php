@@ -1119,7 +1119,7 @@ class ProductController extends Controller
         $user_price_column = UserHelper::getUserPriceColumn();
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
-                $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                $price = !empty($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
                 if (empty($price) || $price == 0 || $price == null || $price == '' || $price == '0') {
                     $price = $price_get['sacramentoUSD'];
                 } else {
