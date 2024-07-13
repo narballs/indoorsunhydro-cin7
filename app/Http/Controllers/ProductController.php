@@ -1120,11 +1120,11 @@ class ProductController extends Controller
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
                 $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                if ($price == 0) {
+                if ($price == 0 || $price == null) {
                     $price = $price_get['sacramentoUSD'];
                 }
 
-                if ($price == 0) {
+                if ($price == 0 || $price == null) {
                     $price = $price_get['retailUSD'];
                 }
             }
