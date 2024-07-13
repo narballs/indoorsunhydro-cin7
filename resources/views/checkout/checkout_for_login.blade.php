@@ -482,6 +482,48 @@
     .payment-custom-radio {
         cursor: pointer;
     }
+
+    .accept_pickup_order {
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        text-transform: uppercase;
+        border-radius: 3px;
+        background-color: #7BC533;
+        color: #FFF;
+        border-color: #7BC533;
+    }
+    .reject_pickup_order {
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        text-transform: uppercase;
+        border-radius: 3px;
+    }
+
+    .accept_pickup_order:hover {
+        color: #FFF;
+        background-color: #7BC533;
+        border-color: #7BC533;
+    }
+
+    .accept_pickup_order:focus {
+        color: #FFF;
+        background-color: #7BC533;
+        border-color: #7BC533;
+    }
+    .pick_up_text {
+        font-size: 14px;
+        font-family: 'poppins';
+        line-height: 25px;
+    }
+    .pickUp_modal_head {
+        font-family: 'poppins';
+        font-size: 20px;
+        font-weight: 600;
+    }
 </style>
 <div class="mb-4 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
@@ -568,7 +610,7 @@ $cart_price = 0;
                                                         @csrf
                                                         @foreach ($payment_method->options as $payment_option)
                                                             <div class="col-md-12">
-                                                                @if ($allow_pickup != 1)
+                                                                {{-- @if ($allow_pickup != 1)
                                                                     @if (strtolower($payment_option->option_name) != 'pickup order')
                                                                         <input type="hidden" value="{{ $payment_method->name }}"
                                                                             name="method_name">
@@ -585,10 +627,10 @@ $cart_price = 0;
                                                                             </span>
                                                                         @endif
                                                                     @endif
-                                                                @else
+                                                                @else --}}
                                                                     <input type="hidden" value="{{ $payment_method->name }}"
                                                                         name="method_name">
-                                                                    <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                                    <input type="radio" class="d_options" id="local_delivery_{{ $payment_option->id }}"
                                                                         name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
                                                                         value="{{ $payment_option->option_name }}" style="background: #008BD3;" onclick="pickup_order(this)">
                                                                     <label for="local_delivery payment-option-label"
@@ -600,7 +642,7 @@ $cart_price = 0;
                                                                             (Monday - Friday 9:00 AM - 5:00 PM only)
                                                                         </span>
                                                                     @endif
-                                                                @endif
+                                                                {{-- @endif --}}
                                                             </div>
                                                         @endforeach
                                                     @endforeach
@@ -1042,9 +1084,42 @@ $cart_price = 0;
     </div>
 </div>
 
+{{-- pick up pop up --}}
+<div class="modal fade" id="pick_up_modal" tabindex="-1" role="dialog" aria-labelledby="pickUp_modal" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title pickUp_modal_head" id="pickUp_modal">Pick Up Availability</h5>
+          {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> --}}
+        </div>
+        <div class="modal-body">
+            <p class="mb-0 pick_up_text">
+                Pick up is available only at the address below
+                <br/>
+                <strong>
+                    5671 Warehouse Way Sacramento CA 95826
+                </strong>
+                <br/>
 
+                Pick up window is any working day between 
+                <strong>10:30Am - 4:30Pm</strong>
+                <br/>
+
+                All orders are available to be picked up <strong>1hr</strong> after the order is placed and paid for
+            </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger reject_pickup_order" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
+          <button type="button" class="btn btn-primary accept_pickup_order" onclick="accept_pickUp()">Accept</button>
+        </div>
+      </div>
+    </div>
+</div>
+{{-- pick up pop up end --}}
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content py-4" style="width:70% ;margin: auto;">
@@ -3107,12 +3182,31 @@ $cart_price = 0;
                             $('#charge_shipment_to_customer').val(0);
                             $('.shipping_main_div').addClass('d-none');
                             $('.remove_shipping_price').removeClass('d-none');
+                            $('#pick_up_modal').modal('show');
                         } else {
                             $('#charge_shipment_to_customer').val(charge_shipment_to_customer);
                             $('.shipping_main_div').removeClass('d-none');
                             $('.remove_shipping_price').addClass('d-none');
+                            $('#pick_up_modal').modal('hide');
                         }
                     } 
+                }
+                function reject_pickUp() {
+                    var charge_shipment_to_customer = $('#charge_shipment_to_customer').val();
+                    $('.d_options').each(function() {
+                        $(this).prop('checked', false); // Uncheck all options
+                        if ($(this).val() == 'Delivery') {
+                            $(this).prop('checked', true); // Check only the Delivery option
+                        }
+                    });
+                    $('#charge_shipment_to_customer').val(charge_shipment_to_customer);
+                    $('.shipping_main_div').removeClass('d-none');
+                    $('.remove_shipping_price').addClass('d-none');
+                    $('#pick_up_modal').modal('hide');
+                }
+
+                function accept_pickUp() {
+                    $('#pick_up_modal').modal('hide');
                 }
             </script>
             @include('partials.footer')

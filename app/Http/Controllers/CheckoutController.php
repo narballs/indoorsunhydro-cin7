@@ -637,7 +637,7 @@ class CheckoutController extends Controller
                 'allow_discount_for_specific_customers',
                 'allow_discount_for_all_customers',
                 'parcel_guard',
-                'allow_pickup',
+                // 'allow_pickup',
                 'distance',
                 // 'toggle_shipment_insurance'
             ));
@@ -1348,11 +1348,11 @@ class CheckoutController extends Controller
                         "password" => !empty($is_guest_user)  && $is_guest_user == 1 ? bcrypt('123456') : bcrypt($request->get('password'))
                     ]);
                     $user_id = $user->id;
-                    $newsletter_subscriber = NewsletterSubscription::where('email', $user->email)->first();
-                    if (empty($newsletter_subscriber)) {
-                        $newsletter_subscriber->email = $user->email;
-                        $newsletter_subscriber->save();
-                    }
+                    // $newsletter_subscriber = NewsletterSubscription::where('email', $user->email)->first();
+                    // if (empty($newsletter_subscriber)) {
+                    //     $newsletter_subscriber->email = $user->email;
+                    //     $newsletter_subscriber->save();
+                    // }
 
                     $contact = new Contact([
                         // 'website' => $request->input('company_website'),
@@ -1511,7 +1511,6 @@ class CheckoutController extends Controller
 
                     
                 } catch (\Exception $e) {
-                    // $message = $e->getMessage();
                     $message = 'Something went wrong. Please contact admin .';
                     $access = true;
                     $registration_status = false;
