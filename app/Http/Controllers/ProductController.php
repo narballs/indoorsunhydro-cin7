@@ -1388,12 +1388,20 @@ class ProductController extends Controller
         $user_price_column = UserHelper::getUserPriceColumn();
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
-                $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                if ($price == 0) {
-                    $price = $price_get['sacramentoUSD'];
-                }
+                // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                // if ($price == 0) {
+                //     $price = $price_get['sacramentoUSD'];
+                // }
 
-                if ($price == 0) {
+                // if ($price == 0) {
+                //     $price = $price_get['retailUSD'];
+                // }
+
+                if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+                    $price = $price_get[$user_price_column];
+                } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+                    $price = $price_get['sacramentoUSD'];
+                } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
                     $price = $price_get['retailUSD'];
                 }
             }
@@ -2106,12 +2114,20 @@ class ProductController extends Controller
                 $user_price_column = UserHelper::getUserPriceColumn();
                 foreach ($productOption->products->options as $option) {
                     foreach ($option->price as $price_get) {
-                        $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                        if ($price == 0) {
-                            $price = $price_get['sacramentoUSD'];
-                        }
+                        // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                        // if ($price == 0) {
+                        //     $price = $price_get['sacramentoUSD'];
+                        // }
         
-                        if ($price == 0) {
+                        // if ($price == 0) {
+                        //     $price = $price_get['retailUSD'];
+                        // }
+
+                        if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+                            $price = $price_get[$user_price_column];
+                        } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+                            $price = $price_get['sacramentoUSD'];
+                        } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
                             $price = $price_get['retailUSD'];
                         }
                     }
@@ -2208,12 +2224,20 @@ class ProductController extends Controller
                 $user_price_column = UserHelper::getUserPriceColumn();
                 foreach ($productOption->products->options as $option) {
                     foreach ($option->price as $price_get) {
-                        $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                        if ($price == 0) {
-                            $price = $price_get['sacramentoUSD'];
-                        }
+                        // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+                        // if ($price == 0) {
+                        //     $price = $price_get['sacramentoUSD'];
+                        // }
         
-                        if ($price == 0) {
+                        // if ($price == 0) {
+                        //     $price = $price_get['retailUSD'];
+                        // }
+
+                        if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+                            $price = $price_get[$user_price_column];
+                        } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+                            $price = $price_get['sacramentoUSD'];
+                        } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
                             $price = $price_get['retailUSD'];
                         }
                     }
