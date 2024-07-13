@@ -24,7 +24,12 @@
     } else {
         $contact =  App\Models\Contact::where('user_id', $user_id)->first();
     }
-    $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
+
+    if (!auth()->user()) {
+        $tax_class = App\Models\TaxClass::where('is_default', 1)->first();
+    } else {
+        $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
+    }
     if (!empty($cart_items)) {
        
         foreach ($cart_items as $cart_item) {
