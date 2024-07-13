@@ -110,7 +110,7 @@ class UserHelper
                     }
                     
                     if ($productPrice == 0) { 
-                        $productPrice = $productPricing['retaillUSD'];
+                        $productPrice = $productPricing['retailUSD'];
                     }
                     $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
                     if (!empty($cart)) {
@@ -367,7 +367,7 @@ class UserHelper
                     }
                     
                     if ($productPrice == 0) { 
-                        $productPrice = $productPricing['retaillUSD'];
+                        $productPrice = $productPricing['retailUSD'];
                     }
                     $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
                     if (!empty($cart)) {
