@@ -2224,7 +2224,9 @@ class UserController extends Controller
         User::where('email', $request->email)
             ->update([
                 'password' => bcrypt($request->password),
-                'is_updated' => 1
+                'is_updated' => 1,
+                'hash' => null,
+                // 'updated_at' => Carbon::now()
             ]);
         $user_id = auth()->user()->id;
         $companies = Contact::where('user_id', $user_id)->get();
