@@ -334,7 +334,7 @@ class UserController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (empty($user)) {
-            return redirect()->back()->with('error', 'Email not found!');
+            return redirect()->back()->with('error', 'Email not found! Please re-register or try to checkout again. Alternatively you can send us a message via the contact us form. <a href="contact-us">Contact Us</a>');
         }
 
         $plain_password = Str::random(10) . date('YmdHis');
@@ -2224,7 +2224,9 @@ class UserController extends Controller
         User::where('email', $request->email)
             ->update([
                 'password' => bcrypt($request->password),
-                'is_updated' => 1
+                'is_updated' => 1,
+                'hash' => null,
+                // 'updated_at' => Carbon::now()
             ]);
         $user_id = auth()->user()->id;
         $companies = Contact::where('user_id', $user_id)->get();
