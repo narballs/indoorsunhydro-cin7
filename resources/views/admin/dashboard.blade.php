@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-3 mobile-screen-flash-message">
                             <div class="row">
-                                <div class="col-md-6 m-auto" id="div_message"></div>
+                                <div class="col-md-11 my-2" id="div_message"></div>
                                 <div class="col-md-1">
                                     <div id="div_import_contacts" class="spinner-border hide" role="status">
                                         <span class="sr-only">Loading...</span>
@@ -294,11 +294,11 @@
 
                         if (response.status == 'success') {
                             $('#div_message').html(
-                                '<div class="alert alert-success" role="alert">' +
+                                '<div class="alert alert-success alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
                                 response.message + '</div>');
                         } else {
                             $('#div_message').html(
-                                '<div class="alert alert-danger" role="alert">' + response
+                                '<div class="alert alert-danger alert-dismissible" role="alert">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + response
                                 .message + '</div>');
                         }
                     }
@@ -319,14 +319,13 @@
                     success: function(response) {
                         btn.prop('disabled', false);
                         $('#div_import_product_prices').hide();
-
                         if (response.status == 'success') {
                             $('#div_message').html(
-                                '<div class="alert alert-success" role="alert">' +
+                                '<div class="alert alert-success alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
                                 response.message + '</div>');
                         } else {
                             $('#div_message').html(
-                                '<div class="alert alert-danger" role="alert">' + response
+                                '<div class="alert alert-danger alert-dismissible" role="alert">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + response
                                 .message + '</div>');
                         }
                     }
