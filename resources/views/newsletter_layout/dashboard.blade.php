@@ -16,5 +16,5 @@
             Content body end
         ***********************************-->
 @include('newsletter_layout.footer')
-@include('newsletter_layout.footerscripts')
 @stack('scripts')
+@include('newsletter_layout.footerscripts')

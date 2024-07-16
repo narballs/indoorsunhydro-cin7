@@ -205,6 +205,9 @@
             'TableOfContents',
             'PasteFromOfficeEnhanced'
         ]
+        
     });
+
+    
 </script>
 @endsection
