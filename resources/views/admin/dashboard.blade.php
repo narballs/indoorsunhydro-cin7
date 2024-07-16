@@ -36,14 +36,22 @@
                                     <div id="div_import_contacts" class="spinner-border hide" role="status">
                                         <span class="sr-only">Loading...</span>
                                     </div>
+                                    <div id="div_import_product_prices" class="spinner-border hide" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
                             <div class="d-flex">
-                                <span class="create_new_btn_mbl">
+                                <span class="create_new_btn_mbl mx-3">
                                     <button type="button" class="btn create_new_product_btn btn-import-contacts">
                                         Import Contacts +
+                                    </button>
+                                </span>
+                                <span class="create_new_btn_mbl">
+                                    <button type="button" class="btn create_new_product_btn btn-update-product-prices">
+                                        Update Product Prices
                                     </button>
                                 </span>
                             </div>
@@ -268,6 +276,7 @@
     <script>
         $(document).ready(function() {
             $('#div_import_contacts').hide();
+            $('#div_import_product_prices').hide();
 
             $('body').on('click', '.btn-import-contacts', function() {
                 var btn = $(this);
@@ -295,6 +304,34 @@
                     }
                 });
 
+            });
+
+            $('.btn-update-product-prices').on('click', function () {
+                alert('drfd');
+                var btn = $(this);
+                btn.prop('disabled', true);
+                $('#div_import_product_prices').show();
+                $('#div_message').html('Updating Product Prices... Please do not close this window.');
+
+                $.ajax({
+                    url: "{{ url('admin/commands/update_product_prices') }}",
+                    method: 'get',
+                    data: {},
+                    success: function(response) {
+                        btn.prop('disabled', false);
+                        $('#div_import_product_prices').hide();
+
+                        if (response.status == 'success') {
+                            $('#div_message').html(
+                                '<div class="alert alert-success" role="alert">' +
+                                response.message + '</div>');
+                        } else {
+                            $('#div_message').html(
+                                '<div class="alert alert-danger" role="alert">' + response
+                                .message + '</div>');
+                        }
+                    }
+                });
             });
         });
     </script>
