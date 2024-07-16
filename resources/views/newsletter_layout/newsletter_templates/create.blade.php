@@ -206,6 +206,12 @@
             'TableOfContents',
             'PasteFromOfficeEnhanced'
         ]
+        
     });
+
+    
 </script>
+
 @endsection
+
+

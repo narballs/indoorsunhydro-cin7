@@ -6,6 +6,7 @@ use App\Models\NewsletterSubscriberTemplate;
 use Illuminate\Http\Request;
 use App\Models\NewsletterTemplate;
 use App\Models\SubscriberList;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -145,31 +146,41 @@ class NewsletterTemplateController extends Controller
 
     public function upload_newsletterImage(Request $request)
     {
-        if ($request->hasFile('upload')) {
-            $file = $request->file('upload');
-            $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $destinationPath = public_path('/theme/bootstrap5/newsletter_images');
-            
-            // Create the directory if it doesn't exist
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0777, true);
+        try {
+            if ($request->hasFile('upload')) {
+                $file = $request->file('upload');
+                $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('/theme/bootstrap5/newsletter_images');
+                
+                // Create the directory if it doesn't exist
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
+                
+                $file->move($destinationPath, $filename);
+    
+                $url = asset('/theme/bootstrap5/newsletter_images/' . $filename);
+    
+                return response()->json([
+                    'uploaded' => true,
+                    'url' => $url,
+                ]);
             }
-            
-            $file->move($destinationPath, $filename);
-
-            $url = asset('theme/bootstrap5/newsletter_images/' . $filename);
-
+    
             return response()->json([
-                'uploaded' => true,
-                'url' => $url,
+                'uploaded' => false,
+                'error' => [
+                    'message' => 'No file uploaded.'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Image upload error: ' . $e->getMessage());
+            return response()->json([
+                'uploaded' => false,
+                'error' => [
+                    'message' => 'Server error: ' . $e->getMessage()
+                ]
             ]);
         }
-
-        return response()->json([
-            'uploaded' => false,
-            'error' => [
-                'message' => 'No file uploaded.'
-            ]
-        ]);
     }
 }
