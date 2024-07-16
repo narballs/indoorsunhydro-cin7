@@ -307,14 +307,13 @@
             });
 
             $('.btn-update-product-prices').on('click', function () {
-                alert('drfd');
                 var btn = $(this);
                 btn.prop('disabled', true);
                 $('#div_import_product_prices').show();
                 $('#div_message').html('Updating Product Prices... Please do not close this window.');
 
                 $.ajax({
-                    url: "{{ url('admin/commands/update_product_prices') }}",
+                    url: "{{ url('admin/commands/update-product-prices') }}",
                     method: 'get',
                     data: {},
                     success: function(response) {
