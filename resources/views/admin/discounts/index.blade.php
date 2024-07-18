@@ -95,16 +95,16 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="row mb-2 justify-content-center">
-                                    <a href="{{ route('discounts.edit', $discount->id) }}" class="border-0 btn-sm text-dark" style="background: #f0f0f0;"><i class="fa fa-edit"></i></a>
-                                </div>
+                                {{-- <div class="row mb-2 justify-content-center">
+                                    
+                                </div> --}}
                                 <div class="d-flex justify-content-between align-items-center">
-
+                                    <a href="{{ route('discounts.edit', $discount->id) }}" class="border-0 btn-sm text-dark" style="background: #f0f0f0;"><i class="fa fa-edit"></i></a>
                                     <form action="{{route('discounts_duplicate')}}" method="POST">
                                         
                                         @csrf
                                         <input type="hidden" name="discount_id" value="{{ $discount->id }}">
-                                        <button type="submit" class="btn-sm bg-none border-0 mr-1" onclick="return confirm('Are you sure you want to duplicate this discount?');">
+                                        <button type="submit" class="btn-sm bg-none border-0" onclick="return confirm('Are you sure you want to duplicate this discount?');">
                                             <i class="fa fa-clone"></i>
                                         </button>
                                     </form>
@@ -112,7 +112,7 @@
                                         
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="bg-none border-0 ml-1" onclick="return confirm('Are you sure you want to delete this discount?');">
+                                        <button type="submit" class="btn-sm bg-none border-0" onclick="return confirm('Are you sure you want to delete this discount?');">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </form>
