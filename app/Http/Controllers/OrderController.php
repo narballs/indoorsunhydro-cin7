@@ -844,15 +844,15 @@ class OrderController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
 
-                    // if (!empty($users_with_role_admin)) {
-                        // foreach ($users_with_role_admin as $role_admin) {
+                    if (!empty($users_with_role_admin)) {
+                        foreach ($users_with_role_admin as $role_admin) {
                             $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
                             $adminTemplate = 'emails.admin-order-received';
                             $data['subject'] = $subject;
-                            $data['email'] = 'engrdanishsabir00@gmail.com';
+                            $data['email'] = $role_admin->email;
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                        // }
-                    // }
+                        }
+                    }
                     $credit_limit = $customer->contact->credit_limit;
                     $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
@@ -880,33 +880,28 @@ class OrderController extends Controller
                     // }
                     if (!empty($email)) {
                         $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
-                        $data['email'] = 'engrdanishsabir00@gmail.com';
+                        $data['email'] = $email;
                         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     }
                     $email_sent_to_users = [];
                     
                     // $user = User::where('id',  Auth::id())->first();
                     // $all_ids = UserHelper::getAllMemberIds($user);
-                    // $all_members = Contact::whereIn('id', $all_ids)->get();
-                    // foreach ($all_members as $member) {
-                    //     $member_user = User::find($member->user_id);
-                    //     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                    //         if (isset($email_sent_to_users[$member_user->id])) {
-                    //             continue;
-                    //         }
+                    $all_members = Contact::whereIn('id', $all_ids)->get();
+                    foreach ($all_members as $member) {
+                        $member_user = User::find($member->user_id);
+                        if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                            if (isset($email_sent_to_users[$member_user->id])) {
+                                continue;
+                            }
 
-                    //         $email_sent_to_users[$member_user->id] = $member_user;
-                    //         $data['name'] = $member_user->firstName;
-                    //         $data['subject'] = 'New order awaiting approval';
-                    //         $data['email'] = $member_user->email;
-                    //         MailHelper::sendMailNotification('emails.user-order-received', $data);
-                    //     }
-                    // }
-
-                    $data['name'] = 'Danish Test';
-                    $data['subject'] = 'New order awaiting approval';
-                    $data['email'] = 'engrdanishsabir00@gmail.com';
-                    MailHelper::sendMailNotification('emails.user-order-received', $data);
+                            $email_sent_to_users[$member_user->id] = $member_user;
+                            $data['name'] = $member_user->firstName;
+                            $data['subject'] = 'New order awaiting approval';
+                            $data['email'] = $member_user->email;
+                            MailHelper::sendMailNotification('emails.user-order-received', $data);
+                        }
+                    }
 
                     session()->forget('cart');
                     return Redirect::route('thankyou', $order_id);
