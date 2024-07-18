@@ -415,7 +415,7 @@
                                             @if (!empty($customer->contact->company ))
                                                 Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
                                             @endif
-                                            @if (!empty($customer->contact->firstName && $customer->contact->lastName))
+                                            @if (!empty($customer->contact->firstName) && !empty($customer->contact->lastName))
                                                 {{ $customer->contact->firstName }}&nbsp;{{ $customer->contact->lastName }}<br>
                                             @endif
                                             @if(!empty($customer->contact->postalAddress1))
@@ -492,9 +492,11 @@
                                 <h3 class="h6">Shipping Information</h3>
 
                                 <hr>
-                                <h3 class=" h6">Address</h3>
                                 <address>
-                                    <strong>{{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
+                                    @if (!empty($customer->contact->company ))
+                                        Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
+                                    @endif
+                                    {{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
                                     {{ !empty($customer->contact->address1) ? $customer->contact->address1 . ',' : '' }}
                                     {{ !empty($customer->contact->address2) ? $customer->contact->address2 . ',': ''}}<br>
                                     {{ !empty($customer->contact->state) ? $customer->contact->state . ',' : '' }}
