@@ -620,13 +620,36 @@ $cart_price = 0;
                 <input type="hidden" name="charge_shipment_to_customer" id="charge_shipment_to_customer" value="{{$charge_shipment_to_customer}}">
                 <div class="row main_row_checkout justify-content-between">
                     <div class="col-md-12 col-lg-12 col-xl-5 col-12 order-xl-2 custom-width">
-                        <div class="row mt-2 mb-2">
+                        <div class="row mt-2 mb-2 desktop_view_checkout_products">
                             <div class="col-md-12">
                                 <h5 class="checkout_default_address">Cart Total</h5>
                             </div>
                         </div>
                         {{-- <div class="row cart_total_div"> --}}
                             {{-- <div class="border m-0 rounded"> --}}
+                                <div class="mobile_view_checkout_products d-none">
+                                    <?php
+                                        $cart_total = 0;
+                                        $cart_price = 0;
+                                        $item_quantity = 0;
+                                    ?>
+                                    @foreach ($cart_items as $product_id => $cart)
+                                        <?php
+                                            $total_quatity = $cart['quantity'];
+                                            $total_price = $cart['price'] * $total_quatity;
+                                            $item_quantity = $item_quantity + $total_quatity;
+                                            $cart_total = $cart_total + $total_price;
+                                        ?>
+                                    @endforeach
+                                    <div class="row text-center">
+                                        <h2>
+                                            Checkout
+                                        </h2>
+                                        <h6 class="checkout_product_heading">
+                                            ({{ $item_quantity  . 'Items'}}) ${{number_format($cart_total, 2)}}
+                                        </h6>
+                                    </div>
+                                </div>
                                 <div class="row pb-2 pt-2 border m-0 rounded cart_total_div">
                                     {{-- <div class="row">
                                         <div class="col-md-12">
@@ -640,11 +663,19 @@ $cart_price = 0;
                                             $cart_price = 0;
                                             $item_quantity = 0;
                                         ?>
+                                        @foreach ($cart_items as $product_id => $cart)
+                                            <?php
+                                                $total_quatity = $cart['quantity'];
+                                                $total_price = $cart['price'] * $total_quatity;
+                                                $item_quantity = $item_quantity + $total_quatity;
+                                                $cart_total = $cart_total + $total_price;
+                                            ?>
+                                        @endforeach
                                         <div class="accordion" id="accordionExample">
                                             <div class="accordion-item border-0 bg-transparent">
                                                 <h2 class="accordion-header" id="heading">
                                                     <button class="accordion-button checkout_product_heading bg-transparent btn-accord pl-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="true" aria-controls="collapse">
-                                                       Product 
+                                                       Product (s)
                                                     </button>
                                                 </h2>
                                                 <div id="collapse" class="accordion-collapse collapse show" aria-labelledby="heading" data-bs-parent="#accordionExample">
