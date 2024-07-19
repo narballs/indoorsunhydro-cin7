@@ -6309,12 +6309,23 @@ select.list-dt:focus {
         .remove_from_mobile_view {
             display: none;
         }
+
+        .checkout_address_heading {
+            display: none;
+        }
+
+        /* .custom-border-bottom {
+            border-bottom: none;
+        } */
     }
 
     @media only screen and (min-width: 801px) {
         .searchFilter {
             display: block;
         }
+        /* .custom-border-bottom {
+            border-bottom: 1px solid #dee2e6 !important;
+        } */
     }
 
 
