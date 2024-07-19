@@ -26,13 +26,13 @@
                             </a>
                             <ul class="dropdown-menu  dropdown-menu-dark mt-0 pr-4 pl-4"
                                 aria-labelledby="navbarDarkDropdownMenuLink" style="width: 346px;">
-                                <li><a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
+                                <li><a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu pl-2"
                                         href="{{ url('products') }}" style="font-size: 12px !important"><b>All
                                             Products</b></a></li>
                                 @foreach ($categories as $category)
                                     @if ($category->parent_id == 0)
                                         <li>
-                                            <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
+                                            <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu pl-2"
                                                 id="category_{{ $category->id }}"
                                                 href="{{ url('products/' . $category->id . '/' . $category->slug) }}"
                                                 style="font-size: 12px !important">
@@ -276,14 +276,14 @@
                                 <ul class="dropdown-menu l dropdown-menu-dark mt-0 pr-4 pl-4"
                                     aria-labelledby="navbarDarkDropdownMenuLink" style="width: 346px;">
                                     <li>
-                                        <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu"
+                                        <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu pl-2"
                                             href="{{ url('products') }}"><b>All Products</b>
                                         </a>
                                     </li>
                                     @foreach ($categories as $category)
                                     @if ($category->parent_id == 0)
                                     <li>
-                                        <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu "
+                                        <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu pl-2 "
                                             id="category_{{ $category->id }}"
                                             href="{{ url('products/' . $category->id . '/' . $category->slug) }}">
                                             {{ $category->name }}
