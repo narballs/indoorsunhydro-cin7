@@ -6301,13 +6301,17 @@ select.list-dt:focus {
     }
 
 
-    @media only screen and (max-width: 700px)  and (min-width: 280px){
+    @media only screen and (max-width: 800px)  and (min-width: 280px){
         .searchFilter {
+            display: none;
+        }
+
+        .remove_from_mobile_view {
             display: none;
         }
     }
 
-    @media only screen and (min-width: 701px) {
+    @media only screen and (min-width: 801px) {
         .searchFilter {
             display: block;
         }

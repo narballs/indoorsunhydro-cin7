@@ -581,7 +581,7 @@ $cart_price = 0;
                         </div>
                     </div>
                     <input type="hidden" value="Pay in Advanced" id="paymentTerms">
-                    <div class="col-md-12 col-lg-12 col-xl-5">
+                    <div class="col-md-12 col-lg-12 col-xl-5 remove_from_mobile_view">
                         <div class="row mb-0 mt-2">
                             <div class="col-md-12">
                                 <h5 class="checkout_default_address">Cart Total</h5>
