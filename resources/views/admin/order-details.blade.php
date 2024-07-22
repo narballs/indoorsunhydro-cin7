@@ -45,7 +45,7 @@
                     <div class="col-md-6">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-3 ">
+                                <div class="col-md-4 ">
                                     <form class="mb-0">
                                         @csrf
                                         <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
@@ -113,8 +113,8 @@
                                         @endif
                                     </form>
                                 </div>
-                                @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid')
-                                    <div class="col-md-6 ">
+                                @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
+                                    <div class="col-md-5 ">
                                         <form action="{{route('send_order_to_shipstation')}}" class="" method="post" class="mb-0">
                                             @csrf
                                             <div class="col-md-12">

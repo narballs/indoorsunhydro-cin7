@@ -646,7 +646,7 @@ $cart_price = 0;
                                             Checkout
                                         </h2>
                                         <h6 class="checkout_product_heading">
-                                            ({{ $item_quantity  . 'Items'}}) ${{number_format($cart_total, 2)}}
+                                            ({{ $item_quantity  . ' Items'}}) ${{number_format($cart_total, 2)}}
                                         </h6>
                                     </div>
                                 </div>
@@ -774,7 +774,7 @@ $cart_price = 0;
                                                                     </label>
                                                                     @if (strtolower($payment_option->option_name) == 'pickup order')
                                                                         <span class="mx-2">
-                                                                            (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                                            (Monday - Sunday 10:30 AM - 4:30 PM)
                                                                         </span>
                                                                     @endif
                                                                 {{-- @endif --}}
