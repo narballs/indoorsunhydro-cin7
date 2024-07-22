@@ -263,6 +263,18 @@
         padding-top: 15px;
         padding-bottom: 15px;
     }
+
+    .updateShippingAddress:hover {
+        color: #FFF;
+        background-color: #7CC633;
+        border-color: #7BC533 ;
+    }
+
+    .updateShippingAddress:focus {
+        color: #FFF;
+        background-color: #7CC633;
+        border-color: #7BC533 ;
+    }
     @media only screen and (max-width: 1700px) and (min-width: 1200px) {
         .custom-width {
             min-width: 48%;
@@ -1593,7 +1605,7 @@ $cart_price = 0;
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn button-cards primary"
+                <button type="button" class="btn btn-primary btn-sm updateShippingAddress" style="background-color: #7BC533; border-color: #7BC533 ;"
                     onclick="updateContact_address('{{'update billing address'}}' , '{{ auth()->user()->id }}'  )">Update Billing</button>
             </div>
         </div>
@@ -1772,7 +1784,7 @@ $cart_price = 0;
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader_shipping">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn button-cards primary"
+                <button type="button" class="btn btn-primary btn-sm updateShippingAddress" style="background-color: #7BC533; border-color: #7BC533 ;"
                     onclick="updateContact_address('{{'update shipping address'}}'  , '{{ auth()->user()->id }}' )">Update Shipping</button>
             </div>
         </div>
