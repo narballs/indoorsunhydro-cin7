@@ -283,7 +283,7 @@
                                                 @if (!empty($addresses['delievery_method']) && strtolower($addresses['delievery_method']) == 'pickup order')
                                                     {{ !empty($addresses['delievery_method']) ? $addresses['delievery_method'] : '' }}
                                                     <br/><span >
-                                                        (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                        (Monday - Sunday 10:30 AM - 4:30 PM)
                                                     </span>
                                                 @else
                                                     {{ !empty($addresses['delievery_method']) ? $addresses['delievery_method'] : '' }}
