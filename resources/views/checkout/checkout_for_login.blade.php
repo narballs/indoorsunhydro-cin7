@@ -646,7 +646,7 @@ $cart_price = 0;
                                             Checkout
                                         </h2>
                                         <h6 class="checkout_product_heading">
-                                            ({{ $item_quantity  . 'Items'}}) ${{number_format($cart_total, 2)}}
+                                            ({{ $item_quantity  . ' Items'}}) ${{number_format($cart_total, 2)}}
                                         </h6>
                                     </div>
                                 </div>
