@@ -254,6 +254,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
     Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
 
+
+    // send orer to shipstation
+    Route::post('admin/send-order-to-shipstation', [OrderManagementController::class, 'send_order_to_shipstation'])->name('send_order_to_shipstation');
+
     Route::get('admin/logout', function () {
         Auth::logout();
         Session::forget('logged_in_as_another_user');

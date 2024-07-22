@@ -309,7 +309,7 @@
             line-height: 19.5px;
         }
         .checkout_address_text {
-            line-height: 21px;
+            /* line-height: 10px; */
             font-size: 14px;
             color: #131313;
         }
@@ -524,6 +524,65 @@
         font-size: 20px;
         font-weight: 600;
     }
+
+    
+
+    @media only screen and (max-width: 800px)  and (min-width: 280px){
+
+        .custom-border-bottom {
+            border-bottom: none;
+        }
+
+        .checkout_address_text {
+            line-height: 21px;
+        }
+        .custom_head_div {
+            display: none;
+        }
+        .desktop_view_checkout_products {
+            display: none;
+        }
+
+        .mobile_view_checkout_products {
+            display: block !important;
+        }
+        .btn-accord {
+            box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
+        }
+
+        .btn-accord:focus {
+            box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
+        }
+
+        .btn-accord:not(.collapsed) {
+            box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
+        }
+
+
+    }
+
+    @media only screen and (min-width: 801px) {
+        .searchFilter {
+            display: block;
+        }
+        .custom-border-bottom {
+            border-bottom: 1px solid #dee2e6 !important;
+        }
+
+        .custom_address_padding {
+            justify-content: center;
+        }
+
+        .mobile_view_checkout_products {
+            display: none;
+        }
+
+        .desktop_view_checkout_products {
+            display: block !important;
+        }
+
+
+    }
 </style>
 <div class="mb-4 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
@@ -561,20 +620,95 @@ $cart_price = 0;
                 <input type="hidden" name="charge_shipment_to_customer" id="charge_shipment_to_customer" value="{{$charge_shipment_to_customer}}">
                 <div class="row main_row_checkout justify-content-between">
                     <div class="col-md-12 col-lg-12 col-xl-5 col-12 order-xl-2 custom-width">
-                        <div class="row mt-2 mb-2">
+                        <div class="row mt-2 mb-2 desktop_view_checkout_products">
                             <div class="col-md-12">
                                 <h5 class="checkout_default_address">Cart Total</h5>
                             </div>
                         </div>
                         {{-- <div class="row cart_total_div"> --}}
                             {{-- <div class="border m-0 rounded"> --}}
+                                <div class="mobile_view_checkout_products d-none">
+                                    <?php
+                                        $cart_total = 0;
+                                        $cart_price = 0;
+                                        $item_quantity = 0;
+                                    ?>
+                                    @foreach ($cart_items as $product_id => $cart)
+                                        <?php
+                                            $total_quatity = $cart['quantity'];
+                                            $total_price = $cart['price'] * $total_quatity;
+                                            $item_quantity = $item_quantity + $total_quatity;
+                                            $cart_total = $cart_total + $total_price;
+                                        ?>
+                                    @endforeach
+                                    <div class="row text-center">
+                                        <h2>
+                                            Checkout
+                                        </h2>
+                                        <h6 class="checkout_product_heading">
+                                            ({{ $item_quantity  . ' Items'}}) ${{number_format($cart_total, 2)}}
+                                        </h6>
+                                    </div>
+                                </div>
                                 <div class="row pb-2 pt-2 border m-0 rounded cart_total_div">
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="checkout_product_heading">Product</h6>
                                         </div>
+                                    </div> --}}
+                                    
+                                    <div class="mobile_view_checkout_products d-none">
+                                        <?php
+                                            $cart_total = 0;
+                                            $cart_price = 0;
+                                            $item_quantity = 0;
+                                        ?>
+                                        @foreach ($cart_items as $product_id => $cart)
+                                            <?php
+                                                $total_quatity = $cart['quantity'];
+                                                $total_price = $cart['price'] * $total_quatity;
+                                                $item_quantity = $item_quantity + $total_quatity;
+                                                $cart_total = $cart_total + $total_price;
+                                            ?>
+                                        @endforeach
+                                        <div class="accordion" id="accordionExample">
+                                            <div class="accordion-item border-0 bg-transparent">
+                                                <h2 class="accordion-header" id="heading">
+                                                    <button class="accordion-button checkout_product_heading bg-transparent btn-accord pl-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="true" aria-controls="collapse">
+                                                       Product (s)
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse" class="accordion-collapse collapse show" aria-labelledby="heading" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body p-1">
+                                                        {{-- <div class="row justify-content-center"> --}}
+                                                            
+                                                            @if ($cart_items)
+                                                                @foreach ($cart_items as $product_id => $cart)
+                                                                    <?php
+                                                                        $total_quatity = $cart['quantity'];
+                                                                        $total_price = $cart['price'] * $total_quatity;
+                                                                        $item_quantity = $item_quantity + $total_quatity;
+                                                                        $cart_total = $cart_total + $total_price;
+                                                                    ?>
+                                                                    <div class="row border-bottom custom-padding">
+                                                                        <div class="col-xl-8 col-md-8 col-7"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
+                                                                        <div class="col-xl-1 col-md-1 col-2"><span class="checkout_product_quantity">{{$total_quatity . 'x'}}</span></div>
+                                                                        <div class="col-xl-3 col-md-3 col-3 text-right"><span class="checkout_product_price ">${{ number_format($total_price, 2) }}</span></div>
+                                                                    </div>
+                                                                @endforeach
+                                                            @endif
+                                                        {{-- </div> --}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 desktop_view_checkout_products">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6 class="checkout_product_heading">Product</h6>
+                                            </div>
+                                        </div>
                                         <?php
                                             $cart_total = 0;
                                             $cart_price = 0;
@@ -595,7 +729,8 @@ $cart_price = 0;
                                                 </div>
                                             @endforeach
                                         @endif
-                                        
+                                    </div>
+                                    <div class="col-md-12">    
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
                                                 <p class="checkout_product_heading ml-0 mb-2">Delivery Options</p>
@@ -639,7 +774,7 @@ $cart_price = 0;
                                                                     </label>
                                                                     @if (strtolower($payment_option->option_name) == 'pickup order')
                                                                         <span class="mx-2">
-                                                                            (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                                            (Monday - Sunday 10:30 AM - 4:30 PM)
                                                                         </span>
                                                                     @endif
                                                                 {{-- @endif --}}
@@ -960,35 +1095,35 @@ $cart_price = 0;
                                                 <h6 class="checkout_main_sub_address mb-0">Billing Address</h6>
                                             </div>
                                             <div class="col-md-2 col-2">
-                                                <a data-bs-toggle="modal" href="#address_modal_id_billing" role="button" class="float-end" style="font-size:20px">Edit</a>
+                                                <a data-bs-toggle="modal" href="#address_modal_id_billing" role="button" class="float-end" style="font-size:20px">Change</a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="row justify-content-center border-bottom custom_address_padding">
-                                            <div class="col-md-3"><span class="checkout_address_heading">Contact</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->firstName ? $user_address->firstName : '' }}
                                                 {{ $user_address->lastName ? $user_address->lastName : '' }}</span></div>
                                             
                                         </div>
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">Bill to</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalAddress1 ? $user_address->postalAddress1 : ''}} {{$user_address->postalAddress2 ? ', ' .$user_address->postalAddress2 : ''}}</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Bill to</span></div>
+                                            <div class="col-md-9 "><span class="checkout_address_text">{{ $user_address->postalAddress1 ? $user_address->postalAddress1 : ''}} {{$user_address->postalAddress2 ? ', ' .$user_address->postalAddress2 : ''}}</span></div>
                                             
                                         </div>
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">City</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalCity ? $user_address->postalCity : '' }}</span></div>
                                             
                                         </div>
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">State</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalState ? $user_address->postalState : '' }}</span></div>
                                             
                                         </div>
                                         
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">Zip Code</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalPostCode ? $user_address->postalPostCode : '' }}</span></div>
                                             
                                         </div>
@@ -999,35 +1134,35 @@ $cart_price = 0;
                                                 <h6 class="checkout_main_sub_address mb-0">Shipping Address</h6>
                                             </div>
                                             <div class="col-md-2 col-2">
-                                                <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Edit</a>
+                                                <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Change</a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">Contact</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->firstName ? $user_address->firstName : '' }}
                                                 {{ $user_address->lastName ? $user_address->lastName : '' }}</span></div>
                                             
                                         </div>
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">Ship to</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Ship to</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->address1 ? $user_address->address1 : ''}}  {{$user_address->address2 ? ', ' .$user_address->address2 : ''}}</span></div>
                                             
                                         </div>
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">City</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->city ? $user_address->city : '' }}</span></div>
                                             
                                         </div>
-                                        <div class="row justify-content-center border-bottom custom_address_padding ">
-                                            <div class="col-md-3"><span class="checkout_address_heading">State</span></div>
+                                        <div class="row  custom-border-bottom custom_address_padding ">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->state ? $user_address->state : '' }}</span></div>
                                             
                                         </div>
                                         
-                                        <div class="row justify-content-center custom_address_padding">
-                                            <div class="col-md-3"><span class="checkout_address_heading">Zip Code</span></div>
+                                        <div class="row  custom_address_padding">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postCode ? $user_address->postCode : '' }}</span></div>
                                             
                                         </div>

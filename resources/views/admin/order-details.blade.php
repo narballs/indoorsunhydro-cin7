@@ -11,6 +11,21 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <div class="row">
+        @if (\Session::has('success'))
+            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                {!! \Session::get('success') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @elseif (\Session::has('error'))
+            <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                {!! \Session::get('error') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <div class="col-md-12">
             <div class="alert alert-info alert-dismissible success_text_div d-none">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -20,17 +35,17 @@
         <div class="col-md-8 d-flex mb-3">
             <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-8 d-flex align-items-center">
+                    <div class="col-md-6 d-flex align-items-center">
                         <h6 class="mb-0">
                             @if ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
                                 <span class="text-danger">This order is processed through stripe. But we are unable to verify payment.</span>
                             @endif
                         </h6>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-6 d-flex justify-content-end">
+                                <div class="col-md-4 ">
                                     <form class="mb-0">
                                         @csrf
                                         <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
@@ -57,7 +72,7 @@
                                         @endif
                                     </form>
                                 </div>
-                                <div class="col-md-6 d-flex justify-content-end">
+                                <div class="col-md-3">
                                     <form class="mb-0">
                                         @csrf
                                         @if ($order->isApproved == 1 )
@@ -98,6 +113,19 @@
                                         @endif
                                     </form>
                                 </div>
+                                @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
+                                    <div class="col-md-5 ">
+                                        <form action="{{route('send_order_to_shipstation')}}" class="" method="post" class="mb-0">
+                                            @csrf
+                                            <div class="col-md-12">
+                                                <input type="hidden" name="order_id" id="" value="{{$order->id}}">
+                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                    Send Order to Shipstation
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
