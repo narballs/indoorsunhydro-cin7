@@ -47,7 +47,7 @@
                                             <select onchange="updatePriceColumn(4)" class="pricingColumn" id="pricingColumn">
                                                 <option value="">Choose Pricing</option>
                                                 @foreach ($contact_price_columns as $contact_price_column)
-                                                    <option value="{{ ucfirst($contact_price_column) }}" {{ strtoupper($customer->priceColumn) == strtoupper($contact_price_column) ? 'selected="selected"' : ''}} >
+                                                    <option value="{{ lcfirst($contact_price_column) }}" {{ strtoupper($customer->priceColumn) == strtoupper($contact_price_column) ? 'selected="selected"' : ''}} >
                                                         {{ strtoupper($contact_price_column) }}
                                                     </option>
                                                 @endforeach
