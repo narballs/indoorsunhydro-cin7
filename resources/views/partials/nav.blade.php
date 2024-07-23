@@ -203,15 +203,15 @@
                 </div>
                 <div class="mbl_drop_othr">
                     <div class="d-flex justify-content-between">
-                        <div class="col-sm-4 p-0">
+                        <div class="col-sm-4 text-right">
                             <a class="font-mobile-class" href="{{ url('my-account') }}">Account</a>
                         </div>
-                        <div class="col-sm-4 p-0">
+                        <div class="col-sm-4 text-right">
                             <a class="font-mobile-class" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                 Logout
                             </a>
                         </div>
-                        @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                        {{-- @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
                             @if (!empty($wholesale_application_status) && ($wholesale_application_status->status == 1))
                                 <div class="col-sm-4 p-0">
                                     <a class="font-mobile-class" href="{{route('view_wholesale_account' , $wholesale_application_status->id)}}">{!! \Illuminate\Support\Str::limit('View Wholesale Application', 10) !!}</a>
@@ -225,16 +225,16 @@
                                     <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">{!! \Illuminate\Support\Str::limit('Apply for Wholesale Account', 10) !!}</a>
                                 </div>
                             @endif
-                        @endif
+                        @endif --}}
                         
                     </div>
                 </div>
                 @else
-                @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
+                {{-- @if(strtolower($enable_wholesale_registration->option_value) == 'yes')
                     <div class="col-xs-8 mx-2">
                         <a class="font-mobile-class" href="{{route('create_wholesale_account')}}">Apply for Wholesale Account</a>
                     </div>
-                @endif
+                @endif --}}
                 <div class="col-xs-4 mx-2">
                     <a class="font-mobile-class" href="{{ '/user/' }}">Login or Register</a>
                 </div>

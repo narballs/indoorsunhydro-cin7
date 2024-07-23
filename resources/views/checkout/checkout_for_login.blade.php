@@ -263,6 +263,18 @@
         padding-top: 15px;
         padding-bottom: 15px;
     }
+
+    .updateShippingAddress:hover {
+        color: #FFF;
+        background-color: #7CC633;
+        border-color: #7BC533 ;
+    }
+
+    .updateShippingAddress:focus {
+        color: #FFF;
+        background-color: #7CC633;
+        border-color: #7BC533 ;
+    }
     @media only screen and (max-width: 1700px) and (min-width: 1200px) {
         .custom-width {
             min-width: 48%;
@@ -598,6 +610,7 @@
         </button>
     </div>
 @endif
+
 <?php
 $cart_total = 0;
 $cart_price = 0;
@@ -646,7 +659,7 @@ $cart_price = 0;
                                             Checkout
                                         </h2>
                                         <h6 class="checkout_product_heading">
-                                            ({{ $item_quantity  . ' Items'}}) ${{number_format($cart_total, 2)}}
+                                            ({{ $item_quantity  . ' Item(s)'}}) ${{number_format($cart_total, 2)}}
                                         </h6>
                                     </div>
                                 </div>
@@ -774,7 +787,7 @@ $cart_price = 0;
                                                                     </label>
                                                                     @if (strtolower($payment_option->option_name) == 'pickup order')
                                                                         <span class="mx-2">
-                                                                            (Monday - Sunday 10:30 AM - 4:30 PM)
+                                                                            (Monday - Friday (no weekends) 10:30 AM - 4:30 PM)
                                                                         </span>
                                                                     @endif
                                                                 {{-- @endif --}}
@@ -784,7 +797,7 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        @if (strtolower($user_address->paymentTerms) !== 'pay in advanced')
+                                        {{-- @if (strtolower($user_address->paymentTerms) !== 'pay in advanced') --}}
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
                                                 <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
@@ -800,13 +813,30 @@ $cart_price = 0;
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Memo (Optional)</p>
-                                                <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your Message"
-                                                    id="memo" class="form-control fontAwesome">
-                                                    </textarea>
+                                                <p class="checkout_product_heading mb-1 ml-0">Internal Comments (Required)</p>
+                                                <textarea type="text" name="internal_comments" cols="20" rows="5" placeholder="Enter your Comments" id="internal_comments" class="form-control fontAwesome"></textarea>
+                                                @error('internal_comments')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
-                                        @endif
+                                        {{-- <div class="row justify-content-center border-bottom py-3">
+                                            <div class="col-md-12">
+                                                <p class="checkout_product_heading mb-1 ml-0">Delievery Instructions</p>
+                                                <textarea type="text" name="delievery_instructions" cols="20" rows="5" placeholder="Enter your delievery Instructions" id="delievery_instructions" class="form-control fontAwesome"></textarea>
+                                            </div>
+                                        </div> --}}
+                                        
+                                        <div class="row justify-content-center border-bottom py-3">
+                                            <div class="col-md-12">
+                                                <p class="checkout_product_heading mb-1 ml-0">Delievery Instructions (Required)</p>
+                                                <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your delievery Instructions" id="memo" class="form-control fontAwesome"></textarea>
+                                                @error('memo')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        {{-- @endif --}}
                                         {{-- <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mb-3">
                                                 <p class="checkout_product_heading mb-2 ml-0">Payment Terms</p>
@@ -925,7 +955,7 @@ $cart_price = 0;
                                         <div class="shipping_main_div">
                                             @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
                                                 <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
-                                                <input type="hidden" name="shipment_error" value="{{$shipment_error}}">
+                                                <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
                                                 @if (!empty($products_weight) && $products_weight > 150)
                                                 @php
                                                     $shipment_price = !empty($shipment_price) ? $shipment_price : 0;
@@ -1238,8 +1268,7 @@ $cart_price = 0;
                 </strong>
                 <br/>
 
-                Pick up window is any working day between 
-                <strong>10:30Am - 4:30Pm</strong>
+                Pick up window is Monday - Friday (no weekends)
                 <br/>
 
                 All orders are available to be picked up <strong>1hr</strong> after the order is placed and paid for
@@ -1593,7 +1622,7 @@ $cart_price = 0;
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn button-cards primary"
+                <button type="button" class="btn btn-primary btn-sm updateShippingAddress" style="background-color: #7BC533; border-color: #7BC533 ;"
                     onclick="updateContact_address('{{'update billing address'}}' , '{{ auth()->user()->id }}'  )">Update Billing</button>
             </div>
         </div>
@@ -1772,7 +1801,7 @@ $cart_price = 0;
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader_shipping">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn button-cards primary"
+                <button type="button" class="btn btn-primary btn-sm updateShippingAddress" style="background-color: #7BC533; border-color: #7BC533 ;"
                     onclick="updateContact_address('{{'update shipping address'}}'  , '{{ auth()->user()->id }}' )">Update Shipping</button>
             </div>
         </div>
@@ -3313,13 +3342,16 @@ $cart_price = 0;
                     if ($(element).is(':checked')) {
                         var delievery_value = element.value;
                         var charge_shipment_to_customer = $('#charge_shipment_to_customer').val();
+                        var shipment_error = $('#shipment_error').val();
                         if (delievery_value == 'Pickup Order') {
                             $('#charge_shipment_to_customer').val(0);
+                            $('#shipment_error').val(0);
                             $('.shipping_main_div').addClass('d-none');
                             $('.remove_shipping_price').removeClass('d-none');
                             $('#pick_up_modal').modal('show');
                         } else {
                             $('#charge_shipment_to_customer').val(charge_shipment_to_customer);
+                            $('#shipment_error').val(shipment_error);
                             $('.shipping_main_div').removeClass('d-none');
                             $('.remove_shipping_price').addClass('d-none');
                             $('#pick_up_modal').modal('hide');
@@ -3328,6 +3360,7 @@ $cart_price = 0;
                 }
                 function reject_pickUp() {
                     var charge_shipment_to_customer = $('#charge_shipment_to_customer').val();
+                    var shipment_error = $('#shipment_error').val();
                     $('.d_options').each(function() {
                         $(this).prop('checked', false); // Uncheck all options
                         if ($(this).val() == 'Delivery') {
@@ -3335,6 +3368,7 @@ $cart_price = 0;
                         }
                     });
                     $('#charge_shipment_to_customer').val(charge_shipment_to_customer);
+                    $('#shipment_error').val(shipment_error);
                     $('.shipping_main_div').removeClass('d-none');
                     $('.remove_shipping_price').addClass('d-none');
                     $('#pick_up_modal').modal('hide');

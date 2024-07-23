@@ -471,7 +471,7 @@
 
                     <div class="col-md-4">
                         <!-- Customer Notes -->
-                        <div class="card mb-4">
+                        <div class="card mb-3">
                             <div class="card-body">
                                 <h3 class="h6" style="margin-bottom: 0px;"><strong>Order Notes</strong></h3>
                                 @foreach ($orderComment as $comment)
@@ -514,6 +514,19 @@
 
                             </form>
                         </div> --}}
+
+                        <div class="card  mb-3">
+                            <div class="card-body">
+                                <h3 class="h6 summary-head"><strong>Internal Comments</strong></h3>
+                                <span class="delievery">{{ $order->internal_comments }}</span></p>
+                            </div>
+                        </div>
+                        <div class="card  mb-3">
+                            <div class="card-body">
+                                <h3 class="h6 summary-head"><strong>Delievery Instructions</strong></h3>
+                                <span class="delievery">{{ $order->memo }}</span></p>
+                            </div>
+                        </div>
                         <div class="card mb-4">
                             <!-- Shipping information -->
                             <div class="card-body">
