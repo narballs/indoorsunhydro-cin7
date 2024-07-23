@@ -54,6 +54,8 @@ class ApiOrder extends Model
         'shipping_carrier_code',
         'shipping_service_code',
         'parcel_guard',
+        'internal_comments',
+        'delievery_instructions',
     ];
     public function contact()
     {

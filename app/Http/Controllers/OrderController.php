@@ -52,6 +52,12 @@ class OrderController extends Controller
         $request->validate(
             [
                 'method_name' => 'required',
+                'internal_comments' => 'required',
+                'memo' => 'required',
+            ] , 
+            [
+                'internal_comments.required' => 'Internal comments is required',
+                'memo.required' => 'Delivery instructions is required',
             ]
         );
         $shipment_error = $request->shipment_error;
@@ -237,6 +243,8 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
+                    $order->internal_comments = $request->internal_comments;
+                    // $order->delievery_instructions = $request->delievery_instructions;
                     $order->shipment_price = $request->shipment_price;
                     $order->is_square = 1;
                     $order->shipping_carrier_code = $shipping_carrier_code;
@@ -407,6 +415,8 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
+                    $order->internal_comments = $request->internal_comments;
+                    // $order->delievery_instructions = $request->delievery_instructions;
                     $order->shipment_price = $actual_shipping_price;
                     $order->total_including_tax = $order_total;
                     $order->discount_id = $discount_id;
@@ -718,6 +728,8 @@ class OrderController extends Controller
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
                     $order->date = $request->date;
+                    $order->internal_comments = $request->internal_comments;
+                    // $order->delievery_instructions = $request->delievery_instructions;
                     $order->shipment_price = $actual_shipping_price;
                     $order->total_including_tax = $order_total;
                     $order->discount_id = $discount_id;
