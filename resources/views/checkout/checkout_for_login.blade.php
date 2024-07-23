@@ -829,8 +829,8 @@ $cart_price = 0;
                                         
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Delievery Instructions (Required)</p>
-                                                <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your delievery Instructions" id="memo" class="form-control fontAwesome"></textarea>
+                                                <p class="checkout_product_heading mb-1 ml-0">Delivery Instructions (Required)</p>
+                                                <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your delivery Instructions" id="memo" class="form-control fontAwesome"></textarea>
                                                 @error('memo')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
