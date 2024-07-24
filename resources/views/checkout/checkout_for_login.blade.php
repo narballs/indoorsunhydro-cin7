@@ -817,7 +817,7 @@ $cart_price = 0;
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Internal Comments</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Internal Comments (Optional)</p>
                                                 <textarea type="text" name="internal_comments" cols="20" rows="5" placeholder="Enter your Comments" id="internal_comments" class="form-control fontAwesome"></textarea>
                                                 {{-- @error('internal_comments')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -833,7 +833,7 @@ $cart_price = 0;
                                         
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Delivery Instructions</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Delivery Instructions (Optional)</p>
                                                 <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your delivery Instructions" id="memo" class="form-control fontAwesome"></textarea>
                                                 {{-- @error('memo')
                                                     <span class="text-danger">{{ $message }}</span>
