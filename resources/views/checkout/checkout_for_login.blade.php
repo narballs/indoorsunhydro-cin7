@@ -787,7 +787,11 @@ $cart_price = 0;
                                                                     </label>
                                                                     @if (strtolower($payment_option->option_name) == 'pickup order')
                                                                         <span class="mx-2">
-                                                                            (Monday - Friday (no weekends) 10:30 AM - 4:30 PM)
+                                                                            @php
+                                                                                $timings_part1 = App\Models\AdminSetting::where('option_name', 'timings_part1')->first();
+                                                                                $timings_part2 = App\Models\AdminSetting::where('option_name', 'timings_part2')->first();
+                                                                            @endphp
+                                                                            {{!empty($timings_part1) ? '(' . $timings_part1->option_value : ''}} {{!empty($timings_part2) ? $timings_part2->option_value  . ')' : ''}}
                                                                         </span>
                                                                     @endif
                                                                 {{-- @endif --}}
@@ -1260,18 +1264,13 @@ $cart_price = 0;
           </button> --}}
         </div>
         <div class="modal-body">
+            @php
+                $pick_up_text = App\Models\AdminSetting::where('option_name', 'pickup_info')->first();
+            @endphp
             <p class="mb-0 pick_up_text">
-                Pick up is available only at the address below
-                <br/>
-                <strong>
-                    5671 Warehouse Way Sacramento CA 95826
-                </strong>
-                <br/>
-
-                Pick up window is Monday - Friday (no weekends)
-                <br/>
-
-                All orders are available to be picked up <strong>2 Hours</strong> after the order is placed and paid for.
+                @if(!empty($pick_up_text))
+                    {!! $pick_up_text->option_value !!}
+                @endif
             </p>
         </div>
         <div class="modal-footer">

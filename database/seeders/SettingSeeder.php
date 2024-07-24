@@ -344,6 +344,15 @@ class SettingSeeder extends Seeder
                 'option_value' => '+12512921422',
             ],
 
+            [
+                'option_name' => 'pickup_info',
+                'type' => 'text',
+                'option_value' => 'Pick up is available only at the address below <br/> <strong>5671 Warehouse Way Sacramento CA 95826</strong>
+                <br/>
+                Pick up window is Monday - Friday (no weekends) <br/>
+                All orders are available to be picked up <strong>2 Hours</strong> after the order is placed and paid for.',
+            ]
+
             
         ];
 
