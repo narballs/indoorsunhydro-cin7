@@ -1271,7 +1271,7 @@ $cart_price = 0;
                 Pick up window is Monday - Friday (no weekends)
                 <br/>
 
-                All orders are available to be picked up <strong>1hr</strong> after the order is placed and paid for
+                All orders are available to be picked up <strong>2 Hours</strong> after the order is placed and paid for.
             </p>
         </div>
         <div class="modal-footer">
