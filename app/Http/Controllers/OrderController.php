@@ -52,13 +52,14 @@ class OrderController extends Controller
         $request->validate(
             [
                 'method_name' => 'required',
-                'internal_comments' => 'required',
-                'memo' => 'required',
-            ] , 
-            [
-                'internal_comments.required' => 'Internal comments is required',
-                'memo.required' => 'Delivery instructions is required',
-            ]
+                // 'internal_comments' => 'required',
+                // 'memo' => 'required',
+            ] 
+            // , 
+            // [
+            //     'internal_comments.required' => 'Internal comments is required',
+            //     'memo.required' => 'Delivery instructions is required',
+            // ]
         );
         $shipment_error = $request->shipment_error;
         if ($shipment_error == 1) {
