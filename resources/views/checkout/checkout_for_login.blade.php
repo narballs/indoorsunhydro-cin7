@@ -817,11 +817,11 @@ $cart_price = 0;
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Internal Comments (Required)</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Internal Comments</p>
                                                 <textarea type="text" name="internal_comments" cols="20" rows="5" placeholder="Enter your Comments" id="internal_comments" class="form-control fontAwesome"></textarea>
-                                                @error('internal_comments')
+                                                {{-- @error('internal_comments')
                                                     <span class="text-danger">{{ $message }}</span>
-                                                @enderror
+                                                @enderror --}}
                                             </div>
                                         </div>
                                         {{-- <div class="row justify-content-center border-bottom py-3">
@@ -833,11 +833,11 @@ $cart_price = 0;
                                         
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Delivery Instructions (Required)</p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Delivery Instructions</p>
                                                 <textarea type="text" name="memo" cols="20" rows="5" placeholder="Enter your delivery Instructions" id="memo" class="form-control fontAwesome"></textarea>
-                                                @error('memo')
+                                                {{-- @error('memo')
                                                     <span class="text-danger">{{ $message }}</span>
-                                                @enderror
+                                                @enderror --}}
                                             </div>
                                         </div>
                                         {{-- @endif --}}
