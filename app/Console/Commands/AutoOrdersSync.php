@@ -77,10 +77,12 @@ class AutoOrdersSync extends Command
                 if (strtolower($order->payment_status) === 'paid') {
                     $order_data = OrderHelper::get_order_data_to_process($order);
                     SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                    sleep(20);
                 }
             } else {
                 $order_data = OrderHelper::get_order_data_to_process($order);
                 SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                sleep(20);
             }
         }
 
