@@ -735,7 +735,7 @@
         }
 
         function buildDataColumn(productData) {
-            var dataHtml = '            <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account">';
+            var dataHtml = '            <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account d-flex align-items-center">';
                 dataHtml += '                <div class="row">';
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_name mb-1">';
