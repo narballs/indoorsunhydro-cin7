@@ -43,17 +43,23 @@
                             </div>
                         </div>
                         <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
-                            <div class="d-flex">
-                                <span class="create_new_btn_mbl mx-3">
+                            <div class="d-flex justify-content-between">
+                                <span class="create_new_btn_mbl mr-2">
                                     <button type="button" class="btn create_new_product_btn btn-import-contacts">
                                         Import Contacts +
                                     </button>
                                 </span>
-                                <span class="create_new_btn_mbl">
+                                <span class="create_new_btn_mbl mr-2">
                                     <button type="button" class="btn create_new_product_btn btn-update-product-prices">
                                         Update Product Prices
                                     </button>
                                 </span>
+                                <span class="create_new_btn_mbl">
+                                    <button type="button" class="btn create_new_product_btn btn-empty-failed-jobs">
+                                        Empty Failed Jobs
+                                    </button>
+                                </span>
+
                             </div>
                         </div>
                         <div class="col-md-2 d-flex align-items-center">
@@ -327,6 +333,31 @@
                             $('#div_message').html(
                                 '<div class="alert alert-danger alert-dismissible" role="alert">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + response
                                 .message + '</div>');
+                        }
+                    }
+                });
+            });
+
+
+            $('.btn-empty-failed-jobs').on('click', function () {
+                var btn = $(this);
+                btn.prop('disabled', true);
+                $('#div_message').html('Emptying Failed Jobs... Please do not close this window.');
+
+                $.ajax({
+                    url: "{{ url('admin/empty-failed-jobs') }}",
+                    method: 'get',
+                    data: {},
+                    success: function(response) {
+                        btn.prop('disabled', false);
+                        if (response.status == 'success') {
+                            $('#div_message').html(
+                                '<div class="alert alert-success alert-dismissible" role="alert"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                                response.msg + '</div>');
+                        } else {
+                            $('#div_message').html(
+                                '<div class="alert alert-danger alert-dismissible" role="alert">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + response
+                                .msg + '</div>');
                         }
                     }
                 });

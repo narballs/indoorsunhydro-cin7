@@ -17,6 +17,7 @@ use App\Models\SpecificAdminNotification;
 use App\Models\SurchargeSetting;
 use App\Models\User;
 use App\Models\UserLog;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\DB;
 
 class AdminSettingsController extends Controller
@@ -420,6 +421,21 @@ class AdminSettingsController extends Controller
         }
         
         return redirect()->back()->with('success', 'Shipping quotes updated successfully.');
+    }
+
+    public function empty_failed_jobs() {
+        $failed_jobs = DB::table('failed_jobs')->get();
+        if (count($failed_jobs) > 0) {
+            DB::table('failed_jobs')->truncate();
+            return response()->json([
+                'status' => 'success',
+                'msg' => 'Failed jobs cleared successfully.'
+            ]);
+        }
+        return response()->json([
+            'status' => 'error',
+            'msg' => 'Failed jobs not found.'
+        ]);
     }
 
     
