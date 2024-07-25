@@ -1,8 +1,32 @@
 @include('partials.header')
 <style>
-    figure.media > div > div {
+    /* figure.media > div > div {
         position: static !important;
+        height: auto !important;
+    } */
+
+    .media {
+        display: block !important;
     }
+    /* .blog_detail_description {
+        position: relative;
+        padding: 20px;
+        background-color: #f8f9fa; 
+    } */
+
+    .blog_detail_description img,
+    .blog_detail_description iframe {
+        display: block;
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        margin-bottom: 20px; /* Space below media elements */
+    }
+
+    .blog_detail_description p {
+        margin-bottom: 20px;
+        font-size: 16px; /* Adjust font size as needed */
+    }
+
 
 </style>
 <body>
@@ -14,19 +38,18 @@
             <div class="">
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row justify-content-center">
-                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
-                            <p class="mt-3 mb-3 fs-2  border-0 text-white text-center align-middle text-uppercase p-2 blog_header">
-                                {{$blog_detail->title}}
-                            </p>
+                        <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="banner-img img-fluid w-100" alt="...">
+                            <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
+                                <div class="banner-title text-center">
+                                    <span class="text-uppercase font-weight-bold text-white">{{$blog_detail->title}}</span>
+                                </div>
+                            </h2>
                         </div>
-
-                        <div class="col-xl-6 col-lg-8 col-md-8 col-sm-12 col-xs-12 blog_detail_description">
-                            <div class="mb-5 w-100">
-                                @if(!empty($blog_detail->image))
-                                    <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="img-fluid-custom" alt="...">
-                                @endif
+                        <div class="col-xl-8 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-10">
+                            <div class="row blog_detail_description">
+                                {!! $blog_detail->description !!}
                             </div>
-                            {!! $blog_detail->description !!}
                         </div>
                     </div>
                     <div class="text-center mt-4 mb-4">
