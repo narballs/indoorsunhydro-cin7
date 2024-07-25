@@ -21,10 +21,17 @@ class Kernel extends ConsoleKernel
     {
         // Api endpoints starts here
         
-        $schedule->command('Sync:ApiData')->hourly();
-        $schedule->command('Sync:ProductOptions')->everySixHours();
-        
-        $schedule->command('sync:supplier')->hourly();
+        $schedule->command('Sync:ApiData')->everyTwoHours();
+        // $schedule->command('Sync:ProductOptions')->everySixHours();
+        $schedule->command('Sync:ProductOptions')
+        ->everyThreeHours()
+        ->when(function () {
+            return in_array(\Carbon\Carbon::now()->dayOfWeek, [
+                \Carbon\Carbon::SATURDAY, 
+                \Carbon\Carbon::SUNDAY
+            ]);
+        });
+        $schedule->command('sync:supplier')->everyTwoHours();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyThreeMinutes();
