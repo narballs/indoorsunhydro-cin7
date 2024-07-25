@@ -79,6 +79,12 @@
         <link rel="stylesheet" href="/theme/css/admin_custom.css">
         <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
         <style>
+
+            figure.media {
+                position: static !important; /* Override relative positioning */
+                padding-bottom: 0 !important; /* Reset padding if needed */
+            }
+
             .text-successs {
                 color: #7CC633 !important;
                 font-family: 'Poppins', sans-serif !important;
@@ -317,7 +323,7 @@
 
     @section('js')
     {{-- <script src="{{asset('admin/ck_editor.js')}}"></script> --}}
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
+    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
     <script>
         class MyUploadAdapter {
             constructor( loader ) {
@@ -467,5 +473,115 @@
                 'PasteFromOfficeEnhanced'
             ]
         });
+    </script> --}}
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
+    <script>
+        class MyUploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
+                        this._initRequest();
+                        this._initListeners(resolve, reject, file);
+                        this._sendRequest(file);
+                    }));
+            }
+
+            abort() {
+                if (this.xhr) {
+                    this.xhr.abort();
+                }
+            }
+
+            _initRequest() {
+                const xhr = this.xhr = new XMLHttpRequest();
+                xhr.open('POST', "{{ route('image_upload') }}", true);
+                xhr.responseType = 'json';
+            }
+
+            _initListeners(resolve, reject, file) {
+                const xhr = this.xhr;
+                const loader = this.loader;
+                const genericErrorText = `Couldn't upload file: ${file.name}.`;
+
+                xhr.addEventListener('error', () => reject(genericErrorText));
+                xhr.addEventListener('abort', () => reject());
+                xhr.addEventListener('load', () => {
+                    const response = xhr.response;
+
+                    if (!response || response.error) {
+                        return reject(response && response.error ? response.error.message : genericErrorText);
+                    }
+
+                    resolve({
+                        default: response.url,
+                        // For video, return embed HTML if needed
+                        embedHtml: response.url && response.url.match(/\.(mp4|mov|avi|wmv)$/) ? `<video controls src="${response.url}"></video>` : ''
+                    });
+                });
+
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', evt => {
+                        if (evt.lengthComputable) {
+                            loader.uploadTotal = evt.total;
+                            loader.uploaded = evt.loaded;
+                        }
+                    });
+                }
+            }
+
+            _sendRequest(file) {
+                const data = new FormData();
+                data.append('upload', file);
+                this.xhr.send(data);
+            }
+        }
+
+        function MyCustomUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                return new MyUploadAdapter(loader);
+            };
+        }
+
+        CKEDITOR.ClassicEditor.create(document.getElementById("blog_description"), {
+            extraPlugins: [MyCustomUploadAdapterPlugin],
+            toolbar: {
+                items: [
+                    'exportPDF', 'exportWord', '|',
+                    'findAndReplace', 'selectAll', '|',
+                    'heading', '|',
+                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
+                    'bulletedList', 'numberedList', 'todoList', '|',
+                    'outdent', 'indent', '|',
+                    'undo', 'redo',
+                    '-',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                    'alignment', '|',
+                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
+                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
+                    'textPartLanguage', '|',
+                    'sourceEditing'
+                ],
+                shouldNotGroupWhenFull: true
+            },
+            mediaEmbed: {
+                previewsInData: true
+            },
+            htmlEmbed: {
+                showPreviews: true
+            },
+            removePlugins: [
+                'ExportPdf', 'ExportWord', 'CKBox', 'CKFinder', 'EasyImage',
+                'RealTimeCollaborativeComments', 'RealTimeCollaborativeTrackChanges',
+                'RealTimeCollaborativeRevisionHistory', 'PresenceList', 'Comments',
+                'TrackChanges', 'TrackChangesData', 'RevisionHistory', 'Pagination',
+                'WProofreader', 'MathType', 'SlashCommand', 'Template', 'DocumentOutline',
+                'FormatPainter', 'TableOfContents', 'PasteFromOfficeEnhanced'
+            ]
+        });
     </script>
+
     @stop

@@ -1,5 +1,10 @@
 @include('partials.header')
+<style>
+    figure.media > div > div {
+        position: static !important;
+    }
 
+</style>
 <body>
     <main>
         @include('partials.top-bar')
