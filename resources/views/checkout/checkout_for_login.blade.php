@@ -1195,9 +1195,14 @@ $cart_price = 0;
                                             
                                         </div>
                                         
-                                        <div class="row  custom_address_padding">
+                                        <div class="row  custom-border-bottom custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postCode ? $user_address->postCode : '' }}</span></div>
+                                            
+                                        </div>
+                                        <div class="row  custom_address_padding">
+                                            <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Phone</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->phone ? $user_address->phone : '' }}</span></div>
                                             
                                         </div>
                                     </div>

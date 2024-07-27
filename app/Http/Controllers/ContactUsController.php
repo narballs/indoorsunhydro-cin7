@@ -88,5 +88,10 @@ class ContactUsController extends Controller
         // });
         return response()->json(['success' => true, 'created'=> true, 'msg' => "Thank you. Your request has been received. You'll get an email notification confirming a ticket has been created."]);
     }
+
+
+    public function thankyou_page () {
+        return view('thankyou_page');
+    }
 }
 

@@ -550,3 +550,6 @@ Route::post('bulk-upload-numbers-to-list', [SmsController::class, 'bulk_upload_n
 Route::post('import-numbers-to-list', [SmsController::class, 'import_numbers_to_list'])->name('import_numbers_to_list');
 
 Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sms');
+
+// thankyou page
+Route::get('/thankyou', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
