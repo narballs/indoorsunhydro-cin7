@@ -632,6 +632,8 @@
 							<p class="order-confirmation-page-top-heading mobile-font">Order Confirmation</p>
 						</div> --}}
 						<div class="row mb-3">
+							<input type="hidden" value="{{!empty($order_contact) && !empty($order_contact->email) ? $order_contact->email : ''}}" id="order_contact_email">
+							<input type="hidden" value="{{!empty($order) && !empty($order->apiOrderItem) ? $order->apiOrderItem : ''}}" id="order_Items_ty">
 							<div class="col-md-12 d-flex main-logo-confirm-div">
 								<div class="logo-confirm-div-1">
 									<svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">

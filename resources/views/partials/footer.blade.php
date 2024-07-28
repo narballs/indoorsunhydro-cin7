@@ -1,5 +1,7 @@
-<input type="hidden" id="zendesk_first_name" value="{{auth()->user() && !empty(auth()->user()->onlycontact->firstName) ? auth()->user()->onlycontact->firstName : ''}}">
-<input type="hidden" id="zendesk_last_name" value="{{auth()->user() && !empty(auth()->user()->onlycontact->lastName) ? auth()->user()->onlycontact->lastName : ''}}">
+<input type="hidden" id="zendesk_first_name"
+    value="{{auth()->user() && !empty(auth()->user()->onlycontact->firstName) ? auth()->user()->onlycontact->firstName : ''}}">
+<input type="hidden" id="zendesk_last_name"
+    value="{{auth()->user() && !empty(auth()->user()->onlycontact->lastName) ? auth()->user()->onlycontact->lastName : ''}}">
 <input type="hidden" id="zendesk_email" value="{{auth()->user() ? auth()->user()->email : ''}}">
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js') }}"></script>
@@ -11,7 +13,7 @@
 <script id="ze-snippet" src="{{asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475')}}"></script>
 <script src="{{ asset('theme/jquery/bootstrap-tagsinput.min.js') }}"></script>
 <script>
-	$(document).ready(function() {
+    $(document).ready(function() {
 		var order_id = parseInt($('.getorderID').html());
 		var currency = 'USD';
 		var orderTotal = $('.getorderTotal').val();
@@ -27,6 +29,64 @@
 		}
 
 	});
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+
+<script>
+    window.renderOptIn = function() {
+        var order_Items = $('#order_Items_ty').val();
+        if (order_Items == '' || order_Items == null) {
+            return false;
+        }
+        var order_id = parseInt($('.getorderID').html());
+        var contact_email = $('#order_contact_email').val();
+        var orderItemsArray = JSON.parse(order_Items);
+        var barcodes = orderItemsArray.map(function(item) {
+            return item.product.barcode;
+        });
+        let currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 4);
+    
+        // Format the date as YYYY-MM-DD
+        let year = currentDate.getFullYear();
+        let month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        let day = currentDate.getDate().toString().padStart(2, '0');
+        let formattedDate = `${year}-${month}-${day}`;
+    
+        var products = barcodes.map(function(barcode) {
+            return { "gtin": barcode };
+        });
+  
+        window.gapi.load('surveyoptin', function() {
+            window.gapi.surveyoptin.render(
+            {
+            // REQUIRED FIELDS
+                "merchant_id": 5309938228,
+                "order_id": order_id,
+                "email": contact_email,
+                "delivery_country": "US",
+                "estimated_delivery_date": formattedDate,
+    
+                // OPTIONAL FIELDS
+                "opt_in_style": "BOTTOM_RIGHT_DIALOG", // Adjust this according to your preference
+                "products": products // Add the products array here
+    
+            });
+        });
+    }
+</script>
+
+
+<script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
+<script>
+    window.renderBadge = function() {
+        var merchantId = @json(env('GOOGLE_MERCHANT_CENTER_ID'));
+        var ratingBadgeContainer = document.createElement("div");
+        document.body.appendChild(ratingBadgeContainer);
+        window.gapi.load('ratingbadge', function() {
+            window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": merchantId});
+        });
+    }
 </script>
 <script>
     function adding_quantity(product_id , option_id) {
@@ -688,9 +748,10 @@
         $('.all_items:first').addClass('active');
     });
 </script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js"></script>
-    <script>
-        $('#owl-carousel-landing-page').owlCarousel({
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
+</script>
+<script>
+    $('#owl-carousel-landing-page').owlCarousel({
             rtl:false,
             loop:false,
             margin:10,
@@ -837,80 +898,88 @@
 
             zE('webWidget', 'open');
         }
-    </script>
+</script>
 
-    <!-- Modal -->
-<div class="modal fade notify_popup_modal" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<!-- Modal -->
+<div class="modal fade notify_popup_modal" id="notify_user_modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
-            <button type="button" class="close" onclick="close_notify_user_modal()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="row">
-                    <div class="form-group">
-                        <label for="">Email <span class="text-danger">*</span></label>
-                        <input type="hidden" name="sku" id="sku_value" class="productSku_value" value="">
-                        <input type="hidden" name="product_id" id="product_id_value" class="productId_value" value="">
-                        <div class="col-md-12">
-                            <input type="text" name="notify_user_email" id="notify_user_email" class="form-control notifyEmail" value="" placeholder="Enter your email">
-                            <div class="text-danger email_required_alert"></div>
-                        </div>
-    
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
-                <span class="sr-only"></span>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
+                <button type="button" class="close" onclick="close_notify_user_modal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock($('.productId_value').val() , $('.productSku_value').val())">Submit</button>
-            <!-- You can add additional buttons here if needed -->
-        </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Email <span class="text-danger">*</span></label>
+                            <input type="hidden" name="sku" id="sku_value" class="productSku_value" value="">
+                            <input type="hidden" name="product_id" id="product_id_value" class="productId_value"
+                                value="">
+                            <div class="col-md-12">
+                                <input type="text" name="notify_user_email" id="notify_user_email"
+                                    class="form-control notifyEmail" value="" placeholder="Enter your email">
+                                <div class="text-danger email_required_alert"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
+                    <span class="sr-only"></span>
+                </div>
+                <button type="button" class="btn btn-secondary"
+                    onclick="notify_user_about_product_stock($('.productId_value').val() , $('.productSku_value').val())">Submit</button>
+                <!-- You can add additional buttons here if needed -->
+            </div>
         </div>
     </div>
 </div>
-<div class="modal fade notify_popup_modal_similar" id="notify_user_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade notify_popup_modal_similar" id="notify_user_modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
-            <button type="button" class="close" onclick="close_notify_user_modal_similar()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="row">
-                    <div class="form-group">
-                        <label for="">Email <span class="text-danger">*</span></label>
-                        <input type="hidden" name="sku" id="sku_value" class="productSku_value" value="">
-                        <input type="hidden" name="product_id" id="product_id_value" class="productId_value" value="">
-                        <div class="col-md-12">
-                            <input type="text" name="notify_user_email" id="notify_user_email" class="form-control similar_notifyEmail" value="" placeholder="Enter your email">
-                            <div class="text-danger email_required_alert"></div>
-                        </div>
-    
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
-                <span class="sr-only"></span>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock</h5>
+                <button type="button" class="close" onclick="close_notify_user_modal_similar()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <button type="button" class="btn btn-secondary" onclick="notify_user_about_product_stock_similar($('.productId_value').val() , $('.productSku_value').val())">Submit</button>
-            <!-- You can add additional buttons here if needed -->
-        </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Email <span class="text-danger">*</span></label>
+                            <input type="hidden" name="sku" id="sku_value" class="productSku_value" value="">
+                            <input type="hidden" name="product_id" id="product_id_value" class="productId_value"
+                                value="">
+                            <div class="col-md-12">
+                                <input type="text" name="notify_user_email" id="notify_user_email"
+                                    class="form-control similar_notifyEmail" value="" placeholder="Enter your email">
+                                <div class="text-danger email_required_alert"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="spinner-border text-primary stock_spinner_modal d-none" role="status">
+                    <span class="sr-only"></span>
+                </div>
+                <button type="button" class="btn btn-secondary"
+                    onclick="notify_user_about_product_stock_similar($('.productId_value').val() , $('.productSku_value').val())">Submit</button>
+                <!-- You can add additional buttons here if needed -->
+            </div>
         </div>
     </div>
 </div>
-{{--  notify user pop up modal end --}}
+{{-- notify user pop up modal end --}}
 
 <script>
     $(document).on('keydown', function(event) {
@@ -942,5 +1011,3 @@
         }
     });
 </script>
-
-
