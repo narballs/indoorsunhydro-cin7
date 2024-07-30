@@ -90,8 +90,8 @@
     			$('#save').prop('disabled', false);
       			if (response.success == true) {
                     $('#contact_save_loader').addClass('d-none');
-                    $('#message_flash_div').removeClass('d-none');
-      				$('#success_message_div').html(response.msg);
+                    // $('#message_flash_div').removeClass('d-none');
+      				// $('#success_message_div').html(response.msg);
       				const name = document.getElementById('name');
       				const email = document.getElementById('email');
       				const subject = document.getElementById('subject');
@@ -101,6 +101,7 @@
       				email.value = '';
       				message.value = '';
       				message.html = '';
+					window.location.href = '/thankyou';
 				}
    			},
    			error: function (response) {

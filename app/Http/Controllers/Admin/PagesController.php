@@ -189,7 +189,7 @@ class PagesController extends Controller
 
             //Resize image here
             $thumbnailpath = public_path('storage/uploads/thumbnail/'.$filenametostore);
-            $img = \Image::make($thumbnailpath)->resize(200, 150, function($constraint) {
+            $img = Image::make($thumbnailpath)->resize(200, 150, function($constraint) {
                 $constraint->aspectRatio();
             });
             $img->save($thumbnailpath);
@@ -266,23 +266,49 @@ class PagesController extends Controller
         ]);
 
         if(!empty($request->blog_image)) {
+            // if ($request->hasFile('blog_image')) {
+            //     $image = $request->file('blog_image');
+            //     $blog_image = time() . '.' . $image->getClientOriginalExtension();
+            //     $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$blog_image;
+            //     $destinationPath = public_path('pages/blogs');
+            //     File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            //     $thumbnailpath = public_path('pages/blogs/thumbnails');
+            //     if(!File::isDirectory($thumbnailpath)){
+            //         File::makeDirectory($thumbnailpath, 0777, true, true);
+            //     }
+            //     $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
+            //     $imageinter =  Image::make($image)->fit(290,200)->save($imageUrl);
+
+            //     $image->move($destinationPath, $blog_image);
+            // }
             if ($request->hasFile('blog_image')) {
                 $image = $request->file('blog_image');
-                $blog_image = time() . '.' . $image->getClientOriginalExtension();
-                $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$blog_image;
-                $destinationPath = public_path('pages/blogs');
-                File::makeDirectory($destinationPath, $mode = 0777, true, true);
-                // $imageUrl = $destinationPath.'/'.$blog_image;
-                // $imageinter =  Image::make($image)->resize(1920,517)->save($imageUrl);
                 
-                $thumbnailpath = public_path('pages/blogs/thumbnails');
-                if(!File::isDirectory($thumbnailpath)){
-                    File::makeDirectory($thumbnailpath, 0777, true, true);
+                // Generate unique filenames
+                $blog_image = time() . '.' . $image->getClientOriginalExtension();
+                $fileName_thumb = rand(11111111, 99999999) . "_" . time() . "_thumb_" . $blog_image;
+            
+                // Define paths
+                $destinationPath = public_path('pages/blogs');
+                $thumbnailPath = public_path('pages/blogs/thumbnails');
+            
+                // Create directories if they do not exist
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                if (!File::isDirectory($thumbnailPath)) {
+                    File::makeDirectory($thumbnailPath, 0777, true, true);
                 }
-                $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
-                $imageinter =  Image::make($image)->fit(290,200)->save($imageUrl);
-
+            
+                // Resize and save the cover image (1920x517)
+                $coverImageUrl = $destinationPath . '/' . $blog_image;
+                Image::make($image)->fit(900, 300)->save($coverImageUrl);
+            
+                // Resize and save the thumbnail (290x200)
+                $thumbnailUrl = $thumbnailPath . '/' . $fileName_thumb;
+                Image::make($image)->fit(290, 200)->save($thumbnailUrl);
+            
+                // Move the original image to the destination directory
                 $image->move($destinationPath, $blog_image);
+                
             }
         } else {
             $blog_image = null;
@@ -324,25 +350,61 @@ class PagesController extends Controller
         $Image =  null;
 
         if( !empty($request->blog_image)) {
+            // if ($request->hasFile('blog_image')) {
+            //     $blog_image = $request->file('blog_image');
+            //     $blog_image2 = $request->file('blog_image');
+            //     $destinationPath = public_path('pages/blogs');
+            //     $Image = time() . "." . $blog_image->getClientOriginalExtension();
+            //     File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            //     // $imageUrl = $destinationPath.'/'.$Image;
+            //     // $imageinter =  Image::make($blog_image2)->resize(1920,517)->save($imageUrl);
+                
+            //     $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$Image;
+            //     $thumbnailpath = public_path('pages/blogs/thumbnails');
+            //     if(!File::isDirectory($thumbnailpath)){
+            //         File::makeDirectory($thumbnailpath, 0777, true, true);
+            //     }
+            //     $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
+            //     $imageinter =  Image::make($blog_image2)->fit(290,200)->save($imageUrl);
+
+
+            //     $blog_image->move($destinationPath, $Image);
+            //     $request['blog_image'] = "$Image";
+            // }
+
             if ($request->hasFile('blog_image')) {
                 $blog_image = $request->file('blog_image');
-                $blog_image2 = $request->file('blog_image');
                 $destinationPath = public_path('pages/blogs');
+            
+                // Generate a unique filename for the cover image
                 $Image = time() . "." . $blog_image->getClientOriginalExtension();
-                File::makeDirectory($destinationPath, $mode = 0777, true, true);
-                // $imageUrl = $destinationPath.'/'.$Image;
-                // $imageinter =  Image::make($blog_image2)->resize(1920,517)->save($imageUrl);
-                
-                $fileName_thumb =rand(11111111,99999999)."_".time()."_thumb_".$Image;
-                $thumbnailpath = public_path('pages/blogs/thumbnails');
-                if(!File::isDirectory($thumbnailpath)){
-                    File::makeDirectory($thumbnailpath, 0777, true, true);
+            
+                // Create the destination directory if it does not exist
+                if (!File::isDirectory($destinationPath)) {
+                    File::makeDirectory($destinationPath, $mode = 0777, true, true);
                 }
-                $imageUrl = $thumbnailpath.'/'.$fileName_thumb;
-                $imageinter =  Image::make($blog_image2)->fit(290,200)->save($imageUrl);
-
-
+            
+                // Resize and save the cover image with the specified dimensions (1920x517)
+                $coverImageUrl = $destinationPath . '/' . $Image;
+                $coverImage = Image::make($blog_image)->fit(900, 300)->save($coverImageUrl);
+            
+                // Generate a unique filename for the thumbnail
+                $fileName_thumb = rand(11111111, 99999999) . "_" . time() . "_thumb_" . $Image;
+                $thumbnailPath = public_path('pages/blogs/thumbnails');
+            
+                // Create the thumbnail directory if it does not exist
+                if (!File::isDirectory($thumbnailPath)) {
+                    File::makeDirectory($thumbnailPath, 0777, true, true);
+                }
+            
+                // Resize and save the thumbnail with the specified dimensions (290x200)
+                $thumbnailUrl = $thumbnailPath . '/' . $fileName_thumb;
+                $thumbnailImage = Image::make($blog_image)->fit(290, 200)->save($thumbnailUrl);
+            
+                // Move the original cover image to the destination directory
                 $blog_image->move($destinationPath, $Image);
+            
+                // Store the filename in the request data
                 $request['blog_image'] = "$Image";
             }
 
