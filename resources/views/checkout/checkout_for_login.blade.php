@@ -3376,6 +3376,7 @@ $cart_price = 0;
                     $('.shipping_main_div').removeClass('d-none');
                     $('.remove_shipping_price').addClass('d-none');
                     $('#pick_up_modal').modal('hide');
+                    window.location.href = '/checkout';
                 }
 
                 function accept_pickUp() {
