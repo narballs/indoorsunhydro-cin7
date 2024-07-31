@@ -130,6 +130,12 @@ class OrderController extends Controller
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
         $paymentMethod = $paymentMethodOption;
+        $delivery_instructions = null;
+        if (!empty($request->logisticsCarrier) && (strtolower($request->logisticsCarrier) === 'pickup order')) {
+            $delivery_instructions = 'web pickup order placed on ' . $request->date . ' ' . $request->memo;
+        } else {
+            $delivery_instructions = $request->memo;
+        }
         //check if user have already contact with cin7
         $existing_contact = Contact::where('user_id', Auth::id())->first();
         $session_contact_id = Session::get('contact_id');
@@ -414,7 +420,7 @@ class OrderController extends Controller
                     $order->user_switch = $user_switch;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
-                    $order->memo = $request->memo;
+                    $order->memo = $delivery_instructions;
                     $order->date = $request->date;
                     $order->internal_comments = $request->internal_comments;
                     // $order->delievery_instructions = $request->delievery_instructions;
@@ -727,7 +733,7 @@ class OrderController extends Controller
                     $order->user_switch = $user_switch;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
-                    $order->memo = $request->memo;
+                    $order->memo = $delivery_instructions;
                     $order->date = $request->date;
                     $order->internal_comments = $request->internal_comments;
                     // $order->delievery_instructions = $request->delievery_instructions;
