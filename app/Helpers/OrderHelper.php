@@ -105,7 +105,7 @@ class OrderHelper {
                 "internalComments" => $order->internal_comments,
                 "productTotal" => 100,
                 "freightTotal" => !empty($order->shipment_price) ? $order->shipment_price : 0.00,
-                "freightDescription" => null,
+                "freightDescription" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? 'Pickup Order' : null,
                 "surcharge" => null,
                 "surchargeDescription" => null,
                 "discountTotal" => null,

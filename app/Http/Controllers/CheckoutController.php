@@ -963,11 +963,13 @@ class CheckoutController extends Controller
                     $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
                     ->where('order_id', $order_id)
                     ->get();
+
+                    $pickup = !empty($currentOrder->logisticsCarrier) && strtolower($currentOrder->logisticsCarrier) === 'pickup order' ? true : false;
                     
                     $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
-                        if (!empty($order_contact)) {
+                        if (!empty($order_contact) && $pickup == false) {
                             // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
                             $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
                             if ($shiping_order['statusCode'] == 200) {
