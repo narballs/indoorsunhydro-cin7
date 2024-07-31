@@ -49,6 +49,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         
+        
         $request->validate(
             [
                 'method_name' => 'required',
@@ -131,7 +132,7 @@ class OrderController extends Controller
         $paymentMethodOption = $request->input('method_option');
         $paymentMethod = $paymentMethodOption;
         $delivery_instructions = null;
-        if (!empty($request->logisticsCarrier) && (strtolower($request->logisticsCarrier) === 'pickup order')) {
+        if (!empty($request->method_option) && (strtolower($request->method_option) === 'pickup order')) {
             $delivery_instructions = 'web pickup order placed on ' . $request->date . ' ' . $request->memo;
         } else {
             $delivery_instructions = $request->memo;
