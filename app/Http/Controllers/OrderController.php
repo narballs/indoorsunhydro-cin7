@@ -131,9 +131,10 @@ class OrderController extends Controller
         $paymentMethod = $request->input('method_name');
         $paymentMethodOption = $request->input('method_option');
         $paymentMethod = $paymentMethodOption;
+        $date = !empty($request->date) ? Carbon::parse($request->date)->format('Y-m-d H:i') : Carbon::now();
         $delivery_instructions = null;
         if (!empty($request->method_option) && (strtolower($request->method_option) === 'pickup order')) {
-            $delivery_instructions = 'web pickup order placed on ' . $request->date . ' ' . $request->memo;
+            $delivery_instructions = 'web pickup order placed on ' . $date . ' ' . $request->memo;
         } else {
             $delivery_instructions = $request->memo;
         }
