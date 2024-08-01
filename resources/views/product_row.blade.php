@@ -83,17 +83,52 @@
                     @csrf
                     <div class="col-md-12 p-1 price-category-view-section">
                         <?php
-                        $retail_price = 0;
-                        $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
-                        foreach ($option->price as $price) {
-                            $retail_price = $price->$user_price_column;
-                            if ($retail_price == 0) {
-                                $retail_price = $price->sacramentoUSD;
+                        
+                            $retail_price = 0;
+                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                            foreach ($option->price as $price) {
+                                $retail_price = $price->$user_price_column;
+                                if ($retail_price == 0) {
+                                    $retail_price = $price->sacramentoUSD;
+                                }
+                                if ($retail_price == 0) {
+                                    $retail_price = $price->retailUSD;
+                                }
                             }
-                            if ($retail_price == 0) {
-                                $retail_price = $price->retailUSD;
+                            $add_to_cart = true;
+                            $show_price = true;
+                            if (!empty($products_to_hide)) {
+                                if (in_array($option->option_id, $products_to_hide)) {
+                                    if (!auth()->user()) {
+                                        $add_to_cart = false;
+                                        $show_price = false;
+                                    } else {
+                                        if (auth()->user()) {
+                                            $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+                                            if (empty($contact)) {
+                                                $add_to_cart = false;
+                                                $show_price = false;
+                                            }
+                                            $contact_id_new = null; 
+                                            if ($contact->is_parent == 1) {
+                                                $contact_id_new = $contact->contact_id;
+                                            } else {
+                                                $contact_id_new = $contact->parent_id;
+                                            }
+
+                                            $get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
+                                            if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                                                $add_to_cart = false;
+                                                $show_price = false;
+                                            } else {
+                                                $add_to_cart = true;
+                                                $show_price = true;
+                                            }
+                                        }
+                                        
+                                    }
+                                }
                             }
-                        }
                         ?>
                         @if (!empty($option) && $option->stockAvailable > 0)
                             <div class="mt-1 mb-1">
@@ -105,8 +140,9 @@
                                     }}</span>
                             </div>
                         @endif
-                        <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
-                            ${{ number_format($retail_price, 2) }}</h4>
+                        @if ($show_price == true)
+                            <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">${{ number_format($retail_price, 2) }}</h4>
+                        @endif
                         @if ($product->categories)
                             <p class="category-cart-page  mt-3 mb-2" title="{{$product->categories->name}}">
                                 Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
@@ -117,6 +153,7 @@
                             </p>
                         @endif
                         <?php 
+                            
                             $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($option); 
                             $last_month_views = null;
                             $views_count = $product->product_views->whereBetween('created_at', [Carbon\Carbon::now()->subMonth()->startOfMonth(), Carbon\Carbon::now()->subMonth()->endOfMonth()])->count();
@@ -142,96 +179,104 @@
                         @endif
                         
                     </div>
-                    <div class="col-md-12 add-to-cart-button-section">
-                        @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
-                            @if ($option->stockAvailable > 0)
-                                <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend custom-border qty_minus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
-                                        </div>
-                                        {{-- <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}"> --}}
-                                        <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
-                                        <div class="input-group-prepend custom-border qty_plus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button 
-                                    class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
-                                    type="submit" 
-                                    style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
-                                    onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
-                                >
-                                    Add to cart
-                                </button>
-                                
-                                {{-- <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
-                                    <span class="cart-total-number-{{$product->id }} mr-2"></span>
-                                    Added to cart
-                                </div> --}}
-                            @else
-                                
-                                @if (auth()->user())
-                                    <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$product->code}}">
-                                    <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$product->id}}">
-                                    <div class="row justify-content-center align-items-center">
-                                        <div class="col-md-12">
-                                            <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards text-uppercase notify_stock_btn_class rounded d-flex align-items-center justify-content-center"
-                                                type="button" id="" onclick="notify_user_about_product_stock('{{$product->id}}' , '{{$product->code}}')" data-product-id = {{$product->id}}>
-                                                <a class="text-white">Notify</a>
-                                                <div class="spinner-border text-white custom_stock_spinner stock_spinner_{{$product->id}} ml-1 d-none" role="status">
-                                                    <span class="sr-only"></span>
-                                                </div>
-                                            </button>
+                    @if ($add_to_cart == true)
+                        <div class="col-md-12 add-to-cart-button-section">
+                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
+                                @if ($option->stockAvailable > 0)
+                                    <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend custom-border qty_minus_mobile">
+                                                <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
+                                            </div>
+                                            {{-- <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}"> --}}
+                                            <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
+                                            <div class="input-group-prepend custom-border qty_plus_mobile">
+                                                <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
+                                            </div>
                                         </div>
                                     </div>
-                                @else
-                                    <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded"
-                                        type="button" id="notify_popup_modal" onclick="show_notify_popup_modal('{{$product->id}}' , '{{$product->code}}')">
-                                        <a class="text-white">Notify</a>
+                                    <button 
+                                        class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
+                                        type="submit" 
+                                        style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
+                                        onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                    >
+                                        Add to cart
                                     </button>
+                                    
+                                    {{-- <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
+                                        <span class="cart-total-number-{{$product->id }} mr-2"></span>
+                                        Added to cart
+                                    </div> --}}
+                                @else
+                                    
+                                    @if (auth()->user())
+                                        <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$product->code}}">
+                                        <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$product->id}}">
+                                        <div class="row justify-content-center align-items-center">
+                                            <div class="col-md-12">
+                                                <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards text-uppercase notify_stock_btn_class rounded d-flex align-items-center justify-content-center"
+                                                    type="button" id="" onclick="notify_user_about_product_stock('{{$product->id}}' , '{{$product->code}}')" data-product-id = {{$product->id}}>
+                                                    <a class="text-white">Notify</a>
+                                                    <div class="spinner-border text-white custom_stock_spinner stock_spinner_{{$product->id}} ml-1 d-none" role="status">
+                                                        <span class="sr-only"></span>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded"
+                                            type="button" id="notify_popup_modal" onclick="show_notify_popup_modal('{{$product->id}}' , '{{$product->code}}')">
+                                            <a class="text-white">Notify</a>
+                                        </button>
+                                    @endif
+                                @endif
+                            @else
+                                @if ($enable_add_to_cart)
+                                    <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend custom-border qty_minus_mobile">
+                                                <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
+                                            </div>
+                                            {{-- <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}"> --}}
+                                            <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
+                                            <div class="input-group-prepend custom-border qty_plus_mobile">
+                                                <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
+                                        type="submit" 
+                                        style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
+                                        onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
+                                    >
+                                        Add to cart
+                                    </button>
+                                    
+                                    {{-- <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
+                                        <span class="cart-total-number-{{$product->id }} mr-2"></span>
+                                        Added to cart
+                                    </div> --}}
+                                @else
+                                    <button 
+                                        class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
+                                        tabindex="-1" 
+                                        type="submit" 
+                                        style="max-height: 46px;" 
+                                        id="ajaxSubmit_{{ $product->id }}"
+                                        disabled 
+                                        onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
                                 @endif
                             @endif
-                        @else
-                            @if ($enable_add_to_cart)
-                                <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend custom-border qty_minus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
-                                        </div>
-                                        {{-- <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number " onchange="update_qty_text('{{ $product->id }}', '{{ $option->option_id }}')" class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}"> --}}
-                                        <input type="number" id="swap_qty_number_{{$product->id}}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_{{$product->id}}"  style="font-weight: 500" min="1" max="{{$option->stockAvailable}}">
-                                        <div class="input-group-prepend custom-border qty_plus_mobile">
-                                            <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button 
-                                    class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_{{$product->id}}" 
-                                    type="submit" 
-                                    style="max-height: 46px;" id="ajaxSubmit_{{ $product->id }}"
-                                    onclick="updateCart('{{ $product->id }}', '{{ $option->option_id }}')"
-                                >
-                                    Add to cart
-                                </button>
-                                
-                                {{-- <div class="cart-total-{{ $product->id }} quantity_count_circle " style="display: none" data-product="{{$product->id}}" onclick="swap_quantity_input('{{ $product->id }}')">
-                                    <span class="cart-total-number-{{$product->id }} mr-2"></span>
-                                    Added to cart
-                                </div> --}}
-                            @else
-                                <button 
-                                    class="prd_btn_resp ajaxSubmit mb-3 text-white bg-danger bg-gradient button-cards col w-100 autocomplete=off"
-                                    tabindex="-1" 
-                                    type="submit" 
-                                    style="max-height: 46px;" 
-                                    id="ajaxSubmit_{{ $product->id }}"
-                                    disabled 
-                                    onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
-                            @endif
-                        @endif
-                    </div>
+                        </div>
+                    @else
+                        <div class="col-md-12">
+                            <button class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
+                                Call To Order
+                            </button>
+                        </div> 
+                    @endif
                 </div>
             </div>
             <div id="popover-form" class="d-none">

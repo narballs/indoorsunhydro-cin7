@@ -87,7 +87,12 @@ class HomeController extends Controller
 
 
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
-        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock'));
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
+        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide'));
     }
 
     public function show_page($slug) {

@@ -1098,6 +1098,12 @@ class UserController extends Controller
                     $address_user = Contact::where('contact_id', $parent->parent_id)->first();
                 }
             }
+
+            $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+            if (!empty($products_to_hide)) {
+                $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+            }
             return view('my-account', compact(
                 'user',
                 'user_address',
@@ -1113,7 +1119,7 @@ class UserController extends Controller
                 'search',
                 'date_filter',
                 'frequent_products',
-                'order_submitters','submitter_filter','address_user'
+                'order_submitters','submitter_filter','address_user','products_to_hide'
             ));
         }
     }
@@ -1228,6 +1234,11 @@ class UserController extends Controller
                     $address_user = Contact::where('contact_id', $parent->parent_id)->first();
                 }
             }
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+    
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
         return view('my-account.my-favorites', compact(
             'lists',
             'user',
@@ -1237,7 +1248,8 @@ class UserController extends Controller
             'companies',
             'states',
             'per_page',
-            'address_user'
+            'address_user',
+            'products_to_hide'
         ));
         // return $images;
     }
