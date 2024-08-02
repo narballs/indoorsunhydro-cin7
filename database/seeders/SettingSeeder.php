@@ -351,7 +351,13 @@ class SettingSeeder extends Seeder
                 <br/>
                 Pick up window is Monday - Friday (no weekends) <br/>
                 All orders are available to be picked up <strong>2 Hours</strong> after the order is placed and paid for.',
-            ]
+            ],
+
+            [
+                'option_name' => 'add_extra_70_to_shipping', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];
