@@ -7,6 +7,37 @@
         MY ACCOUNT
     </p>
 </div>
+<input type="hidden" name="products_to_hide" id="products_to_hide" value="{{ htmlspecialchars(json_encode($products_to_hide)) }}">
+@php
+    $auth = false;
+    $paymentTerms = false;
+    if (auth()->user()) {
+        $auth = true;
+        $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+        if (empty($contact)) {
+            $paymentTerms = false;
+        }
+        $contact_id_new = null; 
+        if ($contact->is_parent == 1) {
+            $contact_id_new = $contact->contact_id;
+        } else {
+            $contact_id_new = $contact->parent_id;
+        }
+
+        $get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
+        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+            $paymentTerms = true;
+        } else {
+            $paymentTerms = false;
+        }
+    } else {
+        $auth = false;
+        $paymentTerms = false;
+    }
+@endphp
+
+<input type="hidden" name="paymentTerms" id="paymentTerms" value="{{$paymentTerms}}">
+<input type="hidden" name="auth_value" id="auth_value" value="{{$auth}}">
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 m-auto">
@@ -735,34 +766,75 @@
         }
 
         function buildDataColumn(productData) {
+            var products_to_hide = JSON.parse($('#products_to_hide').val());
+            var show_price = true;
+            var paymentTerms = $('#payment_terms').val();
+            var auth_value = $('#auth_value').val();
+
+            
+            if ((productData.options[0].option_id != null) && (products_to_hide.includes(productData.options[0].option_id))) {
+                if (auth_value == false) {
+                    show_price = false;
+                } else {
+                    if (paymentTerms == true) {
+                        show_price = true;
+                    } else {
+                        show_price = false;
+                    }
+                }
+            }
             var dataHtml = '            <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account d-flex align-items-center">';
-                dataHtml += '                <div class="row">';
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="product_name mb-1">';
-                dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[0].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
-                dataHtml += '                        </p>';
-                dataHtml += '                    </div>';
+            dataHtml += '                <div class="row">';
+            dataHtml += '                    <div class="col-md-10">';
+            dataHtml += '                        <p class="product_name mb-1">';
+            dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[0].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
+            dataHtml += '                        </p>';
+            dataHtml += '                    </div>';
+            if (show_price == true) {
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="product_price mb-1">$' + productData.retail_price.toFixed(2) + '</p>';
                 dataHtml += '                    </div>';
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="category_name mb-1">Category:';
-                dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
-                dataHtml += '                        </p>';
-                dataHtml += '                    </div>';
-                dataHtml += '                </div>';
-                dataHtml += '            </div>';
+            }
+            dataHtml += '                    <div class="col-md-10">';
+            dataHtml += '                        <p class="category_name mb-1">Category:';
+            dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
+            dataHtml += '                        </p>';
+            dataHtml += '                    </div>';
+            dataHtml += '                </div>';
+            dataHtml += '            </div>';
             return dataHtml;
         }
 
         function buildButtonRow(productData) {
+            var products_to_hide = JSON.parse($('#products_to_hide').val());
+            var add_to_cart = true;
+            var paymentTerms = $('#payment_terms').val();
+            var auth_value = $('#auth_value').val();
+            if ((productData.options[0].option_id != null) && (products_to_hide.includes(productData.options[0].option_id))) {
+                if (auth_value == false) {
+                    add_to_cart = false;
+                } else {
+                    if (paymentTerms == true) {
+                        add_to_cart = true;
+                    } else {
+                        add_to_cart = false;
+                    }
+                }
+            }
             var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
+            if (add_to_cart == true) {
                 buttonRowHtml += '            <div class="col-md-10">';
                 buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart(\'' + productData.id + '\', \'' + productData.options[0].option_id + '\')">Add to Cart</button>';
                 buttonRowHtml += '            </div>';
                 buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
                 buttonRowHtml += '        </div>';
-             return buttonRowHtml;
+            } else {
+                buttonRowHtml += '            <div class="col-md-10">';
+                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">Call To Order</button>';
+                buttonRowHtml += '            </div>';
+                buttonRowHtml += '        </div>';
+            }
+            return buttonRowHtml;
         }
 
         function generatePaginationLinks(totalPages, currentPage) {

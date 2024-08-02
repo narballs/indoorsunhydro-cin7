@@ -1,6 +1,26 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<style>
+    .call-to-order-button-product-slider {
+        background-color: #008BD3 !important;
+        color: #ffffff !important;
+        border: 1px solid #008BD3 !important;
+        font-size: 14px;
+        line-height: 1.5;
+        border-radius: .25rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        font-family: 'Poppins';
+        font-style: normal;
+    }
+    .call-to-order-button-product-slider:hover {
+        color: #008BD3 !important;
+        background-color: #ffffff !important;
+        border: 1px solid #008BD3 !important;
+        font-size: 14px;
+    }
+</style>
 @section('my-favorites-active', 'active')
 <div class="col-md-12 p-0">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle my-account-main-heading">
@@ -85,6 +105,16 @@
                                             @if (count($lists) > 0)
                                                 @foreach ($lists as $product)
                                                     @foreach ($product->product->options as $option)
+                                                        @php
+                                                            $add_to_cart = true;
+                                                            $show_price = true;
+                                                            if (!empty($products_to_hide)) {
+                                                                if (in_array($option->option_id, $products_to_hide)) {
+                                                                    $add_to_cart = false;
+                                                                    $show_price = false;
+                                                                }
+                                                            }
+                                                        @endphp
                                                         <div id="">
                                                             @foreach ($option->price as $price)
                                                                 <input type="hidden" value="{{ $product->id }}"
@@ -126,17 +156,25 @@
 
                                                                     </td>
                                                                     <td style="border:none; vertical-align: middle">
-                                                                        <span class="favorite_product_price">
-                                                                            ${{ $product->sub_total }}
-                                                                        </span>
+                                                                        @if ($show_price == true)
+                                                                            <span class="favorite_product_price">
+                                                                                ${{ $product->sub_total }}
+                                                                            </span>
+                                                                        @endif
                                                                     </td>
                                                                     <td style="border:none; vertical-align: middle">
-                                                                        <button type="submit"
-                                                                            style="border:none; background:none;"
-                                                                            onclick="add_favorite_to_cart('{{ $product->id }}', '{{ $product->option_id }}')">
-                                                                            <img src="/theme/img/fav_cart_icon.png"
-                                                                                alt="">
-                                                                        </button>
+                                                                        @if ($show_price == true)
+                                                                            <button type="submit"
+                                                                                style="border:none; background:none;"
+                                                                                onclick="add_favorite_to_cart('{{ $product->id }}', '{{ $product->option_id }}')">
+                                                                                <img src="/theme/img/fav_cart_icon.png"
+                                                                                    alt="">
+                                                                            </button>
+                                                                        @else
+                                                                            <button class="p-2 call-to-order-button-product-slider mb-1">
+                                                                                Call To Order
+                                                                            </button>
+                                                                        @endif
                                                                     </td>
                                                                     <td style="border:none; vertical-align: middle">
                                                                         <button type="button"
