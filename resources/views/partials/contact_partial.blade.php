@@ -101,7 +101,7 @@
       				email.value = '';
       				message.value = '';
       				message.html = '';
-					window.location.href = '/thankyou';
+					window.location.href = '/thank-you';
 				}
    			},
    			error: function (response) {
