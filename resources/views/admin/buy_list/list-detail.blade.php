@@ -66,7 +66,7 @@
                     <tr colspan="4">
                         <th colspan="3">Grand Total</th>
                         <td class="text-center">
-                            <h4>${{ $list_product->grand_total }}</h4>
+                            <h4>${{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</h4>
                         </td>
                     </tr>
                 </tbody>
