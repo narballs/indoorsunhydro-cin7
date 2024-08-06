@@ -831,7 +831,7 @@ class CheckoutController extends Controller
                     ->get();
                     
                     $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
-                    if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                    if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && (strtolower($currentOrder->logisticsCarrier) !== 'pickup order')) {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
                             // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
