@@ -66,15 +66,15 @@
                             </tr>
                             <tr>
                                 @php
-                                    $delivery_text = 'ship';
+                                    $delivery_text = 'to ship';
                                     if (!empty($addresses['delievery_method']) && strtolower($addresses['delievery_method']) == 'pickup order')  {
-                                        $delivery_text = 'pickup';
+                                        $delivery_text = 'for pickup';
                                     } else {
-                                        $delivery_text = 'ship';
+                                        $delivery_text = 'to ship';
                                     }
                                 @endphp
                                 <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 11px;font-weight:400;">
-                                    Your order #{{ $addresses['order_id'] }} is completed and ready to {{ $delivery_text }}
+                                    Your order #{{ $addresses['order_id'] }} is completed and ready {{ $delivery_text }}
                                 </td>
                             </tr>
                         @endif
