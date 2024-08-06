@@ -58,11 +58,11 @@
                         </div>
                         <div class="col-xl-8 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-10">
                             <div class="row">
-                                <h2 class="page-title-head">
+                                <h1 class="page-title-head border-0">
                                     <div class="banner-title">
                                         <div class="text-uppercase font-weight-bold text-dark mx-1 border-element">{{$blog_detail->title}}</div>
                                     </div>
-                                </h2>
+                                </h1>
                             </div>
                         </div>
                         <div class="col-xl-8 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-10">
