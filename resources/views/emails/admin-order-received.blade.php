@@ -67,7 +67,7 @@
                             <tr>
                                 @php
                                     $delivery_text = 'ship';
-                                    @if (!empty($addresses['delievery_method']) && strtolower($addresses['delievery_method']) == 'pickup order')  {
+                                    if (!empty($addresses['delievery_method']) && strtolower($addresses['delievery_method']) == 'pickup order')  {
                                         $delivery_text = 'pickup';
                                     } else {
                                         $delivery_text = 'ship';
