@@ -317,9 +317,11 @@ class CheckoutController extends Controller
 
             
         }
+
+        $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
         if ($enable_extra_shipping_value == true) {
             if ($product_width > 40 || $product_height > 40 || $product_length > 40) {
-                $extra_shipping_value = 70;
+                $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
             } else {
                 $extra_shipping_value = 0;
             }

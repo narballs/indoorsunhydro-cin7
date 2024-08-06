@@ -358,6 +358,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'extra_shipping_value', 
+                'type' => 'text',
+                'option_value' => '70',
+            ],
 
             
         ];
