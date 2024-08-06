@@ -11,7 +11,41 @@
                 @if(!empty($similar_product->options))
                     @foreach ($similar_product->options as $option)
                     @php
-                        $product = $similar_product; 
+                        $product = $similar_product;
+                        $add_to_cart = true;
+                        $show_price = true;
+                        if (!empty($products_to_hide)) {
+                            if (in_array($option->option_id, $products_to_hide)) {
+                                if (!auth()->user()) {
+                                    $add_to_cart = false;
+                                    $show_price = false;
+                                } else {
+                                    if (auth()->user()) {
+                                        $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+                                        if (empty($contact)) {
+                                            $add_to_cart = false;
+                                            $show_price = false;
+                                        }
+                                        $contact_id_new = null; 
+                                        if ($contact->is_parent == 1) {
+                                            $contact_id_new = $contact->contact_id;
+                                        } else {
+                                            $contact_id_new = $contact->parent_id;
+                                        }
+
+                                        $get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
+                                        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                                            $add_to_cart = false;
+                                            $show_price = false;
+                                        } else {
+                                            $add_to_cart = true;
+                                            $show_price = true;
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                        }
                     @endphp
                     <div class="row mt-4 mb-3">
                         <div class="col-md-12">
@@ -47,11 +81,13 @@
                                                 }
                                             }
                                         ?>
+                                        @if ($show_price == true)
                                         <div class="col-md-10">
                                             <p class="product_price mb-1">
                                                 ${{ number_format($retail_price, 2) }}
                                             </p>
                                         </div>
+                                        @endif
                                         <div class="col-md-10">
                                             <p class="category_name mb-1">Category:
                                                 @if(!empty($product->categories))
@@ -65,10 +101,18 @@
                                 </div>
                             </div>
                             <div class="row justify-content-center mt-4">
-                                <div class="col-md-10">
-                                    <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart('{{ $product->id }}', '{{ $option->option_id }}')">Add to Cart</button>
-                                </div>
-                                <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
+                                @if ($add_to_cart == true)
+                                    <div class="col-md-10">
+                                        <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart('{{ $product->id }}', '{{ $option->option_id }}')">Add to Cart</button>
+                                    </div>
+                                    <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
+                                @else
+                                    <div class="col-md-10">
+                                        <button class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
+                                            Call To Order
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

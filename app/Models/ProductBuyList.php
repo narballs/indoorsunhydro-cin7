@@ -25,4 +25,9 @@ class ProductBuyList extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
+
+    public function option()
+    {
+        return $this->belongsTo(ProductOption::class, 'option_id', 'option_id');
+    }
 }

@@ -50,6 +50,7 @@ class ProductController extends Controller
         $selected_category_id = $request->get('selected_category_id');
         if (!empty($selected_category_id)) {
         }
+        
         $parent_category = Category::find($category_id);
         $parent_category_slug = $parent_category->slug;
         $categories = Category::orderBy('name', 'ASC')->where('parent_id', 0)->where('is_active' , 1)->get();
@@ -65,7 +66,11 @@ class ProductController extends Controller
 
         $brand_id = $request->get('brand_id');
         $stock = $request->get('stock');
-
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
         if ($request->get('per_page')) {
             $per_page = $request->get('per_page');
         } else {
@@ -203,7 +208,7 @@ class ProductController extends Controller
             'user_buy_list_options',
             'product_views',
             'best_selling_products',
-            'notify_user_about_product_stock'
+            'notify_user_about_product_stock','products_to_hide'
         ));
     }
 
@@ -223,7 +228,11 @@ class ProductController extends Controller
 
         $childerens = Category::orderBy('name', 'ASC')->where('parent_id', $selected_category_id)->get();
 
-
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
 
         $category_id = $selected_category_id;
         $brand_ids = Product::where('category_id', $selected_category_id)->where('status' , '!='  ,'Inactive')->pluck('brand_id', 'brand_id')->toArray();
@@ -444,7 +453,8 @@ class ProductController extends Controller
             'contact_id',
             'product_views',
             'best_selling_products',
-            'notify_user_about_product_stock'
+            'notify_user_about_product_stock',
+            'products_to_hide'
             // 'db_price_column'
         ));
     }
@@ -492,12 +502,18 @@ class ProductController extends Controller
             $pricing = 'Retail';
         }
 
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
+
         return view('buy_again', compact(
             'products',
             'lists',
             'pricing',
             'user_buy_list_options',
-            'contact_id',
+            'contact_id', 'products_to_hide'
         ));
     }
 
@@ -744,6 +760,11 @@ class ProductController extends Controller
         } 
         
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
 
         return view('product-detail', compact(
             'productOption',
@@ -757,7 +778,13 @@ class ProductController extends Controller
             'product_stocks',
             'notify_user_about_product_stock',
             'request_bulk_quantity_discount',
-            'similar_products','total_stock','best_selling_products','locations', 'inventory_update_time_flag' , 'customer_demand_inventory_number'
+            'similar_products',
+            'total_stock',
+            'best_selling_products',
+            'locations', 
+            'inventory_update_time_flag' , 
+            'customer_demand_inventory_number',
+            'products_to_hide'
         ));
 
         
@@ -855,13 +882,19 @@ class ProductController extends Controller
         ->take(24)
         ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
         return view('categories', compact('products',
         'user_buy_list_options',
         'contact_id',
         'lists', 
         'product_views',
         'best_selling_products',
-        'notify_user_about_product_stock'
+        'notify_user_about_product_stock',
+        'products_to_hide'
         ));
     }
 
@@ -1074,6 +1107,11 @@ class ProductController extends Controller
         ->get();
 
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
         return view(
             'products-by-brand',
             compact(
@@ -1094,7 +1132,8 @@ class ProductController extends Controller
             'contact_id',
             'product_views',
             'best_selling_products',
-            'notify_user_about_product_stock' 
+            'notify_user_about_product_stock',
+            'products_to_hide' 
             )
         );
     }
@@ -1891,6 +1930,11 @@ class ProductController extends Controller
         ->take(24)
         ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -1909,7 +1953,8 @@ class ProductController extends Controller
             'user_buy_list_options',
             'product_views',
             'best_selling_products',
-            'notify_user_about_product_stock'
+            'notify_user_about_product_stock',
+            'products_to_hide'
         ));
     }
 
@@ -2085,12 +2130,23 @@ class ProductController extends Controller
     //add multi favorites to cart
     public function multi_favorites_to_cart(Request $request)
     {
+        $error = false;
+        
+        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+    
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
         if (!empty($request->all_fav)) {
             foreach ($request->all_fav as $multi_favorites) {
                 $id = $multi_favorites['product_id'];
                 $option_id = $multi_favorites['option_id'];
 
-                $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+                $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->whereNotIn('option_id', $products_to_hide)->first();
+                if (empty($productOption) || empty($productOption->products)) {
+                    $error = true;
+                    continue;
+                }
                 $cart = session()->get('cart');
                 if (Auth::id() !== null) {
                     $user_id = Auth::id();
@@ -2172,6 +2228,13 @@ class ProductController extends Controller
 
                 $request->session()->put('cart', $cart);
                 $cart_items = session()->get('cart');
+            }
+
+            if ($error == true) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Some products are not available in the cart'
+                ]);
             }
             return response()->json([
                 'status' => 'success',

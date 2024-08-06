@@ -27,6 +27,21 @@
         font-size: 16px; /* Adjust font size as needed */
     }
 
+    .border-element {
+        position: relative;
+        padding-left: 15px; /* space for border */
+    }
+
+    .border-element::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 7px; /* adjust top spacing */
+        bottom: 7px; /* adjust bottom spacing */
+        width: 5px; /* border width */
+        background-color: #7BC533;
+    }
+
 
 </style>
 <body>
@@ -40,11 +55,15 @@
                     <div class="row justify-content-center">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                             <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="banner-img img-fluid w-100" alt="...">
-                            <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
-                                <div class="banner-title text-center">
-                                    <span class="text-uppercase font-weight-bold text-white">{{$blog_detail->title}}</span>
-                                </div>
-                            </h2>
+                        </div>
+                        <div class="col-xl-8 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-10">
+                            <div class="row">
+                                <h2 class="page-title-head">
+                                    <div class="banner-title">
+                                        <div class="text-uppercase font-weight-bold text-dark mx-1 border-element">{{$blog_detail->title}}</div>
+                                    </div>
+                                </h2>
+                            </div>
                         </div>
                         <div class="col-xl-8 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-10">
                             <div class="row blog_detail_description">

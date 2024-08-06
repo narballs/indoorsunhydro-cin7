@@ -324,6 +324,33 @@ h1 {
     letter-spacing: 0.05em;
 }
 
+.call-to-order-button{
+    background-color: #008bd3;
+    font-family: 'Poppins';
+    color: #FFFFFF ;
+    border: none;
+    height: 44px;
+    line-height: 27px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.05em;
+
+}
+
+.call-to-order-button:hover {
+    color: #008bd3;
+    background-color: #FFFFFF ;
+    border: 1px solid #008bd3 !important;
+}
+
+.call-to-order-button:focus {
+    color: #008bd3;
+    background-color: #FFFFFF ;
+    border: 1px solid #008bd3 !important;
+}
+
 .card {
     min-height: 372px;
 }
@@ -3129,11 +3156,34 @@ input[type=number] {
         color: #FFFFFF !important;
         border: none !important;
         width: 389px !important;
-        font: Poppins !important;
+        font: 'Poppins' !important;
         font-weight: 600 !important;
         font-size: 16px !important;
         height: 44px !important;
         line-height: 27px !important;
+    }
+    .call-to-order-button {
+        background-color: #008bd3 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        width: 389px !important;
+        font: 'Poppins' !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        height: 44px !important;
+        line-height: 27px !important; 
+    }
+
+    .call-to-order-button:hover {
+        color: #008bd3 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #008bd3 !important;
+    }
+
+    .call-to-order-button:focus {
+        color: #008bd3 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #008bd3 !important;
     }
 
     .applay-coupon-code-modal-btn {
@@ -5676,6 +5726,35 @@ select.list-dt:focus {
         width: 75% !important;
     }
 
+
+    .call-to-order-button {
+        background-color: #008bd3 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        font-weight: 600 !important;
+        line-height: 27px !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-size: 10.0772px !important;
+        line-height: 15px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        height: 25.19px;
+        width: 75% !important;
+    }
+
+    .call-to-order-button:hover {
+        color: #008bd3 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #008bd3 !important;
+    }
+
+    .call-to-order-button:focus {
+        color: #008bd3 !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #008bd3 !important;
+    }
+
     .applay-coupon-code-modal-btn {
         color: #fff !important;
         text-transform: uppercase !important;
@@ -6183,6 +6262,36 @@ select.list-dt:focus {
         color: #FFFFFF !important;
 
     }
+
+    .call-to-order-button{
+        background-color: #008bd3;
+        color: #FFFFFF !important;
+        border: none;
+        width: 90% !important;
+        height: 31.09px !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 10.0836px !important;
+        line-height: 15px !important;
+        letter-spacing: 0.05em !important;
+        text-transform: uppercase !important;
+        color: #FFFFFF !important;
+
+    }
+
+    .call-to-order-button:focus {
+        color: #008bd3;
+        background-color: #FFFFFF !important;
+        border: 1px solid #008bd3 !important;
+    }
+
+    .call-to-order-button:hover {
+        color: #008bd3;
+        background-color: #FFFFFF !important;
+        border: 1px solid #008bd3 !important;
+    }
+
 
 
     .p_detail_image_row {

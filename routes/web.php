@@ -552,4 +552,4 @@ Route::post('import-numbers-to-list', [SmsController::class, 'import_numbers_to_
 Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sms');
 
 // thankyou page
-Route::get('/thankyou', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
+Route::get('/thank-you', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');

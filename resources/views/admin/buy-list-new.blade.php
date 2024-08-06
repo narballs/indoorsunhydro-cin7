@@ -162,7 +162,7 @@
                     <div class="row">
                         <div class="col-md-10 border-top">Grand Total</div>
                         <div class="col-md-2 border-top">amount : <span
-                                id="grand_total">{{ $list_product->grand_total }}</span></div>
+                                id="grand_total">{{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</span></div>
                     </div>
                     <div class="row">
                         <div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary"

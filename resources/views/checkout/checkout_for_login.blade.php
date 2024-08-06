@@ -965,9 +965,9 @@ $cart_price = 0;
                                                     $shipment_price = !empty($shipment_price) ? $shipment_price : 0;
                                                     if ($shipment_price > 0) {
                                                         $parcel_guard_price = (ceil($shipment_price / 100) * 0.99);
-                                                        $shipment_price = $shipment_price + $parcel_guard_price;
+                                                        $shipment_price = $shipment_price + $parcel_guard_price + $extra_shipping_value;
                                                     } else {
-                                                        $shipment_price = $shipment_price;
+                                                        $shipment_price = $shipment_price + $extra_shipping_value;
                                                     }
                                                 @endphp
                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
@@ -1008,9 +1008,9 @@ $cart_price = 0;
                                                                         $parcel_guard_price = 0 ;
                                                                         if ($shipment_cost_with_surcharge > 0) {
                                                                             $parcel_guard_price = (ceil($shipment_cost_with_surcharge / 100) * 0.99);
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price;
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price + $extra_shipping_value;
                                                                         } else {
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge;
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price + $extra_shipping_value;
                                                                         }
                                                                         
                                                                         if (!empty($shipment_cost_with_surcharge)) {
@@ -1048,9 +1048,9 @@ $cart_price = 0;
                                                                         $parcel_guard_price = 0 ;
                                                                         if ($shipment_cost_with_surcharge > 0) {
                                                                             $parcel_guard_price = (ceil($shipment_cost_with_surcharge / 100) * 0.99);
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price;
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price + $extra_shipping_value;
                                                                         } else {
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge;
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $extra_shipping_value;
                                                                         }
                                                                         // dd($parcel_guard_price);
                                                                     @endphp

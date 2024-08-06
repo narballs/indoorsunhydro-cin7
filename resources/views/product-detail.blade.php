@@ -20,8 +20,79 @@
     @endif
     @yield('content')
 </div>
-<?php //dd($location_inventories);exit;?>
+<?php 
+    // dd($products_to_hide);
+?>
 <input type="hidden" value="{{App\Helpers\UserHelper::getUserPriceColumn()}}" id="get_column">
+<input type="hidden" name="products_to_hide" id="products_to_hide" value="{{ htmlspecialchars(json_encode($products_to_hide)) }}">
+
+
+@php
+    
+    $add_to_cart = true;
+    $show_price = true;
+    $auth = false;
+    $paymentTerms = false;
+    if (!empty($products_to_hide)) {
+        if (in_array($productOption->option_id, $products_to_hide)) {
+            if (!auth()->user()) {
+                $add_to_cart = false;
+                $show_price = false;
+            } else {
+                if (auth()->user()) {
+                    $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+                    if (empty($contact)) {
+                        $add_to_cart = false;
+                        $show_price = false;
+                    }
+                    $contact_id_new = null; 
+                    if ($contact->is_parent == 1) {
+                        $contact_id_new = $contact->contact_id;
+                    } else {
+                        $contact_id_new = $contact->parent_id;
+                    }
+
+                    $get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
+                    if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                        $add_to_cart = false;
+                        $show_price = false;
+                    } else {
+                        $add_to_cart = true;
+                        $show_price = true;
+                    }
+                }
+                
+            }
+        }
+    }
+
+    if (auth()->user()) {
+        $auth = true;
+        $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+        if (empty($contact)) {
+            $paymentTerms = false;
+        }
+        $contact_id_new = null; 
+        if ($contact->is_parent == 1) {
+            $contact_id_new = $contact->contact_id;
+        } else {
+            $contact_id_new = $contact->parent_id;
+        }
+
+        $get_main_contact = App\Models\Contact::where('id', $contact_id_new)->first();
+        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+            $paymentTerms = true;
+        } else {
+            $paymentTerms = false;
+        }
+    } else {
+        $auth = false;
+        $paymentTerms = false;
+    }
+@endphp
+
+<input type="hidden" name="paymentTerms" id="paymentTerms" value="{{$paymentTerms}}">
+<input type="hidden" name="auth_value" id="auth_value" value="{{$auth}}">
 
 <div class="row bg-light desktop-view justify-content-center w-100">
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
@@ -107,12 +178,13 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row align-items-center">
-                                            <div class="col-md-12">
-                                                <span class="text-danger product-detail-price" id="product_price">
-                                                    ${{number_format($retail_price, 2)}}
-                                                </span>
-                                            </div>
-                                            
+                                            @if ($show_price == true)
+                                                <div class="col-md-12">
+                                                    <span class="text-danger product-detail-price" id="product_price">
+                                                        ${{number_format($retail_price, 2)}}
+                                                    </span>
+                                                </div>
+                                            @endif
                                             <div class="col-md-6 ">
                                                 <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand"></span>                                                
                                                     <div class="price d-flex flex-row align-items-center">
@@ -266,6 +338,7 @@
                                     @csrf
                                     <div class="cart row mt-3  w-100 justify-content-between">
                                         <div class="col-md-3">
+                                            @if ($add_to_cart == true)
                                             <div class="quantity" style="width:144px">
                                                 <input type="number" name="quantity" id="quantity" min="1"
                                                     max="{{$productOption->stockAvailable}}" step="1" value="1" class="desktopqtyprd">
@@ -279,17 +352,18 @@
                                                     <div class="quantity-div quantity-down greyed"></div>
                                                 </div>
                                             </div>
+                                            @endif
                                         </div>
                                         <div class="col-md-8">
-                                            
+                                            @if ($add_to_cart == true)
                                             @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                                 @if ($total_stock > 0)
-                                                    <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
+                                                    <button type="button" class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>
                                                     </button>
                                                 @elseif ($productOption->stockAvailable > 0)
-                                                    <button class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
+                                                    <button type="button" class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
                                                         type="button" id="ajaxSubmit">
                                                         <a class="text-white">Add to cart </a>
                                                     </button>
@@ -300,7 +374,7 @@
                                                         <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
                                                         <div class="row justify-content-between align-items-center">
                                                             <div class="col-md-10">
-                                                                <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
+                                                                <button type="button" class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
                                                                     type="button" id="" onclick="notify_user_about_product_stock()">
                                                                     <a class="text-white">Notify When in Stock </a>
                                                                 </button>
@@ -312,7 +386,7 @@
                                                             </div>
                                                         </div>
                                                     @else
-                                                        <button class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase notify_popup_modal_btn"
+                                                        <button type="button" class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase notify_popup_modal_btn"
                                                             type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
                                                             <a class="text-white">Notify When in Stock </a>
                                                         </button>
@@ -338,6 +412,11 @@
                                                         <a class="text-white">Add to cart</a>
                                                     </button>
                                                 @endif
+                                            @endif
+                                            @else
+                                            <button type="button" class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
+                                                Call To Order
+                                            </button>
                                             @endif
                                         </div>
                                     </div>
@@ -488,11 +567,12 @@
                         <div class="product-detail-heading w-75" id="product_name">
                             <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                         </div>
-
+                        @if ($show_price == true)
                         <div class="w-25 text-right">
                             <span class="product-detail-price" id="product_price">
                                 ${{number_format($retail_price,2)}}</span>
                         </div>
+                        @endif
 
                         
                     </div>
@@ -649,21 +729,23 @@
                         @csrf
                         <div class="cart d-flex  justify-content-between align-items-center">
                             <div class="mt-3 p_detail_stock_row">
-                                <div class="quantity p_detail_stock_qty qty_mbl_holder">
-                                    <input type="number" name="quantity" class="mobile_qty" id="qt_mbl_number" min="1"
-                                        max="{{$productOption->stockAvailable}}" step="1" value="1">
-                                    <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
-                                    <input type="hidden" name="option_id" id="option_id"
-                                        value="{{$productOption->option_id}}">
-                                    <div class="quantity-nav">
-                                        <div class="quantity-div quantity-up up_qty_mbl">
-                                            <i class="fa fa-angle-up text-dark u_btn mt-1"></i>
-                                        </div>
-                                        <div class="quantity-div quantity-down down_qty_mbl greyed">
-                                            <i class="fa fa-angle-down text-dark d_btn mt-1"></i>
+                                @if ($add_to_cart == true)
+                                    <div class="quantity p_detail_stock_qty qty_mbl_holder">
+                                        <input type="number" name="quantity" class="mobile_qty" id="qt_mbl_number" min="1"
+                                            max="{{$productOption->stockAvailable}}" step="1" value="1">
+                                        <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
+                                        <input type="hidden" name="option_id" id="option_id"
+                                            value="{{$productOption->option_id}}">
+                                        <div class="quantity-nav">
+                                            <div class="quantity-div quantity-up up_qty_mbl">
+                                                <i class="fa fa-angle-up text-dark u_btn mt-1"></i>
+                                            </div>
+                                            <div class="quantity-div quantity-down down_qty_mbl greyed">
+                                                <i class="fa fa-angle-down text-dark d_btn mt-1"></i>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                             <div class="mt-3 p_detail_cart_row">
                                 <div style="">
@@ -671,52 +753,58 @@
                                         // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                         $enable_add_to_cart = true;
                                     ?>
-                                    @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                        @if ($total_stock > 0)
+                                    @if ($add_to_cart == true)
+                                        @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
+                                            @if ($total_stock > 0)
+                                                    <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
+                                                    type="submit" id="ajaxSubmit_mbl">
+                                                    Add to cart
+                                                </button>
+                                            @elseif ($productOption->stockAvailable > 0)
                                                 <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
-                                                type="submit" id="ajaxSubmit_mbl">
-                                                Add to cart
-                                            </button>
-                                        @elseif ($productOption->stockAvailable > 0)
-                                            <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
-                                                type="submit" id="ajaxSubmit_mbl">
-                                                Add to cart
-                                            </button>
-                                        @else
-                                            @if (auth()->user())
-                                                <input type="hidden" name="notify_user_email_input" class="notify_user_email_input" id="auth_user_email" value="{{auth()->user()->email}}">
-                                                <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$productOption->products->code}}">
-                                                <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
-                                                <div class="row justify-content-between align-items-center">
-                                                    <div class="col-md-10">
-                                                        <button class="bg-primary button-cards product-detail-button-cards ajaxSubmit_mbl"
-                                                            type="button" id="" onclick="notify_user_about_product_stock()">
-                                                            <a class="text-white">Notify When in Stock </a>
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <div class="spinner-border text-primary stock_spinner d-none" role="status">
-                                                            <span class="sr-only"></span>
+                                                    type="submit" id="ajaxSubmit_mbl">
+                                                    Add to cart
+                                                </button>
+                                            @else
+                                                @if (auth()->user())
+                                                    <input type="hidden" name="notify_user_email_input" class="notify_user_email_input" id="auth_user_email" value="{{auth()->user()->email}}">
+                                                    <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$productOption->products->code}}">
+                                                    <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
+                                                    <div class="row justify-content-between align-items-center">
+                                                        <div class="col-md-10">
+                                                            <button class="bg-primary button-cards product-detail-button-cards ajaxSubmit_mbl"
+                                                                type="button" id="" onclick="notify_user_about_product_stock()">
+                                                                <a class="text-white">Notify When in Stock </a>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="spinner-border text-primary stock_spinner d-none" role="status">
+                                                                <span class="sr-only"></span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @else
+                                                    <button class="bg-primary button-cards product-detail-button-cards notify_popup_modal_btn "
+                                                        type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
+                                                        <a class="text-white">Notify When in Stock </a>
+                                                    </button>
+                                                @endif
+                                            @endif
+                                        @else
+                                            @if ($enable_add_to_cart)
+                                                <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
+                                                    <a class="text-white">Add to cart</a>
+                                                </button>
                                             @else
-                                                <button class="bg-primary button-cards product-detail-button-cards notify_popup_modal_btn "
-                                                    type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
-                                                    <a class="text-white">Notify When in Stock </a>
+                                                <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
+                                                    <a class="text-white">Add to cart</a>
                                                 </button>
                                             @endif
                                         @endif
                                     @else
-                                        @if ($enable_add_to_cart)
-                                            <button class="button-cards product-detail-button-cards text-uppercase ajaxSubmit_mbl w-100" type="button" id="ajaxSubmit_mbl">
-                                                <a class="text-white">Add to cart</a>
-                                            </button>
-                                        @else
-                                            <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
-                                                <a class="text-white">Add to cart</a>
-                                            </button>
-                                        @endif
+                                        <button type="button" class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
+                                            Call To Order
+                                        </button>
                                     @endif
                                 </div>
                             </div>
@@ -783,7 +871,41 @@
                         @foreach($similar_products as $similar_product)
                             @foreach ($similar_product->options as $option)
                                 @php
-                                    $product = $similar_product; 
+                                    $product = $similar_product;
+                                    $add_to_cart = true;
+                                    $show_price = true;
+                                    if (!empty($products_to_hide)) {
+                                        if (in_array($option->option_id, $products_to_hide)) {
+                                            if (!auth()->user()) {
+                                                $add_to_cart = false;
+                                                $show_price = false;
+                                            } else {
+                                                if (auth()->user()) {
+                                                    $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+                                                    if (empty($contact)) {
+                                                        $add_to_cart = false;
+                                                        $show_price = false;
+                                                    }
+                                                    $contact_id_new = null; 
+                                                    if ($contact->is_parent == 1) {
+                                                        $contact_id_new = $contact->contact_id;
+                                                    } else {
+                                                        $contact_id_new = $contact->parent_id;
+                                                    }
+
+                                                    $get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
+                                                    if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                                                        $add_to_cart = false;
+                                                        $show_price = false;
+                                                    } else {
+                                                        $add_to_cart = true;
+                                                        $show_price = true;
+                                                    }
+                                                }
+                                                
+                                            }
+                                        }
+                                    }
                                 @endphp
                                 @if (!empty($product->categories) && ($product->categories->is_active == 1))
                                     <div class="item mt-2  pt-1 similar_items_div ">
@@ -862,8 +984,10 @@
                                                         }
                                                     }
                                                     ?>
+                                                    @if ($show_price == true)
                                                     <h4 text="{{ $retail_price }}" class="text-uppercase mb-0 text-center p_price_resp mt-0">
                                                         ${{ number_format($retail_price, 2) }}</h4>
+                                                        @endif
                                                     @if ($product->categories)
                                                         <p class="category-cart-page  mt-3 mb-2" title="{{$product->categories->name}}">
                                                             Category:&nbsp;&nbsp;{{ \Illuminate\Support\Str::limit($product->categories->name, 4) }}
@@ -895,6 +1019,7 @@
                                                         <small class="text-dark mb-0 ft-size ft-size-slider-product">{{$bought_products_count . '  bought in the past month'}}</small>
                                                     @endif
                                                 </div>
+                                                @if ($add_to_cart == true)
                                                 <div class="col-md-12 add-to-cart-button-section">
                                                     @if ($enable_add_to_cart)
                                                         <button 
@@ -913,6 +1038,14 @@
                                                             onclick="return updateCart('{{ $product->id }}')">Out of Stock</button>
                                                     @endif
                                                 </div>
+                                                @else
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
+                                                            Call To Order
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                                 
                                             </div>
                                         </div>
                                     </div>
@@ -951,11 +1084,12 @@
                         <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12" id="product_name">
                             <h3 class="product-detail-heading">{{$productOption->products->name}}</h3>
                         </div>
-
-                        <div class="col-md-12 d-flex">
-                            <span class="text-danger product-detail-price mt-4" id="product_price">
-                                ${{number_format($retail_price,2)}}</span>
-                        </div>
+                        @if ($show_price == true)
+                            <div class="col-md-12 d-flex">
+                                <span class="text-danger product-detail-price mt-4" id="product_price">
+                                    ${{number_format($retail_price,2)}}</span>
+                            </div>
+                        @endif
                     </div>
                     <div class=""> <span class="text-uppercase text-muted brand"></span>
                         <div class="price d-flex flex-row align-items-center mt-4">
@@ -1017,34 +1151,42 @@
                         @csrf
                         <div class="cart row  align-items-center">
                             <div class="w-50">
-                                <div class="quantity" style="margin-top: 24px !important;">
-                                    <input type="number" name="quantity" id="quantity" min="1"
-                                        max="{{$productOption->stockAvailable}}" step="1" value="1">
-                                    <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
-                                    <input type="hidden" name="option_id" id="option_id"
-                                        value="{{$productOption->option_id}}">
-                                    <div class="quantity-nav">
-                                        <div class="quantity-div quantity-up"></div>
-                                        <div class="quantity-div quantity-down"></div>
+                                @if ($add_to_cart == true)
+                                    <div class="quantity" style="margin-top: 24px !important;">
+                                        <input type="number" name="quantity" id="quantity" min="1"
+                                            max="{{$productOption->stockAvailable}}" step="1" value="1">
+                                        <input type="hidden" name="p_id" id="p_id" value="{{$productOption->products->id}}">
+                                        <input type="hidden" name="option_id" id="option_id"
+                                            value="{{$productOption->option_id}}">
+                                        <div class="quantity-nav">
+                                            <div class="quantity-div quantity-up"></div>
+                                            <div class="quantity-div quantity-down"></div>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                             <div class="w-50">
                                 <?php $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption); ?>
-                                @if ($enable_add_to_cart)
-                                    <button 
-                                        class="button-cards product-detail-button-cards text-uppercase" 
-                                        style="font-size: 16px !important; width: 252px !important;" 
-                                        type="button" 
-                                        id="ajaxSubmit"
-                                    >
-                                    <a class="text-white">Add to cart</a></button>
+                                @if ($add_to_cart == true)
+                                    @if ($enable_add_to_cart)
+                                        <button 
+                                            class="button-cards product-detail-button-cards text-uppercase" 
+                                            style="font-size: 16px !important; width: 252px !important;" 
+                                            type="button" 
+                                            id="ajaxSubmit"
+                                        >
+                                        <a class="text-white">Add to cart</a></button>
+                                    @else
+                                        <button 
+                                            class="button-cards product-detail-button-cards opacity-50 text-uppercase"
+                                            type="submit" 
+                                            style="font-size: 16px !important; width: 130px  !important;">
+                                            <a class="text-white">Add to cart</a>
+                                        </button>
+                                    @endif
                                 @else
-                                    <button 
-                                        class="button-cards product-detail-button-cards opacity-50 text-uppercase"
-                                        type="submit" 
-                                        style="font-size: 16px !important; width: 130px  !important;">
-                                        <a class="text-white">Add to cart</a>
+                                    <button type="button" class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
+                                        Call To Order
                                     </button>
                                 @endif
                             </div>
@@ -1502,6 +1644,19 @@
         flex-shrink: 0;
         border-radius: 6px;
         background: #7BC533;
+        box-shadow: 0px 2.474916458129883px 3.712374687194824px 0px rgba(0, 0, 0, 0.08);
+        color: #FFF;
+        text-align: center;
+        font-family: 'Poppins';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 21.037px; /* 150.263% */
+    }
+    .buy_frequent_again_btn_call_to_order {
+        flex-shrink: 0;
+        border-radius: 6px;
+        background-color: #008bd3;
         box-shadow: 0px 2.474916458129883px 3.712374687194824px 0px rgba(0, 0, 0, 0.08);
         color: #FFF;
         text-align: center;
@@ -2227,9 +2382,26 @@
         function buildDataColumn(productData) {
             var column = $('#get_column').val();
             var stock_label = '';  
-            var text_class = '';  
+            var text_class = '';
+            var products_to_hide = JSON.parse($('#products_to_hide').val());
+            var show_price = true;
+            var paymentTerms = $('#payment_terms').val();
+            var auth_value = $('#auth_value').val();
+
+            
             retail_price = 0;
             for (var i = 0; i < productData.options.length; i++) {
+                if (products_to_hide.includes(productData.options[i].option_id)) {
+                    if (auth_value == false) {
+                        show_price = false;
+                    } else {
+                        if (paymentTerms == true) {
+                            show_price = true;
+                        } else {
+                            show_price = false;
+                        }
+                    }
+                }
                 if (productData.options[i].stockAvailable > 0) {
                     stock_label = 'In Stock';
                     text_class = 'text-success';
@@ -2255,9 +2427,11 @@
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="'+text_class+' mb-0">'+stock_label+'</p>';
                 dataHtml += '                    </div>';
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="product_price mb-1">$' + retail_price.toFixed(2) + '</p>';
-                dataHtml += '                    </div>';
+                if (show_price == true) {
+                    dataHtml += '                    <div class="col-md-10">';
+                    dataHtml += '                        <p class="product_price mb-1">$' + retail_price.toFixed(2) + '</p>';
+                    dataHtml += '                    </div>';
+                }
                 dataHtml += '                    <div class="col-md-10">';
                 dataHtml += '                        <p class="category_name mb-1">Category:';
                 dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
@@ -2271,7 +2445,22 @@
         }
 
         function buildButtonRow(productData) {
+            var products_to_hide = JSON.parse($('#products_to_hide').val());
+            var add_to_cart = true;
+            var paymentTerms = $('#payment_terms').val();
+            var auth_value = $('#auth_value').val();
             for (var i = 0; i < productData.options.length; i++) {
+                if (products_to_hide.includes(productData.options[i].option_id)) {
+                    if (auth_value == false) {
+                        add_to_cart = false;
+                    } else {
+                        if (paymentTerms == true) {
+                            add_to_cart = true;
+                        } else {
+                            add_to_cart = false;
+                        }
+                    }
+                }
                 var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
                 if (productData.options[i].stockAvailable > 0) {
                     buttonRowHtml += '            <div class="col-md-10">';
@@ -2280,17 +2469,24 @@
                     buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
                     buttonRowHtml += '        </div>';
                 } else {
-                    if (auth_user === null) {
-                        buttonRowHtml += '            <div class="col-md-10">';
-                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
-                        buttonRowHtml += '            </div>';
-                        buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                        buttonRowHtml += '        </div>';
+                    if (add_to_cart == true) {
+                        if (auth_user === null) {
+                            buttonRowHtml += '            <div class="col-md-10">';
+                            buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
+                            buttonRowHtml += '            </div>';
+                            buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                            buttonRowHtml += '        </div>';
+                        } else {
+                            buttonRowHtml += '            <div class="col-md-10">';
+                            buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
+                            buttonRowHtml += '            </div>';
+                            buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+                            buttonRowHtml += '        </div>';
+                        }
                     } else {
                         buttonRowHtml += '            <div class="col-md-10">';
-                        buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
+                        buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">Call To Order</button>';
                         buttonRowHtml += '            </div>';
-                        buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
                         buttonRowHtml += '        </div>';
                     }
                 }

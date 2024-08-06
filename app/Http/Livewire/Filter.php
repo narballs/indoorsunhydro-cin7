@@ -20,7 +20,7 @@ class Filter extends Component
         return view(
             'livewire.filter', [
             'products' =>  Product::with('options')->where(function($sub_query){
-                        $sub_query->where('name', 'like', '%'.$this->searchTerm.'%');
+                        $sub_query->where('name', 'like', '%'.$this->searchTerm.'%')->orWhere('code', 'like', '%'.$this->searchTerm.'%');
                         })->paginate(5),
             'role' => $role
         ]);

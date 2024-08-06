@@ -230,6 +230,13 @@ class CheckoutController extends Controller
     public function new_checkout(Request $request)
     {
         $shipment_error = 0;
+        $enable_extra_shipping_value = false;
+        $add_extra_70_to_shipping = AdminSetting::where('option_name', 'add_extra_70_to_shipping')->first();
+        if (!empty($add_extra_70_to_shipping) && strtolower($add_extra_70_to_shipping->option_value) == 'yes') {
+            $enable_extra_shipping_value = true;
+        } else {
+            $enable_extra_shipping_value = false;
+        }
         $discount_code = null;
         $states = UsState::all();
         $cart_items = UserHelper::switch_price_tier($request);
@@ -307,7 +314,21 @@ class CheckoutController extends Controller
                     $product_length += !empty($product_option->products->length) ? $product_option->products->length : 0;
                 }
             }
+
+            
         }
+
+        $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
+        if ($enable_extra_shipping_value == true) {
+            if ($product_width > 40 || $product_height > 40 || $product_length > 40) {
+                $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
+            } else {
+                $extra_shipping_value = 0;
+            }
+        } else {
+            $extra_shipping_value = 0;
+        }
+        
         if ($contact) {
             $isApproved = $contact->contact_id;
         }
@@ -639,6 +660,7 @@ class CheckoutController extends Controller
                 'parcel_guard',
                 // 'allow_pickup',
                 'distance',
+                'extra_shipping_value'
                 // 'toggle_shipment_insurance'
             ));
         } else {
