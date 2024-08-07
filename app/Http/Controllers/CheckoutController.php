@@ -1403,7 +1403,10 @@ class CheckoutController extends Controller
                         'postalAddress2' => $postalAddress2,
                         'postalCity' => $postalCity,
                         'postalState' => $postalState,
-                        'postalPostCode' => $postalPostCode,                                
+                        'postalPostCode' => $postalPostCode,
+                        'accountsFirstName' => $user->first_name,
+                        'accountsLastName' => $user->last_name,
+                        'billingEmail' => SettingHelper::getSetting('noreply_email_address'),                                
                     ]);
                     
                     if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
