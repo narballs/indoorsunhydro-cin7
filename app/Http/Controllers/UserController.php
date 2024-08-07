@@ -780,6 +780,16 @@ class UserController extends Controller
                     'accountsFirstName' => $user->first_name,
                     'accountsLastName' => $user->last_name,
                     'billingEmail' => SettingHelper::getSetting('noreply_email_address'),
+                    'postalAddress1' => $request->input('street_address'),
+                    'postalAddress2' => $request->input('suit_apartment'),
+                    'postalState' => $state_name,
+                    'postalCity' => $city_name,
+                    'postalPostCode' => $request->input('zip'),
+                    'address1' => $request->input('street_address'),
+                    'address2' => $request->input('suit_apartment'),
+                    'state' => $state_name,
+                    'city' => $city_name,
+                    'postCode' => $request->input('zip'),
                 ]);
                 if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
                     $auto_approved = true;
