@@ -152,7 +152,7 @@ class StockChecking extends Command
                             $this->info('Stock Updated for product option#' . $product_stock->option_id);
                         } else {
                             $product_stock = ProductStock::create([
-                                'available_stock' => $stock_available,
+                                'available_stock' =>$product_option_stock->available >= 0 ? $product_option_stock->available : 0,
                                 'branch_id' => $product_option_stock->branchId,
                                 'product_id' => $product_option_stock->productId,
                                 'branch_name' => $product_option_stock->branchName,
