@@ -784,7 +784,6 @@ class UserController extends Controller
                 if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
                     $auto_approved = true;
                     $api_contact = $contact->toArray();
-                    dd($api_contact);
                     $client = new \GuzzleHttp\Client();
                     $url = "https://api.cin7.com/api/v1/Contacts/";
                     $response = $client->post($url, [
