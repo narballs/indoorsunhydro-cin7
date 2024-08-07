@@ -776,7 +776,20 @@ class UserController extends Controller
                     'is_parent' => 1,
                     'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
                     'paymentTerms' => $request->paymentTerms,
-                    'charge_shipping' => 1,    
+                    'charge_shipping' => 1,
+                    'accountsFirstName' => $user->first_name,
+                    'accountsLastName' => $user->last_name,
+                    'billingEmail' => SettingHelper::getSetting('noreply_email_address'),
+                    'postalAddress1' => $request->input('street_address'),
+                    'postalAddress2' => $request->input('suit_apartment'),
+                    'postalState' => $state_name,
+                    'postalCity' => $city_name,
+                    'postalPostCode' => $request->input('zip'),
+                    'address1' => $request->input('street_address'),
+                    'address2' => $request->input('suit_apartment'),
+                    'state' => $state_name,
+                    'city' => $city_name,
+                    'postCode' => $request->input('zip'),
                 ]);
                 if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
                     $auto_approved = true;
@@ -816,9 +829,15 @@ class UserController extends Controller
                         $contact = Contact::where('user_id', $user->id)->first()->update(
                             [
                                 'postalAddress1' => $request->input('street_address'),
+                                'postalAddress2' => $request->input('suit_apartment'),
                                 'postalState' => $state_name,
                                 'postalCity' => $city_name,
-                                'postalPostCode' => $request->input('zip')
+                                'postalPostCode' => $request->input('zip'),
+                                'address1' => $request->input('street_address'),
+                                'address2' => $request->input('suit_apartment'),
+                                'state' => $state_name,
+                                'city' => $city_name,
+                                'postCode' => $request->input('zip'),
                             ]
                         );
                         $auth_user = Auth::loginUsingId($created_contact->user_id);
@@ -857,9 +876,15 @@ class UserController extends Controller
                     $contact = Contact::where('user_id', $user->id)->first()->update(
                         [
                             'postalAddress1' => $request->input('street_address'),
+                            'postalAddress2' => $request->input('suit_apartment'),
                             'postalState' => $state_name,
                             'postalCity' => $city_name,
-                            'postalPostCode' => $request->input('zip')
+                            'postalPostCode' => $request->input('zip'),
+                            'address1' => $request->input('street_address'),
+                            'address2' => $request->input('suit_apartment'),
+                            'state' => $state_name,
+                            'city' => $city_name,
+                            'postCode' => $request->input('zip'),
                         ]
                     );
                     $auth_user = Auth::loginUsingId($created_contact->user_id);
@@ -882,7 +907,7 @@ class UserController extends Controller
                     'content' => $content,
                     'email' => $user->email,
                     'subject' => 'Your account registration request ',
-                    'from' => 'noreply@indoorsunhydro.com',
+                    'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
                 if ($registration_status == true) {
                     if (!empty($users_with_role_admin)) {
