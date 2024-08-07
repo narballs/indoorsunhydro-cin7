@@ -49,7 +49,10 @@ class Contact extends Model
         'paymentTerms',
         'is_deleted',
         'charge_shipping',
-        'is_guest'
+        'is_guest',
+        'billingEmail',
+        'accountsFirstName',
+        'accountsLastName',
     ];
 
     public function orders()
