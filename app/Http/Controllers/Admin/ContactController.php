@@ -685,6 +685,7 @@ class ContactController extends Controller
                 'lastName' => $api_contact->lastName,
                 'priceColumn' => $pricing,
                 'company' => $api_contact->company,
+                'paymentTerms' => $api_contact->paymentTerms,
                 'phone' => $api_contact->phone,
                 'mobile' => $api_contact->mobile,
                 'website' => $api_contact->website,
