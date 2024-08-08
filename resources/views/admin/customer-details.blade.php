@@ -138,6 +138,9 @@
                                                 <div class="col-md-12 p-0">
                                                     <b>Tax Status: {{!empty($customer->tax_class) ?  $customer->tax_class : 'Empty'}} </b>
                                                 </div>
+                                                <div class="col-md-12 p-0">
+                                                    <b>Payment Terms: {{!empty($customer->paymentTerms) ?  $customer->paymentTerms : 'Empty'}} </b>
+                                                </div>
                                             </div>
                                             <div class="col-md-4 d-flex justify-content-end align-items-center">
                                                 @if (!empty($customer) && $customer->is_parent == 1)
