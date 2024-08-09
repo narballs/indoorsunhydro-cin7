@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         ->everyThreeHours()
         ->when(function () {
             return in_array(\Carbon\Carbon::now()->dayOfWeek, [
+                \Carbon\Carbon::FRIDAY, 
                 \Carbon\Carbon::SATURDAY, 
                 \Carbon\Carbon::SUNDAY
             ]);
@@ -35,7 +36,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyThreeMinutes();
-        $schedule->command('stock:checking')->everyFiveMinutes();
+        $schedule->command('stock:checking')->everyFifteenMinutes();
         $schedule->command('auto:notify')->everyThreeMinutes();
         $schedule->command('admin:stockrequest')->weekly();
         $schedule->command('sync:gmc')->hourly();
