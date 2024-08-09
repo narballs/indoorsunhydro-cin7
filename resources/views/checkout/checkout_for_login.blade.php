@@ -2,6 +2,12 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 <style>
+    .free_shipping_banner_text {
+        font-size: 14px;
+        font-weight: 500;
+        font-family: 'poppins';
+        color: #555;
+    }
     .thank-you-page-table,
     thead,
     tbody,
@@ -329,6 +335,9 @@
             padding-top: 0.5rem;
             padding-bottom:0.5rem;
         }
+        .free_shipping_gif {
+           max-height: 25px !important;
+        }  
     }
     .custom-padding {
         padding-top: 0.75rem;
@@ -624,7 +633,8 @@ $cart_price = 0;
         ?>
     @endforeach
 @endif
-<?php $zip_code_is_valid = true;
+<?php 
+    $zip_code_is_valid = true;
 ?>
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -955,6 +965,11 @@ $cart_price = 0;
                                         <input type="hidden" value="{{$products_weight}}" name="product_weight" class="product_weight">
                                         @php
                                             $surcharge_value = 0;
+                                            if ($shipping_free_over_1000 == 1) {
+                                                $extra_shipping_value = 0;
+                                            } else {
+                                                $extra_shipping_value = $extra_shipping_value;
+                                            }
                                         @endphp
                                         <div class="shipping_main_div">
                                             @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
@@ -981,8 +996,29 @@ $cart_price = 0;
                                                                 </span>
                                                             </div>
                                                         @else
-                                                            <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
-                                                            <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{!empty($shipment_price)  ? number_format($shipment_price , 2)  : 0}}</span></div>
+                                                            <div class="col-md-9 col-8">
+                                                                <span class="checkout_shipping_heading">Shipment Price</span>
+                                                                @if ($shipping_free_over_1000 == 1)
+                                                                    @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-md-2 col-3">
+                                                                                <span>
+                                                                                    <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
+                                                                                </span>
+                                                                            </div>
+                                                                            <div class="col-md-10 col-9">
+                                                                                
+                                                                                <span class="free_shipping_banner_text">
+                                                                                    {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-md-3 col-4 text-right">
+                                                                <span class="checkout_shipping_price">${{!empty($shipment_price)  ? number_format($shipment_price , 2)  : 0}}</span>
+                                                            </div>
                                                         @endif
                                                         {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
                                                     </div>
@@ -1068,7 +1104,26 @@ $cart_price = 0;
                                                                 @endforeach
                                                             @endif
                                                         @else
-                                                            <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                            <div class="col-md-9 col-8">
+                                                                <span class="checkout_shipping_heading">Shipment Price</span>
+                                                                @if ($shipping_free_over_1000 == 1)
+                                                                    @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-md-2 col-3">
+                                                                                <span>
+                                                                                    <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
+                                                                                </span>
+                                                                            </div>
+                                                                            <div class="col-md-10 col-9">
+                                                                                
+                                                                                <span class="free_shipping_banner_text">
+                                                                                    {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                @endif
+                                                            </div>
                                                             <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                                         @endif
                                                     </div>
@@ -1078,14 +1133,50 @@ $cart_price = 0;
                                                 <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                 <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
                                                 <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                    <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                    <div class="col-md-9 col-8">
+                                                        <span class="checkout_shipping_heading">Shipment Price</span>
+                                                        @if ($shipping_free_over_1000 == 1)
+                                                            @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-md-2 col-3">
+                                                                        <span>
+                                                                            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="col-md-10 col-9">
+                                                                        <span class="free_shipping_banner_text">
+                                                                            {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endif
+                                                    </div>
                                                     <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                                 </div>
                                             @endif
                                         </div>
                                         <div class="remove_shipping_price d-none">
                                             <div class="row justify-content-center  align-items-center py-2 border-bottom">
-                                                <div class="col-md-9 col-8"><span class="checkout_shipping_heading">Shipment Price</span></div>
+                                                <div class="col-md-9 col-8">
+                                                    <span class="checkout_shipping_heading">Shipment Price</span>
+                                                    @if ($shipping_free_over_1000 == 1)
+                                                        @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                            <div class="row align-items-center">
+                                                                <div class="col-md-2 col-3">
+                                                                    <span>
+                                                                        <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-md-10 col-9">
+                                                                    <span class="free_shipping_banner_text">
+                                                                        {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                </div>
                                                 <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{'0.00'}}</span></div>
                                             </div>
                                         </div>

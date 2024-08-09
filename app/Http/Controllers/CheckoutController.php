@@ -230,6 +230,8 @@ class CheckoutController extends Controller
     public function new_checkout(Request $request)
     {
         $shipment_error = 0;
+        $enable_free_shipping_banner = AdminSetting::where('option_name' , 'enable_free_shipping_banner')->first();
+        $enable_free_shipping_banner_text = AdminSetting::where('option_name' , 'enable_free_shipping_banner_text')->first();
         $enable_extra_shipping_value = false;
         $add_extra_70_to_shipping = AdminSetting::where('option_name', 'add_extra_70_to_shipping')->first();
         if (!empty($add_extra_70_to_shipping) && strtolower($add_extra_70_to_shipping->option_value) == 'yes') {
@@ -660,7 +662,9 @@ class CheckoutController extends Controller
                 'parcel_guard',
                 // 'allow_pickup',
                 'distance',
-                'extra_shipping_value'
+                'extra_shipping_value',
+                'enable_free_shipping_banner',
+                'enable_free_shipping_banner_text'
                 // 'toggle_shipment_insurance'
             ));
         } else {

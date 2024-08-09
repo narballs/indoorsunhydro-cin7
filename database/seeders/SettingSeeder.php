@@ -364,6 +364,12 @@ class SettingSeeder extends Seeder
                 'option_value' => '70',
             ],
 
+            [
+                'option_name' => 'enable_free_shipping_banner_text',
+                'type' => 'text',
+                'option_value' => 'Good news, your cart qualifies for free shipping',
+            ],
+
             
         ];
 
