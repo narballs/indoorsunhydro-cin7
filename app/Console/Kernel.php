@@ -21,26 +21,26 @@ class Kernel extends ConsoleKernel
     {
         // Api endpoints starts here
         
-        $schedule->command('Sync:ApiData')->everySixHours();
+        // $schedule->command('Sync:ApiData')->everySixHours();
         // $schedule->command('Sync:ProductOptions')->everySixHours();
-        $schedule->command('Sync:ProductOptions')
-        ->everyThreeHours()
-        ->when(function () {
-            return in_array(\Carbon\Carbon::now()->dayOfWeek, [
-                // \Carbon\Carbon::FRIDAY, 
-                \Carbon\Carbon::SATURDAY, 
-                \Carbon\Carbon::SUNDAY
-            ]);
-        });
-        $schedule->command('sync:supplier')->everySixHours();
+        // $schedule->command('Sync:ProductOptions')
+        // ->everyThreeHours()
+        // ->when(function () {
+        //     return in_array(\Carbon\Carbon::now()->dayOfWeek, [
+        //         // \Carbon\Carbon::FRIDAY, 
+        //         \Carbon\Carbon::SATURDAY, 
+        //         \Carbon\Carbon::SUNDAY
+        //     ]);
+        // });
+        // $schedule->command('sync:supplier')->everySixHours();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
-        $schedule->command('cancel:order')->everyFourMinutes();
-        $schedule->command('stock:checking')->everyThirtyMinutes();
+        // $schedule->command('cancel:order')->everyFourMinutes();
+        // $schedule->command('stock:checking')->everyThirtyMinutes();
         $schedule->command('auto:notify')->everyThreeMinutes();
         $schedule->command('admin:stockrequest')->weekly();
         $schedule->command('sync:gmc')->hourly();
-        $schedule->command('update:lags-products')->hourly();
+        // $schedule->command('update:lags-products')->hourly();
 
         // $schedule->command('Delete:ContactsPermanently')->daily();
 
