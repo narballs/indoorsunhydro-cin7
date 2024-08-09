@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
     {
         // Api endpoints starts here
         
-        $schedule->command('Sync:ApiData')->everyTwoHours();
+        $schedule->command('Sync:ApiData')->everySixHours();
         // $schedule->command('Sync:ProductOptions')->everySixHours();
         $schedule->command('Sync:ProductOptions')
         ->everyThreeHours()
@@ -32,10 +32,10 @@ class Kernel extends ConsoleKernel
                 \Carbon\Carbon::SUNDAY
             ]);
         });
-        $schedule->command('sync:supplier')->everyTwoHours();
+        $schedule->command('sync:supplier')->everySixHours();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
-        $schedule->command('cancel:order')->everyThreeMinutes();
+        $schedule->command('cancel:order')->everyFourMinutes();
         $schedule->command('stock:checking')->everyThirtyMinutes();
         $schedule->command('auto:notify')->everyThreeMinutes();
         $schedule->command('admin:stockrequest')->weekly();
