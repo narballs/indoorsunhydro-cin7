@@ -9,6 +9,7 @@
     $d_none = 'd-none'; 
     $calculate_free_shipping = 0;
     $enable_free_shipping_banner = App\Models\AdminSetting::where('option_name', 'enable_free_shipping_banner')->first();
+    $enable_free_shipping_banner_text = App\Models\AdminSetting::where('option_name', 'enable_free_shipping_banner_text')->first();
     $free_shipping_value  = App\Models\AdminSetting::where('option_name', 'free_shipping_value')->first();
     $announcement_banner = App\Models\AdminSetting::where('option_name' , 'enable_announcement_banner')->first();
     $announcement_banner_text = App\Models\AdminSetting::where('option_name' , 'announcement_banner_text')->first();
@@ -102,7 +103,7 @@
         <p class="text-center promotional_banner_text_congrats mb-0">
             {{-- <i class="fas fa-shipping-fast"></i>  --}}
             <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
-             <span class="promotional_banner_span_congrats">Good news, your cart qualifies for free shipping</span> 
+             <span class="promotional_banner_span_congrats">{{!empty($enable_free_shipping_banner_text) ?  $enable_free_shipping_banner_text->option_value : ''}}</span> 
         </p>
     </div>
 @endif
