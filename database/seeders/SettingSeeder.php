@@ -72,6 +72,11 @@ class SettingSeeder extends Seeder
                 'option_value' => 'faada8a7a5ef4f90abaabb63e078b5c1',
             ],
             [
+                'option_name' => 'cin7_auth_password_2', 
+                'type' => 'text',
+                'option_value' => '34487efdea814f7892c6b66e7df29f3f',
+            ],
+            [
                 'option_name' => 'noreply_email_address', 
                 'type' => 'text',
                 'option_value' => 'noreply@indoorsunhydro.com',
