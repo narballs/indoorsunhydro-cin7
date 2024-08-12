@@ -99,6 +99,12 @@
                                                     Fullfilled
                                                 </button>
                                             </div>
+                                        @elseif ($order->is_stripe == 1 && strtolower($order->payment_status) == 'refunded')
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-danger btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
                         
                                         @elseif ($order->isApproved == 0 && $auto_fullfill == true )
                                             <div class="col-md-12">

@@ -281,13 +281,15 @@
                                                 @elseif ($order->isApproved == 2)
                                                     <span class="badge badge-danger is_approded_2">Cancelled</span>
                                                 @elseif ($order->isApproved == 3)
-                                                    <span class="badge badge-danger is_approded_3">Refunded</span>
+                                                    <span class="badge badge-info is_approded_3">Refunded</span>
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
                                                 @if(!empty($order->contact->paymentTerms) && strtolower($order->contact->paymentTerms) === 'pay in advanced')
                                                     @if($order->payment_status == 'paid')
                                                         <span class="badge badge-success p-1">Paid</span>
+                                                    @elseif($order->payment_status == 'refunded')
+                                                        <span class="badge badge-info p-1">Unpaid</span>
                                                     @else
                                                         <span class="badge badge-danger p-1">Unpaid</span>
                                                     @endif
