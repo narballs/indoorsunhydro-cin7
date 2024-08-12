@@ -280,6 +280,8 @@
                                                     <span class="badge badge-success is_approded_1">Fullfilled</span>
                                                 @elseif ($order->isApproved == 2)
                                                     <span class="badge badge-danger is_approded_2">Cancelled</span>
+                                                @elseif ($order->isApproved == 3)
+                                                    <span class="badge badge-danger is_approded_3">Refunded</span>
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
@@ -707,6 +709,8 @@
                 'background-warning');
             bg_success = $(this).children('.is-approved').children('.is_approded_2').addClass(
                 'background-danger');
+            bg_success = $(this).children('.is-approved').children('.is_approded_3').addClass(
+                'background-info');
             let tet = $(this).children('.created_by').children('a');
             let get_class = tet.each(function(index, value) {
                 let test = tet[index].children[0];
@@ -724,6 +728,8 @@
                 'background-warning');
             bg_success = $(this).children('.is-approved').children('.is_approded_2').removeClass(
                 'background-danger');
+            bg_success = $(this).children('.is-approved').children('.is_approded_3').removeClass(
+                'background-info');
             let tet = $(this).children('.created_by').children('a');
             let get_class = tet.each(function(index, value) {
                 let test = tet[index].children[0];
