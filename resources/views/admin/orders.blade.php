@@ -289,7 +289,7 @@
                                                     @if($order->payment_status == 'paid')
                                                         <span class="badge badge-success p-1">Paid</span>
                                                     @elseif($order->payment_status == 'refunded')
-                                                        <span class="badge badge-info p-1">Unpaid</span>
+                                                        <span class="badge badge-info p-1">Refunded</span>
                                                     @else
                                                         <span class="badge badge-danger p-1">Unpaid</span>
                                                     @endif
@@ -603,8 +603,25 @@
             font-size: 11.3289px;
         }
 
+        .badge-danger {
+            color: #fff;
+            background-color: rgba(220, 78, 65, 0.12);
+            color: #17a2b8;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
         .bg_danger {
             color: #DC4E41 !important;
+            padding: 6px !important;
+            font-style: normal !important;
+            font-weight: 500 !important;
+            font-size: 11.3289px !important;
+        }
+        .bg_info {
+            color: #17a2b8 !important;
             padding: 6px !important;
             font-style: normal !important;
             font-weight: 500 !important;
