@@ -38,7 +38,7 @@
                     <div class="col-md-6 d-flex align-items-center">
                         <h6 class="mb-0">
                             @if ($order->is_stripe == 1 &&  $order->isApproved == 3)
-                                <span class="text-success">
+                                <span class="text-info">
                                     This order is processed through stripe , and is refunded.
                                 </span>
                             @else
