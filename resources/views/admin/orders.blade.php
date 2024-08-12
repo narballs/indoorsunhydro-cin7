@@ -603,7 +603,7 @@
             font-size: 11.3289px;
         }
 
-        .badge-danger {
+        .badge-info {
             color: #fff;
             background-color: rgba(220, 78, 65, 0.12);
             color: #17a2b8;
