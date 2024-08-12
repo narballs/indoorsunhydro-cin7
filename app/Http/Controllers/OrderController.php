@@ -1330,7 +1330,7 @@ class OrderController extends Controller
                         $message = 'Refund request has been successfully created.';
                         $order->update([
                             'order_status_id' => $order_status_id,
-                            'isApproved' => $current_order_status->status == 'Refunded' ? 2 : $order->isApproved
+                            'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                         ]);
                     } else {
                         $request_status = false;
