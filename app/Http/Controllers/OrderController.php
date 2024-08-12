@@ -1334,46 +1334,57 @@ class OrderController extends Controller
                             'order_status_id' => $order_status_id,
                             'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                         ]);
+
                         if (!empty($order->order_id)) {
-                            $client = new \GuzzleHttp\Client();
-                            $res = $client->request(
-                            'GET', 
-                                'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
-                                [
-                                    'auth' => [
-                                        $cin7_auth_username,
-                                        $cin7_auth_password
-                                    ]                    
-                                ]
-                            );
-
-                            $cin7_order = $res->getBody()->getContents();
-                            $get_order = json_decode($cin7_order);
-
-
-                            if (!empty($get_order)) {
-                                $is_approved_false = false;
-                                $is_voided = true;
-                                $curent_order_voided = $get_order->isVoid == false ? $get_order->isVoid : '';
-                                if ($curent_order_voided == false)  {
-                                    $res = $client->request(
-                                        'PUT', 
-                                        'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
-                                        [
-                                            'auth' => [
-                                                $cin7_auth_username,
-                                                $cin7_auth_password
-                                            ],
-                                            'json' => [
-                                                'isApproved' => false,
-                                                'isVoid' => true
-                                            ]
-                                        ]
-                                    );
-                                }
+                            try {
+                                $client = new \GuzzleHttp\Client();
                                 
+                                $res = $client->request(
+                                    'GET', 
+                                    'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
+                                    [
+                                        'auth' => [
+                                            $cin7_auth_username,
+                                            $cin7_auth_password
+                                        ]                    
+                                    ]
+                                );
+                        
+                                $cin7_order = $res->getBody()->getContents();
+                                $get_order = json_decode($cin7_order);
+                        
+                                if (!empty($get_order)) {
+                                    $curent_order_voided = $get_order->isVoid ?? false;
+                                    
+                                    if ($curent_order_voided == false) {
+                                        $res = $client->request(
+                                            'PUT', 
+                                            'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
+                                            [
+                                                'auth' => [
+                                                    $cin7_auth_username,
+                                                    $cin7_auth_password
+                                                ],
+                                                'json' => [
+                                                    'isApproved' => false,
+                                                    'isVoid' => true
+                                                ]
+                                            ]
+                                        );
+
+                                        
+                                        // Log success message or handle response
+                                    }
+                                }
+                            } catch (\Exception $e) {
+                                // Handle request exception (e.g., log the error)
+                                Log::info('request_failded' . $e->getMessage());
+                            } catch (\Exception $e) {
+                                // Handle other exceptions
+                                Log::info("An error occurred: " . $e->getMessage());
                             }
                         }
+                        
                         
 
 
