@@ -298,7 +298,7 @@
                                                 @endif
                                             </td>
                                             <td data-label="Payment Gateway :" class="td_padding_row">
-                                                <span class="badge badge-info p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
+                                                <span class="badge badge-primary p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
                                             </td>
                                             <td data-label="Payment Term :" class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
@@ -310,7 +310,7 @@
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
                                                                 value="{{ $order->id }}">
-                                                            <button type="submit" class="badge badge-info p-2 border-0">
+                                                            <button type="submit" class="badge badge-primary p-2 border-0">
                                                                 Create Label
                                                             </button>
                                                         </form>
@@ -605,7 +605,7 @@
 
         .badge-info {
             color: #fff;
-            background-color: rgba(220, 78, 65, 0.12);
+            background-color: #e1eff1;
             color: #17a2b8;
             padding: 6px !important;
             font-style: normal;
