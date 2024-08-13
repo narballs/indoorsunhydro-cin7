@@ -1362,6 +1362,9 @@ class OrderController extends Controller
                                             'PUT', 
                                             'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
                                             [
+                                                'headers' => [
+                                                    'Content-Type' => 'application/json'  // Correct header placement
+                                                ],
                                                 'auth' => [
                                                     $cin7_auth_username,
                                                     $cin7_auth_password
