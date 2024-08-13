@@ -93,7 +93,7 @@ class SalesOrders implements ShouldQueue
         $response = json_decode($res);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
-        echo $order_id . '-----' . $reference . '-----' ;
+        echo $order_id . '-----' . $reference;
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
