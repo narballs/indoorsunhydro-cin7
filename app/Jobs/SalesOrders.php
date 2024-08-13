@@ -94,6 +94,7 @@ class SalesOrders implements ShouldQueue
         $response = json_decode($res);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
+        $created_date = $response[0]->createdDate;
         echo $order_id . '-----' . $reference;
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
@@ -126,6 +127,55 @@ class SalesOrders implements ShouldQueue
             $api_order->isApproved = 1;
             $api_order->order_status_id = $order_status->id;
             $api_order->save();
+
+            $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+            $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+            $client = new \GuzzleHttp\Client();
+            $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?orderId=' . $order_id;
+            $res = $client->request(
+                'GET', 
+                $get_order_payment_url,
+                [
+                    'auth' => [
+                        $cin7_auth_username,
+                        $cin7_auth_password
+                    ]                    
+                ]
+            );
+
+            $get_api_order = $res->getBody()->getContents();
+            $get_order = json_decode($get_api_order);
+
+            if (empty($get_order)) {
+                $update_order_payment_url = 'https://api.cin7.com/api/v1/Payments';
+                $authHeaders = [
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'auth' => [
+                        $cin7_auth_username,
+                        $cin7_auth_password,
+                    ],
+                ];
+
+                // Define the update array with the correct structure
+                $update_payment_array = [
+                    'orderId' => $order_id,
+                    'method' => 'On Account',
+                    'paymentDate' => $created_date,
+                ];
+
+                // Ensure the JSON data is correctly added to the request
+                $res = $client->post($update_order_payment_url, [
+                    'headers' => $authHeaders['headers'],
+                    'auth' => $authHeaders['auth'],
+                    'json' => $update_payment_array
+                ]);
+
+                $response = $res->getBody()->getContents();
+            }
+
+            
+
         }
 
 
