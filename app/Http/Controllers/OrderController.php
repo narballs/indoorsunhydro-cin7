@@ -1358,35 +1358,29 @@ class OrderController extends Controller
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
-
-                                        $update_array = [
-                                            'id'=> $order->order_id,
-                                            'isApproved' => false,
-                                            'isVoid' => true
-                                        ];
-                                        $url = 'https://api.cin7.com/api/v1/SalesOrders';
-                                        // $response = $client->request(
-                                        //     'PUT',
-                                        //     'https://api.cin7.com/api/v1/SalesOrders',
-                                        //     [
-                                        //         'headers' => [
-                                        //             'Content-Type' => 'application/json',
-                                        //             'Authorization' => 'Basic ' . base64_encode($cin7_auth_username . ':' . $cin7_auth_password)
-                                        //         ],
-                                        //         'json' => $update_array // Correct way to pass JSON payload
-                                        //     ]
-                                        // );
-                                        $authHeaders = [
-                                            'headers' => ['Content-type' => 'application/json'],
-                                            'auth' => [
-                                                $cin7_auth_username,
-                                                $cin7_auth_password
+                                        $res = $client->request(
+                                            'PUT', 
+                                            'https://api.cin7.com/api/v1/SalesOrders',
+                                            [
+                                                'headers' => [
+                                                    'Content-Type' => 'application/json'  // Correct header placement
+                                                ],
+                                                'auth' => [
+                                                    $cin7_auth_username,
+                                                    $cin7_auth_password
+                                                ],
+                                                'json' => [
+                                                    [
+                                                        "id" => $order->order_id,
+                                                        "isVoid"=> true,
+                                                        "isApproved" => false,
+                                                    ]
+                                                ]
                                             ]
-                                        ];
-                                        if (!empty($update_array)) {
-                                            $authHeaders['json'] = $update_array;
-                                        }
-                                        $res = $client->put($url, $authHeaders);
+                                        );
+
+
+                                        // Log success message or handle response
                                     }
                                 }
                             } catch (\Exception $e) {
