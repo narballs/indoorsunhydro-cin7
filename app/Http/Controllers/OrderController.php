@@ -1364,18 +1364,29 @@ class OrderController extends Controller
                                             'isApproved' => false,
                                             'isVoid' => true
                                         ];
-                                        $response = $client->request(
-                                            'PUT',
-                                            'https://api.cin7.com/api/v1/SalesOrders',
-                                            [
-                                                'headers' => [
-                                                    'Content-Type' => 'application/json',
-                                                    'Authorization' => 'Basic ' . base64_encode($cin7_auth_username . ':' . $cin7_auth_password)
-                                                ],
-                                                json_encode($update_array)
+                                        $url = 'https://api.cin7.com/api/v1/SalesOrders';
+                                        // $response = $client->request(
+                                        //     'PUT',
+                                        //     'https://api.cin7.com/api/v1/SalesOrders',
+                                        //     [
+                                        //         'headers' => [
+                                        //             'Content-Type' => 'application/json',
+                                        //             'Authorization' => 'Basic ' . base64_encode($cin7_auth_username . ':' . $cin7_auth_password)
+                                        //         ],
+                                        //         'json' => $update_array // Correct way to pass JSON payload
+                                        //     ]
+                                        // );
+                                        $authHeaders = [
+                                            'headers' => ['Content-type' => 'application/json'],
+                                            'auth' => [
+                                                $cin7_auth_username,
+                                                $cin7_auth_password
                                             ]
-                                        );
-                                        // Log success message or handle response
+                                        ];
+                                        if (!empty($update_array)) {
+                                            $authHeaders['json'] = $update_array;
+                                        }
+                                        $res = $client->put($url, $authHeaders);
                                     }
                                 }
                             } catch (\Exception $e) {
