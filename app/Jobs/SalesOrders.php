@@ -132,7 +132,7 @@ class SalesOrders implements ShouldQueue
             try {
                 $client = new \GuzzleHttp\Client();
                 $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?orderId=' . $order_id;
-                $res = $client->request(
+                $get_response = $client->request(
                     'GET', 
                     $get_order_payment_url,
                     [
@@ -143,7 +143,7 @@ class SalesOrders implements ShouldQueue
                     ]
                 );
 
-                $get_api_order = $res->getBody()->getContents();
+                $get_api_order = $get_response->getBody()->getContents();
                 $get_order = json_decode($get_api_order);
 
                 if (empty($get_order)) {
@@ -151,6 +151,7 @@ class SalesOrders implements ShouldQueue
                     $order_created_date = $order_created_date_raw->format('Y-m-d');
                     $order_created_time = $order_created_date_raw->format('H:i:s');
                     $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
+                    Log::info('Order Sync Date: ' . $api_order_sync_date);
                     $url = 'https://api.cin7.com/api/v1/Payments';
                     $authHeaders = [
                         'headers' => ['Content-Type' => 'application/json'],
@@ -170,11 +171,11 @@ class SalesOrders implements ShouldQueue
 
                     $authHeaders['json'] = $update_array;
 
-                    $res = $client->post($url, $authHeaders);
+                    $Payment_response = $client->post($url, $authHeaders);
 
-                    $response = json_decode($res->getBody()->getContents());
+                    $response = json_decode($Payment_response->getBody()->getContents());
 
-                    Log::info('Payment Created: ' . json_encode($response));
+                    Log::info('Payment Created: ' . json_encode($Payment_response));
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
