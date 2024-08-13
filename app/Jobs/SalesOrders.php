@@ -21,8 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
 use App\Helpers\SettingHelper;
-
-
+use Carbon\Carbon;
 
 class SalesOrders implements ShouldQueue
 {
@@ -95,7 +94,6 @@ class SalesOrders implements ShouldQueue
         Log::info('Sales Order Response: ' . json_encode($response));
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
-        $created_date = $response[0]['createdDate'];
         echo $order_id . '-----' . $reference . '-----' . $created_date;
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
@@ -150,7 +148,10 @@ class SalesOrders implements ShouldQueue
                 $get_order = json_decode($get_api_order);
 
                 if (empty($get_order)) {
-                    
+                    $order_created_date_raw = Carbon::now();
+                    $order_created_date = $order_created_date_raw->format('Y-m-d');
+                    $order_created_time = $order_created_date_raw->format('H:i:s');
+                    $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
                     $url = 'https://api.cin7.com/api/v1/Payments';
                     $authHeaders = [
                         'headers' => ['Content-Type' => 'application/json'],
@@ -164,7 +165,7 @@ class SalesOrders implements ShouldQueue
                         [
                             'orderId' => $order_id,
                             'method' => 'On Account',
-                            'paymentDate' => $created_date,
+                            'paymentDate' => $api_order_sync_date,
                         ]
                     ];
 
