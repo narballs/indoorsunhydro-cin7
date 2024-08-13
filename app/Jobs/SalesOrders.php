@@ -95,7 +95,7 @@ class SalesOrders implements ShouldQueue
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         $created_date = $response[0]->createdDate;
-        echo $order_id . '-----' . $reference;
+        echo $order_id . '-----' . $reference . '-----' . $created_date;
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
