@@ -1358,6 +1358,12 @@ class OrderController extends Controller
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
+
+                                        $update_array = [
+                                            'id'=> $order->order_id,
+                                            'isApproved' => false,
+                                            'isVoid' => true
+                                        ];
                                         $response = $client->request(
                                             'PUT',
                                             'https://api.cin7.com/api/v1/SalesOrders',
@@ -1366,11 +1372,7 @@ class OrderController extends Controller
                                                     'Content-Type' => 'application/json',
                                                     'Authorization' => 'Basic ' . base64_encode($cin7_auth_username . ':' . $cin7_auth_password)
                                                 ],
-                                                'json' => [
-                                                    'Id' => $order->order_id,
-                                                    'isApproved' => false,
-                                                    'isVoid' => true
-                                                ]
+                                                json_encode($update_array)
                                             ]
                                         );
                                         // Log success message or handle response
