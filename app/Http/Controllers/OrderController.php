@@ -1361,23 +1361,27 @@ class OrderController extends Controller
                                     if ($curent_order_voided == false) {
                                         $url = 'https://api.cin7.com/api/v1/SalesOrders';
                                         $authHeaders = [
-                                            'headers' => ['Content-type' => 'application/json'],
+                                            'headers' => ['Content-Type' => 'application/json'],
                                             'auth' => [
                                                 $cin7_auth_username,
-                                                $cin7_auth_password
-                                            ]
+                                                $cin7_auth_password,
+                                            ],
                                         ];
+
+                                        // Define the update array with the correct structure
                                         $update_array = [
-                                            [
-                                                "id" => $order->order_id,
-                                                "isVoid"=> true,
-                                                "isApproved" => false,
-                                            ]
+                                            "id" => $order->order_id,
+                                            "isVoid" => true,
+                                            "isApproved" => false,
                                         ];
-                                        if (!empty($update_array)) {
-                                            $authHeaders['json'] = json_encode($update_array);
-                                        }
-                                        $res = $client->put($url, $authHeaders);
+
+                                        // Ensure the JSON data is correctly added to the request
+                                        $res = $client->put($url, [
+                                            'headers' => $authHeaders['headers'],
+                                            'auth' => $authHeaders['auth'],
+                                            'json' => $update_array
+                                        ]);
+
                                         $response = $res->getBody()->getContents();
 
                                         // Log success message or handle response
