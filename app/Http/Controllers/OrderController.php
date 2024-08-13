@@ -1358,25 +1358,21 @@ class OrderController extends Controller
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
-                                        $res = $client->request(
-                                            'PUT', 
-                                            'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
+                                        $response = $client->request(
+                                            'PUT',
+                                            'https://api.cin7.com/api/v1/SalesOrders',
                                             [
                                                 'headers' => [
-                                                    'Content-Type' => 'application/json'  // Correct header placement
-                                                ],
-                                                'auth' => [
-                                                    $cin7_auth_username,
-                                                    $cin7_auth_password
+                                                    'Content-Type' => 'application/json',
+                                                    'Authorization' => 'Basic ' . base64_encode($cin7_auth_username . ':' . $cin7_auth_password)
                                                 ],
                                                 'json' => [
+                                                    'Id' => $order->order_id,
                                                     'isApproved' => false,
                                                     'isVoid' => true
                                                 ]
                                             ]
                                         );
-
-
                                         // Log success message or handle response
                                     }
                                 }
