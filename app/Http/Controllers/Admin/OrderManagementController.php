@@ -513,7 +513,7 @@ class OrderManagementController extends Controller
 
     public function check_order_status(Request $request)
     {
-        sleep(20);
+        sleep(60);
         $order = ApiOrder::where('id', $request->order_id)->first();
         if ($order->order_id != null) {
             $msg = 'Order fullfilled successfully';
