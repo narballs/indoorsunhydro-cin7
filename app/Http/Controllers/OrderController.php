@@ -1358,6 +1358,13 @@ class OrderController extends Controller
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
+                                        $update_array = [
+                                            [
+                                                "id" => $order->order_id,
+                                                "isVoid"=> true,
+                                                "isApproved" => false,
+                                            ]
+                                        ];
                                         $res = $client->request(
                                             'PUT', 
                                             'https://api.cin7.com/api/v1/SalesOrders',
@@ -1369,13 +1376,7 @@ class OrderController extends Controller
                                                     $cin7_auth_username,
                                                     $cin7_auth_password
                                                 ],
-                                                'json' => [
-                                                    [
-                                                        "id" => $order->order_id,
-                                                        "isVoid"=> true,
-                                                        "isApproved" => false,
-                                                    ]
-                                                ]
+                                                'json' => json_encode($update_array),
                                             ]
                                         );
 
