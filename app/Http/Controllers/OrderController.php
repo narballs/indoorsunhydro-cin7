@@ -1376,8 +1376,8 @@ class OrderController extends Controller
                                                     $cin7_auth_username,
                                                     $cin7_auth_password
                                                 ],
-                                                json_encode($update_array),
-                                            ]
+                                            ],
+                                            json_encode($update_array),
                                         );
 
 
