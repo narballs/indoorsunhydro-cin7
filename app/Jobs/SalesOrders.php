@@ -121,7 +121,7 @@ class SalesOrders implements ShouldQueue
             }
 
 
-            $api_order = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
+            $api_order = ApiOrder::where('reference', $reference)->first();
             $api_order->order_id = $order_id;
             $api_order->isApproved = 1;
             $api_order->order_status_id = $order_status->id;
