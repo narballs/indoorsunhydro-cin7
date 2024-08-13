@@ -92,6 +92,7 @@ class SalesOrders implements ShouldQueue
             break;
         }
         $response = json_decode($res);
+        Log::info('Sales Order Response: ' . $response);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         $created_date = $response[0]['createdDate'];
