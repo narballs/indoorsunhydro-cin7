@@ -1368,23 +1368,20 @@ class OrderController extends Controller
                                             ],
                                         ];
 
-                                        // Define the update array with the correct structure
                                         $update_array = [
-                                            "id" => $order->order_id,
-                                            "isVoid" => true,
-                                            "isApproved" => false,
+                                            [
+                                                "id" => $order->order_id,
+                                                "isVoid" => true,
+                                                "isApproved" => false,
+                                            ]
                                         ];
 
-                                        // Ensure the JSON data is correctly added to the request
-                                        $res = $client->put($url, [
-                                            'headers' => $authHeaders['headers'],
-                                            'auth' => $authHeaders['auth'],
-                                            'json' => $update_array
-                                        ]);
+                                        $authHeaders['json'] = $update_array;
 
-                                        $response = $res->getBody()->getContents();
+                                        $res = $client->put($url, $authHeaders);
 
-                                        // Log success message or handle response
+                                        $response = json_decode($res->getBody()->getContents());
+
                                     }
                                 }
                             } catch (\Exception $e) {

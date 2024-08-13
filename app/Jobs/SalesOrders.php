@@ -131,50 +131,53 @@ class SalesOrders implements ShouldQueue
             $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
             $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
-            $client = new \GuzzleHttp\Client();
-            $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?orderId=' . $order_id;
-            $res = $client->request(
-                'GET', 
-                $get_order_payment_url,
-                [
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
-                    ]                    
-                ]
-            );
+            try {
+                $client = new \GuzzleHttp\Client();
+                $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?orderId=' . $order_id;
+                $res = $client->request(
+                    'GET', 
+                    $get_order_payment_url,
+                    [
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password
+                        ]                    
+                    ]
+                );
 
-            $get_api_order = $res->getBody()->getContents();
-            $get_order = json_decode($get_api_order);
+                $get_api_order = $res->getBody()->getContents();
+                $get_order = json_decode($get_api_order);
 
-            if (empty($get_order)) {
-                $update_order_payment_url = 'https://api.cin7.com/api/v1/Payments';
-                $authHeaders = [
-                    'headers' => ['Content-Type' => 'application/json'],
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password,
-                    ],
-                ];
+                if (empty($get_order)) {
+                    
+                    $url = 'https://api.cin7.com/api/v1/Payments';
+                    $authHeaders = [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password,
+                        ],
+                    ];
 
-                // Define the update array with the correct structure
-                $update_payment_array = [
-                    'orderId' => $order_id,
-                    'method' => 'On Account',
-                    'paymentDate' => $created_date,
-                ];
+                    $update_array = [
+                        [
+                            'orderId' => $order_id,
+                            'method' => 'On Account',
+                            'paymentDate' => $created_date,
+                        ]
+                    ];
 
-                // Ensure the JSON data is correctly added to the request
-                $res = $client->post($update_order_payment_url, [
-                    'headers' => $authHeaders['headers'],
-                    'auth' => $authHeaders['auth'],
-                    'json' => $update_payment_array
-                ]);
+                    $authHeaders['json'] = $update_array;
 
-                $response = $res->getBody()->getContents();
-            }
+                    $res = $client->post($url, $authHeaders);
 
-            
+                    $response = json_decode($res->getBody()->getContents());
+
+                    Log::info('Payment Created: ' . json_encode($response));
+                }
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+            }       
 
         }
 
