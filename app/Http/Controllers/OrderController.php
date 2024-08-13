@@ -1363,7 +1363,7 @@ class OrderController extends Controller
                                             'https://api.cin7.com/api/v1/SalesOrders',
                                             [
                                                 'headers' => [
-                                                    'Content-Type' => 'application/json'  // Correct header placement
+                                                    'Content-Type' => 'application/json',
                                                 ],
                                                 'auth' => [
                                                     $cin7_auth_username,
