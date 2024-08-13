@@ -1312,6 +1312,7 @@ class OrderController extends Controller
 
     // uppdate order status manually 
     public function update_order_status_by_admin(Request $request) {
+        
         $request_status =  true;
         $message = 'Order status updated and  successfully.';
         $order_id = $request->order_id;
@@ -1358,6 +1359,14 @@ class OrderController extends Controller
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
+                                        $url = 'https://api.cin7.com/api/v1/SalesOrders';
+                                        $authHeaders = [
+                                            'headers' => ['Content-type' => 'application/json'],
+                                            'auth' => [
+                                                $cin7_auth_username,
+                                                $cin7_auth_password
+                                            ]
+                                        ];
                                         $update_array = [
                                             [
                                                 "id" => $order->order_id,
@@ -1365,21 +1374,11 @@ class OrderController extends Controller
                                                 "isApproved" => false,
                                             ]
                                         ];
-                                        $res = $client->request(
-                                            'PUT', 
-                                            'https://api.cin7.com/api/v1/SalesOrders',
-                                            [
-                                                'headers' => [
-                                                    'Content-Type' => 'application/json',
-                                                ],
-                                                'auth' => [
-                                                    $cin7_auth_username,
-                                                    $cin7_auth_password
-                                                ],
-                                                json_encode($update_array),
-                                            ]
-                                        );
-
+                                        if (!empty($update_array)) {
+                                            $authHeaders['json'] = json_encode($update_array);
+                                        }
+                                        $res = $client->put($url, $authHeaders);
+                                        $response = $res->getBody()->getContents();
 
                                         // Log success message or handle response
                                     }
