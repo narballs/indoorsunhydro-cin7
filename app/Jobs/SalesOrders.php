@@ -151,7 +151,6 @@ class SalesOrders implements ShouldQueue
                     $order_created_date = $order_created_date_raw->format('Y-m-d');
                     $order_created_time = $order_created_date_raw->format('H:i:s');
                     $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
-                    Log::info('Order Sync Date: ' . $api_order_sync_date);
                     $url = 'https://api.cin7.com/api/v1/Payments';
                     $authHeaders = [
                         'headers' => ['Content-Type' => 'application/json'],
