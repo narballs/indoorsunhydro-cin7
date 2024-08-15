@@ -1326,7 +1326,7 @@ class OrderController extends Controller
         $refund_value = floatval($request->refund_value);
         $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
         if ($order->is_stripe === 1) {
-            if (strtolower($current_order_status->status) === 'partial refunded'  && $refund_value > 0) {
+            if ((strtolower($current_order_status->status) === 'partial refund')  && $refund_value > 0) {
                 
                 try {
                     $partial_refund = $stripe->refunds->create([
