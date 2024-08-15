@@ -1352,7 +1352,7 @@ class OrderController extends Controller
         
                         if ($partial_refund->status === 'succeeded') { 
                             $request_status = true;
-                            $message = 'Refund request has been successfully created.';
+                            $message = 'Partial Refund request has been successfully created.';
         
                             $order->update([
                                 'order_status_id' => $order_status_id,
@@ -1363,7 +1363,7 @@ class OrderController extends Controller
                             $order_refund->order_id = $order_id;
                             $order_refund->refund_amount = $refund_value;
                             $order_refund->save();
-                            
+
                         } else {
                             $request_status = false;
                             $message = 'Partial Refund failed';
@@ -1383,6 +1383,10 @@ class OrderController extends Controller
                         $request_status = true;
                         $message = 'Refund request has been successfully created.';
                         
+                        $order_refund = new OrderRefund;
+                        $order_refund->order_id = $order_id;
+                        $order_refund->refund_amount = $order->total_including_tax;
+                        $order_refund->save();
 
                         if (!empty($order->order_id)) {
                             try {

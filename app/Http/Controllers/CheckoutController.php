@@ -1871,6 +1871,7 @@ class CheckoutController extends Controller
             if (!empty($currentOrder) && ($refundAmount < $total_amount)) {
                 $currentOrder->payment_status = 'partially refunded';
                 $currentOrder->is_refunded = 2;
+                $currentOrder->isApproved = 4;
                 $currentOrder->save();
 
 
@@ -1886,6 +1887,7 @@ class CheckoutController extends Controller
                 $main_order = ApiOrder::find($order_id);
                 $main_order->payment_status = 'refunded';
                 $main_order->is_refunded = 1;
+                $main_order->isApproved = 3;
                 $main_order->save();
 
 
