@@ -21,6 +21,7 @@ class OrderStatusTableSeeder extends Seeder
             ['status' => 'Order Completed' ],
             ['status' => 'Cancelled'],
             ['status' => 'Refunded'],
+            ['status' => 'Partial Refund'],
             ['status' => 'DRAFT'],
             ['status' => 'APPROVED'],
             ['status' => 'VOID'],
