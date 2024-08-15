@@ -181,36 +181,34 @@ class OrderHelper {
             // Or log the entire object as JSON
             Log::info('Get Order Payment1: ' . json_encode($get_order[0]));
 
-            if (empty($get_order[0])) {
-                $order_created_date_raw = Carbon::now();
+            $order_created_date_raw = Carbon::now();
                 $order_created_date = $order_created_date_raw->format('Y-m-d');
-                $order_created_time = $order_created_date_raw->format('H:i:s');
-                $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
-                $url = 'https://api.cin7.com/api/v1/Payments';
-                $authHeaders = [
-                    'headers' => ['Content-Type' => 'application/json'],
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password,
-                    ],
-                ];
+            $order_created_time = $order_created_date_raw->format('H:i:s');
+            $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
+            $url = 'https://api.cin7.com/api/v1/Payments';
+            $authHeaders = [
+                'headers' => ['Content-Type' => 'application/json'],
+                'auth' => [
+                    $cin7_auth_username,
+                    $cin7_auth_password,
+                ],
+            ];
 
-                $update_array = [
-                    [
-                        'orderId' => $get_order[0]->orderId,
-                        'method' => 'On Account',
-                        'paymentDate' => $api_order_sync_date,
-                    ]
-                ];
+            $update_array = [
+                [
+                    'orderId' => $get_order[0]->id,
+                    'method' => 'On Account',
+                    'paymentDate' => $api_order_sync_date,
+                ]
+            ];
 
-                $authHeaders['json'] = $update_array;
+            $authHeaders['json'] = $update_array;
 
-                $Payment_response = $client->post($url, $authHeaders);
+            $Payment_response = $client->post($url, $authHeaders);
 
-                $response = json_decode($Payment_response->getBody()->getContents());
+            $response = json_decode($Payment_response->getBody()->getContents());
 
-                Log::info('Payment Created: ' . json_encode($Payment_response));
-            }
+            Log::info('Payment Created: ' . json_encode($Payment_response));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }       
