@@ -1331,7 +1331,7 @@ class OrderController extends Controller
                 try {
                     $partial_refund = $stripe->refunds->create([
                         'charge' => $order->charge_id,
-                        'amount' => $refund_value * 100,
+                        'amount' => intval($refund_value * 100),
                     ]);
     
                     if ($partial_refund->status === 'succeeded') { 
