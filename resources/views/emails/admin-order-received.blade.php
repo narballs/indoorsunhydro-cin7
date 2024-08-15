@@ -402,6 +402,41 @@
                     </table>
                 </td>
             </tr>
+            @php
+                $refund_amount = 0;
+                $grand_total = 0;
+                $total = 0;
+                if (count($currentOrder->order_refund) > 0) {
+                    foreach ($currentOrder->order_refund as $refund) {
+                        $refund_amount += $refund->refund_amount;
+                    }
+                }
+
+               
+                foreach ($order_items as $item) {
+                    $total = $item['order']->total_including_tax;
+                }
+
+                $grand_total = $total - $refund_amount;
+            @endphp
+            @if(count($currentOrder->order_refund) > 0)
+                @foreach ($currentOrder->order_refund as $refund)
+                    <tr>
+                        <td>
+                            <table width="100%" border="0">
+                                <tr>
+                                    <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                        Refund ({{ $refund->created_at }})
+                                    </td>
+                                    <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                        {{ '$'.number_format($refund->refund_amount, 2) }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
             <tr>
                 <td>
                     <table width="100%" border="0">
@@ -410,14 +445,23 @@
                                 Total
                             </td>
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                @php
-                                    $total = 0;
-                                    foreach ($order_items as $item) {
-                                        $total = $item['order']->total_including_tax;
-                                    }
-                                @endphp
                                 {{-- {{ '$'.number_format($total, 2) }} --}}
-                                {{ '$'.number_format($currentOrder->total_including_tax, 2) }}
+                                {{ '$'.number_format($grand_total, 2) }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>            
+            <tr>
+                <td>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                Total
+                            </td>
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                {{-- {{ '$'.number_format($total, 2) }} --}}
+                                {{ '$'.number_format($grand_total, 2) }}
                             </td>
                         </tr>
                     </table>
