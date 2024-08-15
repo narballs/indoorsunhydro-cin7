@@ -451,21 +451,6 @@
                         </tr>
                     </table>
                 </td>
-            </tr>            
-            <tr>
-                <td>
-                    <table width="100%" border="0">
-                        <tr>
-                            <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                Total
-                            </td>
-                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                {{-- {{ '$'.number_format($total, 2) }} --}}
-                                {{ '$'.number_format($grand_total, 2) }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
             </tr>
             <tr>
                 <td align="center">
