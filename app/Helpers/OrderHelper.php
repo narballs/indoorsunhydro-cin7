@@ -175,6 +175,7 @@ class OrderHelper {
             $get_order = json_decode($get_api_order);
 
             // Log specific property
+            Log::info('Get Order Payment id: ' . $get_order[0]->id);
             Log::info('Get Order Payment: ' . $get_order[0]->orderId);
             
             // Or log the entire object as JSON
