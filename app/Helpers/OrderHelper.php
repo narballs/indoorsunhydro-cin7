@@ -172,7 +172,7 @@ class OrderHelper {
             );
 
             $get_api_order = $get_response->getBody()->getContents();
-            $get_order = json_decode($get_api_order);;
+            $get_order = json_decode($get_api_order);
 
             if (empty($get_order)) {
                 $order_created_date_raw = Carbon::now();
