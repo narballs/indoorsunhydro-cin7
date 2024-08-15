@@ -128,8 +128,10 @@ class SalesOrders implements ShouldQueue
             $api_order->order_status_id = $order_status->id;
             $api_order->save();
 
-
-            OrderHelper::update_order_payment_in_cin7($order_id);
+            if (!empty($api_order) && !empty($api_order->order_id)) {
+                OrderHelper::update_order_payment_in_cin7($api_order->order_id);
+            }
+           
 
             
 
