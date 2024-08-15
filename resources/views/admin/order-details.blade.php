@@ -1285,7 +1285,7 @@
             }
         }
 
-        function order_status_updating_by_admin(order_id ,order_status_id, payment_status, order_status_type) {
+        function order_status_updating_by_admin(order_id ,order_status_id, payment_status, order_status_type , refund_value) {
             jQuery.ajax({
                 url: "{{ url('admin/order/update-order-status') }}",
                 method: 'post',
@@ -1294,7 +1294,8 @@
                     "order_id": order_id,
                     "order_status_id": order_status_id,
                     "payment_status": payment_status,
-                    "order_status_type": order_status_type
+                    "order_status_type": order_status_type,
+                    "refund_value": refund_value
                 },
                 success: function(response) {
                     if (response.success == true) {
@@ -1316,12 +1317,12 @@
         // check if refund_value is greater than grand_total
 
         function partial_refund_ftn(order_id) {
+            var grand_total = parseFloat($('#grand_total_value').val());
+            var refund_value = parseFloat($('#pop_up_grand_total').val());
             if ($('#pop_up_grand_total').val() == null || $('#pop_up_grand_total').val() == '') {
                 $('.error_message_parial_refund').children('span').text('Patial refund value is required');
                 return false;
             }
-            var grand_total = parseFloat($('#grand_total_value').val());
-            var refund_value = parseFloat($('#pop_up_grand_total').val());
             $('.partial-order-status-spinner').removeClass('d-none');
             if (refund_value >= grand_total) {
                 $('.partial-order-status-spinner').addClass('d-none');
