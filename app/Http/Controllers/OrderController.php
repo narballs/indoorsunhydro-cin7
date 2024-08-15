@@ -42,6 +42,7 @@ use Square\Models\Order as SquareOrder;
 use Square\Exceptions\ApiException;
 use Illuminate\Support\Facades\Storage;
 use Square\Models\OrderLineItem;
+use Stripe\Refund;
 use Stripe\TaxRate;
 
 class OrderController extends Controller
@@ -1312,7 +1313,6 @@ class OrderController extends Controller
 
     // uppdate order status manually 
     public function update_order_status_by_admin(Request $request) {
-        
         $request_status =  true;
         $message = 'Order status updated and  successfully.';
         $order_id = $request->order_id;
@@ -1323,9 +1323,37 @@ class OrderController extends Controller
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $refund_value = floatval($request->refund_value);
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
         if ($order->is_stripe === 1) {
+            if (strtolower($current_order_status->status) === 'partial refunded'  && $refund_value > 0) {
+                
+                try {
+                    $partial_refund = $stripe->refunds->create([
+                        'charge' => $order->charge_id,
+                        'amount' => $refund_value * 100,
+                    ]);
+    
+                    if ($partial_refund->status === 'succeeded') { 
+                        $request_status = true;
+                        $message = 'Refund request has been successfully created.';
+    
+                        $order->update([
+                            'order_status_id' => $order_status_id,
+                            'isApproved' => $current_order_status->status == 'Partial Refund' ? 4 : $order->isApproved
+                        ]);
+                    } else {
+                        $request_status = false;
+                        $message = 'Partial Refund failed';
+                        return response()->json(['success' => false , 'message' => $message]);
+                    }
+                } catch (\Exception $e) {
+                    $request_status = false;
+                    $message = $e->getMessage();
+                    return response()->json(['success' => false , 'message' => $message]);
+                }
+            }
             if (strtolower($current_order_status->status) === 'refunded') {
-                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
                 try {
                     $refund = $stripe->refunds->create(['charge' => $order->charge_id]);
                     if ($refund->status === 'succeeded') {
