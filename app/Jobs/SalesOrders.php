@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Helpers\OrderHelper;
 use App\Helpers\SettingHelper;
+use App\Models\Order;
 use Carbon\Carbon;
 
 class SalesOrders implements ShouldQueue
@@ -126,59 +128,10 @@ class SalesOrders implements ShouldQueue
             $api_order->order_status_id = $order_status->id;
             $api_order->save();
 
-            $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-            $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
-            try {
-                $client = new \GuzzleHttp\Client();
-                $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?orderId=' . $order_id;
-                $get_response = $client->request(
-                    'GET', 
-                    $get_order_payment_url,
-                    [
-                        'auth' => [
-                            $cin7_auth_username,
-                            $cin7_auth_password
-                        ]                    
-                    ]
-                );
+            OrderHelper::update_order_payment_in_cin7($order_id);
 
-                $get_api_order = $get_response->getBody()->getContents();
-                $get_order = json_decode($get_api_order);
-
-                if (empty($get_order)) {
-                    $order_created_date_raw = Carbon::now();
-                    $order_created_date = $order_created_date_raw->format('Y-m-d');
-                    $order_created_time = $order_created_date_raw->format('H:i:s');
-                    $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
-                    $url = 'https://api.cin7.com/api/v1/Payments';
-                    $authHeaders = [
-                        'headers' => ['Content-Type' => 'application/json'],
-                        'auth' => [
-                            $cin7_auth_username,
-                            $cin7_auth_password,
-                        ],
-                    ];
-
-                    $update_array = [
-                        [
-                            'orderId' => $order_id,
-                            'method' => 'On Account',
-                            'paymentDate' => $api_order_sync_date,
-                        ]
-                    ];
-
-                    $authHeaders['json'] = $update_array;
-
-                    $Payment_response = $client->post($url, $authHeaders);
-
-                    $response = json_decode($Payment_response->getBody()->getContents());
-
-                    Log::info('Payment Created: ' . json_encode($Payment_response));
-                }
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-            }       
+            
 
         }
 
