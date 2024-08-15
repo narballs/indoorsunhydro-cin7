@@ -280,12 +280,16 @@
                                                     <span class="badge badge-success is_approded_1">Fullfilled</span>
                                                 @elseif ($order->isApproved == 2)
                                                     <span class="badge badge-danger is_approded_2">Cancelled</span>
+                                                @elseif ($order->isApproved == 3)
+                                                    <span class="badge badge-info is_approded_3">Refunded</span>
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
                                                 @if(!empty($order->contact->paymentTerms) && strtolower($order->contact->paymentTerms) === 'pay in advanced')
                                                     @if($order->payment_status == 'paid')
                                                         <span class="badge badge-success p-1">Paid</span>
+                                                    @elseif($order->payment_status == 'refunded')
+                                                        <span class="badge badge-info p-1">Refunded</span>
                                                     @else
                                                         <span class="badge badge-danger p-1">Unpaid</span>
                                                     @endif
@@ -294,7 +298,7 @@
                                                 @endif
                                             </td>
                                             <td data-label="Payment Gateway :" class="td_padding_row">
-                                                <span class="badge badge-info p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
+                                                <span class="badge badge-primary p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
                                             </td>
                                             <td data-label="Payment Term :" class="td_padding_row">
                                                 {{ $order->logisticsCarrier }}
@@ -306,7 +310,7 @@
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
                                                                 value="{{ $order->id }}">
-                                                            <button type="submit" class="badge badge-info p-2 border-0">
+                                                            <button type="submit" class="badge badge-primary p-2 border-0">
                                                                 Create Label
                                                             </button>
                                                         </form>
@@ -599,8 +603,25 @@
             font-size: 11.3289px;
         }
 
+        .badge-info {
+            color: #fff;
+            background-color: #e1eff1;
+            color: #17a2b8;
+            padding: 6px !important;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.3289px;
+        }
+
         .bg_danger {
             color: #DC4E41 !important;
+            padding: 6px !important;
+            font-style: normal !important;
+            font-weight: 500 !important;
+            font-size: 11.3289px !important;
+        }
+        .bg_info {
+            color: #17a2b8 !important;
             padding: 6px !important;
             font-style: normal !important;
             font-weight: 500 !important;
@@ -707,6 +728,8 @@
                 'background-warning');
             bg_success = $(this).children('.is-approved').children('.is_approded_2').addClass(
                 'background-danger');
+            bg_success = $(this).children('.is-approved').children('.is_approded_3').addClass(
+                'background-info');
             let tet = $(this).children('.created_by').children('a');
             let get_class = tet.each(function(index, value) {
                 let test = tet[index].children[0];
@@ -724,6 +747,8 @@
                 'background-warning');
             bg_success = $(this).children('.is-approved').children('.is_approded_2').removeClass(
                 'background-danger');
+            bg_success = $(this).children('.is-approved').children('.is_approded_3').removeClass(
+                'background-info');
             let tet = $(this).children('.created_by').children('a');
             let get_class = tet.each(function(index, value) {
                 let test = tet[index].children[0];

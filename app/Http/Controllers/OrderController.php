@@ -1312,6 +1312,7 @@ class OrderController extends Controller
 
     // uppdate order status manually 
     public function update_order_status_by_admin(Request $request) {
+        
         $request_status =  true;
         $message = 'Order status updated and  successfully.';
         $order_id = $request->order_id;
@@ -1320,6 +1321,8 @@ class OrderController extends Controller
         $order = ApiOrder::where('id', $order_id)->first();
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         if ($order->is_stripe === 1) {
             if (strtolower($current_order_status->status) === 'refunded') {
                 $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
@@ -1328,10 +1331,71 @@ class OrderController extends Controller
                     if ($refund->status === 'succeeded') {
                         $request_status = true;
                         $message = 'Refund request has been successfully created.';
-                        $order->update([
-                            'order_status_id' => $order_status_id,
-                            'isApproved' => $current_order_status->status == 'Refunded' ? 2 : $order->isApproved
-                        ]);
+                        
+
+                        if (!empty($order->order_id)) {
+                            try {
+                                $client = new \GuzzleHttp\Client();
+                                
+                                $res = $client->request(
+                                    'GET', 
+                                    'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
+                                    [
+                                        'auth' => [
+                                            $cin7_auth_username,
+                                            $cin7_auth_password
+                                        ]                    
+                                    ]
+                                );
+                        
+                                $cin7_order = $res->getBody()->getContents();
+                                $get_order = json_decode($cin7_order);
+                        
+                                if (!empty($get_order)) {
+                                    $order->update([
+                                        'order_status_id' => $order_status_id,
+                                        'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
+                                    ]);
+                                    $curent_order_voided = $get_order->isVoid ?? false;
+                                    
+                                    if ($curent_order_voided == false) {
+                                        $url = 'https://api.cin7.com/api/v1/SalesOrders';
+                                        $authHeaders = [
+                                            'headers' => ['Content-Type' => 'application/json'],
+                                            'auth' => [
+                                                $cin7_auth_username,
+                                                $cin7_auth_password,
+                                            ],
+                                        ];
+
+                                        $update_array = [
+                                            [
+                                                "id" => $order->order_id,
+                                                "isVoid" => true,
+                                                "isApproved" => false,
+                                            ]
+                                        ];
+
+                                        $authHeaders['json'] = $update_array;
+
+                                        $res = $client->put($url, $authHeaders);
+
+                                        $response = json_decode($res->getBody()->getContents());
+
+                                    }
+                                }
+                            } catch (\Exception $e) {
+                                // Handle request exception (e.g., log the error)
+                                Log::info('request_failded' . $e->getMessage());
+                            } catch (\Exception $e) {
+                                // Handle other exceptions
+                                Log::info("An error occurred: " . $e->getMessage());
+                            }
+                        }
+                        
+                        
+
+
                     } else {
                         $request_status = false;
                         $message = 'Refund failed';

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
 use App\Models\ApiOrderItem;
+use Illuminate\Support\Facades\Log;
 
 class OrderHelper {
 
@@ -150,4 +151,65 @@ class OrderHelper {
 
         return $order_data;
 	}
+
+
+    public static function update_order_payment_in_cin7($order_id) {
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        try {
+            $client = new \GuzzleHttp\Client();
+            $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?where=orderId=' . $order_id;
+            $get_response = $client->request(
+                'GET', 
+                $get_order_payment_url,
+                [
+                    'auth' => [
+                        $cin7_auth_username,
+                        $cin7_auth_password
+                    ]                    
+                ]
+            );
+
+            $get_api_order = $get_response->getBody()->getContents();
+            $get_order = json_decode($get_api_order);
+
+
+
+            if (empty($get_order)) {
+                $order_created_date_raw = Carbon::now();
+                $order_created_date = $order_created_date_raw->format('Y-m-d');
+                $order_created_time = $order_created_date_raw->format('H:i:s');
+                $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
+                $url = 'https://api.cin7.com/api/v1/Payments';
+                $authHeaders = [
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'auth' => [
+                        $cin7_auth_username,
+                        $cin7_auth_password,
+                    ],
+                ];
+
+                $update_array = [
+                    [
+                        'orderId' => $order_id,
+                        'method' => 'On Account',
+                        'paymentDate' => $api_order_sync_date,
+                    ]
+                ];
+
+                $authHeaders['json'] = $update_array;
+
+                $Payment_response = $client->post($url, $authHeaders);
+
+                $response = json_decode($Payment_response->getBody()->getContents());
+
+                dd($response);
+
+                Log::info('Payment Created: ' . json_encode($Payment_response));
+            }
+            
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }       
+    }
 }

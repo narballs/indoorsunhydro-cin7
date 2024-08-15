@@ -20,9 +20,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Subscribe;
 use App\Helpers\MailHelper;
+use App\Helpers\OrderHelper;
 use App\Helpers\SettingHelper;
-
-
+use App\Models\AdminSetting;
+use App\Models\Order;
+use Carbon\Carbon;
+use Google\Service\MyBusinessAccountManagement\Admin;
 
 class SalesOrders implements ShouldQueue
 {
@@ -121,11 +124,20 @@ class SalesOrders implements ShouldQueue
             }
 
 
-            $api_order = ApiOrder::where('order_id', $order_id)->where('reference', $reference)->first();
+            $api_order = ApiOrder::where('reference', $reference)->first();
             $api_order->order_id = $order_id;
             $api_order->isApproved = 1;
             $api_order->order_status_id = $order_status->id;
             $api_order->save();
+
+
+            $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
+            if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
+                if (!empty($api_order) && !empty($api_order->order_id)) {
+                    OrderHelper::update_order_payment_in_cin7($api_order->order_id);
+                }
+            }
+            
         }
 
 

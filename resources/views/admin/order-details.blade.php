@@ -37,8 +37,14 @@
                 <div class="row">
                     <div class="col-md-6 d-flex align-items-center">
                         <h6 class="mb-0">
-                            @if ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
-                                <span class="text-danger">This order is processed through stripe. But we are unable to verify payment.</span>
+                            @if ($order->is_stripe == 1 &&  $order->isApproved == 3)
+                                <span class="text-info">
+                                    This order is processed through stripe , and is refunded.
+                                </span>
+                            @else
+                                @if ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
+                                    <span class="text-danger">This order is processed through stripe. But we are unable to verify payment.</span>
+                                @endif
                             @endif
                         </h6>
                     </div>
@@ -88,6 +94,12 @@
                                                 </button>
                                             </div>
                                         @elseif ($order->is_stripe == 1 && strtolower($order->payment_status) == 'unpaid')
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-danger btn-sm" disabled>
+                                                    Fullfilled
+                                                </button>
+                                            </div>
+                                        @elseif ($order->is_stripe == 1 && strtolower($order->payment_status) == 'refunded')
                                             <div class="col-md-12">
                                                 <button type="button" class="btn btn-danger btn-sm" disabled>
                                                     Fullfilled
