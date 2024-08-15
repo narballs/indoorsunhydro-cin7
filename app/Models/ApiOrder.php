@@ -107,4 +107,9 @@ class ApiOrder extends Model
     {
         return $this->belongsTo('App\Models\Discount', 'discount_id', 'id');
     }
+
+    Public function order_refund()
+    {
+        return $this->hasMany('App\Models\OrderRefund', 'order_id', 'id');
+    }
 }
