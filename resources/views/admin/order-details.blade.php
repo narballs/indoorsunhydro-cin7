@@ -1336,7 +1336,7 @@
 
             else {
                 var order_status_id = $('#order_status_id').val();
-                var payment_status = 'partial refund';
+                var payment_status = 'partially refunded';
                 var order_status_type = 'partial_refund';
                 order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value);
             }       
