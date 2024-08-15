@@ -1863,11 +1863,12 @@ class CheckoutController extends Controller
         case 'charge.refunded':
             // Handle charge refunded event
             $charge = $event->data->object;
+            $total_amount = $charge->amount / 100; // Convert amount from cents to dollars
             $refundAmount = $charge->amount_refunded / 100; // Convert amount from cents to dollars
             $order_id = $charge->metadata->order_id;
             $currentOrder = ApiOrder::find($order_id);
 
-            if (!empty($currentOrder)) {
+            if (!empty($currentOrder) && ($total_amount >= $refundAmount)) {
                 // Update order status or perform any other actions related to the refund
                 $currentOrder->payment_status = 'refunded';
                 $currentOrder->is_refunded = 1;
@@ -1880,6 +1881,18 @@ class CheckoutController extends Controller
                 $order_comment->save();
 
                 // Log refund information or perform any other necessary actions
+                Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
+            } else {
+                $currentOrder->payment_status = 'partially refunded';
+                $currentOrder->is_refunded = 1;
+                $currentOrder->save();
+
+
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Order marked as partially refunded through webhook. (charge.partaillyRefunded)';
+                $order_comment->save();
+
                 Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
             }
 
