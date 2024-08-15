@@ -374,6 +374,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'Good news, your cart qualifies for free shipping',
             ],
+            [
+                'option_name' => 'add_payment_in_cin7_for_order', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];
