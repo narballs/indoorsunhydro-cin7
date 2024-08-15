@@ -174,8 +174,11 @@ class OrderHelper {
             $get_api_order = $get_response->getBody()->getContents();
             $get_order = json_decode($get_api_order);
 
-            // Log::info('Get Order Payment1: ' . $get_order);
-            Log::info('Get Order Payment: ' . $get_order[0]);
+            // Log specific property
+            Log::info('Get Order Payment: ' . $get_order[0]->orderId);
+            
+            // Or log the entire object as JSON
+            Log::info('Get Order Payment1: ' . json_encode($get_order[0]));
 
             if (empty($get_order[0])) {
                 $order_created_date_raw = Carbon::now();
