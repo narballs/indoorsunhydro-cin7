@@ -1868,8 +1868,22 @@ class CheckoutController extends Controller
             $order_id = $charge->metadata->order_id;
             $currentOrder = ApiOrder::find($order_id);
 
-            if (!empty($currentOrder) && ($total_amount >= $refundAmount)) {
-                // Update order status or perform any other actions related to the refund
+            if (!empty($currentOrder) && ($refundAmount < $total_amount)) {
+                $currentOrder->payment_status = 'partially refunded';
+                $currentOrder->is_refunded = 1;
+                $currentOrder->save();
+
+
+                $order_comment = new OrderComment;
+                $order_comment->order_id = $order_id;
+                $order_comment->comment = 'Order marked as partially refunded through webhook. (charge.partaillyRefunded)';
+                $order_comment->save();
+
+                Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
+                
+            } else {
+                
+
                 $currentOrder->payment_status = 'refunded';
                 $currentOrder->is_refunded = 1;
                 $currentOrder->save();
@@ -1881,18 +1895,6 @@ class CheckoutController extends Controller
                 $order_comment->save();
 
                 // Log refund information or perform any other necessary actions
-                Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
-            } else {
-                $currentOrder->payment_status = 'partially refunded';
-                $currentOrder->is_refunded = 1;
-                $currentOrder->save();
-
-
-                $order_comment = new OrderComment;
-                $order_comment->order_id = $order_id;
-                $order_comment->comment = 'Order marked as partially refunded through webhook. (charge.partaillyRefunded)';
-                $order_comment->save();
-
                 Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
             }
 
