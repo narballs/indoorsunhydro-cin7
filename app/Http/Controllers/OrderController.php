@@ -1513,7 +1513,8 @@ class OrderController extends Controller
             'contact',
             'user.contact',
             'apiOrderItem.product.options',
-            'texClasses'
+            'texClasses',
+            'order_refund'
         )->first();
         $count = $order_items->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
