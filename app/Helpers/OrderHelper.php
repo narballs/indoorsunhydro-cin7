@@ -174,7 +174,10 @@ class OrderHelper {
             $get_api_order = $get_response->getBody()->getContents();
             $get_order = json_decode($get_api_order);
 
-            if (empty($get_order)) {
+            Log::info('Get Order Payment1: ' . $get_order);
+            Log::info('Get Order Payment: ' . $get_order[0]);
+
+            if (empty($get_order[0])) {
                 $order_created_date_raw = Carbon::now();
                 $order_created_date = $order_created_date_raw->format('Y-m-d');
                 $order_created_time = $order_created_date_raw->format('H:i:s');
