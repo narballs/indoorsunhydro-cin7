@@ -1839,78 +1839,78 @@ class CheckoutController extends Controller
     }
 
     public function refund_webhook(Request $request)
-{
-    $payload = $request->getContent();
-    $stripeSignature = $request->header('Stripe-Signature');
-    $webhookSecret = config('services.stripe.refund_webhook_secret');
+    {
+        $payload = $request->getContent();
+        $stripeSignature = $request->header('Stripe-Signature');
+        $webhookSecret = config('services.stripe.refund_webhook_secret');
 
-    try {
-        $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
-    } catch (\Stripe\Exception\SignatureVerificationException $e) {
-        Log::error($e->getMessage());
-        return response()->json(['error' => 'Invalid webhook signature'], 400);
+        try {
+            $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            Log::error($e->getMessage());
+            return response()->json(['error' => 'Invalid webhook signature'], 400);
+        }
+
+        switch ($event->type) {
+            case 'charge.succeeded':
+                // Handle charge succeeded event
+                break;
+
+            case 'charge.failed':
+                // Handle charge failed event
+                break;
+
+            case 'charge.refunded':
+                // Handle charge refunded event
+                $charge = $event->data->object;
+                $total_amount = $charge->amount / 100; // Convert amount from cents to dollars
+                $refundAmount = $charge->amount_refunded / 100; // Convert amount from cents to dollars
+                $order_id = $charge->metadata->order_id;
+                $currentOrder = ApiOrder::find($order_id);
+
+                if (!empty($currentOrder) && ($refundAmount < $total_amount)) {
+                    $currentOrder->payment_status = 'partially refunded';
+                    $currentOrder->is_refunded = 2;
+                    $currentOrder->isApproved = 4;
+                    $currentOrder->save();
+
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order marked as partially refunded through webhook. (charge.partaillyRefunded)';
+                    $order_comment->save();
+
+                    Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
+                    
+                } else {
+                    
+                    $main_order = ApiOrder::find($order_id);
+                    $main_order->payment_status = 'refunded';
+                    $main_order->is_refunded = 1;
+                    $main_order->isApproved = 3;
+                    $main_order->save();
+
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order marked as refunded through webhook. (charge.refunded)';
+                    $order_comment->save();
+
+                    // Log refund information or perform any other necessary actions
+                    Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
+                }
+
+                break;
+
+            // Add more cases for other event types you want to handle
+
+            default:
+                // Handle unknown event types
+                break;
+        }
+
+        return response()->json(['status' => 'success']);
     }
-
-    switch ($event->type) {
-        case 'charge.succeeded':
-            // Handle charge succeeded event
-            break;
-
-        case 'charge.failed':
-            // Handle charge failed event
-            break;
-
-        case 'charge.refunded':
-            // Handle charge refunded event
-            $charge = $event->data->object;
-            $total_amount = $charge->amount / 100; // Convert amount from cents to dollars
-            $refundAmount = $charge->amount_refunded / 100; // Convert amount from cents to dollars
-            $order_id = $charge->metadata->order_id;
-            $currentOrder = ApiOrder::find($order_id);
-
-            if (!empty($currentOrder) && ($refundAmount < $total_amount)) {
-                $currentOrder->payment_status = 'partially refunded';
-                $currentOrder->is_refunded = 2;
-                $currentOrder->isApproved = 4;
-                $currentOrder->save();
-
-
-                $order_comment = new OrderComment;
-                $order_comment->order_id = $order_id;
-                $order_comment->comment = 'Order marked as partially refunded through webhook. (charge.partaillyRefunded)';
-                $order_comment->save();
-
-                Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
-                
-            } else {
-                
-                $main_order = ApiOrder::find($order_id);
-                $main_order->payment_status = 'refunded';
-                $main_order->is_refunded = 1;
-                $main_order->isApproved = 3;
-                $main_order->save();
-
-
-                $order_comment = new OrderComment;
-                $order_comment->order_id = $order_id;
-                $order_comment->comment = 'Order marked as refunded through webhook. (charge.refunded)';
-                $order_comment->save();
-
-                // Log refund information or perform any other necessary actions
-                Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
-            }
-
-            break;
-
-        // Add more cases for other event types you want to handle
-
-        default:
-            // Handle unknown event types
-            break;
-    }
-
-    return response()->json(['status' => 'success']);
-}
 
     
 }

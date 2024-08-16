@@ -446,7 +446,7 @@
                             </td>
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 {{-- {{ '$'.number_format($total, 2) }} --}}
-                                {{ '$'.number_format($grand_total, 2) }}
+                                {{ '$'.number_format($total, 2) }}
                             </td>
                         </tr>
                     </table>
