@@ -2208,6 +2208,7 @@ class OrderController extends Controller
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $calculate_tax = 0;
+        $delivery_cost = 0;
         $client = new \GuzzleHttp\Client();
 
         $res = $client->request(
@@ -2240,6 +2241,7 @@ class OrderController extends Controller
         } else {
             $calculate_tax = 0;
         }
+        $freightTotal = !empty($order->freightTotal) ? ($order->freightTotal * 100) : 0;
         $product_prices = [];
         
         $stripe = new \Stripe\StripeClient(config('services.stripe.wholesale_secret'));
@@ -2295,6 +2297,26 @@ class OrderController extends Controller
                 'quantity' => '1',
             ];
         }
+
+
+        if (!empty($freightTotal) && $freightTotal > 0) {
+            $shipment_price = number_format(($freightTotal * 100) , 2);
+            $shipment_value = str_replace(',', '', $shipment_price);
+            $shipment_product = $stripe->products->create([
+                'name' => 'Shipment',
+            ]);
+            $shipment_product_price = $stripe->prices->create([
+                'unit_amount_decimal' => $shipment_value,
+                'currency' => 'usd',
+                'product' => $shipment_product->id
+            ]);
+            $items[] = [
+                'price' => $shipment_product_price->id,
+                'quantity' => '1',
+            ];
+        }
+
+        
 
         $line_items = [
             'line_items' => 
