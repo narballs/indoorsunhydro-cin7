@@ -2241,7 +2241,7 @@ class OrderController extends Controller
         } else {
             $calculate_tax = 0;
         }
-        $freightTotal = !empty($order->freightTotal) ? ($order->freightTotal * 100) : 0;
+        $freightTotal = !empty($order->freightTotal) ? $order->freightTotal: 0;
         $product_prices = [];
         
         $stripe = new \Stripe\StripeClient(config('services.stripe.wholesale_secret'));
