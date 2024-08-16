@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\SettingHelper;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
+use App\Models\OrderRefund;
 use App\Models\OrderStatus;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -42,6 +43,7 @@ use Square\Models\Order as SquareOrder;
 use Square\Exceptions\ApiException;
 use Illuminate\Support\Facades\Storage;
 use Square\Models\OrderLineItem;
+use Stripe\Refund;
 use Stripe\TaxRate;
 
 class OrderController extends Controller
@@ -1312,7 +1314,6 @@ class OrderController extends Controller
 
     // uppdate order status manually 
     public function update_order_status_by_admin(Request $request) {
-        
         $request_status =  true;
         $message = 'Order status updated and  successfully.';
         $order_id = $request->order_id;
@@ -1323,15 +1324,69 @@ class OrderController extends Controller
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $refund_value = floatval($request->refund_value);
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
         if ($order->is_stripe === 1) {
+            if ((strtolower($current_order_status->status) === 'partial refund')  && $refund_value > 0) {
+                
+                try {
+
+                    $order_refunds = OrderRefund::where('order_id', $order_id)->get();
+                    $total_amount_refunded = 0;
+                    if (count($order_refunds) > 0) {
+                        foreach ($order_refunds as $order_refund) {
+                            $total_amount_refunded += $order_refund->refund_amount;
+                        }
+                    }
+
+                    if ($total_amount_refunded >= $order->total_including_tax) {
+                        $request_status = 'Total amount refunded already';
+                        $message = 'Partial Refund failed';
+                        return response()->json(['success' => false , 'message' => $message]);
+                    }
+                    else {
+                        $partial_refund = $stripe->refunds->create([
+                            'charge' => $order->charge_id,
+                            'amount' => intval($refund_value * 100),
+                        ]);
+        
+                        if ($partial_refund->status === 'succeeded') { 
+                            $request_status = true;
+                            $message = 'Partial Refund request has been successfully created.';
+        
+                            $order->update([
+                                'order_status_id' => $order_status_id,
+                                'isApproved' => $current_order_status->status == 'Partial Refund' ? 4 : $order->isApproved
+                            ]);
+    
+                            $order_refund = new OrderRefund;
+                            $order_refund->order_id = $order_id;
+                            $order_refund->refund_amount = $refund_value;
+                            $order_refund->save();
+
+                        } else {
+                            $request_status = false;
+                            $message = 'Partial Refund failed';
+                            return response()->json(['success' => false , 'message' => $message]);
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $request_status = false;
+                    $message = $e->getMessage();
+                    return response()->json(['success' => false , 'message' => $message]);
+                }
+            }
             if (strtolower($current_order_status->status) === 'refunded') {
-                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
                 try {
                     $refund = $stripe->refunds->create(['charge' => $order->charge_id]);
                     if ($refund->status === 'succeeded') {
                         $request_status = true;
                         $message = 'Refund request has been successfully created.';
                         
+                        $order_refund = new OrderRefund;
+                        $order_refund->order_id = $order_id;
+                        $order_refund->refund_amount = $order->total_including_tax;
+                        $order_refund->save();
 
                         if (!empty($order->order_id)) {
                             try {
@@ -1458,7 +1513,8 @@ class OrderController extends Controller
             'contact',
             'user.contact',
             'apiOrderItem.product.options',
-            'texClasses'
+            'texClasses',
+            'order_refund'
         )->first();
         $count = $order_items->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
@@ -2152,6 +2208,7 @@ class OrderController extends Controller
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $calculate_tax = 0;
+        $delivery_cost = 0;
         $client = new \GuzzleHttp\Client();
 
         $res = $client->request(
@@ -2184,6 +2241,7 @@ class OrderController extends Controller
         } else {
             $calculate_tax = 0;
         }
+        $freightTotal = !empty($order->freightTotal) ? ($order->freightTotal * 100) : 0;
         $product_prices = [];
         
         $stripe = new \Stripe\StripeClient(config('services.stripe.wholesale_secret'));
@@ -2239,6 +2297,26 @@ class OrderController extends Controller
                 'quantity' => '1',
             ];
         }
+
+
+        if (!empty($freightTotal) && $freightTotal > 0) {
+            $shipment_price = number_format(($freightTotal * 100) , 2);
+            $shipment_value = str_replace(',', '', $shipment_price);
+            $shipment_product = $stripe->products->create([
+                'name' => 'Shipment',
+            ]);
+            $shipment_product_price = $stripe->prices->create([
+                'unit_amount_decimal' => $shipment_value,
+                'currency' => 'usd',
+                'product' => $shipment_product->id
+            ]);
+            $items[] = [
+                'price' => $shipment_product_price->id,
+                'quantity' => '1',
+            ];
+        }
+
+        
 
         $line_items = [
             'line_items' => 

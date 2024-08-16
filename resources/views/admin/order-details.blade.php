@@ -32,7 +32,7 @@
                 <span class="success_text text-white"></span>
             </div>
         </div>
-        <div class="col-md-8 d-flex mb-3">
+        <div class="col-md-9 d-flex mb-3">
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-6 d-flex align-items-center">
@@ -162,7 +162,7 @@
                 <input type="hidden" value="0" name="tax_rate" id="tax_rate">
                 @endif
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div class="card">
                             <div class="d-flex card-header">
                                <div class="col-md-12">
@@ -254,7 +254,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @if(($order->isApproved == 0 || $order->isApproved == 1  || $order->isApproved == 2)   && $order->isVoid == 0)
+                                        @if(($order->isApproved == 0 || $order->isApproved == 1  || $order->isApproved == 2 || $order->isApproved == 4)   && $order->isVoid == 0)
                                         <div class="col-md-2 d-flex align-items-center justify-content-end edit_order_div">
                                             <button class="btn btn-light btn-sm edit_admin_order" type="button" onclick="edit_order('{{ $order->id }}')">
                                                     Edit Order
@@ -416,6 +416,7 @@
                                         </tr>
                                         <tr class="fw-bold">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">GRAND TOTAL</span></td>
+                                            <input type="hidden" name="grand_total_value" class="grand_total_value" id="grand_total_value" value="{{ number_format($order->total_including_tax, 2) }}">
                                             <td class="text-center"><span class="order-grand-total" id="grand_total_text">${{ number_format($order->total_including_tax, 2) }}</span></td>
                                         </tr>
                                     </tfoot>
@@ -481,7 +482,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <!-- Customer Notes -->
                         <div class="card mb-3">
                             <div class="card-body">
@@ -563,6 +564,41 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="modal fade" id="partial_refund" tabindex="-1" role="dialog" aria-labelledby="partial_refundLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="partial_refundLabel">Partial Refund</h5>
+              {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> --}}
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="pop_up_grand_total" class="">Grand Total</label>
+                    <input type="text" value="" class="form-control" name="grand_popup_total_text" id="grand_popup_total_text" readonly>
+                    
+                </div>
+                <div class="form-group">
+                    <label for="pop_up_grand_total" class="">Refund Value</label>
+                    <input type="number" name="" class="form-control" id="pop_up_grand_total" step="any" value="" max="" min="0">
+                    <div class="error_message_parial_refund">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="spinner-border text-warning partial-order-status-spinner d-none mx-2" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary mx-2" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="partial_refund_ftn('{{$order->id}}')">Save changes</button>
+                </div>
+            </div>
+          </div>
         </div>
     </div>
 @stop
@@ -1232,7 +1268,24 @@
             $('.order-status-spinner').removeClass('d-none');
             $('.update_order').attr('disabled' , true);
             var order_status_id = $('#order_status_id').val();
-            var payment_status = paid;  
+            var payment_status = paid;
+            check_status_name = $('#order_status_id option:selected').text();
+
+            if (check_status_name == 'Partial Refund') {
+                $('.order-status-spinner').addClass('d-none');
+                $('#partial_refund').modal('show');
+                $('#grand_popup_total_text').val($('#grand_total_value').val());
+                $('#pop_up_grand_total').val($('#grand_total_value').val());
+                $('#pop_up_grand_total').attr('max', $('#grand_total_value').val());
+            }
+            else {
+                $('#partial_refund').modal('hide');
+                var order_status_type = 'null';
+                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value = 0);
+            }
+        }
+
+        function order_status_updating_by_admin(order_id ,order_status_id, payment_status, order_status_type , refund_value) {
             jQuery.ajax({
                 url: "{{ url('admin/order/update-order-status') }}",
                 method: 'post',
@@ -1240,7 +1293,9 @@
                     "_token": "{{ csrf_token() }}",
                     "order_id": order_id,
                     "order_status_id": order_status_id,
-                    "payment_status": payment_status
+                    "payment_status": payment_status,
+                    "order_status_type": order_status_type,
+                    "refund_value": refund_value
                 },
                 success: function(response) {
                     if (response.success == true) {
@@ -1257,6 +1312,35 @@
                     }
                 }
             });
+        }
+
+        // check if refund_value is greater than grand_total
+
+        function partial_refund_ftn(order_id) {
+            var grand_total = parseFloat($('#grand_total_value').val());
+            var refund_value = parseFloat($('#pop_up_grand_total').val());
+            if ($('#pop_up_grand_total').val() == null || $('#pop_up_grand_total').val() == '') {
+                $('.error_message_parial_refund').children('span').text('Patial refund value is required');
+                return false;
+            }
+            $('.partial-order-status-spinner').removeClass('d-none');
+            if (refund_value >= grand_total) {
+                $('.partial-order-status-spinner').addClass('d-none');
+                $('.error_message_parial_refund').children('span').text('Partial Refund value should be less than grand total');
+                return false;
+            } else if(refund_value <= 0 || refund_value === '') {
+                $('.partial-order-status-spinner').addClass('d-none');
+                $('.error_message_parial_refund').children('span').text('Partial Refund value should be greater than 0');
+                return false;
+            }
+
+            else {
+                var order_status_id = $('#order_status_id').val();
+                var payment_status = 'partially refunded';
+                var order_status_type = 'partial_refund';
+                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value);
+            }       
+            
         }
     </script>
 @stop
