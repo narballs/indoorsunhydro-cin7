@@ -1923,22 +1923,18 @@ class OrderController extends Controller
                 $OrderItem->option_id = $cart_item['option_id'];
                 $OrderItem->save();
 
-
-                $original_cart_price = number_format(($cart_item['price'] * 100) , 2);
-                $cart_price = str_replace(',', '', $original_cart_price);
-
                 $products = $stripe->products->create([
                     'name' => $cart_item['name'],
                 ]);
                 $unit_price = 0;
                 if ($discount_type == 'percentage') {
                     $percentage = 'percentage';
-                    $unit_price = $cart_price -  ($cart_price * ($discount_variation_value / 100));
+                    $unit_price = $cart_item['price'] -  ($cart_item['price'] * ($discount_variation_value / 100));
                 } else {
-                    $unit_price = $cart_price - $discount_variation_value;
+                    $unit_price = $cart_item['price'] - $discount_variation_value;
                 }
                 $productPrice = $stripe->prices->create([
-                    'unit_amount' => $cart_price,
+                    'unit_amount' => round($cart_item['price'] * 100),
                     'currency' => 'usd',
                     'product' => $products->id,
                     'metadata' => [
@@ -2088,7 +2084,6 @@ class OrderController extends Controller
             'email' => $order_contact->email,
         ]);    
         foreach ($cart_items as $cart_item) {
-
             $OrderItem = new ApiOrderItem;
             $OrderItem->order_id = $order_id;
             $OrderItem->product_id = $cart_item['product_id'];
@@ -2097,15 +2092,13 @@ class OrderController extends Controller
             $OrderItem->option_id = $cart_item['option_id'];
             $OrderItem->save();
 
-            $original_cart_price = number_format(($cart_item['price'] * 100) , 2);
-            $cart_price = str_replace(',', '', $original_cart_price);
-
+            
             $products = $stripe->products->create([
                 'name' => $cart_item['name'],
             ]);
             
             $productPrice = $stripe->prices->create([
-                'unit_amount_decimal' => $cart_price,
+                'unit_amount' => round($cart_item['price'] * 100),
                 'currency' => 'usd',
                 'product' => $products->id,
                 'metadata' => [
