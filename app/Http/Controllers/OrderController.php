@@ -1945,10 +1945,10 @@ class OrderController extends Controller
             }
             
             if (!empty($tax_rate) && $tax_rate > 0) {
-                $formatted_tax = number_format($tax_rate, 2);
-                $formatted_tax_rate = str_replace(',', '', $formatted_tax);
-                $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
-                $tax_value = str_replace(',', '', $formatted_tax_value);
+                $formatted_tax = number_format(($tax_rate * 100 ), 2);
+                $tax_value = str_replace(',', '', $formatted_tax);
+                // $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+                // $tax_value = str_replace(',', '', $formatted_tax_value);
                 $products_tax= $stripe->products->create([
                     'name' => 'Tax',
                 ]);
@@ -2108,10 +2108,11 @@ class OrderController extends Controller
             array_push($product_prices, $productPrice);
         }
         if (!empty($tax_rate) && $tax_rate > 0) {
-            $formatted_tax = number_format($tax_rate, 2);
-            $formatted_tax_rate = str_replace(',', '', $formatted_tax);
-            $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
-            $tax_value = str_replace(',', '', $formatted_tax_value);
+            $formatted_tax = number_format(($tax_rate * 100 ), 2);
+            // $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+            $tax_value = str_replace(',', '', $formatted_tax);
+            // $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+            //$tax_value = str_replace(',', '', $formatted_tax_value);
             $products_tax= $stripe->products->create([
                 'name' => 'Tax',
             ]);
@@ -2198,6 +2199,8 @@ class OrderController extends Controller
             'customer' => $customer->id,
             // 'customer_email' => auth()->user()->email,
         ]);
+
+        dd($checkout_session);
 
         return $checkout_session;
     }
