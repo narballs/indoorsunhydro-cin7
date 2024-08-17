@@ -1615,6 +1615,7 @@ class OrderController extends Controller
     }
 
     public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value , $parcel_guard) {
+        $tax_rate = number_format($tax_rate, 2);
         $discount_variation_value  = $discount_variation_value;
         $percentage = null;
         
@@ -2065,7 +2066,7 @@ class OrderController extends Controller
     }
     
     public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price, $parcel_guard ) {
-        
+        $tax_rate = number_format($tax_rate, 2);
         // $original_shipment_price = 0;
         // if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
         //     if (!empty($request->products_weight) && $request->product_weight > 150) {
