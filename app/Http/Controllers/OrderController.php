@@ -2200,8 +2200,6 @@ class OrderController extends Controller
             // 'customer_email' => auth()->user()->email,
         ]);
 
-        dd($checkout_session);
-
         return $checkout_session;
     }
 
