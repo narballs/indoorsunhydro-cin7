@@ -26,7 +26,7 @@ class AlterBlogsTableChangeImageAndThumbnailToLongtext extends Migration
      */
     public function down()
     {
-        Schema::table('longtext', function (Blueprint $table) {
+        Schema::table('blogs', function (Blueprint $table) {
             //
         });
     }
