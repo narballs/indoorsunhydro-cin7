@@ -25,14 +25,14 @@
 							</a>
 						@endif
 						<div class="card-body blog-card-body-height">
-							<h5 class="card-title blog_title">{!! \Illuminate\Support\Str::limit($blog->title, 15) !!}</h5>
-							<p class="card-text mb-0"  style="max-height: 7rem;min-height:7rem;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
+							<h5 class="card-title blog_title" style="font-family:'Poppins';font-weight;500;font-size:19px !important;line-height:24px;">{!! \Illuminate\Support\Str::limit($blog->title, 15) !!}</h5>
+							<p class="card-text mb-0"  style="max-height: 7rem;min-height:7rem;font-family:'Poppins';font-weight;400;font-size:16px;line-height:27px;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
 							<div class="row justify-content-between">
 								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
-									<small class="text-muted">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
+									<small class="text-muted" style="font-family:'Poppins';font-weight;400;font-size:14px;line-height:21px;">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
 								</div>
 								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
-									<small class="text-muted"><a href="{{route('blog_detail' , $blog->slug)}}">Read More ..</a></small>
+									<small class="text-muted" style="font-family:'Poppins';font-weight;400;font-size:14px;line-height:21px;"><a href="{{route('blog_detail' , $blog->slug)}}">Read More ..</a></small>
 								</div>
 							</div>
 						</div>
