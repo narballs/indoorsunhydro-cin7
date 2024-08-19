@@ -793,7 +793,9 @@ $cart_price = 0;
                                                                         value="{{ $payment_option->option_name }}" style="background: #008BD3;" onclick="pickup_order(this)">
                                                                     <label for="local_delivery payment-option-label"
                                                                         class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
-                                                                    
+                                                                        @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                        {{':'}}
+                                                                        @endif
                                                                     </label>
                                                                     @if (strtolower($payment_option->option_name) == 'pickup order')
                                                                         <span class="mx-2">
