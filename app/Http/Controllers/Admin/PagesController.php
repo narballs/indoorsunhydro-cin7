@@ -301,6 +301,7 @@ class PagesController extends Controller
             return redirect()->route('blogs.index')->with('success', 'Blog created successfully.');
         }
         catch(\Exception $e) {
+            Log::info('Exception: ' . $e->getMessage());
             return redirect()->route('blogs.index')->with('error', 'Something went wrong !');
         }
     }
@@ -411,6 +412,7 @@ class PagesController extends Controller
     
             return redirect()->route('blogs.index')->with('success', 'Blog updated successfully.');
         } catch (\Exception $e) {
+            Log::info('Exception: ' . $e->getMessage());
             return redirect()->route('blogs.index')->with('error', 'Please reduce image sizes and try again.');
         }
     }
