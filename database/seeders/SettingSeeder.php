@@ -379,6 +379,26 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'store_hours_1', 
+                'type' => 'text',
+                'option_value' => 'Monday-Friday  9:00AM-5:30PM',
+            ],
+            [
+                'option_name' => 'store_hours_2', 
+                'type' => 'text',
+                'option_value' => 'Saturday-Sunday  9:00AM-5:00PM',
+            ],
+            [
+                'option_name' => 'store_timings_1', 
+                'type' => 'text',
+                'option_value' => '9:00AM-5:30PM',
+            ],
+            [
+                'option_name' => 'store_timings_2', 
+                'type' => 'text',
+                'option_value' => '9:00AM-5:00PM',
+            ],
 
             
         ];
