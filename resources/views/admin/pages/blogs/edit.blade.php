@@ -40,26 +40,33 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name"> Image</label>
+                                    <label for="name"> Thumbnail</label>
+                                    <input type="file" class="form-control" id="thumbail" aria-describedby="" name="thumbnail">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Image</label>
                                     <input type="file" class="form-control" id="blog_image" aria-describedby="" name="blog_image">
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="form-group" id="">
-                                    <label><strong>Description :</strong></label>
-                                    <textarea class="form-control" name="description" id="blog_description"> {{$blog->description}}</textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="status">Status</label>
                                     <select name="status" id="status" class="form-control">
-                                        
+                                        `
                                         <option value="1" {{$blog->status == 1 ? 'selected' : ''}}>Active</option>
                                         <option value="0" {{$blog->status == 0 ? 'selected' : ''}}>Inactive</option>
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="form-group" id="">
+                                    <label><strong>Description :</strong></label>
+                                    <textarea class="form-control" name="description" id="blog_description_edit"> {{$blog->description}}</textarea>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -546,7 +553,7 @@
             };
         }
 
-        CKEDITOR.ClassicEditor.create(document.getElementById("blog_description"), {
+        CKEDITOR.ClassicEditor.create(document.getElementById("blog_description_edit"), {
             extraPlugins: [MyCustomUploadAdapterPlugin],
             toolbar: {
                 items: [
@@ -579,7 +586,30 @@
                 ]
             },
             mediaEmbed: {
-                previewsInData: true
+                previewsInData: true,
+                providers: [
+                    {
+                        name: 'youtube',
+                        url: [
+                            /^(https:\/\/www\.youtube\.com\/shorts\/.+)$/,
+                            /^(https:\/\/youtube\.com\/shorts\/.+)$/,
+                            /^(https:\/\/www\.youtube\.com\/watch\?v=.+)$/,
+                            /^(https:\/\/youtu\.be\/.+)$/
+                        ],
+                        html: match => {
+                            let id;
+                            if (match[0].includes('shorts')) {
+                                id = match[1].split('/shorts/')[1];
+                            } else if (match[0].includes('watch')) {
+                                id = match[1].split('v=')[1];
+                            } else {
+                                id = match[0].split('youtu.be/')[1].split('?')[0];
+                            }
+                            return `<div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                                    <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>`;
+                        }
+                    }
+                ]
             },
             htmlEmbed: {
                 showPreviews: true
