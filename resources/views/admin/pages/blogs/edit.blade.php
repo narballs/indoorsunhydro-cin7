@@ -41,13 +41,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name"> Thumbnail</label>
-                                    <input type="file" class="form-control" id="thumbail" aria-describedby="" name="thumbnail">
+                                    <input type="file" class="form-control" id="thumbail" aria-describedby="" name="thumbnail"  accept="jpg,png,jpeg">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name">Image</label>
-                                    <input type="file" class="form-control" id="blog_image" aria-describedby="" name="blog_image">
+                                    <input type="file" class="form-control" id="blog_image" aria-describedby="" name="blog_image"  accept="jpg,png,jpeg">
                                 </div>
                             </div>
                             <div class="col-md-6">
