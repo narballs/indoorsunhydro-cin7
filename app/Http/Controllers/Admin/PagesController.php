@@ -265,17 +265,13 @@ class PagesController extends Controller
             'description' => 'required',
         ]);
 
-        $blog_image = null;
-
-        if(!empty($request->blog_image)) {
-            if ($request->hasFile('blog_image')) {
-                $image = $request->file('blog_image');
-                $blog_image = time() . '.' . $image->getClientOriginalExtension();
-                $destinationPath = public_path('pages/blogs');
-                File::makeDirectory($destinationPath, $mode = 0777, true, true);
-                Image::make($image)->resize(1920, 512)->save($destinationPath . '/' . $blog_image);
-                
-            }
+        if ($request->hasFile('blog_image')) {
+            $image = $request->file('blog_image');
+            $blog_image = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('pages/blogs');
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            Image::make($image)->resize(1920, 512)->save($destinationPath . '/' . $blog_image);
+            
         } else {
             $blog_image = null;
         }
