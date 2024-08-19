@@ -315,11 +315,11 @@ class PagesController extends Controller
         $thumbnail_image = null;
 
         if ($request->hasFile('blog_image')) {
-            $image = $request->file('blog_image');
-            $blog_image = time() . '_cover' . $image->getClientOriginalExtension();
+            $b_image = $request->file('blog_image');
+            $blog_image = time() . '_cover' . $b_image->getClientOriginalExtension();
             $destinationPath = public_path('pages/blogs/thumbnails/covers');
             File::makeDirectory($destinationPath, 0777, true, true);
-            Image::make($image)->resize(1920, 517)->save($destinationPath . '/' . $blog_image);
+            Image::make($b_image)->resize(1920, 517)->save($destinationPath . '/' . $blog_image);
         }
         if ($request->hasFile('thumbnail')) {
             $thumbnail = $request->file('thumbnail');
@@ -428,11 +428,11 @@ class PagesController extends Controller
         $thumbnail_image = $blog->thumbnail;
         
         if ($request->hasFile('blog_image')) {
-            $image = $request->file('blog_image');
-            $blog_image = time() . '_cover' . $image->getClientOriginalExtension();
+            $b_image = $request->file('blog_image');
+            $blog_image = time() . '_cover' . $b_image->getClientOriginalExtension();
             $destinationPath = public_path('pages/blogs/thumbnails/covers');
             File::makeDirectory($destinationPath, 0777, true, true);
-            Image::make($image)->resize(1920, 517)->save($destinationPath . '/' . $blog_image);
+            Image::make($b_image)->resize(1920, 517)->save($destinationPath . '/' . $blog_image);
         }
     
         if ($request->hasFile('thumbnail')) {
