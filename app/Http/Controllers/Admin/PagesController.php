@@ -259,48 +259,116 @@ class PagesController extends Controller
     }
 
 
+    // public function store_blog(Request $request) {
+    //     $validated = $request->validate([
+    //         'title' => 'required',
+    //         'description' => 'required',
+    //     ]);
+
+    //     if ($request->hasFile('blog_image')) {
+    //         $image = $request->file('blog_image');
+    //         $blog_image = time() . '.' . $image->getClientOriginalExtension();
+    //         $destinationPath = public_path('pages/blogs');
+    //         File::makeDirectory($destinationPath, $mode = 0777, true, true);
+    //         Image::make($image)->resize(1920, 512)->save($destinationPath . '/' . $blog_image);
+            
+    //     } else {
+    //         $blog_image = null;
+    //     }
+
+    //     if ($request->hasFile('thumbnail')) {
+    //         $thumbnail = $request->file('thumbnail');
+    //         $thumbnailImage = time() . '_banner.' . $thumbnail->getClientOriginalExtension();
+    //         $bannerDestinationPath = public_path('pages/blogs/thumbnails');
+    //         File::makeDirectory($bannerDestinationPath, 0777, true, true);
+    //         Image::make($thumbnail)->resize(400, 240)->save($bannerDestinationPath . '/' . $thumbnailImage);
+
+    //     } else {
+    //         $thumbnailImage = null;
+    //     }
+    //     $random_number = rand(1, 1000);
+    //     try {
+    //         $blog = Blog::create([
+    //             'title' => $request->title,
+    //             'description' => $request->description,
+    //             'slug' => Str::slug($request->title) . '-' . $random_number,
+    //             'image' => $blog_image,
+    //             'thumbnail' => $thumbnailImage,
+    //             'status' => $request->status,
+    //         ]);
+    //         return redirect()->route('blogs.index')->with('success', 'Blog created successfully.');
+    //     }
+    //     catch(\Exception $e) {
+    //         Log::info('Exception: ' . $e->getMessage());
+    //         return redirect()->route('blogs.index')->with('error', 'Something went wrong !');
+    //     }
+    // }
+
+
     public function store_blog(Request $request) {
         $validated = $request->validate([
             'title' => 'required',
             'description' => 'required',
         ]);
 
-        if ($request->hasFile('blog_image')) {
-            $image = $request->file('blog_image');
-            $blog_image = time() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('pages/blogs');
-            File::makeDirectory($destinationPath, $mode = 0777, true, true);
-            Image::make($image)->resize(1920, 512)->save($destinationPath . '/' . $blog_image);
-            
-        } else {
-            $blog_image = null;
-        }
+        $blog_image = null;
+        $thumbnail_image = null;
 
+        if(!empty($request->blog_image)) {
+            if ($request->hasFile('blog_image')) {
+                $image = $request->file('blog_image');
+                $blog_image = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('pages/blogs');
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                Image::make($image)->resize(1920, 512)->save($destinationPath . '/' . $blog_image);
+
+                // $destinationPath = public_path('pages/blogs');
+                // $thumbnailPath = public_path('pages/blogs/thumbnails');
+            
+                // // Create directories if they do not exist
+                // File::makeDirectory($destinationPath, $mode = 0777, true, true);
+                // if (!File::isDirectory($thumbnailPath)) {
+                //     File::makeDirectory($thumbnailPath, 0777, true, true);
+                // }
+            
+                // // Resize and save the cover image (1920x517)
+                // $coverImageUrl = $destinationPath . '/' . $blog_image;
+                // Image::make($image)->fit(900, 300)->save($coverImageUrl);
+            
+                // // Resize and save the thumbnail (290x200)
+                // $thumbnailUrl = $thumbnailPath . '/' . $fileName_thumb;
+                // Image::make($image)->fit(290, 200)->save($thumbnailUrl);
+            
+                // // Move the original image to the destination directory
+                // $image->move($destinationPath, $blog_image);
+
+                // $image->move($destinationPath, $blog_image);
+            }
+        }
         if ($request->hasFile('thumbnail')) {
             $thumbnail = $request->file('thumbnail');
-            $thumbnailImage = time() . '_banner.' . $thumbnail->getClientOriginalExtension();
-            $bannerDestinationPath = public_path('pages/blogs/thumbnails');
-            File::makeDirectory($bannerDestinationPath, 0777, true, true);
-            Image::make($thumbnail)->resize(400, 240)->save($bannerDestinationPath . '/' . $thumbnailImage);
+            $thumbnail_image = time() . '_thumbnail.' . $thumbnail->getClientOriginalExtension();
+            $thumbnailDestinationPath = public_path('pages/blogs/thumbnails');
+            File::makeDirectory($thumbnailDestinationPath, 0777, true, true);
+            Image::make($thumbnail)->resize(400, 200)->save($thumbnailDestinationPath . '/' . $thumbnail_image);
 
-        } else {
-            $thumbnailImage = null;
         }
+
         $random_number = rand(1, 1000);
+
         try {
             $blog = Blog::create([
                 'title' => $request->title,
                 'description' => $request->description,
                 'slug' => Str::slug($request->title) . '-' . $random_number,
                 'image' => $blog_image,
-                'thumbnail' => $thumbnailImage,
+                'thumbnail' => $thumbnail_image,
                 'status' => $request->status,
             ]);
             return redirect()->route('blogs.index')->with('success', 'Blog created successfully.');
         }
         catch(\Exception $e) {
-            Log::info('Exception: ' . $e->getMessage());
-            return redirect()->route('blogs.index')->with('error', 'Something went wrong !');
+            return redirect()->route('blogs.index')->with('error', 'Please reduce image sizes and try again.');
         }
     }
 
