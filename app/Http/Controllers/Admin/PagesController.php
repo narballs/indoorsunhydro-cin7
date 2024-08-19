@@ -265,6 +265,8 @@ class PagesController extends Controller
             'description' => 'required',
         ]);
 
+        $blog_image = null;
+
         if(!empty($request->blog_image)) {
             if ($request->hasFile('blog_image')) {
                 $image = $request->file('blog_image');
