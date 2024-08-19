@@ -19,7 +19,7 @@
 				@foreach ($blogs as $blog)
 				<div class="col-md-6 col-xl-4 col-lg-6 col-12 mb-3">
 					<div class="card rounded">
-						@if (!empty($blog->image))
+						@if (!empty($blog->thumbnail))
 							<a href="{{route('blog_detail' , $blog->slug)}}">
 								<img class="card-img-top rounded-top" alt="100%x280"  src="{{asset('pages/blogs/thumbnails/' . $blog->thumbnail)}}" alt="Blog Image">
 							</a>
