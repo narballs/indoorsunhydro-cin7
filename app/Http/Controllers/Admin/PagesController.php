@@ -283,7 +283,7 @@ class PagesController extends Controller
             $thumbnailImage = time() . '_banner.' . $thumbnail->getClientOriginalExtension();
             $bannerDestinationPath = public_path('pages/blogs/thumbnails');
             File::makeDirectory($bannerDestinationPath, 0777, true, true);
-            Image::make($thumbnail)->resize(400, 200)->save($bannerDestinationPath . '/' . $thumbnailImage);
+            Image::make($thumbnail)->resize(400, 240)->save($bannerDestinationPath . '/' . $thumbnailImage);
 
         } else {
             $thumbnailImage = null;
@@ -397,7 +397,7 @@ class PagesController extends Controller
             $thumbnail_image = time() . '_thumbnail.' . $thumbnail->getClientOriginalExtension();
             $thumbnailDestinationPath = public_path('pages/blogs/thumbnails');
             File::makeDirectory($thumbnailDestinationPath, 0777, true, true);
-            Image::make($thumbnail)->resize(400, 200)->save($thumbnailDestinationPath . '/' . $thumbnail_image);
+            Image::make($thumbnail)->resize(400, 240)->save($thumbnailDestinationPath . '/' . $thumbnail_image);
         }
     
         try {
