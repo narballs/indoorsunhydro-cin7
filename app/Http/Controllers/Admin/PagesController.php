@@ -316,7 +316,7 @@ class PagesController extends Controller
 
         if ($request->hasFile('blog_image')) {
             $b_image = $request->file('blog_image');
-            $blog_image = time() . '_cover' . $b_image->getClientOriginalExtension();
+            $blog_image = time() . '_cover.' . $b_image->getClientOriginalExtension();
             $destinationPath = public_path('pages/blogs/thumbnails/covers');
             File::makeDirectory($destinationPath, 0777, true, true);
             Image::make($b_image)->resize(1920, 517)->save($destinationPath . '/' . $blog_image);
@@ -429,7 +429,7 @@ class PagesController extends Controller
         
         if ($request->hasFile('blog_image')) {
             $b_image = $request->file('blog_image');
-            $blog_image = time() . '_cover' . $b_image->getClientOriginalExtension();
+            $blog_image = time() . '_cover.' . $b_image->getClientOriginalExtension();
             $destinationPath = public_path('pages/blogs/thumbnails/covers');
             File::makeDirectory($destinationPath, 0777, true, true);
             Image::make($b_image)->resize(1920, 517)->save($destinationPath . '/' . $blog_image);
