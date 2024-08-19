@@ -48,12 +48,27 @@
                     </span>
                     <span class="ms-2 pra-footer fw-semibold">{{ \App\Helpers\SettingHelper::getSetting('store_phone_number') }}
                     </span>
-                    <p class="ms-4 ms-4-footer mt-0">&nbsp;
-                        <span class="text-success sm-4-footer">
-                            {!! \App\Helpers\SettingHelper::getSetting('timings_part1') !!}
-                        </span> {!! \App\Helpers\SettingHelper::getSetting('timings_part2') !!}
+                    <p class="ms-4 ms-4-footer mt-0 mb-0">&nbsp;
+                        <span class="ms-2 text-success sm-4-footer">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_hours_1') !!}
+                        </span> 
                     </p>
-                    <p>
+                    <p class="ms-4 ms-4-footer mt-0 mb-0">&nbsp;
+                        <span class="ms-2 sm-4-footer">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_timings_1') !!}
+                        </span> 
+                    </p>
+                    <p class="ms-4 ms-4-footer mt-0 mb-0">&nbsp;
+                        <span class=" ms-2 text-success sm-4-footer">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_hours_2') !!}
+                        </span> 
+                    </p>
+                    <p class="ms-4 ms-4-footer mt-0 mb-0">&nbsp;
+                        <span class=" ms-2 sm-4-footer">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_timings_2') !!}
+                        </span> 
+                    </p>
+                    <p class="ms-4 ms-4-footer mt-0 mb-0">
                         <?php 
                             $yelp_link = \App\Helpers\SettingHelper::getSetting('yelp_link'); 
                             $instagram_link = \App\Helpers\SettingHelper::getSetting('instagram_link');
@@ -61,20 +76,20 @@
                         ?>
                         @if (!empty($yelp_link))
                             <a target="_blank" href="{{ \App\Helpers\SettingHelper::getSetting('yelp_link') }}"
-                                class="text-light pra-footer" style="text-decoration: none">
+                                class="text-light pra-footer ms-3" style="text-decoration: none">
                                 <img src="/theme/img/footer-yami-icon.png" alt="" class="img-fluid" style="width: 32px;" />
                             </a>
                         @endif
 
                         @if (!empty($facebook_link))
                             <a target="_blank" href="{{ \App\Helpers\SettingHelper::getSetting('facebook_link') }}"
-                                class="text-light pra-footer" style="text-decoration: none">
+                                class="text-light pra-footer ms-3" style="text-decoration: none">
                                 <img src="/theme/img/fb-icon.png" alt="" class="img-fluid" style="width: 24px; margin-left: 5px;" />
                             </a>
                         @endif
                         
                         @if (!empty($instagram_link))
-                            <a target="_blank" href="{{ $instagram_link }}" class="text-light pra-footer"
+                            <a target="_blank" href="{{ $instagram_link }}" class="text-light pra-footer ms-3"
                                 style="text-decoration: none">
                                 <img src="/theme/img/footer-instagram-icon.png" alt="" class="ps-1" style="width: 40px;margin-top:-5px;" />
                             </a>
@@ -178,7 +193,26 @@
                         <img src="/theme/img/phone-call.png" class="img-fluid">
                     </span>
                     <span class="footer_head_mbl pra-footer">{{ \App\Helpers\SettingHelper::getSetting('store_phone_number') }}</span>
-                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4"><span class="day-color-mbl">{!! \App\Helpers\SettingHelper::getSetting('timings_part1') !!}</span> {!! \App\Helpers\SettingHelper::getSetting('timings_part2') !!}</p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4">
+                        <span class="day-color-mbl">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_hours_1') !!}
+                        </span> 
+                    </p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4">
+                        <span class="">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_timings_1') !!}
+                        </span> 
+                    </p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4">
+                        <span class="day-color-mbl">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_hours_2') !!}
+                        </span> 
+                    </p>
+                    <p class="p-footer-mbl ms-4-footer mx-1 ps-4">
+                        <span class="">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_timings_2') !!}
+                        </span> 
+                    </p>
 
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Customer Service</h5>
                     <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/contact-us')}}" class="text-white">Technical Support</a></p>
@@ -245,8 +279,13 @@
                     </span>
                     <p class="ms-4 ms-4-footer">&nbsp;
                         <span class="text-success sm-4-footer">
-                            {!! \App\Helpers\SettingHelper::getSetting('timings_part1') !!}
-                        </span> {!! \App\Helpers\SettingHelper::getSetting('timings_part2') !!}
+                            {!! \App\Helpers\SettingHelper::getSetting('store_hours_1') !!}
+                        </span> 
+                    </p>
+                    <p class="ms-4 ms-4-footer">&nbsp;
+                        <span class="text-success sm-4-footer">
+                            {!! \App\Helpers\SettingHelper::getSetting('store_hours_2') !!}
+                        </span> 
                     </p>
                 </div>
                 <div class="col-md-12 mt-3 main-page-footer-section footer-section-product">

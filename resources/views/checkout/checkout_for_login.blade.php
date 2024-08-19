@@ -801,7 +801,7 @@ $cart_price = 0;
                                                                                 $timings_part1 = App\Models\AdminSetting::where('option_name', 'timings_part1')->first();
                                                                                 $timings_part2 = App\Models\AdminSetting::where('option_name', 'timings_part2')->first();
                                                                             @endphp
-                                                                            {{!empty($timings_part1) ? '(' . $timings_part1->option_value : ''}} {{!empty($timings_part2) ? $timings_part2->option_value  . ')' : ''}}
+                                                                            {{!empty($timings_part1) ? $timings_part1->option_value : ''}} {{!empty($timings_part2) ? $timings_part2->option_value   : ''}}
                                                                         </span>
                                                                     @endif
                                                                 {{-- @endif --}}
