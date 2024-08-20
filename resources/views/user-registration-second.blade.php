@@ -537,11 +537,12 @@
         // $("#icons").removeClass('d-none');
         $('#sigup-bold').css('font-weight', '700');
         var email = $('#email').val();
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
         jQuery.ajax({
             method: 'post',
             url: "{{ url('/check/email') }}",
             data: {
-                "_token": "{{ csrf_token() }}",
+                "_token": csrfToken,
                 "email": email,
             },
             success: function(response) {
