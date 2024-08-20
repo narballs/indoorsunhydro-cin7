@@ -399,6 +399,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => '9:00AM-5:00PM',
             ],
+            [
+                'option_name' => 'enable_ai_prompt', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];

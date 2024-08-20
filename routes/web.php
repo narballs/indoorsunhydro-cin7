@@ -190,6 +190,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/page/blogs/edit/{id}', [PagesController::class, 'edit_blog'])->name('blogs.edit');
     Route::post('admin/page/blogs/update/{id}', [PagesController::class, 'update_blog'])->name('blogs.update');
     Route::post('admin/page/blogs/delete/{id}', [PagesController::class, 'delete_blog'])->name('blogs.delete');
+
+    // ai questions  section
+    Route::get('admin/ai/questions', [AdminSettingsController::class, 'ai_questions'])->name('ai_questions');
+    Route::get('admin/ai/questions/create', [AdminSettingsController::class, 'create_ai_question'])->name('create_ai_question');
+    Route::post('admin/ai/question/store', [AdminSettingsController::class, 'store_ai_question'])->name('store_ai_question');
+    Route::get('admin/ai/question/edit/{id}', [AdminSettingsController::class, 'edit_ai_question'])->name('edit_ai_question');
+    Route::post('admin/ai/question/update/{id}', [AdminSettingsController::class, 'update_ai_question'])->name('update_ai_question');
+    Route::post('admin/ai/question/delete/{id}', [AdminSettingsController::class, 'delete_ai_question'])->name('delete_ai_question');
     
 
     Route::resource('admin/discounts', DiscountController::class);
@@ -553,3 +561,4 @@ Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sm
 
 // thankyou page
 Route::get('/thank-you', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
+Route::get('/ai-answer', [ProductController::class, 'ai_answer'])->name('ai_answer');
