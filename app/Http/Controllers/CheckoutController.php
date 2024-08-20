@@ -1359,6 +1359,7 @@ class CheckoutController extends Controller
                 //     $address_validator = false;
                 //     return response()->json(['status' => 'error', 'address_validator' => $address_validator ,'validator_message' => 'Invalid address. Please enter a valid address.'],400);
                 // }
+                DB::beginTransaction();
                 try {
                     $price_column = null;
                     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
@@ -1539,9 +1540,10 @@ class CheckoutController extends Controller
                         $message = 'Something went wrong. Please try again.';
                     }
                         
-
+                    DB::commit();
                     
                 } catch (\Exception $e) {
+                    DB::rollback();
                     $message = 'Something went wrong. Please contact admin .';
                     $access = true;
                     $registration_status = false;
