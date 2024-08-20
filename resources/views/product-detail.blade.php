@@ -1,4 +1,94 @@
 @include('partials.header')
+<style>
+    .ai_questions {
+        padding: 5px;
+        border: 1px solid #7cc63e;
+        border-radius: 20px;
+        background: #7cc63e;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 300;
+        font-family: 'poppins';
+    }
+    .circle-right-ai {
+        color: #7cc63e;
+        font-size: 20px;
+        font-family: 'poppins';
+        font-weight: 400;
+        
+    }
+    .ai_content {
+        font-family: 'poppins';
+        font-weight: 300;
+        font-size: 14px;
+    }
+
+    .circle-right-ai:focus {
+        border-color: transparent;
+    }
+
+    .ai_text_field {
+        font-family: 'poppins';
+        font-weight: 400;
+        font-size: 14px;
+        
+    }
+
+    .ai_spinner {
+        color: #7cc63e;
+        border: 1px solid #7cc63e;
+    }
+
+    .ai_text_field:focus  {
+        border-color: #7cc63e;
+        box-shadow: 0 0 0 0rem rgba(124, 198, 62, 0.25);
+        
+    }
+    .clear_prompt , .clear_prompt:hover , .clear_prompt:focus , .clear_prompt:active {
+        font-family: 'poppins';
+        font-weight: 400;
+        font-size: 14px;
+        color: #7cc63e;
+        border: 1px solid #7cc63e;
+        border-radius: 20px;
+        background: #fff;
+    }
+    .add_custom_question {
+        cursor: pointer;
+    }
+    @media only screen and (max-width: 768px) {
+        .ai_row {
+            background-color: #fff !important;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+        .ai_row_title {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .ai_row_card_body {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        .ai_row_footer {
+            padding-left: 0rem !important;
+            padding-right: 0rem !important;
+        }
+
+        .add_custom_question {
+            margin-top : 0.5rem !important;
+            margin-bottom : 0.5rem !important;
+        }
+        
+    }
+
+    @media only screen and (min-width: 601px) {
+        .ai_row {
+            background-color: #f8f9fa;
+        }
+    }
+</style>
 @include('partials.top-bar')
 @include('partials.search-bar')
 <div class="w-100 mb-2">
@@ -161,7 +251,7 @@
                                         id="product_name">
                                         <div class="row">
                                             <div class="col-md-11">
-                                                <h3 class="product-detail-heading" data-title="{{$productOption->products->name}}" id="product-detail-id">{{$productOption->products->name}}</h3>
+                                                <h3 class="product-detail-heading product_name_detail_page" data-title="{{$productOption->products->name}}" id="product-detail-id">{{$productOption->products->name}}</h3>
                                             </div>
                                             @if (!empty($contact_id))
                                             <div class="col-md-1 d-flex justify-content-center">
@@ -859,6 +949,55 @@
         </div>
     </div>
 </div>
+
+@if (!empty($ai_setting) && (strtolower($ai_setting->option_value) == 'yes'))
+    <div class="row justify-content-center ai_row">
+        <div class="col-md-12 col-xl-8 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3 px-0">
+            <div class="card my-3 w-100">
+                <div class="card-header ai_row_title">
+                    <h5 class="card-title mb-0">Looking for Specific Info ?</h5>
+                </div>
+                <div class="card-body ai_row_card_body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control border-right-0 ai_text_field" id="ai_text_field" onfocus="mark_arrow_border_green()" placeholder="Ask Refus About this product" aria-label="Ask Refus About this product" aria-describedby="basic-addon2">
+                                <span class="input-group-text circle-right-ai border-left-0 bg-transparent" type="button"  id="basic-addon2"><i class="fa-solid fa-circle-arrow-right"></i></span>
+                            </div>
+                            <div class="text-danger ai_error"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="spinner-grow ai_spinner d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <p class="ai_content px-2"></p>
+                            <button class="btn clear_prompt btn-sm ml-2 d-none mt-3" type="button" onclick="clear_prompt()">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                @if (count($ai_questions) > 0)
+                    <div class="card-footer py-3 px-1">
+                        <div class="col-md-12 ai_row_footer">
+                            <div class="row align-items-center">
+                                @foreach($ai_questions as $question)
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-12 mt-2 add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);">
+                                    <span class="ai_questions">
+                                        <strong class="ai_question_strong">{{ \Illuminate\Support\Str::limit($question->question, 40) }}</strong>
+                                    </span>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endif
 <div class="mobile-view">
     @if (!empty($similar_products) && count($similar_products) > 0)
         <div class="w-100  mt-3">
@@ -1315,6 +1454,10 @@
 </div>
 {{--  notify user pop up modal end --}}
 <script>
+    // mark border green on focus
+    function mark_arrow_border_green() {
+        $('.input-group-text').css('border-color', '#7cc63e');
+    }
     // stock notification for similar products
     function show_notify_popup_modal_similar_portion (id , sku_value) {
         $('.notify_popup_modal_similar_portion').modal('show');
@@ -1494,6 +1637,11 @@
 {{-- bulk qty modal end --}}
 @include('partials.product-footer')
 @include('partials.footer')
+<script>
+    document.getElementById('ai_text_field').addEventListener('focusout', function() {
+        $('.circle-right-ai').css('border-color', '#ced4da');
+    });
+</script>
 <style>
     .bulk_close_btn {
         border: 1px solid #CDCDCD;
@@ -2584,4 +2732,79 @@
         }
 
     // });
+</script>
+
+<script>
+    $('.circle-right-ai').click(function() {
+        $('.ai_spinner').removeClass('d-none');
+        var question  = $('.ai_text_field').val();
+        var product_name_detail_page = $('.product_name_detail_page').html();
+        if (question == '') {
+            $('.ai_spinner').addClass('d-none');
+            // $('.ai_text_field').addClass('border-danger');
+            $('.ai_error').html('Please enter a question');
+            return false;
+        } 
+        else {
+            $('.ai_text_field').prop('readonly', true);
+            calling_ai_prompt(question , product_name_detail_page);
+        }
+    });
+
+    function clear_prompt() {
+        $('.ai_text_field').val('');
+        $('.ai_content').text('');
+        $('.ai_text_field').prop('readonly', false);
+        $('.clear_prompt').addClass('d-none');
+    }
+
+    function add_custom_question(element) {
+        $('.ai_spinner').removeClass('d-none');
+        var question = $(element).find('.ai_question_strong').html();
+        var product_name_detail_page = $('.product_name_detail_page').html();
+        if (question == '') {
+            $('.ai_spinner').addClass('d-none');
+            $('.ai_error').html('Please enter a question');
+            return false;
+        } 
+        else {
+            $('.ai_text_field').val(question);
+            $('.ai_text_field').prop('readonly', true);
+            calling_ai_prompt(question , product_name_detail_page);
+        }
+    }
+
+    function calling_ai_prompt(question , product_name_detail_page) {
+        $.ajax({
+            url: "{{ url('ai-answer') }}",
+            method: 'get',
+            data: {
+            "_token": "{{ csrf_token() }}",
+                question : question + '' + product_name_detail_page,
+            },
+            success: function(response){
+
+                if (response.status === 'success') {
+                    $('.ai_spinner').addClass('d-none');
+                    $('.ai_error').html('');
+                    $('.ai_content').text(response.message);
+                    $('.ai_text_field').prop('readonly', false);
+                    $('.clear_prompt').removeClass('d-none');
+                } else {
+                    $('.ai_spinner').addClass('d-none');
+                    $('.ai_error').html('');
+                    $('.ai_content').text(response.message);
+                    $('.ai_text_field').prop('readonly', false);
+                    $('.clear_prompt').removeClass('d-none');
+                }
+            },
+            error: function(response) {
+                $('.ai_spinner').addClass('d-none');
+                $('.ai_error').html('');
+                $('.ai_content').text('Something went wrong!');
+                $('.ai_text_field').prop('readonly', false);
+                $('.clear_prompt').removeClass('d-none');
+            }
+        });
+    }
 </script>

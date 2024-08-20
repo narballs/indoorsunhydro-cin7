@@ -54,7 +54,7 @@
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row justify-content-center">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                            <img src="{{asset('/pages/blogs/' . $blog_detail->image)}}" class="banner-img img-fluid w-100" alt="...">
+                            <img src="{{asset('/pages/blogs/thumbnails/covers/' . $blog_detail->image)}}" class="banner-img img-fluid w-100" alt="...">
                         </div>
                         <div class="col-xl-8 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-10">
                             <div class="row">

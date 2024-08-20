@@ -5,10 +5,10 @@
 @section('content_header')
 <div class="row ">
     <div class="col-md-6">
-        <h1>Add New Blog</h1>
+        <h1>Edit AI Question</h1>
     </div>
     <div class="col-md-6 text-right">
-        <a class="btn btn-primary text-white" href="{{ route('blogs.index') }}">Back</a>
+        <a class="btn btn-primary text-white" href="{{ route('ai_questions') }}">Back</a>
     </div>
 </div>
 @stop
@@ -25,47 +25,18 @@
     </div>
     @endif
     <div>
-        <form method="POST" action="{{ route('blogs.store') }}"  enctype="multipart/form-data">
-            @csrf
+        <form method="Post" action="{{ route('update_ai_question' , $ai_question->id) }}"  enctype="multipart/form-data">
+            {{ csrf_field() }}
             <div class="row">
                 <div class="col-md-12 card">
                     <div class="card-body">
                         <div class="row justify-conntent-between">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="name">Title</label>
-                                    <input type="text" class="form-control" id="title" aria-describedby=""
-                                    name="title" placeholder="Title">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="Thumbnail">Thumbnail</label>
-                                    <input type="file" class="form-control" id="thumbnail"  name="thumbnail" accept="jpg,png,jpeg">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="blog_image">Image</label>
-                                    <input type="file" class="form-control" id="blog_image" name="blog_image" accept="jpg,png,jpeg">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select name="status" id="status" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
-                                </div>
-                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label><strong>Description :</strong></label>
-                                    <textarea class="form-control" name="description" id="blog_description"> </textarea>
+                                    <label for="question">Question</label>
+                                    <textarea class="form-control" name="question" rows="8" id="question" placeholder="Write Question here ..."> {{$ai_question->question}}</textarea>
                                 </div>
                             </div>
-                            
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -322,9 +293,8 @@
     @stop
 
     @section('js')
-   
     {{-- <script src="{{asset('admin/ck_editor.js')}}"></script> --}}
-    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
     <script>
         class MyUploadAdapter {
             constructor( loader ) {
@@ -397,7 +367,7 @@
         
     </script>
     <script>
-        CKEDITOR.ClassicEditor.create(document.getElementById("blog_description"), {
+        CKEDITOR.ClassicEditor.create(document.getElementById("answer"), {
             toolbar: {
                 items: [
                     'exportPDF','exportWord', '|',
@@ -474,150 +444,5 @@
                 'PasteFromOfficeEnhanced'
             ]
         });
-    </script> --}}
-
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/super-build/ckeditor.js"></script>
-    <script>
-        class MyUploadAdapter {
-            constructor(loader) {
-                this.loader = loader;
-            }
-
-            upload() {
-                return this.loader.file
-                    .then(file => new Promise((resolve, reject) => {
-                        this._initRequest();
-                        this._initListeners(resolve, reject, file);
-                        this._sendRequest(file);
-                    }));
-            }
-
-            abort() {
-                if (this.xhr) {
-                    this.xhr.abort();
-                }
-            }
-
-            _initRequest() {
-                const xhr = this.xhr = new XMLHttpRequest();
-                xhr.open('POST', "{{ route('image_upload') }}", true);
-                xhr.responseType = 'json';
-            }
-
-            _initListeners(resolve, reject, file) {
-                const xhr = this.xhr;
-                const loader = this.loader;
-                const genericErrorText = `Couldn't upload file: ${file.name}.`;
-
-                xhr.addEventListener('error', () => reject(genericErrorText));
-                xhr.addEventListener('abort', () => reject());
-                xhr.addEventListener('load', () => {
-                    const response = xhr.response;
-
-                    if (!response || response.error) {
-                        return reject(response && response.error ? response.error.message : genericErrorText);
-                    }
-
-                    resolve({
-                        default: response.url,
-                        // For video, return embed HTML if needed
-                        embedHtml: response.url && response.url.match(/\.(mp4|mov|avi|wmv)$/) ? `<video controls src="${response.url}"></video>` : ''
-                    });
-                });
-
-                if (xhr.upload) {
-                    xhr.upload.addEventListener('progress', evt => {
-                        if (evt.lengthComputable) {
-                            loader.uploadTotal = evt.total;
-                            loader.uploaded = evt.loaded;
-                        }
-                    });
-                }
-            }
-
-            _sendRequest(file) {
-                const data = new FormData();
-                data.append('upload', file);
-                this.xhr.send(data);
-            }
-        }
-
-        function MyCustomUploadAdapterPlugin(editor) {
-            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                return new MyUploadAdapter(loader);
-            };
-        }
-
-        CKEDITOR.ClassicEditor.create(document.getElementById("blog_description"), {
-            extraPlugins: [MyCustomUploadAdapterPlugin],
-            toolbar: {
-                items: [
-                    'exportPDF', 'exportWord', '|',
-                    'findAndReplace', 'selectAll', '|',
-                    'heading', '|',
-                    'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                    'bulletedList', 'numberedList', 'todoList', '|',
-                    'outdent', 'indent', '|',
-                    'undo', 'redo',
-                    '-',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
-                    'alignment', '|',
-                    'link', 'insertImage', 'blockQuote', 'insertTable', 'mediaEmbed', 'codeBlock', 'htmlEmbed', '|',
-                    'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                    'textPartLanguage', '|',
-                    'sourceEditing'
-                ],
-                shouldNotGroupWhenFull: true
-            },
-            heading: {
-                options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
-                    { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' },
-                    { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
-                    { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
-                ]
-            },
-            mediaEmbed: {
-                previewsInData: true,
-                providers: [
-                    {
-                        name: 'youtube',
-                        url: [
-                            /^(https:\/\/www\.youtube\.com\/shorts\/.+)$/,
-                            /^(https:\/\/youtube\.com\/shorts\/.+)$/,
-                            /^(https:\/\/www\.youtube\.com\/watch\?v=.+)$/,
-                            /^(https:\/\/youtu\.be\/.+)$/
-                        ],
-                        html: match => {
-                            let id;
-                            if (match[0].includes('shorts')) {
-                                id = match[1].split('/shorts/')[1];
-                            } else if (match[0].includes('watch')) {
-                                id = match[1].split('v=')[1];
-                            } else {
-                                id = match[0].split('youtu.be/')[1].split('?')[0];
-                            }
-                            return `<div style="position: relative; padding-bottom: 56.25%; height: 0;">
-                                    <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>`;
-                        }
-                    }
-                ]
-            },
-            htmlEmbed: {
-                showPreviews: true
-            },
-            removePlugins: [
-                'ExportPdf', 'ExportWord', 'CKBox', 'CKFinder', 'EasyImage',
-                'RealTimeCollaborativeComments', 'RealTimeCollaborativeTrackChanges',
-                'RealTimeCollaborativeRevisionHistory', 'PresenceList', 'Comments',
-                'TrackChanges', 'TrackChangesData', 'RevisionHistory', 'Pagination',
-                'WProofreader', 'MathType', 'SlashCommand', 'Template', 'DocumentOutline',
-                'FormatPainter', 'TableOfContents', 'PasteFromOfficeEnhanced'
-            ]
-        });
     </script>
     @stop
-

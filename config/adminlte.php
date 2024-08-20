@@ -423,6 +423,10 @@ return [
             'text'    => 'Select Specific Admins',
             'url'  => 'admin/all-admins',
         ],
+        [
+            'text'    => 'Ai Questions',
+            'url'  => 'admin/ai/questions',
+        ],
 
         [
             'text'       => 'Logout',
