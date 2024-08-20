@@ -30,6 +30,7 @@ use App\Models\User;
 use App\Helpers\UtilHelper;
 use App\Mail\AdminBulkRequestNotification;
 use App\Mail\UserBulkRequestConfirmation;
+use App\Models\AiQuestion;
 use App\Models\ApiOrderItem;
 use App\Models\BulkQuantityDiscount;
 use App\Models\ProductStock;
@@ -766,6 +767,10 @@ class ProductController extends Controller
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
 
+        $ai_questions  = AiQuestion::where('status' , 1)->orderBy('created_at' , 'Desc')->get();
+
+        $ai_setting = AdminSetting::where('option_name', 'enable_ai_prompt')->first();
+
         return view('product-detail', compact(
             'productOption',
             'pname',
@@ -784,7 +789,9 @@ class ProductController extends Controller
             'locations', 
             'inventory_update_time_flag' , 
             'customer_demand_inventory_number',
-            'products_to_hide'
+            'products_to_hide',
+            'ai_questions',
+            'ai_setting'
         ));
 
         
@@ -1935,6 +1942,8 @@ class ProductController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
+
+       
         return view('search_product.search_product', compact(
             'products',
             'brands',
@@ -2433,6 +2442,44 @@ class ProductController extends Controller
             // Log the error
             Log::error('Error submitting bulk product request: ' . $e->getMessage());
             return response()->json(['message' => 'Error submitting bulk product request'], 500);
+        }
+    }
+
+    // ai answer 
+
+    public function ai_answer(Request $request) {
+        $apiKey = config('services.ai.ai_key');
+        $question = $request->question;
+        $client  = new \GuzzleHttp\Client([
+            'base_uri' => 'https://api.openai.com/v1/',
+            'headers' => [
+                'Authorization' => 'Bearer ' . config('services.ai.ai_key'),
+                'Content-Type'  => 'application/json',
+            ],
+        ]);
+
+        $response = $client->post('chat/completions', [
+            'json' => [
+                'model' => 'gpt-3.5-turbo',  // or 'gpt-4' if available
+                'messages' => [
+                    ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+                    ['role' => 'user', 'content' => $question],
+                ],
+                'max_tokens' => 250,
+            ],
+        ]);
+
+        $body = json_decode($response->getBody()->getContents(), true);
+        if (empty($body['choices'][0]['message']['content'])) {
+            return response()->json([
+                'message' => 'No answer found',
+                'status' => 'error'
+            ], 404);
+        } else {
+            return response()->json([
+                'message' => $body['choices'][0]['message']['content'],
+                'status' => 'success'
+            ], 200);
         }
     }
 }

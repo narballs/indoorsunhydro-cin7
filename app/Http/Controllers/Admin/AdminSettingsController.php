@@ -8,6 +8,7 @@ use \App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
+use App\Models\AiQuestion;
 use App\Models\Contact;
 use App\Models\ContactLogs;
 use App\Models\ProductStockNotification;
@@ -437,6 +438,52 @@ class AdminSettingsController extends Controller
             'msg' => 'Failed jobs not found.'
         ]);
     }
+
+
+    // AI Questions
+
+    public function create_ai_question() {
+        return view('admin.ai_question.create');
+    }
+
+
+    public function store_ai_question(Request $request) {
+        $validated = $request->validate([
+            'question' => 'required',
+        ]);
+        $ai_question = AiQuestion::create([
+            'question' => $request->question,
+        ]);
+        return redirect()->route('ai_questions')->with('success', 'Ai Question created successfully.');
+    }
+
+    public function ai_questions() {
+        $ai_questions = AiQuestion::paginate(10);
+        return view('admin.ai_question.index', compact('ai_questions'));
+    }
+
+    public function edit_ai_question($id) {
+        $ai_question = AiQuestion::findOrFail($id);
+        return view('admin.ai_question.edit', compact('ai_question'));
+    }
+
+    public function update_ai_question(Request $request, $id) {
+        $validated = $request->validate([
+            'question' => 'required',
+        ]);
+        $ai_question = AiQuestion::findOrFail($id);
+        $ai_question->update([
+            'question' => $request->question,
+        ]);
+        return redirect()->route('ai_questions')->with('success', 'Ai Question updated successfully.');
+    }
+
+    public function delete_ai_question($id) {
+        $ai_question = AiQuestion::findOrFail($id);
+        $ai_question->delete();
+        return redirect()->route('ai_questions')->with('success', 'Ai Question deleted successfully.');
+    }
+
 
     
 }
