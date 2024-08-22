@@ -3443,4 +3443,8 @@ class UserController extends Controller
         );
         return $pdf->download('document.pdf');
     }
+
+    public function thankyou_for_creating_account() {
+        return view('thankyou_for_creating_account');
+    }
 }

@@ -114,6 +114,7 @@ Route::post('/login/', [UserController::class, 'process_login'])->name('login');
 Route::get('/my-account/', [UserController::class, 'my_account'])->name('my_account');
 Route::post('/user-contact/', [UserController::class, 'save_contact'])->name('save_contact');
 Route::post('/update-contact/', [UserController::class, 'update_contact'])->name('update_contact');
+Route::get('/thankyou/creating/account', [UserController::class, 'thankyou_for_creating_account'])->name('thankyou_for_creating_account');
 
 //buy again products with paginate jquery 
 Route::get('/my-account/buy-again-products', [UserController::class, 'buy_again_products'])->name('buy_again_products');
