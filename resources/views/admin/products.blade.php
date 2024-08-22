@@ -4,6 +4,21 @@
 @stop
 @section('content')
     <div class="table-wrapper">
+        @if (\Session::has('success'))
+            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                {!! \Session::get('success') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @elseif (\Session::has('error'))
+            <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                {!! \Session::get('error') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <div class="card-body product_secion_main_body">
             <div class="row border-bottom product_section_header">
                 <div class="col-md-12">
@@ -161,7 +176,7 @@
                                     <span class="d-flex table-row-item"> Status</span>
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Retail Price</span>
+                                    <span class="d-flex table-row-item"> {{!empty($default_price_column) && !empty($default_price_column->option_value) ? $default_price_column->option_value : 'Price'}}</span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Weight</span>
@@ -170,97 +185,113 @@
                                     <span class="d-flex table-row-item"> Stock Available</span>
                                 </td>
                                 <td>
+                                    <span class="d-flex table-row-item">Update Price</span>
+                                </td>
+                                <td>
                                     <span class="d-flex table-row-item"></span>
                                 </td>
                             </tr>
                         </thead>
                         @if(count($products) > 0)
+                        
                         <tbody id="searched">
                             @php
-                            $count = 0;
+                                $count = 0;
                             @endphp
                             @foreach ($products as $key => $product)
-                                @foreach ($product->options as $option)
-                                    
+                                @if (count($product->options) > 0)
                                     <?php $count++; ?>
-                                    @php
-                                        $retail_price = 0;
-                                        if ($option->defaultPrice != null) {
-                                            $retail_price = $option->defaultPrice->$price_column;
-                                        }
-                                    @endphp
-                                    <tr id="row-{{ $product->id }}" class="product-row border-bottom">
-                                        <td class="d-flex table-items">
-                                            <div class="custom-control custom-checkbox tabel-checkbox">
-                                                <input class="custom-control-input custom-control-input-success sub_chk"
-                                                    data-id="{{ $product->id }}" type="checkbox"
-                                                    id="separate_check_{{ $product->id }}">
-                                                <label for="separate_check_{{ $product->id }}"
-                                                    class="custom-control-label ml-4"></label>
-                                            </div>
-                                            <span class="table-row-heading-order sm-d-none">
-                                                {{ $key + 1 }}
-                                            </span>
-                                        </td>
-                                        <td class="product_name">
-                                            <span class="product_name_slg d-flex table-items-title">
-                                                {{ $product->name }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
-                                        </td>
-                                        <td>
-                                            @if ($product->status == 'Public')
-                                                <span class="badge badge-success">
-                                                    {{ $product->status }}
+                                    @foreach ($product->options as $option)
+                                        @php
+                                            $retail_price = 0;
+                                            if ($option->defaultPrice != null) {
+                                                $retail_price = $option->defaultPrice->$price_column;
+                                            }
+                                        @endphp
+                                        <tr id="row-{{ $product->id }}" class="product-row border-bottom">
+                                            <td class="d-flex table-items">
+                                                <div class="custom-control custom-checkbox tabel-checkbox">
+                                                    <input class="custom-control-input custom-control-input-success sub_chk"
+                                                        data-id="{{ $product->id }}" type="checkbox"
+                                                        id="separate_check_{{ $product->id }}">
+                                                    <label for="separate_check_{{ $product->id }}"
+                                                        class="custom-control-label ml-4"></label>
+                                                </div>
+                                                <span class="table-row-heading-order sm-d-none">
+                                                    {{ $key + 1 }}
                                                 </span>
-                                            @else
-                                                <span class="badge badge-danger">
-                                                    {{ $product->status }}
+                                            </td>
+                                            <td class="product_name">
+                                                <span class="product_name_slg d-flex table-items-title">
+                                                    {{ $product->name }}
                                                 </span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="product_retail_price">
-                                                <span class="d-flex table-items-title"> ${{ $retail_price }}</span>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="product_weight">
-                                                <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->optionWeight : '' }}</span>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="product_weight">
-                                                <span class="d-flex table-items-title"> {{ isset($product->options[0]) ? $product->options[0]->stockAvailable : '' }}</span>
-                                            </span>
-                                        </td>
-                                        <td class="created_by toggleClass td_padding_row">
-                                            <div class="d-flex aling-items-center order-table-actions">
-                                                <span>
-                                                    <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class"
-                                                        title="" data-toggle="tooltip" data-original-title="View">
-                                                        <img src="/theme/img/view.png" alt="" class="img-fluid">
-                                                    </a>
+                                            </td>
+                                            <td>
+                                                <span class="product_name_slg d-flex table-items-title">{{ $product->code }}</span>
+                                            </td>
+                                            <td>
+                                                @if ($product->status == 'Public')
+                                                    <span class="badge badge-success">
+                                                        {{ $product->status }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge badge-danger">
+                                                        {{ $product->status }}
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <span class="product_retail_price">
+                                                    <span class="d-flex table-items-title"> ${{ $retail_price }}</span>
                                                 </span>
-                                                <span>
-                                                    <a href="#" class="edit a_class" title="" data-toggle="tooltip"
-                                                        data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
-                                                            class="img-fluid">
-                                                    </a>
+                                            </td>
+                                            <td>
+                                                <span class="product_weight">
+                                                    <span class="d-flex table-items-title"> {{ isset($option) ? $option->optionWeight : '' }}</span>
                                                 </span>
-                                                <span>
-                                                    <a href="#" class="delete deleteIcon a_class"
-                                                        id="{{ $product->id }}" title="" data-toggle="tooltip"
-                                                        data-original-title="Delete">
-                                                        <img src="/theme/img/delete.png" alt="" class="img-fluid">
-                                                    </a>
+                                            </td>
+                                            <td>
+                                                <span class="product_weight">
+                                                    <span class="d-flex table-items-title"> {{ isset($option) ? $option->stockAvailable : '' }}</span>
                                                 </span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                            </td>
+                                            <td>
+                                                <form method="post" action="{{route('update_product_price')}}">
+                                                    @csrf
+                                                    <input type="hidden" value="{{$product->product_id}}" name="product_id">
+                                                    <input type="hidden" value="{{$option->option_id}}" name="option_id">
+
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        Update Price
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td class="created_by toggleClass td_padding_row">
+                                                <div class="d-flex aling-items-center order-table-actions">
+                                                    <span>
+                                                        <a href="{{ url('admin/products/' . $product->id) }}" class="view a_class"
+                                                            title="" data-toggle="tooltip" data-original-title="View">
+                                                            <img src="/theme/img/view.png" alt="" class="img-fluid">
+                                                        </a>
+                                                    </span>
+                                                    <span>
+                                                        <a href="#" class="edit a_class" title="" data-toggle="tooltip"
+                                                            data-original-title="Edit"><img src="/theme/img/edit.png" alt=""
+                                                                class="img-fluid">
+                                                        </a>
+                                                    </span>
+                                                    <span>
+                                                        <a href="#" class="delete deleteIcon a_class"
+                                                            id="{{ $product->id }}" title="" data-toggle="tooltip"
+                                                            data-original-title="Delete">
+                                                            <img src="/theme/img/delete.png" alt="" class="img-fluid">
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             @endforeach
                         </tbody>
                         <tfoot>

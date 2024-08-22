@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\SettingHelper;
 use \App\Http\Controllers\Controller;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
@@ -9,8 +10,10 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Pricing;
+use App\Models\Pricingnew;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminProductController extends Controller
 {
@@ -350,7 +353,8 @@ class AdminProductController extends Controller
             'price_filter_type',
             'price_value',
             'product_status',
-            'price_column'
+            'price_column',
+            'default_price_column'
         ));
     }
 
@@ -389,6 +393,68 @@ class AdminProductController extends Controller
 
 
     public function order_full_fill(Request $request) {
+
+    }
+
+
+    public function update_product_price(Request $request) {
+        $option_id = $request->option_id;
+        $product_id = $request->product_id;
+        $client = new \GuzzleHttp\Client();
+
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+        $url = 'https://api.cin7.com/api/v1/ProductOptions/' . $option_id;
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            $res = $client->request(
+                'GET', 
+                $url,
+                [
+                    'auth' => [
+                        $cin7_auth_username,
+                        $cin7_auth_password
+                    ]                    
+                ]
+            );
+    
+            $product_option_prices = $res->getBody()->getContents();
+            $get_product_prices = json_decode($product_option_prices);
+            if (!empty($get_product_prices->priceColumns)) {
+                $product_pricing = Pricingnew::where('option_id', $option_id)->first();
+                if (!empty($product_pricing)) {
+                    $product_pricing->retailUSD = $get_product_prices->priceColumns->retailUSD;
+                    $product_pricing->wholesaleUSD = $get_product_prices->priceColumns->wholesaleUSD;
+                    $product_pricing->oklahomaUSD = $get_product_prices->priceColumns->oklahomaUSD;
+                    $product_pricing->calaverasUSD = $get_product_prices->priceColumns->calaverasUSD;
+                    $product_pricing->tier1USD = $get_product_prices->priceColumns->tier1USD;
+                    $product_pricing->tier2USD = $get_product_prices->priceColumns->tier2USD;
+                    $product_pricing->tier3USD = $get_product_prices->priceColumns->tier3USD;
+                    $product_pricing->tier0USD = $get_product_prices->priceColumns->tier0USD;
+                    $product_pricing->commercialOKUSD = $get_product_prices->priceColumns->commercialOKUSD;;
+                    $product_pricing->costUSD = $get_product_prices->priceColumns->costUSD;
+                    $product_pricing->specialPrice = $get_product_prices->priceColumns->specialPrice;
+                    $product_pricing->webPriceUSD = $get_product_prices->priceColumns->webPriceUSD;
+                    $product_pricing->sacramentoUSD = $get_product_prices->priceColumns->sacramentoUSD;;
+
+                    $product_pricing->save();
+
+                    return redirect()->back()->with('success', 'Price updated successfully');
+                    
+                } else {
+                    return redirect()->back()->with('error', 'Price already exists for this product');
+                }
+            } else {
+                return redirect()->back()->with('error', 'Error with Api while updating price');
+            }
+            
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            return redirect()->back()->with('error', 'Error with Api while updating price');
+        }
+
 
     }
 }
