@@ -979,12 +979,26 @@ $cart_price = 0;
                                                 <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
                                                 @if (!empty($products_weight) && $products_weight > 150)
                                                 @php
-                                                    $shipment_price = !empty($shipment_price) ? $shipment_price : 0;
-                                                    if ($shipment_price > 0) {
-                                                        $parcel_guard_price = (ceil($shipment_price / 100) * 0.99);
-                                                        $shipment_price = $shipment_price + $parcel_guard_price + $extra_shipping_value;
+                                                    $adding_surcharge = 0;
+                                                    $shipment_plus_surcharge = 0;
+                                                    $get_original_shipment_price = !empty($shipment_price) ? $shipment_price : 0;
+                                                    if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1) {
+                                                        if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed') {
+                                                            $surcharge_value_greater_weight = $surcharge_settings->surcharge_value;
+                                                        } else {
+                                                            $surcharge_value_greater_weight = $get_original_shipment_price * ($surcharge_settings->surcharge_value / 100);
+                                                        }
                                                     } else {
-                                                        $shipment_price = $shipment_price + $extra_shipping_value;
+                                                        $surcharge_value_greater_weight = 0;
+                                                    }
+
+
+                                                    $shipment_plus_surcharge = $get_original_shipment_price + $surcharge_value_greater_weight;
+                                                    if ($shipment_plus_surcharge > 0) {
+                                                        $parcel_guard_price = (ceil($shipment_plus_surcharge / 100) * 0.99);
+                                                        $shipment_price = $shipment_plus_surcharge + $parcel_guard_price + $extra_shipping_value;
+                                                    } else {
+                                                        $shipment_price = $shipment_plus_surcharge + $extra_shipping_value;
                                                     }
                                                 @endphp
                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
@@ -1041,14 +1055,14 @@ $cart_price = 0;
                                                                                 $surcharge_value = $shipment_cost_without_surcharge * ($surcharge_settings->surcharge_value / 100);
                                                                             }
                                                                         }
-                                                                        $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
+                                                                        $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_value;
                                                                         $adding_shipping_cost_to_total = 0;
                                                                         $parcel_guard_price = 0 ;
-                                                                        if ($shipment_cost_with_surcharge > 0) {
-                                                                            $parcel_guard_price = (ceil($shipment_cost_with_surcharge / 100) * 0.99);
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price + $extra_shipping_value;
+                                                                        if ($shipment_cost_with_surcharge_only > 0) {
+                                                                            $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value;
                                                                         } else {
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price + $extra_shipping_value;
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value;
                                                                         }
                                                                         
                                                                         if (!empty($shipment_cost_with_surcharge)) {
@@ -1081,14 +1095,14 @@ $cart_price = 0;
                                                                                 $surcharge_value = $shipment_cost_without_surcharge * ($surcharge_settings->surcharge_value / 100);
                                                                             }
                                                                         }
-                                                                        $shipment_cost_with_surcharge = $shipment_cost_without_surcharge + $surcharge_value;
+                                                                        $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_value;
 
                                                                         $parcel_guard_price = 0 ;
-                                                                        if ($shipment_cost_with_surcharge > 0) {
-                                                                            $parcel_guard_price = (ceil($shipment_cost_with_surcharge / 100) * 0.99);
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $parcel_guard_price + $extra_shipping_value;
+                                                                        if ($shipment_cost_with_surcharge_only > 0) {
+                                                                            $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value;
                                                                         } else {
-                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge + $extra_shipping_value;
+                                                                            $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value;
                                                                         }
                                                                         // dd($parcel_guard_price);
                                                                     @endphp

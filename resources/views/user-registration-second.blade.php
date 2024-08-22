@@ -869,6 +869,7 @@
                     
                 }
                 else{
+                    $('#sign_up_loader').addClass('d-none');
                     // if (response.address_validator == false) {
                     //     $('#sign_up_loader').addClass('d-none');
                     //     $('.row_error').html(response.address_validation_message);
@@ -916,6 +917,7 @@
 
             },
             error: function(response) {
+                $('#sign_up_loader').addClass('d-none');
                 // if (response.address_validation_flag == false) {
                 //     $('#sign_up_loader').addClass('d-none');
                 //     $('.row_error').html(response.validatedAddress_message);
