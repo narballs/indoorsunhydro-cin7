@@ -383,6 +383,7 @@ Route::group(['middleware' => ['auth']], function () {
     // enable /disable shipping price 
     Route::post('admin/enable-shipping-price', [ContactController::class, 'enableShippingPrice']);
     Route::post('admin/disable-shipping-price', [ContactController::class, 'disableShippingPrice']);
+    Route::post('admin/update/product/price', [AdminProductController::class, 'update_product_price'])->name('update_product_price');
 
 
     //crud for admin settings
