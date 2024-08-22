@@ -851,21 +851,21 @@
             success: function(response) {
                 if (response.success == true) {
                     $('#sign_up_loader').addClass('d-none');
-                    $('#timer').attr('src', '/theme/img/round-border.png');
-                    $('#timer-main').attr('src', '/theme/img/location.png');
-                    $('#finish-round').attr('src', '/theme/img/round-solid.png');
-                    $('#tick').attr('src', '/theme/img/white-tick.png');
-                    $(".business-row").hide();
-                    $(".address").hide();
-                    $(".company-address").hide();
-                    $(".white-panel").addClass('d-none');
-                    $('#user_first_name').removeClass('d-none');
-                    $('.user_last_name').removeClass('d-none');
-                    $('login-form-section').addClass('d-none');
-                    $('#company_info_sidebar').addClass('d-none');
-                    $('#address_info_sidebar').addClass('d-none');
+                    // $('#timer').attr('src', '/theme/img/round-border.png');
+                    // $('#timer-main').attr('src', '/theme/img/location.png');
+                    // $('#finish-round').attr('src', '/theme/img/round-solid.png');
+                    // $('#tick').attr('src', '/theme/img/white-tick.png');
+                    // $(".business-row").hide();
+                    // $(".address").hide();
+                    // $(".company-address").hide();
+                    // $(".white-panel").addClass('d-none');
+                    // $('#user_first_name').removeClass('d-none');
+                    // $('.user_last_name').removeClass('d-none');
+                    // $('login-form-section').addClass('d-none');
+                    // $('#company_info_sidebar').addClass('d-none');
+                    // $('#address_info_sidebar').addClass('d-none');
                     // $("#thanks").removeClass('d-none');
-                    $('.login-reg-panel').addClass('d-none');
+                    // $('.login-reg-panel').addClass('d-none');
                     window.location.href = "/thankyou/creating/account";
                     
                 }
