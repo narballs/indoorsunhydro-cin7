@@ -865,6 +865,7 @@
                     $('#company_info_sidebar').addClass('d-none');
                     $('#address_info_sidebar').addClass('d-none');
                     // $("#thanks").removeClass('d-none');
+                    $('.login-reg-panel').addClass('d-none');
                     window.location.href = "/thankyou/creating/account";
                     
                 }
