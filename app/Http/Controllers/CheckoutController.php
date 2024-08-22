@@ -311,9 +311,9 @@ class CheckoutController extends Controller
             foreach ($product_options as $product_option) {
                 $products_weight += $product_option->optionWeight * $cart_item['quantity'];
                 if (!empty($product_option->products)) {
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width : 0;
-                    $product_height += !empty($product_option->products->height) ? $product_option->products->height : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length : 0;
+                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
+                    $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
+                    $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
                 }
             }
 
