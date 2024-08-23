@@ -14,7 +14,7 @@
         background-color: #f8f9fa; 
     } */
 
-    .blog_detail_description img,
+    /* .blog_detail_description img, */
     .blog_detail_description iframe {
         display: block;
         width: 100%;
