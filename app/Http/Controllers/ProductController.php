@@ -1153,12 +1153,28 @@ class ProductController extends Controller
         $status = null;
         $message = null;
         $price = 0;
+        $main_contact_id = null;
+        $free_postal_state = false;
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
         if (Auth::id() !== null) {
             $user_id = Auth::id();
+            $contact = Contact::where('user_id', $user_id)->first();
+            if (!empty($contact)) {
+                if ($contact->is_parent == 1) {
+                    $main_contact_id = $contact->contact_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                } else {
+                    $main_contact_id = $contact->parent_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                }
+            } else {
+                $main_contact_id = null;
+                $free_postal_state = false;
+            }
         } else {
             $user_id = '';
+            $free_postal_state = true;
         }
         $actual_stock = 0;
         $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
@@ -1243,6 +1259,8 @@ class ProductController extends Controller
             'cart' => $cart,
             'message' => $message,
             'actual_stock' => $actual_stock,
+            'main_contact_id' => $main_contact_id,
+            'free_postal_state' => $free_postal_state
         ]);
     }
 
@@ -1367,8 +1385,31 @@ class ProductController extends Controller
     {
         $quantity = $request->post('items_quantity');
         $cart_items = session()->get('cart');
+        $main_contact_id = null;
+        $free_postal_state = false;
+        if (Auth::id() !== null) {
+            $user_id = Auth::id();
+            $contact = Contact::where('user_id', $user_id)->first();
+            if (!empty($contact)) {
+                if ($contact->is_parent == 1) {
+                    $main_contact_id = $contact->contact_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                } else {
+                    $main_contact_id = $contact->parent_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                }
+            } else {
+                $main_contact_id = null;
+                $free_postal_state = false;
+            }
+        } else {
+            $user_id = '';
+            $free_postal_state = true;
+        }
         
         $user_id = auth()->id();
+
+        
         
         if (!empty($quantity)) {
             $product_id = $request->post('product_id');
@@ -1409,6 +1450,8 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'cart_items' => $cart_items,
+            'main_contact_id' => $main_contact_id,
+            'free_postal_state' => $free_postal_state
         ]);
     }
 
@@ -1419,6 +1462,8 @@ class ProductController extends Controller
         $subtraction = false;
         $status = null;
         $message = null;
+        $main_contact_id = null;
+        $free_postal_state = false;
         if (!empty($action) && $action === 'subtraction') {
             $subtraction = true;
         }
@@ -1428,8 +1473,22 @@ class ProductController extends Controller
         $cart = session()->get('cart');
         if (Auth::id() !== null) {
             $user_id = Auth::id();
+            $contact = Contact::where('user_id', $user_id)->first();
+            if (!empty($contact)) {
+                if ($contact->is_parent == 1) {
+                    $main_contact_id = $contact->contact_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                } else {
+                    $main_contact_id = $contact->parent_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                }
+            } else {
+                $main_contact_id = null;
+                $free_postal_state = false;
+            }
         } else {
             $user_id = '';
+            $free_postal_state = true;
         }
         $user_price_column = UserHelper::getUserPriceColumn();
         foreach ($productOption->products->options as $option) {
@@ -1604,7 +1663,8 @@ class ProductController extends Controller
             'cart_items' => $cart_items,
             'cart' => $cart,
             'message' => $message,
-            'actual_stock' => $actual_stock
+            'actual_stock' => $actual_stock,
+            'free_postal_state'=> $free_postal_state
         ]);
     }
 
@@ -2142,6 +2202,27 @@ class ProductController extends Controller
         $error = false;
         
         $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+
+        $main_contact_id = null;
+        $free_postal_state = false;
+        if (Auth::id() !== null) {
+            $userId = Auth::id();
+            $contact = Contact::where('user_id', $userId)->first();
+            if (!empty($contact)) {
+                if ($contact->is_parent == 1) {
+                    $main_contact_id = $contact->contact_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                } else {
+                    $main_contact_id = $contact->parent_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                }
+            } else {
+                $main_contact_id = null;
+                $free_postal_state = false;
+            }
+        } else {
+            $free_postal_state = true;
+        }
     
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
@@ -2242,13 +2323,17 @@ class ProductController extends Controller
             if ($error == true) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Some products are not available in the cart'
+                    'message' => 'Some products are not available in the cart',
+                    'free_postal_state' => $free_postal_state,
+                    'main_contact_id' => $main_contact_id
                 ]);
             }
             return response()->json([
                 'status' => 'success',
                 'cart_items' => $cart_items,
                 'cart' => $cart,
+                'main_contact_id' => $main_contact_id,
+                'free_postal_state' => $free_postal_state
             ]);
         }
     }
@@ -2266,6 +2351,24 @@ class ProductController extends Controller
 
     public function buy_again_order_items(Request $request)
     {
+        if (Auth::id() !== null) {
+            $userId = Auth::id();
+            $contact = Contact::where('user_id', $userId)->first();
+            if (!empty($contact)) {
+                if ($contact->is_parent == 1) {
+                    $main_contact_id = $contact->contact_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                } else {
+                    $main_contact_id = $contact->parent_id;
+                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+                }
+            } else {
+                $main_contact_id = null;
+                $free_postal_state = false;
+            }
+        } else {
+            $free_postal_state = true;
+        }
         if (!empty($request->ordered_products)) {
             foreach ($request->ordered_products as $orderProducts) {
                 $id = $orderProducts['product_id'];
@@ -2359,6 +2462,8 @@ class ProductController extends Controller
                 'status' => 'success',
                 'cart_items' => $cart_items,
                 'cart' => $cart,
+                'main_contact_id' => $main_contact_id,
+                'free_postal_state' => $free_postal_state
             ]);
         }
     }
