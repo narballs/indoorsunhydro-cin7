@@ -16,11 +16,33 @@
     $checkout_issue_banner = App\Models\AdminSetting::where('option_name' , 'checkout_issue_banner')->first();
     $checkout_issue_banner_text = App\Models\AdminSetting::where('option_name' , 'checkout_issue_banner_text')->first();
     $shipment_for_selected_category  = false;
-    
+    $free_shipping_state = false;
+    if (!auth()->user()) {
+        $free_shipping_state = true;
+    }
     if (!empty($user_id) && !empty($contact_id)) {
         $contact =  App\Models\Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
             ->orWhere('secondary_id', $contact_id)
             ->first();
+
+        if (!empty($contact)) {
+            if ($contact->is_parent === 1) {
+                if ($contact->state == 'California' || $contact->state == 'CA') {
+                    $free_shipping_state = true;
+                } else {
+                    $free_shipping_state = false;
+                }
+            } else {
+                $parent_contact = App\Models\Contact::where('contact_id', $contact->parent_id)->first();
+                if ($parent_contact->state == 'California' || $parent_contact->state == 'CA') {
+                    $free_shipping_state = true;
+                } else {
+                    $free_shipping_state = false;
+                }
+            }
+        } else {
+            $free_shipping_state = false;
+        } 
         
     } else {
         $contact =  App\Models\Contact::where('user_id', $user_id)->first();
@@ -65,22 +87,28 @@
         }
         $calculate_free_shipping = $free_shipping - $cart_total;
     }
-    if ($shipment_for_selected_category == true) {
-        $d_none = 'd-none';
-        $congrats_div_dnone = 'd-none';
-    }
-    else {
-        if ($calculate_free_shipping <= intval($free_shipping) && $calculate_free_shipping >= 0) {
-            $d_none = '';
-        } else {
+    if ($free_shipping_state == true) {
+        if ($shipment_for_selected_category == true) {
             $d_none = 'd-none';
-        }
-
-        if ($cart_total >= intval($free_shipping) && $cart_total >= 0) {
-            $congrats_div_dnone = '';
-        } else {
             $congrats_div_dnone = 'd-none';
         }
+        else {
+            if ($calculate_free_shipping <= intval($free_shipping) && $calculate_free_shipping >= 0) {
+                $d_none = '';
+            } else {
+                $d_none = 'd-none';
+            }
+
+            if ($cart_total >= intval($free_shipping) && $cart_total >= 0) {
+                $congrats_div_dnone = '';
+            } else {
+                $congrats_div_dnone = 'd-none';
+            }
+        }
+    }
+    else {
+        $d_none = 'd-none';
+        $congrats_div_dnone = 'd-none';
     }
 
 @endphp

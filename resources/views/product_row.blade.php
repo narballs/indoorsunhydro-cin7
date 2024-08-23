@@ -584,14 +584,20 @@
                     var tax = cart_total * (tax_rate / 100);
                     var grand_total_include_tax = 0;
                     grand_total_include_tax = (tax + grand_total).toFixed(2);
-                    if (grand_total <= initial_free_shipping_value) {
-                        $('.promotional_banner_div_congrats').addClass('d-none');
-                        $('.promotional_banner_div').removeClass('d-none');
-                        $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
-                    } else {
-                        $('.promotional_banner_div').addClass('d-none');
-                        $('.promotional_banner_div_congrats').removeClass('d-none');
+                    if (response.free_postal_state == true) {
+                        if (grand_total <= initial_free_shipping_value) {
+                            $('.promotional_banner_div_congrats').addClass('d-none');
+                            $('.promotional_banner_div').removeClass('d-none');
+                            $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                        } else {
+                            $('.promotional_banner_div').addClass('d-none');
+                            $('.promotional_banner_div_congrats').removeClass('d-none');
+                        }
                     }
+                    else {
+                        $('.promotional_banner_div').addClass('d-none');
+                        $('.promotional_banner_div_congrats').addClass('d-none');
+                    } 
                     Swal.fire({
                         toast: true,
                         icon: 'success',
