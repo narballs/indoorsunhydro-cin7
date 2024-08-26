@@ -780,9 +780,9 @@
                 if ((product.default_price[response.price_column]  != null) || (parseFloat(product.default_price[response.price_column]) > 0)) {
                     var formattedPrice = formatNumber(parseFloat(product.default_price[response.price_column]));
                 } else if ((product.default_price.sacramentoUSD  != null) || (parseFloat(product.default_price.sacramentoUSD) > 0)) {
-                    var formattedPrice = parseFloat(product.default_price.sacramentoUSD);
+                    var formattedPrice = formatNumber(parseFloat(product.default_price.sacramentoUSD));
                 } else {
-                    var formattedPrice = parseFloat(product.default_price.retailUSD);
+                    var formattedPrice = formatNumber(parseFloat(product.default_price.retailUSD));
                 }
                 productHtml += `
                     <h4 class="text-uppercase mb-0 text-center p_price_resp mt-0 mb-2">
