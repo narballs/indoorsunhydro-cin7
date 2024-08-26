@@ -1,6 +1,6 @@
 <?php
 
-    $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'YES'); 
+    $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'Yes'); 
 
     $product_price = 0;
     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
@@ -729,7 +729,7 @@
                 Swal.fire({
                     toast: true,
                     icon: 'error',
-                    title: response.message,
+                    title: 'No similar products found',
                     timer: 3000,
                     showConfirmButton: false,
                     position: 'top',
