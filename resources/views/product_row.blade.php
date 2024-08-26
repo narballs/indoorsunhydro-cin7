@@ -777,7 +777,7 @@
                 </div>
             `;
             if (product.show_price === true && product.default_price !== null) {
-                var formattedPrice = formatNumber(product.default_price[response.price_column]);
+                var formattedPrice = formatNumber(parseFloat(product.default_price[response.price_column]));
                 productHtml += `
                     <h4 class="text-uppercase mb-0 text-center p_price_resp mt-0 mb-2">
                         $${formattedPrice}
