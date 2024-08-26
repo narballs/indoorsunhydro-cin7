@@ -2588,4 +2588,258 @@ class ProductController extends Controller
             ], 200);
         }
     }
+
+    // see similar products according to the product
+    // public function see_similar_products(Request $request) {
+    //     $product_primiary_id = $request->product_id;
+    //     $option_id = $request->option_id;
+    //     $user_id = Auth::id();
+    //     $primary_contact = null;
+    //     $secondary_contact = null;
+    //     $price_column = null;
+    //     $primary_contact_id = null;
+    //     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+    //     if (!auth()->user()) {
+    //         if (!empty($default_price_column)) {
+    //             $price_column = $default_price_column->option_value;
+    //         }
+    //         else {
+    //             $price_column = 'sacramentoUSD';
+    //         }
+    //     } else {
+    //         $contact = Contact::where('user_id', $user_id)->first();
+    //         if (empty($contact)) {
+    //             if (!empty($default_price_column)) {
+    //                 $price_column = $default_price_column->option_value;
+    //             }
+    //             else {
+    //                 $price_column = 'sacramentoUSD';
+    //             }
+    //         } else {
+    //             if (!empty($contact->contact_id) && $contact->is_parent == 1) {
+    //                 $price_column = $contact->priceColumn;
+    //             } else {
+    //                 $secondary_contact = Contact::where('user_id', $user_id)->first();
+    //                 if (!empty($secondary_contact)) {
+    //                     $primary_contact_id = $secondary_contact->parent_id;
+    //                     $primary_contact = Contact::where('contact_id', $primary_contact_id)->first();
+    //                     if (!empty($primary_contact)) {
+    //                         $price_column = $primary_contact->priceColumn;
+    //                     }
+    //                     else {
+    //                         if (!empty($default_price_column)) {
+    //                             $price_column = $default_price_column->option_value;
+    //                         }
+    //                         else {
+    //                             $price_column = 'sacramentoUSD';
+    //                         }
+    //                     }
+    //                 } else {
+    //                     if (!empty($default_price_column)) {
+    //                         $price_column = $default_price_column->option_value;
+    //                     }
+    //                     else {
+    //                         $price_column = 'sacramentoUSD';
+    //                     }
+    //                 }
+    //             }
+
+    //         }
+    //     } 
+        
+
+    //     $products = Product::with('categories' , 'brand')
+    //     ->where('id', $product_primiary_id)
+    //     ->where('status', '!=', 'Inactive')
+    //     ->get();
+    //     if (count($products) == 0) {
+    //         return response()->json([
+    //             'message' => 'No product found',
+    //             'status' => 'error'
+    //         ], 404);
+    //     }
+
+        
+    //     $lists = BuyList::where('user_id', $user_id)->get();
+    //     $contact = null;
+    //     if ($user_id != null) {
+    //         $contact = Contact::where('user_id', $user_id)->first();
+    //     }
+    //     $contact_id = session()->get('contact_id');
+    //     $user_list = BuyList::where('user_id', $user_id)
+    //         ->where('contact_id', $contact_id)
+    //         ->first();
+
+
+    //     $user_buy_list_options = [];
+
+    //     if (!empty($user_list)) {
+    //         $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+    //     }
+
+    //     $get_category_id = Product::with('categories' , 'brand')
+    //     ->where('id', $product_primiary_id)
+    //     ->whereHas('categories' , function ($q){
+    //         $q->where('is_active' , 1);
+    //     })
+    //     ->pluck('category_id')->toArray();
+
+
+    //     $get_same_category_products_ids = Product::with('categories' , 'brand')
+    //     ->where('status', '!=', 'Inactive')
+    //     ->whereIn('category_id' , $get_category_id)
+    //     ->where('id', '!=', $product_primiary_id)
+    //     ->pluck('product_id')->toArray();
+
+
+    //     $get_in_stock_products = ProductOption::with('products' , 'products.categories' , 'products.brand',  'defaultPrice')
+    //     ->where('status', '!=', 'Disabled')
+    //     ->where('stockAvailable', '>', 0)
+    //     ->whereHas('defaultPrice' , function ($q) use ($price_column){
+    //         $q->where($price_column  , '!=' , null)
+    //         ->where($price_column , '>' , 0);
+    //     })
+    //     ->whereIn('product_id' , $get_same_category_products_ids)
+    //     ->take(4)
+    //     ->get();
+
+    //     if (count($get_in_stock_products) == 0) {
+    //         return response()->json([
+    //             'message' => 'No product found',
+    //             'status' => 'error'
+    //         ], 404);
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'Products found',
+    //         'status' => 'success',
+    //         'products' => $get_in_stock_products,
+    //         'user_buy_list_options' => $user_buy_list_options,
+    //         'contact_id'=> $contact_id,
+    //     ], 200);
+
+    // }
+
+    public function see_similar_products(Request $request) {
+        $product_primiary_id = $request->product_id;
+        $option_id = $request->option_id;
+        $user_id = Auth::id();
+        $primary_contact = null;
+        $secondary_contact = null;
+        $price_column = null;
+        $primary_contact_id = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+    
+        // Determine the price column
+        if (!auth()->user()) {
+            $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
+        } else {
+            $contact = Contact::where('user_id', $user_id)->first();
+            if (empty($contact)) {
+                $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
+            } else {
+                $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
+                $primary_contact = Contact::where('contact_id', $contact_id_new)->first();
+                $price_column = !empty($primary_contact) ? $primary_contact->priceColumn : (!empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD');
+            }
+        }
+    
+        // Fetch the main product
+        $products = Product::with('categories', 'brand')
+            ->where('id', $product_primiary_id)
+            ->where('status', '!=', 'Inactive')
+            ->get();
+    
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => 'No product found',
+                'status' => 'error'
+            ], 404);
+        }
+    
+        // Handle user's buy list
+        $lists = BuyList::where('user_id', $user_id)->get();
+        $contact = $user_id ? Contact::where('user_id', $user_id)->first() : null;
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+    
+        $user_buy_list_options = !empty($user_list) ? ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray() : [];
+    
+        // Get category ID
+        $get_category_id = Product::with('categories', 'brand')
+            ->where('id', $product_primiary_id)
+            ->whereHas('categories', function ($q) {
+                $q->where('is_active', 1);
+            })
+            ->pluck('category_id')
+            ->toArray();
+    
+        // Get similar products in the same category
+        $get_same_category_products_ids = Product::with('categories', 'brand')
+            ->where('status', '!=', 'Inactive')
+            ->whereIn('category_id', $get_category_id)
+            ->where('id', '!=', $product_primiary_id)
+            ->pluck('product_id')
+            ->toArray();
+    
+        // Get in-stock products
+        $get_in_stock_products = ProductOption::with('products', 'products.categories', 'products.brand', 'defaultPrice')
+            ->where('status', '!=', 'Disabled')
+            ->where('stockAvailable', '>', 0)
+            ->whereHas('defaultPrice', function ($q) use ($price_column) {
+                $q->where($price_column, '!=', null)
+                  ->where($price_column, '>', 0);
+            })
+            ->whereIn('product_id', $get_same_category_products_ids)
+            ->take(4)
+            ->get();
+    
+        if ($get_in_stock_products->isEmpty()) {
+            return response()->json([
+                'message' => 'No product found',
+                'status' => 'error'
+            ], 404);
+        }
+    
+        // Add to cart and show price logic
+        foreach ($get_in_stock_products as $option) {
+            $add_to_cart = true;
+            $show_price = true;
+    
+            if (!empty($request->products_to_hide) && in_array($option->option_id, $request->products_to_hide)) {
+                if (!auth()->user()) {
+                    $add_to_cart = false;
+                    $show_price = false;
+                } else {
+                    $contact = Contact::where('user_id', auth()->user()->id)->first();
+                    if (empty($contact)) {
+                        $add_to_cart = false;
+                        $show_price = false;
+                    } else {
+                        $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
+                        $get_main_contact = Contact::where('contact_id', $contact_id_new)->first();
+                        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                            $add_to_cart = false;
+                            $show_price = false;
+                        }
+                    }
+                }
+            }
+    
+            $option->add_to_cart = $add_to_cart;
+            $option->show_price = $show_price;
+        }
+        
+        return response()->json([
+            'message' => 'Products found',
+            'status' => 'success',
+            'products' => $get_in_stock_products,
+            'user_buy_list_options' => $user_buy_list_options,
+            'contact_id' => $contact_id,
+            'price_column' => $price_column ?? 'sacramentoUSD',
+        ], 200);
+    }
+    
 }
