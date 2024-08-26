@@ -729,7 +729,7 @@
                 Swal.fire({
                     toast: true,
                     icon: 'error',
-                    title: 'Something went wrong!',
+                    title: response.message,
                     timer: 3000,
                     showConfirmButton: false,
                     position: 'top',

@@ -2752,7 +2752,7 @@ class ProductController extends Controller
     
         if ($products->isEmpty()) {
             return response()->json([
-                'message' => 'No product found',
+                'message' => 'No similar product found',
                 'status' => 'error'
             ], 404);
         }
@@ -2798,7 +2798,7 @@ class ProductController extends Controller
     
         if ($get_in_stock_products->isEmpty()) {
             return response()->json([
-                'message' => 'No product found',
+                'message' => 'No similar product found',
                 'status' => 'error'
             ], 404);
         }
