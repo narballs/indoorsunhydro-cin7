@@ -508,13 +508,14 @@ class ProductController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
-
+        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
         return view('buy_again', compact(
             'products',
             'lists',
             'pricing',
             'user_buy_list_options',
-            'contact_id', 'products_to_hide'
+            'contact_id', 'products_to_hide',
+            'notify_user_about_product_stock'
         ));
     }
 
