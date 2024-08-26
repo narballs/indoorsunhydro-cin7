@@ -404,6 +404,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'enable_see_similar_products', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];
