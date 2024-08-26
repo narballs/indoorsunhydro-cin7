@@ -351,6 +351,33 @@ h1 {
     border: 1px solid #008bd3 !important;
 }
 
+.see-similar-order-button{
+    background-color: #008bd3;
+    font-family: 'Poppins';
+    color: #FFFFFF ;
+    border: none;
+    height: 44px;
+    line-height: 27px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.05em;
+
+}
+
+.see-similar-order-button:hover {
+    color: #008bd3;
+    background-color: #FFFFFF ;
+    border: 1px solid #008bd3 !important;
+}
+
+.see-similar-order-button:focus {
+    color: #008bd3;
+    background-color: #FFFFFF ;
+    border: 1px solid #008bd3 !important;
+}
+
 .card {
     min-height: 372px;
 }
