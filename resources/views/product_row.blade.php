@@ -777,9 +777,9 @@
                 </div>
             `;
             if (product.show_price === true && product.default_price !== null) {
-                if (product.default_price[response.price_column])  != null || parseFloat(product.default_price[response.price_column]) > 0 {
+                if ((product.default_price[response.price_column]  != null) || parseFloat(product.default_price[response.price_column])) > 0 {
                     var formattedPrice = formatNumber(parseFloat(product.default_price[response.price_column]));
-                } else if (product.default_price.sacramentoUSD)  != null || (parseFloat(product.default_price.sacramentoUSD) > 0) {
+                } else if ((product.default_price.sacramentoUSD  != null) || (parseFloat(product.default_price.sacramentoUSD))) > 0) {
                     var formattedPrice = parseFloat(product.default_price.sacramentoUSD);
                 } else {
                     var formattedPrice = parseFloat(product.default_price.retailUSD);
