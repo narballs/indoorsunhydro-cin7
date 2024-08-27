@@ -128,7 +128,7 @@ class OrderHelper {
                 "memberEmail" => "wqszeeshan@gmail.com",
                 "memberCostCenter" => "sample string 6",
                 "memberAlternativeTaxRate" => $order->texClasses->name,
-                "costCenter" => null,
+                "costCenter" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced' ? 'Online Sales' : Null,
                 "alternativeTaxRate" => $order->texClasses->name,
                 "estimatedDeliveryDate" => $order->date,
                 "salesPersonId" => 10,
