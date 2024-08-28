@@ -92,7 +92,10 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 @php
-    $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'Yes'); 
+    // $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'Yes'); 
+    $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'enable_see_similar_products')
+    ->where('option_value', 'Yes')
+    ->first(); 
 @endphp
 <div class="w-100 mb-2">
     <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div_detail">
@@ -1668,13 +1671,13 @@
 
 {{-- bulk qty modal end --}}
 <div class="modal fade" id="see_similar_pop_up_detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="see_similar_pop_up_detail" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="see_similar_pop_up_detail">Similar Products</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body similar_products_row-body_detail px-2 py-1">
+        <div class="modal-body similar_products_row-body_detail  d-flex justify-content-center align-items-center p-2">
         </div>
         <div class="modal-footer p-1">
           <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
@@ -2955,11 +2958,12 @@
 
     function generateProductsHtml(response , products) {
         var price_column = response.price_column;
-        var htmlContent = `<div class="row">`;
+        var htmlContent = `<div class="owl-carousel owl-theme similar-products-carousel-ai-detail w-75">`;
 
         products.forEach(function(product , price_column) {
             var productHtml = `
-                <div class="col-md-6 col-xl-6 col-lg-6 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1 h-100">
+                <div class="item">
+                    <div class="d-flex align-self-stretch mt-2  pt-1 h-100">
                     <div class="p-2 shadow-sm w-100" style="background-color: #fff; background-clip: border-box; border: 1px solid rgba(0,0,0,.125); border-radius: 0.25rem;">
             `;
 
@@ -3040,7 +3044,7 @@
             }
             
 
-            productHtml += `</div></div>`;
+            productHtml += `</div></div></div>`;
             htmlContent += productHtml;
         });
 
@@ -3086,6 +3090,7 @@
     function formatNumber(value) {
         return parseFloat(value).toFixed(2);
     }
+    
     function updateCartDetail(id, option_id) {
         var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
         var tax = 0;
@@ -3177,7 +3182,6 @@
                     }
                     // jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
-                    jQuery('.swap_qty_number_'+id).val(response.actual_stock);
 
                     var grand_total = 0;
                     var grand_total = parseFloat(cart_total);
@@ -3228,4 +3232,34 @@
 
         return false;
     }
+
+    $(document).on('shown.bs.modal', '#see_similar_pop_up_detail', function () {
+        $('.similar-products-carousel-ai-detail').owlCarousel({
+            loop: true,
+            margin: 10,
+            dots: false,
+            nav: true,
+            // autoplay: true,
+            // autoplayTimeout: 3000,
+            navText: [
+                '<i class="fa fa-chevron-left"></i>', // Left arrow icon
+                '<i class="fa fa-chevron-right"></i>' // Right arrow icon
+            ],
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: false
+                },
+                600: {
+                    items: 2,
+                    nav: false
+                },
+                1000: {
+                    items: 3,
+                    nav: true
+                }
+            }
+        });
+        $('.similar-products-carousel-ai-detail').trigger('refresh.owl.carousel');
+    });
 </script>

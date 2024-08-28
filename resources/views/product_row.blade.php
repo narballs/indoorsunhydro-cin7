@@ -1,6 +1,8 @@
 <?php
 
-    $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'Yes'); 
+    $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'enable_see_similar_products')
+    ->where('option_value', 'Yes')
+    ->first(); 
 
     $product_price = 0;
     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
