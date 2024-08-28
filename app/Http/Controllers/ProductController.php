@@ -2825,7 +2825,9 @@ class ProductController extends Controller
     // get similar products
 
     public function see_similar_products(Request $request) {
-        $product_primiary_id = $request->product_id;
+        $product_primary_id = $request->product_id;
+        $get_single_product = Product::where('id', $product_primary_id)->first();
+        $keywords = explode(' ', $get_single_product->name);
         $option_id = $request->option_id;
         $user_id = Auth::id();
         $primary_contact = null;
@@ -2850,7 +2852,7 @@ class ProductController extends Controller
     
         // Fetch the main product
         $products = Product::with('categories', 'brand')
-            ->where('id', $product_primiary_id)
+            ->where('id', $product_primary_id)
             ->where('status', '!=', 'Inactive')
             ->get();
     
@@ -2873,7 +2875,7 @@ class ProductController extends Controller
     
         // Get category ID
         $get_category_id = Product::with('categories', 'brand')
-            ->where('id', $product_primiary_id)
+            ->where('id', $product_primary_id)
             ->whereHas('categories', function ($q) {
                 $q->where('is_active', 1);
             })
@@ -2884,10 +2886,11 @@ class ProductController extends Controller
         $get_same_category_products_ids = Product::with('categories', 'brand')
             ->where('status', '!=', 'Inactive')
             ->whereIn('category_id', $get_category_id)
-            ->where('id', '!=', $product_primiary_id)
+            ->where('id', '!=', $product_primary_id)
             ->pluck('product_id')
             ->toArray();
-    
+
+        
         // Get in-stock products
         $get_in_stock_products = ProductOption::with('products', 'products.categories', 'products.brand', 'defaultPrice')
             ->where('status', '!=', 'Disabled')
@@ -2897,8 +2900,9 @@ class ProductController extends Controller
                   ->where($price_column, '>', 0);
             })
             ->whereIn('product_id', $get_same_category_products_ids)
-            ->take(4)
             ->get();
+
+
     
         if ($get_in_stock_products->isEmpty()) {
             return response()->json([
