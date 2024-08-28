@@ -409,6 +409,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'enable_gpt-4o', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];
