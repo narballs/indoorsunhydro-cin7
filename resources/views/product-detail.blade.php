@@ -3064,8 +3064,8 @@
     }
 
     function generateProductImage(product) {
-        var imageNotAvailableUrl = "{{ asset('theme/img/image_not_available.png') }}";
-        if (product.images != '') {
+        var imageNotAvailableUrl = "{{ asset('/theme/img/image_not_available.png') }}";
+        if (product.products.images != '') {
             return `
                 <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
                     <div class="image-height-mbl" style="min-height: 130px; max-height:130px;">
