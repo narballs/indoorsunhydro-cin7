@@ -3236,7 +3236,7 @@
 
     $(document).on('shown.bs.modal', '#see_similar_pop_up_detail', function () {
         $('.similar-products-carousel-ai-detail').owlCarousel({
-            loop: true,
+            loop: false,
             margin: 10,
             dots: false,
             nav: true,
