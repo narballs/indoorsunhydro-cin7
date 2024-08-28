@@ -2896,8 +2896,20 @@ class ProductController extends Controller
             ->where('id', '!=', $product_primary_id)
             ->pluck('product_id')
             ->toArray();
-
-        
+            
+        if (count($keywords) > 1) {
+            $get_same_category_products_ids = Product::with('categories', 'brand')
+            ->where('status', '!=', 'Inactive')
+            ->whereIn('category_id', $get_category_id)
+            ->where('id', '!=', $product_primary_id)
+            ->where(function($q) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $q->orWhere('name', 'like', '%' . $keyword . '%');
+                }
+            })
+            ->pluck('product_id')
+            ->toArray();
+        }
         // Get in-stock products
         $get_in_stock_products = ProductOption::with('products', 'products.categories', 'products.brand', 'defaultPrice')
             ->where('status', '!=', 'Disabled')
