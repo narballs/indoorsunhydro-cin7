@@ -3064,6 +3064,7 @@
     }
 
     function generateProductImage(product) {
+        var imageNotAvailableUrl = "{{ asset('theme/img/image_not_available.png') }}";
         if (product.images != '') {
             return `
                 <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
@@ -3079,7 +3080,7 @@
                 <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
                     <div class="image-height-mbl" style="min-height: 130px; max-height:130px;">
                         <span class="d-flex justify-content-center align-items-center">
-                            <img src="${asset('/theme/img/image_not_available.png')}" class="img_responsive_mbl_not_available col-md-10 image-body offset-1 mt-2"  style="min-height: 130px; max-height: 130px;" />
+                            <img src="${imageNotAvailableUrl}" class="img_responsive_mbl_not_available col-md-10 image-body offset-1 mt-2"  style="min-height: 130px; max-height: 130px;" />
                         </span>
                     </div>
                 </a>
