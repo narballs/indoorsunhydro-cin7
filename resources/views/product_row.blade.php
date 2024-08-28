@@ -1,4 +1,9 @@
 <?php
+
+    $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'enable_see_similar_products')
+    ->where('option_value', 'Yes')
+    ->first(); 
+
     $product_price = 0;
     $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
     foreach ($option->price as $price) {
@@ -228,6 +233,11 @@
                                         <button class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded"
                                             type="button" id="notify_popup_modal" onclick="show_notify_popup_modal('{{$product->id}}' , '{{$product->code}}')">
                                             <a class="text-white">Notify</a>
+                                        </button>
+                                    @endif
+                                    @if (!empty($enable_see_similar_products))
+                                        <button class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $product->id }}', '{{ $option->option_id }}')" data-bs-target="#see_similar_pop_up" style="max-height: 46px;">
+                                            See Similar
                                         </button>
                                     @endif
                                 @endif
@@ -519,12 +529,12 @@
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
-                p_id: jQuery('#p_' + id).val(),
-                // quantity: 1
+                p_id: id,
+                option_id: option_id,
                 quantity: itemQuantity
             },
             success: function(response) {
-                if (response.status == 'errror') {
+                if (response.status == 'error') {
                     var cart_items = response.cart_items;
                     var cart_total = 0;
                     var total_cart_quantity = 0;
@@ -676,5 +686,8 @@
         return false;
     }
 
+    
+
 
 </script>
+

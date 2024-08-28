@@ -2553,29 +2553,171 @@ class ProductController extends Controller
 
     // ai answer 
 
-    public function ai_answer(Request $request) {
+    // public function ai_answer(Request $request) {
+    //     $apiKey = config('services.ai.ai_key');
+    //     $question = $request->question;
+    //     $client  = new \GuzzleHttp\Client([
+    //         'base_uri' => 'https://api.openai.com/v1/',
+    //         'headers' => [
+    //             'Authorization' => 'Bearer ' . config('services.ai.ai_key'),
+    //             'Content-Type'  => 'application/json',
+    //         ],
+    //     ]);
+
+    //     $response = $client->post('chat/completions', [
+    //         'json' => [
+    //             'model' => 'gpt-3.5-turbo',  // or 'gpt-4' if available
+    //             'messages' => [
+    //                 ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+    //                 ['role' => 'user', 'content' => $question],
+    //             ],
+    //             'max_tokens' => 250,
+    //         ],
+    //     ]);
+
+    //     $body = json_decode($response->getBody()->getContents(), true);
+    //     if (empty($body['choices'][0]['message']['content'])) {
+    //         return response()->json([
+    //             'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
+    //             'status' => 'error'
+    //         ], 404);
+    //     } else {
+    //         return response()->json([
+    //             'message' => $body['choices'][0]['message']['content'],
+    //             'status' => 'success'
+    //         ], 200);
+    //     }
+    // }
+
+    // public function ai_answer(Request $request)
+    // {
+    //     $apiKey = config('services.ai.ai_key');
+    //     $product_name = $request->product_name;
+    //     $question = $request->question;
+
+    //     $main_product = Product::where('name', $product_name)->first();
+
+    //     $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
+
+    //     // If product description is empty, use a default description or skip relevance check
+    //     if (empty($productDescription)) {
+    //         $isRelated = $this->isQuestionGenericallyRelevant($question);
+    //     } else {
+    //         $isRelated = $this->isQuestionRelatedToProduct($question  . ' ' . $product_name, $productDescription);
+    //     }
+
+    //     $client = new \GuzzleHttp\Client([
+    //         'base_uri' => 'https://api.openai.com/v1/',
+    //         'headers' => [
+    //             'Authorization' => 'Bearer ' . $apiKey,
+    //             'Content-Type'  => 'application/json',
+    //         ],
+    //     ]);
+
+    //     if ($isRelated) {
+    //         // Generate response from OpenAI
+    //         $response = $client->post('chat/completions', [
+    //             'json' => [
+    //                 'model' => 'gpt-3.5-turbo',  // or 'gpt-4' if available
+    //                 'messages' => [
+    //                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+    //                     ['role' => 'user', 'content' => $question],
+    //                 ],
+    //                 'max_tokens' => 250,
+    //             ],
+    //         ]);
+
+    //         $body = json_decode($response->getBody()->getContents(), true);
+
+    //         if (empty($body['choices'][0]['message']['content'])) {
+    //             return response()->json([
+    //                 'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
+    //                 'status' => 'error'
+    //             ], 404);
+    //         } else {
+    //             return response()->json([
+    //                 'message' => $body['choices'][0]['message']['content'],
+    //                 'status' => 'success'
+    //             ], 200);
+    //         }
+    //     } else {
+    //         // Return a standard response for unrelated questions
+    //         return response()->json([
+    //             'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
+    //             'status' => 'error'
+    //         ], 404);
+    //     }
+    // }
+
+    // private function isQuestionRelatedToProduct(string $question, string $productDescription): bool
+    // {
+    //     $genericKeywords = [
+    //         'buy', 'price', 'specifications', 'features', 'availability', 'order', 
+    //         'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
+    //         'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
+    //         'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
+    //         'refund', 'condition', 'guarantee'
+    //     ];
+
+    //     // Convert product description and question to lowercase and split into words
+    //     $keywords = array_map('strtolower', explode(' ', $productDescription));
+    //     $questionWords = array_map('strtolower', explode(' ', $question));
+
+    //     // Combine product description keywords and generic keywords
+    //     $allKeywords = array_unique(array_merge($keywords, $genericKeywords));
+
+    //     $relatedKeywordCount = 0;
+
+    //     foreach ($questionWords as $word) {
+    //         if (in_array($word, $allKeywords)) {
+    //             $relatedKeywordCount++;
+    //         }
+    //     }
+
+    //     // Check if the question has a significant number of related keywords
+    //     $relatedKeywordRatio = $relatedKeywordCount / count($questionWords);
+    //     return $relatedKeywordRatio > 0.2; // Adjust the threshold as needed
+    // }
+
+    public function ai_answer(Request $request)
+    {
         $apiKey = config('services.ai.ai_key');
+        $product_name = $request->product_name;
         $question = $request->question;
-        $client  = new \GuzzleHttp\Client([
+
+        $main_product = Product::where('name', $product_name)->first();
+
+        $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
+
+        // Check if the question is relevant to the product
+        if (!$this->isQuestionRelatedToProduct($question .' '.$product_name, $productDescription)) {
+            return response()->json([
+                'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
+                'status' => 'error'
+            ], 200);
+        }
+
+        $client = new \GuzzleHttp\Client([
             'base_uri' => 'https://api.openai.com/v1/',
             'headers' => [
-                'Authorization' => 'Bearer ' . config('services.ai.ai_key'),
+                'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type'  => 'application/json',
             ],
         ]);
 
         $response = $client->post('chat/completions', [
             'json' => [
-                'model' => 'gpt-3.5-turbo',  // or 'gpt-4' if available
+                'model' => 'gpt-3.5-turbo',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-                    ['role' => 'user', 'content' => $question],
+                    ['role' => 'user', 'content' => $question .' '.$product_name],
                 ],
                 'max_tokens' => 250,
             ],
         ]);
 
         $body = json_decode($response->getBody()->getContents(), true);
+
         if (empty($body['choices'][0]['message']['content'])) {
             return response()->json([
                 'message' => 'No answer found',
@@ -2588,4 +2730,224 @@ class ProductController extends Controller
             ], 200);
         }
     }
+
+    // private function isQuestionRelatedToProduct(string $question, string $productDescription): bool {
+    //     $genericKeywords = [
+    //         'buy', 'price', 'specifications', 'features', 'availability', 'order', 
+    //         'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
+    //         'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
+    //         'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
+    //         'refund', 'condition', 'guarantee'
+    //     ];
+
+    //     // List of irrelevant terms to exclude
+    //     $irrelevantTerms = [
+    //         'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
+    //         'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
+    //         'earth', 'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
+    //         'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
+    //         'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
+    //         'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
+    //         'addition', 'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
+    //     ];
+
+    //     $keywords = array_map('strtolower', explode(' ', $productDescription));
+    //     $questionWords = array_map('strtolower', explode(' ', $question));
+
+    //     // Remove irrelevant terms from the question words
+    //     $questionWords = array_diff($questionWords, $irrelevantTerms);
+
+    //     // Combine product description keywords and generic keywords
+    //     $allKeywords = array_unique(array_merge($keywords, $genericKeywords));
+
+    //     $relatedKeywordCount = 0;
+
+    //     foreach ($questionWords as $word) {
+    //         if (in_array($word, $allKeywords)) {
+    //             $relatedKeywordCount++;
+    //         }
+    //     }
+
+    //     // Check if the question has a significant number of related keywords
+    //     $relatedKeywordRatio = $relatedKeywordCount / count($questionWords);
+    //     return $relatedKeywordRatio > 0.2; // Adjust the threshold as needed
+    // }
+
+    private function isQuestionRelatedToProduct(string $question, string $productDescription): bool
+    {
+        $genericKeywords = [
+            'buy', 'price', 'specifications', 'features', 'availability', 'order', 
+            'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
+            'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
+            'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
+            'refund', 'condition', 'guarantee','similar', 'alternate'
+        ];
+
+        // List of irrelevant terms to exclude
+        $irrelevantTerms = [
+            'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
+            'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
+            'earth', 'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
+            'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
+            'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
+            'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
+            'addition', 'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
+        ];
+
+        $questionWords = array_map('strtolower', explode(' ', $question));
+
+        // Check for any irrelevant terms in the question
+        foreach ($questionWords as $word) {
+            if (in_array($word, $irrelevantTerms)) {
+                return false; // Immediately return false if any irrelevant term is found
+            }
+        }
+
+        $keywords = array_map('strtolower', explode(' ', $productDescription));
+        
+        // Combine product description keywords and generic keywords
+        $allKeywords = array_unique(array_merge($keywords, $genericKeywords));
+
+        $relatedKeywordCount = 0;
+
+        foreach ($questionWords as $word) {
+            if (in_array($word, $allKeywords)) {
+                $relatedKeywordCount++;
+            }
+        }
+
+        // Check if the question has a significant number of related keywords
+        $relatedKeywordRatio = $relatedKeywordCount / count($questionWords);
+        return $relatedKeywordRatio > 0.2; // Adjust the threshold as needed
+    }
+
+
+    // get similar products
+
+    public function see_similar_products(Request $request) {
+        $product_primary_id = $request->product_id;
+        $get_single_product = Product::where('id', $product_primary_id)->first();
+        $keywords = explode(' ', $get_single_product->name);
+        $option_id = $request->option_id;
+        $user_id = Auth::id();
+        $primary_contact = null;
+        $secondary_contact = null;
+        $price_column = null;
+        $primary_contact_id = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+    
+        // Determine the price column
+        if (!auth()->user()) {
+            $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
+        } else {
+            $contact = Contact::where('user_id', $user_id)->first();
+            if (empty($contact)) {
+                $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
+            } else {
+                $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
+                $primary_contact = Contact::where('contact_id', $contact_id_new)->first();
+                $price_column = !empty($primary_contact) ? $primary_contact->priceColumn : (!empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD');
+            }
+        }
+    
+        // Fetch the main product
+        $products = Product::with('categories', 'brand')
+            ->where('id', $product_primary_id)
+            ->where('status', '!=', 'Inactive')
+            ->get();
+    
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => 'No similar product found',
+                'status' => 'error'
+            ], 404);
+        }
+    
+        // Handle user's buy list
+        $lists = BuyList::where('user_id', $user_id)->get();
+        $contact = $user_id ? Contact::where('user_id', $user_id)->first() : null;
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->first();
+    
+        $user_buy_list_options = !empty($user_list) ? ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray() : [];
+    
+        // Get category ID
+        $get_category_id = Product::with('categories', 'brand')
+            ->where('id', $product_primary_id)
+            ->whereHas('categories', function ($q) {
+                $q->where('is_active', 1);
+            })
+            ->pluck('category_id')
+            ->toArray();
+    
+        // Get similar products in the same category
+        $get_same_category_products_ids = Product::with('categories', 'brand')
+            ->where('status', '!=', 'Inactive')
+            ->whereIn('category_id', $get_category_id)
+            ->where('id', '!=', $product_primary_id)
+            ->pluck('product_id')
+            ->toArray();
+
+        
+        // Get in-stock products
+        $get_in_stock_products = ProductOption::with('products', 'products.categories', 'products.brand', 'defaultPrice')
+            ->where('status', '!=', 'Disabled')
+            ->where('stockAvailable', '>', 0)
+            ->whereHas('defaultPrice', function ($q) use ($price_column) {
+                $q->where($price_column, '!=', null)
+                  ->where($price_column, '>', 0);
+            })
+            ->whereIn('product_id', $get_same_category_products_ids)
+            ->get();
+
+
+    
+        if ($get_in_stock_products->isEmpty()) {
+            return response()->json([
+                'message' => 'No similar product found',
+                'status' => 'error'
+            ], 404);
+        }
+    
+        // Add to cart and show price logic
+        foreach ($get_in_stock_products as $option) {
+            $add_to_cart = true;
+            $show_price = true;
+    
+            if (!empty($request->products_to_hide) && in_array($option->option_id, $request->products_to_hide)) {
+                if (!auth()->user()) {
+                    $add_to_cart = false;
+                    $show_price = false;
+                } else {
+                    $contact = Contact::where('user_id', auth()->user()->id)->first();
+                    if (empty($contact)) {
+                        $add_to_cart = false;
+                        $show_price = false;
+                    } else {
+                        $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
+                        $get_main_contact = Contact::where('contact_id', $contact_id_new)->first();
+                        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                            $add_to_cart = false;
+                            $show_price = false;
+                        }
+                    }
+                }
+            }
+    
+            $option->add_to_cart = $add_to_cart;
+            $option->show_price = $show_price;
+        }
+        
+        return response()->json([
+            'message' => 'Products found',
+            'status' => 'success',
+            'products' => $get_in_stock_products,
+            'user_buy_list_options' => $user_buy_list_options,
+            'contact_id' => $contact_id,
+            'price_column' => $price_column ?? 'sacramentoUSD',
+        ], 200);
+    }
+    
 }

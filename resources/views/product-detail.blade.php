@@ -1,7 +1,7 @@
 @include('partials.header')
 <style>
     .ai_questions {
-        padding: 5px;
+        padding: 10px;
         border: 1px solid #7cc63e;
         border-radius: 20px;
         background: #7cc63e;
@@ -91,6 +91,12 @@
 </style>
 @include('partials.top-bar')
 @include('partials.search-bar')
+@php
+    // $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'Yes'); 
+    $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'enable_see_similar_products')
+    ->where('option_value', 'Yes')
+    ->first(); 
+@endphp
 <div class="w-100 mb-2">
     <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div_detail">
         <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
@@ -475,11 +481,25 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @if (!empty($enable_see_similar_products))
+                                                            <div class="row justify-content-between align-items-center">
+                                                                <div class="col-md-10">
+                                                                    <button type="button" class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')" data-bs-target="#see_similar_pop_up_detail" style="max-height: 46px;">
+                                                                        See Similar
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @else
                                                         <button type="button" class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase notify_popup_modal_btn"
                                                             type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
                                                             <a class="text-white">Notify When in Stock </a>
                                                         </button>
+                                                        @if (!empty($enable_see_similar_products))
+                                                            <button type="button" class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')" data-bs-target="#see_similar_pop_up_detail" style="max-height: 46px;">
+                                                                See Similar
+                                                            </button>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             @else
@@ -873,11 +893,25 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    @if (!empty($enable_see_similar_products))
+                                                        <div class="row justify-content-between align-items-center">
+                                                            <div class="col-md-10">
+                                                                <button type="button" class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')" data-bs-target="#see_similar_pop_up_detail" style="max-height: 46px;">
+                                                                    See Similar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 @else
                                                     <button class="bg-primary button-cards product-detail-button-cards notify_popup_modal_btn "
                                                         type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
                                                         <a class="text-white">Notify When in Stock </a>
                                                     </button>
+                                                    @if (!empty($enable_see_similar_products))
+                                                        <button type="button" class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')" data-bs-target="#see_similar_pop_up_detail" style="max-height: 46px;">
+                                                            See Similar
+                                                        </button>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @else
@@ -961,7 +995,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control border-right-0 ai_text_field" id="ai_text_field" onfocus="mark_arrow_border_green()" placeholder="Ask Refus About this product" aria-label="Ask Refus About this product" aria-describedby="basic-addon2">
+                                <input type="text" class="form-control border-right-0 ai_text_field" id="ai_text_field" onfocus="mark_arrow_border_green()" placeholder="Ask any question about this product!" aria-label="Ask Refus About this product" aria-describedby="basic-addon2">
                                 <span class="input-group-text circle-right-ai border-left-0 bg-transparent" type="button"  id="basic-addon2"><i class="fa-solid fa-circle-arrow-right"></i></span>
                             </div>
                             <div class="text-danger ai_error"></div>
@@ -981,16 +1015,16 @@
                 </div>
                 @if (count($ai_questions) > 0)
                     <div class="card-footer py-3 px-1">
-                        <div class="col-md-12 ai_row_footer">
-                            <div class="row align-items-center">
+                        <div class="col-md-12 ai_row_footer d-flex justify-space-evenly">
+                            {{-- <div class="row align-items-center"> --}}
                                 @foreach($ai_questions as $question)
-                                <div class="col-xl-4 col-lg-4 col-md-6 col-12 mt-2 add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);">
-                                    <span class="ai_questions">
+                                {{-- <div class="col-xl-4 col-lg-4 col-md-6 col-12 mt-2 add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);"> --}}
+                                    <span class="ai_questions mx-3 w-auto add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);">
                                         <strong class="ai_question_strong">{{ \Illuminate\Support\Str::limit($question->question, 40) }}</strong>
                                     </span>
-                                </div>
+                                {{-- </div> --}}
                                 @endforeach
-                            </div>
+                            {{-- </div> --}}
                         </div>
                     </div>
                 @endif
@@ -1634,7 +1668,23 @@
         </div>
     </div>
 </div>
+
 {{-- bulk qty modal end --}}
+<div class="modal fade" id="see_similar_pop_up_detail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="see_similar_pop_up_detail" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="see_similar_pop_up_detail">Similar Products</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body similar_products_row-body_detail  d-flex justify-content-center align-items-center p-2">
+        </div>
+        <div class="modal-footer p-1">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
 @include('partials.product-footer')
 @include('partials.footer')
 <script>
@@ -2008,7 +2058,8 @@
                 $('#topbar_cart_total').html('$'+parseFloat(cart_total).toFixed(2));
                 var total = document.getElementById('#top_cart_quantity');
                     
-            }, error: function(response) {
+            }, 
+            error: function(response) {
                 console.log(response.responseJSON);
                 var error_message = response.responseJSON;
                     Swal.fire({
@@ -2676,6 +2727,7 @@
 </script>
 
 
+
 <script>
     // $(document).ready(function() {
         // open notify user modal 
@@ -2792,13 +2844,31 @@
         }
     }
 
+    $('#ai_text_field').keypress(function(event) {
+        if (event.which == 13) {
+            event.preventDefault(); // Prevent the form from submitting
+            var question  = $('.ai_text_field').val();
+            var product_name_detail_page = $('.product_name_detail_page').html();
+            if (question == '') {
+                $('.ai_spinner').addClass('d-none');
+                $('.ai_error').html('Please enter a question');
+                return false;
+            } 
+            else {
+                $('.ai_text_field').prop('readonly', true);
+                calling_ai_prompt(question , product_name_detail_page);
+            }
+        }
+    });
+
     function calling_ai_prompt(question , product_name_detail_page) {
         $.ajax({
             url: "{{ url('ai-answer') }}",
             method: 'get',
             data: {
             "_token": "{{ csrf_token() }}",
-                question : question + '' + product_name_detail_page,
+                question : question,
+                product_name : product_name_detail_page
             },
             success: function(response){
 
@@ -2817,12 +2887,379 @@
                 }
             },
             error: function(response) {
+                var error_message = response.responseJSON;
                 $('.ai_spinner').addClass('d-none');
                 $('.ai_error').html('');
-                $('.ai_content').text('Something went wrong!');
+                $('.ai_content').text(error_message.message);
                 $('.ai_text_field').prop('readonly', false);
                 $('.clear_prompt').removeClass('d-none');
             }
         });
     }
+</script>
+
+
+<script>
+    // see similar products on the basis of category
+    function see_similar_products(product_id  , option_id) {
+        $.ajax({
+            url: "{{ url('/see-similar-products/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                product_id,
+                option_id,
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    if (response.products.length === 0) {
+                        $('#see_similar_pop_up_detail').modal('hide');
+                        Swal.fire({
+                            toast: true,
+                            icon: 'error',
+                            title: response.message,
+                            timer: 3000,
+                            showConfirmButton: false,
+                            position: 'top',
+                            timerProgressBar: true
+                        });
+                    } else {
+                        $('#see_similar_pop_up_detail').modal('show');
+                        $('.similar_products_row-body_detail').html(generateProductsHtml(response , response.products));
+                    }
+                } else {
+                    $('#see_similar_pop_up_detail').modal('hide');
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: response.message,
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+            },
+
+            error: function(response) {
+                $('#see_similar_pop_up_detail').modal('hide');
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: 'No similar products found',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    position: 'top',
+                    timerProgressBar: true
+                });
+            }
+        });
+    }
+
+    function generateProductsHtml(response , products) {
+        var price_column = response.price_column;
+        var htmlContent = `<div class="owl-carousel owl-theme similar-products-carousel-ai-detail w-75">`;
+
+        products.forEach(function(product , price_column) {
+            var productHtml = `
+                <div class="item">
+                    <div class="d-flex align-self-stretch mt-2  pt-1 h-100">
+                    <div class="p-2 shadow-sm w-100" style="background-color: #fff; background-clip: border-box; border: 1px solid rgba(0,0,0,.125); border-radius: 0.25rem;">
+            `;
+
+            // Add subscribe button if contact_id is present
+            if (response.contact_id) {
+                productHtml += generateSubscribeButton(product.product_id, product.option_id , response.user_buy_list_options);
+            }
+
+            // Add image or placeholder
+            productHtml += generateProductImage(product);
+            
+            var productName = product.products.name;  // Get the text of the product name
+            var shortenedName = productName.length > 30 ? productName.substring(0, 20) + '...' : productName;
+            // Add the rest of the product details
+            productHtml += `
+                <div class="card-body d-flex flex-column text-center mt-1 prd_mbl_card_bdy p-2">
+                    <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500; font-size: 16px;" data-title="${product.products.name}" id="product_name_${product.products.id}">
+                        <a class="product-row-product-title" href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
+                            ${shortenedName}
+                            <div class="tooltip-product-text bg-white text-primary">
+                                <div class="tooltip-arrow"></div>
+                                <div class="tooltip-inner bg-white text-primary">
+                                    <span>${productName}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </h5>
+                    <input type="hidden" name="p_id" id="p_${product.products.id}" value="${product.products.id}">
+                </div>
+            `;
+            if (product.show_price === true && product.default_price !== null) {
+                if ((product.default_price[response.price_column]  != null) || (parseFloat(product.default_price[response.price_column]) > 0)) {
+                    var formattedPrice = formatNumber(parseFloat(product.default_price[response.price_column]));
+                } else if ((product.default_price.sacramentoUSD  != null) || (parseFloat(product.default_price.sacramentoUSD) > 0)) {
+                    var formattedPrice = formatNumber(parseFloat(product.default_price.sacramentoUSD));
+                } else {
+                    var formattedPrice = formatNumber(parseFloat(product.default_price.retailUSD));
+                }
+                productHtml += `
+                    <h4 class="text-uppercase mb-0 text-center p_price_resp mt-0 mb-2">
+                        $${formattedPrice}
+                    </h4>
+                `;
+            }
+
+            if (product.add_to_cart == true) {
+                productHtml += `
+                    <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_${product.products.id} mb-2" id="button_swap_${product.products.id}">
+                        <div class="input-group">
+                            <div class="input-group-prepend custom-border qty_minus_mobile">
+                                <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('${product.products.id}', '${product.option_id}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
+                            </div>
+                            
+                            <input type="number" id="swap_qty_number_${product.products.id}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_${product.products.id}"  style="font-weight: 500" min="1" max="${product.stockAvailable}">
+                            <div class="input-group-prepend custom-border qty_plus_mobile">
+                                <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('${product.products.id}', '${product.option_id}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <button 
+                        class="hover_effect prd_btn_resp  button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_${product.products.id}" 
+                        type="submit" 
+                        style="max-height: 46px;" id="ajaxSubmit_${product.products.id}"
+                        onclick="updateCartDetail('${product.products.id}', '${product.option_id}')">
+                        Add to cart
+                    </button>
+                `;
+            } else {
+                productHtml += `
+                    <div class="col-md-12">
+                        <button 
+                            class="w-100 ml-0 call-to-order-button text-uppercase" 
+                            style="max-height: 46px;">
+                            Call To Order
+                        </button>
+                    </div>
+                `;
+            }
+            
+
+            productHtml += `</div></div></div>`;
+            htmlContent += productHtml;
+        });
+
+        htmlContent += `</div>`;
+        return htmlContent;
+    }
+
+    function generateSubscribeButton(productId, optionId , user_buy_list_options) {
+        return `
+            <a style="width:20px !important;" href="javascript:void(0);" class="ml-2 mt-2 subscribe">
+                <i class="fa-solid fav-${optionId} fa-heart ${user_buy_list_options[optionId] ? '' : 'text-muted'}"
+                id="${optionId}" data-toggle="popover"
+                onclick="addToList('${productId}', '${optionId}', '${user_buy_list_options[optionId]}')">
+                </i>
+            </a>
+        `;
+    }
+
+    function generateProductImage(product) {
+        if (product.images != '') {
+            return `
+                <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
+                    <div class="image-height-mbl" style="min-height: 130px; max-height:130px;">
+                        <span class="d-flex justify-content-center align-items-center">
+                            <img src="${product.products.images}" class="img_responsive_mbl col-md-10 image-body offset-1 mt-2" style="min-height: 130px; max-height: 130px;" />
+                        </span>
+                    </div>
+                </a>
+            `;
+        } else {
+            return `
+                <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
+                    <div class="image-height-mbl" style="min-height: 130px; max-height:130px;">
+                        <span class="d-flex justify-content-center align-items-center">
+                            <img src="${asset('theme/img/image_not_available.png')}" class="img_responsive_mbl_not_available col-md-10 image-body offset-1 mt-2"  style="min-height: 130px; max-height: 130px;" />
+                        </span>
+                    </div>
+                </a>
+            `;
+        }
+    }
+
+    function formatNumber(value) {
+        return parseFloat(value).toFixed(2);
+    }
+    
+    function updateCartDetail(id, option_id) {
+        var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
+        var tax = 0;
+        var tax_rate = parseFloat($('#tax_rate_number').val());
+        var itemnumberQuantity = $('.swap_qty_number_'+id).val();
+        var newValue = itemnumberQuantity.replace(/^0+/, ''); // Remove leading zeros
+        if (newValue === "") {
+            newValue = 0; // Handle case where all characters were zeros
+        }
+        $('.swap_qty_number_'+id).val(newValue);
+        var itemQuantity = $('.swap_qty_number_'+id).val();
+        if (parseInt(itemQuantity) <= 0 || itemQuantity === '' || itemQuantity === null) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'Quantity must be greater than 0 and not Empty!',
+                timer: 3000,
+                showConfirmButton: false,
+                position: 'top',
+                timerProgressBar: true
+            });
+            $('.swap_qty_number_'+id).val(1);
+            return false;
+        }
+        jQuery.ajax({
+            url: "{{ url('/add-to-cart/') }}",
+            method: 'post',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                p_id: id,
+                option_id: option_id,
+                // quantity: 1
+                quantity: itemQuantity
+            },
+            success: function(response) {
+                if (response.status == 'error') {
+                    
+
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+                    var product_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        product_quantity = item.quantity;
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseFloat(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = $('#product_name_' + id).attr('data-title');
+                    }
+
+                    // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
+                    jQuery('.cart-total-number-' + id).html(response.actual_stock);
+                    jQuery('.swap_qty_number_'+id).val(response.actual_stock);
+                    Swal.fire({
+                        toast: true,
+                        icon: 'error',
+                        title: response.message,
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                if (response.status == 'success') {
+                    var cart_items = response.cart_items;
+                    var cart_total = 0;
+                    var total_cart_quantity = 0;
+
+                    for (var key in cart_items) {
+                        var item = cart_items[key];
+
+                        var product_id = item.prd_id;
+                        var price = parseFloat(item.price);
+                        var quantity = parseFloat(item.quantity);
+
+                        var subtotal = parseInt(price * quantity);
+                        var cart_total = cart_total + subtotal;
+                        var total_cart_quantity = total_cart_quantity + quantity;
+                        $('#subtotal_' + product_id).html('$' + subtotal);
+                        var product_name = $('#product_name_' + id).attr('data-title');
+                    }
+                    // jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
+                    jQuery('.cart-total-number-' + id).html(response.actual_stock);
+
+                    var grand_total = 0;
+                    var grand_total = parseFloat(cart_total);
+                    var tax = cart_total * (tax_rate / 100);
+                    var grand_total_include_tax = 0;
+                    grand_total_include_tax = (tax + grand_total).toFixed(2);
+                    if (response.free_postal_state == true) {
+                        if (grand_total <= initial_free_shipping_value) {
+                            $('.promotional_banner_div_congrats').addClass('d-none');
+                            $('.promotional_banner_div').removeClass('d-none');
+                            $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
+                        } else {
+                            $('.promotional_banner_div').addClass('d-none');
+                            $('.promotional_banner_div_congrats').removeClass('d-none');
+                        }
+                    }
+                    else {
+                        $('.promotional_banner_div').addClass('d-none');
+                        $('.promotional_banner_div_congrats').addClass('d-none');
+                    } 
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title:itemQuantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ '<div class="added_tocart text-left">Added to your cart</div>',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'top',
+                        timerProgressBar: true
+                    });
+                }
+                $('#top_cart_quantity').html(total_cart_quantity);
+                $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
+                var total = document.getElementById('#top_cart_quantity');
+            },
+            error: function(response) {
+            var error_message = response.responseJSON;
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: error_message.message,
+                    timer: 3000,
+                    showConfirmButton: false,
+                    position: 'top',
+                    timerProgressBar: true
+                });
+            }
+        });
+
+        return false;
+    }
+
+    $(document).on('shown.bs.modal', '#see_similar_pop_up_detail', function () {
+        $('.similar-products-carousel-ai-detail').owlCarousel({
+            loop: true,
+            margin: 10,
+            dots: false,
+            nav: true,
+            // autoplay: true,
+            // autoplayTimeout: 3000,
+            navText: [
+                '<i class="fa fa-chevron-left"></i>', // Left arrow icon
+                '<i class="fa fa-chevron-right"></i>' // Right arrow icon
+            ],
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: false
+                },
+                600: {
+                    items: 2,
+                    nav: false
+                },
+                1000: {
+                    items: 3,
+                    nav: true
+                }
+            }
+        });
+        $('.similar-products-carousel-ai-detail').trigger('refresh.owl.carousel');
+    });
 </script>

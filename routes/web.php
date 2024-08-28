@@ -326,6 +326,7 @@ Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favor
 Route::get('/order/items/{id}', [ProductController::class, 'order_items']);
 Route::post('/buy/order/items', [ProductController::class, 'buy_again_order_items']);
 Route::get('/products/buy-again', [ProductController::class, 'buy_again']);
+Route::post('/see-similar-products', [ProductController::class, 'see_similar_products']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/roles', RoleController::class);
