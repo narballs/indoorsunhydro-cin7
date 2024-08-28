@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\ProductOption;
 use App\Models\Pricingnew;
-use Str;
+use Illuminate\Support\Str;
 use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\BuyList;
@@ -1676,7 +1676,7 @@ class ProductController extends Controller
             $price = $request->input('price');
             $stock = $request->input('instock');
             //$perpage = $request->input('perPage');
-            $products = Product::with(['options' => function ($q) use ($price, $instock) {
+            $products = Product::with(['options' => function ($q) use ($price) {
                 $q->where('status', '!=', 'Disabled')->where('retailPrice', '>=', $price)->where('stockAvailable', '>', 0);
             }])->where('status', '!=', 'Inactive')->where('brand_id', $brand)->paginate(20);
             $count = 0;
@@ -2681,6 +2681,13 @@ class ProductController extends Controller
 
     public function ai_answer(Request $request)
     {
+        $gpt_model = 'gpt-3.5-turbo';
+        $gpt_model_option_name = AdminSetting::where('option_name', 'enable_gpt-4o')->first();
+        if (!empty($gpt_model_option_name) && ($gpt_model_option_name->option_value == 'Yes')) {
+            $gpt_model = 'gpt-4o';
+        } else {
+            $gpt_model = 'gpt-3.5-turbo';
+        }
         $apiKey = config('services.ai.ai_key');
         $product_name = $request->product_name;
         $question = $request->question;
@@ -2707,7 +2714,7 @@ class ProductController extends Controller
 
         $response = $client->post('chat/completions', [
             'json' => [
-                'model' => 'gpt-3.5-turbo',
+                'model'=> $gpt_model,
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
                     ['role' => 'user', 'content' => $question .' '.$product_name],
