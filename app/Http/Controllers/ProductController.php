@@ -2681,12 +2681,12 @@ class ProductController extends Controller
 
     public function ai_answer(Request $request)
     {
-        $gpt_model = 'gpt-3.5-turbo';
-        $gpt_model_option_name = AdminSetting::where('option_name', 'enable_gpt-4o')->first();
+        $gpt_model = 'gpt-4o';
+        $gpt_model_option_name = AdminSetting::where('option_name', 'enable_gpt-3.5-turbo')->first();
         if (!empty($gpt_model_option_name) && ($gpt_model_option_name->option_value == 'Yes')) {
-            $gpt_model = 'gpt-4o';
-        } else {
             $gpt_model = 'gpt-3.5-turbo';
+        } else {
+            $gpt_model = 'gpt-4o';
         }
         $apiKey = config('services.ai.ai_key');
         $product_name = $request->product_name;
