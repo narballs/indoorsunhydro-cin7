@@ -720,7 +720,7 @@ class UserController extends Controller
                     'headers' => ['Content-type' => 'application/json'],
                     'auth' => [
                         SettingHelper::getSetting('cin7_auth_username'),
-                        SettingHelper::getSetting('cin7_auth_password')
+                        SettingHelper::getSetting('cin7_auth_password_2')
                     ],
                     'json' => [
                         $api_contact
@@ -802,7 +802,7 @@ class UserController extends Controller
                             'headers' => ['Content-type' => 'application/json'],
                             'auth' => [
                                 SettingHelper::getSetting('cin7_auth_username'),
-                                SettingHelper::getSetting('cin7_auth_password')
+                                SettingHelper::getSetting('cin7_auth_password_2')
                             ],
                             'json' => [
                                 $api_contact
