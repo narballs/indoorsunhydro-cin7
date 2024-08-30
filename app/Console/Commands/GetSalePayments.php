@@ -198,6 +198,7 @@ class GetSalePayments extends Command
             $this->info('Processing page #' . $i);
 
             try {
+                $total_record_count = 0;
                 $res = $client->request(
                     'GET',
                     $payment_api_url . '&page=' . $i,
