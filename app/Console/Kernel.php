@@ -32,7 +32,8 @@ class Kernel extends ConsoleKernel
                 \Carbon\Carbon::SUNDAY
             ]);
         });
-        $schedule->command('sync:supplier')->hourly();
+        $schedule->command('sync:supplier')->everyTwoHours();
+        $schedule->command('get:sale_payments')->hourly();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyFourMinutes();

@@ -414,6 +414,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'enable_cin7_sale_payments', 
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             
         ];
