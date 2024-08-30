@@ -32,7 +32,7 @@ use App\Helpers\UserHelper;
 use DateTime;
 
 use App\Helpers\SettingHelper;
-
+use App\Models\SalePayments;
 use Illuminate\Support\Facades\DB;
 
 class OrderManagementController extends Controller
@@ -684,6 +684,28 @@ class OrderManagementController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
             }
+        }
+    }
+
+
+    // sales payments
+
+    public function sale_payments() {
+        $sale_payments  = SalePayments::paginate(10);
+        return view('admin/sale-payments/index', compact('sale_payments'));
+    }
+
+    public function sale_payments_show($id) {
+        $sale_payment = SalePayments::where('id', $id)->first();
+        if (!empty($sale_payment)) {
+            $api_order = ApiOrder::where('order_id', $sale_payment->orderId)->first();
+            if (!empty($api_order)) {
+                return redirect()->route('admin.order.detail' , $api_order->id);
+            } else {
+                return redirect()->back()->with('error', 'Order Detail not found !');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Invalid Sale Payment !');
         }
     }
 }
