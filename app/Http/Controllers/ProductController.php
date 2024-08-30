@@ -2691,9 +2691,9 @@ class ProductController extends Controller
         $apiKey = config('services.ai.ai_key');
         $product_name = $request->product_name;
         $question = $request->question;
+        $prompt_format = 'Please provide a relevant and precise description of the product, formatting the content using HTML tags where appropriate. Ensure that the final output appears as it would on a webpage, without displaying HTML tags. The content should look as if it was edited in a WYSIWYG editor like CKEditor, meaning the tags should be used to structure the content, but the response should focus on the plain text rendering.';
 
         $main_product = Product::where('name', $product_name)->first();
-
         $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
 
         // Check if the question is relevant to the product
@@ -2717,22 +2717,39 @@ class ProductController extends Controller
                 'model'=> $gpt_model,
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-                    ['role' => 'user', 'content' => $question .' '.$product_name],
+                    ['role' => 'user', 'content' => $question .' '.$product_name . ' ' . $prompt_format],
                 ],
-                'max_tokens' => 250,
+                'max_tokens' => 2500,
             ],
         ]);
 
         $body = json_decode($response->getBody()->getContents(), true);
 
-        if (empty($body['choices'][0]['message']['content'])) {
+        // if (empty($body['choices'][0]['message']['content'])) {
+        //     return response()->json([
+        //         'message' => 'No answer found',
+        //         'status' => 'error'
+        //     ], 404);
+        // } else {
+        //     return response()->json([
+        //         'message' => $body['choices'][0]['message']['content'],
+        //         'status' => 'success'
+        //     ], 200);
+        // }
+
+        if (!isset($body['choices'][0]['message']['content'])) {
             return response()->json([
                 'message' => 'No answer found',
                 'status' => 'error'
             ], 404);
         } else {
+            $content = $body['choices'][0]['message']['content'];
+            
+            // Optionally decode HTML entities if needed
+            $decodedContent = htmlspecialchars_decode($content);
+        
             return response()->json([
-                'message' => $body['choices'][0]['message']['content'],
+                'message' => $decodedContent,
                 'status' => 'success'
             ], 200);
         }

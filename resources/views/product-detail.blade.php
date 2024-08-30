@@ -2808,7 +2808,7 @@
     $('.circle-right-ai').click(function() {
         $('.ai_spinner').removeClass('d-none');
         var question  = $('.ai_text_field').val();
-        var product_name_detail_page = $('.product_name_detail_page').html();
+        var product_name_detail_page = $('.product_name_detail_page').attr('data-title');
         if (question == '') {
             $('.ai_spinner').addClass('d-none');
             // $('.ai_text_field').addClass('border-danger');
@@ -2831,7 +2831,7 @@
     function add_custom_question(element) {
         $('.ai_spinner').removeClass('d-none');
         var question = $(element).find('.ai_question_strong').html();
-        var product_name_detail_page = $('.product_name_detail_page').html();
+        var product_name_detail_page = $('.product_name_detail_page').attr('data-title');
         if (question == '') {
             $('.ai_spinner').addClass('d-none');
             $('.ai_error').html('Please enter a question');
@@ -2847,8 +2847,9 @@
     $('#ai_text_field').keypress(function(event) {
         if (event.which == 13) {
             event.preventDefault(); // Prevent the form from submitting
+            $('.ai_spinner').removeClass('d-none');
             var question  = $('.ai_text_field').val();
-            var product_name_detail_page = $('.product_name_detail_page').html();
+            var product_name_detail_page = $('.product_name_detail_page').attr('data-title');
             if (question == '') {
                 $('.ai_spinner').addClass('d-none');
                 $('.ai_error').html('Please enter a question');
@@ -2875,13 +2876,13 @@
                 if (response.status === 'success') {
                     $('.ai_spinner').addClass('d-none');
                     $('.ai_error').html('');
-                    $('.ai_content').text(response.message);
+                    $('.ai_content').html(response.message);
                     $('.ai_text_field').prop('readonly', false);
                     $('.clear_prompt').removeClass('d-none');
                 } else {
                     $('.ai_spinner').addClass('d-none');
                     $('.ai_error').html('');
-                    $('.ai_content').text(response.message);
+                    $('.ai_content').html(response.message);
                     $('.ai_text_field').prop('readonly', false);
                     $('.clear_prompt').removeClass('d-none');
                 }
@@ -2890,7 +2891,7 @@
                 var error_message = response.responseJSON;
                 $('.ai_spinner').addClass('d-none');
                 $('.ai_error').html('');
-                $('.ai_content').text(error_message.message);
+                $('.ai_content').html(error_message.message);
                 $('.ai_text_field').prop('readonly', false);
                 $('.clear_prompt').removeClass('d-none');
             }
