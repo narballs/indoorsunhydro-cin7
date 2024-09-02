@@ -2552,133 +2552,6 @@ class ProductController extends Controller
     }
 
     // ai answer 
-
-    // public function ai_answer(Request $request) {
-    //     $apiKey = config('services.ai.ai_key');
-    //     $question = $request->question;
-    //     $client  = new \GuzzleHttp\Client([
-    //         'base_uri' => 'https://api.openai.com/v1/',
-    //         'headers' => [
-    //             'Authorization' => 'Bearer ' . config('services.ai.ai_key'),
-    //             'Content-Type'  => 'application/json',
-    //         ],
-    //     ]);
-
-    //     $response = $client->post('chat/completions', [
-    //         'json' => [
-    //             'model' => 'gpt-3.5-turbo',  // or 'gpt-4' if available
-    //             'messages' => [
-    //                 ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-    //                 ['role' => 'user', 'content' => $question],
-    //             ],
-    //             'max_tokens' => 250,
-    //         ],
-    //     ]);
-
-    //     $body = json_decode($response->getBody()->getContents(), true);
-    //     if (empty($body['choices'][0]['message']['content'])) {
-    //         return response()->json([
-    //             'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
-    //             'status' => 'error'
-    //         ], 404);
-    //     } else {
-    //         return response()->json([
-    //             'message' => $body['choices'][0]['message']['content'],
-    //             'status' => 'success'
-    //         ], 200);
-    //     }
-    // }
-
-    // public function ai_answer(Request $request)
-    // {
-    //     $apiKey = config('services.ai.ai_key');
-    //     $product_name = $request->product_name;
-    //     $question = $request->question;
-
-    //     $main_product = Product::where('name', $product_name)->first();
-
-    //     $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
-
-    //     // If product description is empty, use a default description or skip relevance check
-    //     if (empty($productDescription)) {
-    //         $isRelated = $this->isQuestionGenericallyRelevant($question);
-    //     } else {
-    //         $isRelated = $this->isQuestionRelatedToProduct($question  . ' ' . $product_name, $productDescription);
-    //     }
-
-    //     $client = new \GuzzleHttp\Client([
-    //         'base_uri' => 'https://api.openai.com/v1/',
-    //         'headers' => [
-    //             'Authorization' => 'Bearer ' . $apiKey,
-    //             'Content-Type'  => 'application/json',
-    //         ],
-    //     ]);
-
-    //     if ($isRelated) {
-    //         // Generate response from OpenAI
-    //         $response = $client->post('chat/completions', [
-    //             'json' => [
-    //                 'model' => 'gpt-3.5-turbo',  // or 'gpt-4' if available
-    //                 'messages' => [
-    //                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
-    //                     ['role' => 'user', 'content' => $question],
-    //                 ],
-    //                 'max_tokens' => 250,
-    //             ],
-    //         ]);
-
-    //         $body = json_decode($response->getBody()->getContents(), true);
-
-    //         if (empty($body['choices'][0]['message']['content'])) {
-    //             return response()->json([
-    //                 'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
-    //                 'status' => 'error'
-    //             ], 404);
-    //         } else {
-    //             return response()->json([
-    //                 'message' => $body['choices'][0]['message']['content'],
-    //                 'status' => 'success'
-    //             ], 200);
-    //         }
-    //     } else {
-    //         // Return a standard response for unrelated questions
-    //         return response()->json([
-    //             'message' => 'I apologize, but I do not feel comfortable providing information about products that are unrelated to the question you asked. Please feel free to ask about any items you may be interested in purchasing, and I will do my best to assist you.',
-    //             'status' => 'error'
-    //         ], 404);
-    //     }
-    // }
-
-    // private function isQuestionRelatedToProduct(string $question, string $productDescription): bool
-    // {
-    //     $genericKeywords = [
-    //         'buy', 'price', 'specifications', 'features', 'availability', 'order', 
-    //         'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
-    //         'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
-    //         'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
-    //         'refund', 'condition', 'guarantee'
-    //     ];
-
-    //     // Convert product description and question to lowercase and split into words
-    //     $keywords = array_map('strtolower', explode(' ', $productDescription));
-    //     $questionWords = array_map('strtolower', explode(' ', $question));
-
-    //     // Combine product description keywords and generic keywords
-    //     $allKeywords = array_unique(array_merge($keywords, $genericKeywords));
-
-    //     $relatedKeywordCount = 0;
-
-    //     foreach ($questionWords as $word) {
-    //         if (in_array($word, $allKeywords)) {
-    //             $relatedKeywordCount++;
-    //         }
-    //     }
-
-    //     // Check if the question has a significant number of related keywords
-    //     $relatedKeywordRatio = $relatedKeywordCount / count($questionWords);
-    //     return $relatedKeywordRatio > 0.2; // Adjust the threshold as needed
-    // }
-
     public function ai_answer(Request $request)
     {
         $gpt_model = 'gpt-4o';
@@ -2691,7 +2564,8 @@ class ProductController extends Controller
         $apiKey = config('services.ai.ai_key');
         $product_name = $request->product_name;
         $question = $request->question;
-        $prompt_format = 'Please provide a relevant and precise description of the product, formatting the content using HTML tags where appropriate. Ensure that the final output appears as it would on a webpage, without displaying HTML tags. The content should look as if it was edited in a WYSIWYG editor like CKEditor, meaning the tags should be used to structure the content, but the response should focus on the plain text rendering.';
+        $prompt_format = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. 
+        The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.';
 
         $main_product = Product::where('name', $product_name)->first();
         $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
@@ -2719,23 +2593,13 @@ class ProductController extends Controller
                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
                     ['role' => 'user', 'content' => $question .' '.$product_name . ' ' . $prompt_format],
                 ],
-                'max_tokens' => 2500,
+                'max_tokens' => 4096,
+                'temperature' => 1,
+                'top_p' => 1,
             ],
         ]);
 
         $body = json_decode($response->getBody()->getContents(), true);
-
-        // if (empty($body['choices'][0]['message']['content'])) {
-        //     return response()->json([
-        //         'message' => 'No answer found',
-        //         'status' => 'error'
-        //     ], 404);
-        // } else {
-        //     return response()->json([
-        //         'message' => $body['choices'][0]['message']['content'],
-        //         'status' => 'success'
-        //     ], 200);
-        // }
 
         if (!isset($body['choices'][0]['message']['content'])) {
             return response()->json([
@@ -2755,47 +2619,7 @@ class ProductController extends Controller
         }
     }
 
-    // private function isQuestionRelatedToProduct(string $question, string $productDescription): bool {
-    //     $genericKeywords = [
-    //         'buy', 'price', 'specifications', 'features', 'availability', 'order', 
-    //         'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
-    //         'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
-    //         'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
-    //         'refund', 'condition', 'guarantee'
-    //     ];
-
-    //     // List of irrelevant terms to exclude
-    //     $irrelevantTerms = [
-    //         'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
-    //         'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
-    //         'earth', 'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
-    //         'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
-    //         'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
-    //         'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
-    //         'addition', 'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
-    //     ];
-
-    //     $keywords = array_map('strtolower', explode(' ', $productDescription));
-    //     $questionWords = array_map('strtolower', explode(' ', $question));
-
-    //     // Remove irrelevant terms from the question words
-    //     $questionWords = array_diff($questionWords, $irrelevantTerms);
-
-    //     // Combine product description keywords and generic keywords
-    //     $allKeywords = array_unique(array_merge($keywords, $genericKeywords));
-
-    //     $relatedKeywordCount = 0;
-
-    //     foreach ($questionWords as $word) {
-    //         if (in_array($word, $allKeywords)) {
-    //             $relatedKeywordCount++;
-    //         }
-    //     }
-
-    //     // Check if the question has a significant number of related keywords
-    //     $relatedKeywordRatio = $relatedKeywordCount / count($questionWords);
-    //     return $relatedKeywordRatio > 0.2; // Adjust the threshold as needed
-    // }
+    
 
     private function isQuestionRelatedToProduct(string $question, string $productDescription): bool
     {
