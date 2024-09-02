@@ -33,50 +33,120 @@
             </div>
         </div>
         <div class="card card-body  mt-5">
+            <form action="{{url('/admin/sale-payments')}}" method="GET">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h5>
+                            <strong>
+                                Filter By : 
+                            </strong>
+                            @if (!empty($search) || !empty($payment_method) || !empty($date_from) || !empty($date_to))
+                                <a href="{{url('/admin/sale-payments')}}" class="btn btn-sm btn-primary mx-2 text-white">
+                                    Reset Filter
+                                </a>
+                            @endif
+                        </h5>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="row align-items-center">
+                            
+                            <div class="col-md-12">
+                                <label>
+                                    Name / Email / Company 
+                                </label>
+                                <input type="text" class="form-control" id="search" name="search_by_name_email" placeholder="Search" value="{{!empty($search) ? $search : ''}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <label>
+                                    Payment Method
+                                </label>
+                                <select name="payment_method" id="" class="form-control">
+                                    <option value="">Select Payment Method</option>
+                                    <option value="cash" {{!empty($payment_method) && ($payment_method == 'cash') ? 'selected' : ''}}>Cash</option>
+                                    <option value="card" {{!empty($payment_method) && ($payment_method == 'card') ? 'selected' : ''}}>Card</option>
+                                    <option value="on account" {{!empty($payment_method) && ($payment_method == 'on account') ? 'selected' : ''}}>On Account</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <label for="">Date From</label>
+                                <input type="date" class="form-control" name="date_from" value="{{!empty($date_from) ? $date_from : ''}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <label for="">Date To</label>
+                                <input type="date" class="form-control" name="date_to" value="{{!empty($date_to)  ? $date_to : ''}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <div class="col-md-12 shadow border">
-                <table class="table table-border">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Order Id</th>
-                            <th>Order Reference</th>
-                            <th>Payment Method</th>
-                            <th>Order Type</th>
-                            <th>Transaction Date</th>
-                            <th>Created Date</th>
-                            <th>Modifie Date</th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $i =1; 
-                        @endphp
-                        @if(count($sale_payments) > 0 )
-                            @foreach ($sale_payments as $sale_payment)
+                <div class="table-responsive">
+                    <table class="table table-border">
+                        <thead>
                             <tr>
-                                <td>{{ $i++ }}</td>
-                                <td>{{$sale_payment->orderId }}</td>
-                                <td>{{$sale_payment->orderRef}}</td>
-                                <td>{{$sale_payment->method}}</td>
-                                <td>{{$sale_payment->orderType}}</td>
-                                <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->paymentDate)}}</td>
-                                <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->createdDate)}}</td>
-                                <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->modifiedDate)}}</td>
-                                <td>
-                                    <a href="{{ route('sale-payments.show', $sale_payment->id) }}" class="btn btn-info btn-sm text-white" >View Order Detail</a>
-                                </td>
+                                {{-- <th>S.No</th> --}}
+                                <th>Order Id</th>
+                                <th>Company</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>PO No</th>
+                                <th>Invoice No</th>
+                                <th>Order Reference</th>
+                                <th>Payment Method</th>
+                                <th>Order Type</th>
+                                <th>Payment Date</th>
+                                <th>Created Date</th>
+                                {{-- <th>Modifie Date</th> --}}
+                                <th>
+                                    Action
+                                </th>
                             </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="3">No Sales Payments found</td>
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @php
+                                $i =1; 
+                            @endphp
+                            @if(count($sale_payments) > 0 )
+                                @foreach ($sale_payments as $sale_payment)
+                                <tr>
+                                    {{-- <td>{{ $i++ }}</td> --}}
+                                    <td>{{$sale_payment->orderId }}</td>
+                                    <td>{{$sale_payment->company }}</td>
+                                    <td>{{$sale_payment->customer_first_name .' '. $sale_payment->customer_last_name }}</td>
+                                    <td>{{$sale_payment->email }}</td>
+                                    <td>{{$sale_payment->po_number }}</td>
+                                    <td>{{$sale_payment->invoice_number }}</td>
+                                    <td>{{$sale_payment->orderRef}}</td>
+                                    <td>{{strtoupper($sale_payment->method)}}</td>
+                                    <td>{{$sale_payment->orderType}}</td>
+                                    <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->paymentDate)}}</td>
+                                    <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->createdDate)}}</td>
+                                    {{-- <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->modifiedDate)}}</td> --}}
+                                    <td>
+                                        <a href="{{ route('sale-payments.show', $sale_payment->id) }}" class="btn btn-info btn-sm text-white" >Order Detail</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="3">No Sales Payments found</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-10">

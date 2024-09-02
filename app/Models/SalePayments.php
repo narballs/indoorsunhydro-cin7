@@ -27,5 +27,11 @@ class SalePayments extends Model
         'reconcileDate',
         'branchId',
         'orderType',
+        'customer_first_name',
+        'customer_last_name',
+        'invoice_number',
+        'po_number',
+        'company',
+        'email'
     ];
 }
