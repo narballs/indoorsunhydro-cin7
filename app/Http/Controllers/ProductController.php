@@ -2610,10 +2610,10 @@ class ProductController extends Controller
             $content = $body['choices'][0]['message']['content'];
             
             // Optionally decode HTML entities if needed
-            $decodedContent = htmlspecialchars_decode($content);
+            // $decodedContent = htmlspecialchars_decode($content);
         
             return response()->json([
-                'message' => $decodedContent,
+                'message' => $content,
                 'status' => 'success'
             ], 200);
         }
