@@ -420,6 +420,34 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+            [
+                'option_name' => 'ai_prompt_text',
+                'type' => 'text',
+                'option_value' => 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .',
+            ],
+
+            [
+                'option_name' => 'ai_temprature',
+                'type' => 'text',
+                'option_value' => '1',
+            ],
+
+            [
+                'option_name' => 'ai_top_p',
+                'type' => 'text',
+                'option_value' => '0.9',
+            ],
+
+            [
+                'option_name' => 'ai_max_tokens',
+                'type' => 'text',
+                'option_value' => '4096',
+            ]
+
+
+
+
+
             
         ];
 

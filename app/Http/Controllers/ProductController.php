@@ -2554,6 +2554,14 @@ class ProductController extends Controller
     // ai answer 
     public function ai_answer(Request $request)
     {
+        $tempature = 1;
+        $ai_tempature = AdminSetting::where('option_name', 'ai_tempature')->first();
+        if (!empty($ai_tempature) && !empty($ai_tempature->option_value)) {
+            $tempature = $ai_tempature->option_value;
+        } else {
+            $tempature = 1;
+        }
+
         $gpt_model = 'gpt-4o';
         $gpt_model_option_name = AdminSetting::where('option_name', 'enable_gpt-3.5-turbo')->first();
         if (!empty($gpt_model_option_name) && ($gpt_model_option_name->option_value == 'Yes')) {
@@ -2561,11 +2569,35 @@ class ProductController extends Controller
         } else {
             $gpt_model = 'gpt-4o';
         }
+
+        $top_p = 1;
+        $ai_top_p = AdminSetting::where('option_name', 'ai_top_p')->first();
+        if (!empty($ai_top_p) && !empty($ai_top_p->option_value)) {
+            $top_p = $ai_top_p->option_value;
+        } else {
+            $top_p = 1;
+        }
+
+        $max_tokens = 4096;
+        $ai_max_tokens = AdminSetting::where('option_name', 'ai_max_tokens')->first();
+        if (!empty($ai_max_tokens) && !empty($ai_max_tokens->option_value)) {
+            $max_tokens = $ai_max_tokens->option_value;
+        } else {
+            $max_tokens = 4096;
+        }
+        
+        $prompt_format_text = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
+        $ai_prompt_text = AdminSetting::where('option_name', 'ai_prompt_text')->first();
+        if (!empty($ai_prompt_text) && !empty($ai_prompt_text->option_value)) {
+            $prompt_format = $ai_prompt_text->option_value;
+        } else {
+            $prompt_format = $prompt_format_text;
+        }
+       
         $apiKey = config('services.ai.ai_key');
         $product_name = $request->product_name;
         $question = $request->question;
-        $prompt_format = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
-
+        
         $main_product = Product::where('name', $product_name)->first();
         $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
 
@@ -2592,9 +2624,9 @@ class ProductController extends Controller
                     ['role' => 'system', 'content' => 'You are a helpful assistant.'],
                     ['role' => 'user', 'content' => $question .' '.$product_name . ' ' . $prompt_format],
                 ],
-                'max_tokens' => 4096,
-                'temperature' => 1,
-                'top_p' => 1,
+                'max_tokens' => intval($max_tokens),
+                'temperature' => intval($tempature),
+                'top_p' => floatval($top_p),
             ],
         ]);
 
@@ -2606,13 +2638,28 @@ class ProductController extends Controller
                 'status' => 'error'
             ], 404);
         } else {
-            $content = $body['choices'][0]['message']['content'];
+            // $content = $body['choices'][0]['message']['content'];
             
-            // Optionally decode HTML entities if needed
+            // // Optionally decode HTML entities if needed
             // $decodedContent = htmlspecialchars_decode($content);
         
+            // return response()->json([
+            //     'message' => $decodedContent,
+            //     'status' => 'success'
+            // ], 200);
+
+            $decodedContent = $body['choices'][0]['message']['content'];
+
+            // Remove leading and trailing ```html and ```
+            $decodedContent = preg_replace('/^```\s*html\s*/', '', $decodedContent); // Remove from the start
+            $decodedContent = preg_replace('/\s*```$/', '', $decodedContent); // Remove from the end
+
+            // Optionally, trim any extra whitespace
+            $decodedContent = trim($decodedContent);
+
+            // Now return the cleaned-up content
             return response()->json([
-                'message' => $content,
+                'message' => $decodedContent,
                 'status' => 'success'
             ], 200);
         }
