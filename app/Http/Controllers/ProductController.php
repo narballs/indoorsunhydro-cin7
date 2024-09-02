@@ -2564,8 +2564,7 @@ class ProductController extends Controller
         $apiKey = config('services.ai.ai_key');
         $product_name = $request->product_name;
         $question = $request->question;
-        $prompt_format = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. 
-        The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.';
+        $prompt_format = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
 
         $main_product = Product::where('name', $product_name)->first();
         $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
