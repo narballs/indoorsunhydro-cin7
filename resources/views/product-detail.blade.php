@@ -319,7 +319,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <button type="button" class="btn btn-light update_inventory_number" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
+                                                <button type="button" class="btn btn-light update_inventory_number d-none" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
                                             </div>
                                             <div class="col-md-12 mt-2 mb-3">
                                                 @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
@@ -727,7 +727,7 @@
                         </div>
                     </div>
                     <div class="d-flex w-100">
-                        <button type="button" class="btn btn-light update_inventory_number btn-sm mb-3" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
+                        <button type="button" class="btn btn-light update_inventory_number btn-sm mb-3 d-none" onclick="get_latest_inventory_number()"><i class="fa fa-refresh"></i><span class="mx-2">Update Stock</span></button>
                     </div>
                     <div class="row">
                         @if ($customer_demand_inventory_number === 1)
