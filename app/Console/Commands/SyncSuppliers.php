@@ -125,7 +125,7 @@ class SyncSuppliers extends Command
                 } else {
                     $api_contacts = [];
                 }
-                $api_contacts = json_decode($api_contacts);
+                // $api_contacts = json_decode($api_contacts);
                 $record_count = count($api_contacts);
                 $total_record_count += $record_count; 
                 $this->info('Record Count per page #--------------------------' .$record_count);
