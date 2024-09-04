@@ -262,7 +262,7 @@ class SyncAPiData extends Command
                 } else {
                     $api_products = [];
                 }
-                $api_products = json_decode($api_products);
+                // $api_products = json_decode($api_products);
                 $record_count = count($api_products);
                 $total_record_count += $record_count; 
                 $this->info('Record Count per page #--------------------------' .$record_count);
