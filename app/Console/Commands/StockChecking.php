@@ -53,8 +53,12 @@ class StockChecking extends Command
             return false;
         }
 
+        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
+        $useFirstCredentials = true;
         $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
         $skip_branches = $inactive_inventory_locations;
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
@@ -82,51 +86,63 @@ class StockChecking extends Command
         $stock_api_url = 'https://api.cin7.com/api/v1/Stock?where=modifiedDate>='. $api_formatted_product_stock_sync_date . '&rows=250';
 
         // for ($i = 1; $i <= $total_stock_pages; $i++) {
-            $this->info('Processing page#');
-            try {
-
-                $res = $client2->request(
-                    'GET', 
-                    $stock_api_url, 
-                    [
-                        'auth' => [
-                            $cin7_auth_username,
-                            $cin7_auth_password
+            while (true) {
+                $this->info('Processing page#');
+                try {
+                    $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                    $res = $client2->request(
+                        'GET', 
+                        $stock_api_url, 
+                        [
+                            'auth' => [
+                                $cin7_auth_username,
+                                $api_password
+                            ]
+                            
                         ]
-                        
-                    ]
-                );
+                    );
 
-                UtilHelper::saveDailyApiLog('auto_update_stock');
+                    UtilHelper::saveDailyApiLog('auto_update_stock');
 
 
-                $api_product_stock = $res->getBody()->getContents();
-            
-                $api_product_stock = json_decode($api_product_stock);
-                $record_count = count($api_product_stock);
-                $total_record_count += $record_count; 
-                $this->info('Record Count per page #--------------------------' .$record_count);
-
-
-                $this->info('Record Count => ' . $record_count);
+                    $api_product_stock = $res->getBody()->getContents();
                 
-                // if ($record_count < 1 || empty($record_count)) {
-                //     $this->info('----------------break-----------------');
-                //     break;
-                // }
+                    // $api_product_stock = json_decode($api_product_stock);
+                    if (!empty($api_product_stock)) {
+                        $api_product_stock = json_decode($api_product_stock);
+                    } else {
+                        $api_product_stock = [];
+                    }
+                    $record_count = count($api_product_stock);
+                    $total_record_count += $record_count; 
+                    $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+                    $this->info('Record Count => ' . $record_count);
+                    
+                    // if ($record_count < 1 || empty($record_count)) {
+                    //     $this->info('----------------break-----------------');
+                    //     break;
+                    // }
+                }
+                catch (\Exception $e) {
+                    $msg = $e->getMessage();
+                    $errorlog = new ApiErrorLog();
+                    $errorlog->payload = $e->getMessage();
+                    $errorlog->exception = $e->getCode();
+                    $errorlog->save();
+
+                    // Swap credentials
+                    $useFirstCredentials = !$useFirstCredentials;
+                }
+                
             }
-            catch (\Exception $e) {
-                $msg = $e->getMessage();
-                $errorlog = new ApiErrorLog();
-                $errorlog->payload = $e->getMessage();
-                $errorlog->exception = $e->getCode();
-                $errorlog->save();
-            }
+
             $stock_available = 0;
             $stock_on_hand = 0;
             $stock_available_product_option = 0;
             $stock_on_hand_product_option = 0;
-            if ($api_product_stock) {
+            if (!empty($api_product_stock)) {
                 // foreach ($api_product_stock as $product_stock) {
                 //     $product_id = $product_stock->productId;
                 //     $option_id = $product_stock->productOptionId;
@@ -176,6 +192,8 @@ class StockChecking extends Command
                         }
                     }
                 }
+            } else {
+                $this->info('No stock found');
             }
 
             

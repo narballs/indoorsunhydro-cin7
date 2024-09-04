@@ -442,6 +442,13 @@ class SettingSeeder extends Seeder
                 'option_name' => 'ai_max_tokens',
                 'type' => 'text',
                 'option_value' => '4096',
+            ],
+
+
+            [
+                'option_name'  => 'master_key_attempt',
+                'type'         => 'boolean',
+                'option_value' => 1,
             ]
 
 

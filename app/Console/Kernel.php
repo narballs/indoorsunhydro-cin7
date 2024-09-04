@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
             ]);
         });
         $schedule->command('sync:supplier')->everyTwoHours();
-        $schedule->command('get:sale_payments')->hourly();
+        // $schedule->command('get:sale_payments')->hourly();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyFourMinutes();

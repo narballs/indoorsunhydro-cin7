@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 use App\Helpers\UtilHelper;
 use App\Helpers\SettingHelper;
-
+use App\Models\AdminSetting;
 
 class SyncSuppliers extends Command
 {
@@ -78,11 +78,28 @@ class SyncSuppliers extends Command
         $client2 = new \GuzzleHttp\Client();
         $total_contact_pages = 150;
         $api_contact_ids = [];
-
-        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+        $use_first_credentials = !empty($master_key_attempt) && $master_key_attempt->option_value == 1;
+        
+        
+        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+        
+        
+        
 
         for ($i = 1; $i <= $total_contact_pages; $i++) {
+
+
+            if ($use_first_credentials) {
+                $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+                $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+            } else {
+                $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+                $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+            }
+
 
             $this->info('Processing page#--------------------------' . $i);
             sleep(5);
@@ -102,6 +119,12 @@ class SyncSuppliers extends Command
                 UtilHelper::saveDailyApiLog('sync_contacts');
 
                 $api_contacts = $res->getBody()->getContents();
+
+                if (!empty($api_contacts)) {
+                    $api_contacts = json_decode($api_contacts);
+                } else {
+                    $api_contacts = [];
+                }
                 $api_contacts = json_decode($api_contacts);
                 $record_count = count($api_contacts);
                 $total_record_count += $record_count; 
@@ -109,20 +132,39 @@ class SyncSuppliers extends Command
 
 
                 $this->info('Record Count => ' . $record_count);
-                    
+
+                // Update master key attempt to successful
+                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                $update_master_key_attempt->option_value = 1;
+                $update_master_key_attempt->save();  
+                
+                // Break the loop if no records are returned
                 if ($record_count < 1 || empty($record_count)) {
                     $this->info('----------------break-----------------');
                     break;
                 }
+
+                
             } catch (\Exception $e) {
                 $msg = $e->getMessage();
                 $errorlog = new ApiErrorLog();
                 $errorlog->payload = $e->getMessage();
                 $errorlog->exception = $e->getCode();
                 $errorlog->save();
+
+                // Swap credentials on error
+                $use_first_credentials = !$use_first_credentials;
+
+                // Update master key attempt to unsuccessful
+                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                $update_master_key_attempt->option_value = 0;
+                $update_master_key_attempt->save();
+
+                // Retry the current page with the swapped credentials
+                $i--; // Decrement the loop counter to retry the same page            
             }
 
-            if ($api_contacts) {
+            if (!empty($api_contacts)) {
 
                 foreach ($api_contacts as $api_contact) {
                     $this->info($api_contact->id);
@@ -419,7 +461,10 @@ class SyncSuppliers extends Command
                 $sync_log->last_synced = $current_date;
                 $sync_log->record_count = $total_record_count;
                 $sync_log->save();
-             }
+            } else {
+                $this->info('No records found');
+                break;
+            }
         }
         
 

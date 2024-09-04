@@ -11,6 +11,7 @@ use App\Models\ProductOption;
 use App\Models\InventoryLocation;
 
 use App\Helpers\SettingHelper;
+use App\Models\ApiErrorLog;
 
 class UtilHelper
 {
@@ -22,51 +23,120 @@ class UtilHelper
      * @param  body
      * @return extra
      */
+    // public static function sendRequest($method, $url, $body = [], $extra = [])
+    // {
+        
+    //     $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+    //     $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+
+    //     $authHeaders = [
+    //         'headers' => ['Content-type' => 'application/json'],
+    //         'auth' => [
+    //             $cin7_auth_username,
+    //             $cin7_auth_password
+    //         ]
+    //     ];
+
+    //     if (!empty($body)) {
+    //         $authHeaders['json'] = $body;
+    //     }
+    //     $client = new \GuzzleHttp\Client();
+        
+    //     $res = [];
+    //     switch ($method) {
+    //         case 'POST':
+    //             $res = $client->post($url, $authHeaders);
+    //         break;
+    //         case 'PUT':
+    //             $res = $client->put($url, $authHeaders);
+    //         break;
+    //         case 'GET':
+    //             $res = $client->get($url, $authHeaders); 
+    //         break;
+
+    //         default:
+    //             $res = $client->get($url, [
+    //                 'auth' => $authHeaders
+    //             ]);
+    //         break;
+    //     }
+
+    //     if (!empty($extra['api_end_point'])) {
+    //         self::saveDailyApiLog($extra['api_end_point']);
+    //     }
+
+    //     $api_response = $res->getBody()->getContents();
+    //     return $api_response;
+    // }
+
+
     public static function sendRequest($method, $url, $body = [], $extra = [])
     {
-        
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
 
-        $authHeaders = [
-            'headers' => ['Content-type' => 'application/json'],
-            'auth' => [
-                $cin7_auth_username,
-                $cin7_auth_password
-            ]
-        ];
-
-        if (!empty($body)) {
-            $authHeaders['json'] = $body;
-        }
         $client = new \GuzzleHttp\Client();
-        
-        $res = [];
-        switch ($method) {
-            case 'POST':
-                $res = $client->post($url, $authHeaders);
-            break;
-            case 'PUT':
-                $res = $client->put($url, $authHeaders);
-            break;
-            case 'GET':
-                $res = $client->get($url, $authHeaders); 
-            break;
 
-            default:
-                $res = $client->get($url, [
-                    'auth' => $authHeaders
-                ]);
-            break;
+        $useFirstCredentials = true;
+
+        while (true) {
+            try {
+
+                $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                $credentials = [
+                    'username' => $cin7_auth_username,
+                    'password' =>$api_password,
+                ];
+
+                $authHeaders = [
+                    'headers' => ['Content-type' => 'application/json'],
+                    'auth' => [$credentials['username'], $credentials['password']]
+                ];
+
+                if (!empty($body)) {
+                    $authHeaders['json'] = $body;
+                }
+
+                switch ($method) {
+                    case 'POST':
+                        $res = $client->post($url, $authHeaders);
+                        break;
+                    case 'PUT':
+                        $res = $client->put($url, $authHeaders);
+                        break;
+                    case 'GET':
+                        $res = $client->get($url, $authHeaders);
+                        break;
+                    default:
+                        $res = $client->get($url, $authHeaders);
+                        break;
+                }
+
+                if (!empty($extra['api_end_point'])) {
+                    self::saveDailyApiLog($extra['api_end_point']);
+                }
+
+                $api_response = $res->getBody()->getContents();
+                return $api_response;
+
+            } catch (\Exception $e) {
+                // Log the error
+                $errorlog = new ApiErrorLog();
+                $errorlog->payload = $e->getMessage();
+                $errorlog->exception = $e->getCode();
+                $errorlog->save();
+
+                // Swap credentials
+                $useFirstCredentials = !$useFirstCredentials;
+
+                // Optionally sleep before retrying to avoid rapid retries
+                sleep(5);
+            }
         }
-
-        if (!empty($extra['api_end_point'])) {
-            self::saveDailyApiLog($extra['api_end_point']);
-        }
-
-        $api_response = $res->getBody()->getContents();
-        return $api_response;
     }
+
+
 
     public static function saveDailyApiLog($api_end_point)
     {
@@ -98,100 +168,112 @@ class UtilHelper
             return $stock_updated;
         }
 
+        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
 
-        try {
-            $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-            $client2 = new \GuzzleHttp\Client();
-            $res = $client2->request(
-                'GET',
-                $url,
-                [
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
+        $useFirstCredentials = true;
+        while (true) {
+            try {
+                $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+                $client2 = new \GuzzleHttp\Client();
+                $res = $client2->request(
+                    'GET',
+                    $url,
+                    [
+                        'auth' => [
+                            $cin7_auth_username,
+                            $api_password
+                        ]
                     ]
-                ]
-            );
+                );
 
-            $inventory = $res->getBody()->getContents();
-            $location_inventories = json_decode($inventory);
-            if (empty($location_inventories)) {
-                return [
-                    'stock_updated' => $stock_updated,
-                    'branch_with_stocks' => null,
+                $inventory = $res->getBody()->getContents();
+                $location_inventories = json_decode($inventory);
+                if (empty($location_inventories)) {
+                    return [
+                        'stock_updated' => $stock_updated,
+                        'branch_with_stocks' => null,
 
-                ];
-            }
-            $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
-            
-            // $skip_branches = [172, 173, 174];
-            $skip_branches = $inactive_inventory_locations;
-            $branch_ids = [];
-            foreach ($location_inventories as $location_inventory) {
-                if (in_array($location_inventory->branchId, $skip_branches)) {
-                    continue;
+                    ];
                 }
-                $branch_with_stocks[] = [
-                    'branch_id' => $location_inventory->branchId,
-                    'branch_name' => $location_inventory->branchName,
-                    'available' => $location_inventory->available
-                ];
-
+                $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
                 
-                $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
-                    ->where('product_id' ,  $product->product_id)
-                    ->where('option_id' , $option_id)
-                    ->first();
-
-                   
-                
-                if (!empty($product_stock)) {
-                    $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
-                    $product_stock->save();
-                    
-                    $branch_ids[] = $location_inventory->branchId;
-                    if (!in_array($location_inventory->branchId, $skip_branches)) {
-                        $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
+                // $skip_branches = [172, 173, 174];
+                $skip_branches = $inactive_inventory_locations;
+                $branch_ids = [];
+                foreach ($location_inventories as $location_inventory) {
+                    if (in_array($location_inventory->branchId, $skip_branches)) {
+                        continue;
                     }
-                }
-                else {
-                    $product_stock = ProductStock::create([
-                        'available_stock' => $location_inventory->available >=0 ? $location_inventory->available : 0,
+                    $branch_with_stocks[] = [
                         'branch_id' => $location_inventory->branchId,
-                        'product_id' => $product->product_id,
                         'branch_name' => $location_inventory->branchName,
-                        'option_id' => $option_id
-                    ]);
-                    if (!in_array($location_inventory->branchId, $skip_branches)) {
-                        $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
+                        'available' => $location_inventory->available
+                    ];
+
+                    
+                    $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
+                        ->where('product_id' ,  $product->product_id)
+                        ->where('option_id' , $option_id)
+                        ->first();
+
+                    
+                    
+                    if (!empty($product_stock)) {
+                        $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
+                        $product_stock->save();
+                        
+                        $branch_ids[] = $location_inventory->branchId;
+                        if (!in_array($location_inventory->branchId, $skip_branches)) {
+                            $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
+                        }
                     }
-                    // $total_stock += $product_stock->available_stock;
+                    else {
+                        $product_stock = ProductStock::create([
+                            'available_stock' => $location_inventory->available >=0 ? $location_inventory->available : 0,
+                            'branch_id' => $location_inventory->branchId,
+                            'product_id' => $product->product_id,
+                            'branch_name' => $location_inventory->branchName,
+                            'option_id' => $option_id
+                        ]);
+                        if (!in_array($location_inventory->branchId, $skip_branches)) {
+                            $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
+                        }
+                        // $total_stock += $product_stock->available_stock;
+                    }
+
+                    
+
+                    $stock_updated = true;
                 }
-
+                $update_product_option = ProductOption::where('option_id' , $option_id)->first();
+                if (!empty($update_product_option)) {
+                    $update_product_option->stockAvailable = $total_stock;
+                    $update_product_option->save();
+                } 
                 
+                if (!empty($branch_ids)) {
+                    ProductStock::where('product_id' ,  $product->product_id)
+                        ->where('option_id' , $option_id)
+                        ->whereNotIn('branch_id', $branch_ids)
+                        ->delete();
+                }
+                    
+                self::saveDailyApiLog('product_detail_update_stock');
+            }
+            catch (\Exception $e) {
 
-                $stock_updated = true;
+                // Swap credentials
+                $useFirstCredentials = !$useFirstCredentials;
+                self::saveDailyApiLog('product_detail_update_stock');
+                return $stock_updated;
             }
-            $update_product_option = ProductOption::where('option_id' , $option_id)->first();
-            if (!empty($update_product_option)) {
-                $update_product_option->stockAvailable = $total_stock;
-                $update_product_option->save();
-            } 
-            
-            if (!empty($branch_ids)) {
-                ProductStock::where('product_id' ,  $product->product_id)
-                    ->where('option_id' , $option_id)
-                    ->whereNotIn('branch_id', $branch_ids)
-                    ->delete();
-            }
-                
-            self::saveDailyApiLog('product_detail_update_stock');
-        }
-        catch (\Exception $e) {
-            self::saveDailyApiLog('product_detail_update_stock');
-            return $stock_updated;
         }
 
         return [

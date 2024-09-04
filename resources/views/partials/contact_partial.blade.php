@@ -46,8 +46,8 @@
 					<h3 class="address_header"> Contact Information </h3>
 					<p class="address_flag">Say something to start a live chat!</p>
 					<div class="mb-4">
-						{{-- <img src="{{asset('/theme/bootstrap5/images/map.png')}}" alt="" class="map_image w-100"> --}}
-						<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3121.155359408052!2d-121.38823512366841!3d38.53018676828701!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac4d01bcd10e1%3A0x6cf5de5a395badf1!2sIndoor%20Sun%20Hydro!5e0!3m2!1sen!2s!4v1725023098432!5m2!1sen!2s" width="100%" height="450" style="border:0;border-radius:8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+						<img src="{{asset('/theme/bootstrap5/images/Indoorsun_map.png')}}" alt="" class="img-fluid">
+						{{-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3121.155359408052!2d-121.38823512366841!3d38.53018676828701!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac4d01bcd10e1%3A0x6cf5de5a395badf1!2sIndoor%20Sun%20Hydro!5e0!3m2!1sen!2s!4v1725023098432!5m2!1sen!2s" width="100%" height="450" style="border:0;border-radius:8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> --}}
 					</div>
 					
 					<div class="row align-items-start">

@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Jobs\SalesOrders;
 use App\Models\Cart;
 use App\Models\AdminSetting;
+use App\Models\ApiErrorLog;
 use App\Models\Category;
 use App\Models\DailyApiLog;
 use App\Models\NewsletterSubscription;
@@ -1908,21 +1909,47 @@ class UserController extends Controller
             ];
 
             
+            // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+            // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
             $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-            $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
-            $client = new \GuzzleHttp\Client();
-            $response = $client->request('PUT', 'https://api.cin7.com/api/v1/Contacts', [
-                'auth' => [$cin7_auth_username, $cin7_auth_password], // Authenticate with Cin7 API credentials
-                'json' =>  [
-                    $body
-                ],
-                'headers' => [
-                    'Content-Type' => 'application/json' // Specify Content-Type header
-                ]
-            ]);
+            $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+            $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
             
-            $responseBody = $response->getBody()->getContents();
-            $cin7_status = $response->getStatusCode();
+            $client = new \GuzzleHttp\Client();
+
+            $useFirstCredentials = true;
+
+            while (true) {
+                try {
+                    $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                    $response = $client->request('PUT', 'https://api.cin7.com/api/v1/Contacts', [
+                        // 'auth' => [$cin7_auth_username, $cin7_auth_password], // Authenticate with Cin7 API credentials
+                        'auth' => [$cin7_auth_username, $api_password], // Authenticate with Cin7 API credentials
+                        'json' =>  [
+                            $body
+                        ],
+                        'headers' => [
+                            'Content-Type' => 'application/json' // Specify Content-Type header
+                        ]
+                    ]);
+                    
+                    $responseBody = $response->getBody()->getContents();
+                    $cin7_status = $response->getStatusCode();
+                    $response_status = true;
+                } catch (\Exception $e) {
+                    $errorlog = new ApiErrorLog();
+                    $errorlog->payload = $e->getMessage();
+                    $errorlog->exception = $e->getCode();
+                    $errorlog->save();
+
+                    // Swap credentials
+                    $useFirstCredentials = !$useFirstCredentials;
+
+                    $cin7_status = $e->getCode();
+                    $response_status = false;
+                }
+            }
         }
 
 

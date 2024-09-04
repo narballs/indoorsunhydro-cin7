@@ -82,8 +82,11 @@ class SyncProductOptions extends Command
 
         $client = new \GuzzleHttp\Client();
 
-        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+        $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+        $use_first_credentials = !empty($master_key_attempt) && $master_key_attempt->option_value == 1;
 
         $retail_price_column = SettingHelper::getSetting('retail_price_column');
 
@@ -96,7 +99,16 @@ class SyncProductOptions extends Command
         $product_options_api_url = 'https://api.cin7.com/api/v1/ProductOptions?where=ModifiedDate>='. $api_formatted_product_options_sync_date . '&rows=250';
 
         for ($i = 1; $i <= $total_products_pages; $i++) {
+            if ($use_first_credentials) {
+                $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+                $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+            } else {
+                $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+                $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+            }
+            
             $this->info('Processing page#' . $i);
+
             try {
 
                 $res = $client2->request(
@@ -113,13 +125,22 @@ class SyncProductOptions extends Command
 
                 UtilHelper::saveDailyApiLog('sync_product_options');
                 $api_product_options = $res->getBody()->getContents();
-                $api_product_options = json_decode($api_product_options);
+                // $api_product_options = json_decode($api_product_options);
+                if (!empty($api_product_options)) {
+                    $api_product_options = json_decode($api_product_options);
+                } else {
+                    $api_product_options = [];
+                }
                 $record_count = count($api_product_options);
                 $total_record_count += $record_count; 
                 $this->info('Record Count per page #--------------------------' .$record_count);
 
 
                 $this->info('Record Count => ' . $record_count);
+                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                $update_master_key_attempt->option_value = 1;
+                $update_master_key_attempt->save(); 
+                
                 
                 if ($record_count < 1 || empty($record_count)) {
                     $this->info('----------------break-----------------');
@@ -132,44 +153,112 @@ class SyncProductOptions extends Command
                 $errorlog->payload = $e->getMessage();
                 $errorlog->exception = $e->getCode();
                 $errorlog->save();
+
+                // Swap credentials on error
+                $use_first_credentials = !$use_first_credentials;
+
+                // Update master key attempt to unsuccessful
+                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                $update_master_key_attempt->option_value = 0;
+                $update_master_key_attempt->save();
+
+                // Retry the current page with the swapped credentials
+                $i--; // Decrement the loop counter to retry the same page      
             }
             $retail_price_column = SettingHelper::getSetting('retail_price_column');
-            foreach ($api_product_options as $product_option) {
-                $this->info('Processing option_id ' . $product_option->id . ' => ' . $product_option->modifiedDate . ' => ' . $product_option->code);
-                // $this->info('Processing product prices ' . $product_option->priceColumns);
-                if ($product_option) {
-                    $retail_price = isset($product_option->priceColumns->$retail_price_column) ? $product_option->priceColumns->$retail_price_column : 0;
-                    $update_product_options = ProductOption::with('price')->where('option_id',$product_option->id)->first();
+            if (!empty($api_product_options)) {
+                foreach ($api_product_options as $product_option) {
+                    $this->info('Processing option_id ' . $product_option->id . ' => ' . $product_option->modifiedDate . ' => ' . $product_option->code);
+                    // $this->info('Processing product prices ' . $product_option->priceColumns);
+                    if ($product_option) {
+                        $retail_price = isset($product_option->priceColumns->$retail_price_column) ? $product_option->priceColumns->$retail_price_column : 0;
+                        $update_product_options = ProductOption::with('price')->where('option_id',$product_option->id)->first();
 
-                    if (!empty($update_product_options)) {
-                        $update_product_options->option1 = $product_option->option1;
-                        $update_product_options->option_id = $product_option->id;
-                        $update_product_options->product_id = $product_option->productId;
-                        $update_product_options->code = $product_option->code;
-                        $update_product_options->productOptionSizeCode = $product_option->productOptionSizeCode;
-                        $update_product_options->supplierCode = $product_option->supplierCode;
-                        $update_product_options->option1 = $product_option->option1;
-                        $update_product_options->option2 = $product_option->option2;
-                        $update_product_options->option3 = $product_option->option3;
-                        $update_product_options->optionWeight = $product_option->optionWeight;
-                        $update_product_options->size = $product_option->size;
-                        $update_product_options->retailPrice = $retail_price;
-                        $update_product_options->wholesalePrice = $product_option->wholesalePrice;
-                        $update_product_options->vipPrice = $product_option->vipPrice;
-                        $update_product_options->specialPrice = $product_option->specialPrice;
-                        $update_product_options->specialsStartDate = $product_option->specialsStartDate;
-                        $update_product_options->stockAvailable = $product_option->stockAvailable;
-                        $update_product_options->stockOnHand = $product_option->stockOnHand;
-                        $update_product_options->specialDays = $product_option->specialDays;
-                        $update_product_options->image =  !empty($product_option->image) ? $product_option->image->link: '';
-                        $update_product_options->save();
+                        if (!empty($update_product_options)) {
+                            $update_product_options->option1 = $product_option->option1;
+                            $update_product_options->option_id = $product_option->id;
+                            $update_product_options->product_id = $product_option->productId;
+                            $update_product_options->code = $product_option->code;
+                            $update_product_options->productOptionSizeCode = $product_option->productOptionSizeCode;
+                            $update_product_options->supplierCode = $product_option->supplierCode;
+                            $update_product_options->option1 = $product_option->option1;
+                            $update_product_options->option2 = $product_option->option2;
+                            $update_product_options->option3 = $product_option->option3;
+                            $update_product_options->optionWeight = $product_option->optionWeight;
+                            $update_product_options->size = $product_option->size;
+                            $update_product_options->retailPrice = $retail_price;
+                            $update_product_options->wholesalePrice = $product_option->wholesalePrice;
+                            $update_product_options->vipPrice = $product_option->vipPrice;
+                            $update_product_options->specialPrice = $product_option->specialPrice;
+                            $update_product_options->specialsStartDate = $product_option->specialsStartDate;
+                            $update_product_options->stockAvailable = $product_option->stockAvailable;
+                            $update_product_options->stockOnHand = $product_option->stockOnHand;
+                            $update_product_options->specialDays = $product_option->specialDays;
+                            $update_product_options->image =  !empty($product_option->image) ? $product_option->image->link: '';
+                            $update_product_options->save();
 
-                        $price_columns = $product_option->priceColumns;
-                        $column_keys = array_keys(get_object_vars($price_columns));
-                        $table_columns = $this->getPriceColumns();
+                            $price_columns = $product_option->priceColumns;
+                            $column_keys = array_keys(get_object_vars($price_columns));
+                            $table_columns = $this->getPriceColumns();
 
-                        $priceColumn = Pricingnew::where('option_id', $update_product_options->option_id)->first();
-                        if (empty($priceColumn)) {
+                            $priceColumn = Pricingnew::where('option_id', $update_product_options->option_id)->first();
+                            if (empty($priceColumn)) {
+
+                                $prices_array = [
+                                    'option_id' => $product_option->id,
+                                ];
+
+                                if (!empty($column_keys)) {
+                                    foreach ($column_keys as $column_key) {
+                                        if (isset($table_columns[$column_key])) {
+                                            $prices_array[$column_key] = $price_columns->$column_key;
+                                        }
+                                    }
+                                }
+                                $pricingnew = new Pricingnew($prices_array);
+                                $pricingnew->save();
+                            }
+                            else {
+                                if (!empty($column_keys)) {
+                                    foreach ($column_keys as $column_key) {
+                                        if (isset($table_columns[$column_key])) {
+                                            $priceColumn->$column_key = $product_option->priceColumns->$column_key;
+                                        }
+                                    }
+                                }
+                                
+                                $priceColumn->save();
+                            }
+                        }
+                        else {
+                            $retail_price = isset($product_option->priceColumns->$retail_price_column) ? $product_option->priceColumns->$retail_price_column : 0;
+                            $product_option_table = new ProductOption([
+                                'option1' => $product_option->option1,
+                                'option_id' => $product_option->id,
+                                'product_id' => $product_option->productId,
+                                'code' => $product_option->code,
+                                'productOptionSizeCode' =>  $product_option->productOptionSizeCode,
+                                'supplierCode' =>  $product_option->supplierCode,
+                                'option1' =>  $product_option->option1,
+                                'option2' =>  $product_option->option2,
+                                'option3' =>  $product_option->option3,
+                                'optionWeight' =>  $product_option->optionWeight,
+                                'size' =>  $product_option->size,
+                                'retailPrice' =>  $retail_price,
+                                'wholesalePrice' =>  $product_option->wholesalePrice,
+                                'vipPrice' =>  $product_option->vipPrice,
+                                'specialPrice' =>  $product_option->specialPrice,
+                                'specialsStartDate' =>  $product_option->specialsStartDate,
+                                'stockAvailable' =>  $product_option->stockAvailable,
+                                'stockOnHand' =>  $product_option->stockOnHand,
+                                'specialDays' =>  $product_option->specialDays,
+                                'image' =>  !empty($product_option->image) ? $product_option->image->link: ''
+                            ]);
+                            $product_option_table->save();
+
+                            $price_columns = $product_option->priceColumns;
+                            $column_keys = array_keys(get_object_vars($price_columns));
+                            $table_columns = $this->getPriceColumns();
 
                             $prices_array = [
                                 'option_id' => $product_option->id,
@@ -182,67 +271,14 @@ class SyncProductOptions extends Command
                                     }
                                 }
                             }
-                            $pricingnew = new Pricingnew($prices_array);
-                            $pricingnew->save();
-                        }
-                        else {
-                            if (!empty($column_keys)) {
-                                foreach ($column_keys as $column_key) {
-                                    if (isset($table_columns[$column_key])) {
-                                        $priceColumn->$column_key = $product_option->priceColumns->$column_key;
-                                    }
-                                }
-                            }
-                            
+
+                            $priceColumn = new Pricingnew($prices_array);
                             $priceColumn->save();
                         }
                     }
-                    else {
-                        $retail_price = isset($product_option->priceColumns->$retail_price_column) ? $product_option->priceColumns->$retail_price_column : 0;
-                        $product_option_table = new ProductOption([
-                            'option1' => $product_option->option1,
-                            'option_id' => $product_option->id,
-                            'product_id' => $product_option->productId,
-                            'code' => $product_option->code,
-                            'productOptionSizeCode' =>  $product_option->productOptionSizeCode,
-                            'supplierCode' =>  $product_option->supplierCode,
-                            'option1' =>  $product_option->option1,
-                            'option2' =>  $product_option->option2,
-                            'option3' =>  $product_option->option3,
-                            'optionWeight' =>  $product_option->optionWeight,
-                            'size' =>  $product_option->size,
-                            'retailPrice' =>  $retail_price,
-                            'wholesalePrice' =>  $product_option->wholesalePrice,
-                            'vipPrice' =>  $product_option->vipPrice,
-                            'specialPrice' =>  $product_option->specialPrice,
-                            'specialsStartDate' =>  $product_option->specialsStartDate,
-                            'stockAvailable' =>  $product_option->stockAvailable,
-                            'stockOnHand' =>  $product_option->stockOnHand,
-                            'specialDays' =>  $product_option->specialDays,
-                            'image' =>  !empty($product_option->image) ? $product_option->image->link: ''
-                        ]);
-                        $product_option_table->save();
-
-                        $price_columns = $product_option->priceColumns;
-                        $column_keys = array_keys(get_object_vars($price_columns));
-                        $table_columns = $this->getPriceColumns();
-
-                        $prices_array = [
-                            'option_id' => $product_option->id,
-                        ];
-
-                        if (!empty($column_keys)) {
-                            foreach ($column_keys as $column_key) {
-                                if (isset($table_columns[$column_key])) {
-                                    $prices_array[$column_key] = $price_columns->$column_key;
-                                }
-                            }
-                        }
-
-                        $priceColumn = new Pricingnew($prices_array);
-                        $priceColumn->save();
-                    }
                 }
+            } else {
+                $this->info('No product options found');
             }
             
         }
