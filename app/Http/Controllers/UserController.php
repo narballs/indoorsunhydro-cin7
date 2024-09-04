@@ -1937,11 +1937,27 @@ class UserController extends Controller
                     $responseBody = $response->getBody()->getContents();
                     $cin7_status = $response->getStatusCode();
                     $response_status = true;
+
+                    $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                    if ($update_master_key_attempt) {
+                        $update_master_key_attempt->option_value = 1;
+                        $update_master_key_attempt->save();
+                    }
+
+                    break;
+
                 } catch (\Exception $e) {
                     $errorlog = new ApiErrorLog();
                     $errorlog->payload = $e->getMessage();
                     $errorlog->exception = $e->getCode();
                     $errorlog->save();
+
+                     // Update master_key_attempt to 0 on failure
+                    $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                    if ($master_key_attempt) {
+                        $master_key_attempt->option_value = 0;
+                        $master_key_attempt->save();
+                    }
 
                     // Swap credentials
                     $useFirstCredentials = !$useFirstCredentials;
