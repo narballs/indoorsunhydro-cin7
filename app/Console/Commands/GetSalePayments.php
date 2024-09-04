@@ -77,6 +77,10 @@ class GetSalePayments extends Command
         $requests_per_minute = 0;
         $requests_per_day = 0;
 
+        // empty array for adding data
+
+        $data_array = [];
+
 
         for ($i = 1; $i <= $total_payments_pages; $i++) {
             $this->info('Processing page #' . $i);
