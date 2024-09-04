@@ -118,6 +118,14 @@ class UtilHelper
                 }
 
                 $api_response = $res->getBody()->getContents();
+
+                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                if ($update_master_key_attempt) {
+                    $update_master_key_attempt->option_value = 1;
+                    $update_master_key_attempt->save();
+                }
+
+                
                 return $api_response;
 
             } catch (\Exception $e) {
@@ -126,6 +134,13 @@ class UtilHelper
                 $errorlog->payload = $e->getMessage();
                 $errorlog->exception = $e->getCode();
                 $errorlog->save();
+
+                // Update master_key_attempt to 0 on failure
+                $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                if ($master_key_attempt) {
+                    $master_key_attempt->option_value = 0;
+                    $master_key_attempt->save();
+                }
 
                 // Swap credentials
                 $useFirstCredentials = !$useFirstCredentials;
@@ -266,9 +281,22 @@ class UtilHelper
                 }
                     
                 self::saveDailyApiLog('product_detail_update_stock');
+
+                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                if ($update_master_key_attempt) {
+                    $update_master_key_attempt->option_value = 1;
+                    $update_master_key_attempt->save();
+                }
+
+                break;
             }
             catch (\Exception $e) {
-
+                // Update master_key_attempt to 0 on failure
+                $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                if ($master_key_attempt) {
+                    $master_key_attempt->option_value = 0;
+                    $master_key_attempt->save();
+                }
                 // Swap credentials
                 $useFirstCredentials = !$useFirstCredentials;
                 self::saveDailyApiLog('product_detail_update_stock');
