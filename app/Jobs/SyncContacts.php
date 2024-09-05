@@ -16,6 +16,8 @@ use App\Models\ApiOrder;
 use App\Models\SecondaryContact;
 
 use App\Helpers\SettingHelper;
+use App\Models\AdminSetting;
+use App\Models\ApiErrorLog;
 
 class SyncContacts implements ShouldQueue
 {
@@ -107,49 +109,82 @@ class SyncContacts implements ShouldQueue
         }
 
         if ($this->_method == 'update_contact') {
-            
+            $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+            $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+            $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
+            $useFirstCredentials = true;
             $client = new \GuzzleHttp\Client();
-            $res = $client->request(
-                'GET', 
-                'https://api.cin7.com/api/v1/Contacts/'. $contact_id, 
-                [
-                    'auth' => [
-                        SettingHelper::getSetting('cin7_auth_username'),
-                        SettingHelper::getSetting('cin7_auth_password')
-                    ]
-                 
-                ]
-            );
+                while (true) {
+                    try {
+                        $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                        $res = $client->request(
+                            'GET', 
+                            'https://api.cin7.com/api/v1/Contacts/'. $contact_id, 
+                            [
+                                'auth' => [
+                                    // SettingHelper::getSetting('cin7_auth_username'),
+                                    // SettingHelper::getSetting('cin7_auth_password')
+                                    $cin7_auth_username,
+                                    $api_password
+                                ]
+                            
+                            ]
+                        );
 
-            //dd($res->getBody()->getContents());
-            $secondary_contacts = $res->getBody()->getContents();
-            $secondary_contacts = json_decode($secondary_contacts, true);
+                        //dd($res->getBody()->getContents());
+                        $secondary_contacts = $res->getBody()->getContents();
+                        $secondary_contacts = json_decode($secondary_contacts, true);
 
-            $last_contact = [];
+                        $last_contact = [];
 
-            if (!empty($secondary_contacts['secondaryContacts'])) {
-                $last_contact = end($secondary_contacts['secondaryContacts']);
-            }
+                        if (!empty($secondary_contacts['secondaryContacts'])) {
+                            $last_contact = end($secondary_contacts['secondaryContacts']);
+                        }
 
-            $last_contact_id = isset($last_contact['id']) ? $last_contact['id'] : null;
+                        $last_contact_id = isset($last_contact['id']) ? $last_contact['id'] : null;
 
-            if (is_null($last_contact_id)) {
-                print('Last contact id not found.');
-                return;
-            }
-            //echo $last_contact_id;exit;
-            $get_email = $this->_body[0]['secondaryContacts'][0]['email'];
-            if(!empty($get_email)) {
-                $contact = SecondaryContact::where('email',$get_email)->update(
-                    [
-                        'secondary_id' => $last_contact_id
-                    ]
-                );
-            }else{
-                return response()->json([
-                    'message' => 'email not found!'
-                ],400);
-            }
+                        if (is_null($last_contact_id)) {
+                            print('Last contact id not found.');
+                            return;
+                        }
+                        //echo $last_contact_id;exit;
+                        $get_email = $this->_body[0]['secondaryContacts'][0]['email'];
+                        $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                        if ($update_master_key_attempt) {
+                            $update_master_key_attempt->option_value = 1;
+                            $update_master_key_attempt->save();
+                        }
+
+                        if(!empty($get_email)) {
+                            $contact = SecondaryContact::where('email',$get_email)->update(
+                                [
+                                    'secondary_id' => $last_contact_id
+                                ]
+                            );
+                        }
+                        else{
+                            return response()->json([
+                                'message' => 'email not found!'
+                            ],400);
+                        }
+                    } 
+                    catch (\Exception $e) {
+                        $errorlog = new ApiErrorLog();
+                        $errorlog->payload = $e->getMessage();
+                        $errorlog->exception = $e->getCode();
+                        $errorlog->save();
+        
+                        // Update master_key_attempt to 0 on failure
+                        $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                        if ($master_key_attempt) {
+                            $master_key_attempt->option_value = 0;
+                            $master_key_attempt->save();
+                        }
+        
+                        // Swap credentials
+                        $useFirstCredentials = !$useFirstCredentials;
+                    }
+                }
 
             //$user_id = Contact::where('email', $code)->pluck('user_id')->first();
             //$api_order = ApiOrder::where('user_id', $user_id)->update(['memberId' => $last_contact_id]);
