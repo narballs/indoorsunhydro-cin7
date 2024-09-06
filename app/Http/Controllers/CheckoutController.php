@@ -1132,7 +1132,6 @@ class CheckoutController extends Controller
     }
 
     public function authenticate_user(Request $request) {
-
         $is_guest_user = !empty($request->is_guest) && $request->is_guest == 1 ? 1 : 0;  
 
         if ($is_guest_user == 1) {
@@ -1327,47 +1326,53 @@ class CheckoutController extends Controller
                 }
 
                 
-                $states = UsState::where('id', $request->state)->first();
-                $state_name = $states->state_name;
-                $toggle_registration = AdminSetting::where('option_name', 'toggle_registration_approval')->first();
-                $first_name = $request->first_name;
-                $last_name = $request->last_name;
-                $company = $request->company;
-                $different_shipping = $request->different_shipping_address;
-                $address1 = $request->address;
-                $address2 = $request->address_2;
-                $city = $request->city;
-                $postCode = $request->zip_code;
-                $phone = $request->phone;
-                if (!empty($request->postal_state)) {
-                    $postal_state = UsState::where('id', $request->postal_state)->first();
-                    $postal_state_name = $postal_state->state_name;
-                } else {
-                    $postal_state_name = '';
-                }
-                if ($different_shipping == 1) {
-                    $postalAddress1 = $request->postal_address1;
-                    $postalAddress2 = $request->postal_address2;
-                    $postalCity = $request->postal_city;
-                    $postalState = $postal_state_name;
-                    $postalPostCode = $request->postal_zip_code;
-                } else {
-                    $postalAddress1 = $address1;
-                    $postalAddress2 =$address2;
-                    $postalCity = $city;
-                    $postalState = $state_name;
-                    $postalPostCode =$postCode;
-                }
+                
+
+
+                // I removed different_shipping from here
+                
                 // $validatedAddress = UserHelper::validateAddress($address1, $state_name);
                 // dd($validatedAddress);
                 // if($validatedAddress != 'OK') {
                 //     $address_validator = false;
                 //     return response()->json(['status' => 'error', 'address_validator' => $address_validator ,'validator_message' => 'Invalid address. Please enter a valid address.'],400);
                 // }
-                DB::beginTransaction();
                 $useFirstCredentials = true;
                 while (true) {
+                    DB::beginTransaction();
+                    
                     try {
+                        $states = UsState::where('id', $request->state)->first();
+                        $state_name = $states->state_name;
+                        $toggle_registration = AdminSetting::where('option_name', 'toggle_registration_approval')->first();
+                        $first_name = $request->first_name;
+                        $last_name = $request->last_name;
+                        $company = $request->company;
+                        $different_shipping = $request->different_shipping_address;
+                        $address1 = $request->address;
+                        $address2 = $request->address_2;
+                        $city = $request->city;
+                        $postCode = $request->zip_code;
+                        $phone = $request->phone;
+                        if (!empty($request->postal_state)) {
+                            $postal_state = UsState::where('id', $request->postal_state)->first();
+                            $postal_state_name = $postal_state->state_name;
+                        } else {
+                            $postal_state_name = '';
+                        }
+                        if ($different_shipping == 1) {
+                            $postalAddress1 = $request->postal_address1;
+                            $postalAddress2 = $request->postal_address2;
+                            $postalCity = $request->postal_city;
+                            $postalState = $postal_state_name;
+                            $postalPostCode = $request->postal_zip_code;
+                        } else {
+                            $postalAddress1 = $address1;
+                            $postalAddress2 =$address2;
+                            $postalCity = $city;
+                            $postalState = $state_name;
+                            $postalPostCode =$postCode;
+                        }
                         $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
                         $price_column = null;
                         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
