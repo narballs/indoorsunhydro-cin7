@@ -1364,9 +1364,9 @@ class CheckoutController extends Controller
                 //     $address_validator = false;
                 //     return response()->json(['status' => 'error', 'address_validator' => $address_validator ,'validator_message' => 'Invalid address. Please enter a valid address.'],400);
                 // }
-                DB::beginTransaction();
                 $useFirstCredentials = true;
                 while (true) {
+                    DB::beginTransaction();
                     try {
                         $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
                         $price_column = null;
@@ -1407,16 +1407,16 @@ class CheckoutController extends Controller
                             'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
                             'paymentTerms' => 'Pay in Advanced',
                             'charge_shipping' => 1,
-                            'address1' => $address1,
-                            'address2' => $address2,
-                            'city' => $city,
-                            'state' => $state_name,
-                            'postCode' => $postCode,
-                            'postalAddress1' => $postalAddress1,
-                            'postalAddress2' => $postalAddress2,
-                            'postalCity' => $postalCity,
-                            'postalState' => $postalState,
-                            'postalPostCode' => $postalPostCode,
+                            'address1' => $postalAddress1,
+                            'address2' => $postalAddress2,
+                            'city' => $postalCity,
+                            'state' => $postalState,
+                            'postCode' => $postalPostCode,
+                            'postalAddress1' => $address1,
+                            'postalAddress2' => $address2,
+                            'postalCity' => $city,
+                            'postalState' => $state_name,
+                            'postalPostCode' => $postCode,
                             'accountsFirstName' => $user->first_name,
                             'accountsLastName' => $user->last_name,
                             'billingEmail' => SettingHelper::getSetting('noreply_email_address'),                                
@@ -1584,6 +1584,8 @@ class CheckoutController extends Controller
     
                         // Swap credentials
                         $useFirstCredentials = !$useFirstCredentials;
+
+                        // dd($different_shipping);
                     }
                 }
             }

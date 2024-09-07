@@ -1252,7 +1252,7 @@
                                     $('#fullfill_failed').html(response.status);
                                 }
                                 $('#progress-bar').addClass('d-none');
-                                setInterval('location.reload()', 7000);
+                                setInterval('location.reload()', 10000);
                             }
                         });
                     }

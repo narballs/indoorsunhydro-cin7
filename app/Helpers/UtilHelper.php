@@ -23,133 +23,133 @@ class UtilHelper
      * @param  body
      * @return extra
      */
-    // public static function sendRequest($method, $url, $body = [], $extra = [])
-    // {
-        
-    //     $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-    //     $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
-
-    //     $authHeaders = [
-    //         'headers' => ['Content-type' => 'application/json'],
-    //         'auth' => [
-    //             $cin7_auth_username,
-    //             $cin7_auth_password
-    //         ]
-    //     ];
-
-    //     if (!empty($body)) {
-    //         $authHeaders['json'] = $body;
-    //     }
-    //     $client = new \GuzzleHttp\Client();
-        
-    //     $res = [];
-    //     switch ($method) {
-    //         case 'POST':
-    //             $res = $client->post($url, $authHeaders);
-    //         break;
-    //         case 'PUT':
-    //             $res = $client->put($url, $authHeaders);
-    //         break;
-    //         case 'GET':
-    //             $res = $client->get($url, $authHeaders); 
-    //         break;
-
-    //         default:
-    //             $res = $client->get($url, [
-    //                 'auth' => $authHeaders
-    //             ]);
-    //         break;
-    //     }
-
-    //     if (!empty($extra['api_end_point'])) {
-    //         self::saveDailyApiLog($extra['api_end_point']);
-    //     }
-
-    //     $api_response = $res->getBody()->getContents();
-    //     return $api_response;
-    // }
-
-
     public static function sendRequest($method, $url, $body = [], $extra = [])
     {
+        
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
-        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
 
+        $authHeaders = [
+            'headers' => ['Content-type' => 'application/json'],
+            'auth' => [
+                $cin7_auth_username,
+                $cin7_auth_password
+            ]
+        ];
+
+        if (!empty($body)) {
+            $authHeaders['json'] = $body;
+        }
         $client = new \GuzzleHttp\Client();
+        
+        $res = [];
+        switch ($method) {
+            case 'POST':
+                $res = $client->post($url, $authHeaders);
+            break;
+            case 'PUT':
+                $res = $client->put($url, $authHeaders);
+            break;
+            case 'GET':
+                $res = $client->get($url, $authHeaders); 
+            break;
 
-        $useFirstCredentials = true;
+            default:
+                $res = $client->get($url, [
+                    'auth' => $authHeaders
+                ]);
+            break;
+        }
 
-        while (true) {
-            try {
+        if (!empty($extra['api_end_point'])) {
+            self::saveDailyApiLog($extra['api_end_point']);
+        }
 
-                $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
-                $credentials = [
-                    'username' => $cin7_auth_username,
-                    'password' =>$api_password,
-                ];
+        $api_response = $res->getBody()->getContents();
+        return $api_response;
+    }
 
-                $authHeaders = [
-                    'headers' => ['Content-type' => 'application/json'],
-                    'auth' => [$credentials['username'], $credentials['password']]
-                ];
 
-                if (!empty($body)) {
-                    $authHeaders['json'] = $body;
-                }
+    // public static function sendRequest($method, $url, $body = [], $extra = [])
+    // {
+    //     $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+    //     $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+    //     $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
 
-                switch ($method) {
-                    case 'POST':
-                        $res = $client->post($url, $authHeaders);
-                        break;
-                    case 'PUT':
-                        $res = $client->put($url, $authHeaders);
-                        break;
-                    case 'GET':
-                        $res = $client->get($url, $authHeaders);
-                        break;
-                    default:
-                        $res = $client->get($url, $authHeaders);
-                        break;
-                }
+    //     $client = new \GuzzleHttp\Client();
 
-                if (!empty($extra['api_end_point'])) {
-                    self::saveDailyApiLog($extra['api_end_point']);
-                }
+    //     $useFirstCredentials = true;
 
-                $api_response = $res->getBody()->getContents();
+    //     while (true) {
+    //         try {
 
-                $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                if ($update_master_key_attempt) {
-                    $update_master_key_attempt->option_value = 1;
-                    $update_master_key_attempt->save();
-                }
+    //             $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+    //             $credentials = [
+    //                 'username' => $cin7_auth_username,
+    //                 'password' =>$api_password,
+    //             ];
+
+    //             $authHeaders = [
+    //                 'headers' => ['Content-type' => 'application/json'],
+    //                 'auth' => [$credentials['username'], $credentials['password']]
+    //             ];
+
+    //             if (!empty($body)) {
+    //                 $authHeaders['json'] = $body;
+    //             }
+
+    //             switch ($method) {
+    //                 case 'POST':
+    //                     $res = $client->post($url, $authHeaders);
+    //                     break;
+    //                 case 'PUT':
+    //                     $res = $client->put($url, $authHeaders);
+    //                     break;
+    //                 case 'GET':
+    //                     $res = $client->get($url, $authHeaders);
+    //                     break;
+    //                 default:
+    //                     $res = $client->get($url, $authHeaders);
+    //                     break;
+    //             }
+
+    //             if (!empty($extra['api_end_point'])) {
+    //                 self::saveDailyApiLog($extra['api_end_point']);
+    //             }
+
+    //             $api_response = $res->getBody()->getContents();
+
+    //             $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //             if ($update_master_key_attempt) {
+    //                 $update_master_key_attempt->option_value = 1;
+    //                 $update_master_key_attempt->save();
+    //             }
 
                 
-                return $api_response;
+    //             return $api_response;
 
-            } catch (\Exception $e) {
-                // Log the error
-                $errorlog = new ApiErrorLog();
-                $errorlog->payload = $e->getMessage();
-                $errorlog->exception = $e->getCode();
-                $errorlog->save();
+    //         } catch (\Exception $e) {
+    //             // Log the error
+    //             $errorlog = new ApiErrorLog();
+    //             $errorlog->payload = $e->getMessage();
+    //             $errorlog->exception = $e->getCode();
+    //             $errorlog->save();
 
-                // Update master_key_attempt to 0 on failure
-                $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                if ($master_key_attempt) {
-                    $master_key_attempt->option_value = 0;
-                    $master_key_attempt->save();
-                }
+    //             // Update master_key_attempt to 0 on failure
+    //             $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //             if ($master_key_attempt) {
+    //                 $master_key_attempt->option_value = 0;
+    //                 $master_key_attempt->save();
+    //             }
 
-                // Swap credentials
-                $useFirstCredentials = !$useFirstCredentials;
+    //             // Swap credentials
+    //             $useFirstCredentials = !$useFirstCredentials;
 
-                // Optionally sleep before retrying to avoid rapid retries
-                sleep(5);
-            }
-        }
-    }
+    //             // Optionally sleep before retrying to avoid rapid retries
+    //             sleep(5);
+    //         }
+    //     }
+    // }
 
 
 
