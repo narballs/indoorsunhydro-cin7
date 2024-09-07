@@ -5,6 +5,8 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
+use App\Models\AdminSetting;
+use App\Models\ApiErrorLog;
 use App\Models\ApiOrderItem;
 use Illuminate\Support\Facades\Log;
 
@@ -154,58 +156,89 @@ class OrderHelper {
 
 
     public static function update_order_payment_in_cin7($order_id) {
+        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
-        try {
-            $client = new \GuzzleHttp\Client();
-            $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?where=orderId=' . $order_id;
-            $get_response = $client->request(
-                'GET', 
-                $get_order_payment_url,
-                [
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
-                    ]                    
-                ]
-            );
+        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
 
-            $get_api_order = $get_response->getBody()->getContents();
-            $get_order = json_decode($get_api_order);
+        $client = new \GuzzleHttp\Client();
 
+        $useFirstCredentials = true;
 
-
-            if (empty($get_order)) {
-                $order_created_date_raw = Carbon::now();
-                $order_created_date = $order_created_date_raw->format('Y-m-d');
-                $order_created_time = $order_created_date_raw->format('H:i:s');
-                $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
-                $url = 'https://api.cin7.com/api/v1/Payments';
-                $authHeaders = [
-                    'headers' => ['Content-Type' => 'application/json'],
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password,
-                    ],
-                ];
-
-                $update_array = [
+        while (true) {
+            try {
+                $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?where=orderId=' . $order_id;
+                $get_response = $client->request(
+                    'GET', 
+                    $get_order_payment_url,
                     [
-                        'orderId' => $order_id,
-                        'method' => 'On Account',
-                        'paymentDate' => $api_order_sync_date,
+                        'auth' => [
+                            $cin7_auth_username,
+                            $api_password
+                        ]                    
                     ]
-                ];
+                );
 
-                $authHeaders['json'] = $update_array;
+                $get_api_order = $get_response->getBody()->getContents();
+                $get_order = json_decode($get_api_order);
 
-                $Payment_response = $client->post($url, $authHeaders);
 
-                $response = json_decode($Payment_response->getBody()->getContents());
-            }
-            
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }       
+
+                if (empty($get_order)) {
+                    $order_created_date_raw = Carbon::now();
+                    $order_created_date = $order_created_date_raw->format('Y-m-d');
+                    $order_created_time = $order_created_date_raw->format('H:i:s');
+                    $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
+                    $url = 'https://api.cin7.com/api/v1/Payments';
+                    $authHeaders = [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password2,
+                        ],
+                    ];
+
+                    $update_array = [
+                        [
+                            'orderId' => $order_id,
+                            'method' => 'On Account',
+                            'paymentDate' => $api_order_sync_date,
+                        ]
+                    ];
+
+                    $authHeaders['json'] = $update_array;
+
+                    $Payment_response = $client->post($url, $authHeaders);
+
+                    $response = json_decode($Payment_response->getBody()->getContents());
+
+                    $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                    if ($update_master_key_attempt) {
+                        $update_master_key_attempt->option_value = 1;
+                        $update_master_key_attempt->save();
+                    }
+
+                }
+                
+            } catch (\Exception $e) {
+                $errorlog = new ApiErrorLog();
+                $errorlog->payload = $e->getMessage();
+                $errorlog->exception = $e->getCode();
+                $errorlog->save();
+
+                // Update master_key_attempt to 0 on failure
+                $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                if ($master_key_attempt) {
+                    $master_key_attempt->option_value = 0;
+                    $master_key_attempt->save();
+                }
+
+                // Swap credentials
+                $useFirstCredentials = !$useFirstCredentials;
+            }    
+        }   
     }
 }
