@@ -102,6 +102,7 @@ class SalePayments extends Model
         "departmentNumber",
         "storeLocationNumber",
         "distributionCenter",
+        'order_created_date',
     ];
 
 }

@@ -135,7 +135,7 @@
                                     <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->createdDate)}}</td>
                                     {{-- <td>{{ str_replace(['T', 'Z'], ' ', $sale_payment->modifiedDate)}}</td> --}}
                                     <td>
-                                        <a href="{{ route('sale-payments.show', $sale_payment->id) }}" class="btn btn-info btn-sm text-white" >Order Detail</a>
+                                        <a href="{{ route('sale-payments.show', $sale_payment->orderId) }}" class="btn btn-info btn-sm text-white" >Order Detail</a>
                                     </td>
                                 </tr>
                                 @endforeach

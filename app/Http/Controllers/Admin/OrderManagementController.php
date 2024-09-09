@@ -32,6 +32,7 @@ use App\Helpers\UserHelper;
 use DateTime;
 
 use App\Helpers\SettingHelper;
+use App\Models\SalePaymentOrderItem;
 use App\Models\SalePayments;
 use Illuminate\Support\Facades\DB;
 
@@ -730,17 +731,13 @@ class OrderManagementController extends Controller
         return view('admin/sale-payments/index', compact('sale_payments' , 'search' , 'payment_method' , 'date_from' , 'date_to'));
     }
 
-    public function sale_payments_show($id) {
-        $sale_payment = SalePayments::where('id', $id)->first();
-        if (!empty($sale_payment)) {
-            $api_order = ApiOrder::where('order_id', $sale_payment->orderId)->first();
-            if (!empty($api_order)) {
-                return redirect()->route('admin.order.detail' , $api_order->id);
-            } else {
-                return redirect()->back()->with('error', 'Order Detail not found !');
-            }
+    public function sale_payments_show($order_id) {
+        $sale_payment = SalePayments::where('orderId', $order_id)->first();
+        $api_orders = SalePaymentOrderItem::where('orderId',$order_id)->get();
+        if (count($api_orders) > 0) {
+            return view('admin/sale-payments/show', compact('sale_payment', 'api_orders' ));
         } else {
-            return redirect()->back()->with('error', 'Invalid Sale Payment !');
+            return redirect()->back()->with('error', 'Order Detail not found !');
         }
     }
 }
