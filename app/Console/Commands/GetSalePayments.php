@@ -134,7 +134,8 @@ class GetSalePayments extends Command
         }
 
         $total_order_pages = 200;
-        $get_orders_url = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN (' . implode(',', $orderIds) . ')';
+        // dd($orderIds);
+        $get_orders_url = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . implode(',', $orderIds) . ')';
         for ($i = 1; $i <= $total_order_pages; $i++) {
             $credentials = $this->getCin7Credentials($use_first_credentials);
             $this->info('Processing order page #' . $i);
