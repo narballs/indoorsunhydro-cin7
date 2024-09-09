@@ -155,7 +155,7 @@ class OrderHelper {
 
     public static function update_order_payment_in_cin7($order_id) {
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_3');
         try {
             $client = new \GuzzleHttp\Client();
             $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?where=orderId=' . $order_id;
