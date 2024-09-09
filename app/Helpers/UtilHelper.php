@@ -27,7 +27,7 @@ class UtilHelper
     {
         
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_3');
 
         $authHeaders = [
             'headers' => ['Content-type' => 'application/json'],
