@@ -110,6 +110,7 @@ class StockChecking extends Command
                     // $api_product_stock = json_decode($api_product_stock);
                     if (!empty($api_product_stock)) {
                         $api_product_stock = json_decode($api_product_stock);
+
                     } else {
                         $api_product_stock = [];
                     }
@@ -120,10 +121,10 @@ class StockChecking extends Command
 
                     $this->info('Record Count => ' . $record_count);
                     
-                    // if ($record_count < 1 || empty($record_count)) {
-                    //     $this->info('----------------break-----------------');
-                    //     break;
-                    // }
+                    if ($record_count < 1 || empty($record_count)) {
+                        $this->info('----------------break-----------------');
+                        break;
+                    }
                 }
                 catch (\Exception $e) {
                     $msg = $e->getMessage();
