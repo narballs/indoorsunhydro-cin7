@@ -68,7 +68,8 @@ class GetSalePayments extends Command
 
         $last_payment_synced_date = Carbon::parse($payment_sync_log->last_synced)->format('Y-m-d\TH:i:s\Z');
         $client = new \GuzzleHttp\Client();
-        $use_first_credentials = AdminSetting::where('option_name', 'master_key_attempt')->value('option_value') == 1;
+        $admin_setting_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+        $use_first_credentials = $admin_setting_master_key_attempt->option_value;
         $payment_api_url = "https://api.cin7.com/api/v1/Payments?where=modifieddate>=$last_payment_synced_date&orderType='SalesOrder'&rows=250";
         $orderIds = [];
 
