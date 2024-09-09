@@ -263,7 +263,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
     Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
-
+    //sales payments
+    Route::get('admin/sale-payments', [OrderManagementController::class, 'sale_payments'])->name('sale_payments');
+    Route::get('admin/sale-payments/show/{Id}', [OrderManagementController::class, 'sale_payments_show'])->name('sale-payments.show');
 
     // send orer to shipstation
     Route::post('admin/send-order-to-shipstation', [OrderManagementController::class, 'send_order_to_shipstation'])->name('send_order_to_shipstation');

@@ -25,6 +25,8 @@ use Illuminate\Support\Str;
 use App\Models\UsState;
 
 use App\Helpers\SettingHelper;
+use App\Models\AdminSetting;
+use App\Models\ApiErrorLog;
 
 class ContactController extends Controller
 {
@@ -656,165 +658,229 @@ class ContactController extends Controller
 
     public function refreshContact(Request $request)
     {
+        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
 
         $contact_id  = $request->contactId;
         if ($request->type == 'primary') {
-            $contact = Contact::where('contact_id', $contact_id)->first();
-            $client = new \GuzzleHttp\Client();
 
-            $res = $client->request(
-                'GET',
-                'https://api.cin7.com/api/v1/Contacts/' . $contact_id,
-                [
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
-                    ]
-                ]
-            );
-            $api_contact = $res->getBody()->getContents();
+            $useFirstCredentials = true;
+            while (true) {
+                try {
+                    $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                    $contact = Contact::where('contact_id', $contact_id)->first();
+                    $client = new \GuzzleHttp\Client();
 
-            $api_contact = json_decode($api_contact);
-            $pricing = preg_replace('/\R/', '', $api_contact->priceColumn);
-            $contact_update = Contact::where('contact_id', $contact_id)->first();    
-            $contact_update->update([
-                'email'  => $api_contact->email,
-                'firstName' => $api_contact->firstName,
-                'lastName' => $api_contact->lastName,
-                'priceColumn' => $pricing,
-                'company' => $api_contact->company,
-                'paymentTerms' => $api_contact->paymentTerms,
-                'phone' => $api_contact->phone,
-                'mobile' => $api_contact->mobile,
-                'website' => $api_contact->website,
-                'address1' => $api_contact->address1,
-                'address2' => $api_contact->address2,
-                'postCode' => $api_contact->postCode,
-                'state' => $api_contact->state,
-                'city' => $api_contact->city,
-                'postalAddress1' => $api_contact->postalAddress1,
-                'postalAddress2' => $api_contact->postalAddress2,
-                'postalPostCode' => $api_contact->postalPostCode,
-                'postalState' => $api_contact->postalState,
-                'postalCity' => $api_contact->postalCity,
-                'status' => $api_contact->isActive,
-                'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : $contact->tax_class,
-            ]);
+                    $res = $client->request(
+                        'GET',
+                        'https://api.cin7.com/api/v1/Contacts/' . $contact_id,
+                        [
+                            'auth' => [
+                                $cin7_auth_username,
+                                $api_password
+                            ]
+                        ]
+                    );
+                    $api_contact = $res->getBody()->getContents();
 
-            if ($api_contact->secondaryContacts) {
-                foreach ($api_contact->secondaryContacts as $apiSecondaryContact) {
-                    $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)->where('parent_id', $contact->contact_id)->first();
-                    if ($secondary_contact) {
+                    $api_contact = json_decode($api_contact);
+                    $pricing = preg_replace('/\R/', '', $api_contact->priceColumn);
+                    $contact_update = Contact::where('contact_id', $contact_id)->first();    
+                    $contact_update->update([
+                        'email'  => $api_contact->email,
+                        'firstName' => $api_contact->firstName,
+                        'lastName' => $api_contact->lastName,
+                        'priceColumn' => $pricing,
+                        'company' => $api_contact->company,
+                        'paymentTerms' => $api_contact->paymentTerms,
+                        'phone' => $api_contact->phone,
+                        'mobile' => $api_contact->mobile,
+                        'website' => $api_contact->website,
+                        'address1' => $api_contact->address1,
+                        'address2' => $api_contact->address2,
+                        'postCode' => $api_contact->postCode,
+                        'state' => $api_contact->state,
+                        'city' => $api_contact->city,
+                        'postalAddress1' => $api_contact->postalAddress1,
+                        'postalAddress2' => $api_contact->postalAddress2,
+                        'postalPostCode' => $api_contact->postalPostCode,
+                        'postalState' => $api_contact->postalState,
+                        'postalCity' => $api_contact->postalCity,
+                        'status' => $api_contact->isActive,
+                        'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : $contact->tax_class,
+                    ]);
 
-                        $secondary_contact->secondary_id = $apiSecondaryContact->id;
-                        $secondary_contact->is_parent = 0;
-                        $secondary_contact->status = 1;
-                        $secondary_contact->company = $api_contact->company;
-                        $secondary_contact->firstName = $apiSecondaryContact->firstName;
-                        $secondary_contact->lastName = $apiSecondaryContact->lastName;
-                        $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
-                        $secondary_contact->email = $apiSecondaryContact->email;
-                        $secondary_contact->mobile = $apiSecondaryContact->mobile;
-                        $secondary_contact->phone = $apiSecondaryContact->phone;
-                        $secondary_contact->priceColumn = $api_contact->priceColumn;
-                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : $secondary_contact->tax_class;
-                        $secondary_contact->save();
-                    } else {
-                        $secondary_contact = new Contact();
-                        $secondary_contact->parent_id = $contact->contact_id;
-                        $secondary_contact->secondary_id = $apiSecondaryContact->id;
-                        $secondary_contact->is_parent = 0;
-                        $secondary_contact->status = 1;
-                        $secondary_contact->company = $api_contact->company;
-                        $secondary_contact->firstName = $apiSecondaryContact->firstName;
-                        $secondary_contact->lastName = $apiSecondaryContact->lastName;
-                        $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
-                        $secondary_contact->email = $apiSecondaryContact->email;
-                        $secondary_contact->mobile = $apiSecondaryContact->mobile;
-                        $secondary_contact->phone = $apiSecondaryContact->phone;
-                        $secondary_contact->priceColumn = $api_contact->priceColumn;
-                        $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : $secondary_contact->tax_class;
-                        $secondary_contact->save();
-                        $id = $secondary_contact->id;
-                        $contact_info = Contact::where('id', $id)->first();
-                        $email = $contact_info->email;
-                        if ($email) {
-                            $user = User::where('email', $email)->first();
-                            if (empty($user)) {
-                                $user = User::firstOrCreate([
-                                    'email' => $email
-                                ]);
+                    if ($api_contact->secondaryContacts) {
+                        foreach ($api_contact->secondaryContacts as $apiSecondaryContact) {
+                            $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)->where('parent_id', $contact->contact_id)->first();
+                            if ($secondary_contact) {
+
+                                $secondary_contact->secondary_id = $apiSecondaryContact->id;
+                                $secondary_contact->is_parent = 0;
+                                $secondary_contact->status = 1;
+                                $secondary_contact->company = $api_contact->company;
+                                $secondary_contact->firstName = $apiSecondaryContact->firstName;
+                                $secondary_contact->lastName = $apiSecondaryContact->lastName;
+                                $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
+                                $secondary_contact->email = $apiSecondaryContact->email;
+                                $secondary_contact->mobile = $apiSecondaryContact->mobile;
+                                $secondary_contact->phone = $apiSecondaryContact->phone;
+                                $secondary_contact->priceColumn = $api_contact->priceColumn;
+                                $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : $secondary_contact->tax_class;
+                                $secondary_contact->save();
+                            } else {
+                                $secondary_contact = new Contact();
+                                $secondary_contact->parent_id = $contact->contact_id;
+                                $secondary_contact->secondary_id = $apiSecondaryContact->id;
+                                $secondary_contact->is_parent = 0;
+                                $secondary_contact->status = 1;
+                                $secondary_contact->company = $api_contact->company;
+                                $secondary_contact->firstName = $apiSecondaryContact->firstName;
+                                $secondary_contact->lastName = $apiSecondaryContact->lastName;
+                                $secondary_contact->jobTitle  = $apiSecondaryContact->jobTitle;
+                                $secondary_contact->email = $apiSecondaryContact->email;
+                                $secondary_contact->mobile = $apiSecondaryContact->mobile;
+                                $secondary_contact->phone = $apiSecondaryContact->phone;
+                                $secondary_contact->priceColumn = $api_contact->priceColumn;
+                                $secondary_contact->tax_class = $api_contact->taxStatus ? $api_contact->taxStatus : $secondary_contact->tax_class;
+                                $secondary_contact->save();
+                                $id = $secondary_contact->id;
+                                $contact_info = Contact::where('id', $id)->first();
+                                $email = $contact_info->email;
+                                if ($email) {
+                                    $user = User::where('email', $email)->first();
+                                    if (empty($user)) {
+                                        $user = User::firstOrCreate([
+                                            'email' => $email
+                                        ]);
+                                    }
+                                }
+
+                                $user_contact = User::where('email', $email)->first();
+                                $user_contact_id = $user_contact->id;
+                                $contacts = Contact::where('email', $email)->get();
+                                foreach ($contacts as $contact) {
+                                    $contact->user_id = $user_contact_id;
+                                    $contact->save();
+                                }
                             }
                         }
-
-                        $user_contact = User::where('email', $email)->first();
-                        $user_contact_id = $user_contact->id;
-                        $contacts = Contact::where('email', $email)->get();
-                        foreach ($contacts as $contact) {
-                            $contact->user_id = $user_contact_id;
-                            $contact->save();
-                        }
                     }
-                }
-            }
-            $str = str_replace("\r", '', $api_contact->priceColumn);
-            return response()->json([
-                'status' => '200',
-                'message' => 'Contact Refreshed Successfully',
-                'updated_email' => $api_contact->email,
-                'updated_firstName' => $api_contact->firstName,
-                'updated_lastName' => $api_contact->lastName,
-                'updated_priceColumn' => $str,
-                'updated_company' => $api_contact->company,
-                'success' => true
-            ]);
-        } elseif ($request->type == 'secondary') {
+                    $str = str_replace("\r", '', $api_contact->priceColumn);
+                    // On success, update settings and break out of the loop
+                    $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                    if ($update_master_key_attempt) {
+                        $update_master_key_attempt->option_value = 1;
+                        $update_master_key_attempt->save();
+                    }
 
-            $contact = Contact::where('secondary_id', $contact_id)->first();
-            $parent_id = $contact->parent_id;
-            $pricing_column = Contact::where('parent_id', $parent_id)->first();
-            $pricing_column = $pricing_column->priceColumn;
-            $client = new \GuzzleHttp\Client();
-
-            $res = $client->request(
-                'GET',
-                'https://api.cin7.com/api/v1/Contacts/' . $parent_id,
-                [
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
-                    ]
-                ]
-            );
-            $api_secondary_contact = $res->getBody()->getContents();
-            $api_secondary_contact = json_decode($api_secondary_contact);
-
-            foreach ($api_secondary_contact->secondaryContacts as $api_secondary_contact) {
-
-                if ($api_secondary_contact->id == $contact_id) {
-                    $updated_contact = Contact::where('secondary_id', $contact_id)->update([
-                        'email'  => $api_secondary_contact->email,
-                        'priceColumn' => $pricing_column,
-                        'firstName' => $api_secondary_contact->firstName,
-                        'lastName' => $api_secondary_contact->lastName,
-                        'mobile' => $api_secondary_contact->mobile,
-                        'phone' =>  $api_secondary_contact->phone,
-                        'status' => 1,
-                        'tax_class' => $api_secondary_contact->taxStatus ? $api_secondary_contact->taxStatus : $contact->tax_class,
-                    ]);
                     return response()->json([
                         'status' => '200',
                         'message' => 'Contact Refreshed Successfully',
-                        'updated_email' => $api_secondary_contact->email,
-                        'updated_firstName' => $api_secondary_contact->firstName,
-                        'updated_lastName' => $api_secondary_contact->lastName,
-                        'updated_company' => $api_secondary_contact->company,
+                        'updated_email' => $api_contact->email,
+                        'updated_firstName' => $api_contact->firstName,
+                        'updated_lastName' => $api_contact->lastName,
+                        'updated_priceColumn' => $str,
+                        'updated_company' => $api_contact->company,
                         'success' => true
                     ]);
+                } catch (\Exception $e) {
+
+                    $errorlog = new ApiErrorLog();
+                    $errorlog->payload = $e->getMessage();
+                    $errorlog->exception = $e->getCode();
+                    $errorlog->save();
+
+                        // Update master_key_attempt to 0 on failure
+                    $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                    if ($master_key_attempt) {
+                        $master_key_attempt->option_value = 0;
+                        $master_key_attempt->save();
+                    }
+
+                    // Swap credentials
+                    $useFirstCredentials = !$useFirstCredentials;
                 }
             }
+        } 
+        elseif ($request->type == 'secondary') {
+            $useFirstCredentials = true;
+            $client = new \GuzzleHttp\Client();
+            while (true) {
+                try {
+                    $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+                    $contact = Contact::where('secondary_id', $contact_id)->first();
+                    $parent_id = $contact->parent_id;
+                    $pricing_column = Contact::where('parent_id', $parent_id)->first();
+                    $pricing_column = $pricing_column->priceColumn;
+                    $res = $client->request(
+                        'GET',
+                        'https://api.cin7.com/api/v1/Contacts/' . $parent_id,
+                        [
+                            'auth' => [
+                                $cin7_auth_username,
+                                $api_password
+                            ]
+                        ]
+                    );
+                    $api_secondary_contact = $res->getBody()->getContents();
+                    $api_secondary_contact = json_decode($api_secondary_contact);
+        
+                    foreach ($api_secondary_contact->secondaryContacts as $api_secondary_contact) {
+        
+                        if ($api_secondary_contact->id == $contact_id) {
+                            $updated_contact = Contact::where('secondary_id', $contact_id)->update([
+                                'email'  => $api_secondary_contact->email,
+                                'priceColumn' => $pricing_column,
+                                'firstName' => $api_secondary_contact->firstName,
+                                'lastName' => $api_secondary_contact->lastName,
+                                'mobile' => $api_secondary_contact->mobile,
+                                'phone' =>  $api_secondary_contact->phone,
+                                'status' => 1,
+                                'tax_class' => $api_secondary_contact->taxStatus ? $api_secondary_contact->taxStatus : $contact->tax_class,
+                            ]);
+                            // On success, update settings and break out of the loop
+                            $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                            if ($update_master_key_attempt) {
+                                $update_master_key_attempt->option_value = 1;
+                                $update_master_key_attempt->save();
+                            }
+                            return response()->json([
+                                'status' => '200',
+                                'message' => 'Contact Refreshed Successfully',
+                                'updated_email' => $api_secondary_contact->email,
+                                'updated_firstName' => $api_secondary_contact->firstName,
+                                'updated_lastName' => $api_secondary_contact->lastName,
+                                'updated_company' => $api_secondary_contact->company,
+                                'success' => true
+                            ]);
+                        }
+                    }
+
+                    
+                } catch (\Exception $e) {
+                    $errorlog = new ApiErrorLog();
+                    $errorlog->payload = $e->getMessage();
+                    $errorlog->exception = $e->getCode();
+                    $errorlog->save();
+
+                        // Update master_key_attempt to 0 on failure
+                    $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+                    if ($master_key_attempt) {
+                        $master_key_attempt->option_value = 0;
+                        $master_key_attempt->save();
+                    }
+
+                    // Swap credentials
+                    $useFirstCredentials = !$useFirstCredentials;
+                }   
+            }       
+            
         }
     }
 

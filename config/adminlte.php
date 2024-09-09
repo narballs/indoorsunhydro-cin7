@@ -319,6 +319,10 @@ return [
             'text' => 'Orders',
             'url'  => 'admin/orders',
         ],
+        [
+            'text' => 'Sale Payments',
+            'url'  => 'admin/sale-payments',
+        ],
 
         [
             'text' => 'Products',
