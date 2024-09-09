@@ -72,6 +72,9 @@ class GetSalePayments extends Command
         $payment_api_url = "https://api.cin7.com/api/v1/Payments?where=modifieddate>=$last_payment_synced_date&orderType='SalesOrder'&rows=250";
         $orderIds = [];
 
+        // $this->processPayments($client, $payment_api_url, $orderIds, $use_first_credentials, $total_record_count);
+        // $this->processOrders($client, $orderIds, $use_first_credentials);
+
         $this->processPayments($client, $payment_api_url, $orderIds, $use_first_credentials, $total_record_count);
         $this->processOrders($client, $orderIds, $use_first_credentials);
 
@@ -112,6 +115,7 @@ class GetSalePayments extends Command
                     $orderIds[] = $api_payment['orderId'];
                     $total_record_count++;
                 }
+                
 
                 $this->updateMasterKeyAttempt(1);
                 if (++$requests_per_day >= 5000) {
@@ -127,43 +131,89 @@ class GetSalePayments extends Command
         }
     }
 
+    // private function processOrders($client, $orderIds, &$use_first_credentials)
+    // {
+    //     if (empty($orderIds)) {
+    //         return;
+    //     }
+
+    //     $total_order_pages = 191;
+    //     $get_orders_url = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . implode(',', $orderIds) . ')';
+    //     for ($i = 1; $i <= $total_order_pages; $i++) {
+    //         $credentials = $this->getCin7Credentials($use_first_credentials);
+    //         $this->info('Processing order page #' . $i);
+
+    //         try {
+    //             $response = $client->request('GET', $get_orders_url . '&page=' . $i, ['auth' => $credentials]);
+    //             if ($response->getStatusCode() !== 200) {
+    //                 $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
+    //                 continue;
+    //             }
+
+    //             $order_array = json_decode($response->getBody()->getContents(), true);
+    //             if (empty($order_array)) {
+    //                 $this->info('No more records, breaking out.');
+    //                 break;
+    //             }
+
+    //             foreach ($order_array as $order) {
+    //                 $this->updateOrderDetails($order);
+    //             }
+
+    //             $this->updateMasterKeyAttempt(1);
+    //         } catch (\Exception $e) {
+    //             $this->handleException($e, $use_first_credentials);
+    //             $i--;
+    //         }
+    //     }
+    // }
+
     private function processOrders($client, $orderIds, &$use_first_credentials)
     {
         if (empty($orderIds)) {
             return;
         }
 
-        $total_order_pages = 200;
-        // dd($orderIds);
-        $get_orders_url = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . implode(',', $orderIds) . ')';
-        for ($i = 1; $i <= $total_order_pages; $i++) {
-            $credentials = $this->getCin7Credentials($use_first_credentials);
-            $this->info('Processing order page #' . $i);
+        $chunkSize = 20; // Define the chunk size
+        $orderIdChunks = array_chunk($orderIds, $chunkSize); // Split order IDs into chunks
 
-            try {
-                $response = $client->request('GET', $get_orders_url . '&page=' . $i, ['auth' => $credentials]);
-                if ($response->getStatusCode() !== 200) {
-                    $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
-                    continue;
+        foreach ($orderIdChunks as $chunkIndex => $chunk) {
+            $chunkOrderIds = implode(',', $chunk);
+            $chunkUrl = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . $chunkOrderIds . ')';
+
+            $this->info('Processing order chunk #' . ($chunkIndex + 1));
+
+            while (true) {
+                try {
+                    $response = $client->request('GET', $chunkUrl, ['auth' => $this->getCin7Credentials($use_first_credentials)]);
+                    if ($response->getStatusCode() !== 200) {
+                        $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
+                        $this->info('Retrying order chunk #' . ($chunkIndex + 1));
+                        sleep(5); // Wait before retrying
+                        continue; // Retry the same chunk
+                    }
+
+                    $order_array = json_decode($response->getBody()->getContents(), true);
+                    if (empty($order_array)) {
+                        $this->info('No more records in chunk, breaking out.');
+                        break;
+                    }
+
+                    foreach ($order_array as $order) {
+                        $this->updateOrderDetails($order);
+                    }
+
+                    $this->updateMasterKeyAttempt(1);
+                    break; // Break out of the retry loop if successful
+                } catch (\Exception $e) {
+                    $this->handleException($e, $use_first_credentials);
+                    $this->info('Retrying order chunk #' . ($chunkIndex + 1));
+                    sleep(5); // Wait before retrying
                 }
-
-                $order_array = json_decode($response->getBody()->getContents(), true);
-                if (empty($order_array)) {
-                    $this->info('No more records, breaking out.');
-                    break;
-                }
-
-                foreach ($order_array as $order) {
-                    $this->updateOrderDetails($order);
-                }
-
-                $this->updateMasterKeyAttempt(1);
-            } catch (\Exception $e) {
-                $this->handleException($e, $use_first_credentials);
-                $i--;
             }
         }
     }
+
 
     private function getCin7Credentials($use_first_credentials)
     {
@@ -192,7 +242,7 @@ class GetSalePayments extends Command
                 'branchId' => $api_payment['branchId'],
                 'orderType' => $api_payment['orderType']
             ],
-                ['orderId' => $api_payment['orderId']],
+            ['orderId' => $api_payment['orderId']],
         );
     }
 
