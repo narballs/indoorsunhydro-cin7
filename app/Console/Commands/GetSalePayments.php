@@ -45,6 +45,8 @@ class GetSalePayments extends Command
      */
     
 
+    
+
     public function handle()
     {
         $admin_setting = AdminSetting::where('option_name', 'enable_cin7_sale_payments')->first();
@@ -63,9 +65,7 @@ class GetSalePayments extends Command
             ]
         );
 
-
         $total_record_count = 0;
-
         $last_payment_synced_date = Carbon::parse($payment_sync_log->last_synced)->format('Y-m-d\TH:i:s\Z');
         $client = new \GuzzleHttp\Client();
         $admin_setting_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
@@ -85,97 +85,6 @@ class GetSalePayments extends Command
         $this->info('Total Record Count: ' . $total_record_count);
         $this->info('Finished syncing payments.');
     }
-
-    // private function processPayments($client, $payment_api_url, &$orderIds, &$use_first_credentials, $total_record_count)
-    // {
-    //     $total_payments_pages = 191;
-    //     $requests_per_day = 0;
-
-    //     for ($i = 1; $i <= $total_payments_pages; $i++) {
-    //         $credentials = $this->getCin7Credentials($use_first_credentials);
-    //         $this->info('Processing payment page #' . $i);
-
-    //         try {
-    //             $response = $client->request('GET', $payment_api_url . '&page=' . $i, ['auth' => $credentials]);
-    //             if ($response->getStatusCode() !== 200) {
-    //                 $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
-    //                 continue;
-    //             }
-
-    //             $api_payments = json_decode($response->getBody()->getContents(), true);
-    //             $record_count = count($api_payments);
-    //             if ($record_count < 1) {
-    //                 $this->info('No more records, breaking out.');
-    //                 break;
-    //             }
-
-    //             foreach ($api_payments as $api_payment) {
-    //                 $this->saveOrUpdatePayment($api_payment);
-    //                 $orderIds[] = $api_payment['orderId'];
-    //                 $total_record_count++;
-    //             }
-                
-
-    //             $this->updateMasterKeyAttempt(1);
-    //             if (++$requests_per_day >= 5000) {
-    //                 $this->error('Reached daily limit of 5000 requests. Stopping execution.');
-    //                 break;
-    //             }
-
-    //             sleep(1);
-    //         } catch (\Exception $e) {
-    //             $this->handleException($e, $use_first_credentials);
-    //             $i--;
-    //         }
-    //     }
-    // }
-
-    // private function processOrders($client, $orderIds, &$use_first_credentials)
-    // {
-    //     if (empty($orderIds)) {
-    //         return;
-    //     }
-
-    //     $chunkSize = 20; // Define the chunk size
-    //     $orderIdChunks = array_chunk($orderIds, $chunkSize); // Split order IDs into chunks
-
-    //     foreach ($orderIdChunks as $chunkIndex => $chunk) {
-    //         $chunkOrderIds = implode(',', $chunk);
-    //         $chunkUrl = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . $chunkOrderIds . ')';
-
-    //         $this->info('Processing order chunk #' . ($chunkIndex + 1));
-
-    //         while (true) {
-    //             try {
-    //                 $response = $client->request('GET', $chunkUrl, ['auth' => $this->getCin7Credentials($use_first_credentials)]);
-    //                 if ($response->getStatusCode() !== 200) {
-    //                     $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
-    //                     $this->info('Retrying order chunk #' . ($chunkIndex + 1));
-    //                     sleep(5); // Wait before retrying
-    //                     continue; // Retry the same chunk
-    //                 }
-
-    //                 $order_array = json_decode($response->getBody()->getContents(), true);
-    //                 if (empty($order_array)) {
-    //                     $this->info('No more records in chunk, breaking out.');
-    //                     break;
-    //                 }
-
-    //                 foreach ($order_array as $order) {
-    //                     $this->updateOrderDetails($order);
-    //                 }
-
-    //                 $this->updateMasterKeyAttempt(1);
-    //                 break; // Break out of the retry loop if successful
-    //             } catch (\Exception $e) {
-    //                 $this->handleException($e, $use_first_credentials);
-    //                 $this->info('Retrying order chunk #' . ($chunkIndex + 1));
-    //                 sleep(5); // Wait before retrying
-    //             }
-    //         }
-    //     }
-    // }
-
     private function processPayments($client, $payment_api_url, &$orderIds, &$use_first_credentials, &$total_record_count)
     {
         $total_payments_pages = 191;
@@ -238,8 +147,8 @@ class GetSalePayments extends Command
             return;
         }
 
-        $chunkSize = 20; // Define the chunk size
-        $orderIdChunks = array_chunk($orderIds, $chunkSize); // Split order IDs into chunks
+        $chunkSize = 20;
+        $orderIdChunks = array_chunk($orderIds, $chunkSize);
 
         foreach ($orderIdChunks as $chunkIndex => $chunk) {
             $chunkOrderIds = implode(',', $chunk);
@@ -250,40 +159,34 @@ class GetSalePayments extends Command
             while (true) {
                 try {
                     $response = $client->request('GET', $chunkUrl, ['auth' => $this->getCin7Credentials($use_first_credentials)]);
-                    
-                    if ($response->getStatusCode() === 200) {
-                        $order_array = json_decode($response->getBody()->getContents(), true);
-                        if (empty($order_array)) {
-                            $this->info('No more records in chunk, breaking out.');
-                            break;
-                        }
-
-                        foreach ($order_array as $order) {
-                            $this->updateOrderDetails($order);
-                        }
-
-                        $this->updateMasterKeyAttempt(1);
-                        break; // Break out of the retry loop if successful
-                    } else {
-                        if ($use_first_credentials) {
-                            $this->info('Non-200 response with first credentials. Switching to second credentials.');
-                            $this->updateMasterKeyAttempt(1);
-                            $use_first_credentials = false;
-                        } else {
-                            $this->info('Non-200 response with second credentials. Retrying with first credentials.');
-                            $this->updateMasterKeyAttempt(0);
-                            $use_first_credentials = true;
-                        }
-
+                    if ($response->getStatusCode() !== 200) {
+                        $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
+                        $this->info('Retrying order chunk #' . ($chunkIndex + 1));
                         sleep(5); // Wait before retrying
+                        continue; // Retry the same chunk
                     }
+
+                    $order_array = json_decode($response->getBody()->getContents(), true);
+                    if (empty($order_array)) {
+                        $this->info('No more records in chunk, breaking out.');
+                        break;
+                    }
+
+                    foreach ($order_array as $order) {
+                        $this->updateOrderDetails($order);
+                    }
+
+                    $this->updateMasterKeyAttempt(1);
+                    break; // Break out of the retry loop if successful
                 } catch (\Exception $e) {
                     $this->handleException($e, $use_first_credentials);
+                    $this->info('Retrying order chunk #' . ($chunkIndex + 1));
                     sleep(5); // Wait before retrying
                 }
             }
         }
     }
+
 
 
 
@@ -442,48 +345,26 @@ class GetSalePayments extends Command
         }
     }
 
-    // private function updateMasterKeyAttempt($value)
-    // {
-    //     AdminSetting::where('option_name', 'master_key_attempt')->update(['option_value' => $value]);
-    // }
-
-    // private function handleException($exception, &$use_first_credentials)
-    // {
-    //     $this->error('Error: ' . $exception->getMessage());
-
-    //     ApiErrorLog::create([
-    //         'payload' => $exception->getMessage(),
-    //         'exception' => $exception->getCode()
-    //     ]);
-
-    //     // Swap credentials and retry
-    //     $use_first_credentials = !$use_first_credentials;
-    //     $this->updateMasterKeyAttempt(0);
-    // }
-
-    private function updateMasterKeyAttempt($attempt)
+    
+    
+    private function updateMasterKeyAttempt($value)
     {
-        AdminSetting::updateOrCreate(
-            ['option_name' => 'master_key_attempt'],
-            ['option_value' => $attempt]
-        );
-    }
-
-    private function handleRateLimitExceeded(&$use_first_credentials)
-    {
-        $this->updateMasterKeyAttempt(0);
-        $this->info('Rate limit exceeded. Switching credentials and retrying.');
-        sleep(10); // Wait before retrying with new credentials
-        $use_first_credentials = !$use_first_credentials;
+        $admin_setting_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+        $admin_setting_master_key_attempt->option_value = $value;
+        $admin_setting_master_key_attempt->save();
     }
 
     private function handleException(\Exception $e, &$use_first_credentials)
     {
-        if ($e->getCode() === 429) {
-            $this->error('Rate limit exceeded. Switching credentials and retrying.');
-            $this->handleRateLimitExceeded($use_first_credentials);
-        } else {
-            $this->error('Exception encountered: ' . $e->getMessage());
-        }
+        $errorlog = new ApiErrorLog();
+        $errorlog->payload = $e->getMessage();
+        $errorlog->exception = $e->getCode();
+        $errorlog->save();
+
+        // Swap credentials on error
+        $use_first_credentials = !$use_first_credentials;
+
+        // Update master key attempt to unsuccessful
+        $this->updateMasterKeyAttempt(0);
     }
 }
