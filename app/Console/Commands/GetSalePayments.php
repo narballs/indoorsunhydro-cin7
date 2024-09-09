@@ -365,6 +365,14 @@ class GetSalePayments extends Command
         $use_first_credentials = !$use_first_credentials;
 
         // Update master key attempt to unsuccessful
-        $this->updateMasterKeyAttempt(0);
+        $admin_setting_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+        $attempt_value = 0;
+        if ($admin_setting_master_key_attempt->option_value == 0) {
+            $attempt_value = 1;
+        } 
+        elseif ($admin_setting_master_key_attempt->option_value == 1) {
+            $attempt_value = 0;
+        }
+        $this->updateMasterKeyAttempt($attempt_value);
     }
 }
