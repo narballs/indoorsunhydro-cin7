@@ -47,6 +47,8 @@ class SyncBranches extends Command
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
+        $total_record_count = 0;
+
         for ($i = 1; $i <= $total_branch_pages; $i++) {
             $this->info('Processing page#' . $i);
             sleep(3);
@@ -63,6 +65,19 @@ class SyncBranches extends Command
 
             $branches = $res->getBody()->getContents();
             $branches = json_decode($branches);
+
+            $record_count = count($branches);
+            $total_record_count += $record_count; 
+            $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+            $this->info('Record Count => ' . $record_count);
+                
+            if ($record_count < 1 || empty($record_count)) {
+                $this->info('----------------break-----------------');
+                break;
+            }
+
         
                 foreach ($branches as $branch) {
                         $branch = new Branch([
