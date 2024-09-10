@@ -99,7 +99,7 @@ class GetSalePayments extends Command
         }
 
 
-        $delete_missing_results = SalePayments::whereNotIn('orderId', $orderIds)->delete();
+        $delete_missing_results = SalePaymentOrderItem::whereNotIn('orderId', $orderIds)->delete();
 
         // Update the sync log
 
