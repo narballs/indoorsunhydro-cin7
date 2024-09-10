@@ -163,44 +163,37 @@ class GetSalePayments extends Command
             return;
         }
 
-        $chunkSize = 20;
-        $orderIdChunks = array_chunk($orderIds, $chunkSize);
 
-        foreach ($orderIdChunks as $chunkIndex => $chunk) {
-            $chunkOrderIds = implode(',', $chunk);
-            $chunkUrl = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . $chunkOrderIds . ')';
+        $orderIds = implode(',', $orderIds);
 
-            $this->info('Processing order chunk #' . ($chunkIndex + 1));
+        
 
-            try {
-                $response = $client->request('GET', $chunkUrl, ['auth' => $this->getCin7Credentials()]);
-                UtilHelper::saveDailyApiLog('get_sale_orders');
-                if ($response->getStatusCode() !== 200) {
-                    $this->error('Failed to fetch data from Cin7 API. Status Code: ' . $response->getStatusCode());
-                    $this->info('Retrying order chunk #' . ($chunkIndex + 1));
-                    sleep(5); // Wait before retrying
-                    continue; // Retry the same chunk
+        $get_order_url = 'https://api.cin7.com/api/v1/SalesOrders?where=id IN(' . $orderIds . ')';
+        $credentials = $this->getCin7Credentials();
+        try {
+            $response = $client->request('GET', $get_order_url, ['auth' => $credentials]);
+            UtilHelper::saveDailyApiLog('get_sale_payments');
+
+            if ($response->getStatusCode() === 200) {
+                $api_orders = json_decode($response->getBody()->getContents(), true);
+                $record_count = count($api_orders);
+                if ($record_count < 1 || empty($record_count)) {
+                    $this->info('No more records, breaking out.');
+                    return;
                 }
 
-                $order_array = json_decode($response->getBody()->getContents(), true);
-                if (empty($order_array)) {
-                    $this->info('No more records in chunk, breaking out.');
-                    break;
-                }
-
-                foreach ($order_array as $order) {
+                foreach ($api_orders as $order) {
                     $this->updateOrderDetails($order);
                 }
 
-                $total_order_record_count += count($order_array);
-
-                break; // Break out of the loop if successful
-            } catch (\Exception $e) {
-                $this->handleException($e);
-                $this->info('Retrying order chunk #' . ($chunkIndex + 1));
-                sleep(5); // Wait before retrying
-            }
+                $total_order_record_count += $record_count;
+            } 
+        } catch (\Exception $e) {
+            $this->handleException($e);
+            sleep(5); // Wait before retrying
         }
+
+
     }
 
 
