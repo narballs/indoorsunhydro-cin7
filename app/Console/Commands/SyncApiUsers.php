@@ -47,6 +47,9 @@ class SyncApiUsers extends Command
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
+
+        $total_record_count = 0;
+
         for ($i = 1; $i <= $total_users_pages; $i++) {
             $this->info('Processing page#' . $i);
 
@@ -63,6 +66,18 @@ class SyncApiUsers extends Command
 
             $api_users = $res->getBody()->getContents();
             $api_users = json_decode($api_users);
+
+            $record_count = count($api_users);
+            $total_record_count += $record_count; 
+            $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+            $this->info('Record Count => ' . $record_count);
+            
+            if ($record_count < 1 || empty($record_count)) {
+                $this->info('----------------break-----------------');
+                break;
+            }
 
             foreach($api_users as $api_user) {
                 $this->info($api_user->id);

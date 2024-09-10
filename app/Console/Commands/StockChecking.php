@@ -53,12 +53,8 @@ class StockChecking extends Command
             return false;
         }
 
-        // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
-        $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
-        $useFirstCredentials = true;
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
         $skip_branches = $inactive_inventory_locations;
         $current_date = Carbon::now()->setTimezone('UTC')->format('Y-m-d H:i:s');
@@ -78,67 +74,53 @@ class StockChecking extends Command
         $product_stock_sync_date = $product_stock_sync_raw_date->format('Y-m-d');
         $product_stock_sync_time = $product_stock_sync_raw_date->format('H:i:s');
         $api_formatted_product_stock_sync_date = $product_stock_sync_date . 'T' . $product_stock_sync_time . 'Z';
-        $client2 = new \GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client();
 
         // Find total stock pages
-        $total_stock_pages = 200;
+        $total_stock_pages = 191;
         $total_record_count = 0;
         $stock_api_url = 'https://api.cin7.com/api/v1/Stock?where=modifiedDate>='. $api_formatted_product_stock_sync_date . '&rows=250';
 
-        // for ($i = 1; $i <= $total_stock_pages; $i++) {
-            while (true) {
-                $this->info('Processing page#');
-                try {
-                    $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
-                    $res = $client2->request(
-                        'GET', 
-                        $stock_api_url, 
-                        [
-                            'auth' => [
-                                $cin7_auth_username,
-                                $api_password
-                            ]
-                            
+        for ($i = 1; $i <= $total_stock_pages; $i++) {
+            $this->info('Stock: Processing page#' . $i);
+            try {
+
+                $res = $client->request(
+                    'GET', 
+                    $stock_api_url . '&page=' . $i, 
+                    [
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password
                         ]
-                    );
+                        
+                    ]
+                );
 
-                    UtilHelper::saveDailyApiLog('auto_update_stock');
+                UtilHelper::saveDailyApiLog('auto_update_stock');
 
 
-                    $api_product_stock = $res->getBody()->getContents();
+                $api_product_stock = $res->getBody()->getContents();
+            
+                $api_product_stock = json_decode($api_product_stock);
+                $record_count = count($api_product_stock);
+                $total_record_count += $record_count; 
+                $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+                $this->info('Record Count => ' . $record_count);
                 
-                    // $api_product_stock = json_decode($api_product_stock);
-                    if (!empty($api_product_stock)) {
-                        $api_product_stock = json_decode($api_product_stock);
-
-                    } else {
-                        $api_product_stock = [];
-                    }
-                    $record_count = count($api_product_stock);
-                    $total_record_count += $record_count; 
-                    $this->info('Record Count per page #--------------------------' .$record_count);
-
-
-                    $this->info('Record Count => ' . $record_count);
-                    
-                    if ($record_count < 1 || empty($record_count)) {
-                        $this->info('----------------break-----------------');
-                        break;
-                    }
+                if ($record_count < 1 || empty($record_count)) {
+                    $this->info('----------------break-----------------');
+                    break;
                 }
-                catch (\Exception $e) {
-                    $msg = $e->getMessage();
-                    $errorlog = new ApiErrorLog();
-                    $errorlog->payload = $e->getMessage();
-                    $errorlog->exception = $e->getCode();
-                    $errorlog->save();
-
-                    // Swap credentials
-                    $useFirstCredentials = !$useFirstCredentials;
-                }
-                
             }
-
+            catch (\Exception $e) {
+                $errorlog = new ApiErrorLog();
+                $errorlog->payload = $e->getMessage();
+                $errorlog->exception = $e->getCode();
+                $errorlog->save();
+            }
             $stock_available = 0;
             $stock_on_hand = 0;
             $stock_available_product_option = 0;
@@ -169,7 +151,7 @@ class StockChecking extends Command
                             $this->info('Stock Updated for product option#' . $product_stock->option_id);
                         } else {
                             $product_stock = ProductStock::create([
-                                'available_stock' =>$product_option_stock->available >= 0 ? $product_option_stock->available : 0,
+                                'available_stock' => $stock_available,
                                 'branch_id' => $product_option_stock->branchId,
                                 'product_id' => $product_option_stock->productId,
                                 'branch_name' => $product_option_stock->branchName,
@@ -194,11 +176,11 @@ class StockChecking extends Command
                     }
                 }
             } else {
-                $this->info('No stock found');
+                $this->info('No Stock Found');
             }
 
             
-        // }
+        }
 
         $stock_sync_log->last_synced = $current_date;
         $stock_sync_log->record_count = $total_record_count;
