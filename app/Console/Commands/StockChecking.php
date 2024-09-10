@@ -81,13 +81,13 @@ class StockChecking extends Command
         $total_record_count = 0;
         $stock_api_url = 'https://api.cin7.com/api/v1/Stock?where=modifiedDate>='. $api_formatted_product_stock_sync_date . '&rows=250';
 
-        for ($i = 1; $i <= $total_stock_pages; $i++) {
-            $this->info('Stock: Processing page#' . $i);
+        // for ($i = 1; $i <= $total_stock_pages; $i++) {
+            // $this->info('Stock: Processing page#' . $i);
             try {
 
                 $res = $client->request(
                     'GET', 
-                    $stock_api_url . '&page=' . $i, 
+                    $stock_api_url , 
                     [
                         'auth' => [
                             $cin7_auth_username,
@@ -180,7 +180,7 @@ class StockChecking extends Command
             }
 
             
-        }
+        // }
 
         $stock_sync_log->last_synced = $current_date;
         $stock_sync_log->record_count = $total_record_count;
