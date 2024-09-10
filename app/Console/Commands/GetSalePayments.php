@@ -98,6 +98,9 @@ class GetSalePayments extends Command
             $this->handleException($e);
         }
 
+
+        $delete_missing_results = SalePayments::whereNotIn('orderId', $orderIds)->delete();
+
         // Update the sync log
 
         $payment_sync_log->last_synced = $current_date;
