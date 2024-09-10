@@ -110,10 +110,10 @@ class StockChecking extends Command
 
                 $this->info('Record Count => ' . $record_count);
                 
-                if ($record_count < 1 || empty($record_count)) {
-                    $this->info('----------------break-----------------');
-                    break;
-                }
+                // if ($record_count < 1 || empty($record_count)) {
+                //     $this->info('----------------break-----------------');
+                //     break;
+                // }
             }
             catch (\Exception $e) {
                 $errorlog = new ApiErrorLog();
