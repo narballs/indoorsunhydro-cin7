@@ -89,7 +89,7 @@ class GetSalePayments extends Command
             $this->handleException($e);
         }
 
-        sleep(5);
+        // sleep(5);
         
         // Process orders
         try {
@@ -103,6 +103,7 @@ class GetSalePayments extends Command
         if (!empty($delete_missing_results)) {
             foreach ($delete_missing_results as $delete_missing_result) {
                 $delete_missing_result->delete();
+                $delete_missing_results->delete();
             }
         }
 
