@@ -61,7 +61,7 @@ class GetSalePayments extends Command
         if (empty($payment_sync_log)) {
             $payment_sync_log = new ApiSyncLog();
             $payment_sync_log->end_point = 'https://api.cin7.com/api/v1/Payments';
-            $payment_sync_log->description = 'Stock Updated';
+            $payment_sync_log->description = 'Payment Sync';
             $payment_sync_log->record_count = 0;
             $payment_sync_log->last_synced = $current_date;
             $payment_sync_log->save();
