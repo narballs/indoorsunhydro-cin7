@@ -99,7 +99,12 @@ class GetSalePayments extends Command
         }
 
 
-        $delete_missing_results = SalePaymentOrderItem::whereNotIn('orderId', $orderIds)->delete();
+        $delete_missing_results = SalePaymentOrderItem::whereNotIn('orderId', $orderIds)->get();
+        if (!empty($delete_missing_results)) {
+            foreach ($delete_missing_results as $delete_missing_result) {
+                $delete_missing_result->delete();
+            }
+        }
 
         // Update the sync log
 
@@ -229,122 +234,265 @@ class GetSalePayments extends Command
         $existingPayment = SalePayments::where('orderId', $order['id'])->first();
         if (!$existingPayment) {
             return;
-        }
+        } 
 
-        $existingPayment->update([
-            'customer_first_name' => $order['firstName'],
-            'customer_last_name' => $order['lastName'],
-            'invoice_number' => $order['invoiceNumber'],
-            'po_number' => $order['customerOrderNo'],
-            'company' => $order['company'],
-            'email' => $order['email'],
-            "createdBy" => $order["createdBy"],
-            "processedBy" => $order["processedBy"],
-            "isApproved" => $order["isApproved"],
-            "memberId" => $order["memberId"],
-            "phone" => $order["phone"],
-            "mobile" => $order["mobile"],
-            "fax" => $order["fax"],
-            "deliveryFirstName" => $order["deliveryFirstName"],
-            "deliveryLastName" => $order["deliveryLastName"],
-            "deliveryCompany" => $order["deliveryCompany"],
-            "deliveryAddress1" => $order["deliveryAddress1"],
-            "deliveryAddress2" => $order["deliveryAddress2"],
-            "deliveryCity" => $order["deliveryCity"],
-            "deliveryState" => $order["deliveryState"],
-            "deliveryPostalCode" => $order["deliveryPostalCode"],
-            "deliveryCountry" => $order["deliveryCountry"],
-            "billingFirstName" => $order["billingFirstName"],
-            "billingLastName" => $order["billingLastName"],
-            "billingCompany" => $order["billingCompany"],
-            "billingAddress1" => $order["billingAddress1"],
-            "billingAddress2" => $order["billingAddress2"],
-            "billingCity" => $order["billingCity"],
-            "billingPostalCode" => $order["billingPostalCode"],
-            "billingState" => $order["billingState"],
-            "billingCountry" => $order["billingCountry"],
-            "branchEmail"   => $order["branchEmail"],
-            "projectName" => $order["projectName"],
-            "trackingCode" => $order["trackingCode"],
-            "internalComments" => $order["internalComments"],
-            "productTotal" => $order["productTotal"],
-            "freightTotal" => $order["freightTotal"],
-            "freightDescription" => $order["freightDescription"],
-            "surcharge" => $order["surcharge"],
-            "surchargeDescription" => $order["surchargeDescription"],
-            "discountTotal" => $order["discountTotal"],
-            "discountDescription" ,
-            "total" => $order["total"],
-            "currencyCode" => $order["currencyCode"],
-            "currencyRate" ,
-            "currencySymbol" => $order["currencySymbol"],
-            "taxStatus" => $order["taxStatus"],
-            "taxRate" => $order["taxRate"],
-            "source" => $order["source"],
-            "customFields" => $order["customFields"],
-            "isVoid" => $order["isVoid"],
-            "memberEmail" => $order["memberEmail"],
-            "memberCostCenter" => $order["memberCostCenter"],
-            "memberAlternativeTaxRate" => $order["memberAlternativeTaxRate"],
-            "costCenter" => $order["costCenter"],
-            "alternativeTaxRate" => $order["alternativeTaxRate"],
-            "estimatedDeliveryDate" => $order["estimatedDeliveryDate"],
-            "salesPersonId" => $order["salesPersonId"],
-            "salesPersonEmail" => $order["salesPersonEmail"],
-            "paymentTerms" => $order["paymentTerms"],
-            "voucherCode" => $order["voucherCode"],
-            "deliveryInstructions" => $order["deliveryInstructions"],
-            "cancellationDate" => $order["cancellationDate"],
-            "modifiedCOGSDate" => $order["modifiedCOGSDate"],
-            "status" => $order["status"],
-            "stage" => $order["stage"],
-            "invoiceDate" => $order["invoiceDate"],
-            "dispatchedDate" => $order["dispatchedDate"],
-            "logisticsCarrier" => $order["logisticsCarrier"],
-            "logisticsStatus" => $order["logisticsStatus"],
-            "ediStatus" => $order["ediStatus"],
-            "distributionBranchId" => $order["distributionBranchId"],
-            "departmentNumber" => $order["departmentNumber"],
-            "storeLocationNumber" => $order["storeLocationNumber"],
-            "distributionCenter" => $order["distributionCenter"],
-            "order_created_date" => $order["createdDate"],
+        $existingPayment->customer_first_name = $order['firstName'];
+        $existingPayment->customer_last_name = $order['lastName'];
+        $existingPayment->invoice_number = $order['invoiceNumber'];
+        $existingPayment->po_number = $order['customerOrderNo'];
+        $existingPayment->company = $order['company'];
+        $existingPayment->email = $order['email'];
+        $existingPayment->createdBy = $order['createdBy'];
+        $existingPayment->processedBy = $order['processedBy'];
+        $existingPayment->isApproved = $order['isApproved'];
+        $existingPayment->memberId = $order['memberId'];
+        $existingPayment->phone = $order['phone'];
+        $existingPayment->mobile = $order['mobile'];
+        $existingPayment->fax = $order['fax'];
+        $existingPayment->deliveryFirstName = $order['deliveryFirstName'];
+        $existingPayment->deliveryLastName = $order['deliveryLastName'];
+        $existingPayment->deliveryCompany = $order['deliveryCompany'];
+        $existingPayment->deliveryAddress1 = $order['deliveryAddress1'];
+        $existingPayment->deliveryAddress2 = $order['deliveryAddress2'];
+        $existingPayment->deliveryCity = $order['deliveryCity'];
+        $existingPayment->deliveryState = $order['deliveryState'];
+        $existingPayment->deliveryPostalCode = $order['deliveryPostalCode'];
+        $existingPayment->deliveryCountry = $order['deliveryCountry'];
+        $existingPayment->billingFirstName = $order['billingFirstName'];
+        $existingPayment->billingLastName = $order['billingLastName'];
+        $existingPayment->billingCompany = $order['billingCompany'];
+        $existingPayment->billingAddress1 = $order['billingAddress1'];
+        $existingPayment->billingAddress2 = $order['billingAddress2'];
+        $existingPayment->billingCity = $order['billingCity'];
+        $existingPayment->billingPostalCode = $order['billingPostalCode'];
+        $existingPayment->billingState = $order['billingState'];
+        $existingPayment->billingCountry = $order['billingCountry'];
+        $existingPayment->branchEmail = $order['branchEmail'];
+        $existingPayment->projectName = $order['projectName'];
+        $existingPayment->trackingCode = $order['trackingCode'];
+        $existingPayment->internalComments = $order['internalComments'];
+        $existingPayment->productTotal = $order['productTotal'];
+        $existingPayment->freightTotal = $order['freightTotal'];
+        $existingPayment->freightDescription = $order['freightDescription'];
+        $existingPayment->surcharge = $order['surcharge'];
+        $existingPayment->surchargeDescription = $order['surchargeDescription'];
+        $existingPayment->discountTotal = $order['discountTotal'];
+        $existingPayment->discountDescription = $order['discountDescription'];
+        $existingPayment->total = $order['total'];
+        $existingPayment->currencyCode = $order['currencyCode'];
+        $existingPayment->currencyRate = $order['currencyRate'];
+        $existingPayment->currencySymbol = $order['currencySymbol'];
+        $existingPayment->taxStatus = $order['taxStatus'];
+        $existingPayment->taxRate = $order['taxRate'];
+        $existingPayment->source = $order['source'];
+        $existingPayment->customFields = $order['customFields'];
+        $existingPayment->isVoid = $order['isVoid'];
+        $existingPayment->memberEmail = $order['memberEmail'];
+        $existingPayment->memberCostCenter = $order['memberCostCenter'];
+        $existingPayment->memberAlternativeTaxRate = $order['memberAlternativeTaxRate'];
+        $existingPayment->costCenter = $order['costCenter'];
+        $existingPayment->alternativeTaxRate = $order['alternativeTaxRate'];
+        $existingPayment->estimatedDeliveryDate = $order['estimatedDeliveryDate'];
+        $existingPayment->salesPersonId = $order['salesPersonId'];
+        $existingPayment->salesPersonEmail = $order['salesPersonEmail'];
+        $existingPayment->paymentTerms = $order['paymentTerms'];
+        $existingPayment->voucherCode = $order['voucherCode'];
+        $existingPayment->deliveryInstructions = $order['deliveryInstructions'];
+        $existingPayment->cancellationDate = $order['cancellationDate'];
+        $existingPayment->modifiedCOGSDate = $order['modifiedCOGSDate'];
+        $existingPayment->status = $order['status'];
+        $existingPayment->stage = $order['stage'];
+        $existingPayment->invoiceDate = $order['invoiceDate'];
+        $existingPayment->dispatchedDate = $order['dispatchedDate'];
+        $existingPayment->logisticsCarrier = $order['logisticsCarrier'];
+        $existingPayment->logisticsStatus = $order['logisticsStatus'];
+        $existingPayment->ediStatus = $order['ediStatus'];
+        $existingPayment->distributionBranchId = $order['distributionBranchId'];
+        $existingPayment->departmentNumber = $order['departmentNumber'];
+        $existingPayment->storeLocationNumber = $order['storeLocationNumber'];
+        $existingPayment->distributionCenter = $order['distributionCenter'];
+        $existingPayment->order_created_date = $order['createdDate'];
+        $existingPayment->save();
 
-        ]);
+        // $existingPayment->update([
+        //     'customer_first_name' => $order['firstName'],
+        //     'customer_last_name' => $order['lastName'],
+        //     'invoice_number' => $order['invoiceNumber'],
+        //     'po_number' => $order['customerOrderNo'],
+        //     'company' => $order['company'],
+        //     'email' => $order['email'],
+        //     "createdBy" => $order["createdBy"],
+        //     "processedBy" => $order["processedBy"],
+        //     "isApproved" => $order["isApproved"],
+        //     "memberId" => $order["memberId"],
+        //     "phone" => $order["phone"],
+        //     "mobile" => $order["mobile"],
+        //     "fax" => $order["fax"],
+        //     "deliveryFirstName" => $order["deliveryFirstName"],
+        //     "deliveryLastName" => $order["deliveryLastName"],
+        //     "deliveryCompany" => $order["deliveryCompany"],
+        //     "deliveryAddress1" => $order["deliveryAddress1"],
+        //     "deliveryAddress2" => $order["deliveryAddress2"],
+        //     "deliveryCity" => $order["deliveryCity"],
+        //     "deliveryState" => $order["deliveryState"],
+        //     "deliveryPostalCode" => $order["deliveryPostalCode"],
+        //     "deliveryCountry" => $order["deliveryCountry"],
+        //     "billingFirstName" => $order["billingFirstName"],
+        //     "billingLastName" => $order["billingLastName"],
+        //     "billingCompany" => $order["billingCompany"],
+        //     "billingAddress1" => $order["billingAddress1"],
+        //     "billingAddress2" => $order["billingAddress2"],
+        //     "billingCity" => $order["billingCity"],
+        //     "billingPostalCode" => $order["billingPostalCode"],
+        //     "billingState" => $order["billingState"],
+        //     "billingCountry" => $order["billingCountry"],
+        //     "branchEmail"   => $order["branchEmail"],
+        //     "projectName" => $order["projectName"],
+        //     "trackingCode" => $order["trackingCode"],
+        //     "internalComments" => $order["internalComments"],
+        //     "productTotal" => $order["productTotal"],
+        //     "freightTotal" => $order["freightTotal"],
+        //     "freightDescription" => $order["freightDescription"],
+        //     "surcharge" => $order["surcharge"],
+        //     "surchargeDescription" => $order["surchargeDescription"],
+        //     "discountTotal" => $order["discountTotal"],
+        //     "discountDescription" ,
+        //     "total" => $order["total"],
+        //     "currencyCode" => $order["currencyCode"],
+        //     "currencyRate" ,
+        //     "currencySymbol" => $order["currencySymbol"],
+        //     "taxStatus" => $order["taxStatus"],
+        //     "taxRate" => $order["taxRate"],
+        //     "source" => $order["source"],
+        //     "customFields" => $order["customFields"],
+        //     "isVoid" => $order["isVoid"],
+        //     "memberEmail" => $order["memberEmail"],
+        //     "memberCostCenter" => $order["memberCostCenter"],
+        //     "memberAlternativeTaxRate" => $order["memberAlternativeTaxRate"],
+        //     "costCenter" => $order["costCenter"],
+        //     "alternativeTaxRate" => $order["alternativeTaxRate"],
+        //     "estimatedDeliveryDate" => $order["estimatedDeliveryDate"],
+        //     "salesPersonId" => $order["salesPersonId"],
+        //     "salesPersonEmail" => $order["salesPersonEmail"],
+        //     "paymentTerms" => $order["paymentTerms"],
+        //     "voucherCode" => $order["voucherCode"],
+        //     "deliveryInstructions" => $order["deliveryInstructions"],
+        //     "cancellationDate" => $order["cancellationDate"],
+        //     "modifiedCOGSDate" => $order["modifiedCOGSDate"],
+        //     "status" => $order["status"],
+        //     "stage" => $order["stage"],
+        //     "invoiceDate" => $order["invoiceDate"],
+        //     "dispatchedDate" => $order["dispatchedDate"],
+        //     "logisticsCarrier" => $order["logisticsCarrier"],
+        //     "logisticsStatus" => $order["logisticsStatus"],
+        //     "ediStatus" => $order["ediStatus"],
+        //     "distributionBranchId" => $order["distributionBranchId"],
+        //     "departmentNumber" => $order["departmentNumber"],
+        //     "storeLocationNumber" => $order["storeLocationNumber"],
+        //     "distributionCenter" => $order["distributionCenter"],
+        //     "order_created_date" => $order["createdDate"],
+
+        // ]);
 
         foreach ($order['lineItems'] as $lineItem) {
-            SalePaymentOrderItem::updateOrCreate(
 
-                [
-                    'sale_payment_id' => $existingPayment->sale_payment_id,
-                    'createdDate' => $lineItem['createdDate'],
-                    'transactionId' => $lineItem['transactionId'],
-                    'parentId' => $lineItem['parentId'],
-                    'productOptionId' => $lineItem['productOptionId'],
-                    'integrationRef' => $lineItem['integrationRef'],
-                    'sort' => $lineItem['sort'],
-                    'code' => $lineItem['code'],
-                    'name' => $lineItem['name'],
-                    'option1' => $lineItem['option1'],
-                    'option2' => $lineItem['option2'],
-                    'option3' => $lineItem['option3'],
-                    'qty' => $lineItem['qty'],
-                    'styleCode' => $lineItem['styleCode'],
-                    'barcode' => $lineItem['barcode'],
-                    'sizeCodes' => $lineItem['sizeCodes'],
-                    'lineComments' => $lineItem['lineComments'],
-                    'unitCost' => $lineItem['unitCost'],
-                    'unitPrice' => $lineItem['unitPrice'],
-                    'uomPrice' => $lineItem['uomPrice'],
-                    'discount' => $lineItem['discount'],
-                    'uomQtyOrdered' => $lineItem['uomQtyOrdered'],
-                    'uomQtyShipped' => $lineItem['uomQtyShipped'],
-                    'uomSize' => $lineItem['uomSize'],
-                    'qtyShipped' => $lineItem['qtyShipped'],
-                    'holdingQty' => $lineItem['holdingQty'],
-                    'accountCode' => $lineItem['accountCode']
-                ],
-                ['orderId' =>  $order['id']],
-            );
+            $check_order_id = SalePaymentOrderItem::where('orderId', $order['id'])->first();
+            if (empty($check_order_id)) {
+                $create_new_line_item = new SalePaymentOrderItem();
+                $create_new_line_item->sale_payment_id = $existingPayment->sale_payment_id;
+                $create_new_line_item->createdDate = $lineItem['createdDate'];
+                $create_new_line_item->transactionId = $lineItem['transactionId'];
+                $create_new_line_item->parentId = $lineItem['parentId'];
+                $create_new_line_item->productOptionId = $lineItem['productOptionId'];
+                $create_new_line_item->integrationRef = $lineItem['integrationRef'];
+                $create_new_line_item->sort = $lineItem['sort'];
+                $create_new_line_item->code = $lineItem['code'];
+                $create_new_line_item->name = $lineItem['name'];
+                $create_new_line_item->option1 = $lineItem['option1'];
+                $create_new_line_item->option2 = $lineItem['option2'];
+                $create_new_line_item->option3 = $lineItem['option3'];
+                $create_new_line_item->qty = $lineItem['qty'];
+                $create_new_line_item->styleCode = $lineItem['styleCode'];
+                $create_new_line_item->barcode = $lineItem['barcode'];
+                $create_new_line_item->sizeCodes = $lineItem['sizeCodes'];
+                $create_new_line_item->lineComments = $lineItem['lineComments'];
+                $create_new_line_item->unitCost = $lineItem['unitCost'];
+                $create_new_line_item->unitPrice = $lineItem['unitPrice'];
+                $create_new_line_item->uomPrice = $lineItem['uomPrice'];
+                $create_new_line_item->discount = $lineItem['discount'];
+                $create_new_line_item->uomQtyOrdered = $lineItem['uomQtyOrdered'];
+                $create_new_line_item->uomQtyShipped = $lineItem['uomQtyShipped'];
+                $create_new_line_item->uomSize = $lineItem['uomSize'];
+                $create_new_line_item->qtyShipped = $lineItem['qtyShipped'];
+                $create_new_line_item->holdingQty = $lineItem['holdingQty'];
+                $create_new_line_item->accountCode = $lineItem['accountCode'];
+                $create_new_line_item->orderId = $order['id'];
+                $create_new_line_item->save();   
+            } else {
+                $check_order_id->sale_payment_id = $existingPayment->sale_payment_id;
+                $check_order_id->createdDate = $lineItem['createdDate'];
+                $check_order_id->transactionId = $lineItem['transactionId'];
+                $check_order_id->parentId = $lineItem['parentId'];
+                $check_order_id->productOptionId = $lineItem['productOptionId'];
+                $check_order_id->integrationRef = $lineItem['integrationRef'];
+                $check_order_id->sort = $lineItem['sort'];
+                $check_order_id->code = $lineItem['code'];
+                $check_order_id->name = $lineItem['name'];
+                $check_order_id->option1 = $lineItem['option1'];
+                $check_order_id->option2 = $lineItem['option2'];
+                $check_order_id->option3 = $lineItem['option3'];
+                $check_order_id->qty = $lineItem['qty'];
+                $check_order_id->styleCode = $lineItem['styleCode'];
+                $check_order_id->barcode = $lineItem['barcode'];
+                $check_order_id->sizeCodes = $lineItem['sizeCodes'];
+                $check_order_id->lineComments = $lineItem['lineComments'];
+                $check_order_id->unitCost = $lineItem['unitCost'];
+                $check_order_id->unitPrice = $lineItem['unitPrice'];
+                $check_order_id->uomPrice = $lineItem['uomPrice'];
+                $check_order_id->discount = $lineItem['discount'];
+                $check_order_id->uomQtyOrdered = $lineItem['uomQtyOrdered'];
+                $check_order_id->uomQtyShipped = $lineItem['uomQtyShipped'];
+                $check_order_id->uomSize = $lineItem['uomSize'];
+                $check_order_id->qtyShipped = $lineItem['qtyShipped'];
+                $check_order_id->holdingQty = $lineItem['holdingQty'];
+                $check_order_id->accountCode = $lineItem['accountCode'];
+                $check_order_id->orderId = $order['id'];
+                $check_order_id->save(); 
+                
+            }
+            // SalePaymentOrderItem::updateOrCreate(
+
+                //     [
+                //         'sale_payment_id' => $existingPayment->sale_payment_id,
+                //         'createdDate' => $lineItem['createdDate'],
+                //         'transactionId' => $lineItem['transactionId'],
+                //         'parentId' => $lineItem['parentId'],
+                //         'productOptionId' => $lineItem['productOptionId'],
+                //         'integrationRef' => $lineItem['integrationRef'],
+                //         'sort' => $lineItem['sort'],
+                //         'code' => $lineItem['code'],
+                //         'name' => $lineItem['name'],
+                //         'option1' => $lineItem['option1'],
+                //         'option2' => $lineItem['option2'],
+                //         'option3' => $lineItem['option3'],
+                //         'qty' => $lineItem['qty'],
+                //         'styleCode' => $lineItem['styleCode'],
+                //         'barcode' => $lineItem['barcode'],
+                //         'sizeCodes' => $lineItem['sizeCodes'],
+                //         'lineComments' => $lineItem['lineComments'],
+                //         'unitCost' => $lineItem['unitCost'],
+                //         'unitPrice' => $lineItem['unitPrice'],
+                //         'uomPrice' => $lineItem['uomPrice'],
+                //         'discount' => $lineItem['discount'],
+                //         'uomQtyOrdered' => $lineItem['uomQtyOrdered'],
+                //         'uomQtyShipped' => $lineItem['uomQtyShipped'],
+                //         'uomSize' => $lineItem['uomSize'],
+                //         'qtyShipped' => $lineItem['qtyShipped'],
+                //         'holdingQty' => $lineItem['holdingQty'],
+                //         'accountCode' => $lineItem['accountCode']
+                //     ],
+                //     ['orderId' =>  $order['id']],
+                // );
         }
     }
 
