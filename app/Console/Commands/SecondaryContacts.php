@@ -46,6 +46,8 @@ class SecondaryContacts extends Command
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
+        $total_record_count = 0;
+
         for ($i = 1; $i <= $total_contact_pages; $i++) {
             $this->info('Processing page#' . $i);
             sleep(3);
@@ -63,25 +65,38 @@ class SecondaryContacts extends Command
 
             $contacts = $res->getBody()->getContents();
             $contacts = json_decode($contacts);
+
+
+            $record_count = count($contacts);
+            $total_record_count += $record_count; 
+            $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+            $this->info('Record Count => ' . $record_count);
+                
+            if ($record_count < 1 || empty($record_count)) {
+                $this->info('----------------break-----------------');
+                break;
+            }
             
                 
-                foreach($contacts as $contact) {
-                    $parent_id = $contact->id;
-                    foreach($contact->secondaryContacts as $secondaryContact) {
-                        $contact = new SecondaryContact([
-                            'secondary_id' => $secondaryContact->id,
-                            'parent_id' => $parent_id,
-                            'company' => $secondaryContact->company,
-                            'firstName' => $secondaryContact->firstName,
-                            'lastName' => $secondaryContact->lastName,
-                            'jobTitle' => $secondaryContact->jobTitle,
-                            'email' => $secondaryContact->email,
-                            'mobile' => $secondaryContact->mobile,
-                            'phone' => $secondaryContact->phone
-                        ]);
-                        $contact->save();
-                    }
+            foreach($contacts as $contact) {
+                $parent_id = $contact->id;
+                foreach($contact->secondaryContacts as $secondaryContact) {
+                    $contact = new SecondaryContact([
+                        'secondary_id' => $secondaryContact->id,
+                        'parent_id' => $parent_id,
+                        'company' => $secondaryContact->company,
+                        'firstName' => $secondaryContact->firstName,
+                        'lastName' => $secondaryContact->lastName,
+                        'jobTitle' => $secondaryContact->jobTitle,
+                        'email' => $secondaryContact->email,
+                        'mobile' => $secondaryContact->mobile,
+                        'phone' => $secondaryContact->phone
+                    ]);
+                    $contact->save();
                 }
+            }
         }
     }
 }

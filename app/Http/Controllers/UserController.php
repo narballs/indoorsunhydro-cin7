@@ -663,6 +663,405 @@ class UserController extends Controller
         return redirect()->route('user');
     }
 
+    //swapping keys
+
+    // public function save_contact(CompanyInfoRequest $request)
+    // {
+        
+    //     $price_column = null;
+    //     $content = null;
+    //     $registration_status = false;
+    //     $auto_approved = false;
+    //     $created_contact = null;
+    //     $already_in_cin7 = false;
+    //     $address_validation_flag = true;
+    //     $success = true;   
+    //     $toggle_registration = AdminSetting::where('option_name', 'toggle_registration_approval')->first();
+    //     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+    //     if (!empty($default_price_column)) {
+    //         $price_column = ucfirst($default_price_column->option_value);
+    //     }
+    //     else {
+    //         $price_column = 'RetailUSD';
+    //     }
+    //     $validatedData = $request->validate(
+    //         [
+    //             'street_address' => [
+    //                 'required'
+    //                 // 'regex:/^[a-zA-Z0-9\s-]+$/'
+    //             ],
+    //             'state_id' => 'required',
+    //             'city_id' => 'required',
+    //             'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+    //         ],
+    //         [
+    //             'state_id.required' => 'The state field is required.',
+    //             'city_id.required' => 'The city field is required.',
+    //         ] 
+                
+    //     );
+    //     // $states = UsState::where('id', $request->state_id)->first();
+    //     // $state_name = $states->state_name;
+    //     // $cities = UsCity::where('id', $request->city_id)->first();
+    //     // $city_name = $cities->city;
+    //     // $validatedAddress = UserHelper::validateAddress($request->input('street_address'), $state_name);
+    //     // if ($validatedAddress !== 'OK') {
+    //     //     $address_validation_flag = false;
+    //     //     $created = false;
+    //     //     $validatedAddress_message = 'Address is not valid. Please enter a valid address.';
+    //     //     $success = false;
+    //     // }
+
+    //     // if ($address_validation_flag == true) {
+    //         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+    //         $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+    //         $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
+
+
+    //         $contacts = Contact::where('email', $request->email)->first();
+    //         if (!empty($contacts)) {
+    //             $useFirstCredentials = true;
+    //             $api_contact = $contacts->toArray();
+    //             $client = new \GuzzleHttp\Client();
+    //             $url = "https://api.cin7.com/api/v1/Contacts/";
+    //             $registration_status = false;
+    //             // $response = $client->post($url, [
+    //             //     'headers' => ['Content-type' => 'application/json'],
+    //             //     'auth' => [
+    //             //         SettingHelper::getSetting('cin7_auth_username'),
+    //             //         SettingHelper::getSetting('cin7_auth_password_2')
+    //             //     ],
+    //             //     'json' => [
+    //             //         $api_contact
+    //             //     ],
+    //             // ]);
+    //             // $response = json_decode($response->getBody()->getContents());
+    //             // $registration_status = false;
+    //             // if ($response[0]->success == false) {
+    //             //     $content = 'User already exists in Cin7 . Please contact support.';
+    //             //     $already_in_cin7 = true;
+    //             //     $created = false;
+    //             //     $auth_user = Auth::loginUsingId($contacts->user_id);
+    //             //     $companies = Contact::where('user_id', $auth_user->id)->get();
+    //             //     if ($companies->count() == 1) {
+    //             //         if ($companies[0]->contact_id == null) {
+    //             //             UserHelper::switch_company($companies[0]->secondary_id);
+    //             //         } else {
+    //             //             UserHelper::switch_company($companies[0]->contact_id);
+    //             //         }
+    //             //     }
+    //             //     Session::put('companies', $companies);
+    //             // }
+    //             while (true) {
+    //                 try {
+    //                     $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+    //                     $response = $client->post($url, [
+    //                         'headers' => ['Content-type' => 'application/json'],
+    //                         'auth' => [
+    //                             $cin7_auth_username,
+    //                             $api_password
+    //                         ],
+    //                         'json' => [
+    //                             $api_contact
+    //                         ],
+    //                     ]);
+
+    //                     // Decode response
+    //                     $response = json_decode($response->getBody()->getContents());
+
+    //                     if ($response[0]->success == false) {
+    //                         $content = 'User already exists in Cin7 . Please contact support.';
+    //                         $already_in_cin7 = true;
+    //                         $created = false;
+    //                         $auth_user = Auth::loginUsingId($contacts->user_id);
+    //                         $companies = Contact::where('user_id', $auth_user->id)->get();
+    //                         if ($companies->count() == 1) {
+    //                             if ($companies[0]->contact_id == null) {
+    //                                 UserHelper::switch_company($companies[0]->secondary_id);
+    //                             } else {
+    //                                 UserHelper::switch_company($companies[0]->contact_id);
+    //                             }
+    //                         }
+    //                         Session::put('companies', $companies);
+    //                     }
+
+    //                     // On success, update settings and break out of the loop
+    //                     $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //                     if ($update_master_key_attempt) {
+    //                         $update_master_key_attempt->option_value = 1;
+    //                         $update_master_key_attempt->save();
+    //                     }
+
+    //                     break; // Exit the loop on success
+    //                 } 
+    //                 catch (\Exception $e) {
+
+    //                     $errorlog = new ApiErrorLog();
+    //                     $errorlog->payload = $e->getMessage();
+    //                     $errorlog->exception = $e->getCode();
+    //                     $errorlog->save();
+    
+    //                      // Update master_key_attempt to 0 on failure
+    //                     $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //                     if ($master_key_attempt) {
+    //                         $master_key_attempt->option_value = 0;
+    //                         $master_key_attempt->save();
+    //                     }
+    
+    //                     // Swap credentials
+    //                     $useFirstCredentials = !$useFirstCredentials;
+    //                 }
+    //             }
+    //         }
+    //         else {
+    //             DB::beginTransaction();
+    //             $useFirstCredentials = true;
+    //             while (true) {
+    //                 try {
+    //                     $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+    //                     $states = UsState::where('id', $request->state_id)->first();
+    //                     $state_name = $states->state_name;
+    //                     $cities = UsCity::where('id', $request->city_id)->first();
+    //                     $city_name = $cities->city;
+    //                     $user = User::create([
+    //                         'email' => strtolower($request->get('email')),
+    //                         "first_name" => $request->get('first_name'),
+    //                         "last_name" => $request->get('last_name'),
+    //                         "password" => bcrypt($request->get('password'))
+    //                     ]);
+                        
+    //                     $user_id = $user->id;
+    //                     // $newsletter_subscriber = NewsletterSubscription::where('email', $request->email)->first();
+    //                     // if (empty($newsletter_subscriber)) {
+    //                     //     $newsletter_subscriber->email = $user->email;
+    //                     //     $newsletter_subscriber->save();
+    //                     // }
+    //                     $contact = new Contact([
+    //                         'website' => $request->input('company_website'),
+    //                         'company' => $request->input('company_name'),
+    //                         'phone' => $request->input('phone'),
+    //                         'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
+    //                         'priceColumn' => $price_column,
+    //                         'user_id' => $user_id,
+    //                         'firstName' => $user->first_name,
+    //                         'type' => 'Customer',
+    //                         'lastName' => $user->last_name,
+    //                         'email' => $user->email,
+    //                         'is_parent' => 1,
+    //                         'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
+    //                         'paymentTerms' => $request->paymentTerms,
+    //                         'charge_shipping' => 1,
+    //                         'accountsFirstName' => $user->first_name,
+    //                         'accountsLastName' => $user->last_name,
+    //                         'billingEmail' => SettingHelper::getSetting('noreply_email_address'),
+    //                         'postalAddress1' => $request->input('street_address'),
+    //                         'postalAddress2' => $request->input('suit_apartment'),
+    //                         'postalState' => $state_name,
+    //                         'postalCity' => $city_name,
+    //                         'postalPostCode' => $request->input('zip'),
+    //                         'address1' => $request->input('street_address'),
+    //                         'address2' => $request->input('suit_apartment'),
+    //                         'state' => $state_name,
+    //                         'city' => $city_name,
+    //                         'postCode' => $request->input('zip'),
+    //                     ]);
+    //                     if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
+    //                         $auto_approved = true;
+    //                         $api_contact = $contact->toArray();
+    //                         $client = new \GuzzleHttp\Client();
+    //                         $url = "https://api.cin7.com/api/v1/Contacts/";
+    //                         $response = $client->post($url, [
+    //                             'headers' => ['Content-type' => 'application/json'],
+    //                             'auth' => [
+    //                                 $cin7_auth_username,
+    //                                 $api_password
+    //                             ],
+    //                             'json' => [
+    //                                 $api_contact
+    //                             ],
+    //                         ]);
+    //                         $response = json_decode($response->getBody()->getContents());
+    //                         if ($response[0]->success == true) {
+    //                             $created = true;
+    //                             $contact->contact_id = $response[0]->id;
+    //                             $contact->save();
+    //                             $created_contact = Contact::where('id', $contact->id)->first();
+    //                             $registration_status = true;
+    //                             $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+    //                             $admin_users = $admin_users->toArray();
+                
+    //                             $users_with_role_admin = User::select("email")
+    //                                 ->whereIn('id', $admin_users)
+    //                                 ->get();
+                                
+    //                             $user_log = UserLog::create([
+    //                                 'user_id' => $user->id,
+    //                                 'action' => 'Signup',
+    //                                 'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
+    //                             ]);
+                
+    //                             $contact = Contact::where('user_id', $user->id)->first()->update(
+    //                                 [
+    //                                     'postalAddress1' => $request->input('street_address'),
+    //                                     'postalAddress2' => $request->input('suit_apartment'),
+    //                                     'postalState' => $state_name,
+    //                                     'postalCity' => $city_name,
+    //                                     'postalPostCode' => $request->input('zip'),
+    //                                     'address1' => $request->input('street_address'),
+    //                                     'address2' => $request->input('suit_apartment'),
+    //                                     'state' => $state_name,
+    //                                     'city' => $city_name,
+    //                                     'postCode' => $request->input('zip'),
+    //                                 ]
+    //                             );
+    //                             $auth_user = Auth::loginUsingId($created_contact->user_id);
+    //                             $companies = Contact::where('user_id', $auth_user->id)->get();
+    //                             if ($companies->count() == 1) {
+    //                                 if ($companies[0]->contact_id == null) {
+    //                                     UserHelper::switch_company($companies[0]->secondary_id);
+    //                                 } else {
+    //                                     UserHelper::switch_company($companies[0]->contact_id);
+    //                                 }
+    //                                 Session::put('companies', $companies);
+    //                             }
+                                
+                                
+    //                         } 
+    //                         $content = 'Your account has been created successfully and approved by admin.';
+    //                     } else {
+    //                         $auto_approved = false;
+    //                         $created = true;
+    //                         $contact->save();
+    //                         $created_contact = Contact::where('id', $contact->id)->first();
+    //                         $registration_status = true;
+    //                         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+    //                         $admin_users = $admin_users->toArray();
+
+    //                         $users_with_role_admin = User::select("email")
+    //                             ->whereIn('id', $admin_users)
+    //                             ->get();
+                            
+    //                         $user_log = UserLog::create([
+    //                             'user_id' => $user->id,
+    //                             'action' => 'Signup',
+    //                             'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
+    //                         ]);
+
+    //                         $contact = Contact::where('user_id', $user->id)->first()->update(
+    //                             [
+    //                                 'postalAddress1' => $request->input('street_address'),
+    //                                 'postalAddress2' => $request->input('suit_apartment'),
+    //                                 'postalState' => $state_name,
+    //                                 'postalCity' => $city_name,
+    //                                 'postalPostCode' => $request->input('zip'),
+    //                                 'address1' => $request->input('street_address'),
+    //                                 'address2' => $request->input('suit_apartment'),
+    //                                 'state' => $state_name,
+    //                                 'city' => $city_name,
+    //                                 'postCode' => $request->input('zip'),
+    //                             ]
+    //                         );
+    //                         $auth_user = Auth::loginUsingId($created_contact->user_id);
+    //                         $companies = Contact::where('user_id', $auth_user->id)->get();
+    //                         if ($companies->count() == 1) {
+    //                             if ($companies[0]->contact_id == null) {
+    //                                 UserHelper::switch_company($companies[0]->secondary_id);
+    //                             } else {
+    //                                 UserHelper::switch_company($companies[0]->contact_id);
+    //                             }
+    //                             Session::put('companies', $companies);
+    //                         }
+    //                         $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
+    //                     }
+                        
+    //                     $data = [
+    //                         'user' => $user,
+    //                         'subject' => 'New Register User',
+    //                         'name' => $user->first_name . ' ' . $user->last_name,
+    //                         'content' => $content,
+    //                         'email' => $user->email,
+    //                         'subject' => 'Your account registration request ',
+    //                         'from' => SettingHelper::getSetting('noreply_email_address')
+    //                     ];
+
+                        
+    //                     if ($registration_status == true) {
+    //                         if (!empty($users_with_role_admin)) {
+    //                             foreach ($users_with_role_admin as $role_admin) {
+    //                                 $subject = 'New Register User';
+    //                                 $data['email'] = $role_admin->email;
+    //                                 MailHelper::sendMailNotification('emails.admin_notification', $data);
+    //                             }
+    //                         }
+    //                         if (!empty($created_contact)) {
+    //                             if ($auto_approved == true) {
+    //                                 $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+    //                                 $data['contact_email'] = $created_contact->email;
+    //                                 $data['content'] = $content;
+    //                                 $data['subject'] = 'Your account registration request ';
+    //                                 MailHelper::sendMailNotification('emails.approval-notifications', $data);
+    //                             } else {
+    //                                 $data['content'] = $content;
+    //                                 $data['subject'] = 'Your account registration request ';
+    //                                 MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+    //                             }
+    //                         }
+    //                     } else {
+    //                         $data['content'] = 'User already exists in Cin7 . Please contact support.';
+    //                         $data['subject'] = 'User already exists in Cin7 . Please contact support.';
+    //                         MailHelper::sendMailNotification('emails.approval-notifications', $data);
+    //                     }
+
+
+    //                     // On success, update settings and break out of the loop
+    //                     $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //                     if ($update_master_key_attempt) {
+    //                         $update_master_key_attempt->option_value = 1;
+    //                         $update_master_key_attempt->save();
+    //                     }
+
+                        
+    //                     DB::commit();
+    //                     break; // Exit the loop on success
+    //                 } 
+    //                 catch (\Exception $e) {
+    //                     DB::rollback();
+    //                     $created = false;
+    //                     $success = false;
+    //                     $content = 'Something went wrong. Please contact admin.';
+
+    //                     $errorlog = new ApiErrorLog();
+    //                     $errorlog->payload = $e->getMessage();
+    //                     $errorlog->exception = $e->getCode();
+    //                     $errorlog->save();
+    
+    //                      // Update master_key_attempt to 0 on failure
+    //                     $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //                     if ($master_key_attempt) {
+    //                         $master_key_attempt->option_value = 0;
+    //                         $master_key_attempt->save();
+    //                     }
+    
+    //                     // Swap credentials
+    //                     $useFirstCredentials = !$useFirstCredentials;
+    //                 }
+    //             }
+    //         }
+            
+            
+    //     // }
+
+    //     return response()->json([
+    //         // 'address_validator' => $address_validation_flag,
+    //         'success' => $success,
+    //         'created' => $created,
+    //         'msg' => $content,
+    //         // 'address_validation_message' => $validatedAddress_message
+    //     ]);
+        
+    // }
+
+
     public function save_contact(CompanyInfoRequest $request)
     {
         
@@ -698,160 +1097,173 @@ class UserController extends Controller
             ] 
                 
         );
-        // $states = UsState::where('id', $request->state_id)->first();
-        // $state_name = $states->state_name;
-        // $cities = UsCity::where('id', $request->city_id)->first();
-        // $city_name = $cities->city;
-        // $validatedAddress = UserHelper::validateAddress($request->input('street_address'), $state_name);
-        // if ($validatedAddress !== 'OK') {
-        //     $address_validation_flag = false;
-        //     $created = false;
-        //     $validatedAddress_message = 'Address is not valid. Please enter a valid address.';
-        //     $success = false;
-        // }
-
-        // if ($address_validation_flag == true) {
-            $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-            $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
-            $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
-
-
-            $contacts = Contact::where('email', $request->email)->first();
-            if (!empty($contacts)) {
-                $useFirstCredentials = true;
-                $api_contact = $contacts->toArray();
-                $client = new \GuzzleHttp\Client();
-                $url = "https://api.cin7.com/api/v1/Contacts/";
-                $registration_status = false;
-                // $response = $client->post($url, [
-                //     'headers' => ['Content-type' => 'application/json'],
-                //     'auth' => [
-                //         SettingHelper::getSetting('cin7_auth_username'),
-                //         SettingHelper::getSetting('cin7_auth_password_2')
-                //     ],
-                //     'json' => [
-                //         $api_contact
-                //     ],
-                // ]);
-                // $response = json_decode($response->getBody()->getContents());
-                // $registration_status = false;
-                // if ($response[0]->success == false) {
-                //     $content = 'User already exists in Cin7 . Please contact support.';
-                //     $already_in_cin7 = true;
-                //     $created = false;
-                //     $auth_user = Auth::loginUsingId($contacts->user_id);
-                //     $companies = Contact::where('user_id', $auth_user->id)->get();
-                //     if ($companies->count() == 1) {
-                //         if ($companies[0]->contact_id == null) {
-                //             UserHelper::switch_company($companies[0]->secondary_id);
-                //         } else {
-                //             UserHelper::switch_company($companies[0]->contact_id);
-                //         }
-                //     }
-                //     Session::put('companies', $companies);
+            
+        $contacts = Contact::where('email', $request->email)->first();
+        if (!empty($contacts)) {
+            $api_contact = $contacts->toArray();
+            $client = new \GuzzleHttp\Client();
+            $url = "https://api.cin7.com/api/v1/Contacts/";
+            $response = $client->post($url, [
+                'headers' => ['Content-type' => 'application/json'],
+                'auth' => [
+                    SettingHelper::getSetting('cin7_auth_username'),
+                    SettingHelper::getSetting('cin7_auth_password_2')
+                ],
+                'json' => [
+                    $api_contact
+                ],
+            ]);
+            $response = json_decode($response->getBody()->getContents());
+            $registration_status = false;
+            if ($response[0]->success == false) {
+                $content = 'User already exists in Cin7 . Please contact support.';
+                $already_in_cin7 = true;
+                $created = false;
+                $auth_user = Auth::loginUsingId($contacts->user_id);
+                $companies = Contact::where('user_id', $auth_user->id)->get();
+                if ($companies->count() == 1) {
+                    if ($companies[0]->contact_id == null) {
+                        UserHelper::switch_company($companies[0]->secondary_id);
+                    } else {
+                        UserHelper::switch_company($companies[0]->contact_id);
+                    }
+                }
+                Session::put('companies', $companies);
+            }
+        }
+        else {
+            DB::beginTransaction();
+            try {
+                $states = UsState::where('id', $request->state_id)->first();
+                $state_name = $states->state_name;
+                $cities = UsCity::where('id', $request->city_id)->first();
+                $city_name = $cities->city;
+                $user = User::create([
+                    'email' => strtolower($request->get('email')),
+                    "first_name" => $request->get('first_name'),
+                    "last_name" => $request->get('last_name'),
+                    "password" => bcrypt($request->get('password'))
+                ]);
+                
+                $user_id = $user->id;
+                // $newsletter_subscriber = NewsletterSubscription::where('email', $request->email)->first();
+                // if (empty($newsletter_subscriber)) {
+                //     $newsletter_subscriber->email = $user->email;
+                //     $newsletter_subscriber->save();
                 // }
-                while (true) {
-                    try {
-                        $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
-                        $response = $client->post($url, [
-                            'headers' => ['Content-type' => 'application/json'],
-                            'auth' => [
-                                $cin7_auth_username,
-                                $api_password
-                            ],
-                            'json' => [
-                                $api_contact
-                            ],
+                $contact = new Contact([
+                    'website' => $request->input('company_website'),
+                    'company' => $request->input('company_name'),
+                    'phone' => $request->input('phone'),
+                    'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
+                    'priceColumn' => $price_column,
+                    'user_id' => $user_id,
+                    'firstName' => $user->first_name,
+                    'type' => 'Customer',
+                    'lastName' => $user->last_name,
+                    'email' => $user->email,
+                    'is_parent' => 1,
+                    'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
+                    'paymentTerms' => $request->paymentTerms,
+                    'charge_shipping' => 1,
+                    'accountsFirstName' => $user->first_name,
+                    'accountsLastName' => $user->last_name,
+                    'billingEmail' => SettingHelper::getSetting('noreply_email_address'),
+                    'postalAddress1' => $request->input('street_address'),
+                    'postalAddress2' => $request->input('suit_apartment'),
+                    'postalState' => $state_name,
+                    'postalCity' => $city_name,
+                    'postalPostCode' => $request->input('zip'),
+                    'address1' => $request->input('street_address'),
+                    'address2' => $request->input('suit_apartment'),
+                    'state' => $state_name,
+                    'city' => $city_name,
+                    'postCode' => $request->input('zip'),
+                ]);
+                if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
+                    $auto_approved = true;
+                    $api_contact = $contact->toArray();
+                    $client = new \GuzzleHttp\Client();
+                    $url = "https://api.cin7.com/api/v1/Contacts/";
+                    $response = $client->post($url, [
+                        'headers' => ['Content-type' => 'application/json'],
+                        'auth' => [
+                            SettingHelper::getSetting('cin7_auth_username'),
+                            SettingHelper::getSetting('cin7_auth_password_2')
+                        ],
+                        'json' => [
+                            $api_contact
+                        ],
+                    ]);
+                    $response = json_decode($response->getBody()->getContents());
+                    if ($response[0]->success == true) {
+                        $created = true;
+                        $contact->contact_id = $response[0]->id;
+                        $contact->save();
+                        $created_contact = Contact::where('id', $contact->id)->first();
+                        $registration_status = true;
+                        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+                        $admin_users = $admin_users->toArray();
+        
+                        $users_with_role_admin = User::select("email")
+                            ->whereIn('id', $admin_users)
+                            ->get();
+                        
+                        $user_log = UserLog::create([
+                            'user_id' => $user->id,
+                            'action' => 'Signup',
+                            'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
                         ]);
-
-                        // Decode response
-                        $response = json_decode($response->getBody()->getContents());
-
-                        if ($response[0]->success == false) {
-                            $content = 'User already exists in Cin7 . Please contact support.';
-                            $already_in_cin7 = true;
-                            $created = false;
-                            $auth_user = Auth::loginUsingId($contacts->user_id);
-                            $companies = Contact::where('user_id', $auth_user->id)->get();
-                            if ($companies->count() == 1) {
-                                if ($companies[0]->contact_id == null) {
-                                    UserHelper::switch_company($companies[0]->secondary_id);
-                                } else {
-                                    UserHelper::switch_company($companies[0]->contact_id);
-                                }
+        
+                        $contact = Contact::where('user_id', $user->id)->first()->update(
+                            [
+                                'postalAddress1' => $request->input('street_address'),
+                                'postalAddress2' => $request->input('suit_apartment'),
+                                'postalState' => $state_name,
+                                'postalCity' => $city_name,
+                                'postalPostCode' => $request->input('zip'),
+                                'address1' => $request->input('street_address'),
+                                'address2' => $request->input('suit_apartment'),
+                                'state' => $state_name,
+                                'city' => $city_name,
+                                'postCode' => $request->input('zip'),
+                            ]
+                        );
+                        $auth_user = Auth::loginUsingId($created_contact->user_id);
+                        $companies = Contact::where('user_id', $auth_user->id)->get();
+                        if ($companies->count() == 1) {
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
                             }
                             Session::put('companies', $companies);
                         }
-
-                        // On success, update settings and break out of the loop
-                        $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                        if ($update_master_key_attempt) {
-                            $update_master_key_attempt->option_value = 1;
-                            $update_master_key_attempt->save();
-                        }
-
-                        break; // Exit the loop on success
-                    } 
-                    catch (\Exception $e) {
-
-                        $errorlog = new ApiErrorLog();
-                        $errorlog->payload = $e->getMessage();
-                        $errorlog->exception = $e->getCode();
-                        $errorlog->save();
-    
-                         // Update master_key_attempt to 0 on failure
-                        $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                        if ($master_key_attempt) {
-                            $master_key_attempt->option_value = 0;
-                            $master_key_attempt->save();
-                        }
-    
-                        // Swap credentials
-                        $useFirstCredentials = !$useFirstCredentials;
-                    }
-                }
-            }
-            else {
-                DB::beginTransaction();
-                $useFirstCredentials = true;
-                while (true) {
-                    try {
-                        $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
-                        $states = UsState::where('id', $request->state_id)->first();
-                        $state_name = $states->state_name;
-                        $cities = UsCity::where('id', $request->city_id)->first();
-                        $city_name = $cities->city;
-                        $user = User::create([
-                            'email' => strtolower($request->get('email')),
-                            "first_name" => $request->get('first_name'),
-                            "last_name" => $request->get('last_name'),
-                            "password" => bcrypt($request->get('password'))
-                        ]);
                         
-                        $user_id = $user->id;
-                        // $newsletter_subscriber = NewsletterSubscription::where('email', $request->email)->first();
-                        // if (empty($newsletter_subscriber)) {
-                        //     $newsletter_subscriber->email = $user->email;
-                        //     $newsletter_subscriber->save();
-                        // }
-                        $contact = new Contact([
-                            'website' => $request->input('company_website'),
-                            'company' => $request->input('company_name'),
-                            'phone' => $request->input('phone'),
-                            'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
-                            'priceColumn' => $price_column,
-                            'user_id' => $user_id,
-                            'firstName' => $user->first_name,
-                            'type' => 'Customer',
-                            'lastName' => $user->last_name,
-                            'email' => $user->email,
-                            'is_parent' => 1,
-                            'tax_class' => strtolower($state_name) == strtolower('California') ? '8.75%' : 'Out of State',
-                            'paymentTerms' => $request->paymentTerms,
-                            'charge_shipping' => 1,
-                            'accountsFirstName' => $user->first_name,
-                            'accountsLastName' => $user->last_name,
-                            'billingEmail' => SettingHelper::getSetting('noreply_email_address'),
+                        
+                    } 
+                    $content = 'Your account has been created successfully and approved by admin.';
+                } else {
+                    $auto_approved = false;
+                    $created = true;
+                    $contact->save();
+                    $created_contact = Contact::where('id', $contact->id)->first();
+                    $registration_status = true;
+                    $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+                    $admin_users = $admin_users->toArray();
+
+                    $users_with_role_admin = User::select("email")
+                        ->whereIn('id', $admin_users)
+                        ->get();
+                    
+                    $user_log = UserLog::create([
+                        'user_id' => $user->id,
+                        'action' => 'Signup',
+                        'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
+                    ]);
+
+                    $contact = Contact::where('user_id', $user->id)->first()->update(
+                        [
                             'postalAddress1' => $request->input('street_address'),
                             'postalAddress2' => $request->input('suit_apartment'),
                             'postalState' => $state_name,
@@ -862,199 +1274,69 @@ class UserController extends Controller
                             'state' => $state_name,
                             'city' => $city_name,
                             'postCode' => $request->input('zip'),
-                        ]);
-                        if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
-                            $auto_approved = true;
-                            $api_contact = $contact->toArray();
-                            $client = new \GuzzleHttp\Client();
-                            $url = "https://api.cin7.com/api/v1/Contacts/";
-                            $response = $client->post($url, [
-                                'headers' => ['Content-type' => 'application/json'],
-                                'auth' => [
-                                    $cin7_auth_username,
-                                    $api_password
-                                ],
-                                'json' => [
-                                    $api_contact
-                                ],
-                            ]);
-                            $response = json_decode($response->getBody()->getContents());
-                            if ($response[0]->success == true) {
-                                $created = true;
-                                $contact->contact_id = $response[0]->id;
-                                $contact->save();
-                                $created_contact = Contact::where('id', $contact->id)->first();
-                                $registration_status = true;
-                                $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-                                $admin_users = $admin_users->toArray();
-                
-                                $users_with_role_admin = User::select("email")
-                                    ->whereIn('id', $admin_users)
-                                    ->get();
-                                
-                                $user_log = UserLog::create([
-                                    'user_id' => $user->id,
-                                    'action' => 'Signup',
-                                    'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
-                                ]);
-                
-                                $contact = Contact::where('user_id', $user->id)->first()->update(
-                                    [
-                                        'postalAddress1' => $request->input('street_address'),
-                                        'postalAddress2' => $request->input('suit_apartment'),
-                                        'postalState' => $state_name,
-                                        'postalCity' => $city_name,
-                                        'postalPostCode' => $request->input('zip'),
-                                        'address1' => $request->input('street_address'),
-                                        'address2' => $request->input('suit_apartment'),
-                                        'state' => $state_name,
-                                        'city' => $city_name,
-                                        'postCode' => $request->input('zip'),
-                                    ]
-                                );
-                                $auth_user = Auth::loginUsingId($created_contact->user_id);
-                                $companies = Contact::where('user_id', $auth_user->id)->get();
-                                if ($companies->count() == 1) {
-                                    if ($companies[0]->contact_id == null) {
-                                        UserHelper::switch_company($companies[0]->secondary_id);
-                                    } else {
-                                        UserHelper::switch_company($companies[0]->contact_id);
-                                    }
-                                    Session::put('companies', $companies);
-                                }
-                                
-                                
-                            } 
-                            $content = 'Your account has been created successfully and approved by admin.';
+                        ]
+                    );
+                    $auth_user = Auth::loginUsingId($created_contact->user_id);
+                    $companies = Contact::where('user_id', $auth_user->id)->get();
+                    if ($companies->count() == 1) {
+                        if ($companies[0]->contact_id == null) {
+                            UserHelper::switch_company($companies[0]->secondary_id);
                         } else {
-                            $auto_approved = false;
-                            $created = true;
-                            $contact->save();
-                            $created_contact = Contact::where('id', $contact->id)->first();
-                            $registration_status = true;
-                            $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-                            $admin_users = $admin_users->toArray();
-
-                            $users_with_role_admin = User::select("email")
-                                ->whereIn('id', $admin_users)
-                                ->get();
-                            
-                            $user_log = UserLog::create([
-                                'user_id' => $user->id,
-                                'action' => 'Signup',
-                                'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
-                            ]);
-
-                            $contact = Contact::where('user_id', $user->id)->first()->update(
-                                [
-                                    'postalAddress1' => $request->input('street_address'),
-                                    'postalAddress2' => $request->input('suit_apartment'),
-                                    'postalState' => $state_name,
-                                    'postalCity' => $city_name,
-                                    'postalPostCode' => $request->input('zip'),
-                                    'address1' => $request->input('street_address'),
-                                    'address2' => $request->input('suit_apartment'),
-                                    'state' => $state_name,
-                                    'city' => $city_name,
-                                    'postCode' => $request->input('zip'),
-                                ]
-                            );
-                            $auth_user = Auth::loginUsingId($created_contact->user_id);
-                            $companies = Contact::where('user_id', $auth_user->id)->get();
-                            if ($companies->count() == 1) {
-                                if ($companies[0]->contact_id == null) {
-                                    UserHelper::switch_company($companies[0]->secondary_id);
-                                } else {
-                                    UserHelper::switch_company($companies[0]->contact_id);
-                                }
-                                Session::put('companies', $companies);
-                            }
-                            $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
+                            UserHelper::switch_company($companies[0]->contact_id);
                         }
-                        
-                        $data = [
-                            'user' => $user,
-                            'subject' => 'New Register User',
-                            'name' => $user->first_name . ' ' . $user->last_name,
-                            'content' => $content,
-                            'email' => $user->email,
-                            'subject' => 'Your account registration request ',
-                            'from' => SettingHelper::getSetting('noreply_email_address')
-                        ];
-
-                        
-                        if ($registration_status == true) {
-                            if (!empty($users_with_role_admin)) {
-                                foreach ($users_with_role_admin as $role_admin) {
-                                    $subject = 'New Register User';
-                                    $data['email'] = $role_admin->email;
-                                    MailHelper::sendMailNotification('emails.admin_notification', $data);
-                                }
-                            }
-                            if (!empty($created_contact)) {
-                                if ($auto_approved == true) {
-                                    $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
-                                    $data['contact_email'] = $created_contact->email;
-                                    $data['content'] = $content;
-                                    $data['subject'] = 'Your account registration request ';
-                                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                                } else {
-                                    $data['content'] = $content;
-                                    $data['subject'] = 'Your account registration request ';
-                                    MailHelper::sendMailNotification('emails.user_registration_notification', $data);
-                                }
-                            }
-                        } else {
-                            $data['content'] = 'User already exists in Cin7 . Please contact support.';
-                            $data['subject'] = 'User already exists in Cin7 . Please contact support.';
-                            MailHelper::sendMailNotification('emails.approval-notifications', $data);
-                        }
-
-
-                        // On success, update settings and break out of the loop
-                        $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                        if ($update_master_key_attempt) {
-                            $update_master_key_attempt->option_value = 1;
-                            $update_master_key_attempt->save();
-                        }
-
-                        
-                        DB::commit();
-                        break; // Exit the loop on success
-                    } 
-                    catch (\Exception $e) {
-                        DB::rollback();
-                        $created = false;
-                        $success = false;
-                        $content = 'Something went wrong. Please contact admin.';
-
-                        $errorlog = new ApiErrorLog();
-                        $errorlog->payload = $e->getMessage();
-                        $errorlog->exception = $e->getCode();
-                        $errorlog->save();
-    
-                         // Update master_key_attempt to 0 on failure
-                        $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                        if ($master_key_attempt) {
-                            $master_key_attempt->option_value = 0;
-                            $master_key_attempt->save();
-                        }
-    
-                        // Swap credentials
-                        $useFirstCredentials = !$useFirstCredentials;
+                        Session::put('companies', $companies);
                     }
+                    $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
                 }
+                
+                $data = [
+                    'user' => $user,
+                    'subject' => 'New Register User',
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'content' => $content,
+                    'email' => $user->email,
+                    'subject' => 'Your account registration request ',
+                    'from' => SettingHelper::getSetting('noreply_email_address')
+                ];
+                if ($registration_status == true) {
+                    if (!empty($users_with_role_admin)) {
+                        foreach ($users_with_role_admin as $role_admin) {
+                            $subject = 'New Register User';
+                            $data['email'] = $role_admin->email;
+                            MailHelper::sendMailNotification('emails.admin_notification', $data);
+                        }
+                    }
+                    if (!empty($created_contact)) {
+                        if ($auto_approved == true) {
+                            $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;
+                            $data['contact_email'] = $created_contact->email;
+                            $data['content'] = $content;
+                            $data['subject'] = 'Your account registration request ';
+                            MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                        } else {
+                            $data['content'] = $content;
+                            $data['subject'] = 'Your account registration request ';
+                            MailHelper::sendMailNotification('emails.user_registration_notification', $data);
+                        }
+                    }
+                } else {
+                    $data['content'] = 'User already exists in Cin7 . Please contact support.';
+                    $data['subject'] = 'User already exists in Cin7 . Please contact support.';
+                    MailHelper::sendMailNotification('emails.approval-notifications', $data);
+                }
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+                $created = false;
+                $success = false;
+                $content = 'Something went wrong. Please contact admin.';
             }
-            
-            
-        // }
+        }
 
         return response()->json([
-            // 'address_validator' => $address_validation_flag,
             'success' => $success,
             'created' => $created,
             'msg' => $content,
-            // 'address_validation_message' => $validatedAddress_message
         ]);
         
     }
@@ -1814,6 +2096,190 @@ class UserController extends Controller
         return $data;
     }
 
+    // swap keys
+    // public function address_user_my_account(Request $request)
+    // {
+        
+        
+    //     $request->validate([
+    //         'first_name' => 'required',
+    //         'last_name' => 'required',
+    //         'company_name' => 'required',
+    //         'address' => 'required',
+    //         'state' => 'required',
+    //         'phone' => 'required',
+    //         'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+    //     ]);
+
+    //     $response  = null;
+    //     $get_contact = null;
+    //     $contact_type = null;
+    //     $address_type  = null;
+    //     $response_status = false;
+    //     $contact_synced = false;
+    //     $contact_id = $request->contact_id;
+    //     $secondary_id = $request->secondary_id;
+    //     $response_status = null;
+    //     $responseBody = null;
+    //     $cin7_status = null;
+
+
+    //     if (!empty($request->type) && $request->type == 'update shipping address') {
+    //         $address_type = 'shipping';
+    //     }
+        
+    //     if (!empty($request->type) && $request->type == 'update billing address') {
+    //         $address_type = 'billing';
+    //     }
+
+    //     if (!empty($request->contact_id)) {
+    //         $get_contact = Contact::where('contact_id', $contact_id)
+    //         ->where('is_parent', 1)
+    //         ->first();
+    //         $contact_type = 'primary';
+    //     }
+
+    //     if (!empty($secondary_id) && empty($contact_id)) {
+    //         $secondary_contact = Contact::where('secondary_id', $secondary_id)
+    //         ->where('is_parent', 0)
+    //         ->first();
+    //         $contact_type = 'secondary';
+    //         $get_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
+    //     }
+
+        
+
+
+    //     if (!empty($get_contact) && !empty($address_type)) {
+    //         if ($address_type === 'shipping') {
+    //             $get_contact->firstName = $request->first_name;
+    //             $get_contact->lastName = $request->last_name;
+    //             $get_contact->company = $request->company_name;
+    //             $get_contact->address1 = $request->address;
+    //             $get_contact->address2 = $request->address2;
+    //             $get_contact->state = $request->state;
+    //             $get_contact->city = $request->town_city;
+    //             $get_contact->postCode = $request->zip;
+    //             $get_contact->phone = $request->phone;
+    //             $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
+    //             $get_contact->save();
+    //             $response = $get_contact;
+    //             $response_status = true;
+    //         }
+
+    //         if ($address_type === 'billing') {
+    //             $get_contact->firstName = $request->first_name;
+    //             $get_contact->lastName = $request->last_name;
+    //             $get_contact->company = $request->company_name;
+    //             $get_contact->postalAddress1 = $request->address;
+    //             $get_contact->postalAddress2 = $request->address2;
+    //             $get_contact->postalState = $request->state;
+    //             $get_contact->postalCity = $request->town_city;
+    //             $get_contact->postalPostCode = $request->zip;
+    //             $get_contact->phone = $request->phone;
+    //             $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
+    //             $get_contact->save();
+    //             $response = $get_contact;
+    //             $response_status = true;
+    //         }
+    //     } else {
+    //         $response_status = false;
+    //     }
+
+
+    //     if ($response_status == true) {
+    //         $contact = Contact::where('id', $get_contact->id)->first();
+
+    //         $body = [
+    //             'id'=> $contact->contact_id,
+    //             'type' => $contact->type,
+    //             'firstName' => $contact->firstName,
+    //             'lastName' => $contact->lastName,
+    //             'address1' => $contact->address1,
+    //             'address2' => $contact->address2,
+    //             'city' => $contact->city,
+    //             'state' => $contact->state,
+    //             'postCode' => $contact->postCode,
+    //             'postalAddress1' => $contact->postalAddress1,
+    //             'postalAddress2' => $contact->postalAddress2,
+    //             'postalCity' => $contact->postalCity,
+    //             'postalState' => $contact->postalState,
+    //             'postalPostCode' => $contact->postalPostCode,
+    //             'phone' => $contact->phone,
+    //         ];
+
+            
+    //         // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+    //         // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+    //         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+    //         $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
+    //         $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
+            
+    //         $client = new \GuzzleHttp\Client();
+
+    //         $useFirstCredentials = true;
+
+    //         while (true) {
+    //             try {
+    //                 $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
+    //                 $response = $client->request('PUT', 'https://api.cin7.com/api/v1/Contacts', [
+    //                     // 'auth' => [$cin7_auth_username, $cin7_auth_password], // Authenticate with Cin7 API credentials
+    //                     'auth' => [$cin7_auth_username, $api_password], // Authenticate with Cin7 API credentials
+    //                     'json' =>  [
+    //                         $body
+    //                     ],
+    //                     'headers' => [
+    //                         'Content-Type' => 'application/json' // Specify Content-Type header
+    //                     ]
+    //                 ]);
+                    
+    //                 $responseBody = $response->getBody()->getContents();
+    //                 $cin7_status = $response->getStatusCode();
+    //                 $response_status = true;
+
+    //                 $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //                 if ($update_master_key_attempt) {
+    //                     $update_master_key_attempt->option_value = 1;
+    //                     $update_master_key_attempt->save();
+    //                 }
+
+    //                 break;
+
+    //             } catch (\Exception $e) {
+    //                 $errorlog = new ApiErrorLog();
+    //                 $errorlog->payload = $e->getMessage();
+    //                 $errorlog->exception = $e->getCode();
+    //                 $errorlog->save();
+
+    //                  // Update master_key_attempt to 0 on failure
+    //                 $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
+    //                 if ($master_key_attempt) {
+    //                     $master_key_attempt->option_value = 0;
+    //                     $master_key_attempt->save();
+    //                 }
+
+    //                 // Swap credentials
+    //                 $useFirstCredentials = !$useFirstCredentials;
+
+    //                 $cin7_status = $e->getCode();
+    //                 $response_status = false;
+    //             }
+    //         }
+    //     }
+
+
+    //     return response()->json(
+    //         [
+    //             'cin7_status' => $cin7_status,
+    //             'status' => $response_status,
+    //             'success' => true, 
+    //             'data' => $responseBody ,
+    //             'msg' => 'Address updated and synced Successfully'
+    //         ]
+    //     );
+    // }
+
     public function address_user_my_account(Request $request)
     {
         
@@ -2008,63 +2474,21 @@ class UserController extends Controller
             ];
 
             
-            // $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-            // $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
-
             $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-            $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
-            $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
-            
+            $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
             $client = new \GuzzleHttp\Client();
-
-            $useFirstCredentials = true;
-
-            while (true) {
-                try {
-                    $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
-                    $response = $client->request('PUT', 'https://api.cin7.com/api/v1/Contacts', [
-                        // 'auth' => [$cin7_auth_username, $cin7_auth_password], // Authenticate with Cin7 API credentials
-                        'auth' => [$cin7_auth_username, $api_password], // Authenticate with Cin7 API credentials
-                        'json' =>  [
-                            $body
-                        ],
-                        'headers' => [
-                            'Content-Type' => 'application/json' // Specify Content-Type header
-                        ]
-                    ]);
-                    
-                    $responseBody = $response->getBody()->getContents();
-                    $cin7_status = $response->getStatusCode();
-                    $response_status = true;
-
-                    $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                    if ($update_master_key_attempt) {
-                        $update_master_key_attempt->option_value = 1;
-                        $update_master_key_attempt->save();
-                    }
-
-                    break;
-
-                } catch (\Exception $e) {
-                    $errorlog = new ApiErrorLog();
-                    $errorlog->payload = $e->getMessage();
-                    $errorlog->exception = $e->getCode();
-                    $errorlog->save();
-
-                     // Update master_key_attempt to 0 on failure
-                    $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-                    if ($master_key_attempt) {
-                        $master_key_attempt->option_value = 0;
-                        $master_key_attempt->save();
-                    }
-
-                    // Swap credentials
-                    $useFirstCredentials = !$useFirstCredentials;
-
-                    $cin7_status = $e->getCode();
-                    $response_status = false;
-                }
-            }
+            $response = $client->request('PUT', 'https://api.cin7.com/api/v1/Contacts', [
+                'auth' => [$cin7_auth_username, $cin7_auth_password], // Authenticate with Cin7 API credentials
+                'json' =>  [
+                    $body
+                ],
+                'headers' => [
+                    'Content-Type' => 'application/json' // Specify Content-Type header
+                ]
+            ]);
+            
+            $responseBody = $response->getBody()->getContents();
+            $cin7_status = $response->getStatusCode();
         }
 
 

@@ -55,6 +55,7 @@ class SyncStock extends Command
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $total_record_count = 0;
 
         for ($i = 1; $i <= $total_products_pages; $i++) {
             sleep(1);
@@ -74,6 +75,18 @@ class SyncStock extends Command
 
             $api_stock = $res->getBody()->getContents();
             $api_stock = json_decode($api_stock);
+
+            $record_count = count($api_stock);
+            $total_record_count += $record_count; 
+            $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+            $this->info('Record Count => ' . $record_count);
+                
+            if ($record_count < 1 || empty($record_count)) {
+                $this->info('----------------break-----------------');
+                break;
+            }
             
             $total_stock = 0;
             
