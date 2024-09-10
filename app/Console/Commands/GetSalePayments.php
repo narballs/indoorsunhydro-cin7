@@ -89,7 +89,7 @@ class GetSalePayments extends Command
             $this->handleException($e);
         }
 
-        sleep(5);
+        // sleep(5);
         
         // Process orders
         try {
@@ -99,10 +99,11 @@ class GetSalePayments extends Command
         }
 
 
-        $delete_missing_results = SalePaymentOrderItem::whereNotIn('orderId', $orderIds)->get();
-        if (!empty($delete_missing_results)) {
-            foreach ($delete_missing_results as $delete_missing_result) {
-                $delete_missing_result->delete();
+        $delete_payments_without_detail = SalePayments::whereIn('orderId', $orderIds)->get();
+        foreach ($delete_payments_without_detail as $delete_payment) {
+            $check_order_id = SalePaymentOrderItem::where('orderId', $delete_payment->orderId)->first();
+            if (empty($check_order_id)) {
+                $delete_payment->delete();
             }
         }
 
