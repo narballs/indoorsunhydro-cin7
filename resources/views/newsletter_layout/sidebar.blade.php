@@ -1,6 +1,8 @@
 <aside class="main-sidebar sidebar-light-primary elevation-4">
 
-
+	<i class="brand-image mx-4 fa fa-user fw-4 fs-2 my-3"></i>
+	<br/>
+	<span class="brand-text font-weight-light fw-6 mx-3 px-2"><b>{{strtoupper(auth()->user()->first_name . ' ' .auth()->user()->last_name)}}</b></span>
 	<!-- Sidebar -->
 	<div class="sidebar">
 
