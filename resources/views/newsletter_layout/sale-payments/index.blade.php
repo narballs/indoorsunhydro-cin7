@@ -22,7 +22,7 @@
                 <h3 class="card-title">Sale Payments</h3>
             </div>
             <div class="card-body">
-                <form action="{{url('/admin/sale-payments')}}" method="GET">
+                <form action="{{url('/sale/payments')}}" method="GET">
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <h5>
@@ -30,13 +30,13 @@
                                     Filter By :
                                 </strong>
                                 @if (!empty($search) || !empty($payment_method) || !empty($date_from) || !empty($date_to))
-                                <a href="{{url('/admin/sale-payments')}}" class="btn btn-sm btn-primary mx-2 text-white">
+                                <a href="{{url('/sale/payments')}}" class="btn btn-sm btn-primary mx-2 text-white">
                                     Reset Filter
                                 </a>
                                 @endif
                             </h5>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-12">
                             <div class="row align-items-center">
     
                                 <div class="col-md-12">
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-xl-2 col-lg-4 col-md-6 col-12">
                             <div class="row align-items-center">
                                 <div class="col-md-12">
                                     <label>
@@ -66,21 +66,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-xl-2 col-lg-4 col-md-6 col-12">
                             <div class="row align-items-center">
                                 <div class="col-md-12">
-                                    <label for="">Date From</label>
+                                    <label for="" class="mb-2">Date From</label>
                                     <input type="date" class="form-control" name="date_from"
                                         value="{{!empty($date_from) ? $date_from : ''}}">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-xl-2 col-lg-4 col-md-6 col-12">
                             <div class="row align-items-center">
                                 <div class="col-md-12">
-                                    <label for="">Date To</label>
+                                    <label for="" class="mb-2">Date To</label>
                                     <input type="date" class="form-control" name="date_to"
                                         value="{{!empty($date_to)  ? $date_to : ''}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-4 col-md-6 col-12">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <label for="" class="mb-2"></label>
+                                    <button type="submit" class="btn btn-primary w-100 mt-2">
+                                        Search
+                                    </button>
                                 </div>
                             </div>
                         </div>
