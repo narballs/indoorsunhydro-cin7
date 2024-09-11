@@ -37,7 +37,9 @@ use App\Http\Controllers\ProductStockNotificationController;
 use App\Http\Controllers\GetProductDimensionController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsletterTemplateController;
+use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\SmsController;
+use App\Models\SalePayments;
 use App\Models\TaxClass;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -263,9 +265,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
     Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
-    //sales payments
-    Route::get('admin/sale-payments', [OrderManagementController::class, 'sale_payments'])->name('sale_payments');
-    Route::get('admin/sale-payments/show/{Id}', [OrderManagementController::class, 'sale_payments_show'])->name('sale-payments.show');
+
 
     // send orer to shipstation
     Route::post('admin/send-order-to-shipstation', [OrderManagementController::class, 'send_order_to_shipstation'])->name('send_order_to_shipstation');
@@ -481,6 +481,11 @@ Route::get('/newsletter-templates/edit/{id}', [NewsletterTemplateController::cla
 Route::post('/newsletter-templates/update/{id}', [NewsletterTemplateController::class, 'update_newsletter_template'])->name('update_newsletter_template');
 Route::post('/newsletter-templates', [NewsletterTemplateController::class, 'store'])->name('newsletter-templates.store');
 Route::post('/newsletter-templates/upload/image', [NewsletterTemplateController::class, 'upload_newsletterImage'])->name('upload_newsletterImage');
+
+
+//sales payments
+Route::get('/sale/payments', [SalePaymentsController::class, 'sale_payments'])->name('sale_payments');
+Route::get('/sale/payments/show/{Id}', [SalePaymentsController::class, 'sale_payments_show'])->name('sale-payments.show');
 
 
 // Assign templates to users
