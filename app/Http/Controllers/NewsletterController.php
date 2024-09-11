@@ -23,7 +23,7 @@ class NewsletterController extends Controller
 {
     function __construct()
     {
-        $this->middleware(['role:Newsletter']);
+        $this->middleware('role:Newsletter|Sale Payments');
     }
     public function newsletter_dashboard (Request $request)
     {
@@ -38,7 +38,7 @@ class NewsletterController extends Controller
         //     return redirect()->route('home');
         // }
 
-        if ($role_name == 'Newsletter') {
+        if (($role_name == 'Newsletter' ) || ($role_name == 'Sale Payments')) {
             $templates = NewsletterTemplate::all();
             return view('newsletter_layout.newsletter_dashboard' , compact('templates'));
         } else {
