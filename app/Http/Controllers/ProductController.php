@@ -2586,7 +2586,7 @@ class ProductController extends Controller
             $max_tokens = 4096;
         }
         
-        $prompt_format_text = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
+        $prompt_format_text = 'Please provide a concise and structured description relevent to the product name or sku using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
         $ai_prompt_text = AdminSetting::where('option_name', 'ai_prompt_text')->first();
         if (!empty($ai_prompt_text) && !empty($ai_prompt_text->option_value)) {
             $prompt_format = $ai_prompt_text->option_value;
@@ -2600,6 +2600,18 @@ class ProductController extends Controller
         
         $main_product = Product::where('name', $product_name)->first();
         $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
+        if (!empty($main_product)) {
+            if (!empty($main_product->name)) {
+                $productDescription = $main_product->name;               
+            } elseif (!empty($main_product->description)) {
+                $productDescription = strip_tags($main_product->description);
+            } else {
+                $productDescription = $main_product->code;
+            }
+           
+        } else {
+            $productDescription = $question;
+        }
 
         // Check if the question is relevant to the product
         if (!$this->isQuestionRelatedToProduct($question .' '.$product_name, $productDescription)) {
@@ -2674,7 +2686,8 @@ class ProductController extends Controller
             'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
             'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
             'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
-            'refund', 'condition', 'guarantee','similar', 'alternate'
+            'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
+            'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences', 'used' , 'explain'   
         ];
 
         // List of irrelevant terms to exclude
@@ -2685,14 +2698,20 @@ class ProductController extends Controller
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
             'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
-            'addition', 'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
+             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
         ];
 
         $questionWords = array_map('strtolower', explode(' ', $question));
 
+        // if found one word in the that is relevant to the product then return true
+        // if (count(array_intersect($questionWords, $genericKeywords)) == 0) {
+        //     return false;
+        // }
+
+
         // Check for any irrelevant terms in the question
         foreach ($questionWords as $word) {
-            if (in_array($word, $irrelevantTerms)) {
+            if (in_array($word, $irrelevantTerms) && !in_array($word, $genericKeywords)) {
                 return false; // Immediately return false if any irrelevant term is found
             }
         }
