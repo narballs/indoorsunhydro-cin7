@@ -447,8 +447,20 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h3 class="h6 summary-head">Payment Method</h3>
-                                        <span class="delievery">{{ $order->logisticsCarrier }}</span></p>
+                                        <h3 class="h6 summary-head">Delivery Method</h3>
+                                        <span class="delievery">
+                                            @if (!empty($order->logisticsCarrier ))
+                                                    @if (strtolower($order->logisticsCarrier) === 'delivery')
+                                                        <span class="badge badge-success p-1">Delivery</span>
+                                                    @elseif (strtolower($order->logisticsCarrier) === 'pickup order')
+                                                        <span class="badge badge-warning p-1">Pickup Order</span>
+                                                    @else
+                                                        {{ $order->logisticsCarrier }}
+                                                    @endif
+                                                @else
+                                                {{ $order->logisticsCarrier }}
+                                            @endif
+                                        </span>
                                     </div>
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>
