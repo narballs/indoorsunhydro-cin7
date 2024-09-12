@@ -305,7 +305,18 @@
                                                 <span class="badge badge-primary p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
                                             </td>
                                             <td data-label="Payment Term :" class="td_padding_row">
+                                                @if (!empty($order->logisticsCarrier ))
+                                                    @if (strtolower($order->logisticsCarrier) === 'delivery')
+                                                        <span class="badge badge-success p-1">Delivery</span>
+                                                    @elseif (strtolower($order->logisticsCarrier) === 'pickup order')
+                                                        <span class="badge badge-warning p-1">Pickup Order</span>
+                                                    @else
+                                                        {{ $order->logisticsCarrier }}
+                                                    @endif
+                                                @else
                                                 {{ $order->logisticsCarrier }}
+                                                @endif
+                                                
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid')
