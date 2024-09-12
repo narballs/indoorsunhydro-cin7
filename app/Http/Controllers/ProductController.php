@@ -2600,6 +2600,18 @@ class ProductController extends Controller
         
         $main_product = Product::where('name', $product_name)->first();
         $productDescription =  !empty($main_product) ? $main_product->description : $main_product->code;
+        if (!empty($main_product)) {
+            if (!empty($main_product->name)) {
+                $productDescription = $main_product->name;               
+            } elseif (!empty($main_product->description)) {
+                $productDescription = strip_tags($main_product->description);
+            } else {
+                $productDescription = $main_product->code;
+            }
+           
+        } else {
+            $productDescription = $question;
+        }
 
         // Check if the question is relevant to the product
         if (!$this->isQuestionRelatedToProduct($question .' '.$product_name, $productDescription)) {
