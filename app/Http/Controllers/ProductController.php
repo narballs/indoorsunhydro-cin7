@@ -2586,7 +2586,7 @@ class ProductController extends Controller
             $max_tokens = 4096;
         }
         
-        $prompt_format_text = 'Please provide a concise and structured description relevent to the product using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
+        $prompt_format_text = 'Please provide a concise and structured description relevent to the product name or sku using HTML tags where necessary. Keep the response within a reasonable length and formatted. The content should look as it is created in ckeditor. Add bullet points, headings, and other formatting elements as needed. Do not mention about the ckeditor or any other editor.Do not add any kind of suport email , phone number of websites other then https://indoorsunhydro.com .';
         $ai_prompt_text = AdminSetting::where('option_name', 'ai_prompt_text')->first();
         if (!empty($ai_prompt_text) && !empty($ai_prompt_text->option_value)) {
             $prompt_format = $ai_prompt_text->option_value;
@@ -2675,7 +2675,7 @@ class ProductController extends Controller
             'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
             'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
             'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
-            'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences'   
+            'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences', 'used' , 'explain'   
         ];
 
         // List of irrelevant terms to exclude
