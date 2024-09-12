@@ -2674,7 +2674,8 @@ class ProductController extends Controller
             'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
             'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
             'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
-            'refund', 'condition', 'guarantee','similar', 'alternate'
+            'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
+            'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences'   
         ];
 
         // List of irrelevant terms to exclude
@@ -2685,14 +2686,20 @@ class ProductController extends Controller
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
             'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
-            'addition', 'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
+             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
         ];
 
         $questionWords = array_map('strtolower', explode(' ', $question));
 
+        // if found one word in the that is relevant to the product then return true
+        // if (count(array_intersect($questionWords, $genericKeywords)) == 0) {
+        //     return false;
+        // }
+
+
         // Check for any irrelevant terms in the question
         foreach ($questionWords as $word) {
-            if (in_array($word, $irrelevantTerms)) {
+            if (in_array($word, $irrelevantTerms) && !in_array($word, $genericKeywords)) {
                 return false; // Immediately return false if any irrelevant term is found
             }
         }
