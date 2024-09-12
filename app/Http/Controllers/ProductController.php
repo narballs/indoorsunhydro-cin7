@@ -2675,7 +2675,7 @@ class ProductController extends Controller
             'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
             'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
             'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
-            'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences'   
+            'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences', 'used' , 'explain'   
         ];
 
         // List of irrelevant terms to exclude
