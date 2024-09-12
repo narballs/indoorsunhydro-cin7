@@ -31,13 +31,13 @@ class Kernel extends ConsoleKernel
                 \Carbon\Carbon::SUNDAY
             ]);
         });
-        $schedule->command('get:sale_payments')->hourly()
-        ->when(function () {
-            return in_array(\Carbon\Carbon::now()->dayOfWeek, [ 
-                \Carbon\Carbon::SATURDAY, 
-                \Carbon\Carbon::SUNDAY
-            ]);
-        });
+        // $schedule->command('get:sale_payments')->hourly()
+        // ->when(function () {
+        //     return in_array(\Carbon\Carbon::now()->dayOfWeek, [ 
+        //         \Carbon\Carbon::SATURDAY, 
+        //         \Carbon\Carbon::SUNDAY
+        //     ]);
+        // });
         $schedule->command('sync:supplier')->everyTwoHours();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
