@@ -2577,7 +2577,8 @@ class UserController extends Controller
 
     public function switch_user_back()
     {
-        $admin = User::role('Admin')->first();
+        $auth_user_id = auth()->user()->id;
+        $admin = User::role('Admin')->where('id' , $auth_user_id)->first();
         Auth::loginUsingId($admin->id);
         session()->flash('logged_in_as_another_user', '');
         return redirect('admin/dashboard');
