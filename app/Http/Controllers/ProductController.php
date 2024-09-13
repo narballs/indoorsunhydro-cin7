@@ -2698,7 +2698,11 @@ class ProductController extends Controller
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
             'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
-             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra' // Math
+            'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra', // Math
+            'quantum', 'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
+            'gold', 'silver', 'diamond', 'ruby', 'emerald', 'sapphire', // Precious materials
+            'koala', 'kangaroo', 'elephant', 'dolphin', 'penguin', 'giraffe', 'fish'
+
         ];
 
         $questionWords = array_map('strtolower', explode(' ', $question));
