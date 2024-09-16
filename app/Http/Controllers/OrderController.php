@@ -50,7 +50,7 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        
+        dd($request->all());
         
         $request->validate(
             [
@@ -118,14 +118,26 @@ class OrderController extends Controller
             $parcel_guard = (ceil($actual_shipping_price / 100) * 0.99);
             // $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
         }
-
+        $first_name_shipping = $request->first_name_shipping;
+        $last_name_shipping = $request->last_name_shipping;
         $address_1_shipping = $request->address_1_shipping;
+        $address_2_shipping = $request->address_2_shipping;
+        $city_shipping = $request->city_shipping;
         $state_shipping = $request->state_shipping;
         $zip_code_shipping = $request->zip_code_shipping;
+        $country_shipping = $request->country_shipping;
+        $phone_shipping = $request->phone_shipping;
 
+
+        $first_name_billing = $request->first_name_billing;
+        $last_name_billing = $request->last_name_billing;
         $address_1_billing = $request->address_1_billing;
+        $city_billing = $request->city_billing;
         $state_billing = $request->state_billing;
         $zip_code_billing = $request->zip_code_billing;
+        $country_billing = $request->country_billing;
+        $phone_billing = $request->phone_billing;
+
         if (empty($address_1_shipping) || empty($state_shipping) || empty($zip_code_shipping) || empty($address_1_billing) || empty($state_billing) || empty($zip_code_billing)) {
             return back()->with('error', 'Billing and Shipping address is required.');
         }

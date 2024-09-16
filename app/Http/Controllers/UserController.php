@@ -2506,7 +2506,6 @@ class UserController extends Controller
 
     // add new address 
     public function add_new_address(Request $request) {
-
         $request->validate([
                 'contact_id' => 'required',
                 'first_name' => 'required',
@@ -2567,7 +2566,7 @@ class UserController extends Controller
 
 
         $add_new_address = new ContactsAddress();
-        $add_new_address->contact_id = $contact->id;
+        $add_new_address->contact_id = $contact_id;
         $add_new_address->address_type = $address_type;
         $add_new_address->DeliveryFirstName = $first_name;
         $add_new_address->DeliveryLastName = $last_name;
