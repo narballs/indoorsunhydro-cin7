@@ -572,3 +572,4 @@ Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sm
 // thankyou page
 Route::get('/thank-you', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
 Route::get('/ai-answer', [ProductController::class, 'ai_answer'])->name('ai_answer');
+Route::post('/add-new-address', [UserController::class, 'add_new_address'])->name('add_new_address');

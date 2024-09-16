@@ -884,14 +884,29 @@ $cart_price = 0;
                                             
                                         @endphp
                                         <input type="hidden" name="paymentTerms" value="{{strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
-                                        <input type="hidden" name="address_1_billing" value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}">
-                                        <input type="hidden" name="state_billing" value="{{ !empty($user_address->postalState) ?  $user_address->postalState : '' }}">
-                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($user_address->postalPostCode) ?  $user_address->postalPostCode : '' }}">
+                                        {{-- billing --}}
+                                        <input type="hidden" name="first_name_billing" value="{{ !empty($get_user_default_billing_address->BillingFirstName) ?  $get_user_default_billing_address->BillingFirstName : '' }}">
+                                        <input type="hidden" name="last_name_billing" value="{{ !empty($get_user_default_billing_address->BillingLastName) ?  $get_user_default_billing_address->BillingLastName : '' }}">
+                                        <input type="hidden" name="address_1_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress1) ?  $get_user_default_billing_address->BillingAddress1 : '' }}">
+                                        <input type="hidden" name="address_2_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress2) ?  $get_user_default_billing_address->BillingAddress2 : '' }}">
+                                        <input type="hidden" name="city_billing" value="{{ !empty($get_user_default_billing_address->BillingCity) ?  $get_user_default_billing_address->BillingCity : '' }}">
+                                        <input type="hidden" name="state_billing" value="{{ !empty($get_user_default_billing_address->BillingState) ?  $get_user_default_billing_address->BillingState : '' }}">
+                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($get_user_default_billing_address->BillingZip) ?  $get_user_default_billing_address->BillingZip : '' }}">
+                                        <input type="hidden" name="country_billing" value="{{ !empty($get_user_default_billing_address->BillingCountry) ?  $get_user_default_billing_address->BillingCountry : 'United States' }}">
+                                        <input type="hidden" name="phone_billing" value="{{ !empty($get_user_default_billing_address->BillingPhone) ?  $get_user_default_billing_address->BillingPhone : '' }}">
                                         
                                         {{-- shipping --}}
-                                        <input type="hidden" name="address_1_shipping" value="{{ !empty($user_address->address1) ?  $user_address->address1 : '' }}">
-                                        <input type="hidden" name="state_shipping" value="{{ !empty($user_address->state) ?  $user_address->state : '' }}">
-                                        <input type="hidden" name="zip_code_shipping" value="{{ !empty($user_address->postCode) ?  $user_address->postCode : '' }}">
+                                        <input type="hidden" name="first_name_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryFirstName) ?  $get_user_default_shipping_address->DeliveryFirstName : '' }}">
+                                        <input type="hidden" name="last_name_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryLastName) ?  $get_user_default_shipping_address->DeliveryLastName : '' }}">
+                                        <input type="hidden" name="address_1_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ?  $get_user_default_shipping_address->DeliveryAddress1 : '' }}">
+                                        <input type="hidden" name="address_2_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryAddress2) ?  $get_user_default_shipping_address->DeliveryAddress2 : '' }}">
+                                        <input type="hidden" name="city_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryCity) ?  $get_user_default_shipping_address->DeliveryCity : '' }}">
+                                        <input type="hidden" name="state_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryState) ?  $get_user_default_shipping_address->DeliveryState : '' }}">
+                                        <input type="hidden" name="zip_code_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryZip) ?  $get_user_default_shipping_address->DeliveryZip : '' }}">
+                                        <input type="hidden" name="country_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryCountry) ?  $get_user_default_shipping_address->DeliveryCountry : 'United States' }}">
+                                        <input type="hidden" name="phone_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryPhone) ?  $get_user_default_shipping_address->DeliveryPhone : '' }}">
+
+
                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">
                                         <input type="hidden" name="old_incl_tax" id="old_incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">
                                         <input type="hidden" name="original_shipment_price" id="original_shipment_price" value="{{ $shipment_price }}">
@@ -1235,81 +1250,88 @@ $cart_price = 0;
                                             <div class="col-md-10 col-10">
                                                 <h6 class="checkout_main_sub_address mb-0">Billing Address</h6>
                                             </div>
-                                            <div class="col-md-2 col-2">
+                                            {{-- <div class="col-md-2 col-2">
                                                 <a data-bs-toggle="modal" href="#address_modal_id_billing" role="button" class="float-end" style="font-size:20px">Change</a>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row  custom-border-bottom custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->firstName ? $user_address->firstName : '' }}
-                                                {{ $user_address->lastName ? $user_address->lastName : '' }}</span></div>
+                                            <div class="col-md-9">
+                                                <span class="checkout_address_text">
+                                                    {{ !empty($get_user_default_billing_address->BillingFirstName) ?  $get_user_default_billing_address->BillingFirstName : '' }}
+                                                    {{ !empty($get_user_default_billing_address->BillingLastName) ?  $get_user_default_billing_address->BillingLastName : '' }}
+                                                </span>
+                                            </div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Bill to</span></div>
-                                            <div class="col-md-9 "><span class="checkout_address_text">{{ $user_address->postalAddress1 ? $user_address->postalAddress1 : ''}} {{$user_address->postalAddress2 ? ', ' .$user_address->postalAddress2 : ''}}</span></div>
+                                            <div class="col-md-9 "><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingAddress1 ? $get_user_default_billing_address->BillingAddress1 : ''}} {{$get_user_default_billing_address->BillingAddress2 ? ', ' .$get_user_default_billing_address->BillingAddress2 : ''}}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalCity ? $user_address->postalCity : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingCity ? $get_user_default_billing_address->BillingCity : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalState ? $user_address->postalState : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingState ? $get_user_default_billing_address->BillingState : '' }}</span></div>
                                             
                                         </div>
                                         
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postalPostCode ? $user_address->postalPostCode : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingZip ? $get_user_default_billing_address->BillingZip : '' }}</span></div>
                                             
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row mt-3 align-items-center">
-                                            <div class="col-md-10 col-10">
+                                            <div class="col-md-8 col-8">
                                                 <h6 class="checkout_main_sub_address mb-0">Shipping Address</h6>
                                             </div>
-                                            <div class="col-md-2 col-2">
-                                                <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Change</a>
+                                            <div class="col-md-4 col-4">
+                                                <a data-bs-toggle="modal" href="#add_new_address_shipping" role="button" class="float-end" style="font-size:20px">Add New</a>
                                             </div>
+                                            {{-- <div class="col-md-2 col-2">
+                                                <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Change</a>
+                                            </div> --}}
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->firstName ? $user_address->firstName : '' }}
-                                                {{ $user_address->lastName ? $user_address->lastName : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Ship to</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->address1 ? $user_address->address1 : ''}}  {{$user_address->address2 ? ', ' .$user_address->address2 : ''}}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryAddress1 ? $get_user_default_shipping_address->DeliveryAddress1 : ''}}  {{$get_user_default_shipping_address->DeliveryAddress2 ? ', ' .$get_user_default_shipping_address->DeliveryAddress2 : ''}}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->city ? $user_address->city : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryCity ? $get_user_default_shipping_address->DeliveryCity : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->state ? $user_address->state : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryState ? $get_user_default_shipping_address->DeliveryState : '' }}</span></div>
                                             
                                         </div>
                                         
                                         <div class="row  custom-border-bottom custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->postCode ? $user_address->postCode : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryZip ? $get_user_default_shipping_address->DeliveryZip : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Phone</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $user_address->phone ? $user_address->phone : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryPhone ? $get_user_default_shipping_address->DeliveryPhone : '' }}</span></div>
                                             
                                         </div>
                                     </div>
@@ -1586,7 +1608,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" name="firstName" id="billing_first_name"
-                                    placeholder="First name" value="{{!empty($user_address->firstName) ? $user_address->firstName : ''}}" required>
+                                    placeholder="First name" value="{{!empty($get_user_default_billing_address->BillingFirstName) ? $get_user_default_billing_address->BillingFirstName : ''}}" required>
                                 <div id="error_first_name_billing" class="text-danger">
 
                                 </div>
@@ -1595,7 +1617,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" name="lastName" id="billing_last_name" placeholder=""
-                                    value="{{!empty($user_address->lastName) ? $user_address->lastName : ''}}" required>
+                                    value="{{!empty($get_user_default_billing_address->BillingLastName) ? $get_user_default_billing_address->BillingLastName : ''}}" required>
                                 <div id="error_last_name_billing" class="text-danger">
 
                                 </div>
@@ -1603,8 +1625,8 @@ $cart_price = 0;
                         </div>
 
                         <div class="mb-3">
-                            <label for="company">Select Location</label>
-                            @php
+                            <label for="company">Company</label>
+                            {{-- @php
                                 $companies = Session::get('companies');
                                 $session_company = Session::get('company');
                             @endphp
@@ -1641,31 +1663,33 @@ $cart_price = 0;
                                                 </label>
                                             </div>
                                         @endif
-                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $user_address->company }}" required> --}}
                                     @endforeach
                                 @endif
                                 </div>
-                            </div>
+                            </div> --}}
+                            <input type="text" class="form-control bg-light companyName companyNameBilling" id="companyName" name="company" value="{{!empty($get_user_default_billing_address->BillingCompany) ? $get_user_default_billing_address->BillingCompany : ''}}" readonly>
                             <div id="error_company_billing" class="text-danger"> </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="username">Country</label>&nbsp;<span>United States</span>
-                            <input type="hidden" name="country" value="United States">
+                            <label for="country">Country</label>
+                            <input type="text" class="form-control bg-light billing_country" name="country"  id="billing_country"
+                            value="United States" readonly>
+                            <div id="error_billing_country" class="text-danger"></div>
                         </div>
 
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
                             <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
-                            value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}" placeholder="House number and street name"
+                            value="{{!empty($get_user_default_billing_address->BillingAddress1) ? $get_user_default_billing_address->BillingAddress1 : ''}}" placeholder="House number and street name"
                             required>
                             <div id="error_address1_billing" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light billing_address_2" name="address2"
-                                value="{{ !empty($user_address->postalAddress2) ?  $user_address->postalAddress2 : '' }}"
+                                value="{{!empty($get_user_default_billing_address->BillingAddress2) ? $get_user_default_billing_address->BillingAddress2 : ''}}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                                 <div id="error_address2_billing" class="text-danger"></div>
                         </div>
@@ -1673,7 +1697,7 @@ $cart_price = 0;
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light billing_city" name="town_city"
-                                value="{{ !empty($user_address->postalCity) ? $user_address->postalCity : '' }}" placeholder="Enter your town">
+                                value="{{!empty($get_user_default_billing_address->BillingCity) ? $get_user_default_billing_address->BillingCity : ''}}" placeholder="Enter your town">
                                 <div id="error_city_billing" class="text-danger"></div>
                         </div>
                         
@@ -1682,10 +1706,10 @@ $cart_price = 0;
                                 <label for="state">State</label>
 
                                 <select class="form-control bg-light billing_state"  name="state" id="state">
-                                    @if (empty($user_address->postalState)) <option value="">Select State</option>@endif
+                                    @if (empty($get_user_default_billing_address->BillingState)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
-                                        if (!empty($user_address->postalState) && ($user_address->postalState == $state->state_name)) {
+                                        if (!empty($get_user_default_billing_address->BillingState) && ($get_user_default_billing_address->BillingState == $state->state_name)) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1703,7 +1727,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control bg-light billing_post_code" name="zip"
-                                    placeholder="Enter zip code" value="{{ !empty($user_address->postalPostCode) ? $user_address->postalPostCode : ''}}"
+                                    placeholder="Enter zip code" value="{{ !empty($get_user_default_billing_address->BillingZip) ? $get_user_default_billing_address->BillingZip : ''}}"
                                     required>
                                 <div id="error_zip_billing" class="text-danger">
 
@@ -1716,7 +1740,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light billing_phone" name="phone"
-                                    placeholder="Enter your phone" value="{{!empty($user_address->phone) ? $user_address->phone  : ''}}" required>
+                                    placeholder="Enter your phone" value="{{!empty($get_user_default_billing_address->BillingPhone) ? $get_user_default_billing_address->BillingPhone  : ''}}" required>
                                 <div id="error_phone_billing" class="text-danger"></div>
 
 
@@ -1770,7 +1794,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="firstName">First name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_first_name" name="firstName"
-                                    placeholder="First name" value="{{!empty($user_address->firstName) ? $user_address->firstName  : ''}}" required>
+                                    placeholder="First name" value="{{!empty($get_user_default_shipping_address->DeliveryFirstName) ? $get_user_default_shipping_address->DeliveryFirstName  : ''}}" required>
                                 <div id="error_first_name_shipping" class="text-danger">
 
                                 </div>
@@ -1779,7 +1803,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="lastName">Last name</label>
                                 <input type="text" class="form-control bg-light" id="shipping_last_name" name="lastName" placeholder=""
-                                    value="{{!empty($user_address->lastName) ? $user_address->lastName : '' }}" required>
+                                    value="{{!empty($get_user_default_shipping_address->DeliveryLastName) ? $get_user_default_shipping_address->DeliveryLastName : '' }}" required>
                                 <div id="error_last_name_shipping" class="text-danger">
 
                                 </div>
@@ -1787,8 +1811,9 @@ $cart_price = 0;
                         </div>
 
                         <div class="mb-3">
-                            <label for="company">Select Location</label>
-                            @php
+                            <label for="company">Company</label>
+                            <input type="text" class="form-control bg-light companyName companyNameShipping" id="companyName" name="company" value="{{!empty($get_user_default_shipping_address->DeliveryCompany) ? $get_user_default_shipping_address->DeliveryCompany : '' }}" readonly>
+                            {{-- @php
                                 $companies = Session::get('companies');
                                 $session_company = Session::get('company');
                             @endphp
@@ -1816,7 +1841,7 @@ $cart_price = 0;
                                         @endphp
                                         @if($company->type != "Supplier")
                                             <div class="col-md-12">
-                                                <input type="radio"  {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="change_company_shipping(this  , {{ $contact_id }})" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                <input type="radio"  {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="switch_company_user({{ session()->get('contact_id')}})" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
                                                 <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
                                                     <span
                                                     style="font-size: 9px;font-family: 'Poppins';"
@@ -1828,27 +1853,28 @@ $cart_price = 0;
                                     @endforeach
                                 @endif
                                 </div>
-                            </div>
+                            </div> --}}
                             <div id="error_company_shipping" class="text-danger"> </div>
                         </div>
-
                         <div class="mb-3">
-                            <label for="username">Country</label>&nbsp;<span>United States</span>
-                            <input type="hidden" name="country" value="United States">
+                            <label for="country">Country</label>
+                            <input type="text" class="form-control bg-light shipping_country" name="country"  id="shipping_country"
+                            value="United States" readonly>
+                            <div id="error_shipping_country" class="text-danger"></div>
                         </div>
 
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
-                            value="{{ !empty($user_address->address1) ? $user_address->address1 : '' }}" placeholder="House number and street name"
+                            value="{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ? $get_user_default_shipping_address->DeliveryAddress1 : '' }}" placeholder="House number and street name"
                             required>
                             <div id="error_address_1_shipping" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_address_2" name="address2"
-                                value="{{ !empty($user_address->address2) ? $user_address->address2 : '' }}"
+                                value="{{ !empty($get_user_default_shipping_address->DeliveryAddress2) ? $get_user_default_shipping_address->DeliveryAddress2 : '' }}"
                                 placeholder="Apartment, suite, unit etc (optional)">
                                 <div id="error_address_2_shipping" class="text-danger"></div>
                         </div>
@@ -1856,7 +1882,7 @@ $cart_price = 0;
                         <div class="mb-3">
                             <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_city" name="town_city"
-                                value="{{ !empty($user_address->city) ?  $user_address->city  : ''}}" placeholder="Enter your town">
+                                value="{{ !empty($get_user_default_shipping_address->DeliveryCity) ?  $get_user_default_shipping_address->DeliveryCity  : ''}}" placeholder="Enter your town">
                                 <div id="error_city_shipping" class="text-danger"></div>
                         </div>
                         
@@ -1868,7 +1894,7 @@ $cart_price = 0;
                                     @if (empty($user_address->state)) <option value="">Select State</option>@endif
                                     @foreach ($states as $state)
                                         <?php
-                                        if (!empty($user_address->state ) && ($user_address->state == $state->state_name)) {
+                                        if (!empty($get_user_default_shipping_address->DeliveryState ) && ($get_user_default_shipping_address->DeliveryState == $state->state_name)) {
                                             $selected = 'selected';
                                         } else {
                                             $selected = '';
@@ -1886,7 +1912,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="zip">Zip</label>
                                 <input type="text" class="form-control bg-light shipping_post_code" name="zip"
-                                    placeholder="Enter zip code" value="{{ !empty($user_address->postCode) ?  $user_address->postCode: ''}}"
+                                    placeholder="Enter zip code" value="{{ !empty($get_user_default_shipping_address->DeliveryZip) ?  $get_user_default_shipping_address->DeliveryZip: ''}}"
                                     required>
                                 <div id="error_zip_shipping" class="text-danger">
 
@@ -1899,7 +1925,7 @@ $cart_price = 0;
                             <div class="col-md-6 mb-3">
                                 <label for="phone">Phone</label>
                                 <input type="text" class="form-control bg-light shipping_phone" name="phone"
-                                    placeholder="Enter your phone" value="{{!empty($user_address->phone) ? $user_address->phone : '' }}" required>
+                                    placeholder="Enter your phone" value="{{!empty($get_user_default_shipping_address->DeliveryPhone) ? $get_user_default_shipping_address->DeliveryPhone : '' }}" required>
                                 <div id="error_phone_shipping" class="text-danger"></div>
                             </div>
                         </div>
@@ -1918,6 +1944,134 @@ $cart_price = 0;
         </div>
     </div>
 </div>
+
+
+{{-- Add new address --}}
+<div class="modal fade" id="add_new_address_shipping" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
+    aria-labelledby="exampleModalToggleLabel_new" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel_new">Add New Shipping Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="update-address-section" id="address-form-update">
+
+                    <form class="needs-validation mt-4 novalidate" action="" method="POST">
+                        @if(!empty($user_address->contact_id))
+                            <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_new">
+                        @elseif(!empty($user_address->secondary_id))
+                            <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_new">
+                        @endif
+                        @csrf
+                        <div class="spinner-border text-primary d-none" role="status" id="waiting_loader_shipping_new">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="alert alert-success mt-3 d-none" id="success_msg_shipping_new"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg_shipping_new"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="error_msg_shipping_new"></div>
+                        <input type="hidden" name="email" id="shipping_email_new" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName">First name</label>
+                                <input type="text" class="form-control bg-light" id="shipping_new_first_name" name="first_name_new"
+                                    placeholder="First name" value="" required>
+                                <div id="error_first_name_shipping_new" class="text-danger">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName">Last name</label>
+                                <input type="text" class="form-control bg-light" id="shipping_new_last_name" name="last_name_new" placeholder=""
+                                    value="" required>
+                                <div id="error_last_name_shipping_new" class="text-danger">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="company_shipping_new">Company Name</label>
+                                <input type="text" class="form-control bg-light" id="shipping_new_company_name" name="shipping_new_company_name" placeholder=""
+                                    value="" required>
+                                <div id="error_shipping_new_company_name" class="text-danger">
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="company_shipping_new">Country</label>
+                                <input type="text" readonly class="form-control bg-light" value="United States" id="shipping_country_new" name="shipping_country_new" placeholder=""
+                                    value="" required>
+                                <div id="error_shipping_country_new" class="text-danger"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="address">Street Address</label>
+                            <input type="text" class="form-control bg-light shipping_address1_new" name="shipping_address1_new"  id="shipping_address1_new"
+                            value="" placeholder="House number and street name" required>
+                            <div id="error_shipping_address1_new" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address">Address 2</label>
+                            <input type="text" class="form-control bg-light shipping_address2_new" name="shipping_address2_new"  id="shipping_address2_new"
+                            value="" placeholder="House number and street name" required>
+                            <div id="error_shipping_address_new_2" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="shipping_city_new">Town/City <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control bg-light shipping_city_new" name="shipping_city_new"
+                                value="" placeholder="Enter your town" id="shipping_city_new">
+                                <div id="error_shipping_city_new" class="text-danger"></div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="state">State</label>
+
+                                <select class="form-control bg-light shipping_state_new" name="shipping_state_new" id="shipping_state_new" autocomplete="">
+                                    @foreach ($states as $state)
+                                        <option value="{{ $state->state_name }}">{{ $state->state_name }} </option>
+                                    @endforeach
+                                    <div id="error_shipping_state_new" class="text-danger"></div>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zip">Zip</label>
+                                <input type="text" class="form-control bg-light shipping_postal_code_new" name="shipping_postal_code_new"
+                                    placeholder="Enter zip code" value="" required id="shipping_postal_code_new">
+                                <div id="error_shipping_postal_code_new" class="text-danger"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control bg-light shipping_phone_new" name="shipping_phone_new"
+                                    placeholder="Enter your phone" value="" id="shipping_phone_new" required>
+                                <div id="error_shipping_phone_new" class="text-danger"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader_shipping_new">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm updateShippingAddress" style="background-color: #7BC533; border-color: #7BC533 ;"
+                    onclick="add_new_shipping_address('{{'Shipping'}}'  , '{{ !empty($user_address->contact_id) ?  $user_address->contact_id : $user_address->parent_id}}' )">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Add new address end --}}
 
 <form class="needs-validation mt-4 novalidate" style="display:none" action="{{ url('order') }}" method="POST">
     @csrf
@@ -2018,7 +2172,7 @@ $cart_price = 0;
         
                     if (type === 'update shipping address') {
                         $('#address_loader_shipping').removeClass('d-none');
-                        var companyNameShipping = $('.companyNameShipping:checked').val();
+                        var companyNameShipping = $('.companyNameShipping').val();
                         var first_name_shipping = $('#shipping_first_name').val();
                         var last_name_shipping = $('#shipping_last_name').val();
                         var shipping_address_1 = $('.shipping_address_1').val();
@@ -2050,7 +2204,7 @@ $cart_price = 0;
                         }
                     } else {
                         $('#address_loader').removeClass('d-none');
-                        var companyNameBilling = $('.companyNameBilling:checked').val();
+                        var companyNameBilling = $('.companyNameBilling').val();
                         var first_name_billing = $('#billing_first_name').val();
                         var last_name_billing = $('#billing_last_name').val();
                         var billing_address_1 = $('.billing_address_1').val();
@@ -3488,6 +3642,129 @@ $cart_price = 0;
 
                 function accept_pickUp() {
                     $('#pick_up_modal').modal('hide');
+                }
+
+                // add new shipping address
+
+                function add_new_shipping_address(type , contact_id) {
+                    $('#address_loader_shipping_new').removeClass('d-none');
+                    $('#waiting_loader_shipping_new').removeClass('d-none');
+                    var contact_id = contact_id;
+                    var type = type;
+                    var first_name = $('#shipping_new_first_name').val();
+                    var last_name = $('#shipping_new_last_name').val();
+                    var company_name = $('#shipping_new_company_name').val();
+                    var phone = $('#shipping_phone_new').val();
+                    var address = $('#shipping_address1_new').val();
+                    var address2 = $('#shipping_address2_new').val();
+                    var city = $('#shipping_city_new').val();
+                    var state = $('#shipping_state_new').val();
+                    var country = $('#shipping_country_new').val();
+                    var postal_code = $('#shipping_postal_code_new').val();
+
+
+                    jQuery.ajax({
+                        method: 'Post',
+                        url: "{{ url('/add-new-address/') }}",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "contact_id": contact_id,
+                            "first_name": first_name,
+                            "last_name": last_name,
+                            "company_name": company_name,
+                            "phone": phone,
+                            "address": address,
+                            "address2": address2,
+                            "city": city,
+                            "state": state,
+                            "zip": postal_code,
+                            "type": type,
+                            "country": country                         
+                        },
+
+                        success: function(response) {
+                            if (response.status == 200) {
+                                $('#address_loader_shipping_new').addClass('d-none');
+                                $('#waiting_loader_shipping_new').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                $('#success_msg_shipping_new').removeClass('d-none');
+                                $('#success_msg_shipping_new').html(response.msg);
+                                setTimeout(function() {
+                                    $('#success_msg_shipping_new').addClass('d-none');
+                                    $('#success_msg_shipping_new').html('');
+                                    $('#processing_msg_shipping_new').removeClass('d-none');
+                                    $('#processing_msg_shipping_new').html('Fetching Data ...');
+                                    window.location.href = "{{ url('/checkout') }}";
+                                }, 1000);
+                            } else {
+                                $('#address_loader_shipping_new').addClass('d-none');
+                                $('#waiting_loader_shipping_new').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                $('#error_msg_shipping_new').removeClass('d-none');
+                                $('#error_msg_shipping_new').html(response.msg);
+
+                            }
+                        },
+                        error: function(response) {
+                            $('#address_loader_shipping_new').addClass('d-none');
+                            $('#waiting_loader_shipping_new').addClass('d-none');
+                            var error_message = response.responseJSON;
+                            var error_text = '';
+                            if (typeof error_message.errors.first_name != 'undefined') {
+                                error_text = error_message.errors.first_name;
+                                $('#error_shipping_new_first_name').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_shipping_new_first_name').html(error_text);
+                            }
+                            if (typeof error_message.errors.company_name != 'undefined') {
+                                var error_text = error_message.errors.company_name;
+                                $('#error_shipping_new_company_name').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_shipping_new_company_name').html(error_text);
+                            }
+                            if (typeof error_message.errors.address != 'undefined') {
+                                var error_text = error_message.errors.address;
+                                $('#error_shipping_address1_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_shipping_address1_new').html(error_text);
+                            }
+
+                            if (typeof error_message.errors.zip != 'undefined') {
+                                var error_text = error_message.errors.zip;
+                                $('#error_shipping_postal_code_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_shipping_postal_code_new').html(error_text);
+                            }
+                            if (typeof error_message.errors.phone != 'undefined') {
+                                var error_text = error_message.errors.phone;
+                                $('#error_shipping_phone_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_shipping_phone_new').html(error_text);
+                            }
+                        }
+                    });
+                    
+                }
+
+                // switch company 
+                function switch_company_user(contact_id) {
+                    var company = contact_id;
+                    jQuery.ajax({
+                        url: "{{ url('/switch-company/') }}",
+                        method: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'companyId': company
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                        }
+                    });
                 }
             </script>
             @include('partials.footer')
