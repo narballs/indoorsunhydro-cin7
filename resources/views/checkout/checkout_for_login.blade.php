@@ -1124,8 +1124,8 @@ $cart_price = 0;
                                                                     <div class="col-md-9 col-8">
                                                                         <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                         <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
-                                                                        <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}">
-                                                                        <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" shipping_cost_with_surcharge="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}"  value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
+                                                                        <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}" {{ $shipping_quote->serviceCode === 'ups_ground' ? 'checked' : ''}}>
+                                                                        <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" {{ $shipping_quote->serviceCode === 'ups_ground' ? 'checked' : ''}} shipping_cost_with_surcharge="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}"  value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
                                                                         <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                                                     </div>
                                                                     <div class="col-md-3 col-4 text-right">
@@ -3775,7 +3775,31 @@ $cart_price = 0;
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
                     if (admin_area_for_shipping_check === 'true' && product_weight > 150) {
                         update_total_with_shipping_for_greater_weight();
-                    }   
+                    }
+                    // default ups ground checked
+                    if (admin_area_for_shipping_check === 'true' && product_weight <= 150 && product_weight > 0) {
+                        var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
+                        var var_pro_total = p_total.replace(/\$/g, '');
+                        var p_total_new = var_pro_total.split(',').join('');
+                        var product_total = p_total_new != null ? parseFloat(p_total_new) : 0;
+                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                        var parcel_guard = 0;
+                        var total_including_shipping = 0;
+                        // $('.shipping_service_code').each(function() {
+                        //     $(this).removeAttr('checked');
+                        // });
+                        $('.shipping_multi_price').each(function() {
+                            if ($(this).is(':checked')) {
+                                $(this).parent().find('.shipping_service_code').removeClass('d-none').attr('checked', 'checked');
+                                $(this).parent().find('.shipping_service_code').addClass('d-none');
+                                total_including_shipping =  product_total + tax + parseFloat($(this).val())  +  parseFloat(parcel_guard);
+                                $('#incl_tax').val(total_including_shipping.toFixed(2));
+                                $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                                let ship_cost = $(this).attr('shipping_cost_with_surcharge');
+                                $('#original_shipment_price').val(ship_cost.toFixed(2));
+                            }
+                        }); 
+                    }
                     const currentDate = new Date();
                     const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
                     $('.datetime_').val(formattedDate);

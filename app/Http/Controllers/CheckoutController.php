@@ -2254,7 +2254,6 @@ class CheckoutController extends Controller
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
         $shipping_carrier_code = null;
         $error = false;
-    
         foreach ($shipping_quotes as $quote) {
             if (!empty($quote->selected_shipping_quote)) {
                 $shipping_carrier_code = $quote->carrier_code;
@@ -2263,9 +2262,9 @@ class CheckoutController extends Controller
                     'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : null,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
-                    'toPostalCode' => $get_user_default_shipping_address->DeliveryZip ? $get_user_default_shipping_address->DeliveryZip :  $get_user_default_billing_address->BillingZip,
-                    'toState' => $get_user_default_shipping_address->DeliveryState ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
-                    'toCity' => $get_user_default_shipping_address->DeliveryCity ? $get_user_default_shipping_address->DeliveryCity : $get_user_default_billing_address->BillingCity,
+                    'toPostalCode' => '95899',
+                    'toState' => !empty($get_user_default_shipping_address->DeliveryState) ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
+                    // 'toCity' => !empty($get_user_default_shipping_address->DeliveryCity) ? $get_user_default_shipping_address->DeliveryCity : $get_user_default_billing_address->BillingCity,
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
@@ -2328,9 +2327,9 @@ class CheckoutController extends Controller
             'serviceCode' => $service_code_2->option_value,
             'fromPostalCode' => '95826',
             'toCountry' => 'US',
-            'toPostalCode' => $get_user_default_shipping_address->DeliveryZip ? $get_user_default_shipping_address->DeliveryZip :  $get_user_default_billing_address->BillingZip,
-            'toState' => $get_user_default_shipping_address->DeliveryState ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
-            'toCity' => $get_user_default_shipping_address->DeliveryCity ? $get_user_default_shipping_address->DeliveryCity : $get_user_default_billing_address->BillingCity,
+            'toPostalCode' => !empty($get_user_default_shipping_address->DeliveryZip) ? $get_user_default_shipping_address->DeliveryZip :  $get_user_default_billing_address->BillingZip,
+            'toState' => !empty($get_user_default_shipping_address->DeliveryState) ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
+            // 'toCity' => !empty($get_user_default_shipping_address->DeliveryCity) ? $get_user_default_shipping_address->DeliveryCity : $get_user_default_billing_address->BillingCity,
             'weight' => [
                 'value' => $products_weight,
                 'units' => 'pounds'
