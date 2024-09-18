@@ -272,6 +272,155 @@ class UserHelper
         } else {
             $orderStatus = 'awaiting_shipment';
         }
+
+        // billing address
+
+        if (!empty($currentOrder->BillingFirstName)) {
+            $firstName = $currentOrder->BillingFirstName;
+        } else {
+            $firstName = $order_contact->firstName;
+        }
+
+        if (!empty($currentOrder->BillingLastName)) {
+            $lastName = $currentOrder->BillingLastName;
+        } else {
+            $lastName = $order_contact->lastName;
+        }
+
+        
+        if (!empty($currentOrder->BillingAddress1)) {
+            $address1 = $currentOrder->BillingAddress1;
+        } elseif (!empty($order_contact->postalAddress1)) {
+            $address1 = $order_contact->postalAddress1;
+        } else {
+            $address1 = $order_contact->address1;
+        }
+        
+
+        if (!empty($currentOrder->BillingAddress2)) {
+            $address2 = $currentOrder->BillingAddress2;
+        } elseif (!empty($order_contact->postalAddress2)) {
+            $address2 = $order_contact->postalAddress2;
+        } else {
+            $address2 = $order_contact->address2;
+        }
+
+
+        if (!empty($currentOrder->BillingCity)) {
+            $city = $currentOrder->BillingCity;
+        } elseif (!empty($order_contact->postalCity)) {
+            $city = $order_contact->postalCity;
+        } else {
+            $city = $order_contact->city;
+        }
+
+
+        if (!empty($currentOrder->BillingState)) {
+            $state = $currentOrder->BillingState;
+        } elseif (!empty($order_contact->postalState)) {
+            $state = $order_contact->postalState;
+        } else {
+            $state = $order_contact->state;
+        }
+
+
+        if (!empty($currentOrder->BillingZip)) {
+            $zip = $currentOrder->BillingZip;
+        } elseif (!empty($order_contact->postalPostCode)) {
+            $zip = $order_contact->postalPostCode;
+        } else {
+            $zip = $order_contact->postCode;
+        }
+
+
+        if (!empty($currentOrder->BillingPhone)) {
+            $phone = $currentOrder->BillingPhone;
+        } elseif (!empty($order_contact->phone)) {
+            $phone = $order_contact->phone;
+        } else {
+            $phone = $order_contact->mobile;
+        }
+
+
+        // shipping address
+
+        if (!empty($currentOrder->DeliveryFirstName)) {
+            $DeliveryfirstName = $currentOrder->DeliveryFirstName;
+        } else {
+            $DeliveryfirstName = $order_contact->firstName;
+        }
+
+        if (!empty($currentOrder->DeliveryLastName)) {
+            $DeliverylastName = $currentOrder->DeliveryLastName;
+        } else {
+            $DeliverylastName = $order_contact->lastName;
+        }
+
+        if (!empty($currentOrder->DeliveryCompany)) {
+            $Deliverycompany = $currentOrder->DeliveryCompany;
+        } else {
+            $Deliverycompany = $order_contact->company;
+        }
+
+        if (!empty($currentOrder->DeliveryAddress1)) {
+            $Deliveryaddress1 = $currentOrder->DeliveryAddress1;
+        } elseif (!empty($order_contact->address1)) {
+            $Deliveryaddress1 = $order_contact->address1;
+        } else {
+            $Deliveryaddress1 = $order_contact->postalAddress1;
+        }
+
+
+        if (!empty($currentOrder->DeliveryAddress2)) {
+            $Deliveryaddress2 = $currentOrder->DeliveryAddress2;
+        } elseif (!empty($order_contact->address2)) {
+            $Deliveryaddress2 = $order_contact->address2;
+        } else {
+            $Deliveryaddress2 = $order_contact->postalAddress2;
+        }
+
+        if (!empty($currentOrder->DeliveryCity)) {
+            $Deliverycity = $currentOrder->DeliveryCity;
+        } elseif (!empty($order_contact->city)) {
+            $Deliverycity = $order_contact->city;
+        } else {
+            $Deliverycity = $order_contact->postalCity;
+        }
+
+        if (!empty($currentOrder->DeliveryState)) {
+            $Deliverystate = $currentOrder->DeliveryState;
+        } elseif (!empty($order_contact->state)) {
+            $Deliverystate = $order_contact->state;
+        } else {
+            $Deliverystate = $order_contact->postalState;
+        }
+
+
+        if (!empty($currentOrder->DeliveryZip)) {
+            $Deliveryzip = $currentOrder->DeliveryZip;
+        } elseif (!empty($order_contact->postCode)) {
+            $Deliveryzip = $order_contact->postCode;
+        } else {
+            $Deliveryzip = $order_contact->postalPostCode;
+        }
+
+
+        if (!empty($currentOrder->DeliveryCountry)) {
+            $Deliverycountry = $currentOrder->DeliveryCountry;
+        } else {
+            $Deliverycountry = 'US';
+        }
+
+        if (!empty($currentOrder->DeliveryPhone)) {
+            $Deliveryphone = $currentOrder->DeliveryPhone;
+        } elseif (!empty($order_contact->phone)) {
+            $Deliveryphone = $order_contact->phone;
+        } else {
+            $Deliveryphone = $order_contact->mobile;
+        }
+
+
+
         $data = [
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
@@ -285,27 +434,27 @@ class UserHelper
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
             'shipTo' => [
-                "name" => $order_contact->firstName .' '. $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "name" => $DeliveryfirstName .' '. $DeliverylastName,
+                "company" => $Deliverycompany,
+                "street1" => $Deliveryaddress1,
+                "street2" => $Deliveryaddress2,
+                "city" => $Deliverycity,
+                "state" => $Deliverystate,
+                "postalCode" => $Deliveryzip,
                 "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "phone" => $Deliveryphone,
                 // "residential"=>true
             ],
             'billTo' => [
-                "name" => $order_contact->firstName . ' ' . $order_contact->lastName,
+                "name" => $firstName .' '. $lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->postalAddress1 ? $order_contact->postalAddress1 : $order_contact->address1,
-                "street2" => $order_contact->postalAddress2 ? $order_contact->postalAddress2 : $order_contact->address2,
-                "city" => $order_contact->postalCity ? $order_contact->postalCity : $order_contact->city,
-                "state" => $order_contact->postalState ? $order_contact->postalState : $order_contact->state,
-                "postalCode" => $order_contact->postalPostCode ? $order_contact->postalPostCode : $order_contact->postCode,
+                "street1" => $address1,
+                "street2" => $address2,
+                "city" => $city,
+                "state" => $state,
+                "postalCode" => $zip,
                 "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "phone" => $phone,
                 // "residential"=>true
             ],
             'weight' => [

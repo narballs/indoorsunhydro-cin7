@@ -36,6 +36,7 @@ use App\Models\Cart;
 use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
 use App\Models\Category;
+use App\Models\ContactsAddress;
 use App\Models\DailyApiLog;
 use App\Models\NewsletterSubscription;
 use App\Models\Pricing;
@@ -2501,6 +2502,96 @@ class UserController extends Controller
                 'msg' => 'Address updated and synced Successfully'
             ]
         );
+    }
+
+    // add new address 
+    public function add_new_address(Request $request) {
+        $request->validate([
+                'contact_id' => 'required',
+                'first_name' => 'required',
+                // 'company_name' => 'required',
+                'phone' => 'required',
+                'zip' => 'required',
+                'address' => 'required',
+                // 'city' => 'required',
+                'state' => 'required',
+                // 'country' => 'required',
+                
+            ],
+            [
+                'contact_id.required' => 'Primary Company is required',
+                'first_name.required' => 'First name is required',
+                // 'company_name.required' => 'Company is required',
+                'phone.required' => 'Phone is required',
+                'zip.required' => 'Postal code is required',
+                'address.required' => 'Address is required',
+                // 'city.required' => 'City is required',
+                'state.required' => 'State is required',
+                // 'country.required' => 'Country is required',
+            ] 
+        );
+
+        
+
+        $contact_id = $request->contact_id;
+        $address_type = $request->type;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $company = $request->company_name;
+        $email = $request->email;
+        $phone = $request->phone;
+        $postal_code  = $request->zip;
+        $address1 = $request->address;
+        $address2 = $request->address2;
+        $city = $request->city;
+        $state = $request->state;
+        $country = $request->country;
+
+
+        $contact = Contact::where('contact_id', $contact_id)->first();
+        if (empty($contact)) {
+            return response()->json([
+                'status' => '400',
+                'msg' => 'Contact not found'
+            ]);
+        }
+
+
+        $update_default_address = ContactsAddress::where('contact_id', $contact_id)
+        ->where('address_type', $address_type)
+        ->get();
+
+        if (count($update_default_address) > 0) {
+            foreach ($update_default_address as $update_default) {
+                $update_default->is_default = 0;
+                $update_default->save();
+            }
+        }
+
+
+
+        $add_new_address = new ContactsAddress();
+        $add_new_address->contact_id = $contact_id;
+        $add_new_address->address_type = $address_type;
+        $add_new_address->DeliveryFirstName = $first_name;
+        $add_new_address->DeliveryLastName = $last_name;
+        $add_new_address->DeliveryCompany = $company;
+        $add_new_address->DeliveryPhone = $phone;
+        $add_new_address->DeliveryZip = $postal_code;
+        $add_new_address->DeliveryAddress1 = $address1;
+        $add_new_address->DeliveryAddress2 = $address2;
+        $add_new_address->DeliveryCity = $city;
+        $add_new_address->DeliveryState = $state;
+        $add_new_address->DeliveryCountry = $country;
+        $add_new_address->is_default = 1;
+        $add_new_address->save();
+
+
+        return response()->json([
+            'status' => '200',
+            'msg' => 'Address added successfully'
+        ]);
+          
     }
 
     public function adminUsers(Request $request)
