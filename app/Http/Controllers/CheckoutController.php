@@ -431,7 +431,7 @@ class CheckoutController extends Controller
             ->where('is_default', 1)
             ->first();
 
-            $get_all_user_addresses = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->get();
+            $get_all_user_addresses = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->where('is_default' , 0)->get();
 
 
             $charge_shipment_fee = false;

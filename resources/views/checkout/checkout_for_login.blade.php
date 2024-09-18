@@ -1328,10 +1328,10 @@ $cart_price = 0;
                                                     <div class="dropdown-menu pl-1" aria-labelledby="dropdownMenuButton">
                                                         @foreach($get_all_user_addresses as $get_all_user_addresse)
                                                             <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_shipment_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
-                                                                {{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
-                                                                {{-- {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }} --}}
-                                                                {{$get_user_default_shipping_address->DeliveryAddress1 ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
-                                                                {{$get_user_default_shipping_address->DeliveryZip ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
+                                                                {{ $get_all_user_addresse->DeliveryFirstName ? $get_all_user_addresse->DeliveryFirstName : '' }}
+                                                                {{-- {{ $get_all_user_addresse->DeliveryLastName ? $get_all_user_addresse->DeliveryLastName : '' }} --}}
+                                                                {{$get_all_user_addresse->DeliveryAddress1 ? ', ' .$get_all_user_addresse->DeliveryAddress1 : ''}}
+                                                                {{$get_all_user_addresse->DeliveryZip ? ', ' .$get_all_user_addresse->DeliveryZip : ''}}
                                                             </a> 
                                                         @endforeach
                                                     </div>
