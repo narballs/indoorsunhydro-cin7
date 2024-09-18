@@ -50,8 +50,6 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        dd($request->all());
-        
         $request->validate(
             [
                 'method_name' => 'required',
@@ -118,6 +116,8 @@ class OrderController extends Controller
             $parcel_guard = (ceil($actual_shipping_price / 100) * 0.99);
             // $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
         }
+
+        
         $first_name_shipping = $request->first_name_shipping;
         $last_name_shipping = $request->last_name_shipping;
         $address_1_shipping = $request->address_1_shipping;
@@ -127,16 +127,19 @@ class OrderController extends Controller
         $zip_code_shipping = $request->zip_code_shipping;
         $country_shipping = $request->country_shipping;
         $phone_shipping = $request->phone_shipping;
+        $company_shipping = $request->company_shipping;
 
 
         $first_name_billing = $request->first_name_billing;
         $last_name_billing = $request->last_name_billing;
         $address_1_billing = $request->address_1_billing;
+        $address_2_billing = $request->address_2_billing;
         $city_billing = $request->city_billing;
         $state_billing = $request->state_billing;
         $zip_code_billing = $request->zip_code_billing;
         $country_billing = $request->country_billing;
         $phone_billing = $request->phone_billing;
+        $company_billing = $request->company_billing;
 
         if (empty($address_1_shipping) || empty($state_shipping) || empty($zip_code_shipping) || empty($address_1_billing) || empty($state_billing) || empty($zip_code_billing)) {
             return back()->with('error', 'Billing and Shipping address is required.');
@@ -273,6 +276,31 @@ class OrderController extends Controller
                     $order->shipping_carrier_code = $shipping_carrier_code;
                     $order->shipping_service_code = $shipping_service_code;
                     $order->parcel_guard = $parcel_guard;
+
+                    //saving shipping details
+                    $order->DeliveryFirstName = $first_name_shipping;
+                    $order->DeliveryLastName = $last_name_shipping;
+                    $order->DeliveryCompany = $company_shipping;
+                    $order->DeliveryAddress1 = $address_1_shipping;
+                    $order->DeliveryAddress2 = $address_2_shipping;
+                    $order->DeliveryCity = $city_shipping;
+                    $order->DeliveryState = $state_shipping;
+                    $order->DeliveryZip = $zip_code_shipping;
+                    $order->DeliveryCountry = $country_shipping;
+                    $order->DeliveryPhone = $phone_shipping;
+
+                    // saving billing details
+                    $order->BillingFirstName = $first_name_billing;
+                    $order->BillingLastName = $last_name_billing;
+                    $order->BillingCompany = $company_billing;
+                    $order->BillingAddress1 = $address_1_billing;
+                    $order->BillingAddress2 = $address_2_billing;
+                    $order->BillingCity = $city_billing;
+                    $order->BillingState = $state_billing;
+                    $order->BillingZip = $zip_code_billing;
+                    $order->BillingCountry = $country_billing;
+                    $order->BillingPhone = $phone_billing;
+
                     $order->save();
 
                     $order_id =  $order->id;
@@ -449,6 +477,31 @@ class OrderController extends Controller
                     $order->shipping_carrier_code = $shipping_carrier_code;
                     $order->shipping_service_code = $shipping_service_code;
                     $order->parcel_guard = $parcel_guard;
+
+                    //saving shipping details
+                    $order->DeliveryFirstName = $first_name_shipping;
+                    $order->DeliveryLastName = $last_name_shipping;
+                    $order->DeliveryCompany = $company_shipping;
+                    $order->DeliveryAddress1 = $address_1_shipping;
+                    $order->DeliveryAddress2 = $address_2_shipping;
+                    $order->DeliveryCity = $city_shipping;
+                    $order->DeliveryState = $state_shipping;
+                    $order->DeliveryZip = $zip_code_shipping;
+                    $order->DeliveryCountry = $country_shipping;
+                    $order->DeliveryPhone = $phone_shipping;
+
+                    // saving billing details
+                    $order->BillingFirstName = $first_name_billing;
+                    $order->BillingLastName = $last_name_billing;
+                    $order->BillingCompany = $company_billing;
+                    $order->BillingAddress1 = $address_1_billing;
+                    $order->BillingAddress2 = $address_2_billing;
+                    $order->BillingCity = $city_billing;
+                    $order->BillingState = $state_billing;
+                    $order->BillingZip = $zip_code_billing;
+                    $order->BillingCountry = $country_billing;
+                    $order->BillingPhone = $phone_billing;
+
                     $order->save();
 
                     
@@ -759,6 +812,30 @@ class OrderController extends Controller
                     $order->discount_amount = $discount_amount;
                     $order->tax_rate = $total_tax_rate;
                     $order->parcel_guard = $parcel_guard;
+                    
+                    //saving shipping details
+                    $order->DeliveryFirstName = $first_name_shipping;
+                    $order->DeliveryLastName = $last_name_shipping;
+                    $order->DeliveryCompany = $company_shipping;
+                    $order->DeliveryAddress1 = $address_1_shipping;
+                    $order->DeliveryAddress2 = $address_2_shipping;
+                    $order->DeliveryCity = $city_shipping;
+                    $order->DeliveryState = $state_shipping;
+                    $order->DeliveryZip = $zip_code_shipping;
+                    $order->DeliveryCountry = $country_shipping;
+                    $order->DeliveryPhone = $phone_shipping;
+
+                    // saving billing details
+                    $order->BillingFirstName = $first_name_billing;
+                    $order->BillingLastName = $last_name_billing;
+                    $order->BillingCompany = $company_billing;
+                    $order->BillingAddress1 = $address_1_billing;
+                    $order->BillingAddress2 = $address_2_billing;
+                    $order->BillingCity = $city_billing;
+                    $order->BillingState = $state_billing;
+                    $order->BillingZip = $zip_code_billing;
+                    $order->BillingCountry = $country_billing;
+                    $order->BillingPhone = $phone_billing;
                     $order->save();
 
 

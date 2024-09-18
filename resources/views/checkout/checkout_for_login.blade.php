@@ -884,18 +884,21 @@ $cart_price = 0;
                                             
                                         @endphp
                                         <input type="hidden" name="paymentTerms" value="{{strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
+                                        
                                         {{-- billing --}}
-                                        <input type="hidden" name="first_name_billing" value="{{ !empty($get_user_default_billing_address->BillingFirstName) ?  $get_user_default_billing_address->BillingFirstName : '' }}">
-                                        <input type="hidden" name="last_name_billing" value="{{ !empty($get_user_default_billing_address->BillingLastName) ?  $get_user_default_billing_address->BillingLastName : '' }}">
-                                        <input type="hidden" name="address_1_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress1) ?  $get_user_default_billing_address->BillingAddress1 : '' }}">
-                                        <input type="hidden" name="address_2_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress2) ?  $get_user_default_billing_address->BillingAddress2 : '' }}">
-                                        <input type="hidden" name="city_billing" value="{{ !empty($get_user_default_billing_address->BillingCity) ?  $get_user_default_billing_address->BillingCity : '' }}">
-                                        <input type="hidden" name="state_billing" value="{{ !empty($get_user_default_billing_address->BillingState) ?  $get_user_default_billing_address->BillingState : '' }}">
-                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($get_user_default_billing_address->BillingZip) ?  $get_user_default_billing_address->BillingZip : '' }}">
+                                        <input type="hidden" name="billing_company" value="{{ !empty($get_user_default_billing_address->BillingCompany) ?  $get_user_default_billing_address->BillingCompany : $user_address->company }}">
+                                        <input type="hidden" name="first_name_billing" value="{{ !empty($get_user_default_billing_address->BillingFirstName) ?  $get_user_default_billing_address->BillingFirstName :  $user_address->firstName }}">
+                                        <input type="hidden" name="last_name_billing" value="{{ !empty($get_user_default_billing_address->BillingLastName) ?  $get_user_default_billing_address->BillingLastName : $user_address->lastName }}">
+                                        <input type="hidden" name="address_1_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress1) ?  $get_user_default_billing_address->BillingAddress1 : $user_address->postalAddress1 }}">
+                                        <input type="hidden" name="address_2_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress2) ?  $get_user_default_billing_address->BillingAddress2 : $user_address->postalAddress2 }}">
+                                        <input type="hidden" name="city_billing" value="{{ !empty($get_user_default_billing_address->BillingCity) ?  $get_user_default_billing_address->BillingCity :  $user_address->postalCity }}">
+                                        <input type="hidden" name="state_billing" value="{{ !empty($get_user_default_billing_address->BillingState) ?  $get_user_default_billing_address->BillingState : $user_address->postalState }}">
+                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($get_user_default_billing_address->BillingZip) ?  $get_user_default_billing_address->BillingZip : $user->postalPostCode }}">
                                         <input type="hidden" name="country_billing" value="{{ !empty($get_user_default_billing_address->BillingCountry) ?  $get_user_default_billing_address->BillingCountry : 'United States' }}">
-                                        <input type="hidden" name="phone_billing" value="{{ !empty($get_user_default_billing_address->BillingPhone) ?  $get_user_default_billing_address->BillingPhone : '' }}">
+                                        <input type="hidden" name="phone_billing" value="{{ !empty($get_user_default_billing_address->BillingPhone) ?  $get_user_default_billing_address->BillingPhone : $user_address->phone }}">
                                         
                                         {{-- shipping --}}
+                                        <input type="hidden" name="shipping_company" value="{{ !empty($get_user_default_shipping_address->DeliveryCompany) ?  $get_user_default_shipping_address->DeliveryCompany : '' }}">
                                         <input type="hidden" name="first_name_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryFirstName) ?  $get_user_default_shipping_address->DeliveryFirstName : '' }}">
                                         <input type="hidden" name="last_name_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryLastName) ?  $get_user_default_shipping_address->DeliveryLastName : '' }}">
                                         <input type="hidden" name="address_1_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ?  $get_user_default_shipping_address->DeliveryAddress1 : '' }}">
@@ -1260,31 +1263,31 @@ $cart_price = 0;
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
                                             <div class="col-md-9">
                                                 <span class="checkout_address_text">
-                                                    {{ !empty($get_user_default_billing_address->BillingFirstName) ?  $get_user_default_billing_address->BillingFirstName : '' }}
-                                                    {{ !empty($get_user_default_billing_address->BillingLastName) ?  $get_user_default_billing_address->BillingLastName : '' }}
+                                                    {{ !empty($get_user_default_billing_address->BillingFirstName) ?  $get_user_default_billing_address->BillingFirstName : $user_address->firstName }}
+                                                    {{ !empty($get_user_default_billing_address->BillingLastName) ?  $get_user_default_billing_address->BillingLastName : $user_address->lastName }}
                                                 </span>
                                             </div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Bill to</span></div>
-                                            <div class="col-md-9 "><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingAddress1 ? $get_user_default_billing_address->BillingAddress1 : ''}} {{$get_user_default_billing_address->BillingAddress2 ? ', ' .$get_user_default_billing_address->BillingAddress2 : ''}}</span></div>
+                                            <div class="col-md-9 "><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingAddress1 ? $get_user_default_billing_address->BillingAddress1 : $user_address->postalAddress1}} {{$get_user_default_billing_address->BillingAddress2 ? ', ' .$get_user_default_billing_address->BillingAddress2 : ',' . $user_address->postalAddress2}}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingCity ? $get_user_default_billing_address->BillingCity : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingCity ? $get_user_default_billing_address->BillingCity : $user_address->postalCity }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingState ? $get_user_default_billing_address->BillingState : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingState ? $get_user_default_billing_address->BillingState : $user_address->postalState }}</span></div>
                                             
                                         </div>
                                         
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingZip ? $get_user_default_billing_address->BillingZip : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_billing_address->BillingZip ? $get_user_default_billing_address->BillingZip : $user_address->postalPostCode }}</span></div>
                                             
                                         </div>
                                     </div>
@@ -1994,7 +1997,7 @@ $cart_price = 0;
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="company_shipping_new">Company Name</label>
+                                <label for="company_shipping_new">Company Name <span class="text-muted">(Optional)</span></label>
                                 <input type="text" class="form-control bg-light" id="shipping_new_company_name" name="shipping_new_company_name" placeholder=""
                                     value="" required>
                                 <div id="error_shipping_new_company_name" class="text-danger">
@@ -2016,7 +2019,7 @@ $cart_price = 0;
                             <div id="error_shipping_address1_new" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="address">Address 2</label>
+                            <label for="address">Address 2 <span class="text-muted">(Optional)</span></label>
                             <input type="text" class="form-control bg-light shipping_address2_new" name="shipping_address2_new"  id="shipping_address2_new"
                             value="" placeholder="House number and street name" required>
                             <div id="error_shipping_address_new_2" class="text-danger"></div>

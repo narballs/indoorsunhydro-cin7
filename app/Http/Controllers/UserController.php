@@ -2509,7 +2509,7 @@ class UserController extends Controller
         $request->validate([
                 'contact_id' => 'required',
                 'first_name' => 'required',
-                'company_name' => 'required',
+                // 'company_name' => 'required',
                 'phone' => 'required',
                 'zip' => 'required',
                 'address' => 'required',
@@ -2521,7 +2521,7 @@ class UserController extends Controller
             [
                 'contact_id.required' => 'Primary Company is required',
                 'first_name.required' => 'First name is required',
-                'company_name.required' => 'Company is required',
+                // 'company_name.required' => 'Company is required',
                 'phone.required' => 'Phone is required',
                 'zip.required' => 'Postal code is required',
                 'address.required' => 'Address is required',
@@ -2552,16 +2552,21 @@ class UserController extends Controller
         if (empty($contact)) {
             return response()->json([
                 'status' => '400',
-                'message' => 'Contact not found'
+                'msg' => 'Contact not found'
             ]);
         }
 
 
         $update_default_address = ContactsAddress::where('contact_id', $contact_id)
         ->where('address_type', $address_type)
-        ->first();
-        $update_default_address->is_default = 0;
-        $update_default_address->save();
+        ->get();
+
+        if (count($update_default_address) > 0) {
+            foreach ($update_default_address as $update_default) {
+                $update_default->is_default = 0;
+                $update_default->save();
+            }
+        }
 
 
 
@@ -2584,7 +2589,7 @@ class UserController extends Controller
 
         return response()->json([
             'status' => '200',
-            'message' => 'Address added successfully'
+            'msg' => 'Address added successfully'
         ]);
           
     }
