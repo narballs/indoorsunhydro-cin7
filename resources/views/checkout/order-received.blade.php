@@ -995,8 +995,8 @@
 															{{$order_contact->postalState ? $order_contact->postalState . ',' : ''}}
 														@endif
 
-														@if (!empty($order->BillingPostCode))
-															{{$order->BillingPostCode}}
+														@if (!empty($order->BillingZip))
+															{{$order->BillingZip}}
 														@else
 															{{$order_contact->postalPostCode ? $order_contact->postalPostCode : ''}}
 														@endif
@@ -1042,8 +1042,8 @@
 															{{$order_contact->state ? $order_contact->state . ',' : ''}}
 														@endif
 
-														@if (!empty($order->DeliveryPostCode))
-															{{$order->DeliveryPostCode}}
+														@if (!empty($order->DeliveryZip))
+															{{$order->DeliveryZip}}
 														@else
 															{{$order_contact->postCode ? $order_contact->postCode : ''}}
 														@endif

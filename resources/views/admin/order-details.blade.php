@@ -496,8 +496,8 @@
                                                 {{$customer->contact->postalState . ','}}
                                             @endif
 
-                                            @if (!empty($order->BillingPostCode))
-                                                {{ $order->BillingPostCode }}<br>
+                                            @if (!empty($order->BillingZip))
+                                                {{ $order->BillingZip }}<br>
                                             @elseif(!empty($customer->contact->postalPostCode))
                                                 {{$customer->contact->postalPostCode}}
                                             @endif
@@ -610,8 +610,8 @@
                                         {{$customer->contact->state . ','}}
                                     @endif
 
-                                    @if (!empty($order->DeliveryPostCode))
-                                        {{ $order->DeliveryPostCode }}<br>
+                                    @if (!empty($order->DeliveryZip))
+                                        {{ $order->DeliveryZip }}<br>
                                     @elseif(!empty($customer->contact->postCode))
                                         {{$customer->contact->postCode}}
                                     @endif
