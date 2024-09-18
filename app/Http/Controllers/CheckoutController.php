@@ -431,6 +431,8 @@ class CheckoutController extends Controller
             ->where('is_default', 1)
             ->first();
 
+            $get_all_user_addresses = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->get();
+
 
             $charge_shipment_fee = false;
             if (!empty($user_address) && $user_address->charge_shipping == 1) {
@@ -734,6 +736,7 @@ class CheckoutController extends Controller
                 'enable_free_shipping_banner_text',
                 'get_user_default_billing_address',
                 'get_user_default_shipping_address',
+                'get_all_user_addresses'
                 // 'toggle_shipment_insurance'
             ));
         } else {
@@ -2446,6 +2449,31 @@ class CheckoutController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+
+    public function select_default_shipping_address(Request $request) {
+        $contact_id = $request->contact_id;
+        $address_id = $request->address_id;
+        if (!empty($contact_id) && !empty($address_id)) {
+            $contact_addresses = ContactsAddress::where('contact_id', $contact_id)->where('address_type' , 'Shipping')->get();
+            if (count($contact_addresses) == 0) {
+                return response()->json(['status' => 400, 'message' => 'No address found']);
+            } else {
+                foreach ($contact_addresses as $contact_address) {
+                    $contact_address->is_default = 0;
+                    $contact_address->save();
+                }
+
+                $selected_address = ContactsAddress::where('id', $address_id)->first();
+                $selected_address->is_default = 1;
+                $selected_address->save();
+                return response()->json(['status' => 200, 'message' => 'Shipping address selected successfully']);
+            }
+        } else {
+            return response()->json(['status' => 400, 'message' => 'Contact  is required']);
+        }
+        
     }
 
     

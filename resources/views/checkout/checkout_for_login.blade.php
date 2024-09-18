@@ -2,6 +2,9 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 <style>
+    .user_address_dropdown:active {
+        background-color: #f1f1f1;
+    }
     .free_shipping_banner_text {
         font-size: 14px;
         font-weight: 500;
@@ -1311,6 +1314,31 @@ $cart_price = 0;
                                                 <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Change</a>
                                             </div> --}}
                                         </div>
+                                        @if (count($get_all_user_addresses) > 0)
+                                        <div class="row">
+                                            <div class="col-md-8 col-lg-7 col-12 col-xl-6">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        {{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                        {{-- {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }} --}}
+                                                        {{$get_user_default_shipping_address->DeliveryAddress1 ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
+                                                        {{$get_user_default_shipping_address->DeliveryZip ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
+                                                    </button>
+                                                
+                                                    <div class="dropdown-menu pl-1" aria-labelledby="dropdownMenuButton">
+                                                        @foreach($get_all_user_addresses as $get_all_user_addresse)
+                                                            <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_shipment_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
+                                                                {{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                                {{-- {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }} --}}
+                                                                {{$get_user_default_shipping_address->DeliveryAddress1 ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
+                                                                {{$get_user_default_shipping_address->DeliveryZip ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
+                                                            </a> 
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        @endif
                                     </div>
                                     <div class="col-md-12">
                                         <div class="row  custom-border-bottom custom_address_padding ">
@@ -3774,6 +3802,47 @@ $cart_price = 0;
                         },
                         success: function(response) {
                             window.location.reload();
+                        }
+                    });
+                }
+
+                // change user address 
+                function change_user_shipment_address (contact_id , address_id) {
+                    jQuery.ajax({
+                        url: "{{ url('/select-default-shipping-address/') }}",
+                        method: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'contact_id': contact_id,
+                            'address_id': address_id
+                        },
+                        success: function(response) {
+                            if (response.status == 200) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: response.message,
+                                    icon: "success",
+                                    button: "Ok",
+                                });
+                                setTimeout(function() {
+                                    window.location.href = "{{ url('/checkout') }}";
+                                }, 1000);
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: 'Something went wrong! Please try again later',
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                            }
+                        },
+                        error: function(response) {
+                            Swal.fire({
+                                title: "Error",
+                                text: 'Something went wrong! Please try again later',
+                                icon: "error",
+                                button: "Ok",
+                            });
                         }
                     });
                 }
