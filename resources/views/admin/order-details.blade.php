@@ -578,9 +578,9 @@
 
                                 <hr>
                                 <address>
-                                    {{-- @if (!empty($order->DeliveryCompany))
-                                        Company:<strong>{{ ucfirst($order->DeliveryCompany) }}</strong><br> --}}
-                                    @if (!empty($customer->contact->company ))
+                                    @if (!empty($order->DeliveryCompany))
+                                        Company:<strong>{{ ucfirst($order->DeliveryCompany) }}</strong><br>
+                                    @elseif (!empty($customer->contact->company ))
                                         Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
                                     @endif
                                         
