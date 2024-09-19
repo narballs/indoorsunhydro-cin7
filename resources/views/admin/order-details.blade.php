@@ -125,7 +125,7 @@
                                         @endif
                                     </form>
                                 </div>
-                                @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
+                                {{-- @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1) --}}
                                     <div class="col-md-5 ">
                                         <form action="{{route('send_order_to_shipstation')}}" class="" method="post" class="mb-0">
                                             @csrf
@@ -137,7 +137,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                @endif
+                                {{-- @endif --}}
                             </div>
                         </div>
                     </div>

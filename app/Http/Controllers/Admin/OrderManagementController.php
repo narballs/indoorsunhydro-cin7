@@ -663,7 +663,7 @@ class OrderManagementController extends Controller
         $order_id = $request->order_id;
         $currentOrder = ApiOrder::where('id', $order_id)->first();
         if (!empty($currentOrder)) {
-            if ($currentOrder->is_stripe == 1 && $currentOrder->shipstation_orderId == null && $currentOrder->payment_status == 'paid') {
+            // if ($currentOrder->is_stripe == 1 && $currentOrder->shipstation_orderId == null && $currentOrder->payment_status == 'paid') {
                 $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
@@ -682,9 +682,9 @@ class OrderManagementController extends Controller
                 } else {
                     return redirect()->back()->with('error', 'Please check your admin settings for create order in shipstation' );
                 }
-            } else {
-                return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
-            }
+            // } else {
+            //     return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+            // }
         }
     }
 

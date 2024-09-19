@@ -293,6 +293,10 @@ class CheckoutController extends Controller
         $product_height = 0;
         $product_length = 0;
         $sub_total_of_cart = 0;
+        $products_lengths = [];
+        $products_widths = [];
+        $sum_of_length = 0;
+        $sum_of_width = 0;
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
@@ -313,18 +317,29 @@ class CheckoutController extends Controller
             foreach ($product_options as $product_option) {
                 $products_weight += $product_option->optionWeight * $cart_item['quantity'];
                 if (!empty($product_option->products)) {
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
+                    
+                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+                    
                     $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                    $sum_of_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
+                    $sum_of_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                    
                 }
-            }
+            }            
+        }
 
-            
+        if ($products_weight > 150) {
+            $product_width = $sum_of_width;
+            $product_length = $sum_of_length;
+        } else {
+            $product_width = max($products_widths);
+            $product_length = max($products_lengths);
         }
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
         if ($enable_extra_shipping_value == true) {
-            if ($product_width > 40 || $product_height > 40 || $product_length > 40) {
+            if ($sum_of_width > 40 || $product_height > 40 || $sum_of_length > 40) {
                 $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
             } else {
                 $extra_shipping_value = 0;
@@ -2274,9 +2289,9 @@ class CheckoutController extends Controller
                     ],
                     'dimensions' => [
                         'units' => 'inches',
-                        'length' => $product_height,
+                        'length' => $product_length,
                         'width' => $product_width,
-                        'height' => $product_length,
+                        'height' => $product_height,
                     ],
                 ];
         
@@ -2339,9 +2354,9 @@ class CheckoutController extends Controller
             ],
             'dimensions' => [
                 'units' => 'inches',
-                'length' => $product_height,
+                'length' => $product_length,
                 'width' => $product_width,
-                'height' => $product_length,
+                'height' => $product_height,
             ],
         ];
 
