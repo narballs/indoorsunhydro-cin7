@@ -56,6 +56,27 @@ class ApiOrder extends Model
         'parcel_guard',
         'internal_comments',
         'delievery_instructions',
+        'DeliveryFirstName',
+        'DeliveryLastName',
+        'DeliveryCompany',
+        'DeliveryAddress1',
+        'DeliveryAddress2',
+        'DeliveryCity',
+        'DeliveryState',
+        'DeliveryZip',
+        'DeliveryCountry',
+        'DeliveryPhone',
+        'BillingFirstName',
+        'BillingLastName',
+        'BillingCompany',
+        'BillingAddress1',
+        'BillingAddress2',
+        'BillingCity',
+        'BillingState',
+        'BillingZip',
+        'BillingCountry',
+        'BillingPhone',
+        
     ];
     public function contact()
     {

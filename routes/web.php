@@ -148,6 +148,9 @@ Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
 Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
 Route::post('update-product-cart', [ProductController::class, 'update_product_cart'])->name('update_product_cart');
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
+// select default address
+Route::post('select-default-shipping-address', [CheckoutController::class, 'select_default_shipping_address'])->name('select_default_shipping_address');
+
 Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
 Route::post('order-status-update', [OrderController::class, 'updateStatus'])->name('order.status.update');
@@ -572,3 +575,4 @@ Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sm
 // thankyou page
 Route::get('/thank-you', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
 Route::get('/ai-answer', [ProductController::class, 'ai_answer'])->name('ai_answer');
+Route::post('/add-new-address', [UserController::class, 'add_new_address'])->name('add_new_address');

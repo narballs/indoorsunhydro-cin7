@@ -43,6 +43,7 @@ use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 use PSpell\Config;
 use App\Helpers\DistanceCalculator;
 use App\Models\ApiErrorLog;
+use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
 
 class CheckoutController extends Controller
@@ -292,6 +293,10 @@ class CheckoutController extends Controller
         $product_height = 0;
         $product_length = 0;
         $sub_total_of_cart = 0;
+        $products_lengths = [];
+        $products_widths = [];
+        $sum_of_length = 0;
+        $sum_of_width = 0;
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
@@ -312,18 +317,29 @@ class CheckoutController extends Controller
             foreach ($product_options as $product_option) {
                 $products_weight += $product_option->optionWeight * $cart_item['quantity'];
                 if (!empty($product_option->products)) {
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
+                    
+                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+                    
                     $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                    $sum_of_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
+                    $sum_of_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                    
                 }
-            }
+            }            
+        }
 
-            
+        if ($products_weight > 150) {
+            $product_width = $sum_of_width;
+            $product_length = $sum_of_length;
+        } else {
+            $product_width = max($products_widths);
+            $product_length = max($products_lengths);
         }
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
         if ($enable_extra_shipping_value == true) {
-            if ($product_width > 40 || $product_height > 40 || $product_length > 40) {
+            if ($sum_of_width > 40 || $product_height > 40 || $sum_of_length > 40) {
                 $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
             } else {
                 $extra_shipping_value = 0;
@@ -365,9 +381,73 @@ class CheckoutController extends Controller
                     $check_new_user_orders = ApiOrder::where('memberId' , $parent->parent_id)->first();
                 }
             }
+
+            //adding first entry for users in contact addresses
+
+
+
             if (empty($user_address) && ($user_address->postalAddress1 == null  && $user_address->postalPostCode == null)) {
                 return redirect()->back()->with('address_message', "Please contact support to update your billing address" );
             }
+
+
+
+            // adding address from Contacts Address table
+
+            $check_billing_address = ContactsAddress::where('contact_id', $contact->contact_id)->where('address_type', 'Billing')->first();
+
+            if (empty($check_billing_address)) {
+                $create_billing_address = new ContactsAddress([
+                    'contact_id' => $contact->contact_id,
+                    'BillingFirstName' => $contact->firstName,
+                    'BillingLastName' => $contact->lastName,
+                    'BillingCompany' => $contact->company,
+                    'BillingAddress1' => !empty($contact->postalAddress1) ? $contact->postalAddress1 : $contact->address1,
+                    'BillingAddress2' => !empty($contact->postalAddress2) ? $contact->postalAddress2 : $contact->address2,
+                    'BillingCity' => !empty($contact->postalCity) ? $contact->postalCity : $contact->city,
+                    'BillingState' => !empty($contact->postalState) ? $contact->postalState : $contact->state,
+                    'BillingZip' => !empty($contact->postalPostCode) ? $contact->postalPostCode : $contact->postCode,
+                    'BillingCountry' => $contact->country,
+                    'BillingPhone' => $contact->phone,
+                    'is_default' => 1,
+                    'address_type' => 'Billing',
+                ]);
+                $create_billing_address->save();
+            }
+
+            $check_shipping_address = ContactsAddress::where('contact_id', $contact->contact_id)->where('address_type', 'Shipping')->first();
+
+            if (empty($check_shipping_address)) {
+                $create_shipping_address = new ContactsAddress([
+                    'contact_id' => $contact->contact_id,
+                    'DeliveryFirstName' => $contact->firstName,
+                    'DeliveryLastName' => $contact->lastName,
+                    'DeliveryCompany' => $contact->company,
+                    'DeliveryAddress1' => !empty($contact->address1) ? $contact->address1 : $contact->postalAddress1,
+                    'DeliveryAddress2' => !empty($contact->address2) ? $contact->address2 : $contact->postalAddress2,
+                    'DeliveryCity' =>   !empty($contact->city) ? $contact->city : $contact->postalCity,
+                    'DeliveryState' => !empty($contact->state) ? $contact->state : $contact->postalState,
+                    'DeliveryZip' => !empty($contact->postCode) ? $contact->postCode : $contact->postalPostCode,
+                    'DeliveryCountry' => $contact->country,
+                    'DeliveryPhone' => $contact->phone,
+                    'is_default' => 1,
+                    'address_type' => 'Shipping',
+                ]);
+                $create_shipping_address->save();
+            }
+
+            $get_user_default_billing_address = ContactsAddress::where('contact_id', $contact->contact_id)
+            ->where('address_type', 'Billing')
+            ->where('is_default', 1)
+            ->first();
+
+            $get_user_default_shipping_address = ContactsAddress::where('contact_id', $contact->contact_id)
+            ->where('address_type', 'Shipping')
+            ->where('is_default', 1)
+            ->first();
+
+            $get_all_user_addresses = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->where('is_default' , 0)->get();
+
 
             $charge_shipment_fee = false;
             if (!empty($user_address) && $user_address->charge_shipping == 1) {
@@ -382,8 +462,11 @@ class CheckoutController extends Controller
                 $get_tax_rate = $tax_class->rate;
             }
             $matchZipCode = null;
-            if (empty($user_address) && ($user_address->postalPostCode != null || $user_address->postCode != null)) {
-                $matchZipCode = OperationalZipCode::where('status' , 'active')->where('zip_code', $user_address->postalPostCode)->orWhere('zip_code' , $user_address->postCode)->first();
+            if (empty($user_address) && ($get_user_default_shipping_address->DeliveryZip != null || $get_user_default_billing_address->BillingZip != null)) {
+                $matchZipCode = OperationalZipCode::where('status' , 'active')
+                ->where('zip_code', $get_user_default_shipping_address->DeliveryZip)
+                ->orWhere('zip_code' , $get_user_default_billing_address->BillingZip)
+                ->first();
             }
             
             $check_zip_code_setting = AdminSetting::where('option_name', 'check_zipcode')->where('option_value' , 'Yes')->first();
@@ -391,9 +474,9 @@ class CheckoutController extends Controller
             if (!empty($check_zip_code_setting) && strtolower($check_zip_code_setting->option_value) == 'yes') {
                 $zip_code_is_valid = false;
                 $operational_zip_code = OperationalZipCode::where('status' , 'active')
-                    ->where('zip_code', $user_address->postalPostCode)
-                    ->orWhere('zip_code' , $user_address->postCode)
-                    ->first();
+                ->where('zip_code', $get_user_default_shipping_address->DeliveryZip)
+                ->orWhere('zip_code' , $get_user_default_billing_address->BillingZip)
+                ->first();
                 if (!empty($operational_zip_code)) {
                     $zip_code_is_valid = true;
                 }
@@ -402,7 +485,7 @@ class CheckoutController extends Controller
             $shipping_free_over_1000 = 0;
             $calculator = new DistanceCalculator();
             $allow_pickup = 0;
-            $distance = $calculator->calculate_distance('95826', $user_address->postCode);
+            $distance = $calculator->calculate_distance('95826', $get_user_default_shipping_address->DeliveryZip);
 
             if (empty($distance)) {
                 $allow_pickup = 0;
@@ -424,7 +507,7 @@ class CheckoutController extends Controller
             } 
             else {
                 if (!empty($free_shipping_state)) {
-                    if ($free_shipping_state->option_value == $user_address->state || $user_address->state == 'CA') {
+                    if ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState || $get_user_default_shipping_address->DeliveryState == 'CA') {
                         if ($sub_total_of_cart >= 1000) {
                             $shipping_free_over_1000 = 1;
                         } else {
@@ -456,7 +539,7 @@ class CheckoutController extends Controller
                         if ($products_weight > 150) {
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
-                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length);
+                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
                             // dd($get_shipping_rates_greater);
                             if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
                                 $shipment_error = 1;
@@ -472,7 +555,7 @@ class CheckoutController extends Controller
                         else {
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
-                            $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length);
+                            $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
                             if (($get_shipping_rates['shipment_prices'] === null)) {
                                 $shipment_error = 1;
                             }
@@ -535,7 +618,7 @@ class CheckoutController extends Controller
                             'serviceCode' => $service_code ,
                             'fromPostalCode' => '95826',
                             'toCountry' => 'US',
-                            'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
+                            'toPostalCode' => $get_user_default_shipping_address->DeliveryState ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
                             'weight' => [
                                 'value' => $products_weight,
                                 'units' => 'pounds'
@@ -665,7 +748,10 @@ class CheckoutController extends Controller
                 'distance',
                 'extra_shipping_value',
                 'enable_free_shipping_banner',
-                'enable_free_shipping_banner_text'
+                'enable_free_shipping_banner_text',
+                'get_user_default_billing_address',
+                'get_user_default_shipping_address',
+                'get_all_user_addresses'
                 // 'toggle_shipment_insurance'
             ));
         } else {
@@ -2177,7 +2263,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function get_shipping_rate($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length) {
+    public function get_shipping_rate($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address) {
         $client = new \GuzzleHttp\Client();
         $ship_station_host_url = config('services.shipstation.host_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -2186,7 +2272,6 @@ class CheckoutController extends Controller
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
         $shipping_carrier_code = null;
         $error = false;
-    
         foreach ($shipping_quotes as $quote) {
             if (!empty($quote->selected_shipping_quote)) {
                 $shipping_carrier_code = $quote->carrier_code;
@@ -2195,16 +2280,18 @@ class CheckoutController extends Controller
                     'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : null,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
-                    'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
+                    'toPostalCode' => '95899',
+                    'toState' => !empty($get_user_default_shipping_address->DeliveryState) ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
+                    // 'toCity' => !empty($get_user_default_shipping_address->DeliveryCity) ? $get_user_default_shipping_address->DeliveryCity : $get_user_default_billing_address->BillingCity,
                     'weight' => [
                         'value' => $products_weight,
                         'units' => 'pounds'
                     ],
                     'dimensions' => [
                         'units' => 'inches',
-                        'length' => $product_height,
+                        'length' => $product_length,
                         'width' => $product_width,
-                        'height' => $product_length,
+                        'height' => $product_height,
                     ],
                 ];
         
@@ -2246,29 +2333,30 @@ class CheckoutController extends Controller
         ];
     }
 
-    public function get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price ,$product_width , $product_height , $product_length) {
+    public function get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price ,$product_width , $product_height , $product_length ,$get_user_default_shipping_address , $get_user_default_billing_address) {
         $client = new \GuzzleHttp\Client();
         $ship_station_host_url = config('services.shipstation.host_url');
         $ship_station_api_key = config('services.shipstation.key');
         $ship_station_api_secret = config('services.shipstation.secret');
         $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
-        $shipping_carrier_code = $carrier_code_2->option_value;
         $data = [
             'carrierCode' => $carrier_code_2->option_value,
             'serviceCode' => $service_code_2->option_value,
             'fromPostalCode' => '95826',
             'toCountry' => 'US',
-            'toPostalCode' => $user_address->postCode ? $user_address->postCode : $user_address->postalPostCode,
+            'toPostalCode' => !empty($get_user_default_shipping_address->DeliveryZip) ? $get_user_default_shipping_address->DeliveryZip :  $get_user_default_billing_address->BillingZip,
+            'toState' => !empty($get_user_default_shipping_address->DeliveryState) ? $get_user_default_shipping_address->DeliveryState : $get_user_default_billing_address->BillingState,
+            // 'toCity' => !empty($get_user_default_shipping_address->DeliveryCity) ? $get_user_default_shipping_address->DeliveryCity : $get_user_default_billing_address->BillingCity,
             'weight' => [
                 'value' => $products_weight,
                 'units' => 'pounds'
             ],
             'dimensions' => [
                 'units' => 'inches',
-                'length' => $product_height,
+                'length' => $product_length,
                 'width' => $product_width,
-                'height' => $product_length,
+                'height' => $product_height,
             ],
         ];
 
@@ -2376,6 +2464,31 @@ class CheckoutController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+
+    public function select_default_shipping_address(Request $request) {
+        $contact_id = $request->contact_id;
+        $address_id = $request->address_id;
+        if (!empty($contact_id) && !empty($address_id)) {
+            $contact_addresses = ContactsAddress::where('contact_id', $contact_id)->where('address_type' , 'Shipping')->get();
+            if (count($contact_addresses) == 0) {
+                return response()->json(['status' => 400, 'message' => 'No address found']);
+            } else {
+                foreach ($contact_addresses as $contact_address) {
+                    $contact_address->is_default = 0;
+                    $contact_address->save();
+                }
+
+                $selected_address = ContactsAddress::where('id', $address_id)->first();
+                $selected_address->is_default = 1;
+                $selected_address->save();
+                return response()->json(['status' => 200, 'message' => 'Shipping address selected successfully']);
+            }
+        } else {
+            return response()->json(['status' => 400, 'message' => 'Contact  is required']);
+        }
+        
     }
 
     

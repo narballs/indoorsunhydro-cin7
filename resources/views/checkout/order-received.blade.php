@@ -649,8 +649,13 @@
 									</div>
 									<div class="">
 										<p class="order-confirmation-page-title name_title">
-											{{$order_contact->firstName}}
-											{{$order_contact->lastName}}
+											@if (!empty($order->BillingFirstName))
+												{{$order->BillingFirstName}} {{$order->BillingLastName}}
+											@elseif (!empty($order->BillingLastName)) 
+												 {{$order->BillingFirstName}} {{$order->BillingLastName}}	
+											@else
+												{{$order_contact->firstName}} {{$order_contact->lastName}}
+											@endif
 											{{-- <span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span> --}}
 										</p>
 									</div>
@@ -964,15 +969,37 @@
 											<div class="row">
 												<div class="col-md-12">
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->postalAddress1 ? $order_contact->postalAddress1 . ',' : ''}}
+														@if (!empty($order->BillingAddress1))
+															{{$order->BillingAddress1 . ','}}
+														@else
+															{{$order_contact->postalAddress1 ? $order_contact->postalAddress1 . ',' : ''}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->postalAddress2 ? $order_contact->postalAddress2 . ',' : ''}}
+														@if (!empty($order->BillingAddress2))
+															{{$order->BillingAddress2 . ','}}
+														@else
+															{{$order_contact->postalAddress2 ? $order_contact->postalAddress2 . ',' : ''}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
-														{{$order_contact->postalCity ? $order_contact->postalCity . ',' : ''}}
-														{{$order_contact->postalState ? $order_contact->postalState . ',' : ''}}
-														{{$order_contact->postalPostCode ? $order_contact->postalPostCode : ''}}
+														@if (!empty($order->BillingCity))
+															{{$order->BillingCity . ','}}
+														@else
+															{{$order_contact->postalCity ? $order_contact->postalCity . ',' : ''}}
+														@endif
+
+														@if (!empty($order->BillingState))
+															{{$order->BillingState . ','}}
+														@else
+															{{$order_contact->postalState ? $order_contact->postalState . ',' : ''}}
+														@endif
+
+														@if (!empty($order->BillingZip))
+															{{$order->BillingZip}}
+														@else
+															{{$order_contact->postalPostCode ? $order_contact->postalPostCode : ''}}
+														@endif
 													</p>
 													
 												</div>
@@ -989,15 +1016,37 @@
 											<div class="row">
 												<div class="col-md-12">
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address1 ? $order_contact->address1 . ',' : ''}}
+														@if (!empty($order->DeliveryAddress1))
+															{{$order->DeliveryAddress1 . ','}}
+														@else
+															{{$order_contact->address1 ? $order_contact->address1 . ',' : ''}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title mb-1">
-														{{$order_contact->address2 ? $order_contact->address2: ''}}
+														@if (!empty($order->DeliveryAddress2))
+															{{$order->DeliveryAddress2 . ','}}
+														@else
+															{{$order_contact->address2 ? $order_contact->address2: ''}}
+														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
-														{{$order_contact->city ? $order_contact->city . ',' : ''}}
-														{{$order_contact->state ? $order_contact->state . ',' : ''}}
-														{{$order_contact->postCode ? $order_contact->postCode : ''}}
+														@if (!empty($order->DeliveryCity))
+															{{$order->DeliveryCity . ','}}
+														@else
+															{{$order_contact->city ? $order_contact->city . ',' : ''}}
+														@endif
+
+														@if (!empty($order->DeliveryState))
+															{{$order->DeliveryState . ','}}
+														@else
+															{{$order_contact->state ? $order_contact->state . ',' : ''}}
+														@endif
+
+														@if (!empty($order->DeliveryZip))
+															{{$order->DeliveryZip}}
+														@else
+															{{$order_contact->postCode ? $order_contact->postCode : ''}}
+														@endif
 													</p>
 												</div>
 											</div>

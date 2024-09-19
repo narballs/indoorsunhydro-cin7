@@ -465,28 +465,47 @@
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>
                                         <address>
-                                            @if (!empty($customer->contact->company ))
-                                                Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
+                                            @if (!empty($order->BillingCompany))
+                                                Company:<strong>{{ ucfirst($order->BillingCompany) }}</strong><br>
+                                            @elseif (!empty($customer->contact->company ))
+                                            Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
                                             @endif
-                                            @if (!empty($customer->contact->firstName) && !empty($customer->contact->lastName))
-                                                {{ $customer->contact->firstName }}&nbsp;{{ $customer->contact->lastName }}<br>
+
+                                            {{!empty($order->BillingFirstName) ? $order->BillingFirstName : $customer->contact->firstName }}&nbsp;{{ !empty($order->BillingLastName) ? $order->BillingLastName : $customer->contact->lastName }}<br>
+                                            @if (!empty($order->BillingAddress1))
+                                                {{ $order->BillingAddress1 . ',' }}
+                                            @elseif(!empty($customer->contact->postalAddress1))
+                                                {{$customer->contact->postalAddress1 . ','}} 
                                             @endif
-                                            @if(!empty($customer->contact->postalAddress1))
-                                                {{$customer->contact->postalAddress1 . ','}} <br>
+
+                                            @if (!empty($order->BillingAddress2))
+                                                {{ $order->BillingAddress2 . ',' }}<br>
+                                            @elseif(!empty($customer->contact->postalAddress2))
+                                                {{$customer->contact->postalAddress2 . ','}} <br>
                                             @endif
-                                            @if(!empty($customer->contact->postalAddress2))
-                                                {{$customer->contact->postalAddress2 . ','}} 
-                                            @endif
-                                            @if(!empty($customer->contact->postalCity))
+
+                                            @if (!empty($order->BillingCity))
+                                                {{ $order->BillingCity . ',' }}<br>
+                                            @elseif(!empty($customer->contact->postalCity))
                                                 {{$customer->contact->postalCity . ','}}
                                             @endif
-                                            @if(!empty($customer->contact->postalState))
+
+                                            @if (!empty($order->BillingState))
+                                                {{ $order->BillingState . ',' }}<br>
+                                            @elseif(!empty($customer->contact->postalState))
                                                 {{$customer->contact->postalState . ','}}
                                             @endif
-                                            @if(!empty($customer->contact->postalPostCode))
+
+                                            @if (!empty($order->BillingZip))
+                                                {{ $order->BillingZip }}<br>
+                                            @elseif(!empty($customer->contact->postalPostCode))
                                                 {{$customer->contact->postalPostCode}}
                                             @endif
+                                            @if (!empty($order->BillingPhone))
+                                                <p title="Phone" class="mb-0">P: {{ '('. $order->BillingPhone . ')' }}</p>
+                                            @else
                                             <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
+                                            @endif
                                         </address>
                                     </div>
                                 </div>
@@ -559,16 +578,49 @@
 
                                 <hr>
                                 <address>
-                                    @if (!empty($customer->contact->company ))
+                                    @if (!empty($order->DeliveryCompany))
+                                        Company:<strong>{{ ucfirst($order->DeliveryCompany) }}</strong><br>
+                                    @elseif (!empty($customer->contact->company ))
                                         Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
                                     @endif
-                                    {{ $customer->contact->firstName }} {{ $customer->contact->lastName }}</strong><br>
-                                    {{ !empty($customer->contact->address1) ? $customer->contact->address1 . ',' : '' }}
-                                    {{ !empty($customer->contact->address2) ? $customer->contact->address2 . ',': ''}}<br>
-                                    {{ !empty($customer->contact->state) ? $customer->contact->state . ',' : '' }}
-                                    {{ !empty($customer->contact->city) ? $customer->contact->city . ',' : '' }}
-                                    {{ !empty($customer->contact->postCode) ? $customer->contact->postCode . ',' : '' }}
-                                    <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
+                                        
+                                    {{!empty($order->DeliveryFirstName) ? $order->DeliveryFirstName : $customer->contact->firstName }}&nbsp;{{ !empty($order->DeliveryLastName) ? $order->DeliveryLastName : $customer->contact->lastName }}<br>
+                                    
+                                    @if (!empty($order->DeliveryAddress1))
+                                        {{ $order->DeliveryAddress1 . ',' }}
+                                    @elseif(!empty($customer->contact->address1))
+                                        {{$customer->contact->address1 . ','}} 
+                                    @endif
+
+                                    @if (!empty($order->DeliveryAddress2))
+                                        {{ $order->DeliveryAddress2 . ',' }}<br>
+                                    @elseif(!empty($customer->contact->address2))
+                                        {{$customer->contact->address2 . ','}}<br>
+                                    @endif
+
+                                    @if (!empty($order->DeliveryCity))
+                                        {{ $order->DeliveryCity . ',' }}
+                                    @elseif(!empty($customer->contact->city))
+                                        {{$customer->contact->city . ','}}
+                                    @endif
+
+                                    @if (!empty($order->DeliveryState))
+                                        {{ $order->DeliveryState . ',' }}
+                                    @elseif(!empty($customer->contact->state))
+                                        {{$customer->contact->state . ','}}
+                                    @endif
+
+                                    @if (!empty($order->DeliveryZip))
+                                        {{ $order->DeliveryZip }}<br>
+                                    @elseif(!empty($customer->contact->postCode))
+                                        {{$customer->contact->postCode}}
+                                    @endif
+
+                                    @if (!empty($order->DeliveryPhone))
+                                        <p title="Phone" class="mb-0">P: {{ '('. $order->DeliveryPhone . ')' }}</p>
+                                    @else
+                                        <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
+                                    @endif
                                     <p title="Phone">{{ $customer->contact->email }}</p>
                                 </address>
                             </div>

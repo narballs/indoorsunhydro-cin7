@@ -202,6 +202,8 @@ class UserHelper
         return $label_data;
     }
 
+    
+
 
     public static function shipping_order($order_id , $currentOrder , $order_contact) {
         $api_order = ApiOrder::where('id', $order_id)->first();
@@ -222,6 +224,10 @@ class UserHelper
         $product_width = 0;
         $product_height = 0;
         $product_length = 0;
+        $products_lengths = [];
+        $products_widths = [];
+        $sum_of_length = 0;
+        $sum_of_width = 0;
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -233,12 +239,27 @@ class UserHelper
             foreach ($product_options as $product_option) {
                 $produts_weight += $product_option->optionWeight * $order_item['quantity'];
                 if (!empty($product_option->products)) {
+
+                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+
+
                     $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
                     $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
                     $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
                 }
             }
         }
+
+        if ($produts_weight > 150) {
+            $product_width = $sum_of_width;
+            $product_length = $sum_of_length;
+        } else {
+            $product_width = max($products_widths);
+            $product_length = max($products_lengths);
+        }
+
+
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -272,6 +293,33 @@ class UserHelper
         } else {
             $orderStatus = 'awaiting_shipment';
         }
+
+        
+
+        // Billing Address
+        $firstName = self::get_AddressValue($currentOrder->BillingFirstName, $order_contact->firstName);
+        $lastName = self::get_AddressValue($currentOrder->BillingLastName, $order_contact->lastName);
+        $address1 = self::get_AddressValue($currentOrder->BillingAddress1, $order_contact->postalAddress1, $order_contact->address1);
+        $address2 = self::get_AddressValue($currentOrder->BillingAddress2, $order_contact->postalAddress2, $order_contact->address2);
+        $city = self::get_AddressValue($currentOrder->BillingCity, $order_contact->postalCity, $order_contact->city);
+        $state = self::get_AddressValue($currentOrder->BillingState, $order_contact->postalState, $order_contact->state);
+        $zip = self::get_AddressValue($currentOrder->BillingZip, $order_contact->postalPostCode, $order_contact->postCode);
+        $phone = self::get_AddressValue($currentOrder->BillingPhone, $order_contact->phone, $order_contact->mobile);
+
+        // Shipping Address
+        $DeliveryfirstName = self::get_AddressValue($currentOrder->DeliveryFirstName, $order_contact->firstName);
+        $DeliverylastName = self::get_AddressValue($currentOrder->DeliveryLastName, $order_contact->lastName);
+        $Deliverycompany = self::get_AddressValue($currentOrder->DeliveryCompany, $order_contact->company);
+        $Deliveryaddress1 = self::get_AddressValue($currentOrder->DeliveryAddress1, $order_contact->address1, $order_contact->postalAddress1);
+        $Deliveryaddress2 = self::get_AddressValue($currentOrder->DeliveryAddress2, $order_contact->address2, $order_contact->postalAddress2);
+        $Deliverycity = self::get_AddressValue($currentOrder->DeliveryCity, $order_contact->city, $order_contact->postalCity);
+        $Deliverystate = self::get_AddressValue($currentOrder->DeliveryState, $order_contact->state, $order_contact->postalState);
+        $Deliveryzip = self::get_AddressValue($currentOrder->DeliveryZip, $order_contact->postCode, $order_contact->postalPostCode);
+        $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
+        $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
+
+
+
         $data = [
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
@@ -285,27 +333,27 @@ class UserHelper
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
             'shipTo' => [
-                "name" => $order_contact->firstName .' '. $order_contact->lastName,
-                "company" => $order_contact->company,
-                "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-                "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress2,
-                "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-                "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-                "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
+                "name" => $DeliveryfirstName .' '. $DeliverylastName,
+                "company" => $Deliverycompany,
+                "street1" => $Deliveryaddress1,
+                "street2" => $Deliveryaddress2,
+                "city" => $Deliverycity,
+                "state" => $Deliverystate,
+                "postalCode" => $Deliveryzip,
                 "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "phone" => $Deliveryphone,
                 // "residential"=>true
             ],
             'billTo' => [
-                "name" => $order_contact->firstName . ' ' . $order_contact->lastName,
+                "name" => $firstName .' '. $lastName,
                 "company" => $order_contact->company,
-                "street1" => $order_contact->postalAddress1 ? $order_contact->postalAddress1 : $order_contact->address1,
-                "street2" => $order_contact->postalAddress2 ? $order_contact->postalAddress2 : $order_contact->address2,
-                "city" => $order_contact->postalCity ? $order_contact->postalCity : $order_contact->city,
-                "state" => $order_contact->postalState ? $order_contact->postalState : $order_contact->state,
-                "postalCode" => $order_contact->postalPostCode ? $order_contact->postalPostCode : $order_contact->postCode,
+                "street1" => $address1,
+                "street2" => $address2,
+                "city" => $city,
+                "state" => $state,
+                "postalCode" => $zip,
                 "country"=>"US",
-                "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
+                "phone" => $phone,
                 // "residential"=>true
             ],
             'weight' => [
@@ -314,9 +362,9 @@ class UserHelper
             ],
             'dimensions' => [
                 'units' => 'inches',
-                'length' => $product_height,
+                'length' => $product_length,
                 'width' => $product_width,
-                'height' => $product_length,
+                'height' => $product_height,
             ],
             'insuranceOptions' => [
                 'provider' => 'parcelguard', 
@@ -343,6 +391,18 @@ class UserHelper
         ];
         
     }
+
+
+    public static function get_AddressValue(...$values) {
+        foreach ($values as $value) {
+            if (!empty($value)) {
+                return $value;
+            }
+        }
+        return null; // Return null if all values are empty
+    }
+
+    
 
     public static function switch_price_tier(Request $request) {
         $user_id = auth()->id();
