@@ -394,54 +394,58 @@ class CheckoutController extends Controller
 
             // adding address from Contacts Address table
 
-            $check_billing_address = ContactsAddress::where('contact_id', $contact->contact_id)->where('address_type', 'Billing')->first();
+            // $check_billing_address = ContactsAddress::where('contact_id', $contact->contact_id)->where('address_type', 'Billing')->first();
+            $check_billing_address = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Billing')->first();
 
             if (empty($check_billing_address)) {
                 $create_billing_address = new ContactsAddress([
-                    'contact_id' => $contact->contact_id,
-                    'BillingFirstName' => $contact->firstName,
-                    'BillingLastName' => $contact->lastName,
-                    'BillingCompany' => $contact->company,
-                    'BillingAddress1' => !empty($contact->postalAddress1) ? $contact->postalAddress1 : $contact->address1,
-                    'BillingAddress2' => !empty($contact->postalAddress2) ? $contact->postalAddress2 : $contact->address2,
-                    'BillingCity' => !empty($contact->postalCity) ? $contact->postalCity : $contact->city,
-                    'BillingState' => !empty($contact->postalState) ? $contact->postalState : $contact->state,
-                    'BillingZip' => !empty($contact->postalPostCode) ? $contact->postalPostCode : $contact->postCode,
-                    'BillingCountry' => $contact->country,
-                    'BillingPhone' => $contact->phone,
+                    'contact_id' => $user_address->contact_id,
+                    'BillingFirstName' => $user_address->firstName,
+                    'BillingLastName' => $user_address->lastName,
+                    'BillingCompany' => $user_address->company,
+                    'BillingAddress1' => !empty($user_address->postalAddress1) ? $user_address->postalAddress1 : $user_address->address1,
+                    'BillingAddress2' => !empty($user_address->postalAddress2) ? $user_address->postalAddress2 : $user_address->address2,
+                    'BillingCity' => !empty($user_address->postalCity) ? $user_address->postalCity : $user_address->city,
+                    'BillingState' => !empty($user_address->postalState) ? $user_address->postalState : $user_address->state,
+                    'BillingZip' => !empty($user_address->postalPostCode) ? $user_address->postalPostCode : $user_address->postCode,
+                    'BillingCountry' => $user_address->country,
+                    'BillingPhone' => $user_address->phone,
                     'is_default' => 1,
                     'address_type' => 'Billing',
                 ]);
                 $create_billing_address->save();
             }
 
-            $check_shipping_address = ContactsAddress::where('contact_id', $contact->contact_id)->where('address_type', 'Shipping')->first();
+            
+
+            // $check_shipping_address = ContactsAddress::where('contact_id', $contact->contact_id)->where('address_type', 'Shipping')->first();
+            $check_shipping_address = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->first();
 
             if (empty($check_shipping_address)) {
                 $create_shipping_address = new ContactsAddress([
-                    'contact_id' => $contact->contact_id,
-                    'DeliveryFirstName' => $contact->firstName,
-                    'DeliveryLastName' => $contact->lastName,
-                    'DeliveryCompany' => $contact->company,
-                    'DeliveryAddress1' => !empty($contact->address1) ? $contact->address1 : $contact->postalAddress1,
-                    'DeliveryAddress2' => !empty($contact->address2) ? $contact->address2 : $contact->postalAddress2,
-                    'DeliveryCity' =>   !empty($contact->city) ? $contact->city : $contact->postalCity,
-                    'DeliveryState' => !empty($contact->state) ? $contact->state : $contact->postalState,
-                    'DeliveryZip' => !empty($contact->postCode) ? $contact->postCode : $contact->postalPostCode,
-                    'DeliveryCountry' => $contact->country,
-                    'DeliveryPhone' => $contact->phone,
+                    'contact_id' => $user_address->contact_id,
+                    'DeliveryFirstName' => $user_address->firstName,
+                    'DeliveryLastName' => $user_address->lastName,
+                    'DeliveryCompany' => $user_address->company,
+                    'DeliveryAddress1' => !empty($user_address->address1) ? $user_address->address1 : $user_address->postalAddress1,
+                    'DeliveryAddress2' => !empty($user_address->address2) ? $user_address->address2 : $user_address->postalAddress2,
+                    'DeliveryCity' =>   !empty($user_address->city) ? $user_address->city : $user_address->postalCity,
+                    'DeliveryState' => !empty($user_address->state) ? $user_address->state : $user_address->postalState,
+                    'DeliveryZip' => !empty($user_address->postCode) ? $user_address->postCode : $user_address->postalPostCode,
+                    'DeliveryCountry' => $user_address->country,
+                    'DeliveryPhone' => $user_address->phone,
                     'is_default' => 1,
                     'address_type' => 'Shipping',
                 ]);
                 $create_shipping_address->save();
             }
 
-            $get_user_default_billing_address = ContactsAddress::where('contact_id', $contact->contact_id)
+            $get_user_default_billing_address = ContactsAddress::where('contact_id', $user_address->contact_id)
             ->where('address_type', 'Billing')
             ->where('is_default', 1)
             ->first();
 
-            $get_user_default_shipping_address = ContactsAddress::where('contact_id', $contact->contact_id)
+            $get_user_default_shipping_address = ContactsAddress::where('contact_id', $user_address->contact_id)
             ->where('address_type', 'Shipping')
             ->where('is_default', 1)
             ->first();
