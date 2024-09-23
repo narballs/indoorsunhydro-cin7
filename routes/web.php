@@ -38,6 +38,7 @@ use App\Http\Controllers\GetProductDimensionController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsletterTemplateController;
 use App\Http\Controllers\SalePaymentsController;
+use App\Http\Controllers\ShippingQuoteSettingController;
 use App\Http\Controllers\SmsController;
 use App\Models\SalePayments;
 use App\Models\TaxClass;
@@ -409,6 +410,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/order/search-product', [OrderController::class, 'searchProduct'])->name('search_product');
         Route::get('/shipping-quotes', [AdminSettingsController::class, 'shipping_quotes'])->name('shipping_quotes');
         Route::post('/update-shipping-quotes', [AdminSettingsController::class, 'update_shipping_quotes'])->name('update_shipping_quotes');
+
+        Route::get('/shipping-quotes/settings/index', [ShippingQuoteSettingController::class, 'index'])->name('shipping_quotes.settings.index');
+        Route::get('/shipping-quotes/settings/create', [ShippingQuoteSettingController::class, 'create'])->name('shipping_quotes.settings.create');
+        Route::post('/shipping-quotes/settings/store', [ShippingQuoteSettingController::class, 'store'])->name('shipping_quotes.settings.store');
+        Route::get('/shipping-quotes/settings/edit/{id}', [ShippingQuoteSettingController::class, 'edit'])->name('shipping_quotes.settings.edit');
+        Route::post('/shipping-quotes/settings/update/{id}', [ShippingQuoteSettingController::class, 'update'])->name('shipping_quotes.settings.update');
+        Route::post('/shipping-quotes/settings/delete/{id}', [ShippingQuoteSettingController::class, 'delete'])->name('shipping_quotes.settings.delete');
     });
 
     Route::get('admin/logout', function () {

@@ -402,9 +402,14 @@ return [
             'url'  => 'admin/redeemed-discount-users',
             // 'classes' => 'd-none',
         ],
+        // [
+        //     'text'    => 'Shipping Quotes',
+        //     'url'  => 'admin/shipping-quotes',
+        //     // 'classes' => 'd-none',
+        // ],
         [
             'text'    => 'Shipping Quotes',
-            'url'  => 'admin/shipping-quotes',
+            'url'  => 'admin/shipping-quotes/settings/index',
             // 'classes' => 'd-none',
         ],
         [

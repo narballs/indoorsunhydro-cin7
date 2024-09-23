@@ -1003,11 +1003,11 @@ $cart_price = 0;
                                                         $adding_surcharge = 0;
                                                         $shipment_plus_surcharge = 0;
                                                         $get_original_shipment_price = !empty($shipment_price) ? $shipment_price : 0;
-                                                        if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1) {
-                                                            if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed') {
-                                                                $surcharge_value_greater_weight = $surcharge_settings->surcharge_value;
-                                                            } else {
+                                                        if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
+                                                            if (!empty($surcharge_type_settings_for_weight_greater_then_150) && strtolower($surcharge_type_settings_for_weight_greater_then_150->option_value) == 'percentage') {
                                                                 $surcharge_value_greater_weight = $get_original_shipment_price * ($surcharge_settings->surcharge_value / 100);
+                                                            } else {
+                                                                $surcharge_value_greater_weight = $surcharge_settings->surcharge_value;
                                                             }
                                                         } else {
                                                             $surcharge_value_greater_weight = 0;
@@ -1069,36 +1069,44 @@ $cart_price = 0;
                                                             </div>
                                                         @else
                                                             @if (count($admin_selected_shipping_quote) > 0)
+                                                                @php
+                                                                   $surcharge_for_lighter_weight = 0; 
+                                                                @endphp
                                                                 <div class="col-md-12">
                                                                     <p class="checkout_product_heading ml-0 mb-2">Shipping Methods</p>
                                                                 </div>
                                                                 @if (count($admin_selected_shipping_quote) == 1)
                                                                     @foreach ($admin_selected_shipping_quote as $shipping_quote)
-                                                                        @php
+                                                                        <?php
                                                                             $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
-                                                                            if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1) {
-                                                                                if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed') {
-                                                                                    $surcharge_value = $surcharge_settings->surcharge_value;
+                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->apply_extra_surcharge) == 'yes') {
+                                                                                if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
+                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_value);
                                                                                 } else {
-                                                                                    $surcharge_value = $shipment_cost_without_surcharge * ($surcharge_settings->surcharge_value / 100);
+                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_value) / 100);
                                                                                 }
+                                                                            } else {
+                                                                                $surcharge_for_lighter_weight = 0;
                                                                             }
-                                                                            $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_value;
+                                                                            $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_for_lighter_weight;
                                                                             $adding_shipping_cost_to_total = 0;
                                                                             $parcel_guard_price = 0 ;
                                                                             if ($shipment_cost_with_surcharge_only > 0) {
                                                                                 $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value;
+                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value ;
                                                                             } else {
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value;
+                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value ;
                                                                             }
                                                                             
-                                                                            if (!empty($shipment_cost_with_surcharge)) {
-                                                                                $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_with_surcharge;
-                                                                            } else {
-                                                                                $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_without_surcharge;
-                                                                            }
-                                                                        @endphp
+                                                                            
+                                                                            // if (!empty($shipment_cost_with_surcharge)) {
+                                                                            //     $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_with_surcharge;
+                                                                            // } else {
+                                                                            //     $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_without_surcharge;
+                                                                            // }
+                                                                        ?>
+
+
                                                                         
                                                                         <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                         <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
@@ -1116,14 +1124,16 @@ $cart_price = 0;
                                                                     @foreach ($admin_selected_shipping_quote as $shipping_quote)
                                                                         @php
                                                                             $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
-                                                                            if (!empty($surcharge_settings) && $surcharge_settings->apply_surcharge == 1) {
-                                                                                if (!empty($surcharge_settings->surcharge_type) && $surcharge_settings->surcharge_type == 'fixed') {
-                                                                                    $surcharge_value = $surcharge_settings->surcharge_value;
+                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->apply_extra_surcharge) == 'yes') {
+                                                                                if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
+                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_value);
                                                                                 } else {
-                                                                                    $surcharge_value = $shipment_cost_without_surcharge * ($surcharge_settings->surcharge_value / 100);
+                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_value) / 100);
                                                                                 }
+                                                                            } else {
+                                                                                $surcharge_for_lighter_weight = 0;
                                                                             }
-                                                                            $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_value;
+                                                                            $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_for_lighter_weight;
 
                                                                             $parcel_guard_price = 0 ;
                                                                             if ($shipment_cost_with_surcharge_only > 0) {
@@ -1132,7 +1142,6 @@ $cart_price = 0;
                                                                             } else {
                                                                                 $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value;
                                                                             }
-                                                                            // dd($parcel_guard_price);
                                                                         @endphp
                                                                         <div class="col-md-9 col-8">
                                                                             <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
