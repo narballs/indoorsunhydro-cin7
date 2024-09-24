@@ -300,6 +300,7 @@ class CheckoutController extends Controller
         $products_widths = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
+        $productTotal = 0;
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
@@ -316,6 +317,7 @@ class CheckoutController extends Controller
                 $shipment_for_selected_category = false;
             }
             $sub_total_of_cart += $cart_item['quantity'] * $cart_item['price'];
+            $productTotal += $cart_item['quantity'] * $cart_item['price'];
             $product_options = ProductOption::with('products')->where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
             foreach ($product_options as $product_option) {
                 $products_weight += $product_option->optionWeight * $cart_item['quantity'];
@@ -551,7 +553,7 @@ class CheckoutController extends Controller
                         if ($products_weight > 150) {
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
-                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
+                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
                             // dd($get_shipping_rates_greater);
                             if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
                                 $shipment_error = 1;
@@ -567,7 +569,7 @@ class CheckoutController extends Controller
                         else {
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
-                            $get_shipping_rates_new = $this->get_shipping_rate_new($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
+                            $get_shipping_rates_new = $this->get_shipping_rate_new($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
                             // $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
                             // old code
                             // if (($get_shipping_rates['shipment_prices'] === null)) {
@@ -2509,7 +2511,7 @@ class CheckoutController extends Controller
     }
 
 
-    public function get_shipping_rate_new($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address) {
+    public function get_shipping_rate_new($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address ,$productTotal) {
         $shipment_prices = [];
         $client = new \GuzzleHttp\Client();
         $ship_station_host_url = config('services.shipstation.host_url');
@@ -2550,6 +2552,7 @@ class CheckoutController extends Controller
                         'width' => $product_width,
                         'height' => $product_height,
                     ],
+                    'confirmation' => floatval($productTotal) >= 500 ? 'signature' : 'delivery',
                 ];
     
                 $headers = [
