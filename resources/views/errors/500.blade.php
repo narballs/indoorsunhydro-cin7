@@ -51,6 +51,7 @@
                 </p>
                 <ul>
                     <li><strong>Logout:</strong> If you'd like to logout, click the button below.</li>
+                    <li><strong>Contact Us:</strong> <a href="{{url('contact-us')}}">Please Click here</a> </li>
                     {{-- <li><strong>Return Home:</strong> Alternatively, you can return to the home page.</li> --}}
                 </ul>
             </div>
