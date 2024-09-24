@@ -1079,11 +1079,11 @@ $cart_price = 0;
                                                                     @foreach ($admin_selected_shipping_quote as $shipping_quote)
                                                                         <?php
                                                                             $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
-                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->apply_extra_surcharge) == 'yes') {
+                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
                                                                                 if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
-                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_value);
+                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_amount);
                                                                                 } else {
-                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_value) / 100);
+                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_amount) / 100);
                                                                                 }
                                                                             } else {
                                                                                 $surcharge_for_lighter_weight = 0;
@@ -1125,11 +1125,11 @@ $cart_price = 0;
                                                                     @foreach ($admin_selected_shipping_quote as $shipping_quote)
                                                                         @php
                                                                             $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
-                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->apply_extra_surcharge) == 'yes') {
+                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
                                                                                 if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
-                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_value);
+                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_amount);
                                                                                 } else {
-                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_value) / 100);
+                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_amount) / 100);
                                                                                 }
                                                                             } else {
                                                                                 $surcharge_for_lighter_weight = 0;
