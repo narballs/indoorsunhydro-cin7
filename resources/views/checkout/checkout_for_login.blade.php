@@ -1108,6 +1108,7 @@ $cart_price = 0;
 
 
                                                                         
+                                                                        <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">
                                                                         <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                         <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
                                                                         <input type="radio" name="shipping_service_code" id="" class="d-none" value="{{$shipping_quote->serviceCode}}" checked>
@@ -1143,6 +1144,7 @@ $cart_price = 0;
                                                                                 $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value;
                                                                             }
                                                                         @endphp
+                                                                        <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">
                                                                         <div class="col-md-9 col-8">
                                                                             <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
                                                                             <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
