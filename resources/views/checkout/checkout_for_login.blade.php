@@ -994,7 +994,7 @@ $cart_price = 0;
                                             } else {
                                                 $extra_shipping_value = $extra_shipping_value;
                                             }
-                                            if ((floatval($total_including_tax) > floatval(499)) && $shipping_free_over_1000 == 0) {
+                                            if ((floatval($cart_total) > floatval(499)) && $shipping_free_over_1000 == 0) {
                                                 $extra_charges_for_total_over_499 = floatval($extra_charges_for_total_over_499);
                                             } else {
                                                 $extra_charges_for_total_over_499 = 0;
