@@ -360,6 +360,13 @@ class CheckoutController extends Controller
 
         if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
             // $tax_class = TaxClass::where('is_default', 1)->first();
+            $extra_charges_for_total_over_499 = 0;
+            $extra_charges_for_total_over_499_value_setting = AdminSetting::where('option_name', 'extra_charges_for_total_over_499')->first();
+            if (!empty($extra_charges_for_total_over_499_value_setting)) {
+                $extra_charges_for_total_over_499 = floatval($extra_charges_for_total_over_499_value_setting->option_value);
+            } else {
+                $extra_charges_for_total_over_499 = 0;
+            }
             $allow_discount_for_new_user = false;
             $allow_discount_for_all_customers  =  false;
             $allow_discount_for_specific_customers = false;
@@ -762,7 +769,8 @@ class CheckoutController extends Controller
                 'allow_discount_for_all_customers',
                 'parcel_guard',
                 // 'shipping_quotes_settings',
-                // 'allow_pickup',
+                // 'allow_pickup','
+                'extra_charges_for_total_over_499',
                 'distance',
                 'extra_shipping_value',
                 'enable_free_shipping_banner',

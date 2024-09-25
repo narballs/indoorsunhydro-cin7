@@ -921,6 +921,7 @@ $cart_price = 0;
                                         <input type="hidden" name="items_total_price" class="items_total_price" id="" value="{{ number_format($cart_total, 2, '.', '') }}">
                                         <input type="hidden" name="total_tax" class="total_tax" id="" value="{{ number_format($tax , 2, '.', '') }}">
                                         <input type="hidden" name="shipping_free_over_1000" id="shipping_free_over_1000" value="{{$shipping_free_over_1000}}">
+                                        <input type="hidden" name="extra_charges_for_total_over_499" id="extra_charges_for_total_over_499" value="{{$extra_charges_for_total_over_499}}">
                                         @if(!empty($tax_class))
                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                         @else
@@ -993,6 +994,11 @@ $cart_price = 0;
                                             } else {
                                                 $extra_shipping_value = $extra_shipping_value;
                                             }
+                                            if ((floatval($total_including_tax) > floatval(499)) && $shipping_free_over_1000 == 0) {
+                                                $extra_charges_for_total_over_499 = floatval($extra_charges_for_total_over_499);
+                                            } else {
+                                                $extra_charges_for_total_over_499 = 0;
+                                            }
                                         @endphp
                                         <div class="shipping_main_div">
                                             @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
@@ -1017,9 +1023,9 @@ $cart_price = 0;
                                                         $shipment_plus_surcharge = $get_original_shipment_price + $surcharge_value_greater_weight;
                                                         if ($shipment_plus_surcharge > 0) {
                                                             $parcel_guard_price = (ceil($shipment_plus_surcharge / 100) * 0.99);
-                                                            $shipment_price = $shipment_plus_surcharge + $parcel_guard_price + $extra_shipping_value;
+                                                            $shipment_price = $shipment_plus_surcharge + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
                                                         } else {
-                                                            $shipment_price = $shipment_plus_surcharge + $extra_shipping_value;
+                                                            $shipment_price = $shipment_plus_surcharge + $extra_shipping_value + $extra_charges_for_total_over_499;
                                                         }
                                                     @endphp
                                                     <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
@@ -1093,9 +1099,9 @@ $cart_price = 0;
                                                                             $parcel_guard_price = 0 ;
                                                                             if ($shipment_cost_with_surcharge_only > 0) {
                                                                                 $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value ;
+                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499 ;
                                                                             } else {
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value ;
+                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value  + $extra_charges_for_total_over_499;
                                                                             }
                                                                             
                                                                             
@@ -1139,9 +1145,9 @@ $cart_price = 0;
                                                                             $parcel_guard_price = 0 ;
                                                                             if ($shipment_cost_with_surcharge_only > 0) {
                                                                                 $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value;
+                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
                                                                             } else {
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value;
+                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value + $extra_charges_for_total_over_499;
                                                                             }
                                                                         @endphp
                                                                         <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">

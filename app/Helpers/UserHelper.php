@@ -354,7 +354,7 @@ class UserHelper
                 'insureShipment' => true,
                 'insuredValue' => floatval($currentOrder->productTotal),
             ],
-            'confirmation' => floatval($currentOrder->productTotal) >= 500 ? 'signature' : 'delivery',
+            'confirmation' => floatval($currentOrder->total_including_tax) > 499 ? 'signature' : 'delivery',
             'items'=> $items
         ];
         $headers = [
