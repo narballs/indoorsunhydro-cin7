@@ -301,6 +301,14 @@ class UserHelper
         $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
         $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
 
+        $confirmation_value = 'delivery';
+
+        if (floatval($currentOrder->productTotal) > floatval(499)) {
+            $confirmation_value = 'signature';
+        } else {
+            $confirmation_value = 'delivery';
+        }
+
 
 
         $data = [
@@ -312,7 +320,7 @@ class UserHelper
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
             'packageCode' => !empty($products_weight) && $products_weight > 150 ? 'container' : 'package',
-            'confirmation' => floatval($currentOrder->productTotal) > floatval(499) ? 'signature' : 'delivery',
+            'confirmation' => $confirmation_value,
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
