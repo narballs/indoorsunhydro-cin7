@@ -2560,7 +2560,7 @@ class CheckoutController extends Controller
                         'width' => $product_width,
                         'height' => $product_height,
                     ],
-                    'confirmation' => floatval($productTotal) >= 500 ? 'signature' : 'delivery',
+                    'confirmation' => floatval($productTotal) > 499 ? 'signature' : 'delivery',
                 ];
     
                 $headers = [
