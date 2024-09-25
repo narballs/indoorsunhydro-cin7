@@ -479,6 +479,12 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+            [
+                'option_name' => 'extra_charges_for_total_over_499',
+                'type' => 'text',
+                'option_value' => '6',
+            ],
+
 
 
 
