@@ -320,7 +320,7 @@ class UserHelper
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
             'packageCode' => !empty($products_weight) && $products_weight > 150 ? 'container' : 'package',
-            'confirmation' => $confirmation_value,
+            'confirmation' => 'signature',
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
