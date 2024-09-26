@@ -1022,7 +1022,7 @@ $cart_price = 0;
 
                                                         $shipment_plus_surcharge = $get_original_shipment_price + $surcharge_value_greater_weight;
                                                         if ($shipment_plus_surcharge > 0) {
-                                                            $parcel_guard_price = (ceil($shipment_plus_surcharge / 100) * 0.99);
+                                                            $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
                                                             $shipment_price = $shipment_plus_surcharge + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
                                                         } else {
                                                             $shipment_price = $shipment_plus_surcharge + $extra_shipping_value + $extra_charges_for_total_over_499;
@@ -1098,7 +1098,7 @@ $cart_price = 0;
                                                                             $adding_shipping_cost_to_total = 0;
                                                                             $parcel_guard_price = 0 ;
                                                                             if ($shipment_cost_with_surcharge_only > 0) {
-                                                                                $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
+                                                                                $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
                                                                                 $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499 ;
                                                                             } else {
                                                                                 $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value  + $extra_charges_for_total_over_499;
@@ -1144,7 +1144,7 @@ $cart_price = 0;
 
                                                                             $parcel_guard_price = 0 ;
                                                                             if ($shipment_cost_with_surcharge_only > 0) {
-                                                                                $parcel_guard_price = (ceil($shipment_cost_with_surcharge_only / 100) * 0.99);
+                                                                                $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
                                                                                 $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
                                                                             } else {
                                                                                 $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value + $extra_charges_for_total_over_499;
