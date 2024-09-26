@@ -209,18 +209,8 @@ class UserHelper
         $api_order = ApiOrder::where('id', $order_id)->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
-        // for ($i = 0; $i <= count($order_items) - 1; $i++){
-        //     $items[] = [
-        //         'name' => $order_items[0]->product->name,
-        //         'sku' => $order_items[0]->product->code,
-        //         'quantity' => $order_items[0]->quantity,
-        //         'unitPrice' => $order_items[0]->price,
-        //     ];  
-        // }
 
-        
-
-        $produts_weight = 0;
+        $products_weight = 0;
         $product_width = 0;
         $product_height = 0;
         $product_length = 0;
@@ -237,7 +227,7 @@ class UserHelper
             ];
             $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
-                $produts_weight += $product_option->optionWeight * $order_item['quantity'];
+                $products_weight += $product_option->optionWeight * $order_item['quantity'];
                 if (!empty($product_option->products)) {
 
                     array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
@@ -251,7 +241,7 @@ class UserHelper
             }
         }
 
-        if ($produts_weight > 150) {
+        if ($products_weight > 150) {
             $product_width = $sum_of_width;
             $product_length = $sum_of_length;
         } else {
@@ -269,13 +259,6 @@ class UserHelper
         $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
-        // if ($produts_weight > 150) {
-        //     $carrier_code = $carrier_code_2->option_value;
-        //     $service_code = $service_code_2->option_value;
-        // } else {
-        //     $carrier_code = $carrier_code->option_value;
-        //     $service_code = $service_code->option_value;
-        // }
 
         $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
         $getDate =$created_date->format('Y-m-d');
@@ -318,17 +301,24 @@ class UserHelper
         $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
         $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
 
+        $confirmation_value = 'delivery';
+
+        if (floatval($currentOrder->productTotal) > floatval(499)) {
+            $confirmation_value = 'signature';
+        }
+
 
 
         $data = [
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
-            'carrierCode' => !empty($produts_weight) && $produts_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
-            'serviceCode' => !empty($produts_weight) && $produts_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
+            'carrierCode' => !empty($products_weight) && $products_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
+            'serviceCode' => !empty($products_weight) && $products_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
-            'packageCode' => !empty($produts_weight) && $produts_weight > 150 ? 'container' : 'package',
+            'packageCode' => !empty($products_weight) && $products_weight > 150 ? 'container' : 'package',
+            'confirmation' => $confirmation_value,
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
@@ -357,7 +347,7 @@ class UserHelper
                 // "residential"=>true
             ],
             'weight' => [
-                'value' => $produts_weight,
+                'value' => $products_weight,
                 'units' => 'pounds'
             ],
             'dimensions' => [
@@ -371,7 +361,6 @@ class UserHelper
                 'insureShipment' => true,
                 'insuredValue' => floatval($currentOrder->productTotal),
             ],
-            'confirmation' => floatval($currentOrder->total_including_tax) >= 500 ? 'signature' : 'delivery',
             'items'=> $items
         ];
         $headers = [

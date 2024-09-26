@@ -454,7 +454,37 @@ class SettingSeeder extends Seeder
                 'option_name'  => 'master_key_attempt',
                 'type'         => 'boolean',
                 'option_value' => 1,
-            ]
+            ],
+
+            [
+                'option_name'  => '500_error_message',
+                'type'         => 'text',
+                'option_value' => 'Oops! Something went wrong on our end.  We are working to fix the issue as soon as possible. In the meantime, you can try the following options:',
+            ],
+            [
+                'option_name'  => 'surcharge_value_greater_weight',
+                'type'         => 'number',
+                'option_value' => '10',
+            ],
+
+            [
+                'option_name'  => 'surcharge_type_greater_weight',
+                'type'         => 'text',
+                'option_value' => 'percentage',
+            ],
+
+            [
+                'option_name' => 'apply_extra_surcharge',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
+            [
+                'option_name' => 'extra_charges_for_total_over_499',
+                'type' => 'text',
+                'option_value' => '6',
+            ],
+
 
 
 
