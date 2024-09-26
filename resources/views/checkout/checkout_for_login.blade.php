@@ -1011,9 +1011,9 @@ $cart_price = 0;
                                                         $get_original_shipment_price = !empty($shipment_price) ? $shipment_price : 0;
                                                         if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
                                                             if (!empty($surcharge_type_settings_for_weight_greater_then_150) && strtolower($surcharge_type_settings_for_weight_greater_then_150->option_value) == 'percentage') {
-                                                                $surcharge_value_greater_weight = $get_original_shipment_price * ($surcharge_settings->surcharge_value / 100);
+                                                                $surcharge_value_greater_weight = $get_original_shipment_price * (floatval($surcharge_settings_for_weight_greater_then_150->option_value) / 100);
                                                             } else {
-                                                                $surcharge_value_greater_weight = $surcharge_settings->surcharge_value;
+                                                                $surcharge_value_greater_weight = floatval($surcharge_settings_for_weight_greater_then_150->option_value);
                                                             }
                                                         } else {
                                                             $surcharge_value_greater_weight = 0;
