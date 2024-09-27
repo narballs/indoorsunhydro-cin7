@@ -1,5 +1,5 @@
 @php
-$blogs = NavHelper::getBlogs();;
+$blogs = NavHelper::getBlogs();
 @endphp
 @include('partials.header')
 <style>
@@ -41,8 +41,6 @@ $blogs = NavHelper::getBlogs();;
             height: auto;
         }
     }
-    
-
 </style>
 <body>
     <main>
@@ -54,30 +52,57 @@ $blogs = NavHelper::getBlogs();;
                 <div class="container-fluid px-0 overflow-hidden">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                            @if (!empty($page->banner_image))
-                                <img src="{{asset('/pages/banners/' . $page->banner_image)}}" class="banner-img img-fluid w-100" alt="...">
-                                <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
-                                    <div class="banner-title">
-                                        <span class="text-uppercase font-weight-bold text-white">{{$page->title}}</span>
-                                    </div>
-                                </h2>
-                            @else
-                                <h2 class="text-center mt-4 mb-0">
-                                    <div class="banner-title">
-                                        <span class="text-uppercase font-weight-bold">{{$page->title}}</span>
-                                    </div>
-                                </h2>
-                            @endif
-                            @if (strtolower($page->name) == 'blogs')
-                                <div class="position-absolute top-60 start-50 translate-middle search-div-blog">
-                                    <form method="post" action="{{route('blog_search')}}">
-                                        @csrf
-                                        <div class="form-group has-search mb-0">
-                                            <span class="fa fa-search form-control-feedback"></span>
-                                            <input type="text" class="form-control" placeholder="Search" name="search_blog" id="search_blog"  value="{{!empty($search_value) ? $search_value : ''}}">
-                                            <input type="hidden" name="page_slug" id="" value="{{$page->slug}}">
+                            @if (strtolower($page->name) != 'blogs')
+                                @if (!empty($page->banner_image))
+                                    <img src="{{asset('/pages/banners/' . $page->banner_image)}}" class="banner-img img-fluid w-100" alt="...">
+                                    <h2 class="position-absolute top-50 start-50 translate-middle page-title-head">
+                                        <div class="banner-title">
+                                            <span class="text-uppercase font-weight-bold text-white">{{$page->title}}</span>
                                         </div>
-                                    </form>
+                                    </h2>
+                                @else
+                                    <h2 class="text-center mt-4 mb-0">
+                                        <div class="banner-title">
+                                            <span class="text-uppercase font-weight-bold">{{$page->title}}</span>
+                                        </div>
+                                    </h2>
+                                @endif
+                            @else
+                                <div class="container-sm mt-5">
+                                    <div class="row align-items-end">
+                                        <div class="col-md-8">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-1 border-bottom-blog-color col-2">
+                                                </div>
+                                                <div class="col-md-11 col-10">
+                                                    <span class="guide_to_growth">
+                                                        Guide to Growth
+                                                    </span>
+                                                </div>
+                                                <h3 class="pl-0 latest_from_blogs">
+                                                    Latest From the <span class="blog_separate_head">Blog</span>
+                                                </h3>
+                                                <p class="pl-0 tips_trends">
+                                                    Tips, trends, and innovation in hydroponic gardening.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <form method="post" action="{{route('blog_search')}}" class="w-100">
+                                                @csrf
+                                                {{-- <div class="form-group has-search mb-0">
+                                                    <span class="fa fa-search form-control-feedback"></span>
+                                                    <input type="text" class="form-control w-100" placeholder="Search" name="search_blog" id="search_blog"  value="{{!empty($search_value) ? $search_value : ''}}">
+                                                    <input type="hidden" name="page_slug" id="" value="{{$page->slug}}">
+                                                </div> --}}
+                                                <div class="search-bar" id="searchBar">
+                                                    <input type="text" placeholder="Search" class="form-control w-100" id="searchBarInput" name="search_blog" id="search_blog"  value="{{!empty($search_value) ? $search_value : ''}}">
+                                                    <i class="fas fa-search position-icon"></i>
+                                                    <input type="hidden" name="page_slug" id="" value="{{$page->slug}}">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             @endif
                         </div>
