@@ -474,6 +474,7 @@ class PagesController extends Controller
     
 
     public function blog_search (Request $request) {
+        // dd($request->all());
         $search_value = $request->search_blog;
         $page_slug = $request->page_slug;
         $blogs = Blog::where('title', 'LIKE', '%' . $search_value . '%')->paginate(10);
