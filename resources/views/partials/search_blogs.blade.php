@@ -151,8 +151,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 col-xl-3 col-lg-4 col-12 order-1 order-md-2 mt-2">
-                                                <a href="{{route('blog_detail' , $blog->slug)}}">
-                                                    <img class="img-fluid rounded" alt="100%x280"  src="{{asset('pages/blogs/thumbnails/' . $blog->thumbnail)}}" alt="Blog Image">
+                                                <a href="{{route('blog_detail' , $blog->slug)}}" class="blog_image_container">
+                                                    <img class="img-fluid rounded blog_image_link" alt="100%x280"  src="{{asset('pages/blogs/thumbnails/' . $blog->thumbnail)}}" alt="Blog Image">
                                                 </a>
                                             </div>
                                         </div>

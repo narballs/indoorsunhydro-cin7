@@ -350,6 +350,37 @@
         .blog_div {
             border: 1px solid #EBEBEB;
         }
+
+        .blog_image_link:hover {
+            filter: brightness(0) saturate(100%) invert(72%) sepia(33%) saturate(612%) hue-rotate(48deg) brightness(101%) contrast(91%);
+        }
+        .blog_image_container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .blog_image_link {
+            display: block;
+            width: 100%;  /* Adjust as needed */
+            height: auto; /* Adjust as needed */
+            transition: all 0.3s ease;
+        }
+
+        .blog_image_container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #7CC633;  /* Green color */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .blog_image_container:hover::after {
+            opacity: 0.1;  /* Adjust the opacity to control the intensity of the green overlay */
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>

@@ -1997,9 +1997,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 if(response.status == 'success'){
@@ -2067,9 +2072,14 @@
                         icon: 'error',
                         title: error_message.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
             });
@@ -2137,9 +2147,14 @@
                         icon: 'error',
                         title: 'Quantity must be less than or equal to stock quantity',
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 } else {
                     $(this).val(input_qty);
@@ -2241,9 +2256,15 @@
                         // title: jQuery('.mobile_qty').val() + ' X ' + product_name + '<div class="text-dark fw-bold fs-5">'+ product_price +'</div>'+ '<br>' + 'added to your cart',
                         timer: 2000,
                         text: 'Product added to cart',
-                        // imageUrl: "{{asset('theme/img/add_to_cart_gif.gif')}}",
-                        showConfirmButton: false,
-                        timerProgressBar: true
+                        // imageUrl: "{{asset('theme/img/add_to_cart_gif.gif')}}"
+                        position: 'top',
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -2316,9 +2337,14 @@
                         icon: 'error',
                         title: 'Quantity must be less than or equal to stock quantity',
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 } else {
                     $(this).val(input_value);
@@ -2396,9 +2422,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 if (response.status == 'success') {
@@ -2445,10 +2476,15 @@
                         icon: 'success',
                         title: 1 + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ '<div class="added_tocart">Added to your cart</div>',
                         timer: 3000,
-                        showConfirmButton: false,
+                        customClass: {popup: 'short-toast-popup'},
                         position: 'top',
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
                         timerProgressBar: true,
-                        customClass: {popup: 'short-toast-popup'}
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -2920,9 +2956,14 @@
                             icon: 'error',
                             title: response.message,
                             timer: 3000,
-                            showConfirmButton: false,
                             position: 'top',
-                            timerProgressBar: true
+                            showConfirmButton: true,  // Show the confirm (OK) button
+                            confirmButtonText: 'Okay',
+                            timerProgressBar: true,
+                            customClass: {
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                actions: 'my-actions-class'  // Class for the actions container
+                            }
                         });
                     } else {
                         $('#see_similar_pop_up_detail').modal('show');
@@ -2935,9 +2976,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
             },
@@ -2949,9 +2995,14 @@
                     icon: 'error',
                     title: 'No similar products found',
                     timer: 3000,
-                    showConfirmButton: false,
                     position: 'top',
-                    timerProgressBar: true
+                    showConfirmButton: true,  // Show the confirm (OK) button
+                    confirmButtonText: 'Okay',
+                    timerProgressBar: true,
+                    customClass: {
+                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        actions: 'my-actions-class'  // Class for the actions container
+                    }
                 });
             }
         });
@@ -3110,9 +3161,14 @@
                 icon: 'error',
                 title: 'Quantity must be greater than 0 and not Empty!',
                 timer: 3000,
-                showConfirmButton: false,
                 position: 'top',
-                timerProgressBar: true
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: true,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
             });
             $('.swap_qty_number_'+id).val(1);
             return false;
@@ -3159,9 +3215,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 if (response.status == 'success') {
@@ -3225,9 +3286,14 @@
                     icon: 'error',
                     title: error_message.message,
                     timer: 3000,
-                    showConfirmButton: false,
                     position: 'top',
-                    timerProgressBar: true
+                    showConfirmButton: true,  // Show the confirm (OK) button
+                    confirmButtonText: 'Okay',
+                    timerProgressBar: true,
+                    customClass: {
+                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        actions: 'my-actions-class'  // Class for the actions container
+                    }
                 });
             }
         });
