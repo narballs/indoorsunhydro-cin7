@@ -560,9 +560,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 if (response.status == 'success') {
@@ -613,9 +618,14 @@
                         icon: 'success',
                         title: itemQuantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' Added to your cart',
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);

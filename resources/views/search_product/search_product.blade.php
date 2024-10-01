@@ -238,9 +238,14 @@
                             icon: 'error',
                             title: response.message,
                             timer: 3000,
-                            showConfirmButton: false,
+                            showConfirmButton: true,  // Show the confirm (OK) button
+                            confirmButtonText: 'Okay',
                             position: 'top',
-                            timerProgressBar: true
+                            timerProgressBar: true,
+                            customClass: {
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                actions: 'my-actions-class'  // Class for the actions container
+                            }
                         });
                     }
                     if(response.status == 'success'){

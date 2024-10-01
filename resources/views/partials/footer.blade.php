@@ -115,9 +115,14 @@
                 icon: 'error',
                 title: 'Maximum stock limit reached',
                 timer: 3000,
-                showConfirmButton: false,
                 position: 'top',
-                timerProgressBar: true
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: true,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
             });
             $('.swap_qty_number_' + product_id).val(stock_number);
             $('.cart-total-number-' + product_id).html(stock_number);
@@ -203,9 +208,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 if (response.status == 'success') {
@@ -397,9 +407,14 @@
                 icon: 'error',
                 title: 'Maximum stock limit reached',
                 timer: 3000,
-                showConfirmButton: false,
                 position: 'top',
-                timerProgressBar: true
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: true,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
             });
             $('.button_swap_quantity_'+id).addClass('d-none');
             $('.original_cart_btn_'+id).removeClass('d-none');
@@ -450,9 +465,14 @@
                             icon: 'error',
                             title: response.message,
                             timer: 3000,
-                            showConfirmButton: false,
                             position: 'top',
-                            timerProgressBar: true
+                            showConfirmButton: true,  // Show the confirm (OK) button
+                            confirmButtonText: 'Okay',
+                            timerProgressBar: true,
+                            customClass: {
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                actions: 'my-actions-class'  // Class for the actions container
+                            }
                         });
                     }
                     if (response.status == 'success') {
@@ -504,9 +524,14 @@
                             title: qty + ' X ' + product_name +
                                 ' added to your cart',
                             timer: 3000,
-                            showConfirmButton: false,
                             position: 'top',
-                            timerProgressBar: true
+                            showConfirmButton: true,  // Show the confirm (OK) button
+                            confirmButtonText: 'Okay',
+                            timerProgressBar: true,
+                            customClass: {
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                actions: 'my-actions-class'  // Class for the actions container
+                            }
                         });
                     }
                     $('#top_cart_quantity').html(total_cart_quantity);
@@ -1066,9 +1091,14 @@
                             icon: 'error',
                             title: response.message,
                             timer: 3000,
-                            showConfirmButton: false,
                             position: 'top',
-                            timerProgressBar: true
+                            showConfirmButton: true,  // Show the confirm (OK) button
+                            confirmButtonText: 'Okay',
+                            timerProgressBar: true,
+                            customClass: {
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                actions: 'my-actions-class'  // Class for the actions container
+                            }
                         });
                     } else {
                         $('#see_similar_pop_up').modal('show');
@@ -1081,9 +1111,14 @@
                         icon: 'error',
                         title: response.message,
                         timer: 3000,
-                        showConfirmButton: false,
                         position: 'top',
-                        timerProgressBar: true
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Okay',
+                        timerProgressBar: true,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
             },
@@ -1095,9 +1130,14 @@
                     icon: 'error',
                     title: 'No similar products found',
                     timer: 3000,
-                    showConfirmButton: false,
                     position: 'top',
-                    timerProgressBar: true
+                    showConfirmButton: true,  // Show the confirm (OK) button
+                    confirmButtonText: 'Okay',
+                    timerProgressBar: true,
+                    customClass: {
+                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        actions: 'my-actions-class'  // Class for the actions container
+                    }
                 });
             }
         });

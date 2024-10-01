@@ -943,9 +943,14 @@
                 icon: 'error',
                 title: 'Maximum stock limit reached',
                 timer: 3000,
-                showConfirmButton: false,
                 position: 'top',
-                timerProgressBar: true
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: true,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
             });
             // $('#row_quantity_' + pk_product_id).val(old_qty);
             return false;
@@ -1042,9 +1047,14 @@
                     icon: 'error',
                     title: 'Maximum stock limit reached',
                     timer: 3000,
-                    showConfirmButton: false,
                     position: 'top',
-                    timerProgressBar: true
+                    showConfirmButton: true,  // Show the confirm (OK) button
+                    confirmButtonText: 'Okay',
+                    timerProgressBar: true,
+                    customClass: {
+                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        actions: 'my-actions-class'  // Class for the actions container
+                    }
                 });
                 $('#row_quantity_' + pk_product_id).val(old_qty);
                 return false;
@@ -1144,9 +1154,14 @@
                 icon: 'error',
                 title: 'Maximum stock limit reached',
                 timer: 3000,
-                showConfirmButton: false,
                 position: 'top',
-                timerProgressBar: true
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: true,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
             });
             $('#row_quantity_' + pk_product_id).val(old_qty);
             return false;
@@ -1247,9 +1262,14 @@
                 icon: 'error',
                 title: 'Maximum stock limit reached',
                 timer: 3000,
-                showConfirmButton: false,
                 position: 'top',
-                timerProgressBar: true
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: true,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
             });
             $('#itm_qty' + product_id).val(old_qty);
             return false;
