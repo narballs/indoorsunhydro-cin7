@@ -13,40 +13,48 @@
     }
 </style>
 <div class="row justify-content-center mt-3">
-	<div class="col-md-10">
-		@if (count($blogs) > 0)
-			<div class="row">
-				@foreach ($blogs as $blog)
-				<div class="col-md-6 col-xl-4 col-lg-6 col-12 mb-3">
-					<div class="card rounded">
-						@if (!empty($blog->thumbnail))
-							<a href="{{route('blog_detail' , $blog->slug)}}">
-								<img class="card-img-top rounded-top" alt="100%x280"  src="{{asset('pages/blogs/thumbnails/' . $blog->thumbnail)}}" alt="Blog Image">
+	@if (count($blogs) == 0)
+		<div class="row">
+			<h4 class="text-center font-weight-bold">
+				No Blogs Found !!
+			</h4>
+		</div>
+	@endif
+	@foreach ($blogs as $blog)
+		<div class="col-md-12 mb-4 ">
+			<div class="row justify-content-between rounded py-3 blog_div">
+				<div class="col-md-7 col-lg-7 col-xl-5 col-12 order-md-1 order-2 mt-2">
+					<div class="row">
+						<div class="col-md-12">
+							<span class="blog_date">
+								{{ $blog->created_at->format('j M Y') }}
+							</span>
+						</div>
+						<div class="col-md-12">
+							<a href="{{route('blog_detail' , $blog->slug)}}" class="text-decoration-none single_blog_heading">
+								{!! \Illuminate\Support\Str::limit($blog->title, 50) !!}
 							</a>
-						@endif
-						<div class="card-body blog-card-body-height">
-							<h5 class="card-title blog_title" style="font-family:'Poppins';font-weight;500;font-size:19px !important;line-height:24px;">{!! \Illuminate\Support\Str::limit($blog->title, 15) !!}</h5>
-							<p class="card-text mb-0"  style="max-height: 7rem;min-height:7rem;font-family:'Poppins';font-weight;400;font-size:16px;line-height:27px;">{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}</p>
-							<div class="row justify-content-between">
-								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
-									<small class="text-muted" style="font-family:'Poppins';font-weight;400;font-size:14px;line-height:21px;">{{date('Y-m-d', strtotime($blog->created_at))}}</small>
-								</div>
-								<div class="col-md-5 col-5 col-xl-5 col-lg-5">
-									<small class="text-muted" style="font-family:'Poppins';font-weight;400;font-size:14px;line-height:21px;"><a href="{{route('blog_detail' , $blog->slug)}}">Read More ..</a></small>
-								</div>
-							</div>
+						</div>
+						<div class="col-md-12">
+							<p class="single_blog_description">
+								{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 100) !!}
+							</p>
+						</div>
+
+						<div class="col-md-12">
+							<a  href="{{route('blog_detail' , $blog->slug)}}" class="text-decoration-none text-white single_blog_detail_btn btn">
+								Read More
+							</a>
 						</div>
 					</div>
 				</div>
-				@endforeach
-				{{ $blogs->links('pagination.custom_pagination') }}
+				<div class="col-md-4 col-xl-3 col-lg-4 col-12 order-1 order-md-2 mt-2">
+					<a href="{{route('blog_detail' , $blog->slug)}}" class="blog_image_container">
+						<img class="img-fluid rounded blog_image_link" alt="100%x280"  src="{{asset('pages/blogs/thumbnails/' . $blog->thumbnail)}}" alt="Blog Image">
+					</a>
+				</div>
 			</div>
-		@else
-			<div class="row">
-				<h4 class="text-center font-weight-bold">
-					No Blogs Found !!
-				</h4>
-			</div>
-		@endif
-	</div>
+		</div>
+	@endforeach
+	{{ $blogs->links('pagination.custom_pagination') }}
 </div>

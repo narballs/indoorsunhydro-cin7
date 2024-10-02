@@ -11,6 +11,23 @@
         padding-bottom: 0rem !important;
     }
 }
+.my-confirm-button {
+    background-color: #7BC533 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    line-height: 27px   !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    letter-spacing: 0.05em  !important;
+    padding: 5px 25px !important;
+    border-radius: 20px !important;
+}
+.my-actions-class {
+    justify-content: center !important;
+    margin-top: 0rem !important;
+}
 .top_placeholder_style {
     top: -10px !important;
 }

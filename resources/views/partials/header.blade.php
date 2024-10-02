@@ -261,6 +261,127 @@
             line-height: 171%;
         }
     </style>
+    <style>
+        .tips_trends {
+            font-family: 'poppins';
+            color:#272424;
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 5%;
+        }
+    
+        .latest_from_blogs {
+            font-family: 'poppins';
+            color:#000000;
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+    
+        .blog_separate_head {
+            font-family: 'poppins';
+            color:#7CC633;
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+    
+        .guide_to_growth {
+            font-family: 'poppins';
+            color:#000000;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+    
+        .border-bottom-blog-color {
+            border-bottom: 1px solid #7CC633;
+        }
+    
+        #searchBarInput {
+            position: relative;
+            background: transparent;
+            font-size: 16px;
+            font-weight: 400;
+            font-family: 'poppins';
+            color: #979797;
+            outline: 1px  #EBEBEB;
+            border: 1px solid #EBEBEB;
+            background-color: #ffffff;
+        }
+    
+    
+        .position-icon {
+            position: relative;
+            left: 90%;
+            top: -1.5rem;
+            color: #7CC633;
+            font-size: 12px;
+        }
+        .blog_date {
+            font-size: 14px;
+            font-weight: 600;
+            color: #73BC2B;
+            font-family: 'Poppins';
+            line-height: 20px;
+        }
+        .single_blog_heading {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1A1A1A;
+            font-family: 'Poppins';
+            line-height: 32px;
+        }
+        .single_blog_description {
+            font-size: 16px;
+            font-weight: 400;
+            color: #667085;
+            font-family: 'Poppins';
+            line-height: 24px;
+        }
+        .single_blog_detail_btn {
+            background-color: #73BC2B;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Poppins';
+            border-radius: 30px;
+            color: #FFFFFF;
+        }
+        .blog_div {
+            border: 1px solid #EBEBEB;
+        }
+
+        .blog_image_link:hover {
+            filter: brightness(0) saturate(100%) invert(72%) sepia(33%) saturate(612%) hue-rotate(48deg) brightness(101%) contrast(91%);
+        }
+        .blog_image_container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .blog_image_link {
+            display: block;
+            width: 100%;  /* Adjust as needed */
+            height: auto; /* Adjust as needed */
+            transition: all 0.3s ease;
+        }
+
+        .blog_image_container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #7CC633;  /* Green color */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .blog_image_container:hover::after {
+            opacity: 0.1;  /* Adjust the opacity to control the intensity of the green overlay */
+        }
+    </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>
 <div class="spinner-border text-success hide_default" role="status" id="spinner-global">
