@@ -264,7 +264,7 @@
                                         <div class="card-body d-flex flex-column text-center mt-2 prd_mbl_card_bdy p-0">
                                             <h5 class="card-title card_product_title tooltip-product" data-title="{{$product->name}}" style="font-weight: 500;font-size: 16px;" id="product_name_{{ $product->id }}">
                                                 <a class="product-row-product-title" href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                                                    {{ \Illuminate\Support\Str::limit($product->name, 20) }}
+                                                    {{ \Illuminate\Support\Str::limit($product->name, 40) }}
                                                     <div class="tooltip-product-text bg-white text-primary">
                                                         <div class="tooltip-arrow"></div>
                                                         <div class="tooltip-inner bg-white text-primary">
@@ -276,7 +276,7 @@
                                             <input type="hidden" name="quantity" value="1" id="quantity">
                                             <input type="hidden" name="p_id" id="p_{{ $product->id }}" value="{{ $product->id }}">
                                             @csrf
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 mt-3">
                                                 @php
                                                     $similar_product_option = App\Models\ProductOption::where('option_id', $option->option_id)->first();
                                                 @endphp
@@ -291,7 +291,7 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                            <div class="col-md-12 p-1 price-category-view-section">
+                                            <div class="col-md-12 p-1 price-category-view-section mt-2">
                                                 <?php
                                                 $retail_price = 0;
                                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
