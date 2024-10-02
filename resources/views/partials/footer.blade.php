@@ -32,16 +32,21 @@
 		var order_id = parseInt($('.getorderID').html());
 		var currency = 'USD';
 		var orderTotal = $('.getorderTotal').val();
+        var isStripe = $('.isStripe').val();
 		var send_to = 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq';
 		console.log(order_id , currency , orderTotal , send_to);
-		if (window.location.pathname.match('/thankyou/')) {
-			gtag('event', 'conversion', {
-				'send_to': 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq',
-				'value':orderTotal,
-				'currency': 'USD',
-				'transaction_id': order_id
-			});
-		}
+        if (parseInt(isStripe) == 1) {
+            if (window.location.pathname.match('/thankyou/')) {
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq',
+                    'value':orderTotal,
+                    'currency': 'USD',
+                    'transaction_id': order_id
+                });
+            }
+        } else {
+            console.log('wholesale_order');
+        }	
 
 	});
 </script>
