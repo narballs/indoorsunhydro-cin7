@@ -41,6 +41,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Services\ZendeskService;
+use Illuminate\Support\Facades\Http;
 use Zendesk\API\HttpClient as ZendeskClient;
 
 class ProductController extends Controller
@@ -2878,5 +2879,60 @@ class ProductController extends Controller
             'price_column' => $price_column ?? 'sacramentoUSD',
         ], 200);
     }
+
+
+    // public function filter_products(Request $request) {
+    //     $product_primary_id = $request->product_id;
+    //     $get_single_product = Product::where('id', $product_primary_id)->first();
+    //     $user_id = Auth::id();
+    //     if (!auth()->user()) {
+    //         $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
+    //     } else {
+    //         $contact = Contact::where('user_id', $user_id)->first();
+    //         if (empty($contact)) {
+    //             $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
+    //         } else {
+    //             $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
+    //             $primary_contact = Contact::where('contact_id', $contact_id_new)->first();
+    //             $price_column = !empty($primary_contact) ? $primary_contact->priceColumn : (!empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD');
+    //         }
+    //     }
+    //     $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
+    //     $all_products_ids = Product::whereIn('category_id' , $product_categories)
+    //     ->pluck('product_id')->toArray();
+    //     $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)
+    //     ->where('status', '!=', 'Disabled')
+    //     // ->where('optionWeight', '>', 0)
+    //     ->pluck('option_id')->toArray();
+    //     $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
+    //     ->where($price_column , '!=', null)
+    //     ->where($price_column , '>' , 0)
+    //     ->pluck('option_id')
+    //     ->toArray();
+    //     $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
+    //     ->pluck('product_id')->toArray();
+    //     $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
+    //     ->where('status' , '!=' , 'Inactive')
+    //     // ->where('barcode' , '!=' , '')
+    //     ->get();
+
+    //     return response()->json($products);
+    // }
+
+    // public function sendDataToFlask()
+    // {
+    //     // Fetch all products
+    //     $products = Product::all();
+
+    //     // Prepare data to send
+    //     $dataToSend = [
+    //         'all_products' => $products,
+    //     ];
+
+    //     // Send data to Flask API
+    //     $response = Http::post('http://127.0.0.1:5000/recommend', $dataToSend);
+
+    //     return response()->json($response->json());
+    // }
     
 }
