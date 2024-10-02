@@ -724,6 +724,7 @@
 							</div> --}}
 							<div class="col-md-3">
 								<input type="hidden" name="getorderTotal" value="{{number_format($order->total_including_tax, 2)}}" class="getorderTotal" id="">
+								<input type="hidden" name="is_stripe" value="{{$order->is_stripe}}" class="isStripe" id="isStripe">
 								<p class="order-confirmation-page-order-number-title">Total</p>
 								<p class="order-confirmation-page-order-number-item">
 									${{number_format($order->total_including_tax, 2)}}

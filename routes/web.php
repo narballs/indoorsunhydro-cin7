@@ -584,3 +584,9 @@ Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sm
 Route::get('/thank-you', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
 Route::get('/ai-answer', [ProductController::class, 'ai_answer'])->name('ai_answer');
 Route::post('/add-new-address', [UserController::class, 'add_new_address'])->name('add_new_address');
+
+
+// get filter products from pythone api
+
+// Route::get('/filter-products', [ProductController::class, 'filter_products'])->name('filter_products');
+// Route::post('/send-data-flask', [ProductController::class, 'sendDataToFlask']);
