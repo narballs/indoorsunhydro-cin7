@@ -23,7 +23,7 @@
 	@foreach ($blogs as $blog)
 		<div class="col-md-12 mb-4 ">
 			<div class="row justify-content-between rounded py-3 blog_div">
-				<div class="col-md-7 col-lg-7 col-xl-5 col-12 order-md-1 order-2 mt-2">
+				<div class="col-md-8 col-lg-8 col-xl-9 col-12 order-md-1 order-2 mt-2">
 					<div class="row">
 						<div class="col-md-12">
 							<span class="blog_date">
@@ -32,12 +32,12 @@
 						</div>
 						<div class="col-md-12">
 							<a href="{{route('blog_detail' , $blog->slug)}}" class="text-decoration-none single_blog_heading">
-								{!! \Illuminate\Support\Str::limit($blog->title, 50) !!}
+								{!! \Illuminate\Support\Str::limit($blog->title, 100) !!}
 							</a>
 						</div>
 						<div class="col-md-12">
 							<p class="single_blog_description">
-								{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 100) !!}
+								{!! \Illuminate\Support\Str::limit(strip_tags($blog->description), 130) !!}
 							</p>
 						</div>
 
