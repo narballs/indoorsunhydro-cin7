@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductsExport;
 use App\Helpers\MailHelper;
 use App\Helpers\SettingHelper;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Services\ZendeskService;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 use Zendesk\API\HttpClient as ZendeskClient;
 
 class ProductController extends Controller
@@ -2881,9 +2883,30 @@ class ProductController extends Controller
     }
 
 
-    // public function filter_products(Request $request) {
+    // public function see_similar_products(Request $request) {
+    //     $single_product_array = [];
+    //     $all_products_array = [];
     //     $product_primary_id = $request->product_id;
     //     $get_single_product = Product::where('id', $product_primary_id)->first();
+    //     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+    //     if (empty($get_single_product)) {
+    //         return response()->json([
+    //             'message' => 'No similar product found',
+    //             'status' => 'error'
+    //         ], 404);
+    //     }
+
+    //     // dd($get_single_product);
+    //     $single_product_array = [
+    //         'id'=> $get_single_product->id,
+    //         'product_id' => $get_single_product->product_id,
+    //         'product_name' => $get_single_product->name,
+    //         'product_code' => $get_single_product->code,
+    //         'product_description' => $get_single_product->description,
+    //         'Category' => !empty($get_single_product->categories) ? $get_single_product->categories->name : '',
+    //         'brand' => !empty($get_single_product->product_brand) ? $get_single_product->product_brand->name : '',    
+    //     ];
+
     //     $user_id = Auth::id();
     //     if (!auth()->user()) {
     //         $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
@@ -2916,23 +2939,181 @@ class ProductController extends Controller
     //     // ->where('barcode' , '!=' , '')
     //     ->get();
 
-    //     return response()->json($products);
+    //     if ($products->isEmpty()) {
+    //         return response()->json([
+    //             'message' => 'No similar product found',
+    //             'status' => 'error'
+    //         ], 404);
+    //     }
+
+    //     if (count($products) > 0) {
+    //         foreach ($products as $product) {
+    //             if (count($product->options) > 0) {
+    //                 foreach ($product->options as $option) {
+    //                     $all_products_array[] = [
+    //                         'id'=> $product->id,
+    //                         'product_id' => $product->product_id,
+    //                         'product_name' => $product->name,
+    //                         'product_code' => $product->code,
+    //                         'product_description' => $product->description,
+    //                         'Category' => !empty($product->categories) ? $product->categories->name : '',
+    //                         'brand' => !empty($product->product_brand) ? $product->product_brand->name : '',    
+    //                     ];
+    //                 }
+    //             } 
+    //         }
+    //     }
+
+
+    //     $findsimilarProducts = $this->sendToOpenAIInBatches($single_product_array , $all_products_array);
+    //     // dd($findsimilarProducts);
+
     // }
 
-    // public function sendDataToFlask()
-    // {
-    //     // Fetch all products
-    //     $products = Product::all();
+    // public function sendToOpenAI(array $singleProduct, array $allProducts) {
+    //     $apiKey = config('services.ai.ai_key');
+    //     // Create a new HTTP client
+    //     $client = new \GuzzleHttp\Client();
+        
+    //     // Prepare the message content
+    //     $singleProductDetails = json_encode($singleProduct, JSON_PRETTY_PRINT);
+    //     $allProductsDetails = json_encode($allProducts, JSON_PRETTY_PRINT);
 
-    //     // Prepare data to send
-    //     $dataToSend = [
-    //         'all_products' => $products,
-    //     ];
+    //     // Construct the message to OpenAI
+    //     $messageContent = "Here is the product to find similar items for:\n" . $singleProductDetails . 
+    //                     "\n\nBased on this product, please find similar products from the following list:\n" . 
+    //                     $allProductsDetails;
 
-    //     // Send data to Flask API
-    //     $response = Http::post('http://127.0.0.1:5000/recommend', $dataToSend);
+    //     // Send request to OpenAI
+    //     try {
+    //         $response = $client->post('https://api.openai.com/v1/chat/completions', [
+    //             'headers' => [
+    //                 'Authorization' => 'Bearer ' . $apiKey,
+    //                 'Content-Type' => 'application/json',
+    //             ],
+    //             'json' => [
+    //                 'model' => 'gpt-3.5-turbo',
+    //                 'messages' => [
+    //                     [
+    //                         'role' => 'system',
+    //                         'content' => 'You are a product recommendation assistant that finds similar items based on product details.'
+    //                     ],
+    //                     [
+    //                         'role' => 'user',
+    //                         'content' => $messageContent
+    //                     ]
+    //                 ],
+    //                 'temperature' => 0.7,
+    //             ],
+    //         ]);
+            
+    //         // Parse the response
+    //         $responseBody = json_decode($response->getBody(), true);
+            
+    //         // Check if the response contains the choices and get the first one
+    //         if (isset($responseBody['choices']) && !empty($responseBody['choices'])) {
+    //             // Extract the response content
+    //             $similarProducts = $responseBody['choices'][0]['message']['content'] ?? '';
 
-    //     return response()->json($response->json());
+    //             // Assuming the OpenAI response is a JSON string with similar products
+    //             $similarProductsArray = json_decode($similarProducts, true) ?? [];
+
+    //             // Prepare the final result containing only names, codes, and IDs
+    //             $finalResults = [];
+    //             foreach ($similarProductsArray as $product) {
+    //                 if (isset($product['product_id'], $product['product_name'], $product['product_code'])) {
+    //                     $finalResults[] = [
+    //                         'product_id' => $product['product_id'],
+    //                         'product_name' => $product['product_name'],
+    //                         'product_code' => $product['product_code'],
+    //                     ];
+    //                 }
+    //             }
+
+    //             return $finalResults; // Return only the filtered similar products
+    //         } else {
+    //             return []; // Return an empty array if no choices are found
+    //         }
+    //     } catch (\Exception $e) {
+    //         // Log the error for debugging purposes
+    //         Log::error('OpenAI API request failed: ' . $e->getMessage());
+    //         return []; // Return an empty array on failure
+    //     }
     // }
+
+    // public function sendToOpenAIInBatches(array $singleProduct, array $allProducts) {
+    //     $apiKey = config('services.ai.ai_key');
+    //     $client = new \GuzzleHttp\Client();
+        
+    //     $similarProducts = []; // Array to collect similar products from all batches
+    
+    //     // Define the batch size (you can adjust this based on your testing)
+    //     $batchSize = 50; // Adjust this as necessary
+    //     $totalProducts = count($allProducts);
+    //     $numBatches = ceil($totalProducts / $batchSize); // Calculate the number of batches
+    
+    //     for ($i = 0; $i < $numBatches; $i++) {
+    //         // Slice the array to get the current batch
+    //         $currentBatch = array_slice($allProducts, $i * $batchSize, $batchSize);
+    
+    //         // Construct the message to OpenAI for the current batch
+    //         $messageContent = "Here is the product to find similar items for:\n" . json_encode($singleProduct, JSON_PRETTY_PRINT) . 
+    //                           "\n\nBased on this product, please find similar products from the following list:\n" . 
+    //                           json_encode($currentBatch, JSON_PRETTY_PRINT);
+    
+    //         try {
+    //             $response = $client->post('https://api.openai.com/v1/chat/completions', [
+    //                 'headers' => [
+    //                     'Authorization' => 'Bearer ' . $apiKey,
+    //                     'Content-Type' => 'application/json',
+    //                 ],
+    //                 'json' => [
+    //                     'model' => 'gpt-3.5-turbo',
+    //                     'messages' => [
+    //                         [
+    //                             'role' => 'system',
+    //                             'content' => 'You are a product recommendation assistant that finds similar items based on product details.'
+    //                         ],
+    //                         [
+    //                             'role' => 'user',
+    //                             'content' => $messageContent
+    //                         ]
+    //                     ],
+    //                     'temperature' => 0.7,
+    //                 ],
+    //             ]);
+    
+    //             // Parse the response
+    //             $responseBody = json_decode($response->getBody(), true);
+                
+    //             // Check if the response contains the choices and get the first one
+    //             if (isset($responseBody['choices']) && !empty($responseBody['choices'])) {
+    //                 // Extract the response content
+    //                 $similarProductsBatch = $responseBody['choices'][0]['message']['content'] ?? '';
+    
+    //                 // Assuming the OpenAI response is a JSON string with similar products
+    //                 $similarProductsArray = json_decode($similarProductsBatch, true) ?? [];
+    
+    //                 // Prepare the final result containing only names, codes, and IDs
+    //                 foreach ($similarProductsArray as $product) {
+    //                     if (isset($product['product_id'], $product['product_name'], $product['product_code'])) {
+    //                         $similarProducts[] = [
+    //                             'product_id' => $product['product_id'],
+    //                             'product_name' => $product['product_name'],
+    //                             'product_code' => $product['product_code'],
+    //                         ];
+    //                     }
+    //                 }
+    //             }
+    //         } catch (\Exception $e) {
+    //             // Log the error for debugging purposes
+    //             Log::error('OpenAI API request failed: ' . $e->getMessage());
+    //             continue; // Skip to the next batch on failure
+    //         }
+    //     }
+    
+    //     return $similarProducts; // Return all aggregated similar products
+    // }
+
     
 }
