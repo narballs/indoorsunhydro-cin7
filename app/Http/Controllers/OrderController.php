@@ -27,6 +27,7 @@ use Stripe\Webhook;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
+use App\Helpers\UtilHelper;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
 use App\Models\OrderRefund;
@@ -554,6 +555,7 @@ class OrderController extends Controller
                         $tax_rate = 0;
                     }
                     if (session()->has('cart')) {
+                        UtilHelper::update_product_stock_on_local($cart_items);
                         $checkout_session = null;
                         if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes' && ($discount_amount > 0)) {
                             $checkout = $this->apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value , $parcel_guard);
@@ -881,6 +883,8 @@ class OrderController extends Controller
                             $OrderItem->option_id = $cart_item['option_id'];
                             $OrderItem->save();
                         }
+
+                        UtilHelper::update_product_stock_on_local($cart_items);
                     } else {
                         session()->forget('cart');
                         return redirect('/');
@@ -2198,6 +2202,7 @@ class OrderController extends Controller
             ]);
             array_push($product_prices, $productPrice);
         }
+
         if (!empty($tax_rate) && $tax_rate > 0) {
             $formatted_tax = number_format(($tax_rate * 100 ), 2);
             // $formatted_tax_rate = str_replace(',', '', $formatted_tax);
