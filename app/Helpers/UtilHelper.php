@@ -422,4 +422,40 @@ class UtilHelper
             'total_stock' => $total_stock
         ];
     }
+
+
+
+    public static function update_product_stock_on_local($cart_items)
+    {
+        if (empty($cart_items)) {
+            return false;
+        }
+
+        foreach ($cart_items as $cart_item) {
+            $product_id = $cart_item['product_id'];
+            $option_id = $cart_item['option_id'];
+            $quantity = $cart_item['quantity'];
+            
+            $product_option = ProductOption::where('option_id', $option_id)
+            ->where('product_id', $product_id)
+            ->where('stockAvailable', '>', 0)
+            ->first();
+
+            $product_stock = ProductStock::where('product_id' ,  $product_id)
+            ->where('option_id' , $option_id)
+            ->first();
+
+            if (!empty($product_option)) {
+                $product_option->stockAvailable = !empty($product_option->stockAvailable) && intval($product_option->stockAvailable) > 0 ? intval($product_option->stockAvailable) - $quantity :  0;
+                $product_option->save();
+            }
+
+            if (!empty($product_stock)) {
+                $product_stock->available_stock = !empty($product_stock->available_stock) && intval($product_stock->available_stock) > 0 ? intval($product_stock->available_stock) - $quantity :  0;
+                $product_stock->save();
+            }
+        }
+
+        return true;
+    }
 }

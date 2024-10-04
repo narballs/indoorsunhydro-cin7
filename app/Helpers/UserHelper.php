@@ -261,9 +261,18 @@ class UserHelper
 
 
         $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
-        $getDate =$created_date->format('Y-m-d');
+        $getDate = $created_date->format('Y-m-d');
         $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
         $order_created_date = $getDate . 'T' . $getTime ;
+
+        // // Add 1 day to the date part only
+        // $next_date = $created_date->addDay()->format('Y-m-d');
+        // // Combine the new date with the original time
+        // $ship_by_date = $next_date . 'T' . $getTime;
+
+        $shipDate = $created_date->addDay()->format('Y-m-d');
+
+
         $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
         $tax = $calculate_tax - $currentOrder->shipment_price;
         $orderStatus = null;
@@ -313,6 +322,7 @@ class UserHelper
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
+            'shipDate' => $shipDate,
             'carrierCode' => !empty($products_weight) && $products_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
             'serviceCode' => !empty($products_weight) && $products_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
             'orderStatus' => $orderStatus,

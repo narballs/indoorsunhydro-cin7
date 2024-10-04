@@ -14,6 +14,6 @@ class Brand extends Model
 
     public function product()
     {
-        return $this->hasOne(App\Models\Product, 'id', 'brand_id');
+        return $this->hasOne(Product::class);
     }
 }
