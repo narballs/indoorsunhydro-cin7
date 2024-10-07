@@ -265,12 +265,26 @@ class UserHelper
         $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
         $order_created_date = $getDate . 'T' . $getTime ;
 
-        // // Add 1 day to the date part only
-        // $next_date = $created_date->addDay()->format('Y-m-d');
-        // // Combine the new date with the original time
-        // $ship_by_date = $next_date . 'T' . $getTime;
 
-        $shipDate = $created_date->addDay()->format('Y-m-d');
+        // Check if the created date is Friday
+        if ($created_date->isFriday()) {
+            // If it's Friday, ship day should be Monday (add 3 days)
+            $shipDate = $created_date->addDays(3);
+        }
+        // Check if the created date is on Saturday or Sunday
+        elseif ($created_date->isSaturday()) {
+            // If it's Saturday, ship day should be Monday (add 2 days)
+            $shipDate = $created_date->addDays(2);
+        } elseif ($created_date->isSunday()) {
+            // If it's Sunday, ship day should be Monday (add 1 day)
+            $shipDate = $created_date->addDay();
+        } else {
+            // Otherwise, add 1 day as usual for other weekdays (Monday to Thursday)
+            $shipDate = $created_date->addDay();
+        }
+
+        // Format the final shipping date as a string in 'Y-m-dTH:i:s' format
+        $ship_by_date = $shipDate->format('Y-m-d');
 
 
         $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
@@ -322,7 +336,7 @@ class UserHelper
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
-            'shipDate' => $shipDate,
+            'shipDate' => $ship_by_date,
             'carrierCode' => !empty($products_weight) && $products_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
             'serviceCode' => !empty($products_weight) && $products_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
             'orderStatus' => $orderStatus,

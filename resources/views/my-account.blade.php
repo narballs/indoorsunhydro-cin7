@@ -191,15 +191,22 @@
                                                                         ${{ number_format($user_order->total_including_tax, 2) }}
                                                                     </span>
                                                                 </td>
+                        
                                                                 <td>
-                                                                    @if(!empty($user_order->contact->address1))
-                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->address1}}  {{$user_order->contact->city}}  {{$user_order->contact->state}} {{$user_order->contact->postCode}}">
-                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
+                                                                    @if (!empty($user_order->DeliveryAddress1))
+                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->DeliveryAddress1}}  {{$user_order->DeliveryCity}}  {{$user_order->DeliveryState}} {{$user_order->DeliveryZip}}">
+                                                                            {{ \Illuminate\Support\Str::limit($user_order->DeliveryAddress1, 10) }}
                                                                         </span>
-                                                                    @elseif(!empty($user_order->contact->postalAddress1))
-                                                                        <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}  {{$user_order->contact->postalCity}}   {{$user_order->contact->postalState}}  {{$user_order->contact->postalPostCode}}">
-                                                                            {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
-                                                                        </span>
+                                                                    @else
+                                                                        @if(!empty($user_order->contact->address1))
+                                                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->address1}}  {{$user_order->contact->city}}  {{$user_order->contact->state}} {{$user_order->contact->postCode}}">
+                                                                                {{ \Illuminate\Support\Str::limit($user_order->contact->address1, 10) }}
+                                                                            </span>
+                                                                        @elseif(!empty($user_order->contact->postalAddress1))
+                                                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$user_order->contact->postalAddress1}}  {{$user_order->contact->postalCity}}   {{$user_order->contact->postalState}}  {{$user_order->contact->postalPostCode}}">
+                                                                                {{ \Illuminate\Support\Str::limit($user_order->contact->postalAddress1, 10) }}
+                                                                            </span>
+                                                                        @endif
                                                                     @endif
                                                                 </td>
                                                                 <td>

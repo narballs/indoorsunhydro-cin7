@@ -84,15 +84,21 @@
                                         Bill to Address
                                     </span><br>
                                     <span class="shipping_to_my_account">
-                                        @if(!empty($order_detail->contact->postalAddress1))
-                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}  {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}">
-                                                {{$order_detail->contact->postalAddress1}} {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}
+                                        @if (!empty($order->BillingAddress1))
+                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->BillingAddress1}}  {{$order_detail->BillingCity}}   {{$order_detail->BillingState}}  {{$order_detail->BillingZip}}">
+                                                {{$order_detail->BillingAddress1}} {{$order_detail->BillingCity}}   {{$order_detail->BillingState}}  {{$order_detail->BillingZip}}
                                             </span>
-                                        @elseif(!empty($order_detail->contact->address1))
-                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}  {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}">
-                                                {{$order_detail->contact->address1}} {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}
-                                            </span>
-                                        
+                                        @else
+                                            @if(!empty($order_detail->contact->postalAddress1))
+                                                <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}  {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}">
+                                                    {{$order_detail->contact->postalAddress1}} {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}
+                                                </span>
+                                            @elseif(!empty($order_detail->contact->address1))
+                                                <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}  {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}">
+                                                    {{$order_detail->contact->address1}} {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}
+                                                </span>
+                                            
+                                            @endif
                                         @endif
                                     </span>
                                 </div>
@@ -101,14 +107,20 @@
                                         Ship to Address
                                     </span><br>
                                     <span class="shipping_to_my_account">
-                                        @if(!empty($order_detail->contact->address1))
-                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}  {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}">
-                                                {{$order_detail->contact->address1}} {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}
+                                        @if (!empty($order_detail->DeliveryAddress1))
+                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->DeliveryAddress1}}  {{$order_detail->DeliveryCity}}  {{$order_detail->DeliveryState}} {{$order_detail->DeliveryZip}}">
+                                                {{$order_detail->DeliveryAddress1}} {{$order_detail->DeliveryCity}}  {{$order_detail->DeliveryState}} {{$order_detail->DeliveryZip}}
                                             </span>
-                                        @elseif(!empty($order_detail->contact->postalAddress1))
-                                            <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}  {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}">
-                                                {{$order_detail->contact->postalAddress1}} {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}
-                                            </span>
+                                        @else
+                                            @if(!empty($order_detail->contact->address1))
+                                                <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->address1}}  {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}">
+                                                    {{$order_detail->contact->address1}} {{$order_detail->contact->city}}  {{$order_detail->contact->state}} {{$order_detail->contact->postCode}}
+                                                </span>
+                                            @elseif(!empty($order_detail->contact->postalAddress1))
+                                                <span class="header-row-mbl-my-account shipping_to_my_account" title="{{$order_detail->contact->postalAddress1}}  {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}">
+                                                    {{$order_detail->contact->postalAddress1}} {{$order_detail->contact->postalCity}}   {{$order_detail->contact->postalState}}  {{$order_detail->contact->postalPostCode}}
+                                                </span>
+                                            @endif
                                         @endif
                                     </span>
                                 </div>
