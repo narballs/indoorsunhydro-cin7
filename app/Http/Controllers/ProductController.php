@@ -1161,6 +1161,8 @@ class ProductController extends Controller
         $free_postal_state = false;
         $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
         $cart = session()->get('cart');
+        $getCompanyContact  = session()->get('contact_id');
+        $assigned_contact = UserHelper::assign_contact($getCompanyContact);
         if (Auth::id() !== null) {
             $user_id = Auth::id();
             $contact = Contact::where('user_id', $user_id)->first();
@@ -1206,20 +1208,76 @@ class ProductController extends Controller
         if (isset($cart[$id])) {
             $hash_cart = session()->get('cart_hash');
             $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-            if ($product_in_active_cart) {
-                $current_quantity = $product_in_active_cart->quantity;
-                if ($current_quantity + $request->quantity > intval($actual_stock)) {
-                    $status = 'error';
-                    $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
-                } 
-                else {
+            if (!auth()->user()) {
+                if ($product_in_active_cart) {
+                    $current_quantity = $product_in_active_cart->quantity;
+                    if ($current_quantity + $request->quantity > intval($actual_stock)) {
+                        $status = 'error';
+                        $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
+                    } 
+                    else {
 
-                    $product_in_active_cart->quantity = $current_quantity + $request->quantity;
-                    $product_in_active_cart->save();
-                    $status = 'success';
-                    $message = 'Product added to cart successfully';
-                    $cart[$id]['quantity'] += $request->quantity;
+                        $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+                        $product_in_active_cart->save();
+                        $status = 'success';
+                        $message = 'Product added to cart successfully';
+                        $cart[$id]['quantity'] += $request->quantity;
+                    }
                 }
+            } else {
+                if ($product_in_active_cart) {
+                    if ($product_in_active_cart->contact_id == $assigned_contact) {
+                        $current_quantity = $product_in_active_cart->quantity;
+                        if ($current_quantity + $request->quantity > intval($actual_stock)) {
+                            $status = 'error';
+                            $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
+                        } 
+                        else {
+                            $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+                            $product_in_active_cart->save();
+                            $status = 'success';
+                            $message = 'Product added to cart successfully';
+                            $cart[$id]['quantity'] += $request->quantity;
+                        }
+                    } else {
+                        $cart[$id] = [
+                            "product_id" => $productOption->products->product_id,
+                            "name" => $productOption->products->name,
+                            "quantity" => $request->quantity,
+                            "price" => $price,
+                            "code" => $productOption->code,
+                            "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
+                            'option_id' => $productOption->option_id,
+                            "slug" => $productOption->products->slug,
+                            "contact_id" => !empty(auth()->user()) ? $assigned_contact : null,
+                            "cart_hash" => session()->get('cart_hash')
+                        ];
+                        $cart[$id]['user_id'] = $user_id;
+                        $cart[$id]['is_active'] = 1;
+                        $cart[$id]['qoute_id'] = $id;
+        
+                        $qoute = Cart::create($cart[$id]);
+                    }
+                } else {
+                    $cart[$id] = [
+                        "product_id" => $productOption->products->product_id,
+                        "name" => $productOption->products->name,
+                        "quantity" => $request->quantity,
+                        "price" => $price,
+                        "code" => $productOption->code,
+                        "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
+                        'option_id' => $productOption->option_id,
+                        "slug" => $productOption->products->slug,
+                        "contact_id" => !empty(auth()->user()) ? $assigned_contact : null,
+                        "cart_hash" => session()->get('cart_hash')
+                    ];
+                    $cart[$id]['user_id'] = $user_id;
+                    $cart[$id]['is_active'] = 1;
+                    $cart[$id]['qoute_id'] = $id;
+    
+                    $qoute = Cart::create($cart[$id]);
+                }
+                
             }
         } else {
             $hash_cart = $request->session()->get('cart_hash');
@@ -1243,6 +1301,7 @@ class ProductController extends Controller
                     "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
                     'option_id' => $productOption->option_id,
                     "slug" => $productOption->products->slug,
+                    "contact_id" => !empty(auth()->user()) ? $assigned_contact : null,
                     "cart_hash" => session()->get('cart_hash')
                 ];
                 $cart[$id]['user_id'] = $user_id;
@@ -1362,8 +1421,7 @@ class ProductController extends Controller
         }
 
         $new_checkout_flow = AdminSetting::where('option_name', 'new_checkout_flow')->first();
-
-        if (!empty($cart_items)) {
+        if (!empty($cart_items) || count($cart_items) > 0) {
             $view = 'cart';
         } else {
             $view = 'empty-cart';
@@ -1389,6 +1447,7 @@ class ProductController extends Controller
     {
         $quantity = $request->post('items_quantity');
         $cart_items = session()->get('cart');
+        $session_contact_id = session()->get('contact_id');
         $main_contact_id = null;
         $free_postal_state = false;
         if (Auth::id() !== null) {
@@ -1425,12 +1484,22 @@ class ProductController extends Controller
                 
                 if (!empty($user_id)) {
                     $cart = Cart::where('qoute_id', $product_id)
-                        ->where('user_id', $user_id)
-                        ->first();
+                    ->where('contact_id', $session_contact_id)
+                    ->first();
 
                     if (!empty($cart)) {
                         $cart->quantity = $quantity;
                         $cart->save();
+                    }
+                    else {
+                        $cart = Cart::where('qoute_id', $product_id)
+                        ->where('user_id', $user_id)
+                        ->first();
+
+                        if (!empty($cart)) {
+                            $cart->quantity = $quantity;
+                            $cart->save();
+                        }
                     }
                 }
                 else {

@@ -425,7 +425,7 @@ class UserController extends Controller
                             UserHelper::switch_company($companies[0]->contact_id);
                         }
                     }
-                    if ($companies->count() == 2) {
+                    if ($companies->count() > 1) {
                         foreach ($companies as $company) {
                             if ($company->status == 1) {
                                 if ($company->contact_id == null) {
@@ -2769,6 +2769,7 @@ class UserController extends Controller
 
     public function switch_company(Request $request)
     {
+        
         $user_id =  auth()->user()->id;
         $contact_id = $request->companyId;
         $contact = Contact::where('contact_id', $contact_id)->first();
@@ -2777,6 +2778,7 @@ class UserController extends Controller
         $active_company = null;
         $get_company_address = null;
         $productPrice = 0;
+        $cartItems = [];
         $cart = [];
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
@@ -2794,8 +2796,17 @@ class UserController extends Controller
             'contact_id' => $active_contact_id,
             'company' => $active_company
         ]);
-        $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
-        $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+        // $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
+        $getSelectedContact = Contact::where('user_id' , $user_id)
+            ->where('contact_id' , $active_contact_id)
+            ->orWhere('secondary_id' , $active_contact_id)
+            ->first();
+        $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
+        ->where('contact_id' , $active_contact_id)
+        ->get();
+        if (count($cartItems) == 0) {
+            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+        }
         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
 
         $cart_data = [];
@@ -2811,12 +2822,19 @@ class UserController extends Controller
                 if ($productPrice == 0) { 
                     $productPrice = $productPricing['retailUSD'];
                 }
-                $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
+                $cart = Cart::where('user_id' , $user_id)
+                ->where('product_id' , $cartItem['product_id'])
+                ->first();
                 if (!empty($cart)) {
-                    $cart->price = $productPrice;
-                    $cart->save();
-                }
-                
+                    if (!empty($cart->contact_id)){
+                        $cart->price = $productPrice;
+                        $cart->save();
+                    } else {
+                        $cart->price = $productPrice;
+                        $cart->contact_id = $active_contact_id;
+                        $cart->save();
+                    }
+                } 
                 $cart_data[$cart['qoute_id']] = [
                     "product_id" => $cartItem['product_id'],
                     "name" => $cartItem['name'],

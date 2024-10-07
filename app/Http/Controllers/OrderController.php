@@ -873,7 +873,9 @@ class OrderController extends Controller
                     )->first();
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $reference = $currentOrder->reference;
-                    if (session()->has('cart')) {
+                    $cart_items = UserHelper::switch_price_tier($request);
+                    // if (session()->has('cart')) {
+                    if ($cart_items) {
                         foreach ($cart_items as $cart_item) {
                             $OrderItem = new ApiOrderItem;
                             $OrderItem->order_id = $order_id;

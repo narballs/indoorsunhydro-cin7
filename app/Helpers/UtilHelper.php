@@ -12,6 +12,8 @@ use App\Models\InventoryLocation;
 
 use App\Helpers\SettingHelper;
 use App\Models\ApiErrorLog;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Session;
 
 class UtilHelper
 {
@@ -457,5 +459,41 @@ class UtilHelper
         }
 
         return true;
+    }
+
+
+    public static function cart_detail ($total_quantity , $grand_total) {
+        $contact_id = Session::get('contact_id');
+        $total = 0;
+        $grand_total = 0;
+        if (!auth()->user()) {
+            $cart_items = Session::get('cart');
+            if (!empty($cart_items)) {
+                foreach ($cart_items as $cart) {
+                    $total_q[] = $cart['quantity'];
+                    $total_quantity = array_sum($total_q);
+                    $total_price[] = $cart['price'] * $cart['quantity'];
+                    $grand_total = array_sum($total_price);
+                }
+            }
+        } else {
+            $cart_items = Cart::where('contact_id', $contact_id)
+            ->where('user_id' , auth()->user()->id)
+            ->get();
+            if (count($cart_items) > 0) {
+                foreach ($cart_items as $cart) {
+                    $total_q[] = $cart->quantity;
+                    $total_quantity = array_sum($total_q);
+                    $total_price[] = $cart->price * $cart->quantity;
+                    $grand_total = array_sum($total_price);
+                }
+            }
+        }
+    
+        return [
+            'total_quantity' => $total_quantity,
+            'grand_total' => $grand_total
+        ];
+
     }
 }
