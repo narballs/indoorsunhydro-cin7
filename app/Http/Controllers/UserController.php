@@ -2808,7 +2808,6 @@ class UserController extends Controller
             $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
         }
         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-
         $cart_data = [];
         if (count($cartItems) > 0) {
             Session::forget('cart');

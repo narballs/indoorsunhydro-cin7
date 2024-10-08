@@ -79,21 +79,40 @@ class UserHelper
             ]);
 
         } else {
-            $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
-            if (!empty($contact)) {
-                $active_contact_id = $contact->contact_id;
-                // $active_company = $contact->company;
-                $active_company = null;
-            } 
-            else {
-                $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
-                if (!empty($contact)) {
-                    $active_contact_id = $contact->secondary_id;
-                    // $active_company = $contact->company;
-                    $active_company = null;
-                    
+            $companies_count = Contact::where('user_id', $user_id)->get();
+            if (count($companies_count) > 0) {
+                if ($companies_count->count() == 1) {
+                    $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
+                    if (!empty($contact)) {
+                        $active_contact_id = $contact->contact_id;
+                        $active_company = $contact->company;
+                    } 
+                    else {
+                        $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+                        if (!empty($contact)) {
+                            $active_contact_id = $contact->secondary_id;
+                            $active_company = $contact->company;
+                            
+                        }
+                    }
                 }
-            }
+
+                if ($companies_count->count() > 1) {
+                    $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
+                    if (!empty($contact)) {
+                        $active_contact_id = $contact->contact_id;
+                        $active_company = null;
+                    } 
+                    else {
+                        $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+                        if (!empty($contact)) {
+                            $active_contact_id = $contact->secondary_id;
+                            $active_company = null;
+                        }
+                    }
+                }
+            }  
+            
             Session::put([
                 'contact_id' => $active_contact_id,
                 'company' => $active_company,
@@ -209,22 +228,32 @@ class UserHelper
         return $label_data;
     }
 
-    public static function assign_contact($contact_id) {
+    public static function assign_contact($contact_id)
+    {
+        $find_contact = Contact::where('contact_id', $contact_id)
+                                ->orWhere('secondary_id', $contact_id)
+                                ->first();
 
-        $get_contact_id = null;
-        $find_contact = Contact::where('contact_id', $contact_id)->orWhere('secondary_id' , $contact_id)->first();
-        if (!empty($find_contact)) {
-            if (!empty($find_contact->contact_id)) {
-                $get_contact_id = $find_contact->contact_id;
-            } else {
-                $get_contact_id = $find_contact->secondary_id;
-            }
-        } else {
-            $get_contact_id = null;
-        }
+        return $find_contact ? ($find_contact->contact_id ?? $find_contact->secondary_id) : null;
+    }
 
-        return $get_contact_id;
-        
+
+    // Helper function to create a cart entry
+    public static function createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $id)
+    {
+        return [
+            "product_id" => $productOption->products->product_id,
+            "name" => $productOption->products->name,
+            "quantity" => $request->quantity,
+            "price" => $price,
+            "code" => $productOption->code,
+            "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
+            'option_id' => $productOption->option_id,
+            "slug" => $productOption->products->slug,
+            "contact_id" => $assigned_contact,
+            "user_id" => $user_id,
+            'is_active' => 1,
+        ];
     }
 
     

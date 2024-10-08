@@ -789,7 +789,7 @@ class CheckoutController extends Controller
     public function thankyou(Request $request , $id)
     {
         $user_id = Auth::id();
-        $session_contact_id = Session::get('contact_id');
+        // $session_contact_id = Session::get('contact_id');
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
@@ -818,19 +818,25 @@ class CheckoutController extends Controller
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
         
-        $delete_cart = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
-        if (count($delete_cart) > 0) {
-            foreach ($delete_cart as $cart) {
-                if (!empty($cart->contact_id) && $cart->contact_id == $session_contact_id) {
-                    $cart->delete();
-                } else {
-                    $cart->delete();
-                }
-            }
-        }
+        // $delete_cart = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
+        // if (count($delete_cart) > 0) {
+        //     foreach ($delete_cart as $cart) {
+        //         if (!empty($cart->contact_id) && $cart->contact_id == $session_contact_id) {
+        //             $cart->delete();
+        //         } 
+        //         // else {
+        //         //     $cart->delete();
+        //         // }
+        //     }
+        // }
 
-        Session::forget('cart');
-        Session::forget('cart_hash');
+        // // Session::forget('cart');
+        // // Session::forget('cart_hash');
+
+        // if ($session_contact_id) {
+        //     Session::forget('cart');
+        //     Session::forget('cart_hash');
+        // }
 
         $contact = Contact::where('user_id', $user_id)->first();
 

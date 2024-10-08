@@ -1149,183 +1149,271 @@ class ProductController extends Controller
         );
     }
 
+    //old code
+
+    //  public function addToCart(Request $request)
+    // {
+        
+    //     $id = $request->p_id;
+    //     $option_id = $request->option_id;
+    //     $status = null;
+    //     $message = null;
+    //     $price = 0;
+    //     $main_contact_id = null;
+    //     $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+    //     $cart = session()->get('cart');
+    //     $free_postal_state = false;
+    //     if (Auth::id() !== null) {
+    //         $user_id = Auth::id();
+    //         $contact = Contact::where('user_id', $user_id)->first();
+    //         if (!empty($contact)) {
+    //             if ($contact->is_parent == 1) {
+    //                 $main_contact_id = $contact->contact_id;
+    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+    //             } else {
+    //                 $main_contact_id = $contact->parent_id;
+    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+    //             }
+    //         } else {
+    //             $main_contact_id = null;
+    //             $free_postal_state = false;
+    //         }
+    //     } else {
+    //         $user_id = '';
+    //         $free_postal_state = true;
+    //     }
+    //     $actual_stock = 0;
+    //     $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
+    //     $user_price_column = UserHelper::getUserPriceColumn();
+    //     foreach ($productOption->products->options as $option) {
+    //         foreach ($option->price as $price_get) {
+    //             // $price = !empty($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+    //             // if (empty($price) || $price == 0 || $price == null || $price == '' || $price == '0') {
+    //             //     $price = $price_get['sacramentoUSD'];
+    //             // } else {
+    //             //     $price = $price_get['retailUSD'];
+    //             // }
+
+    //             if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+    //                 $price = $price_get[$user_price_column];
+    //             } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+    //                 $price = $price_get['sacramentoUSD'];
+    //             } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
+    //                 $price = $price_get['retailUSD'];
+    //             }
+        
+    //         }
+    //     }
+        
+    //     if (isset($cart[$id])) {
+    //         $hash_cart = session()->get('cart_hash');
+    //         $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+    //         if ($product_in_active_cart) {
+    //             $current_quantity = $product_in_active_cart->quantity;
+    //             if ($current_quantity + $request->quantity > intval($actual_stock)) {
+    //                 $status = 'error';
+    //                 $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
+    //             } 
+    //             else {
+
+    //                 $product_in_active_cart->quantity = $current_quantity + $request->quantity;
+    //                 $product_in_active_cart->save();
+    //                 $status = 'success';
+    //                 $message = 'Product added to cart successfully';
+    //                 $cart[$id]['quantity'] += $request->quantity;
+    //             }
+    //         }
+    //     } else {
+    //         $hash_cart = $request->session()->get('cart_hash');
+    //         $cart_hash_exist = session()->has('cart_hash');
+
+
+    //         if ($cart_hash_exist == false) {
+    //             $request->session()->put('cart_hash', Str::random(10));
+    //         }
+    //         if ($request->quantity > intval($actual_stock)) {
+    //             $status = 'error';
+    //             $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
+    //         } 
+    //         else {
+    //             $cart[$id] = [
+    //                 "product_id" => $productOption->products->product_id,
+    //                 "name" => $productOption->products->name,
+    //                 "quantity" => $request->quantity,
+    //                 "price" => $price,
+    //                 "code" => $productOption->code,
+    //                 "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
+    //                 'option_id' => $productOption->option_id,
+    //                 "slug" => $productOption->products->slug,
+    //                 "cart_hash" => session()->get('cart_hash')
+    //             ];
+    //             $cart[$id]['user_id'] = $user_id;
+    //             $cart[$id]['is_active'] = 1;
+    //             $cart[$id]['qoute_id'] = $id;
+
+    //             $qoute = Cart::create($cart[$id]);
+    //             $status = 'success';
+    //             $message = 'Product added to cart successfully';
+    //         }
+    //     }
+
+    //     $request->session()->put('cart', $cart);
+    //     $cart_items = session()->get('cart');
+    //     return response()->json([
+    //         'status' => $status,
+    //         'cart_items' => $cart_items,
+    //         'cart' => $cart,
+    //         'message' => $message,
+    //         'actual_stock' => $actual_stock,
+    //         'main_contact_id' => $main_contact_id,
+    //         'free_postal_state' => $free_postal_state
+    //     ]);
+    // }
+
+
     public function addToCart(Request $request)
     {
-        
-        $id = $request->p_id;
-        $option_id = $request->option_id;
-        $status = null;
-        $message = null;
-        $price = 0;
+        // Step 1: Initialize variables and retrieve session data
+        $id = $request->p_id;  // Product ID
+        $option_id = $request->option_id;  // Product option ID
+        $user_id = Auth::id(); // Get authenticated user ID
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
+        // Step 2: Determine the main contact and check for free postal state
         $main_contact_id = null;
         $free_postal_state = false;
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-        $cart = session()->get('cart');
-        $getCompanyContact  = session()->get('contact_id');
-        $assigned_contact = UserHelper::assign_contact($getCompanyContact);
-        if (Auth::id() !== null) {
-            $user_id = Auth::id();
+    
+        if ($user_id !== null) {
             $contact = Contact::where('user_id', $user_id)->first();
-            if (!empty($contact)) {
-                if ($contact->is_parent == 1) {
-                    $main_contact_id = $contact->contact_id;
-                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-                } else {
-                    $main_contact_id = $contact->parent_id;
-                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-                }
-            } else {
-                $main_contact_id = null;
-                $free_postal_state = false;
+            if ($contact) {
+                $main_contact_id = $contact->is_parent ? $contact->contact_id : $contact->parent_id;
+                $free_postal_state = in_array($contact->state, ['California', 'CA']);
             }
-        } else {
-            $user_id = '';
-            $free_postal_state = true;
         }
-        $actual_stock = 0;
-        $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
+    
+        // Step 3: Fetch product option and stock information
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+        $actual_stock = $productOption->stockAvailable ?? 0; // Ensure stock availability
+    
+        // Step 4: Retrieve user-specific price
         $user_price_column = UserHelper::getUserPriceColumn();
+        $price = $this->getUserPrice($productOption, $user_price_column);
+    
+        // Step 5: Retrieve or initialize the cart from session
+        $cart = session()->get('cart', []);
+        
+        // Step 6: Check if the product is already in the cart for the assigned contact
+        $product_in_active_cart = Cart::where('qoute_id', $id)->where('contact_id', $assigned_contact)->first();
+    
+        if ($product_in_active_cart) {
+            return $this->updateCartItem($product_in_active_cart, $request->quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state);
+        } else {
+            return $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state);
+        }
+    }
+    
+    // Helper function to retrieve user-specific price
+    private function getUserPrice($productOption, $user_price_column)
+    {
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
-                // $price = !empty($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                // if (empty($price) || $price == 0 || $price == null || $price == '' || $price == '0') {
-                //     $price = $price_get['sacramentoUSD'];
-                // } else {
-                //     $price = $price_get['retailUSD'];
-                // }
-
                 if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
-                    $price = $price_get[$user_price_column];
-                } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
-                    $price = $price_get['sacramentoUSD'];
-                } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
-                    $price = $price_get['retailUSD'];
+                    return $price_get[$user_price_column];
                 }
-        
+                if (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+                    return $price_get['sacramentoUSD'];
+                }
+                if (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
+                    return $price_get['retailUSD'];
+                }
             }
         }
-        
-        if (isset($cart[$id])) {
-            $hash_cart = session()->get('cart_hash');
-            $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-            if (!auth()->user()) {
-                if ($product_in_active_cart) {
-                    $current_quantity = $product_in_active_cart->quantity;
-                    if ($current_quantity + $request->quantity > intval($actual_stock)) {
-                        $status = 'error';
-                        $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
-                    } 
-                    else {
-
-                        $product_in_active_cart->quantity = $current_quantity + $request->quantity;
-                        $product_in_active_cart->save();
-                        $status = 'success';
-                        $message = 'Product added to cart successfully';
-                        $cart[$id]['quantity'] += $request->quantity;
-                    }
-                }
-            } else {
-                if ($product_in_active_cart) {
-                    if ($product_in_active_cart->contact_id == $assigned_contact) {
-                        $current_quantity = $product_in_active_cart->quantity;
-                        if ($current_quantity + $request->quantity > intval($actual_stock)) {
-                            $status = 'error';
-                            $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
-                        } 
-                        else {
-                            $product_in_active_cart->quantity = $current_quantity + $request->quantity;
-                            $product_in_active_cart->save();
-                            $status = 'success';
-                            $message = 'Product added to cart successfully';
-                            $cart[$id]['quantity'] += $request->quantity;
-                        }
-                    } else {
-                        $cart[$id] = [
-                            "product_id" => $productOption->products->product_id,
-                            "name" => $productOption->products->name,
-                            "quantity" => $request->quantity,
-                            "price" => $price,
-                            "code" => $productOption->code,
-                            "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
-                            'option_id' => $productOption->option_id,
-                            "slug" => $productOption->products->slug,
-                            "contact_id" => !empty(auth()->user()) ? $assigned_contact : null,
-                            "cart_hash" => session()->get('cart_hash')
-                        ];
-                        $cart[$id]['user_id'] = $user_id;
-                        $cart[$id]['is_active'] = 1;
-                        $cart[$id]['qoute_id'] = $id;
-        
-                        $qoute = Cart::create($cart[$id]);
-                    }
-                } else {
-                    $cart[$id] = [
-                        "product_id" => $productOption->products->product_id,
-                        "name" => $productOption->products->name,
-                        "quantity" => $request->quantity,
-                        "price" => $price,
-                        "code" => $productOption->code,
-                        "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
-                        'option_id' => $productOption->option_id,
-                        "slug" => $productOption->products->slug,
-                        "contact_id" => !empty(auth()->user()) ? $assigned_contact : null,
-                        "cart_hash" => session()->get('cart_hash')
-                    ];
-                    $cart[$id]['user_id'] = $user_id;
-                    $cart[$id]['is_active'] = 1;
-                    $cart[$id]['qoute_id'] = $id;
+        return 0; // Return 0 if no price found
+    }
     
-                    $qoute = Cart::create($cart[$id]);
-                }
-                
-            }
-        } else {
-            $hash_cart = $request->session()->get('cart_hash');
-            $cart_hash_exist = session()->has('cart_hash');
-
-
-            if ($cart_hash_exist == false) {
-                $request->session()->put('cart_hash', Str::random(10));
-            }
-            if ($request->quantity > intval($actual_stock)) {
-                $status = 'error';
-                $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
-            } 
-            else {
-                $cart[$id] = [
-                    "product_id" => $productOption->products->product_id,
-                    "name" => $productOption->products->name,
-                    "quantity" => $request->quantity,
-                    "price" => $price,
-                    "code" => $productOption->code,
-                    "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
-                    'option_id' => $productOption->option_id,
-                    "slug" => $productOption->products->slug,
-                    "contact_id" => !empty(auth()->user()) ? $assigned_contact : null,
-                    "cart_hash" => session()->get('cart_hash')
-                ];
-                $cart[$id]['user_id'] = $user_id;
-                $cart[$id]['is_active'] = 1;
-                $cart[$id]['qoute_id'] = $id;
-
-                $qoute = Cart::create($cart[$id]);
-                $status = 'success';
-                $message = 'Product added to cart successfully';
-            }
+    // Helper function to update existing cart item
+    private function updateCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state)
+    {
+        $current_quantity = $product->quantity;
+    
+        if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You cannot add more than ' . intval($actual_stock) . ' items to the cart',
+                'cart_items' => $cart,
+                'cart' => $cart,
+                'actual_stock' => $actual_stock,
+                'main_contact_id' => $main_contact_id,
+                'free_postal_state' => $free_postal_state
+            ]);
         }
-
-        $request->session()->put('cart', $cart);
-        $cart_items = session()->get('cart');
+    
+        // Update quantity and save
+        $product->quantity += $requested_quantity;
+        $product->save();
+    
+        // Update the session cart
+        $cart[$product->qoute_id]['quantity'] = $product->quantity; 
+        session()->put('cart', $cart);
+    
         return response()->json([
-            'status' => $status,
-            'cart_items' => $cart_items,
+            'status' => 'success',
+            'message' => 'Product quantity updated successfully',
+            'cart_items' => $cart,
             'cart' => $cart,
-            'message' => $message,
             'actual_stock' => $actual_stock,
             'main_contact_id' => $main_contact_id,
             'free_postal_state' => $free_postal_state
         ]);
     }
+    
+    // Helper function to add a new cart item
+    private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state)
+    {
+        $cart[$request->p_id] = $this->createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $request->p_id);
+        Cart::create($cart[$request->p_id]); // Store the cart entry in the database
+        session()->put('cart', $cart); // Store the updated cart in the session
+    
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product added to cart successfully',
+            'cart_items' => $cart,
+            'cart' => $cart,
+            'actual_stock' => $productOption->stockAvailable,
+            'main_contact_id' => $main_contact_id,
+            'free_postal_state' => $free_postal_state
+        ]);
+    }
+
+    private function createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $product_id)
+    {
+        $hash_cart = $request->session()->get('cart_hash');
+        $cart_hash_exist = session()->has('cart_hash');
+
+
+        if ($cart_hash_exist == false) {
+            $request->session()->put('cart_hash', Str::random(10));
+        }
+        
+        return [
+            'qoute_id' => $product_id,
+            'product_id' => $productOption->products->product_id,
+            'name' => $productOption->products->name,
+            'option_id' => $productOption->option_id,
+            'price' => $price,
+            'quantity' => $request->quantity,
+            'contact_id' => $assigned_contact,
+            "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
+            "code" => $productOption->code,
+            "slug" => $productOption->products->slug,
+            "cart_hash" => session()->get('cart_hash'),
+            'user_id' => $user_id,
+            'is_active' =>1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+    
+
 
     public function removeProductByCategory(Request $request)
     {

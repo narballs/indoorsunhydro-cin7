@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
 use App\Helpers\UtilHelper;
+use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
 use App\Models\OrderRefund;
@@ -51,7 +52,6 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        
         
         $request->validate(
             [
@@ -112,7 +112,6 @@ class OrderController extends Controller
             $shipping_carrier_code = $request->shipping_carrier_code;
             $shipstation_shipment_value = $actual_shipping_price;
         }
-
 
         $parcel_guard = 0;
         if (floatval($actual_shipping_price) > 0) {
@@ -560,213 +559,19 @@ class OrderController extends Controller
                         if (!empty($enable_discount_setting) && strtolower($enable_discount_setting->option_value) == 'yes' && ($discount_amount > 0)) {
                             $checkout = $this->apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value , $parcel_guard);
                             if ($checkout) {
-                                session()->forget('cart');
+                                // session()->forget('cart');
+                                $this->empty_cart_for_current_order();
                                 return redirect($checkout->url);
                             }
-                            // foreach ($cart_items as $cart_item) {
-                            //     $OrderItem = new ApiOrderItem;
-                            //     $OrderItem->order_id = $order_id;
-                            //     $OrderItem->product_id = $cart_item['product_id'];
-                            //     $OrderItem->quantity =  $cart_item['quantity'];
-                            //     $OrderItem->price = $cart_item['price'];
-                            //     $OrderItem->option_id = $cart_item['option_id'];
-                            //     $OrderItem->save();
-    
-                            //     $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-                            //     $products = $stripe->products->create([
-                            //         'name' => $cart_item['name'],
-                            //     ]);
-                                
-                            //     $productPrice = $stripe->prices->create([
-                            //         'unit_amount' => $cart_item['price'] * 100,
-                            //         'currency' => 'usd',
-                            //         'product' => $products->id,
-                            //         'metadata' => [
-                            //             'quantity'=> $cart_item['quantity']
-                            //         ]
-                            //     ]);
-                            //     array_push($product_prices, $productPrice);
-                            // }
-                            // if (!empty($tax_rate) && $tax_rate > 0) {
-                            //     $formatted_tax = number_format($tax_rate, 2);
-                            //     $formatted_tax_rate = str_replace(',', '', $formatted_tax);
-                            //     $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
-                            //     $tax_value = str_replace(',', '', $formatted_tax_value);
-                            //     $products_tax= $stripe->products->create([
-                            //         'name' => 'Tax',
-                            //     ]);
-    
-                            //     $taxproductPrice = $stripe->prices->create([
-                            //         'unit_amount_decimal' => $tax_value,
-                            //         'currency' => 'usd',
-                            //         'product' => $products_tax->id
-                            //     ]);
-                            // }
-    
-                            // for ($i = 0; $i <= count($product_prices) - 1; $i++){
-                            //     $items[] = [
-                            //         'price' => $product_prices[$i]->id,
-                            //         'quantity' => $product_prices[$i]['metadata']['quantity'],
-                            //     ];  
-                            // }
-                            // if (!empty($tax_rate) && $tax_rate > 0) {
-                            //     $items[] = [
-                            //         'price' => $taxproductPrice->id,
-                            //         'quantity' => '1',
-                            //     ];
-                            // }
-    
-                           
-    
-                            // // adding shipping price to order
-                            // if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
-                            //     $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
-                            //     $shipment_value = str_replace(',', '', $shipment_price);
-                            //     $shipment_product = $stripe->products->create([
-                            //         'name' => 'Shipment',
-                            //     ]);
-                            //     $shipment_product_price = $stripe->prices->create([
-                            //         'unit_amount_decimal' => $shipment_value,
-                            //         'currency' => 'usd',
-                            //         'product' => $shipment_product->id
-                            //     ]);
-                            //     $items[] = [
-                            //         'price' => $shipment_product_price->id,
-                            //         'quantity' => '1',
-                            //     ];
-                            // }
-    
                             
-    
-                            // $line_items = [
-                            //     'line_items' => 
-                            //     [
-                            //         $items
-                            //     ]
-                            // ];
-                            // $adding_discount = $stripe->coupons->create([
-                            //     'percent_off' => $discount_variation_value,
-                            //     'duration' => 'once',
-                            //     'currency' => 'usd',
-                            // ]);
-
-                            // $checkout_session = $stripe->checkout->sessions->create([
-                            //     'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
-                            //     'cancel_url' => url('/checkout'),
-                            //     $line_items,
-                            //     'mode' => 'payment',
-                            //     'discounts' => [['coupon' => $adding_discount->id]],
-                            //     'payment_intent_data'=> [
-                            //         "metadata" => [
-                            //             "order_id"=> $order_id,
-                            //         ]
-                            //     ],
-                            //     // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
-                            //     'customer_email' => auth()->user()->email,
-                                
-                            // ]);
                         } 
                         else {
                             $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total, $actual_shipping_price , $parcel_guard );
                             if ($checkout) {
-                                session()->forget('cart');
+                                // session()->forget('cart');
+                                $this->empty_cart_for_current_order();
                                 return redirect($checkout->url);
                             }
-                            // foreach ($cart_items as $cart_item) {
-                            //     $OrderItem = new ApiOrderItem;
-                            //     $OrderItem->order_id = $order_id;
-                            //     $OrderItem->product_id = $cart_item['product_id'];
-                            //     $OrderItem->quantity =  $cart_item['quantity'];
-                            //     $OrderItem->price = $cart_item['price'];
-                            //     $OrderItem->option_id = $cart_item['option_id'];
-                            //     $OrderItem->save();
-    
-                            //     $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-                            //     $products = $stripe->products->create([
-                            //         'name' => $cart_item['name'],
-                            //     ]);
-                                
-                            //     $productPrice = $stripe->prices->create([
-                            //         'unit_amount' => $cart_item['price'] * 100,
-                            //         'currency' => 'usd',
-                            //         'product' => $products->id,
-                            //         'metadata' => [
-                            //             'quantity'=> $cart_item['quantity']
-                            //         ]
-                            //     ]);
-                            //     array_push($product_prices, $productPrice);
-                            // }
-                            // if (!empty($tax_rate) && $tax_rate > 0) {
-                            //     $formatted_tax = number_format($tax_rate, 2);
-                            //     $formatted_tax_rate = str_replace(',', '', $formatted_tax);
-                            //     $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
-                            //     $tax_value = str_replace(',', '', $formatted_tax_value);
-                            //     $products_tax= $stripe->products->create([
-                            //         'name' => 'Tax',
-                            //     ]);
-    
-                            //     $taxproductPrice = $stripe->prices->create([
-                            //         'unit_amount_decimal' => $tax_value,
-                            //         'currency' => 'usd',
-                            //         'product' => $products_tax->id
-                            //     ]);
-                            // }
-    
-                            // for ($i = 0; $i <= count($product_prices) - 1; $i++){
-                            //     $items[] = [
-                            //         'price' => $product_prices[$i]->id,
-                            //         'quantity' => $product_prices[$i]['metadata']['quantity'],
-                            //     ];  
-                            // }
-                            // if (!empty($tax_rate) && $tax_rate > 0) {
-                            //     $items[] = [
-                            //         'price' => $taxproductPrice->id,
-                            //         'quantity' => '1',
-                            //     ];
-                            // }
-    
-                           
-    
-                            // // adding shipping price to order
-                            // if (!empty($request->original_shipment_price) && $request->original_shipment_price > 0) {
-                            //     $shipment_price = number_format(($request->original_shipment_price * 100) , 2);
-                            //     $shipment_value = str_replace(',', '', $shipment_price);
-                            //     $shipment_product = $stripe->products->create([
-                            //         'name' => 'Shipment',
-                            //     ]);
-                            //     $shipment_product_price = $stripe->prices->create([
-                            //         'unit_amount_decimal' => $shipment_value,
-                            //         'currency' => 'usd',
-                            //         'product' => $shipment_product->id
-                            //     ]);
-                            //     $items[] = [
-                            //         'price' => $shipment_product_price->id,
-                            //         'quantity' => '1',
-                            //     ];
-                            // }
-    
-                            
-    
-                            // $line_items = [
-                            //     'line_items' => 
-                            //     [
-                            //         $items
-                            //     ]
-                            // ];
-
-                            // $checkout_session = $stripe->checkout->sessions->create([
-                            //     'success_url' => url('/thankyou/' . $order_id) . '?session_id={CHECKOUT_SESSION_ID}',
-                            //     'cancel_url' => url('/checkout'),
-                            //     $line_items,
-                            //     'mode' => 'payment',
-                            //     'payment_intent_data'=> [
-                            //         "metadata" => [
-                            //             "order_id"=> $order_id,
-                            //         ]
-                            //     ],
-                            //     // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
-                            //     'customer_email' => auth()->user()->email,
-                            // ]);
                         }
                         
                     } else {
@@ -1023,13 +828,35 @@ class OrderController extends Controller
                         }
                     }
 
-                    session()->forget('cart');
+                    // session()->forget('cart');
+                    $this->empty_cart_for_current_order();
                     return Redirect::route('thankyou', $order_id);
                 }
             }
         }
 
         return redirect('/checkout');
+    }
+
+    public function empty_cart_for_current_order() {
+        $user_id = Auth::id();
+        $session_contact_id = Session::get('contact_id');
+        
+        $delete_cart = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
+        if (count($delete_cart) > 0) {
+            foreach ($delete_cart as $cart) {
+                if (!empty($cart->contact_id) && $cart->contact_id == $session_contact_id) {
+                    $cart->delete();
+                } 
+            }
+        }
+
+        if ($session_contact_id) {
+            Session::forget('cart');
+            Session::forget('cart_hash');
+        }
+
+        return true;
     }
 
     // delete item from order by admin 
