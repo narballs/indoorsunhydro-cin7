@@ -20,6 +20,8 @@ class Cart extends Model
         'slug',
         'user_id',
         'is_active',
-        'cart_hash'
+        'cart_hash',
+        'contact_id',
+        'company',
     ];
 }

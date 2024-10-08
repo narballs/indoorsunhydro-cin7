@@ -104,9 +104,9 @@
                                                 $cart_total = 0;
                                                 $cart_price = 0;
                                                 ?>
-                                                @if (Session::get('cart'))
-                    
-                                                @foreach (Session::get('cart') as $pk_product_id => $cart)
+                                                {{-- @if (Session::get('cart')) --}}
+                                                @if (count($cart_items) > 0)
+                                                @foreach ($cart_items as $pk_product_id => $cart)
                                                         <?php
                                                         $total_quatity = $cart['quantity'];
                                                         $total_price = $cart['price'] * $total_quatity;
