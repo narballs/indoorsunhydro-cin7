@@ -55,7 +55,7 @@
         $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
         $cart_items = App\Models\Cart::where('contact_id', $contact_id)->where('user_id' , auth()->user()->id)->get();
     }
-    if (!empty($cart_items) || count($cart_items) > 0) {
+    if (!empty($cart_items)) {
        
         foreach ($cart_items as $cart_item) {
             $product = App\Models\Product::where('product_id' , $cart_item['product_id'])->first();
