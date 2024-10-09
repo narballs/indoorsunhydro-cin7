@@ -1305,9 +1305,9 @@ class ProductController extends Controller
         $product_in_active_cart = Cart::where('qoute_id', $id)->where('contact_id', $assigned_contact)->first();
     
         if ($product_in_active_cart) {
-            return $this->updateCartItem($product_in_active_cart, $request->quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state,$id);
+            return $this->updateCartItem($product_in_active_cart, $request->quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state);
         } else {
-            return $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state,$id);
+            return $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state);
         }
     }
     
@@ -1331,7 +1331,7 @@ class ProductController extends Controller
     }
     
     // Helper function to update existing cart item
-    private function updateCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state,$id)
+    private function updateCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state)
     {
         $current_quantity = $product->quantity;
     
@@ -1367,10 +1367,10 @@ class ProductController extends Controller
     }
     
     // Helper function to add a new cart item
-    private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state,$id)
+    private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state)
     {
-        $cart[$id] = $this->createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $id);
-        Cart::create($cart[$id]); // Store the cart entry in the database
+        $cart[$request->p_id] = $this->createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $request->p_id);
+        Cart::create($cart[$request->p_id]); // Store the cart entry in the database
         session()->put('cart', $cart); // Store the updated cart in the session
     
         return response()->json([
@@ -2500,120 +2500,13 @@ class ProductController extends Controller
     //     }
     // }
 
-    //add multi favorites to cart
-
-    // public function multi_favorites_to_cart(Request $request)
-    // {
-    //     $error = false;
-
-    //     // Step 1: Get products to hide
-    //     $products_to_hide = BuyList::with('list_products')
-    //         ->where('title', 'Products_to_hide')
-    //         ->first();
-
-    //     $products_to_hide = $products_to_hide ? $products_to_hide->list_products->pluck('option_id')->toArray() : [];
-    //     $user_id = Auth::id() ?? '';
-
-    //     // Step 2: Get main contact and free postal state
-    //     $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
-    //     $main_contact_id = null;
-    //     $free_postal_state = false;
-
-    //     if ($user_id !== null) {
-    //         $contact = Contact::where('user_id', $user_id)->first();
-    //         if ($contact) {
-    //             $main_contact_id = $contact->is_parent ? $contact->contact_id : $contact->parent_id;
-    //             $free_postal_state = in_array($contact->state, ['California', 'CA']);
-    //         }
-    //     }
-
-    //     // Step 3: Initialize the cart
-    //     $cart = session()->get('cart', []);
-
-    //     // Step 4: Loop through all favorites from the request
-    //     if (!empty($request->all_fav)) {
-    //         foreach ($request->all_fav as $multi_favorites) {
-    //             $product_id = $multi_favorites['product_id'];
-    //             $option_id = $multi_favorites['option_id'];
-
-    //             // Step 5: Retrieve the product option
-    //             $productOption = $this->getProductOption($option_id, $products_to_hide);
-    //             if (!$productOption) {
-    //                 $error = true; // Skip this product if not found
-    //                 continue;
-    //             }
-
-    //             // Step 6: Get the price for the user
-    //             $user_price_column = UserHelper::getUserPriceColumn();
-    //             $price = $this->getUserPrice($productOption, $user_price_column);
-
-    //             // Step 7: Check if the product is already in the cart
-    //             $product_in_active_cart = Cart::where('qoute_id', $product_id) // Ensure correct column name
-    //                 ->where('contact_id', $assigned_contact)
-    //                 ->first();
-
-    //             $requested_quantity = $request->quantity; // Assuming the quantity is the same for all products
-    //             $actual_stock = $productOption->stockAvailable; // Get the available stock
-
-    //             if ($product_in_active_cart) {
-    //                 // Update the existing cart item
-    //                 $response = $this->updateCartItem($product_in_active_cart, $requested_quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state,$product_id);
-    //                 if ($response->getData()->status === 'error') {
-    //                     $error = true;
-    //                 }
-    //             } else {
-    //                 // Add a new cart item
-    //                 if ($product_id && $option_id) { // Ensure product_id and option_id are not null
-    //                     $response = $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state,$product_id);
-    //                     if ($response->getData()->status === 'error') {
-    //                         $error = true;
-    //                     }
-    //                 } else {
-    //                     $error = true; // Handle the case where IDs are null
-    //                 }
-    //             }
-
-    //             $request->session()->put('cart', $cart);
-    //             $cart_items = session()->get('cart');
-    //         }
-
-    //         // Step 8: Handle errors and success response
-    //         if ($error) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Some products were not added to the cart.',
-    //                 'cart_items' => $cart,
-    //                 'main_contact_id' => $main_contact_id,
-    //                 'free_postal_state' => $free_postal_state
-    //             ]);
-    //         }
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'cart_items' => $cart_items,
-    //             'cart' => $cart,
-    //             'main_contact_id' => $main_contact_id,
-    //             'free_postal_state' => $free_postal_state
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'status' => 'error',
-    //         'message' => 'No products found to add to the cart.',
-    //     ]);
-    // }
-
-    // private function getProductOption($option_id, $products_to_hide)
-    // {
-    //     return ProductOption::where('option_id', $option_id)
-    //         ->with('products.options.price')
-    //         ->whereNotIn('option_id', $products_to_hide)
-    //         ->first();
-    // }
+    
+    
 
     public function multi_favorites_to_cart(Request $request)
     {
-        $error = false;
+        $errors = []; // Initialize an array to store errors
+        $cart = session()->get('cart', []); // Initialize the cart
 
         // Step 1: Get products to hide
         $products_to_hide = $this->getProductsToHide();
@@ -2628,32 +2521,38 @@ class ProductController extends Controller
             [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
         }
 
-        // Step 3: Initialize the cart
-        $cart = session()->get('cart', []);
-        
         // Step 4: Loop through all favorites from the request
         if (!empty($request->all_fav)) {
-            foreach ($request->all_fav as $multi_favorites) {
-                $error = $this->processFavorite($multi_favorites, $request->quantity, $products_to_hide, $assigned_contact, $cart, $main_contact_id, $free_postal_state, $error);
+            foreach ($request->all_fav as $multi_favorite) {
+                $error = $this->processFavorite($multi_favorite, $request->quantity, $products_to_hide, $assigned_contact, $cart, $main_contact_id, $free_postal_state);
+                if ($error) {
+                    $errors[] = $error; // Collect errors
+                }
             }
 
-            // Step 8: Handle errors and success response
-            if ($error) {
+            $cart_items = session()->get('cart');
+
+            // Handle errors and success response
+            if (!empty($errors)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Some products were not added to the cart.',
-                    'cart_items' => $cart,
+                    'message' => 'Some products are not available in the cart',
+                    'free_postal_state' => $free_postal_state,
                     'main_contact_id' => $main_contact_id,
-                    'free_postal_state' => $free_postal_state
+                    'cart_items' => $cart,
+                    'cart' => $cart,
                 ]);
             }
 
             return response()->json([
                 'status' => 'success',
-                'cart_items' => session()->get('cart'),
+                'cart_items' => $cart,
+                'cart' => $cart,
                 'main_contact_id' => $main_contact_id,
                 'free_postal_state' => $free_postal_state
             ]);
+
+            
         }
 
         return response()->json([
@@ -2662,6 +2561,7 @@ class ProductController extends Controller
         ]);
     }
 
+    // Helper function to get products to hide
     private function getProductsToHide()
     {
         $products_to_hide = BuyList::with('list_products')
@@ -2671,6 +2571,7 @@ class ProductController extends Controller
         return $products_to_hide ? $products_to_hide->list_products->pluck('option_id')->toArray() : [];
     }
 
+    // Helper function to get main contact and free postal state
     private function getMainContactAndState($user_id)
     {
         $contact = Contact::where('user_id', $user_id)->first();
@@ -2682,15 +2583,17 @@ class ProductController extends Controller
         return [null, false];
     }
 
-    private function processFavorite($multi_favorites, $requested_quantity, $products_to_hide, $assigned_contact, &$cart, $main_contact_id, $free_postal_state, $error)
+    // Helper function to process each favorite item
+    private function processFavorite($multi_favorite, $requested_quantity, $products_to_hide, $assigned_contact, &$cart, $main_contact_id, $free_postal_state)
     {
-        $product_id = $multi_favorites['product_id'];
-        $option_id = $multi_favorites['option_id'];
+        $product_id = $multi_favorite['product_id'];
+        $option_id = $multi_favorite['option_id'];
+        $user_id = Auth::id() ?? '';
 
         // Step 5: Retrieve the product option
         $productOption = $this->getProductOption($option_id, $products_to_hide);
         if (!$productOption) {
-            return true; // Skip this product if not found
+            return ['product_id' => $product_id, 'message' => 'Product option not found.'];
         }
 
         // Step 6: Get the price for the user
@@ -2698,7 +2601,7 @@ class ProductController extends Controller
         $price = $this->getUserPrice($productOption, $user_price_column);
 
         // Step 7: Check if the product is already in the cart
-        $product_in_active_cart = Cart::where('qoute_id', $product_id) // Ensure correct column name
+        $product_in_active_cart = Cart::where('qoute_id', $product_id)
             ->where('contact_id', $assigned_contact)
             ->first();
 
@@ -2706,26 +2609,27 @@ class ProductController extends Controller
 
         if ($product_in_active_cart) {
             // Update the existing cart item
-            $response = $this->updateCartItem($product_in_active_cart, $requested_quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state, $product_id);
-            if ($response->getData()->status === 'error') {
-                return true; // Mark error
+            $error_message = $this->updateFavouriteCartItem($product_in_active_cart, $requested_quantity, $actual_stock, $cart, $product_id);
+            if ($error_message) {
+                return ['product_id' => $product_id, 'message' => $error_message];
             }
         } else {
             // Add a new cart item
-            if ($product_id && $option_id) { // Ensure product_id and option_id are not null
-                $response = $this->addNewCartItem($cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state, $product_id);
-                if ($response->getData()->status === 'error') {
-                    return true; // Mark error
+            if ($product_id && $option_id) {
+                $error_message = $this->addFavouriteToCart($cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+                if ($error_message) {
+                    return ['product_id' => $product_id, 'message' => $error_message];
                 }
             } else {
-                return true; // Handle the case where IDs are null
+                return ['product_id' => $product_id, 'message' => 'Invalid product or option ID.'];
             }
         }
 
         session()->put('cart', $cart); // Update session cart
-        return $error; // Return current error state
+        return null; // No error
     }
 
+    // Helper function to retrieve product option
     private function getProductOption($option_id, $products_to_hide)
     {
         return ProductOption::where('option_id', $option_id)
@@ -2733,6 +2637,76 @@ class ProductController extends Controller
             ->whereNotIn('option_id', $products_to_hide)
             ->first();
     }
+    // Helper function to update existing cart item
+    private function updateFavouriteCartItem($product, $requested_quantity, $actual_stock, &$cart, $product_id)
+    {
+        if (!$product) {
+            return 'Product not found in the cart.';
+        }
+
+        $current_quantity = $product->quantity;
+
+        // Check stock availability
+        if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
+            return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+        }
+
+        // Update quantity and save
+        $product->quantity += $requested_quantity;
+        $product->save();
+
+        // Update the session cart
+        if (isset($cart[$product_id])) {
+            $cart[$product_id]['quantity'] = $product->quantity;
+        }
+
+        return null; // No error
+    }
+
+    // Helper function to add a new cart item
+    private function addFavouriteToCart(&$cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
+    {
+        // Check stock availability
+        $actual_stock = $productOption->stockAvailable;
+        if ($requested_quantity > intval($actual_stock)) {
+            return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+        }
+
+        $cart[$product_id] = $this->createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+
+        // Store the cart entry in the database
+        Cart::create($cart[$product_id]);
+
+        return null; // No error
+    }
+
+    // Helper function to create cart entry for a favorite item
+    private function createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
+    {
+        // Check if cart hash exists, if not create a new one
+        if (!session()->has('cart_hash')) {
+            session()->put('cart_hash', Str::random(10));
+        }
+
+        return [
+            'qoute_id' => $product_id,
+            'product_id' => $productOption->products->product_id,
+            'name' => $productOption->products->name,
+            'option_id' => $productOption->option_id,
+            'price' => $price,
+            'quantity' => $requested_quantity,
+            'contact_id' => $assigned_contact,
+            'image' => !empty($productOption->products->images) ? $productOption->products->images : '',
+            'code' => $productOption->code,
+            'slug' => $productOption->products->slug,
+            'cart_hash' => session()->get('cart_hash'),
+            'user_id' => $user_id,
+            'is_active' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
 
 
 
