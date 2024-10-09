@@ -704,7 +704,6 @@
                 quantity: 1
             },
             success: function(response) {
-                console.log(response);
                 if (response.status == 'error') {
                     var cart_items = response.cart_items;
                     var cart_total = 0;
