@@ -2715,7 +2715,7 @@ class ProductController extends Controller
             'code' => $productOption->code,
             'slug' => $productOption->products->slug,
             'cart_hash' => session()->get('cart_hash'),
-            'user_id' => $user_id,
+            'user_id' => !empty($user_id) ? $user_id : 0,
             'is_active' => 1,
             'created_at' => now(),
             'updated_at' => now(),
@@ -2736,125 +2736,262 @@ class ProductController extends Controller
     }
 
     //buy again items to cart and checkout
+    // old code
+    // public function buy_again_order_items(Request $request)
+    // {
+    //     if (Auth::id() !== null) {
+    //         $userId = Auth::id();
+    //         $contact = Contact::where('user_id', $userId)->first();
+    //         if (!empty($contact)) {
+    //             if ($contact->is_parent == 1) {
+    //                 $main_contact_id = $contact->contact_id;
+    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+    //             } else {
+    //                 $main_contact_id = $contact->parent_id;
+    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
+    //             }
+    //         } else {
+    //             $main_contact_id = null;
+    //             $free_postal_state = false;
+    //         }
+    //     } else {
+    //         $free_postal_state = true;
+    //     }
+    //     if (!empty($request->ordered_products)) {
+    //         foreach ($request->ordered_products as $orderProducts) {
+    //             $id = $orderProducts['product_id'];
+    //             $option_id = $orderProducts['option_id'];
+    //             $quantity = $orderProducts['quantity'];
+
+    //             $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
+    //             $cart = session()->get('cart');
+    //             if (Auth::id() !== null) {
+    //                 $user_id = Auth::id();
+    //             } else {
+    //                 $user_id = '';
+    //             }
+
+    //             $contact_id = '';
+    //             $secondary_id = '';
+
+    //             if ($user_id) {
+    //                 $contact = Contact::where('user_id', $user_id)->first();
+    //                 $contact_id = $contact->contact_id;
+    //                 $secondary_id = $contact->secondary_id;
+    //             }
+
+    //             if ($contact_id || $secondary_id) {
+    //                 $pricing = $contact->priceColumn;
+    //             }
+
+    //             $user_price_column = UserHelper::getUserPriceColumn();
+    //             foreach ($productOption->products->options as $option) {
+    //                 foreach ($option->price as $price_get) {
+    //                     // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
+    //                     // if ($price == 0) {
+    //                     //     $price = $price_get['sacramentoUSD'];
+    //                     // }
+        
+    //                     // if ($price == 0) {
+    //                     //     $price = $price_get['retailUSD'];
+    //                     // }
+
+    //                     if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+    //                         $price = $price_get[$user_price_column];
+    //                     } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+    //                         $price = $price_get['sacramentoUSD'];
+    //                     } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
+    //                         $price = $price_get['retailUSD'];
+    //                     }
+    //                 }
+    //             }
+
+    //             if (isset($cart[$id])) {
+    //                 $hash_cart = session()->get('cart_hash');
+    //                 $product_in_active_cart = Cart::where('qoute_id', $id)->first();
+    //                 if ($product_in_active_cart) {
+    //                     $current_quantity = $product_in_active_cart->quantity;
+    //                     $product_in_active_cart->quantity = $current_quantity + $quantity;
+    //                     $product_in_active_cart->save();
+    //                 }
+    //                 $cart[$id]['quantity'] += $quantity;
+    //             } else {
+
+    //                 $hash_cart = $request->session()->get('cart_hash');
+    //                 $cart_hash_exist = session()->has('cart_hash');
+
+
+    //                 if ($cart_hash_exist == false) {
+    //                     $request->session()->put('cart_hash', Str::random(10));
+    //                 }
+
+    //                 $cart[$id] = [
+    //                     "product_id" => $productOption->products->product_id,
+    //                     "name" => $productOption->products->name,
+    //                     "quantity" => $quantity,
+    //                     "price" => $price,
+    //                     "code" => $productOption->code,
+    //                     "image" => $productOption->image,
+    //                     'option_id' => $productOption->option_id,
+    //                     "slug" => $productOption->products->slug,
+    //                     "cart_hash" => session()->get('cart_hash')
+    //                 ];
+    //                 $cart[$id]['user_id'] = $user_id;
+    //                 $cart[$id]['is_active'] = 1;
+    //                 $cart[$id]['qoute_id'] = $id;
+
+    //                 $qoute = Cart::create($cart[$id]);
+    //             }
+
+    //             $request->session()->put('cart', $cart);
+    //             $cart_items = session()->get('cart');
+    //         }
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'cart_items' => $cart_items,
+    //             'cart' => $cart,
+    //             'main_contact_id' => $main_contact_id,
+    //             'free_postal_state' => $free_postal_state
+    //         ]);
+    //     }
+    // }
+
 
     public function buy_again_order_items(Request $request)
     {
-        if (Auth::id() !== null) {
-            $userId = Auth::id();
-            $contact = Contact::where('user_id', $userId)->first();
-            if (!empty($contact)) {
-                if ($contact->is_parent == 1) {
-                    $main_contact_id = $contact->contact_id;
-                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-                } else {
-                    $main_contact_id = $contact->parent_id;
-                    $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-                }
-            } else {
-                $main_contact_id = null;
-                $free_postal_state = false;
+        $user_id = Auth::id();
+        $main_contact_id = null;
+        $free_postal_state = false;
+
+        // Step 1: Determine the main contact and check for free postal state
+        if ($user_id !== null) {
+            $contact = Contact::where('user_id', $user_id)->first();
+            if ($contact) {
+                $main_contact_id = $contact->is_parent ? $contact->contact_id : $contact->parent_id;
+                $free_postal_state = in_array($contact->state, ['California', 'CA']);
             }
-        } else {
-            $free_postal_state = true;
         }
+
+        // Step 2: Loop through the ordered products and process each
         if (!empty($request->ordered_products)) {
-            foreach ($request->ordered_products as $orderProducts) {
-                $id = $orderProducts['product_id'];
-                $option_id = $orderProducts['option_id'];
-                $quantity = $orderProducts['quantity'];
+            foreach ($request->ordered_products as $orderProduct) {
+                $product_id = $orderProduct['product_id'];
+                $option_id = $orderProduct['option_id'];
+                $quantity = $orderProduct['quantity'];
 
-                $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-                $cart = session()->get('cart');
-                if (Auth::id() !== null) {
-                    $user_id = Auth::id();
-                } else {
-                    $user_id = '';
-                }
+                // Fetch the product option and pricing information
+                $productOption = ProductOption::where('option_id', $option_id)
+                                ->with('products.options.price')
+                                ->first();
+                $actual_stock = $productOption->stockAvailable ?? 0;
 
-                $contact_id = '';
-                $secondary_id = '';
-
-                if ($user_id) {
-                    $contact = Contact::where('user_id', $user_id)->first();
-                    $contact_id = $contact->contact_id;
-                    $secondary_id = $contact->secondary_id;
-                }
-
-                if ($contact_id || $secondary_id) {
-                    $pricing = $contact->priceColumn;
-                }
-
+                // Get user-specific price using the helper function
                 $user_price_column = UserHelper::getUserPriceColumn();
-                foreach ($productOption->products->options as $option) {
-                    foreach ($option->price as $price_get) {
-                        // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-                        // if ($price == 0) {
-                        //     $price = $price_get['sacramentoUSD'];
-                        // }
-        
-                        // if ($price == 0) {
-                        //     $price = $price_get['retailUSD'];
-                        // }
+                $price = $this->getUserPrice($productOption, $user_price_column);
+                
+                // Retrieve the cart from the session or initialize it
+                $cart = session()->get('cart', []);
+                $assigned_contact = UserHelper::assign_contact(session()->get('contact_id'));
 
-                        if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
-                            $price = $price_get[$user_price_column];
-                        } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
-                            $price = $price_get['sacramentoUSD'];
-                        } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
-                            $price = $price_get['retailUSD'];
-                        }
-                    }
-                }
+                // Check if the product is already in the cart
+                $product_in_active_cart = Cart::where('qoute_id', $product_id)
+                                            ->where('contact_id', $assigned_contact)
+                                            ->first();
 
-                if (isset($cart[$id])) {
-                    $hash_cart = session()->get('cart_hash');
-                    $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-                    if ($product_in_active_cart) {
-                        $current_quantity = $product_in_active_cart->quantity;
-                        $product_in_active_cart->quantity = $current_quantity + $quantity;
-                        $product_in_active_cart->save();
-                    }
-                    $cart[$id]['quantity'] += $quantity;
+                // Update the existing cart item or add a new one
+                if ($product_in_active_cart) {
+                    $response = $this->updateBuyAgainCartItem($product_in_active_cart, $quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state, $product_id);
                 } else {
-
-                    $hash_cart = $request->session()->get('cart_hash');
-                    $cart_hash_exist = session()->has('cart_hash');
-
-
-                    if ($cart_hash_exist == false) {
-                        $request->session()->put('cart_hash', Str::random(10));
-                    }
-
-                    $cart[$id] = [
-                        "product_id" => $productOption->products->product_id,
-                        "name" => $productOption->products->name,
-                        "quantity" => $quantity,
-                        "price" => $price,
-                        "code" => $productOption->code,
-                        "image" => $productOption->image,
-                        'option_id' => $productOption->option_id,
-                        "slug" => $productOption->products->slug,
-                        "cart_hash" => session()->get('cart_hash')
-                    ];
-                    $cart[$id]['user_id'] = $user_id;
-                    $cart[$id]['is_active'] = 1;
-                    $cart[$id]['qoute_id'] = $id;
-
-                    $qoute = Cart::create($cart[$id]);
+                    $response = $this->addBuyAgainToCart($cart, $productOption, $orderProduct, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state, $product_id);
                 }
 
-                $request->session()->put('cart', $cart);
-                $cart_items = session()->get('cart');
+                // Update the session cart after processing the product
+                session()->put('cart', $cart);
             }
+
+            // Step 3: Return a response with the updated cart items
             return response()->json([
                 'status' => 'success',
-                'cart_items' => $cart_items,
+                'cart_items' => session()->get('cart'),
                 'cart' => $cart,
                 'main_contact_id' => $main_contact_id,
                 'free_postal_state' => $free_postal_state
             ]);
         }
     }
+
+    // Helper function to update existing cart item
+    private function updateBuyAgainCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state, $product_id)
+    {
+        if (!$product) {
+            return 'Product not found in the cart.';
+        }
+
+        $current_quantity = $product->quantity;
+
+        // Check stock availability
+        if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
+            return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+        }
+
+        // Update quantity and save
+        $product->quantity += $requested_quantity;
+        $product->save();
+
+        // Update the session cart
+        if (isset($cart[$product_id])) {
+            $cart[$product_id]['quantity'] = $product->quantity;
+        }
+
+        return null; // No error
+    }
+
+    // Helper function to add a new cart item
+    private function addBuyAgainToCart(&$cart, $productOption, $orderProduct, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state, $product_id)
+    {
+        // Check stock availability
+        $actual_stock = $productOption->stockAvailable;
+        $requested_quantity = $orderProduct['quantity'];
+
+        if ($requested_quantity > intval($actual_stock)) {
+            return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+        }
+
+        $cart[$product_id] = $this->createCartForBuyAgain($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+
+        // Store the cart entry in the database
+        Cart::create($cart[$product_id]);
+
+        return null; // No error
+    }
+
+    // Helper function to create cart entry for a favorite item
+    private function createCartForBuyAgain($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
+    {
+        // Check if cart hash exists, if not create a new one
+        if (!session()->has('cart_hash')) {
+            session()->put('cart_hash', Str::random(10));
+        }
+
+        return [
+            'qoute_id' => $product_id,
+            'product_id' => $productOption->products->product_id,
+            'name' => $productOption->products->name,
+            'option_id' => $productOption->option_id,
+            'price' => $price,
+            'quantity' => $requested_quantity,
+            'contact_id' => $assigned_contact,
+            'image' => !empty($productOption->products->images) ? $productOption->products->images : '',
+            'code' => $productOption->code,
+            'slug' => $productOption->products->slug,
+            'cart_hash' => session()->get('cart_hash'),
+            'user_id' => !empty($user_id) ? $user_id : 0,
+            'is_active' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
 
     // request bulk quantity 
     public function bulk_products_request(Request $request) {
