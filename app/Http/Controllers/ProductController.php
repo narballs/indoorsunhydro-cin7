@@ -1417,9 +1417,24 @@ class ProductController extends Controller
 
     public function removeProductByCategory(Request $request)
     {
+        $session_contact_id = session()->get('contact_id');
         if ($request->id) {
+            if (auth()->user()) {
+                $cart = session()->get('cart');
+                if (isset($cart[$request->id])) {
+                    $qoute = Cart::where('qoute_id', $request->id)->where('contact_id', $session_contact_id)->where('user_id', auth()->user()->id)->first();
+                    if (!empty($qoute)) {
+                        $qoute->delete();
+                        unset($cart[$request->id]);
+                    } else{
+                        $qoute = Cart::where('qoute_id', $request->id)->delete();
+                        unset($cart[$request->id]);
+                    }
+                    $request->session()->put('cart', $cart);
+                    session()->flash('success', 'Product removed successfully');
+                }
+            }
             $cart = session()->get('cart');
-            //dd($request->id);
             if (isset($cart[$request->id])) {
                 $qoute = Cart::where('qoute_id', $request->id)->delete();
                 unset($cart[$request->id]);
