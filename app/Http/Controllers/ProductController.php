@@ -1406,7 +1406,7 @@ class ProductController extends Controller
             "code" => $productOption->code,
             "slug" => $productOption->products->slug,
             "cart_hash" => session()->get('cart_hash'),
-            'user_id' => $user_id,
+            'user_id' => !empty($user_id) ? $user_id : 0,
             'is_active' =>1,
             'created_at' => now(),
             'updated_at' => now(),
