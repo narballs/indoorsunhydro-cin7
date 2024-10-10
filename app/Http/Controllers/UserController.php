@@ -444,10 +444,28 @@ class UserController extends Controller
 
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
 
-                            if ($companies[0]->contact_id == null) {
-                                UserHelper::switch_company($companies[0]->secondary_id);
-                            } else {
-                                UserHelper::switch_company($companies[0]->contact_id);
+                            // if ($companies[0]->contact_id == null) {
+                            //     UserHelper::switch_company($companies[0]->secondary_id);
+                            // } else {
+                            //     UserHelper::switch_company($companies[0]->contact_id);
+                            // }
+                            if ($companies->count() == 1) {
+                                if ($companies[0]->contact_id == null) {
+                                    UserHelper::switch_company($companies[0]->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($companies[0]->contact_id);
+                                }
+                            }
+                            if ($companies->count() > 1) {
+                                foreach ($companies as $company) {
+                                    if ($company->status == 1) {
+                                        if ($company->contact_id == null) {
+                                            UserHelper::switch_company($company->secondary_id);
+                                        } else {
+                                            UserHelper::switch_company($company->contact_id);
+                                        }
+                                    }
+                                }
                             }
                             // Session::put('companies', $companies);
                             $previousUrl = session('previous_url', '/'); 
@@ -456,10 +474,28 @@ class UserController extends Controller
                         } else {
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
                             // Session::put('companies', $companies);
-                            if ($companies[0]->contact_id == null) {
-                                UserHelper::switch_company($companies[0]->secondary_id);
-                            } else {
-                                UserHelper::switch_company($companies[0]->contact_id);
+                            // if ($companies[0]->contact_id == null) {
+                            //     UserHelper::switch_company($companies[0]->secondary_id);
+                            // } else {
+                            //     UserHelper::switch_company($companies[0]->contact_id);
+                            // }
+                            if ($companies->count() == 1) {
+                                if ($companies[0]->contact_id == null) {
+                                    UserHelper::switch_company($companies[0]->secondary_id);
+                                } else {
+                                    UserHelper::switch_company($companies[0]->contact_id);
+                                }
+                            }
+                            if ($companies->count() > 1) {
+                                foreach ($companies as $company) {
+                                    if ($company->status == 1) {
+                                        if ($company->contact_id == null) {
+                                            UserHelper::switch_company($company->secondary_id);
+                                        } else {
+                                            UserHelper::switch_company($company->contact_id);
+                                        }
+                                    }
+                                }
                             }
                             return redirect('/');
                         }
