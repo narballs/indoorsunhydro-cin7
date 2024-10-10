@@ -1401,7 +1401,7 @@ class ProductController extends Controller
             'option_id' => $productOption->option_id,
             'price' => $price,
             'quantity' => $request->quantity,
-            'contact_id' => $assigned_contact,
+            'contact_id' => !empty($user_id) ? $assigned_contact : null,
             "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
             "code" => $productOption->code,
             "slug" => $productOption->products->slug,
