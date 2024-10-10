@@ -2837,12 +2837,40 @@ class UserController extends Controller
             ->where('contact_id' , $active_contact_id)
             ->orWhere('secondary_id' , $active_contact_id)
             ->first();
+
         $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
         ->where('contact_id' , $active_contact_id)
         ->get();
+
         if (count($cartItems) == 0) {
             $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+        } else {
+            $update_cart = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $active_contact_id)->get();
+
+            if (count($update_cart) > 0) {
+                foreach ($update_cart as $update_cart_item) {
+                    $check_product_in_cart = Cart::where('user_id' , $getSelectedContact->user_id)
+                    ->where('contact_id' , null)
+                    ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
+                    ->first();
+                    if (!empty($check_product_in_cart)) {
+                        if ($update_cart_item->product_id == $check_product_in_cart->product_id) {
+                            $update_cart_item->quantity = intval($update_cart_item->quantity) + intval($check_product_in_cart->quantity);
+                            $update_cart_item->save();
+
+                            $remove_duplicate_product = Cart::where('product_id' , $check_product_in_cart->product_id)
+                            ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
+                            ->delete();
+                        } else {
+                            $check_product_in_cart->contact_id = $active_contact_id;
+                            $check_product_in_cart->save();
+                        }
+                    }
+                }
+            }
+            
         }
+
         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
         $cart_data = [];
         if (count($cartItems) > 0) {
