@@ -1369,6 +1369,7 @@ class ProductController extends Controller
     // Helper function to add a new cart item
     private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state)
     {
+        
         $cart[$request->p_id] = $this->createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $request->p_id);
         Cart::create($cart[$request->p_id]); // Store the cart entry in the database
         session()->put('cart', $cart); // Store the updated cart in the session
