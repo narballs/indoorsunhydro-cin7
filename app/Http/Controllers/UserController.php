@@ -2803,131 +2803,264 @@ class UserController extends Controller
         $secondary_contact->delete();
     }
 
+    // public function switch_company(Request $request)
+    // {
+        
+    //     $user_id =  auth()->user()->id;
+    //     $contact_id = $request->companyId;
+    //     $contact = Contact::where('contact_id', $contact_id)->first();
+    //     $company_type = null;
+    //     $active_contact_id = null;
+    //     $active_company = null;
+    //     $get_company_address = null;
+    //     $productPrice = 0;
+    //     $cartItems = [];
+    //     $cart = [];
+    //     if (!empty($contact)) {
+    //         $active_contact_id = $contact->contact_id;
+    //         $active_company = $contact->company;
+    //         $company_type = 'primary';
+            
+    //     } else {
+    //         $contact = Contact::where('secondary_id', $contact_id)->first();
+    //         $active_contact_id = $contact->secondary_id;
+    //         $active_company = $contact->company;
+    //         $company_type = 'secondary';
+            
+    //     }
+    //     Session::put([
+    //         'contact_id' => $active_contact_id,
+    //         'company' => $active_company
+    //     ]);
+    //     // $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
+    //     $getSelectedContact = Contact::where('user_id' , $user_id)
+    //         ->where('contact_id' , $active_contact_id)
+    //         ->orWhere('secondary_id' , $active_contact_id)
+    //         ->first();
+
+    //     $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
+    //     ->where('contact_id' , $active_contact_id)
+    //     ->get();
+
+    //     if (count($cartItems) == 0) {
+    //         $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+    //     } else {
+    //         $update_cart = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $active_contact_id)->get();
+
+    //         if (count($update_cart) > 0) {
+    //             foreach ($update_cart as $update_cart_item) {
+    //                 $check_product_in_cart = Cart::where('user_id' , $getSelectedContact->user_id)
+    //                 ->where('contact_id' , null)
+    //                 ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
+    //                 ->first();
+    //                 if (!empty($check_product_in_cart)) {
+    //                     if ($update_cart_item->product_id == $check_product_in_cart->product_id && $update_cart_item->option_id == $check_product_in_cart->option_id) {
+    //                         $update_cart_item->quantity = intval($update_cart_item->quantity) + intval($check_product_in_cart->quantity);
+    //                         $check_product_in_cart->contact_id = $active_contact_id;
+    //                         $update_cart_item->save();
+
+    //                         $remove_duplicate_product = Cart::where('product_id' , $check_product_in_cart->product_id)
+    //                         ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
+    //                         ->delete();
+    //                     } else {
+    //                         $check_product_in_cart->contact_id = $active_contact_id;
+    //                         $check_product_in_cart->save();
+    //                     }
+    //                 } else {
+    //                     // dd($active_contact_id);
+    //                     $check_product_in_cart_with_contact = Cart::where('user_id' , $getSelectedContact->user_id)
+    //                     ->where('contact_id' , $active_contact_id)
+    //                     ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
+    //                     ->first();
+    //                     if (!empty($check_product_in_cart_with_contact)) {
+    //                         if ($update_cart_item->product_id == $check_product_in_cart_with_contact->product_id && $update_cart_item->option_id == $check_product_in_cart_with_contact->option_id) {
+    //                             $update_cart_item->quantity = intval($update_cart_item->quantity) + intval($check_product_in_cart_with_contact->quantity);
+    //                             $update_cart_item->save();
+
+    //                             $remove_duplicate_product = Cart::where('product_id' , $check_product_in_cart_with_contact->product_id)
+    //                             ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
+    //                             ->delete();
+    //                         } 
+    //                         else {
+    //                             $check_product_in_cart_with_contact->contact_id = $active_contact_id;
+    //                             $check_product_in_cart_with_contact->save();
+    //                         }
+    //                     } else {
+    //                         $update_cart_item->contact_id = $active_contact_id;
+    //                         $update_cart_item->save();
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $active_contact_id)->get();
+            
+    //     }
+
+    //     $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+    //     $cart_data = [];
+    //     if (count($cartItems) > 0) {
+    //         Session::forget('cart');
+    //         foreach ($cartItems as $cartItem){
+    //             $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
+    //             $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
+    //             if ($productPrice == 0) { 
+    //                 $productPrice = $productPricing['sacramentoUSD'];
+    //             }
+                
+    //             if ($productPrice == 0) { 
+    //                 $productPrice = $productPricing['retailUSD'];
+    //             }
+    //             $cart = Cart::where('user_id' , $user_id)
+    //             ->where('product_id' , $cartItem['product_id'])
+    //             ->first();
+    //             if (!empty($cart)) {
+    //                 if (!empty($cart->contact_id)){
+    //                     $cart->price = $productPrice;
+    //                     $cart->save();
+    //                 } else {
+    //                     $cart->price = $productPrice;
+    //                     $cart->contact_id = $active_contact_id;
+    //                     $cart->save();
+    //                 }
+    //             } 
+    //             $cart_data[$cart['qoute_id']] = [
+    //                 "product_id" => $cartItem['product_id'],
+    //                 "name" => $cartItem['name'],
+    //                 "quantity" => $cartItem['quantity'],
+    //                 "price" => $cart['price'],
+    //                 "code" => $cartItem['code'],
+    //                 "image" => $cartItem['image'],
+    //                 'option_id' => $cartItem['option_id'],
+    //                 "slug" => $cartItem['slug'],
+    //             ];
+    //         }
+    //     }
+
+    //     Session::put('cart', $cart_data);
+    //     if ($company_type == 'primary') {
+    //         $get_company_address = Contact::where('contact_id', $active_contact_id)->first();
+    //     } 
+
+    //     if ($company_type == 'secondary') {
+    //         $secondary_contact_user = Contact::where('secondary_id', $active_contact_id)->first();
+    //         $get_company_address = Contact::where('contact_id', $secondary_contact_user->parent_id)->where('is_parent' , 1)->first();
+
+    //     }
+    //     return response()->json([
+    //         'status' => '204',
+    //         'message' => 'Company Switch Successfully !',
+    //         'success' => true,
+    //         'update_address' => $get_company_address
+    //     ]);
+    // }
+
+
     public function switch_company(Request $request)
     {
-        
-        $user_id =  auth()->user()->id;
+        $user_id = auth()->user()->id;
         $contact_id = $request->companyId;
+
+        // Fetch the primary contact by contact_id
         $contact = Contact::where('contact_id', $contact_id)->first();
         $company_type = null;
         $active_contact_id = null;
         $active_company = null;
         $get_company_address = null;
-        $productPrice = 0;
         $cartItems = [];
-        $cart = [];
+        $cart_data = [];
+
+        // Determine active contact (primary or secondary)
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
             $active_company = $contact->company;
             $company_type = 'primary';
-            
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
             $active_company = $contact->company;
             $company_type = 'secondary';
-            
         }
+
+        // Store company details in session
         Session::put([
             'contact_id' => $active_contact_id,
-            'company' => $active_company
+            'company' => $active_company,
         ]);
-        // $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
-        $getSelectedContact = Contact::where('user_id' , $user_id)
-            ->where('contact_id' , $active_contact_id)
-            ->orWhere('secondary_id' , $active_contact_id)
+
+        // Fetch the selected contact for the user
+        $getSelectedContact = Contact::where('user_id', $user_id)
+            ->where(function ($query) use ($active_contact_id) {
+                $query->where('contact_id', $active_contact_id)
+                    ->orWhere('secondary_id', $active_contact_id);
+            })
             ->first();
 
-        $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
-        ->where('contact_id' , $active_contact_id)
-        ->get();
+        // Retrieve cart items, including those with null contact_id
+        $cartItems = Cart::where('user_id', $getSelectedContact->user_id)
+            ->where(function ($query) use ($active_contact_id) {
+                $query->where('contact_id', $active_contact_id)
+                    ->orWhereNull('contact_id');
+            })
+            ->get();
 
-        if (count($cartItems) == 0) {
-            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
-        } else {
-            $update_cart = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $active_contact_id)->get();
+        // Group the cart items by product and option_id for merging quantities
+        $cartItemsGrouped = $cartItems->groupBy(function ($item) {
+            return $item->product_id . '-' . $item->option_id;
+        });
 
-            if (count($update_cart) > 0) {
-                foreach ($update_cart as $update_cart_item) {
-                    $check_product_in_cart = Cart::where('user_id' , $getSelectedContact->user_id)
-                    ->where('contact_id' , null)
-                    ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
-                    ->first();
-                    if (!empty($check_product_in_cart)) {
-                        if ($update_cart_item->product_id == $check_product_in_cart->product_id) {
-                            $update_cart_item->quantity = intval($update_cart_item->quantity) + intval($check_product_in_cart->quantity);
-                            $update_cart_item->save();
+        $getPriceColumn = UserHelper::getUserPriceColumn(false, $getSelectedContact->user_id);
 
-                            $remove_duplicate_product = Cart::where('product_id' , $check_product_in_cart->product_id)
-                            ->where('cart_hash' ,'!=', $update_cart_item->cart_hash)
-                            ->delete();
-                        } else {
-                            $check_product_in_cart->contact_id = $active_contact_id;
-                            $check_product_in_cart->save();
-                        }
-                    }
-                }
-            }
+        // Process the cart items
+        foreach ($cartItemsGrouped as $groupKey => $groupItems) {
+            $cartItem = $groupItems->first();
             
+            // Fetch the product pricing
+            $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
+            $productPrice = $productPricing->$getPriceColumn ?? $productPricing['sacramentoUSD'] ?? $productPricing['retailUSD'] ?? 0;
+
+            // Merge the quantities of grouped items
+            $totalQuantity = $groupItems->sum('quantity');
+
+            // Update or create cart item with the current active contact_id and price
+            Cart::updateOrCreate(
+                ['user_id' => $user_id, 'product_id' => $cartItem['product_id'], 'option_id' => $cartItem['option_id']],
+                ['contact_id' => $active_contact_id, 'quantity' => $totalQuantity, 'price' => $productPrice]
+            );
+
+            // Store updated cart data for session
+            $cart_data[$cartItem['qoute_id']] = [
+                "product_id" => $cartItem['product_id'],
+                "name" => $cartItem['name'],
+                "quantity" => $totalQuantity,
+                "price" => $productPrice,
+                "code" => $cartItem['code'],
+                "image" => $cartItem['image'],
+                'option_id' => $cartItem['option_id'],
+                "slug" => $cartItem['slug'],
+            ];
         }
 
-        $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-        $cart_data = [];
-        if (count($cartItems) > 0) {
-            Session::forget('cart');
-            foreach ($cartItems as $cartItem){
-                $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-                $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
-                if ($productPrice == 0) { 
-                    $productPrice = $productPricing['sacramentoUSD'];
-                }
-                
-                if ($productPrice == 0) { 
-                    $productPrice = $productPricing['retailUSD'];
-                }
-                $cart = Cart::where('user_id' , $user_id)
-                ->where('product_id' , $cartItem['product_id'])
-                ->first();
-                if (!empty($cart)) {
-                    if (!empty($cart->contact_id)){
-                        $cart->price = $productPrice;
-                        $cart->save();
-                    } else {
-                        $cart->price = $productPrice;
-                        $cart->contact_id = $active_contact_id;
-                        $cart->save();
-                    }
-                } 
-                $cart_data[$cart['qoute_id']] = [
-                    "product_id" => $cartItem['product_id'],
-                    "name" => $cartItem['name'],
-                    "quantity" => $cartItem['quantity'],
-                    "price" => $cart['price'],
-                    "code" => $cartItem['code'],
-                    "image" => $cartItem['image'],
-                    'option_id' => $cartItem['option_id'],
-                    "slug" => $cartItem['slug'],
-                ];
-            }
-        }
-
+        // Store updated cart in session
         Session::put('cart', $cart_data);
+
+        // Get company address based on primary or secondary contact
         if ($company_type == 'primary') {
             $get_company_address = Contact::where('contact_id', $active_contact_id)->first();
-        } 
-
-        if ($company_type == 'secondary') {
+        } elseif ($company_type == 'secondary') {
             $secondary_contact_user = Contact::where('secondary_id', $active_contact_id)->first();
-            $get_company_address = Contact::where('contact_id', $secondary_contact_user->parent_id)->where('is_parent' , 1)->first();
-
+            $get_company_address = Contact::where('contact_id', $secondary_contact_user->parent_id)->where('is_parent', 1)->first();
         }
+
         return response()->json([
             'status' => '204',
-            'message' => 'Company Switch Successfully !',
+            'message' => 'Company Switch Successfully!',
             'success' => true,
-            'update_address' => $get_company_address
+            'update_address' => $get_company_address,
         ]);
     }
+
+
 
     public function switch_company_select(Request $request)
     {

@@ -98,15 +98,15 @@ class UserHelper
                 }
 
                 if ($companies_count->count() > 1) {
-                    $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
+                    $contact = Contact::where('user_id', auth()->user()->id)->where('status', '!=', 0)->first();
                     if (!empty($contact)) {
-                        $active_contact_id = $contact->contact_id;
+                        $active_contact_id = null;
                         $active_company = null;
                     } 
                     else {
-                        $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+                        $contact = Contact::where('user_id', auth()->user()->id)->where('status', '!=', 0)->first();
                         if (!empty($contact)) {
-                            $active_contact_id = $contact->secondary_id;
+                            $active_contact_id = null;
                             $active_company = null;
                         }
                     }
@@ -480,10 +480,16 @@ class UserHelper
             
         }
         elseif (empty($company) || (!$company) && (!empty($user_id))) {
-            // $cart_items = Cart::where('user_id' , $user_id)->where('contact_id' , $contact_id)->get();
-            $cart_items = $request->session()->get('cart');
+            $cart_items = Cart::where('user_id' , $user_id)->get();
+            // $cart_items = $request->session()->get('cart');
         } else {
-            $getSelectedContact = Contact::where('company' , $company)->where('user_id' , $user_id)->first();
+            // $getSelectedContact = Contact::where('company' , $company)
+            // ->where('user_id' , $user_id)
+            // ->first();
+            $getSelectedContact = Contact::where('contact_id' , $contact_id)
+            ->orWhere('secondary_id' , $contact_id)
+            ->where('user_id' , $user_id)
+            ->first();
             $productPrice = 0;
             $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $contact_id)->get();
             $cart_items = [];
