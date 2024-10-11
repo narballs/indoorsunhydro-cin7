@@ -463,7 +463,8 @@ class UtilHelper
 
 
     public static function cart_detail ($total_quantity , $grand_total) {
-        $contact_id = Session::get('contact_id');
+        $company = session()->get('company');
+        $contact_id = session()->get('contact_id');
         $total = 0;
         $grand_total = 0;
         if (!auth()->user()) {
@@ -477,15 +478,29 @@ class UtilHelper
                 }
             }
         } else {
-            $cart_items = Cart::where('contact_id', $contact_id)
-            ->where('user_id' , auth()->user()->id)
-            ->get();
-            if (count($cart_items) > 0) {
-                foreach ($cart_items as $cart) {
-                    $total_q[] = $cart->quantity;
-                    $total_quantity = array_sum($total_q);
-                    $total_price[] = $cart->price * $cart->quantity;
-                    $grand_total = array_sum($total_price);
+            if (empty($company) || (!$company) && (!empty(!auth()->user()))) {
+                $cart_items = Cart::where('user_id' , auth()->user()->id)
+                ->get();
+                if (count($cart_items) > 0) {
+                    foreach ($cart_items as $cart) {
+                        $total_q[] = $cart->quantity;
+                        $total_quantity = array_sum($total_q);
+                        $total_price[] = $cart->price * $cart->quantity;
+                        $grand_total = array_sum($total_price);
+                    }
+                }
+            }
+            else {
+                $cart_items = Cart::where('contact_id', $contact_id)
+                ->where('user_id' , auth()->user()->id)
+                ->get();
+                if (count($cart_items) > 0) {
+                    foreach ($cart_items as $cart) {
+                        $total_q[] = $cart->quantity;
+                        $total_quantity = array_sum($total_q);
+                        $total_price[] = $cart->price * $cart->quantity;
+                        $grand_total = array_sum($total_price);
+                    }
                 }
             }
         }
