@@ -230,6 +230,10 @@ class UserHelper
 
     public static function assign_contact($contact_id)
     {
+        if (empty($contact_id)) {
+            return null;
+        }
+        
         $find_contact = Contact::where('contact_id', $contact_id)
                                 ->orWhere('secondary_id', $contact_id)
                                 ->first();
