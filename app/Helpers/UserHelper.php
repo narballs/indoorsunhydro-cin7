@@ -478,9 +478,10 @@ class UserHelper
         if (!$user_id) {
             $cart_items = $request->session()->get('cart');
             
-        } elseif (empty($company) || (!$company) && (!empty($user_id))) {
-            $cart_items = Cart::where('user_id' , $user_id)->where('contact_id' , $contact_id)->get();
-            // $cart_items = $request->session()->get('cart');
+        }
+        elseif (empty($company) || (!$company) && (!empty($user_id))) {
+            // $cart_items = Cart::where('user_id' , $user_id)->where('contact_id' , $contact_id)->get();
+            $cart_items = $request->session()->get('cart');
         } else {
             $getSelectedContact = Contact::where('company' , $company)->where('user_id' , $user_id)->first();
             $productPrice = 0;
