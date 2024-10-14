@@ -796,7 +796,11 @@ class CheckoutController extends Controller
                 'apiOrderItem.product.options',
                 'texClasses',
                 'discount',
-            )->first();
+            )
+            ->whereHas('apiOrderItem', function ($query) use ($id) {
+                $query->where('order_id', $id);
+            })
+            ->first();
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $order_contact_query = Contact::whereIn('id', $all_ids)->first();
