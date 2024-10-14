@@ -797,9 +797,6 @@ class CheckoutController extends Controller
                 'texClasses',
                 'discount',
             )
-            ->whereHas('apiOrderItem', function ($query) use ($id) {
-                $query->where('order_id', $id);
-            })
             ->first();
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
@@ -818,7 +815,7 @@ class CheckoutController extends Controller
          
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
-        $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
+        $orderitems = ApiOrderItem::where('order_id', $id)->with('product','product_option')->get();
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
         
