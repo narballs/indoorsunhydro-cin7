@@ -442,6 +442,7 @@ Route::delete('secondary/user/delete', [UserController::class, 'delete_secondary
 Route::post('/reset-password', [UserController::class, 'reset_password'])->name('reset_password');
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/google-reviews', [HomeController::class, 'fetchReviews'])->name('fetchReviews');
 Route::get('/customer/invitation/{hash}', [ContactController::class, 'customer_invitation']);
 Route::group(['middleware' => ['auth']], function () {
 });

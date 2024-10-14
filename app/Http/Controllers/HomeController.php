@@ -118,5 +118,23 @@ class HomeController extends Controller
         return redirect()->back()->with('success' , 'You have been subscribed to our newsletter');
     }
 
+    public function fetchReviews()
+    {
+        $apiKey = config('services.google_places.api_key'); // Store the API key in the config file
+        $placeId = config('services.google_places.place_id'); // Store the API key in the config file
+        
+        $client = new \GuzzleHttp\Client();
+        $url = "https://maps.googleapis.com/maps/api/place/details/json?place_id={$placeId}&fields=reviews&key={$apiKey}";
+
+        $response = $client->request('GET', $url);
+        $body = json_decode($response->getBody(), true);
+        if (isset($body['result']['reviews'])) {
+            $reviews = $body['result']['reviews'];
+            return view('google_reviews', compact('reviews')); // Pass reviews to the view
+        } else {
+            return response()->json(['message' => 'No reviews found'], 404);
+        }
+    }
+
     
 }
