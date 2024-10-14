@@ -316,7 +316,7 @@
                                     <thead>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                                Delievery Option
+                                                Delivery Option
                                             </td>
                                         </tr>
                                     </thead>
