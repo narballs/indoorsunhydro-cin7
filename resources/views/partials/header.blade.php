@@ -380,23 +380,23 @@
             opacity: 0.1;  /* Adjust the opacity to control the intensity of the green overlay */
         }
         .floating-button {
-        position: fixed;
-        bottom: 65px;
-        right: 40px;
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        border-color: #7BC533;
-        background-color: #7BC533;
-        color: white;
-        border: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        z-index: 1000;
-        overflow: hidden; /* Ensure content fits within circle */
+            position: fixed;
+            bottom: 65px;
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border-color: #7BC533;
+            background-color: #7BC533;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 1000;
+            overflow: hidden; /* Ensure content fits within circle */
         }
         
         .average-rating {
@@ -413,13 +413,17 @@
         }
 
         .floating-button:hover {
-            background-color: #6aa62b; /* Darker shade on hover */
+            background-color: #7BC533; /* Darker shade on hover */
             transform: scale(1.05);
         }
 
         .floating-button:focus {
             outline: none;
-            background-color: #6aa62b; /* Darker shade on focus */
+            background-color: #7BC533; /* Darker shade on focus */
+        }
+        .floating-button:active {
+            outline: none;
+            background-color: #7BC533; /* Darker shade on focus */
         }
         #averageRatingStars {
             font-size: 1rem;
