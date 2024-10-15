@@ -260,7 +260,7 @@ class HomeController extends Controller
     private function calculateAverageRating($reviews)
     {
         if ($reviews->isEmpty()) {
-            return 'No reviews yet'; // Return a message if there are no reviews
+            return 'No Reviews'; // Return a message if there are no reviews
         }
         
         $totalRating = $reviews->sum('rating'); // Sum all the ratings
