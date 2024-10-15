@@ -97,7 +97,7 @@
 </script>
 
 
-<script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
+{{-- <script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
 <script>
     window.renderBadge = function() {
         var merchantId = @json(env('GOOGLE_MERCHANT_CENTER_ID'));
@@ -107,7 +107,7 @@
             window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": merchantId});
         });
     }
-</script>
+</script> --}}
 <script>
     function adding_quantity(product_id , option_id) {
         // updateBodyClickEventStatus(false);
