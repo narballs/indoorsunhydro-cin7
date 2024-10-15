@@ -443,6 +443,7 @@ Route::post('/reset-password', [UserController::class, 'reset_password'])->name(
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/google-reviews', [HomeController::class, 'fetchReviews'])->name('fetchReviews');
+Route::get('/get_google_reviews', [HomeController::class, 'get_google_reviews'])->name('get_google_reviews');
 Route::get('/customer/invitation/{hash}', [ContactController::class, 'customer_invitation']);
 Route::group(['middleware' => ['auth']], function () {
 });

@@ -16,6 +16,9 @@ use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use App\Models\GoogleReview;
+
 
 
 class HomeController extends Controller
@@ -92,7 +95,9 @@ class HomeController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
-        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide'));
+        $reviews = GoogleReview::orderBy('rating', 'DESC')->where('rating','!=','null')->where('rating', '>', 4)->get();
+        $averageRating = $this->calculateAverageRating($reviews);
+        return view('index', compact('categories','cart_items','averageRating', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide'));
     }
 
     public function show_page($slug) {
@@ -118,22 +123,150 @@ class HomeController extends Controller
         return redirect()->back()->with('success' , 'You have been subscribed to our newsletter');
     }
 
-    public function fetchReviews()
+    // public function fetchReviews()
+    // {
+        
+    //     $apiKey = config('services.google_places.api_key'); // Store the API key in the config file
+    //     $placeId = config('services.google_places.place_id'); // Store the place ID in the config file
+
+    //     $url = "https://maps.googleapis.com/maps/api/place/details/json?place_id={$placeId}&fields=reviews&key={$apiKey}";
+    //     $response = Http::get($url);
+    //     $body = $response->json();
+    //     if ($response->successful()) {
+    //         $body = $response->json();
+        
+    //         // Check if reviews exist in the response
+    //         if (isset($body['result']['reviews']) && !empty($body['result']['reviews'])) {
+    //             $reviews = $body['result']['reviews'];
+    //             if (!empty($reviews)) {
+    //                 foreach ($reviews as $review) {
+    //                     // Generate a unique identifier using author's name and review time
+    //                     $reviewId = md5($review['author_name'] . $review['time']); // Use MD5 or another hashing function
+            
+    //                     // Update or create the review in the database
+    //                     GoogleReview::updateOrCreate(
+    //                         [
+    //                             'google_review_id' => $reviewId, // Use generated ID as unique identifier
+    //                         ],
+    //                         [
+    //                             'author_name' => $review['author_name'],
+    //                             'author_url' => $review['author_url'] ?? null,
+    //                             'language' => $review['language'] ?? null,
+    //                             'profile_photo_url' => $review['profile_photo_url'] ?? null,
+    //                             'rating' => $review['rating'],
+    //                             'relative_time_description' => $review['relative_time_description'] ?? null,
+    //                             'text' => $review['text'],
+    //                             'review_time' => \Carbon\Carbon::createFromTimestamp($review['time']),
+    //                             'place_id' => $placeId,
+    //                             'translated' => false, // Update this based on your translation logic
+    //                         ]
+    //                     );
+    //                 }
+            
+    //                 // Return the reviews to the view
+    //                 return view('google_reviews', compact('reviews')); // Pass reviews to the view
+    //             } else {
+    //                 // If no reviews found
+    //                 return response()->json(['message' => 'No reviews found'], 404);
+    //             }
+    //         }
+        
+    //         // If no reviews found
+    //         return response()->json(['message' => 'No reviews found'], 404);
+        
+    //     } else {
+    //         // Return error status and message if the API request was not successful
+    //         return response()->json([
+    //             'status' => $response->status(),
+    //             'message' => 'Failed to retrieve reviews',
+    //         ], $response->status());
+    //     }
+    // }
+
+
+    public function fetchReviews($nextPageToken = null)
     {
         $apiKey = config('services.google_places.api_key'); // Store the API key in the config file
-        $placeId = config('services.google_places.place_id'); // Store the API key in the config file
-        
-        $client = new \GuzzleHttp\Client();
-        $url = "https://maps.googleapis.com/maps/api/place/details/json?place_id={$placeId}&fields=reviews&key={$apiKey}";
+        $placeId = config('services.google_places.place_id'); // Store the place ID in the config file
 
-        $response = $client->request('GET', $url);
-        $body = json_decode($response->getBody(), true);
-        if (isset($body['result']['reviews'])) {
-            $reviews = $body['result']['reviews'];
-            return view('google_reviews', compact('reviews')); // Pass reviews to the view
-        } else {
-            return response()->json(['message' => 'No reviews found'], 404);
+        // Base URL with required parameters
+        $url = "https://maps.googleapis.com/maps/api/place/details/json?place_id={$placeId}&fields=reviews&key={$apiKey}";
+        if ($nextPageToken) {
+            $url .= "&pagetoken={$nextPageToken}";
         }
+
+        // Send the request
+        $response = Http::get($url);
+        dd($response);
+        $body = $response->json();
+        // Check for a successful response and the presence of reviews
+        if ($response->successful() && isset($body['result']['reviews'])) {
+            $reviews = $body['result']['reviews'];
+
+            // Check if reviews are present
+            if (!empty($reviews)) {
+                // Loop through the reviews and update or create in the database
+                foreach ($reviews as $review) {
+                    // Generate a unique identifier using author's name and review time
+                    $reviewId = md5($review['author_name'] . $review['time']); // Use MD5 or another hashing function
+
+                    // Update or create the review in the database
+                    GoogleReview::updateOrCreate(
+                        [
+                            'google_review_id' => $reviewId, // Use generated ID as unique identifier
+                        ],
+                        [
+                            'author_name' => $review['author_name'],
+                            'author_url' => $review['author_url'] ?? null,
+                            'language' => $review['language'] ?? null,
+                            'profile_photo_url' => $review['profile_photo_url'] ?? null,
+                            'rating' => $review['rating'],
+                            'relative_time_description' => $review['relative_time_description'] ?? null,
+                            'text' => $review['text'],
+                            'review_time' => \Carbon\Carbon::createFromTimestamp($review['time']),
+                            'place_id' => $placeId,
+                            'translated' => false, // Update this based on your translation logic
+                        ]
+                    );
+                }
+
+                // Check if there's a next_page_token for more reviews
+                if (isset($body['next_page_token'])) {
+                    // Google API requires a short delay (2-3 seconds) before calling the next page
+                    sleep(2); // Delay for API token processing
+                    return $this->fetchReviews($body['next_page_token']); // Recursively fetch more reviews
+                }
+
+                // Return success message after fetching all pages
+                return response()->json(['message' => 'All reviews fetched and saved successfully'], 200);
+            } else {
+                // No reviews found
+                return response()->json(['message' => 'No reviews found'], 404);
+            }
+        }
+
+        // Handle cases where no reviews or error in the request
+        return response()->json([
+            'status' => $response->status(),
+            'message' => $response->successful() ? 'No reviews found' : 'Failed to retrieve reviews',
+        ], $response->status());
+    }
+
+    public function get_google_reviews()
+    {
+        $reviews = GoogleReview::orderBy('rating', 'DESC')->where('rating','!=','null')->where('rating', '>', 4)->get();
+        return response()->json($reviews);
+    }
+
+    private function calculateAverageRating($reviews)
+    {
+        if ($reviews->isEmpty()) {
+            return 'No reviews yet'; // Return a message if there are no reviews
+        }
+        
+        $totalRating = $reviews->sum('rating'); // Sum all the ratings
+        $total = round($totalRating / $reviews->count(), 1); // Calculate and return the average, rounded to one decimal place
+        return number_format($total, 1);
     }
 
     
