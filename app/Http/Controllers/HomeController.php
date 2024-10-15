@@ -197,7 +197,6 @@ class HomeController extends Controller
 
         // Send the request
         $response = Http::get($url);
-        dd($response);
         $body = $response->json();
         // Check for a successful response and the presence of reviews
         if ($response->successful() && isset($body['result']['reviews'])) {
