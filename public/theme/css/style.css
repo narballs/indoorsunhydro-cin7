@@ -5015,7 +5015,7 @@ select.list-dt:focus {
         scrollbar-width: none;  /* Firefox */
     }
     .header-row-mbl-my-account {
-        font-size: 12px !important;
+        font-size: 14px !important;
         line-height: 20px !important;
     }
     .order_place_my_account {

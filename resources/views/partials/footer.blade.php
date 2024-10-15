@@ -1416,3 +1416,144 @@
 
 </script>
 
+<!-- Floating Button -->
+@php
+function getStars($averageRating) {
+    $stars = '';
+    for ($i = 1; $i <= 5; $i++) {
+        if ($i <= $averageRating) {
+            $stars .= '<span class="text-warning">&#9733;</span>'; // Full star
+        } else {
+            $stars .= '<span class="text-muted">&#9734;</span>'; // Empty star
+        }
+    }
+    return $stars;
+}
+@endphp
+
+<!-- Floating Button -->
+<button class="floating-button btn btn-primary position-fixed" data-bs-toggle="modal" data-bs-target="#reviewsModal" id="floatingButton">
+    <div class="rating-container">
+        <span id="default_average">{{ $averageRating }}</span> <!-- Display average rating -->
+        <span id="averageRatingStars">{!! getStars($averageRating) !!}</span> <!-- Display star rating -->
+    </div>
+</button>
+
+<!-- Reviews Modal -->
+<div class="modal fade" id="reviewsModal" tabindex="-1" aria-labelledby="reviewsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewsModalLabel">Customer Reviews</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 400px; overflow-y: scroll;">
+                <ul class="list-group" id="reviewsList">
+                    <!-- Reviews will be dynamically inserted here -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to load reviews into the modal
+    function loadReviews() {
+        const reviewsList = document.getElementById('reviewsList');
+        reviewsList.innerHTML = ''; // Clear existing reviews
+
+        // AJAX request to fetch reviews from the Laravel backend
+        $.ajax({
+            url: '{{ route('get_google_reviews') }}', // Adjust the route to your setup
+            method: 'GET',
+            success: function(reviews) {
+                // Check if reviews are returned
+                if (reviews.length === 0) {
+                    reviewsList.innerHTML = '<li class="list-group-item">No reviews found.</li>';
+                    updateFloatingButton([]); // Update button with no reviews
+                } else {
+                    reviews.forEach(review => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex align-items-start';
+
+                        // Create avatar image
+                        const avatar = document.createElement('img');
+                        avatar.src = review.profile_photo_url || 'default-avatar.png'; // Fallback to a default avatar
+                        avatar.alt = review.author_name || 'Avatar';
+                        avatar.className = 'rounded-circle me-2';
+                        avatar.style.width = '50px'; // Adjust size as necessary
+                        avatar.style.height = '50px'; // Adjust size as necessary
+
+                        // Create review content
+                        const contentDiv = document.createElement('div');
+                        contentDiv.className = 'flex-grow-1';
+                        
+                        // Author name
+                        const authorName = document.createElement('strong');
+                        authorName.textContent = review.author_name;
+                        
+                        // Rating
+                        const ratingStars = document.createElement('div');
+                        ratingStars.innerHTML = getStars(review.rating); // Generate stars based on rating
+                        
+                        // Review text
+                        const reviewText = document.createElement('p');
+                        reviewText.textContent = review.text;
+
+                        // Append all elements to the content div
+                        contentDiv.appendChild(authorName);
+                        contentDiv.appendChild(ratingStars);
+                        contentDiv.appendChild(reviewText);
+
+                        // Append avatar and content div to list item
+                        li.appendChild(avatar);
+                        li.appendChild(contentDiv);
+                        
+                        reviewsList.appendChild(li);
+                    });
+                    updateFloatingButton(reviews); // Update the floating button with average rating
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching reviews:', error);
+                reviewsList.innerHTML = '<li class="list-group-item">Error fetching reviews. Please try again later.</li>';
+                updateFloatingButton([]); // Update button with no reviews
+            }
+        });
+    }
+
+    // Function to generate star rating HTML
+    function getStars(rating) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            stars += (i <= rating) ? '<span class="text-warning star">&#9733;</span>' : '<span class="text-muted star">&#9734;</span>'; // Full and empty stars
+        }
+        return stars;
+    }
+
+    // Function to calculate average rating
+    function calculateAverageRating(reviews) {
+        if (reviews.length === 0) return 0; // Handle case with no reviews
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        return (totalRating / reviews.length).toFixed(1); // Average rating to one decimal place
+    }
+
+    // Function to update the floating button with average rating
+    function updateFloatingButton(reviews) {
+        const averageRating = calculateAverageRating(reviews);
+        const button = document.getElementById('floatingButton');
+        const starsHTML = getStars(averageRating); // Display stars based on average rating
+        document.getElementById('averageRatingStars').innerHTML = starsHTML; // Set stars in the button
+    }
+
+    // Load reviews when the modal is shown
+    const reviewsModal = document.getElementById('reviewsModal');
+    reviewsModal.addEventListener('show.bs.modal', loadReviews);
+</script>
+
+
+
+
