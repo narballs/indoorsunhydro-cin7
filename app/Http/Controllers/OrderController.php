@@ -33,6 +33,7 @@ use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
 use App\Models\OrderRefund;
 use App\Models\OrderStatus;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -768,16 +769,28 @@ class OrderController extends Controller
                         'count' => $count,
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
-
-                    if (!empty($users_with_role_admin)) {
-                        foreach ($users_with_role_admin as $role_admin) {
+                    //old code
+                    // if (!empty($users_with_role_admin)) {
+                    //     foreach ($users_with_role_admin as $role_admin) {
+                    //         $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['subject'] = $subject;
+                    //         $data['email'] = $role_admin->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
                             $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
                             $adminTemplate = 'emails.admin-order-received';
                             $data['subject'] = $subject;
-                            $data['email'] = $role_admin->email;
+                            $data['email'] = $specific_admin_notification->email;
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
+
+                    
                     $credit_limit = $customer->contact->credit_limit;
                     $parent_email = Contact::where('contact_id', $active_contact_id)->first();
 
