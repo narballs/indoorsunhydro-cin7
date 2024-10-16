@@ -338,8 +338,9 @@ class CheckoutController extends Controller
             $product_width = $sum_of_width;
             $product_length = $sum_of_length;
         } else {
-            $product_width = max($products_widths);
-            $product_length = max($products_lengths);
+            // Check if arrays are not empty before calling max()
+            $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
+            $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
         }
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
