@@ -46,6 +46,7 @@ use App\Models\ApiErrorLog;
 use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
 use App\Models\ShippingQuoteSetting;
+use App\Models\SpecificAdminNotification;
 
 use function PHPSTORM_META\type;
 
@@ -1044,11 +1045,21 @@ class CheckoutController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
     
-                    if (!empty($users_with_role_admin)) {
-                        foreach ($users_with_role_admin as $role_admin) {
+                    // if (!empty($users_with_role_admin)) {
+                    //     foreach ($users_with_role_admin as $role_admin) {
+                    //         $subject = 'New order received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['email'] = $role_admin->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
                             $subject = 'New order received';
                             $adminTemplate = 'emails.admin-order-received';
-                            $data['email'] = $role_admin->email;
+                            $data['email'] = $specific_admin_notification->email;
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
