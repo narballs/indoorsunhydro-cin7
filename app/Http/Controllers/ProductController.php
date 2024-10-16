@@ -1525,7 +1525,7 @@ class ProductController extends Controller
         }
 
         $new_checkout_flow = AdminSetting::where('option_name', 'new_checkout_flow')->first();
-        if (!empty($cart_items) || count($cart_items) > 0) {
+        if (!empty($cart_items) && count($cart_items) > 0) {
             $view = 'cart';
         } else {
             $view = 'empty-cart';
