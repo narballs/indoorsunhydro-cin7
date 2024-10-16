@@ -1418,6 +1418,7 @@
 
 <!-- Floating Button -->
 @php
+$averageRating = App\Helpers\UserHelper::getaverageRating();
 function getStars($averageRating) {
     $stars = '';
     for ($i = 1; $i <= 5; $i++) {
@@ -1434,7 +1435,7 @@ function getStars($averageRating) {
 <!-- Floating Button -->
 <button class="floating-button btn btn-primary position-fixed" data-bs-toggle="modal" data-bs-target="#reviewsModal" id="floatingButton">
     <div class="rating-container">
-        <span id="default_average">{{ $averageRating }}</span> <!-- Display average rating -->
+        <span id="default_average">{{App\Helpers\UserHelper::getaverageRating() }}</span> <!-- Display average rating -->
         <span id="averageRatingStars">{!! getStars($averageRating) !!}</span> <!-- Display star rating -->
     </div>
 </button>

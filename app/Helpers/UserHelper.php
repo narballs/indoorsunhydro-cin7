@@ -13,6 +13,7 @@ use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\ProductOption;
 use App\Models\AdminSetting;
+use App\Models\GoogleReview;
 use Google\Service\Calendar\Setting;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -221,6 +222,22 @@ class UserHelper
             $stock = 0;
         }
         return $stock;
+    }
+
+    public static function getaverageRating() {
+        $reviews = GoogleReview::orderBy('rating', 'DESC')->where('rating','!=','null')->where('rating', '>', 4)->get();
+        $averageRating = self::calculateAverageRating($reviews);
+        return $averageRating;
+    }
+
+    public static function calculateAverageRating($reviews) {
+        if ($reviews->isEmpty()) {
+            return 'No reviews yet'; // Return a message if there are no reviews
+        }
+        
+        $totalRating = $reviews->sum('rating'); // Sum all the ratings
+        $total = round($totalRating / $reviews->count(), 1); // Calculate and return the average, rounded to one decimal place
+        return number_format($total, 1);
     }
 
     public static function shipment_label() {
