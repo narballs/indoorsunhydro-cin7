@@ -95,9 +95,7 @@ class HomeController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
-        $reviews = GoogleReview::orderBy('rating', 'DESC')->where('rating','!=','null')->where('rating', '>', 4)->get();
-        $averageRating = $this->calculateAverageRating($reviews);
-        return view('index', compact('categories','cart_items','averageRating', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide'));
+        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide'));
     }
 
     public function show_page($slug) {
@@ -188,17 +186,5 @@ class HomeController extends Controller
         $reviews = GoogleReview::orderBy('rating', 'DESC')->where('rating','!=','null')->where('rating', '>', 4)->get();
         return response()->json($reviews);
     }
-
-    private function calculateAverageRating($reviews)
-    {
-        if ($reviews->isEmpty()) {
-            return 'No reviews yet'; // Return a message if there are no reviews
-        }
-        
-        $totalRating = $reviews->sum('rating'); // Sum all the ratings
-        $total = round($totalRating / $reviews->count(), 1); // Calculate and return the average, rounded to one decimal place
-        return number_format($total, 1);
-    }
-
     
 }
