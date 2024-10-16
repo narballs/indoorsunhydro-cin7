@@ -1433,7 +1433,7 @@ function getStars($averageRating) {
 @endphp
 
 <!-- Floating Button -->
-<button class="floating-button btn btn-primary position-fixed" data-bs-toggle="modal" data-bs-target="#reviewsModal" id="floatingButton">
+<button class="floating-button btn btn-primary position-fixed d-none" data-bs-toggle="modal" data-bs-target="#reviewsModal" id="floatingButton">
     <div class="rating-container">
         <span id="default_average">{{App\Helpers\UserHelper::getaverageRating() }}</span> <!-- Display average rating -->
         <span id="averageRatingStars">{!! getStars($averageRating) !!}</span> <!-- Display star rating -->
