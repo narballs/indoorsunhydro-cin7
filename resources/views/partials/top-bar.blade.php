@@ -4,7 +4,7 @@
     $tax = 0;
     $free_shipping = 0;
     $contact_id = session()->get('contact_id');
-    $cart_items = session()->get('cart');
+    // $cart_items = session()->get('cart');
     $user_id = auth()->id();
     $d_none = 'd-none'; 
     $calculate_free_shipping = 0;
@@ -50,8 +50,10 @@
 
     if (!auth()->user()) {
         $tax_class = App\Models\TaxClass::where('is_default', 1)->first();
+        $cart_items = session()->get('cart');
     } else {
         $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
+        $cart_items = App\Models\Cart::where('contact_id', $contact_id)->where('user_id' , auth()->user()->id)->get();
     }
     if (!empty($cart_items)) {
        

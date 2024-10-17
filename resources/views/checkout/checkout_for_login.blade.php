@@ -1000,170 +1000,54 @@ $cart_price = 0;
                                                 $extra_charges_for_total_over_499 = 0;
                                             }
                                         @endphp
-                                        <div class="shipping_main_div">
-                                            @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
-                                                <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
-                                                <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
-                                                @if (!empty($products_weight) && $products_weight > 150)
-                                                    @php
-                                                        $adding_surcharge = 0;
-                                                        $shipment_plus_surcharge = 0;
-                                                        $get_original_shipment_price = !empty($shipment_price) ? $shipment_price : 0;
-                                                        if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
-                                                            if (!empty($surcharge_type_settings_for_weight_greater_then_150) && strtolower($surcharge_type_settings_for_weight_greater_then_150->option_value) == 'percentage') {
-                                                                $surcharge_value_greater_weight = $get_original_shipment_price * (floatval($surcharge_settings_for_weight_greater_then_150->option_value) / 100);
+                                        @if($charge_shipment_to_customer === 0)
+                                            <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                <div class="col-md-9 col-8">
+                                                    <span class="checkout_shipping_heading">Shipment Price</span>
+                                                </div>
+                                                <div class="col-md-3 col-4 text-right">
+                                                    <span class="checkout_shipping_price">${{number_format(0), 2}}</span>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="shipping_main_div">
+                                                @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
+                                                    <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
+                                                    <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
+                                                    @if (!empty($products_weight) && $products_weight > 150)
+                                                        @php
+                                                            $adding_surcharge = 0;
+                                                            $shipment_plus_surcharge = 0;
+                                                            $get_original_shipment_price = !empty($shipment_price) ? $shipment_price : 0;
+                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
+                                                                if (!empty($surcharge_type_settings_for_weight_greater_then_150) && strtolower($surcharge_type_settings_for_weight_greater_then_150->option_value) == 'percentage') {
+                                                                    $surcharge_value_greater_weight = $get_original_shipment_price * (floatval($surcharge_settings_for_weight_greater_then_150->option_value) / 100);
+                                                                } else {
+                                                                    $surcharge_value_greater_weight = floatval($surcharge_settings_for_weight_greater_then_150->option_value);
+                                                                }
                                                             } else {
-                                                                $surcharge_value_greater_weight = floatval($surcharge_settings_for_weight_greater_then_150->option_value);
+                                                                $surcharge_value_greater_weight = 0;
                                                             }
-                                                        } else {
-                                                            $surcharge_value_greater_weight = 0;
-                                                        }
 
 
-                                                        $shipment_plus_surcharge = $get_original_shipment_price + $surcharge_value_greater_weight;
-                                                        if ($shipment_plus_surcharge > 0) {
-                                                            $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
-                                                            $shipment_price = $shipment_plus_surcharge + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
-                                                        } else {
-                                                            $shipment_price = $shipment_plus_surcharge + $extra_shipping_value + $extra_charges_for_total_over_499;
-                                                        }
-                                                    @endphp
-                                                    <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
-                                                    <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
-                                                    <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{!empty($shipment_price) ? number_format($shipment_price , 2, '.', '')  : 0 }}">
-                                                    <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                        @if ($shipment_error == 1)
-                                                            <div class="col-md-12">
-                                                                <span class="checkout_shipping_price text-danger">
-                                                                    There was an issue getting a freight quote, please try again later
-                                                                </span>
-                                                            </div>
-                                                        @else
-                                                            <div class="col-md-9 col-8">
-                                                                <span class="checkout_shipping_heading">Shipment Price</span>
-                                                                @if ($shipping_free_over_1000 == 1)
-                                                                    @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-md-2 col-3">
-                                                                                <span>
-                                                                                    <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="col-md-10 col-9">
-                                                                                
-                                                                                <span class="free_shipping_banner_text">
-                                                                                    {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endif
-                                                                @endif
-                                                            </div>
-                                                            <div class="col-md-3 col-4 text-right">
-                                                                <span class="checkout_shipping_price">${{!empty($shipment_price)  ? number_format($shipment_price , 2)  : 0}}</span>
-                                                            </div>
-                                                        @endif
-                                                        {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
-                                                    </div>
-                                                @else
-                                                    <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                        @if ($shipment_error == 1)
-                                                            <div class="col-md-12">
-                                                                <span class="checkout_shipping_price text-danger">
-                                                                    There was an issue getting a freight quote, please try again later
-                                                                </span>
-                                                            </div>
-                                                        @else
-                                                            @if (count($admin_selected_shipping_quote) > 0)
-                                                                @php
-                                                                   $surcharge_for_lighter_weight = 0; 
-                                                                @endphp
+                                                            $shipment_plus_surcharge = $get_original_shipment_price + $surcharge_value_greater_weight;
+                                                            if ($shipment_plus_surcharge > 0) {
+                                                                $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
+                                                                $shipment_price = $shipment_plus_surcharge + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
+                                                            } else {
+                                                                $shipment_price = $shipment_plus_surcharge + $extra_shipping_value + $extra_charges_for_total_over_499;
+                                                            }
+                                                        @endphp
+                                                        <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                        <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
+                                                        <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{!empty($shipment_price) ? number_format($shipment_price , 2, '.', '')  : 0 }}">
+                                                        <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                            @if ($shipment_error == 1)
                                                                 <div class="col-md-12">
-                                                                    <p class="checkout_product_heading ml-0 mb-2">Shipping Methods</p>
+                                                                    <span class="checkout_shipping_price text-danger">
+                                                                        There was an issue getting a freight quote, please try again later
+                                                                    </span>
                                                                 </div>
-                                                                @if (count($admin_selected_shipping_quote) == 1)
-                                                                    @foreach ($admin_selected_shipping_quote as $shipping_quote)
-                                                                        <?php
-                                                                            $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
-                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
-                                                                                if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
-                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_amount);
-                                                                                } else {
-                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_amount) / 100);
-                                                                                }
-                                                                            } else {
-                                                                                $surcharge_for_lighter_weight = 0;
-                                                                            }
-                                                                            $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_for_lighter_weight;
-                                                                            $adding_shipping_cost_to_total = 0;
-                                                                            $parcel_guard_price = 0 ;
-                                                                            if ($shipment_cost_with_surcharge_only > 0) {
-                                                                                $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499 ;
-                                                                            } else {
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value  + $extra_charges_for_total_over_499;
-                                                                            }
-                                                                            
-                                                                            
-                                                                            // if (!empty($shipment_cost_with_surcharge)) {
-                                                                            //     $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_with_surcharge;
-                                                                            // } else {
-                                                                            //     $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_without_surcharge;
-                                                                            // }
-                                                                        ?>
-
-
-                                                                        
-                                                                        <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">
-                                                                        <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
-                                                                        <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
-                                                                        <input type="radio" name="shipping_service_code" id="" class="d-none" value="{{$shipping_quote->serviceCode}}" checked>
-                                                                        <div class="col-md-9 col-8">
-                                                                            <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="single_shipping_quote" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" checked>
-                                                                            <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
-                                                                        </div>
-                                                                        <div class="col-md-3 col-4 text-right">
-                                                                            <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
-                                                                        </div>
-                                                                        <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
-                                                                    @endforeach
-                                                                @else
-                                                                    @foreach ($admin_selected_shipping_quote as $shipping_quote)
-                                                                        @php
-                                                                            $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
-                                                                            if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
-                                                                                if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
-                                                                                    $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_amount);
-                                                                                } else {
-                                                                                    $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_amount) / 100);
-                                                                                }
-                                                                            } else {
-                                                                                $surcharge_for_lighter_weight = 0;
-                                                                            }
-                                                                            $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_for_lighter_weight;
-
-                                                                            $parcel_guard_price = 0 ;
-                                                                            if ($shipment_cost_with_surcharge_only > 0) {
-                                                                                $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
-                                                                            } else {
-                                                                                $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value + $extra_charges_for_total_over_499;
-                                                                            }
-                                                                        @endphp
-                                                                        <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">
-                                                                        <div class="col-md-9 col-8">
-                                                                            <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
-                                                                            <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
-                                                                            <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}" {{ $shipping_quote->serviceCode === 'ups_ground' ? 'checked' : ''}}>
-                                                                            <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" {{ $shipping_quote->serviceCode === 'ups_ground' ? 'checked' : ''}} shipping_cost_with_surcharge="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}"  value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
-                                                                            <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
-                                                                        </div>
-                                                                        <div class="col-md-3 col-4 text-right">
-                                                                            <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
-                                                                        </div>
-                                                                        <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
-                                                                    @endforeach
-                                                                @endif
                                                             @else
                                                                 <div class="col-md-9 col-8">
                                                                     <span class="checkout_shipping_heading">Shipment Price</span>
@@ -1185,16 +1069,167 @@ $cart_price = 0;
                                                                         @endif
                                                                     @endif
                                                                 </div>
-                                                                <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                                <div class="col-md-3 col-4 text-right">
+                                                                    <span class="checkout_shipping_price">${{!empty($shipment_price)  ? number_format($shipment_price , 2)  : 0}}</span>
+                                                                </div>
                                                             @endif
-                                                        @endif
+                                                            {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
+                                                        </div>
+                                                    @else
+                                                        <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                            @if ($shipment_error == 1)
+                                                                <div class="col-md-12">
+                                                                    <span class="checkout_shipping_price text-danger">
+                                                                        There was an issue getting a freight quote, please try again later
+                                                                    </span>
+                                                                </div>
+                                                            @else
+                                                                @if (count($admin_selected_shipping_quote) > 0)
+                                                                    @php
+                                                                    $surcharge_for_lighter_weight = 0; 
+                                                                    @endphp
+                                                                    <div class="col-md-12">
+                                                                        <p class="checkout_product_heading ml-0 mb-2">Shipping Methods</p>
+                                                                    </div>
+                                                                    @if (count($admin_selected_shipping_quote) == 1)
+                                                                        @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                            <?php
+                                                                                $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
+                                                                                if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
+                                                                                    if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
+                                                                                        $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_amount);
+                                                                                    } else {
+                                                                                        $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_amount) / 100);
+                                                                                    }
+                                                                                } else {
+                                                                                    $surcharge_for_lighter_weight = 0;
+                                                                                }
+                                                                                $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_for_lighter_weight;
+                                                                                $adding_shipping_cost_to_total = 0;
+                                                                                $parcel_guard_price = 0 ;
+                                                                                if ($shipment_cost_with_surcharge_only > 0) {
+                                                                                    $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
+                                                                                    $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499 ;
+                                                                                } else {
+                                                                                    $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value  + $extra_charges_for_total_over_499;
+                                                                                }
+                                                                                
+                                                                                
+                                                                                // if (!empty($shipment_cost_with_surcharge)) {
+                                                                                //     $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_with_surcharge;
+                                                                                // } else {
+                                                                                //     $adding_shipping_cost_to_total = $total_including_tax + $shipment_cost_without_surcharge;
+                                                                                // }
+                                                                            ?>
+
+
+                                                                            
+                                                                            <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">
+                                                                            <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
+                                                                            <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                                            <input type="radio" name="shipping_service_code" id="" class="d-none" value="{{$shipping_quote->serviceCode}}" checked>
+                                                                            <div class="col-md-9 col-8">
+                                                                                <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="single_shipping_quote" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" checked>
+                                                                                <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                                                            </div>
+                                                                            <div class="col-md-3 col-4 text-right">
+                                                                                <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
+                                                                            </div>
+                                                                            <input type="hidden" name="shipment_cost_multiple" id="shipment_price_single" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
+                                                                        @endforeach
+                                                                    @else
+                                                                        @foreach ($admin_selected_shipping_quote as $shipping_quote)
+                                                                            @php
+                                                                                $shipment_cost_without_surcharge = $shipping_quote->shipmentCost + $shipping_quote->otherCost;
+                                                                                if (!empty($surcharge_settings) && strtolower($surcharge_settings->option_value) == 'yes') {
+                                                                                    if (!empty( $shipping_quote->surcharge_type) && $shipping_quote->surcharge_type == 'fixed') {
+                                                                                        $surcharge_for_lighter_weight = floatval($shipping_quote->surcharge_amount);
+                                                                                    } else {
+                                                                                        $surcharge_for_lighter_weight = $shipment_cost_without_surcharge * (floatval($shipping_quote->surcharge_amount) / 100);
+                                                                                    }
+                                                                                } else {
+                                                                                    $surcharge_for_lighter_weight = 0;
+                                                                                }
+                                                                                $shipment_cost_with_surcharge_only = $shipment_cost_without_surcharge + $surcharge_for_lighter_weight;
+
+                                                                                $parcel_guard_price = 0 ;
+                                                                                if ($shipment_cost_with_surcharge_only > 0) {
+                                                                                    $parcel_guard_price = (ceil(floatval($cart_total) / 100) * 0.99);
+                                                                                    $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $parcel_guard_price + $extra_shipping_value + $extra_charges_for_total_over_499;
+                                                                                } else {
+                                                                                    $shipment_cost_with_surcharge = $shipment_cost_with_surcharge_only + $extra_shipping_value + $extra_charges_for_total_over_499;
+                                                                                }
+                                                                            @endphp
+                                                                            <input type="hidden" name="surcharge_for_lighter_weight" id="" value="{{ number_format($surcharge_for_lighter_weight , 2, '.', '')}}">
+                                                                            <div class="col-md-9 col-8">
+                                                                                <input type="hidden" name="original_shipping_cost_from_shipstation" id="" value="{{ number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
+                                                                                <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                                                <input type="radio" name="shipping_service_code" id="" class="shipping_service_code d-none" value="{{$shipping_quote->serviceCode}}" {{ $shipping_quote->serviceCode === 'ups_ground' ? 'checked' : ''}}>
+                                                                                <input type="radio" name="shipping_multi_price" class="shipping_multi_price" id="" {{ $shipping_quote->serviceCode === 'ups_ground' ? 'checked' : ''}} shipping_cost_with_surcharge="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}"  value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}" onclick="assign_service_code(this)">
+                                                                                <span class="checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                                                            </div>
+                                                                            <div class="col-md-3 col-4 text-right">
+                                                                                <span class="checkout_shipping_price">${{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2) : number_format($shipment_cost_without_surcharge , 2)}}</span>
+                                                                            </div>
+                                                                            <input type="hidden" name="shipment_cost_multiple" id="shipment_price_{{$shipping_quote->serviceCode}}" class="shipstation_multi_shipment_price" value="{{!empty($shipment_cost_with_surcharge) ? number_format($shipment_cost_with_surcharge , 2, '.', '') : number_format($shipment_cost_without_surcharge , 2, '.', '')}}">
+                                                                        @endforeach
+                                                                    @endif
+                                                                @else
+                                                                    <div class="col-md-9 col-8">
+                                                                        <span class="checkout_shipping_heading">Shipment Price</span>
+                                                                        @if ($shipping_free_over_1000 == 1)
+                                                                            @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                                                <div class="row align-items-center">
+                                                                                    <div class="col-md-2 col-3">
+                                                                                        <span>
+                                                                                            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="col-md-10 col-9">
+                                                                                        
+                                                                                        <span class="free_shipping_banner_text">
+                                                                                            {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endif
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    @endif 
+                                                @else
+                                                    <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="false">
+                                                    <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
+                                                    <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
+                                                    <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                        <div class="col-md-9 col-8">
+                                                            <span class="checkout_shipping_heading">Shipment Price</span>
+                                                            @if ($shipping_free_over_1000 == 1)
+                                                                @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-md-2 col-3">
+                                                                            <span>
+                                                                                <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="col-md-10 col-9">
+                                                                            <span class="free_shipping_banner_text">
+                                                                                {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                        <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                                     </div>
-                                                @endif 
-                                            @else
-                                                <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="false">
-                                                <input type="hidden" name="shipping_carrier_code" id="" value="{{$shipping_carrier_code}}">
-                                                <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
-                                                <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                @endif
+                                            </div>
+                                            <div class="remove_shipping_price d-none">
+                                                <div class="row justify-content-center  align-items-center py-2 border-bottom">
                                                     <div class="col-md-9 col-8">
                                                         <span class="checkout_shipping_heading">Shipment Price</span>
                                                         @if ($shipping_free_over_1000 == 1)
@@ -1214,45 +1249,10 @@ $cart_price = 0;
                                                             @endif
                                                         @endif
                                                     </div>
-                                                    <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="remove_shipping_price d-none">
-                                            <div class="row justify-content-center  align-items-center py-2 border-bottom">
-                                                <div class="col-md-9 col-8">
-                                                    <span class="checkout_shipping_heading">Shipment Price</span>
-                                                    @if ($shipping_free_over_1000 == 1)
-                                                        @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
-                                                            <div class="row align-items-center">
-                                                                <div class="col-md-2 col-3">
-                                                                    <span>
-                                                                        <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="free_shipping_gif" style="max-height: 40px;">
-                                                                    </span>
-                                                                </div>
-                                                                <div class="col-md-10 col-9">
-                                                                    <span class="free_shipping_banner_text">
-                                                                        {{!empty($enable_free_shipping_banner_text) ? $enable_free_shipping_banner_text->option_value : ''}}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        @endif
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{'0.00'}}</span></div>
-                                            </div>
-                                        </div>
-                                        {{-- @if (!empty($toggle_shipment_insurance) && strtolower($toggle_shipment_insurance->option_value) == 'yes') 
-                                            <div class="row justify-content-center  align-items-center py-2 border-bottom">
-                                                <div class="col-md-9 col-8">
-                                                    <input type="checkbox" name="parcel_guard" class="parcel_guard" value="{{ number_format($parcel_guard , 2, '.', '')}}" onclick="add_parcel_guard_value(this)">
-                                                    <span class="parcel_guard_heading">ParcelGuard (Optional)</span>
-                                                </div>
-                                                <div class="col-md-3 col-4 text-right">
-                                                    <span class="parcel_guard_price" id="parcel_guard_price">${{ number_format($parcel_guard, 2) }}</span>
+                                                    <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format(0), 2}}</span></div>
                                                 </div>
                                             </div>
-                                        @endif --}}
+                                        @endif
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-8"><span class="checkout_total_heading">Total</span></div>
                                             <div class="col-md-3 col-4 text-right"><span class="checkout_total_price" id="checkout_order_total">${{ number_format($total_including_tax, 2) }}</span></div>

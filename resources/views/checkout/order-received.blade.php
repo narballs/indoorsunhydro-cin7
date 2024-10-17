@@ -1072,7 +1072,7 @@
 									{{-- <th class="order-confirmation-page-table-data-heading">Shipping</th> --}}
 									<th class="order-confirmation-page-table-data-heading">Price</th>
 								</tr>
-								<tbody class="border-0">
+								{{-- <tbody class="border-0">
 									@foreach($order->apiOrderItem as $item)
 									@foreach($item->product->options as $option)
 									<tr>
@@ -1091,11 +1091,6 @@
 														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
 														{{$item->product->name}}
 													</a>
-													{{-- <br>
-													<p class="order-confirmation-page-product-title">Title:<span
-															class="order-confirmation-page-product-item">
-															{{$item->product->name}}</span>
-													</p> --}}
 												</div>
 											</div>
 										</td>
@@ -1107,7 +1102,6 @@
 												</div>
 											</div>
 										</td>
-										{{-- <td>Shipping</td> --}}
 										<td class="align-middle">
 											<div class="row">
 												<div class="col-md-12">
@@ -1123,6 +1117,52 @@
 									</tr>
 									@endforeach
 									@endforeach
+								</tbody> --}}
+								<tbody class="border-0">
+									@foreach($orderitems as $orderitem)
+									@if (!empty($orderitem->product_option) && !empty($orderitem->product))
+									<tr>
+										<td>
+											<div class="row align-items-center">
+												<div class="col-md-2 py-2 mobile_thankyou_img_div">
+													@if ($orderitem->product_option->image)
+													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product_option->image}}" alt=""
+														width="90px" style="max-height: 90px">
+													@else
+													<img src="/theme/img/image_not_available.png" alt="" width="80px">
+													@endif
+												</div>
+												<div class="col-md-5 py-2 ps-0 prod-name-img mobile_text_class" style="">
+													<a class="order-confirmation-page-product-category-name pb-3"
+														href=" {{ url('product-detail/'. $orderitem->product->id.'/'.$orderitem->product_option->option_id.'/'.$orderitem->product->slug) }}">
+														{{$orderitem->product->name}}
+													</a>
+												</div>
+											</div>
+										</td>
+										<td class="align-middle">
+											<div class="row">
+												<div class="col-md-12">
+													<p class="mb-0 order-confirmation-page-product-quantity">
+														{{$orderitem->product->code}}</p>
+												</div>
+											</div>
+										</td>
+										<td class="align-middle">
+											<div class="row">
+												<div class="col-md-12">
+													<p class="mb-0 order-confirmation-page-product-quantity">
+														{{$orderitem->quantity}}</p>
+												</div>
+											</div>
+										</td>
+										<td class="align-middle">
+											<p class="mb-0 order-confirmation-page-product-price">
+												${{number_format($orderitem->price,2)}}</p>
+										</td>
+									</tr>
+									@endif
+									@endforeach
 								</tbody>
 							</table>
 							<div class="row justify-content-center">
@@ -1136,7 +1176,7 @@
 						{{-- data show for mobile --}}
 						<div class="col-md-12 mt-5 purchaseTable for_mobile d-none">
 							<table class="table main_table_mobile">
-								<tbody class="border-0">
+								{{-- <tbody class="border-0">
 									@foreach($order->apiOrderItem as $item)
 									
 										@foreach($item->product->options as $option)
@@ -1173,6 +1213,44 @@
 											</td>
 										</tr>
 										@endforeach
+									@endforeach
+								</tbody> --}}
+								<tbody class="border-0">
+									@foreach($orderitems as $orderitem)
+									@if (!empty($orderitem->product_option) && !empty($orderitem->product))
+										
+										<tr class="border_bottom_mb">
+											<td style="width: 20% !important;">
+												<div class="py-2 mobile_thankyou_img_div">
+													@if ($orderitem->product_option->image)
+													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product_option->image}}" alt=""
+														width="90px" style="max-height: 90px">
+													@else
+													<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
+													@endif
+												</div>
+											</td>
+											
+											<td style="width:75%;">
+												<div class="ps-0 mobile_text_class mt-1" style="">
+													<p class="order-confirmation-page-product-title">
+														<a class="order-confirmation-page-product-category-name pb-3"
+															href=" {{ url('product-detail/'. $orderitem->product->id.'/'.$orderitem->product_option->option_id.'/'.$orderitem->product->slug) }}">
+															{{$orderitem->product->name}}
+														</a>
+													</p>
+												</div>
+												<p class=" mb-0 order-confirmation-page-product-price"> ${{number_format($orderitem->price,2)}}</p>
+											</td>
+											<td style="width:5%;">
+												<div class="ps-0 mobile_text_class mt-1" style="">
+													<p class="order-confirmation-page-product-title">
+														{{$orderitem->product->code}}
+													</p>
+												</div>
+											</td>
+										</tr>
+									@endif
 									@endforeach
 								</tbody>
 							</table>

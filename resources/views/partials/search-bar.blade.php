@@ -56,19 +56,20 @@
                                 <?php
                                 $total_quantity = 0;
                                 $grand_total = 0;
-                                
+                                $cart_detail = App\Helpers\UtilHelper::cart_detail($total_quantity, $grand_total);
                                 ?>
-                                @if (Session::get('cart'))
+                                {{-- @if (Session::get('cart'))
                                     @foreach (Session::get('cart') as $cart)
                                         <?php
-                                        $total_q[] = $cart['quantity'];
-                                        $total_quantity = array_sum($total_q);
-                                        $total_price[] = $cart['price'] * $cart['quantity'];
-                                        $grand_total = array_sum($total_price);
+                                        // $total_q[] = $cart['quantity'];
+                                        // $total_quantity = array_sum($total_q);
+                                        // $total_price[] = $cart['price'] * $cart['quantity'];
+                                        // $grand_total = array_sum($total_price);
+                                           
                                         ?>
                                     @endforeach
-                                @endif
-                                {{ $total_quantity }}
+                                @endif --}}
+                                {{ !empty($cart_detail) && !empty($cart_detail['total_quantity']) ? $cart_detail['total_quantity'] : $total_quantity}}
                             </span>
                         </div>
                         <div class="d-flex ml-1" style="flex-direction: column;">
@@ -77,7 +78,7 @@
                                 
                             <a>
                                 <span id="top_cart_total"><a href="{{ '/cart/' }}"  class="d-flex align-items-center" style="color: #7bc533">
-                                <span id="topbar_cart_total" class="cart-counter-details"> ${{ number_format($grand_total, 2) }}</span>
+                                <span id="topbar_cart_total" class="cart-counter-details"> ${{!empty($cart_detail) && !empty($cart_detail['grand_total']) ? number_format($cart_detail['grand_total'], 2) : $grand_total }}</span>
                             </a>
                         </div>
                     </div>

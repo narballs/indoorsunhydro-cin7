@@ -24,6 +24,11 @@ class ApiOrderItem extends Model
         return $this->belongsTo(Product::class, 'product_id', 'product_id');
     }
 
+    public function product_option()
+    {
+        return $this->belongsTo(ProductOption::class, 'option_id', 'option_id');
+    }
+
     // public function product()
     //  {
     //  return $this->belongsToMany('App\Models\Product', 'api_order_items', 

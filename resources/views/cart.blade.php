@@ -104,9 +104,9 @@
                                                 $cart_total = 0;
                                                 $cart_price = 0;
                                                 ?>
-                                                @if (Session::get('cart'))
-                    
-                                                @foreach (Session::get('cart') as $pk_product_id => $cart)
+                                                {{-- @if (Session::get('cart')) --}}
+                                                @if (count($cart_items) > 0)
+                                                @foreach ($cart_items as $pk_product_id => $cart)
                                                         <?php
                                                         $total_quatity = $cart['quantity'];
                                                         $total_price = $cart['price'] * $total_quatity;
@@ -587,9 +587,11 @@
                                                         <thead>
                                                         </thead>
                                                         <tbody style="border-top: none !important">
-                                                            @if (Session::get('cart'))
+                                                            {{-- @if (Session::get('cart'))
             
-                                                            @foreach (Session::get('cart') as $pk_product_id => $cart)
+                                                            @foreach (Session::get('cart') as $pk_product_id => $cart) --}}
+                                                            @if (count($cart_items) > 0)
+                                                            @foreach ($cart_items as $pk_product_id => $cart)
                                                             @php
                                                                 $stock_per_product_mbl = 0;
                                                                 $stock_per_product_mbl = App\Helpers\UserHelper::get_stock_per_product_option($pk_product_id, $cart['option_id']);
@@ -617,7 +619,7 @@
                                                                                     <td class="p-0" style="width:80%;">
                                                                                         <div class="">
                                                                                             <a class="cart-page-items"
-                                                                                                href="{{ url('product-detail/' . $cart['product_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
+                                                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                                             </a>
                                                                                             
                                                                                         </div>

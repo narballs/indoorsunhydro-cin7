@@ -261,7 +261,7 @@
                         <a href="{{ '/cart/' }}">
                             <img class="basket-icon mt-2" src="{{asset('/theme/img/icons/Cart-icon.svg')}}">
                             <span class="cartQtymbl cart-basket d-flex align-items-center justify-content-center float-sm-end cart-counter rounded-circle " id="top_cart_quantity" style="border: 2px solid #ffffff;">
-                               {{ $total_quantity }}
+                                {{ !empty($cart_detail) && !empty($cart_detail['total_quantity']) ? $cart_detail['total_quantity'] : $total_quantity}}
                             </span>
                         </a>
                     </div>
