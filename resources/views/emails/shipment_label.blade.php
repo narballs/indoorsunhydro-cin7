@@ -42,7 +42,7 @@
                         <!-- Subject -->
                         <tr>
                             <td align="center" style="color:#000000;font-size: 18px;font-weight: 600;padding-top: 10px;">
-                                <b>{{ $data['content']['subject'] }}</b>
+                                <b>{{ !empty($subject) ? $subject : '' }}</b>
                             </td>
                         </tr>
 
@@ -50,7 +50,7 @@
                         <tr>
                             <td align="center" style="padding-top: 10px;padding-bottom: 20px;">
                                 <p style="color:#000000;font-size: 14px;font-weight: 400;">
-                                    Your shipment label for order #{{ $data['content']['order_id'] }} is attached.
+                                    Your shipment label for order #{{ $content['order_id'] }} is attached.
                                 </p>
                             </td>
                         </tr>
@@ -60,13 +60,13 @@
                             <td style="padding: 10px 20px; color: #000;">
                                 <h4 style="font-size: 16px; font-weight: 600;">Shipping to:</h4>
                                 <p style="font-size: 14px; margin: 0;">
-                                    <b>{{ !empty($data['content']['company']) ? $data['content']['company'] : '' }}</b><br>
-                                    {{!empty( $data['content']['name']) ?  $data['content']['name'] : '' }}<br>
-                                    {{ !empty($data['content']['street1']) ? $data['content']['street1'] : '' }}<br>
-                                    {{ !empty($data['content']['street2']) ? $data['content']['street2'] : '' }}<br>
-                                    {{ !empty($data['content']['street3']) ? $data['content']['street3'] : '' }}<br>
-                                    {{ !empty($data['content']['city']) ? $data['content']['city'] : '' }}, {{ !empty($data['content']['state']) ? $data['content']['state'] : '' }} {{ !empty($data['content']['postalCode']) ? $data['content']['postalCode'] : '' }}<br>
-                                    {{ !empty($data['content']['country']) ? $data['content']['country'] : '' }}
+                                    <b>{{ !empty($content['company']) ? $content['company'] : '' }}</b><br>
+                                    {{!empty( $content['name']) ?  $content['name'] : '' }}<br>
+                                    {{ !empty($content['street1']) ? $content['street1'] : '' }}<br>
+                                    {{ !empty($content['street2']) ? $content['street2'] : '' }}<br>
+                                    {{ !empty($content['street3']) ? $content['street3'] : '' }}<br>
+                                    {{ !empty($content['city']) ? $content['city'] : '' }}, {{ !empty($content['state']) ? $content['state'] : '' }} {{ !empty($content['postalCode']) ? $content['postalCode'] : '' }}<br>
+                                    {{ !empty($content['country']) ? $content['country'] : '' }}
                                 </p>
                             </td>
                         </tr>
