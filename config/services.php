@@ -40,6 +40,7 @@ return [
         'host_url' => env('SHIPMENT_HOST_URL'),
         'shipment_order_url' => env('SHIPMENT_ORDER_URL'),
         'shipment_label_url' => env('SHIPMENT_LABEL_URL'),
+        'shipstation_warehouse_url' => env('SHIPMENT_WAREHOUSE_URL'),
     ],
     'ai' => [
         'ai_key' => env('OPEN_AI_KEY'),
