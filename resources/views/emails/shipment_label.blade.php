@@ -26,8 +26,8 @@
     }
 </style>
 
-<body style="background-color: #000000;">
-    <table bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
+<body bgcolor="#000000" style="background-color: #000000;padding-top: 20px;padding-bottom: 0px;padding-right:0px;padding-left:0px;" width="100%;">
+    <table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
         <tbody>
             <tr>
                 <td>
@@ -35,7 +35,7 @@
                         <!-- Header Icon -->
                         <tr>
                             <td align="center">
-                                <img class="img-fluid" src="{{ url('/theme/img/email/approve_email_icon.png') }}" alt="Approval Icon">
+                                <img class="img-fluid" src="{{ url('/theme/img/email/approve_email_icon.png') }}" alt="Approval Icon" style="margin-top: 10px;">
                             </td>
                         </tr>
 
