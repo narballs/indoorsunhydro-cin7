@@ -46,6 +46,7 @@ use App\Models\ApiErrorLog;
 use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
 use App\Models\ShippingQuoteSetting;
+use App\Models\SpecificAdminNotification;
 
 use function PHPSTORM_META\type;
 
@@ -338,8 +339,9 @@ class CheckoutController extends Controller
             $product_width = $sum_of_width;
             $product_length = $sum_of_length;
         } else {
-            $product_width = max($products_widths);
-            $product_length = max($products_lengths);
+            // Check if arrays are not empty before calling max()
+            $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
+            $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
         }
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
@@ -789,13 +791,15 @@ class CheckoutController extends Controller
     public function thankyou(Request $request , $id)
     {
         $user_id = Auth::id();
+        // $session_contact_id = Session::get('contact_id');
         $order = ApiOrder::where('id', $id)
             ->with(
                 'user.contact',
                 'apiOrderItem.product.options',
                 'texClasses',
                 'discount',
-            )->first();
+            )
+            ->first();
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $order_contact_query = Contact::whereIn('id', $all_ids)->first();
@@ -813,14 +817,29 @@ class CheckoutController extends Controller
          
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('F  j, Y h:i:s A');
-        $orderitems = ApiOrderItem::where('order_id', $id)->with('product')->get();
+        $orderitems = ApiOrderItem::where('order_id', $id)->with('product','product_option')->get();
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
         
-        Cart::where('user_id', $user_id)->where('is_active', 1)->delete();
+        // $delete_cart = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
+        // if (count($delete_cart) > 0) {
+        //     foreach ($delete_cart as $cart) {
+        //         if (!empty($cart->contact_id) && $cart->contact_id == $session_contact_id) {
+        //             $cart->delete();
+        //         } 
+        //         // else {
+        //         //     $cart->delete();
+        //         // }
+        //     }
+        // }
 
-        Session::forget('cart');
-        Session::forget('cart_hash');
+        // // Session::forget('cart');
+        // // Session::forget('cart_hash');
+
+        // if ($session_contact_id) {
+        //     Session::forget('cart');
+        //     Session::forget('cart_hash');
+        // }
 
         $contact = Contact::where('user_id', $user_id)->first();
 
@@ -1026,11 +1045,21 @@ class CheckoutController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
     
-                    if (!empty($users_with_role_admin)) {
-                        foreach ($users_with_role_admin as $role_admin) {
+                    // if (!empty($users_with_role_admin)) {
+                    //     foreach ($users_with_role_admin as $role_admin) {
+                    //         $subject = 'New order received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['email'] = $role_admin->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
                             $subject = 'New order received';
                             $adminTemplate = 'emails.admin-order-received';
-                            $data['email'] = $role_admin->email;
+                            $data['email'] = $specific_admin_notification->email;
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }

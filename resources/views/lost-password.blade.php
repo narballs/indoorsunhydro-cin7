@@ -32,8 +32,8 @@
    	@csrf
 	<div class="form-signup-secondary">
 		<div class="user-info">
-			<div class="row mt-3">
-				<div class="col-md-12">
+			<div class="row mt-3 justify-content-center">
+				<div class="col-md-12 col-10">
 					<input type="text" placeholder="&#xf007;  Email" id="email"
 						name="email" class="form-control mt-3 fontAwesome" value="">
                         @if ($errors->has('email'))
