@@ -83,9 +83,13 @@ class MailHelper
                     ]);
                 }
             });
+
+            return true; // Email queued successfully
         } catch (\Exception $e) {
             // Log the error or handle it as needed
+
             Log::error('Failed to send email: ' . $e->getMessage());
+            return false; // Email sending failed
         }
     }
     
