@@ -1049,109 +1049,189 @@ class OrderController extends Controller
     }
 
     //create label for order
+    // public function create_label(Request $request) {
+    //     $order_id = $request->order_id;
+    //     $order = ApiOrder::where('id', $order_id)->first();
+    //     if ($order->label_created == 1) {
+    //         return redirect('admin/orders')->with('error', 'Label already created for this order.');
+    //     } 
+    //     $order_contact = Contact::where('contact_id', $order->memberId)->first();
+    //     $client = new \GuzzleHttp\Client();
+    //     $shipstation_label_url = config('services.shipstation.shipment_label_url');
+    //     $shipstation_api_key = config('services.shipstation.key');
+    //     $shipstation_api_secret = config('services.shipstation.secret');
+    //     $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+    //     $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+    //     $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
+    //     $company_name = AdminSetting::where('option_name', 'website_name')->first();
+    //     $getDate = now()->format('Y-m-d');
+    //     $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+    //     $products_weight = 0;
+    //     $responseBody = null;
+    //     foreach ($order_items as $order_item) {
+    //         $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+    //         foreach ($product_options as $product_option) {
+    //             $products_weight += $product_option->optionWeight * $order_item['quantity'];
+    //         }
+    //     }
+    //     $data = [
+    //         'orderId' => $order->shipstation_orderId,
+    //         'carrierCode' => !empty($order->shipping_carrier_code) ? $order->shipping_carrier_code : null,
+    //         'serviceCode' =>  !empty($order->shipping_service_code) ? $order->shipping_service_code : null,
+    //         'packageCode' => $shipping_package->option_value,
+    //         "confirmation" => "delivery",
+    //         'weight' => [
+    //             "value" => $products_weight,
+    //             "units" => "pounds"
+    //         ],
+    //         'shipDate'=> $getDate,
+    //         'testLabel' => false,
+    //     ];
+    //     $headers = [
+    //         "Content-Type: application/json",
+    //         'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
+    //     ];
+    //     $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
+    //     if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
+    //         $labelData = UserHelper::shipment_label();
+
+    //         $label_data = base64_decode($labelData);
+    //         $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
+    //         $label_path = 'public/' . $file_name;
+    //         Storage::disk('local')->put($label_path, $label_data);
+            
+    //         $order->update([
+    //             'is_shipped' => 1,
+    //             'label_created' => 1,
+    //             'label_link' => $file_name,
+    //         ]);
+
+    //         $ship_station_api_logs  = new ShipstationApiLogs();      
+    //         $ship_station_api_logs->api_url = $shipstation_label_url;
+    //         $ship_station_api_logs->request = json_encode($data);
+    //         $ship_station_api_logs->response = 'label created from sandbox';
+    //         $ship_station_api_logs->status = 200;
+    //         $ship_station_api_logs->save();
+
+    //         return response($label_data)
+    //         ->header('Content-Type', 'application/pdf')
+    //         ->header('Content-Disposition', 'attachment; filename='.$file_name);
+    //     } else {
+    //         try {
+    //             $response = $client->post($shipstation_label_url, [
+    //                 'headers' => $headers,
+    //                 'json' => $data,
+    //             ]);
+    //             $statusCode = $response->getStatusCode();
+                
+    //             $responseBody = $response->getBody()->getContents();
+    //             $label_api_response = json_decode($responseBody);
+    //             $label_data = base64_decode($label_api_response->labelData);
+                
+    //             $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
+    //             $label_path = 'public/' . $file_name;
+    //             Storage::disk('local')->put($label_path, $label_data);
+                
+    //             $order->update([
+    //                 'is_shipped' => 1,
+    //                 'label_created' => 1,
+    //                 'label_link' => $file_name,
+    //             ]);
+    
+    //             $label = [
+    //                 'orderId' => $label_api_response->orderId,
+    //                 'labelData' => $label_api_response->labelData,
+    //             ];
+    
+    
+    //             $ship_station_api_logs  = new ShipstationApiLogs();      
+    //             $ship_station_api_logs->api_url = $shipstation_label_url;
+    //             $ship_station_api_logs->request = json_encode($data);
+    //             $ship_station_api_logs->response = $responseBody;
+    //             $ship_station_api_logs->status = $statusCode;
+    //             $ship_station_api_logs->save();
+    
+    //             return response($label_data)
+    //             ->header('Content-Type', 'application/pdf')
+    //             ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                 
+                    
+            
+    //         } catch (\Exception $e) {
+    //             Log::error($e->getMessage());
+    
+    //             $ship_station_api_logs  = new ShipstationApiLogs();      
+    //             $ship_station_api_logs->api_url = $shipstation_label_url;
+    //             $ship_station_api_logs->request = json_encode($data);
+    //             $ship_station_api_logs->response = $e->getMessage();
+    //             $ship_station_api_logs->status = $response->getStatusCode();
+    //             $ship_station_api_logs->save();
+    
+    //             return redirect('admin/orders')->with('error', $e->getMessage());
+    //         }
+            
+    //     }
+        
+        
+    // }
+
     public function create_label(Request $request) {
+        
+        $data = [];
+        $client = new \GuzzleHttp\Client();
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
-        if ($order->label_created == 1) {
+        $shipstation_order_id = $order->shipstation_orderId;
+
+        if ($order->label_created == 1 ) {
             return redirect('admin/orders')->with('error', 'Label already created for this order.');
-        } 
+        }
+
+        if (empty($shipstation_order_id)) {
+            return redirect('admin/orders')->with('error', 'shipstation_order_id not found.');
+        }
+
         $order_contact = Contact::where('contact_id', $order->memberId)->first();
-        $client = new \GuzzleHttp\Client();
-        $shipstation_label_url = config('services.shipstation.shipment_label_url');
+        
         $shipstation_api_key = config('services.shipstation.key');
         $shipstation_api_secret = config('services.shipstation.secret');
-        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
-        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
-        $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
-        $company_name = AdminSetting::where('option_name', 'website_name')->first();
-        $getDate = now()->format('Y-m-d');
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
-        $products_weight = 0;
-        $responseBody = null;
-        foreach ($order_items as $order_item) {
-            $product_options = ProductOption::where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
-            foreach ($product_options as $product_option) {
-                $products_weight += $product_option->optionWeight * $order_item['quantity'];
-            }
+        $shipstation_label_url = config('services.shipstation.shipment_label_url');
+
+        $get_default_ship_from_address =  UserHelper::get_default_shipstation_warehouse();
+        if (empty($get_default_ship_from_address) || empty($get_default_ship_from_address['default_ship_from_address'])) {
+            return redirect('admin/orders')->with('error', 'Default ship from address not found.');
+        } else {
+            $default_ship_from_address = $get_default_ship_from_address['default_ship_from_address'];
         }
-        $data = [
-            'orderId' => $order->shipstation_orderId,
-            'carrierCode' => !empty($order->shipping_carrier_code) ? $order->shipping_carrier_code : null,
-            'serviceCode' =>  !empty($order->shipping_service_code) ? $order->shipping_service_code : null,
-            'packageCode' => $shipping_package->option_value,
-            "confirmation" => "delivery",
-            // 'shipFrom' => [
-            //     "name" => 'Kevin',
-            //     "company" => $company_name->option_value,
-            //     "street1" => '5671 Warehouse Way',
-            //     "street2" => '5671 Warehouse Way',
-            //     "city" => 'Sacramento',
-            //     "state" => 'CA',
-            //     "postalCode" => '95826',
-            //     "country"=>"US",
-            //     "phone" => '(916) 281-3090',
-            //     "residential"=>true
-            // ],
-            // 'shipTo' => [
-            //     "name" => $order_contact->firstName . $order_contact->lastName,
-            //     "company" => $order_contact->company,
-            //     "street1" => $order_contact->address1 ? $order_contact->address1 : $order_contact->postalAddress1,
-            //     "street2" => $order_contact->address2 ? $order_contact->address2 : $order_contact->postalAddress1,
-            //     "city" => $order_contact->city ? $order_contact->city : $order_contact->postalCity,
-            //     "state" => $order_contact->state ? $order_contact->state : $order_contact->postalState,
-            //     "postalCode" => $order_contact->postCode ? $order_contact->postCode : $order_contact->postalPostCode,
-            //     "country"=>"US",
-            //     "phone" => $order_contact->phone ? $order_contact->phone : $order_contact->mobile,
-            //     "residential"=>true
-            // ],
-            'weight' => [
-                "value" => $products_weight,
-                "units" => "pounds"
-            ],
-            'shipDate'=> $getDate,
-            'testLabel' => false,
-        ];
+
+        $getShipstationOrderUrl = 'https://ssapi.shipstation.com/orders/' . $shipstation_order_id;
+
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($shipstation_api_key . ':' . $shipstation_api_secret),
         ];
-        $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
-        if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
-            $labelData = UserHelper::shipment_label();
 
-            $label_data = base64_decode($labelData);
-            $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
-            $label_path = 'public/' . $file_name;
-            Storage::disk('local')->put($label_path, $label_data);
-            
-            $order->update([
-                'is_shipped' => 1,
-                'label_created' => 1,
-                'label_link' => $file_name,
+        try {
+            $response = $client->request('GET', $getShipstationOrderUrl, [
+                'headers' => $headers
             ]);
+        
+            $orderData = json_decode($response->getBody()->getContents(), true);
 
-            $ship_station_api_logs  = new ShipstationApiLogs();      
-            $ship_station_api_logs->api_url = $shipstation_label_url;
-            $ship_station_api_logs->request = json_encode($data);
-            $ship_station_api_logs->response = 'label created from sandbox';
-            $ship_station_api_logs->status = 200;
-            $ship_station_api_logs->save();
+            $user_email = $orderData['customerEmail'];
 
-            return response($label_data)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename='.$file_name);
-        } else {
-            try {
-                $response = $client->post($shipstation_label_url, [
-                    'headers' => $headers,
-                    'json' => $data,
-                ]);
-                $statusCode = $response->getStatusCode();
-                
-                $responseBody = $response->getBody()->getContents();
-                $label_api_response = json_decode($responseBody);
-                $label_data = base64_decode($label_api_response->labelData);
-                
+            if (empty($orderData)) {
+                return redirect('admin/orders')->with('error', 'Order not found in ShipStation.');
+            }
+
+
+            $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
+
+            $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
+            if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
+                $labelData = UserHelper::shipment_label();
+
+                $label_data = base64_decode($labelData);
                 $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
                 $label_path = 'public/' . $file_name;
                 Storage::disk('local')->put($label_path, $label_data);
@@ -1161,40 +1241,97 @@ class OrderController extends Controller
                     'label_created' => 1,
                     'label_link' => $file_name,
                 ]);
-    
-                $label = [
-                    'orderId' => $label_api_response->orderId,
-                    'labelData' => $label_api_response->labelData,
+
+
+                $labe_email_data = [
+                    'email' => $user_email,
+                    'subject' => 'Ship Web Order' . ' ' . $order_id . ' ' . 'Label',
+                    'file' => $label_path,
+                    'content' =>  $prepare_data_for_creating_label['shipTo'],
+                    'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
-    
-    
+
                 $ship_station_api_logs  = new ShipstationApiLogs();      
                 $ship_station_api_logs->api_url = $shipstation_label_url;
-                $ship_station_api_logs->request = json_encode($data);
-                $ship_station_api_logs->response = $responseBody;
-                $ship_station_api_logs->status = $statusCode;
+                $ship_station_api_logs->request = json_encode($prepare_data_for_creating_label);
+                $ship_station_api_logs->response = 'label created from sandbox';
+                $ship_station_api_logs->status = 200;
                 $ship_station_api_logs->save();
-    
+
+                MailHelper::sendShipstationLabelMail($labe_email_data);
+
                 return response($label_data)
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'attachment; filename='.$file_name);
-                 
+            } 
+            else {
+                try {
+                    $response = $client->post($shipstation_label_url, [
+                        'headers' => $headers,
+                        'json' => $prepare_data_for_creating_label,
+                    ]);
+                    $statusCode = $response->getStatusCode();
                     
-            
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-    
-                $ship_station_api_logs  = new ShipstationApiLogs();      
-                $ship_station_api_logs->api_url = $shipstation_label_url;
-                $ship_station_api_logs->request = json_encode($data);
-                $ship_station_api_logs->response = $e->getMessage();
-                $ship_station_api_logs->status = $response->getStatusCode();
-                $ship_station_api_logs->save();
-    
-                return redirect('admin/orders')->with('error', $e->getMessage());
+                    $responseBody = $response->getBody()->getContents();
+                    $label_api_response = json_decode($responseBody);
+                    $label_data = base64_decode($label_api_response->labelData);
+                    
+                    $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
+                    $label_path = 'public/' . $file_name;
+                    Storage::disk('local')->put($label_path, $label_data);
+                    
+                    $order->update([
+                        'is_shipped' => 1,
+                        'label_created' => 1,
+                        'label_link' => $file_name,
+                    ]);
+        
+                    $label = [
+                        'orderId' => $label_api_response->orderId,
+                        'labelData' => $label_api_response->labelData,
+                    ];
+
+
+                    $labe_email_data = [
+                        'email' => $user_email,
+                        'subject' => 'Ship Web Order' . ' ' . $order_id . ' ' . 'Label',
+                        'file' => $label_path,
+                        'content' =>  $prepare_data_for_creating_label['shipTo'],
+                        'from' => SettingHelper::getSetting('noreply_email_address')
+                    ];
+        
+        
+                    $ship_station_api_logs  = new ShipstationApiLogs();      
+                    $ship_station_api_logs->api_url = $shipstation_label_url;
+                    $ship_station_api_logs->request = json_encode($data);
+                    $ship_station_api_logs->response = $responseBody;
+                    $ship_station_api_logs->status = $statusCode;
+                    $ship_station_api_logs->save();
+
+                    MailHelper::sendShipstationLabelMail($labe_email_data);
+        
+                    return response($label_data)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+        
+                    $ship_station_api_logs  = new ShipstationApiLogs();      
+                    $ship_station_api_logs->api_url = $shipstation_label_url;
+                    $ship_station_api_logs->request = json_encode($data);
+                    $ship_station_api_logs->response = $e->getMessage();
+                    $ship_station_api_logs->status = $response->getStatusCode();
+                    $ship_station_api_logs->save();
+        
+                    return redirect('admin/orders')->with('error', $e->getMessage());
+                }
             }
-            
+
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            return redirect('admin/orders')->with('error', 'Error fetching order from ShipStation: ' . $e->getMessage());
         }
+       
         
         
     }

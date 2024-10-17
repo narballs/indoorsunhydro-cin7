@@ -67,4 +67,42 @@ class MailHelper
             $message->to($data['email'])->subject($data['subject']);
         });
     }
+
+    // public static function sendShipstationLabelMail($data) {
+    //     Mail::send('emails.shipment_label', ['content' => $data['content']], function($message) use ($data) {
+    //         $message->from($data['from']);
+    //         $message->to($data['email'])->subject($data['subject']);
+    
+    //         // Attach the label PDF to the email
+    //         $message->attach(storage_path('app/' . $data['file']), [
+    //             'as' => basename($data['file']), // Filename in the email
+    //             'mime' => 'application/pdf',     // MIME type for PDF
+    //         ]);
+    //     });
+    // }
+
+    public static function sendShipstationLabelMail($data) {
+        Mail::send([], [], function($message) use ($data) {
+            $message->from($data['from']);
+            $message->to($data['email'])->subject($data['subject']);
+            
+            // Attach the label PDF to the email
+            $message->attach(storage_path('app/' . $data['file']), [
+                'as' => basename($data['file']), // Filename in the email
+                'mime' => 'application/pdf',     // MIME type for PDF
+            ]);
+    
+            // Generate body content using $data['content']
+            $content = "Shipping to:\n" .
+                       $data['content']['name'] . "\n" .
+                       $data['content']['street1'] . "\n" .
+                       $data['content']['city'] . ', ' . $data['content']['state'] . ' ' . $data['content']['postalCode'] . "\n" .
+                       $data['content']['country'];
+    
+            // Set the email body with the shipping details
+            $message->setBody('Your shipment label is attached.' . "\n\n" . $content, 'text/plain');
+        });
+    }
+    
+    
 }
