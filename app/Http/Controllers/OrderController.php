@@ -1182,6 +1182,7 @@ class OrderController extends Controller
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
         $shipstation_order_id = $order->shipstation_orderId;
+        $order_items_array = [];
 
         if ($order->label_created == 1 ) {
             return redirect('admin/orders')->with('error', 'Label already created for this order.');
@@ -1218,36 +1219,54 @@ class OrderController extends Controller
         
             $orderData = json_decode($response->getBody()->getContents(), true);
 
-            $user_email = $orderData['customerEmail'];
-
+            
             if (empty($orderData)) {
                 return redirect('admin/orders')->with('error', 'Order not found in ShipStation.');
             }
 
+            $user_email = $orderData['customerEmail'];
+            $order_items = $orderData['items'];
+            if (empty($order_items)) {
+                return redirect('admin/orders')->with('error', 'Order items not found in ShipStation.');
+            } else {
+                foreach ($order_items as $order_item) {
+                    $order_items_array[] = [
+                        'sku' => $order_item['sku'],
+                        'name' => $order_item['name'],
+                        'quantity' => $order_item['quantity'],
+                    ];
+                }
+            }
+
 
             $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
+            $template = 'emails.shipment_label';
 
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
+                
                 $labelData = UserHelper::shipment_label();
-
                 $label_data = base64_decode($labelData);
                 $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
                 $label_path = 'public/' . $file_name;
                 Storage::disk('local')->put($label_path, $label_data);
                 
-                $order->update([
-                    'is_shipped' => 1,
-                    'label_created' => 1,
-                    'label_link' => $file_name,
-                ]);
-
-
-                $labe_email_data = [
+                $label_email_data = [
                     'email' => $user_email,
-                    'subject' => 'Ship Web Order' . ' ' . $order_id . ' ' . 'Label',
+                    'subject' => 'Ship Web Order ' . $order_id . ' Label',
                     'file' => $label_path,
-                    'content' =>  $prepare_data_for_creating_label['shipTo'],
+                    'content' => [
+                        'order_id' => $order_id,
+                        'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                        'name' => $prepare_data_for_creating_label['shipTo']['name'],
+                        'street1' => $prepare_data_for_creating_label['shipTo']['street1'],
+                        'street2' => $prepare_data_for_creating_label['shipTo']['street2'],
+                        'city' => $prepare_data_for_creating_label['shipTo']['city'],
+                        'state' => $prepare_data_for_creating_label['shipTo']['state'],
+                        'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
+                        'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                    ],
+                    'order_items' => $order_items_array,
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
 
@@ -1258,11 +1277,21 @@ class OrderController extends Controller
                 $ship_station_api_logs->status = 200;
                 $ship_station_api_logs->save();
 
-                MailHelper::sendShipstationLabelMail($labe_email_data);
+                $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                
+                if ($mail_send) {
+                    $order->update([
+                        'is_shipped' => 1,
+                        'label_created' => 1,
+                        'label_link' => $file_name,
+                    ]);
 
-                return response($label_data)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    return response($label_data)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                } else {
+                    return redirect('admin/orders')->with('error', 'Error sending email.');
+                }
             } 
             else {
                 try {
@@ -1292,11 +1321,22 @@ class OrderController extends Controller
                     ];
 
 
-                    $labe_email_data = [
+                    $label_email_data = [
                         'email' => $user_email,
-                        'subject' => 'Ship Web Order' . ' ' . $order_id . ' ' . 'Label',
+                        'subject' => 'Ship Web Order ' . $order_id . ' Label',
                         'file' => $label_path,
-                        'content' =>  $prepare_data_for_creating_label['shipTo'],
+                        'content' => [
+                            'order_id' => $order_id,
+                            'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                            'name' => $prepare_data_for_creating_label['shipTo']['name'],
+                            'street1' => $prepare_data_for_creating_label['shipTo']['street1'],
+                            'street2' => $prepare_data_for_creating_label['shipTo']['street2'],
+                            'city' => $prepare_data_for_creating_label['shipTo']['city'],
+                            'state' => $prepare_data_for_creating_label['shipTo']['state'],
+                            'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
+                            'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                        ],
+                        'order_items' => $order_items_array,
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
         
@@ -1308,11 +1348,21 @@ class OrderController extends Controller
                     $ship_station_api_logs->status = $statusCode;
                     $ship_station_api_logs->save();
 
-                    MailHelper::sendShipstationLabelMail($labe_email_data);
-        
-                    return response($label_data)
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+
+                    if ($mail_send) {
+                        $order->update([
+                            'is_shipped' => 1,
+                            'label_created' => 1,
+                            'label_link' => $file_name,
+                        ]);
+    
+                        return response($label_data)
+                        ->header('Content-Type', 'application/pdf')
+                        ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    } else {
+                        return redirect('admin/orders')->with('error', 'Error sending email.');
+                    }
                     
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
