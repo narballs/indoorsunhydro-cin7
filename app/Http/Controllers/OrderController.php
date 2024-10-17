@@ -1326,6 +1326,8 @@ class OrderController extends Controller
                         'subject' => 'Ship Web Order ' . $order_id . ' Label',
                         'file' => $label_path,
                         'content' => [
+                            'subject' => 'Ship Web Order ' . $order_id . ' Label',
+                            'email' => $user_email,
                             'order_id' => $order_id,
                             'company' => $prepare_data_for_creating_label['shipTo']['company'],
                             'name' => $prepare_data_for_creating_label['shipTo']['name'],
