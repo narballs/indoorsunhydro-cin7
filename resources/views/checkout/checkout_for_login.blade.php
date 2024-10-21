@@ -896,7 +896,7 @@ $cart_price = 0;
                                         <input type="hidden" name="address_2_billing" value="{{ !empty($get_user_default_billing_address->BillingAddress2) ?  $get_user_default_billing_address->BillingAddress2 : $user_address->postalAddress2 }}">
                                         <input type="hidden" name="city_billing" value="{{ !empty($get_user_default_billing_address->BillingCity) ?  $get_user_default_billing_address->BillingCity :  $user_address->postalCity }}">
                                         <input type="hidden" name="state_billing" value="{{ !empty($get_user_default_billing_address->BillingState) ?  $get_user_default_billing_address->BillingState : $user_address->postalState }}">
-                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($get_user_default_billing_address->BillingZip) ?  $get_user_default_billing_address->BillingZip : $user->postalPostCode }}">
+                                        <input type="hidden" name="zip_code_billing" value="{{ !empty($get_user_default_billing_address->BillingZip) ?  $get_user_default_billing_address->BillingZip : $user_address->postalPostCode }}">
                                         <input type="hidden" name="country_billing" value="{{ !empty($get_user_default_billing_address->BillingCountry) ?  $get_user_default_billing_address->BillingCountry : 'United States' }}">
                                         <input type="hidden" name="phone_billing" value="{{ !empty($get_user_default_billing_address->BillingPhone) ?  $get_user_default_billing_address->BillingPhone : $user_address->phone }}">
                                         
