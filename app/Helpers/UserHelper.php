@@ -118,45 +118,113 @@ class UserHelper
                 'contact_id' => $active_contact_id,
                 'company' => $active_company,
             ]);
-            $getSelectedContact = Contact::where('user_id' , $user_id)
-            ->where('contact_id' , $active_contact_id)
-            ->orWhere('secondary_id' , $active_contact_id)
-            ->first();
-            // $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
-            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
-            // $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $active_contact_id)->get();
-            $all_cart_items = [];
-            $productPrice = 0;
-            $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-            if (count($cartItems) > 0) {
-                foreach ($cartItems as $cartItem) {
-                    $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-                    $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
-                    if ($productPrice == 0) {
-                        $productPrice = $productPricing['sacramentoUSD'];
-                    }
+
+            // $getSelectedContact = Contact::where('user_id' , $user_id)
+            // ->where('contact_id' , $active_contact_id)
+            // ->orWhere('secondary_id' , $active_contact_id)
+            // ->first();
+            // $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+            // $all_cart_items = [];
+            // $productPrice = 0;
+            // $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+            // if (count($cartItems) > 0) {
+            //     foreach ($cartItems as $cartItem) {
+            //         $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
+            //         $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
+            //         if ($productPrice == 0) {
+            //             $productPrice = $productPricing['sacramentoUSD'];
+            //         }
                     
-                    if ($productPrice == 0) { 
-                        $productPrice = $productPricing['retailUSD'];
+            //         if ($productPrice == 0) { 
+            //             $productPrice = $productPricing['retailUSD'];
+            //         }
+            //         $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
+            //         if (!empty($cart)) {
+            //             $cart->price = $productPrice;
+            //             $cart->save();
+            //         }
+            //         $all_cart_items[$cartItem['qoute_id']] = [
+            //             "product_id" => $cartItem['product_id'],
+            //             "name" => $cartItem['name'],
+            //             "quantity" => $cartItem['quantity'],
+            //             "price" => $cart['price'],
+            //             "code" => $cartItem['code'],
+            //             "image" => $cartItem['image'],
+            //             'option_id' => $cartItem['option_id'],
+            //             "slug" => $cartItem['slug'],
+            //         ];
+            //     }
+            //     session()->forget('cart');
+            //     Session::put('cart', $all_cart_items);
+            // }
+
+            $getSelectedContact = Contact::where('user_id', $user_id)
+            ->where(function ($query) use ($active_contact_id) {
+                $query->where('contact_id', $active_contact_id)
+                    ->orWhere('secondary_id', $active_contact_id);
+            })
+            ->first();
+
+            if ($getSelectedContact) {
+                // Retrieve cart items, including those with null contact_id
+                $cartItems = Cart::where('user_id', $getSelectedContact->user_id)
+                    ->where(function ($query) use ($active_contact_id) {
+                        $query->where('contact_id', $active_contact_id)
+                            ->orWhereNull('contact_id');
+                    })
+                    ->get();
+
+                if ($cartItems->isNotEmpty()) {
+                    // Group the cart items by product and option_id for merging quantities
+                    $cartItemsGrouped = $cartItems->groupBy(function ($item) {
+                        return $item->product_id . '-' . $item->option_id;
+                    });
+
+                    $getPriceColumn = UserHelper::getUserPriceColumn(false, $getSelectedContact->user_id);
+
+                    // Process the cart items
+                    $cart_data = [];
+                    foreach ($cartItemsGrouped as $groupKey => $groupItems) {
+                        $cartItem = $groupItems->first();
+
+                        // Fetch the product pricing
+                        $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
+                        $productPrice = $productPricing->$getPriceColumn ?? $productPricing['sacramentoUSD'] ?? $productPricing['retailUSD'] ?? 0;
+
+                        // Merge the quantities of grouped items
+                        $totalQuantity = $groupItems->sum('quantity');
+
+                        // Update or create cart item with the current active contact_id and price
+                        Cart::updateOrCreate(
+                            [
+                                'user_id' => $user_id,
+                                'product_id' => $cartItem['product_id'],
+                                'option_id' => $cartItem['option_id']
+                            ],
+                            [
+                                'contact_id' => $active_contact_id,
+                                'quantity' => $totalQuantity,
+                                'price' => $productPrice
+                            ]
+                        );
+
+                        // Store updated cart data for session
+                        $cart_data[$cartItem['qoute_id']] = [
+                            "product_id" => $cartItem['product_id'],
+                            "name" => $cartItem['name'],
+                            "quantity" => $totalQuantity,
+                            "price" => $productPrice,
+                            "code" => $cartItem['code'],
+                            "image" => $cartItem['image'],
+                            'option_id' => $cartItem['option_id'],
+                            "slug" => $cartItem['slug'],
+                        ];
                     }
-                    $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
-                    if (!empty($cart)) {
-                        $cart->price = $productPrice;
-                        $cart->save();
-                    }
-                    $all_cart_items[$cartItem['qoute_id']] = [
-                        "product_id" => $cartItem['product_id'],
-                        "name" => $cartItem['name'],
-                        "quantity" => $cartItem['quantity'],
-                        "price" => $cart['price'],
-                        "code" => $cartItem['code'],
-                        "image" => $cartItem['image'],
-                        'option_id' => $cartItem['option_id'],
-                        "slug" => $cartItem['slug'],
-                    ];
+
+                    // Store updated cart in session
+                    Session::forget('cart');
+                    Session::put('cart', $cart_data);
                 }
-                session()->forget('cart');
-                Session::put('cart', $all_cart_items);
             }
             
         }
@@ -836,8 +904,10 @@ class UserHelper
             ->where('user_id' , $user_id)
             ->first();
             $productPrice = 0;
-            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $contact_id)->get();
             $cart_items = [];
+            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
+            ->where('contact_id' , $contact_id)
+            ->get();
             $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
             if (count($cartItems) > 0) {
                 foreach ($cartItems as $cartItem) {
