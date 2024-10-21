@@ -379,7 +379,7 @@ class UserController extends Controller
         ]);
         $credentials = $request->except(['_token']);
         $user = User::where('email', $request->email)->first();
-
+        $session_contact_id = Session::get('contact_id');
         $email_user = session::put('user', $user);
         $cart = [];
         if (auth()->attempt($credentials)) {
@@ -1158,14 +1158,24 @@ class UserController extends Controller
                 $created = false;
                 $auth_user = Auth::loginUsingId($contacts->user_id);
                 $companies = Contact::where('user_id', $auth_user->id)->get();
-                if ($companies->count() == 1) {
+                // if ($companies->count() == 1) {
+                //     if ($companies[0]->contact_id == null) {
+                //         UserHelper::switch_company($companies[0]->secondary_id);
+                //     } else {
+                //         UserHelper::switch_company($companies[0]->contact_id);
+                //     }
+                // }
+
+                if (count($companies) > 0 ) {
                     if ($companies[0]->contact_id == null) {
                         UserHelper::switch_company($companies[0]->secondary_id);
                     } else {
                         UserHelper::switch_company($companies[0]->contact_id);
                     }
+
+                    Session::put('companies', $companies);
                 }
-                Session::put('companies', $companies);
+                
             }
         }
         else {
@@ -1267,14 +1277,38 @@ class UserController extends Controller
                             ]
                         );
                         $auth_user = Auth::loginUsingId($created_contact->user_id);
+                        // $companies = Contact::where('user_id', $auth_user->id)->get();
+                        // if ($companies->count() == 1) {
+                        //     if ($companies[0]->contact_id == null) {
+                        //         UserHelper::switch_company($companies[0]->secondary_id);
+                        //     } else {
+                        //         UserHelper::switch_company($companies[0]->contact_id);
+                        //     }
+                        //     Session::put('companies', $companies);
+                        // }
+
+
+                        $session_contact_id = null;
                         $companies = Contact::where('user_id', $auth_user->id)->get();
-                        if ($companies->count() == 1) {
+                        if (count($companies) > 0 ) {
                             if ($companies[0]->contact_id == null) {
                                 UserHelper::switch_company($companies[0]->secondary_id);
+                                $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
                             } else {
                                 UserHelper::switch_company($companies[0]->contact_id);
+                                $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
                             }
                             Session::put('companies', $companies);
+                        }
+
+                        if ($request->session()->has('cart_hash')) {
+                            $cart_hash = $request->session()->get('cart_hash');
+                            $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                            foreach ($cart_items as $cart_item) {
+                                $cart_item->user_id = $auth_user->id;
+                                $cart_item->contact_id = $session_contact_id;
+                                $cart_item->save();
+                            }
                         }
                         
                         
@@ -1314,15 +1348,30 @@ class UserController extends Controller
                         ]
                     );
                     $auth_user = Auth::loginUsingId($created_contact->user_id);
+                    $session_contact_id = null;
+
                     $companies = Contact::where('user_id', $auth_user->id)->get();
-                    if ($companies->count() == 1) {
+                    if (count($companies) > 0 ) {
                         if ($companies[0]->contact_id == null) {
                             UserHelper::switch_company($companies[0]->secondary_id);
+                            $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
                         } else {
                             UserHelper::switch_company($companies[0]->contact_id);
+                            $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
                         }
                         Session::put('companies', $companies);
                     }
+
+                    if ($request->session()->has('cart_hash')) {
+                        $cart_hash = $request->session()->get('cart_hash');
+                        $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+                        foreach ($cart_items as $cart_item) {
+                            $cart_item->user_id = $auth_user->id;
+                            $cart_item->contact_id = $session_contact_id;
+                            $cart_item->save();
+                        }
+                    }
+
                     $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
                 }
                 
