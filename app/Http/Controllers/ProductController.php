@@ -1380,6 +1380,19 @@ class ProductController extends Controller
     private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state)
     {
         
+        $actual_stock = $productOption->stockAvailable ?? 0; // Ensure stock availability
+        if ((intval($request->quantity)) > intval($actual_stock)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Stock limit exceeded',
+                'cart_items' => $cart,
+                'cart' => $cart,
+                'actual_stock' => $actual_stock,
+                'main_contact_id' => $main_contact_id,
+                'free_postal_state' => $free_postal_state
+            ]);
+        }
+        
         $cart[$request->p_id] = $this->createCartEntry($productOption, $request, $price, $assigned_contact, $user_id, $request->p_id);
         Cart::create($cart[$request->p_id]); // Store the cart entry in the database
         session()->put('cart', $cart); // Store the updated cart in the session
