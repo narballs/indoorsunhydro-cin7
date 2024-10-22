@@ -1348,7 +1348,7 @@ class ProductController extends Controller
         if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'You already added max ' . intval($actual_stock) . 'items to the cart',
+                'message' => 'Stock limit exceeded',
                 'cart_items' => $cart,
                 'cart' => $cart,
                 'actual_stock' => $actual_stock,
