@@ -112,13 +112,13 @@
                                                         $total_price = $cart['price'] * $total_quatity;
                                                         $cart_total = $cart_total + $total_price;
                                                         $stock_per_product = 0;
-                                                        $stock_per_product = App\Helpers\UserHelper::get_stock_per_product_option($pk_product_id, $cart['option_id']);  
+                                                        $stock_per_product = App\Helpers\UserHelper::get_stock_per_product_option($cart['qoute_id'], $cart['option_id']);  
                                                         ?>
-                                                        <tr id="{{ 'row_' . $pk_product_id }}" class="quantities">
+                                                        <tr id="{{ 'row_' . $cart['qoute_id'] }}" class="quantities">
                                                             <td class="align-middle">
                                                                 <span class="mb-0" style="font-weight: 500;">
                                                                     <a class="cart-page-items"
-                                                                        href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['code'] }}
+                                                                        href="{{ url('product-detail/' . $cart['qoute_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['code'] }}
                                                                     </a>
                                                                 </span>
                                                             </td>
@@ -136,7 +136,7 @@
                                                                     <div class="flex-column ms-4">
                                                                         <span class="mb-2">
                                                                             <a class=" pe-3 cart-page-items"
-                                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
+                                                                                href="{{ url('product-detail/' . $cart['qoute_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                             </a>
                                                                         </span>
                                                                     </div>
@@ -150,20 +150,20 @@
                                                             <td class="align-middle">
                                                                 <div class="mt-4 ml-1">
                                                                     <div class="quantity cart_qty">
-                                                                        <input type="number" name="quantity" class="quantity_calculator" id={{ 'row_quantity_' . $pk_product_id }}
+                                                                        <input type="number" name="quantity" class="quantity_calculator" id={{ 'row_quantity_' . $cart['qoute_id'] }}
                                                                             min="1" max="{{$stock_per_product}}" step="1" data-old = "{{ $cart['quantity'] }}"
-                                                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
+                                                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $cart['qoute_id'] }})">
                                                                         <input type="hidden" name="p_id" id="p_id"
                                                                             value="{{ $cart['product_id'] }}">
                                                                         <input type="hidden" name="p_id" id="option_id"
                                                                             value="{{ $cart['option_id'] }}">
                                                                         <div class="quantity-nav cart-quantity-nav">
                                                                             <div class="quantity-div quantity-up"
-                                                                                onclick="increase_qty({{ $pk_product_id }})">
+                                                                                onclick="increase_qty({{ $cart['qoute_id'] }})">
                                                                                 
                                                                             </div>
                                                                             <div class="quantity-div quantity-down"
-                                                                                onclick="decrease_qty({{ $pk_product_id }})">
+                                                                                onclick="decrease_qty({{ $cart['qoute_id'] }})">
                                                                                 
                                                                             </div>
                                                                         </div>
@@ -174,10 +174,10 @@
                                                                 <div class="row align-items-center text-center">
                                                                     <span class="mb-0 text-danger ps-2  cart-page-items">
                                                                         <span
-                                                                            id="subtotal_{{ $pk_product_id }}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
+                                                                            id="subtotal_{{ $cart['qoute_id']}}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
                                                                     </span>
                                                                     <p class="text-center remove-item-cart mb-0">
-                                                                        <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
+                                                                        <a href="{{ url('remove/' . $cart['qoute_id']) }}" id="remove"
                                                                             class="remove-cart-page-button">Remove</a>
                                                                     </p>
                                                                 </div>
@@ -594,7 +594,7 @@
                                                             @foreach ($cart_items as $pk_product_id => $cart)
                                                             @php
                                                                 $stock_per_product_mbl = 0;
-                                                                $stock_per_product_mbl = App\Helpers\UserHelper::get_stock_per_product_option($pk_product_id, $cart['option_id']);
+                                                                $stock_per_product_mbl = App\Helpers\UserHelper::get_stock_per_product_option($cart['qoute_id'], $cart['option_id']);
                                                             @endphp
                                                                     <tr>
                                                                         <td colspan="3" class="" style="vertical-align: center !important;">
@@ -619,14 +619,14 @@
                                                                                     <td class="p-0" style="width:80%;">
                                                                                         <div class="">
                                                                                             <a class="cart-page-items"
-                                                                                                href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
+                                                                                                href="{{ url('product-detail/' . $cart['qoute_id'] . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                                             </a>
                                                                                             
                                                                                         </div>
                                                                                     </td>
                                                                                     <td class="p-0 text-right"  style="width:20%;" align="right">
                                                                                         <div class="cart-page-price ps-3"
-                                                                                            id="m_p_price_{{ $pk_product_id }}">
+                                                                                            id="m_p_price_{{ $cart['qoute_id'] }}">
                                                                                             ${{ number_format($cart['price'], 2) }}
                                                                                         </div>
                                                                                     </td>
@@ -634,22 +634,22 @@
                                                                                 <tr>
                                                                                     <td class="p-0 pt-3" style="width:80%;">
                                                                                         <div class="d-flex">
-                                                                                            <button class="btn p-1 text-center mb_plusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="minusq({{ $pk_product_id }})">
+                                                                                            <button class="btn p-1 text-center mb_plusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="minusq({{ $cart['qoute_id'] }})">
                                                                                                 <i class="fa fa-angle-left text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                             <div class="">
-                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" max="{{$stock_per_product_mbl}}" step="1" data-old="{{ $cart['quantity'] }}" id="itm_qty{{ $pk_product_id }}"
-                                                                                                data-type="{{ $pk_product_id }}" onchange="update_cart_products_mbl({{ $pk_product_id }})" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
+                                                                                                <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" max="{{$stock_per_product_mbl}}" step="1" data-old="{{ $cart['quantity'] }}" id="itm_qty{{ $cart['qoute_id'] }}"
+                                                                                                data-type="{{ $cart['qoute_id'] }}" onchange="update_cart_products_mbl({{ $cart['qoute_id'] }})" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
                                                                                                 color: #7CC633;background-color: #ffffff !important;border-top:0.485995px solid #EBEBEB !important;border-bottom:0.485995px solid #EBEBEB !important;line-height: 15px !important;border-left:0px !important;border-right:0px !important;">
                                                                                             </div>
-                                                                                            <button class="btn p-1 text-center mb_minusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="plusq({{ $pk_product_id }})">
+                                                                                            <button class="btn p-1 text-center mb_minusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="plusq({{ $cart['qoute_id'] }})">
                                                                                                 <i class="fa fa-angle-right text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                         </div>
                                                                                     </td> 
                                                                                     <td class="p-0 pt-3" style="width:20%;vertical-align:bottom;" align="right">
                                                                                         <div class="d-flex justify-content-end">
-                                                                                            <a href="{{ url('remove/' . $pk_product_id) }}" id="remove" class="remove_p_mbl">
+                                                                                            <a href="{{ url('remove/' . $cart['qoute_id']) }}" id="remove" class="remove_p_mbl">
                                                                                                 <span>
                                                                                                     Remove
                                                                                                 </span>
