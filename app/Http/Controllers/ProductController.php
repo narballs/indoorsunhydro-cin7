@@ -1475,43 +1475,38 @@ class ProductController extends Controller
     //     return redirect()->back()->with('success', 'Product removed successfully!');
     // }
 
-    public function removeProductByCategory(Request $request)
+    public function removeProductByCategory(Request $request , $id)
     {
+        
+        if (empty($id)) {
+            return redirect()->back()->with('error', 'Product not found!');
+        }
+
         $session_contact_id = session()->get('contact_id');
-        $cart = session()->get('cart');
-        if ($request->id && isset($cart[$request->id])) {
-            // Handle authenticated users
-            if (auth()->check()) {
-                $user_id = auth()->user()->id;
+        if (auth()->check()) {
+            $user_id = auth()->user()->id;
 
-                // Attempt to find the quote with matching quote_id, contact_id, and user_id
-                $quote = Cart::where('qoute_id', $request->id)
-                            ->where('contact_id', $session_contact_id)
-                            ->where('user_id', $user_id)
-                            ->first();
+            // Attempt to find the quote with matching quote_id, contact_id, and user_id
+            $quote = Cart::where('qoute_id', $id)
+                        ->where('contact_id', $session_contact_id)
+                        ->where('user_id', $user_id)
+                        ->first();
 
-                if ($quote) {
-                    $quote->delete();
-                } else {
-                    // If quote doesn't match the contact_id, attempt to find with just user_id and quote_id
-                    $cart_delete = Cart::where('qoute_id', $request->id)
-                                    ->where('user_id', $user_id)
-                                    ->first();
-                    if ($cart_delete) {
-                        $cart_delete->delete();
-                    }
-                }
+            if ($quote) {
+                $quote->delete();
             } else {
-                // Handle unauthenticated users, delete by just quote_id
-                Cart::where('qoute_id', $request->id)->delete();
+                // If quote doesn't match the contact_id, attempt to find with just user_id and quote_id
+                $cart_delete = Cart::where('qoute_id', $id)
+                                ->where('user_id', $user_id)
+                                ->first();
+                if ($cart_delete) {
+                    $cart_delete->delete();
+                }
             }
-
-            // Remove the product from the session cart and update the session
-            unset($cart[$request->id]);
-            $request->session()->put('cart', $cart);
-
-            // Flash success message
-            session()->flash('success', 'Product removed successfully');
+            
+        } else {
+            // Handle unauthenticated users, delete by just quote_id
+            Cart::where('qoute_id', $id)->delete();
         }
 
         return redirect()->back()->with('success', 'Product removed successfully!');
