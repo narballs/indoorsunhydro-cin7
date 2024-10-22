@@ -118,45 +118,113 @@ class UserHelper
                 'contact_id' => $active_contact_id,
                 'company' => $active_company,
             ]);
-            $getSelectedContact = Contact::where('user_id' , $user_id)
-            ->where('contact_id' , $active_contact_id)
-            ->orWhere('secondary_id' , $active_contact_id)
-            ->first();
-            // $getSelectedContact = Contact::where('company' , $active_company)->where('user_id' , $user_id)->first();
-            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
-            // $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $active_contact_id)->get();
-            $all_cart_items = [];
-            $productPrice = 0;
-            $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-            if (count($cartItems) > 0) {
-                foreach ($cartItems as $cartItem) {
-                    $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-                    $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
-                    if ($productPrice == 0) {
-                        $productPrice = $productPricing['sacramentoUSD'];
-                    }
+
+            // $getSelectedContact = Contact::where('user_id' , $user_id)
+            // ->where('contact_id' , $active_contact_id)
+            // ->orWhere('secondary_id' , $active_contact_id)
+            // ->first();
+            // $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
+            // $all_cart_items = [];
+            // $productPrice = 0;
+            // $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
+            // if (count($cartItems) > 0) {
+            //     foreach ($cartItems as $cartItem) {
+            //         $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
+            //         $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
+            //         if ($productPrice == 0) {
+            //             $productPrice = $productPricing['sacramentoUSD'];
+            //         }
                     
-                    if ($productPrice == 0) { 
-                        $productPrice = $productPricing['retailUSD'];
+            //         if ($productPrice == 0) { 
+            //             $productPrice = $productPricing['retailUSD'];
+            //         }
+            //         $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
+            //         if (!empty($cart)) {
+            //             $cart->price = $productPrice;
+            //             $cart->save();
+            //         }
+            //         $all_cart_items[$cartItem['qoute_id']] = [
+            //             "product_id" => $cartItem['product_id'],
+            //             "name" => $cartItem['name'],
+            //             "quantity" => $cartItem['quantity'],
+            //             "price" => $cart['price'],
+            //             "code" => $cartItem['code'],
+            //             "image" => $cartItem['image'],
+            //             'option_id' => $cartItem['option_id'],
+            //             "slug" => $cartItem['slug'],
+            //         ];
+            //     }
+            //     session()->forget('cart');
+            //     Session::put('cart', $all_cart_items);
+            // }
+
+            $getSelectedContact = Contact::where('user_id', $user_id)
+            ->where(function ($query) use ($active_contact_id) {
+                $query->where('contact_id', $active_contact_id)
+                    ->orWhere('secondary_id', $active_contact_id);
+            })
+            ->first();
+
+            if ($getSelectedContact) {
+                // Retrieve cart items, including those with null contact_id
+                $cartItems = Cart::where('user_id', $getSelectedContact->user_id)
+                    ->where(function ($query) use ($active_contact_id) {
+                        $query->where('contact_id', $active_contact_id)
+                            ->orWhereNull('contact_id');
+                    })
+                    ->get();
+
+                if ($cartItems->isNotEmpty()) {
+                    // Group the cart items by product and option_id for merging quantities
+                    $cartItemsGrouped = $cartItems->groupBy(function ($item) {
+                        return $item->product_id . '-' . $item->option_id;
+                    });
+
+                    $getPriceColumn = UserHelper::getUserPriceColumn(false, $getSelectedContact->user_id);
+
+                    // Process the cart items
+                    $cart_data = [];
+                    foreach ($cartItemsGrouped as $groupKey => $groupItems) {
+                        $cartItem = $groupItems->first();
+
+                        // Fetch the product pricing
+                        $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
+                        $productPrice = $productPricing->$getPriceColumn ?? $productPricing['sacramentoUSD'] ?? $productPricing['retailUSD'] ?? 0;
+
+                        // Merge the quantities of grouped items
+                        $totalQuantity = $groupItems->sum('quantity');
+
+                        // Update or create cart item with the current active contact_id and price
+                        Cart::updateOrCreate(
+                            [
+                                'user_id' => $user_id,
+                                'product_id' => $cartItem['product_id'],
+                                'option_id' => $cartItem['option_id']
+                            ],
+                            [
+                                'contact_id' => $active_contact_id,
+                                'quantity' => $totalQuantity,
+                                'price' => $productPrice
+                            ]
+                        );
+
+                        // Store updated cart data for session
+                        $cart_data[$cartItem['qoute_id']] = [
+                            "product_id" => $cartItem['product_id'],
+                            "name" => $cartItem['name'],
+                            "quantity" => $totalQuantity,
+                            "price" => $productPrice,
+                            "code" => $cartItem['code'],
+                            "image" => $cartItem['image'],
+                            'option_id' => $cartItem['option_id'],
+                            "slug" => $cartItem['slug'],
+                        ];
                     }
-                    $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
-                    if (!empty($cart)) {
-                        $cart->price = $productPrice;
-                        $cart->save();
-                    }
-                    $all_cart_items[$cartItem['qoute_id']] = [
-                        "product_id" => $cartItem['product_id'],
-                        "name" => $cartItem['name'],
-                        "quantity" => $cartItem['quantity'],
-                        "price" => $cart['price'],
-                        "code" => $cartItem['code'],
-                        "image" => $cartItem['image'],
-                        'option_id' => $cartItem['option_id'],
-                        "slug" => $cartItem['slug'],
-                    ];
+
+                    // Store updated cart in session
+                    Session::forget('cart');
+                    Session::put('cart', $cart_data);
                 }
-                session()->forget('cart');
-                Session::put('cart', $all_cart_items);
             }
             
         }
@@ -482,6 +550,208 @@ class UserHelper
     }
 
 
+    public static function create_label($order_id , $currentOrder , $order_contact) {
+        $api_order = ApiOrder::where('id', $order_id)->first();
+        $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+
+        $products_weight = 0;
+        $product_width = 0;
+        $product_height = 0;
+        $product_length = 0;
+        $products_lengths = [];
+        $products_widths = [];
+        $sum_of_length = 0;
+        $sum_of_width = 0;
+        foreach ($order_items as $order_item) {
+            $items[] = [
+                'name' => $order_item->product->name,
+                'sku' => $order_item->product->code,
+                'quantity' => $order_item->quantity,
+                'unitPrice' => $order_item->price,
+            ];
+            $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $products_weight += $product_option->optionWeight * $order_item['quantity'];
+                if (!empty($product_option->products)) {
+
+                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+
+
+                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+                    $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
+                    $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+                }
+            }
+        }
+
+        if ($products_weight > 150) {
+            $product_width = $sum_of_width;
+            $product_length = $sum_of_length;
+        } else {
+            // Check if arrays are not empty before calling max()
+            $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
+            $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
+        }
+
+
+        $client = new \GuzzleHttp\Client();
+        $shipstation_label_url = config('services.shipstation.shipment_label_url');
+        $ship_station_api_key = config('services.shipstation.key');
+        $ship_station_api_secret = config('services.shipstation.secret');
+        $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
+        $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
+        $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+        $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
+
+
+        $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
+        $getDate = $created_date->format('Y-m-d');
+        $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
+        $order_created_date = $getDate . 'T' . $getTime ;
+
+
+        // Check if the created date is Friday
+        if ($created_date->isFriday()) {
+            // If it's Friday, ship day should be Monday (add 3 days)
+            $shipDate = $created_date->addDays(3);
+        }
+        // Check if the created date is on Saturday or Sunday
+        elseif ($created_date->isSaturday()) {
+            // If it's Saturday, ship day should be Monday (add 2 days)
+            $shipDate = $created_date->addDays(2);
+        } elseif ($created_date->isSunday()) {
+            // If it's Sunday, ship day should be Monday (add 1 day)
+            $shipDate = $created_date->addDay();
+        } else {
+            // Otherwise, add 1 day as usual for other weekdays (Monday to Thursday)
+            $shipDate = $created_date->addDay();
+        }
+
+        // Format the final shipping date as a string in 'Y-m-dTH:i:s' format
+        $ship_by_date = $shipDate->format('Y-m-d');
+
+
+        $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
+        $tax = $calculate_tax - $currentOrder->shipment_price;
+        $orderStatus = null;
+        if ($api_order->shipstation_orderId == null) {
+            if ($currentOrder->payment_status == 'paid') {
+                $orderStatus = 'awaiting_shipment';
+            } else {
+                $orderStatus = 'awaiting_payment';
+            }
+        } else {
+            $orderStatus = 'awaiting_shipment';
+        }
+
+        
+
+        // Billing Address
+        $firstName = self::get_AddressValue($currentOrder->BillingFirstName, $order_contact->firstName);
+        $lastName = self::get_AddressValue($currentOrder->BillingLastName, $order_contact->lastName);
+        $address1 = self::get_AddressValue($currentOrder->BillingAddress1, $order_contact->postalAddress1, $order_contact->address1);
+        $address2 = self::get_AddressValue($currentOrder->BillingAddress2, $order_contact->postalAddress2, $order_contact->address2);
+        $city = self::get_AddressValue($currentOrder->BillingCity, $order_contact->postalCity, $order_contact->city);
+        $state = self::get_AddressValue($currentOrder->BillingState, $order_contact->postalState, $order_contact->state);
+        $zip = self::get_AddressValue($currentOrder->BillingZip, $order_contact->postalPostCode, $order_contact->postCode);
+        $phone = self::get_AddressValue($currentOrder->BillingPhone, $order_contact->phone, $order_contact->mobile);
+
+        // Shipping Address
+        $DeliveryfirstName = self::get_AddressValue($currentOrder->DeliveryFirstName, $order_contact->firstName);
+        $DeliverylastName = self::get_AddressValue($currentOrder->DeliveryLastName, $order_contact->lastName);
+        $Deliverycompany = self::get_AddressValue($currentOrder->DeliveryCompany, $order_contact->company);
+        $Deliveryaddress1 = self::get_AddressValue($currentOrder->DeliveryAddress1, $order_contact->address1, $order_contact->postalAddress1);
+        $Deliveryaddress2 = self::get_AddressValue($currentOrder->DeliveryAddress2, $order_contact->address2, $order_contact->postalAddress2);
+        $Deliverycity = self::get_AddressValue($currentOrder->DeliveryCity, $order_contact->city, $order_contact->postalCity);
+        $Deliverystate = self::get_AddressValue($currentOrder->DeliveryState, $order_contact->state, $order_contact->postalState);
+        $Deliveryzip = self::get_AddressValue($currentOrder->DeliveryZip, $order_contact->postCode, $order_contact->postalPostCode);
+        $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
+        $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
+
+        $confirmation_value = 'delivery';
+
+        if (floatval($currentOrder->productTotal) > floatval(499)) {
+            $confirmation_value = 'signature';
+        }
+
+
+
+        $data = [
+            'orderNumber' => $order_id,
+            'orderKey' => $currentOrder->reference,
+            'orderDate' => $order_created_date,
+            'shipDate' => $ship_by_date,
+            'carrierCode' => !empty($products_weight) && $products_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
+            'serviceCode' => !empty($products_weight) && $products_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
+            'orderStatus' => $orderStatus,
+            'customerEmail'=> $order_contact->email,
+            'packageCode' => !empty($products_weight) && $products_weight > 150 ? 'container' : 'package',
+            'confirmation' => $confirmation_value,
+            'shippingAmount' => number_format($currentOrder->shipment_price , 2),
+            "amountPaid" => number_format($currentOrder->total_including_tax , 2),
+            "taxAmount" => number_format($currentOrder->tax_rate, 2),
+            'shipTo' => [
+                "name" => $DeliveryfirstName .' '. $DeliverylastName,
+                "company" => $Deliverycompany,
+                "street1" => $Deliveryaddress1,
+                "street2" => $Deliveryaddress2,
+                "city" => $Deliverycity,
+                "state" => $Deliverystate,
+                "postalCode" => $Deliveryzip,
+                "country"=>"US",
+                "phone" => $Deliveryphone,
+                // "residential"=>true
+            ],
+            'billTo' => [
+                "name" => $firstName .' '. $lastName,
+                "company" => $order_contact->company,
+                "street1" => $address1,
+                "street2" => $address2,
+                "city" => $city,
+                "state" => $state,
+                "postalCode" => $zip,
+                "country"=>"US",
+                "phone" => $phone,
+                // "residential"=>true
+            ],
+            'weight' => [
+                'value' => $products_weight,
+                'units' => 'pounds'
+            ],
+            'dimensions' => [
+                'units' => 'inches',
+                'length' => $product_length,
+                'width' => $product_width,
+                'height' => $product_height,
+            ],
+            'insuranceOptions' => [
+                'provider' => 'parcelguard', 
+                'insureShipment' => true,
+                'insuredValue' => floatval($currentOrder->productTotal),
+            ],
+            'items'=> $items
+        ];
+        $headers = [
+            "Content-Type: application/json",
+            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        ];
+        $responseBody = null;
+        $response = $client->post($shipstation_label_url, [
+            'headers' => $headers,
+            'json' => $data,
+        ]);
+        $statusCode = $response->getStatusCode();
+        $responseBody = $response->getBody()->getContents();
+        return [
+            'statusCode' => $statusCode,
+            'responseBody' => json_decode($responseBody)
+        ];
+        
+    }
+
+
     public static function get_AddressValue(...$values) {
         foreach ($values as $value) {
             if (!empty($value)) {
@@ -491,7 +761,128 @@ class UserHelper
         return null; // Return null if all values are empty
     }
 
-    
+    public static function get_default_shipstation_warehouse()
+    {
+        $client = new \GuzzleHttp\Client();
+        $shipstation_warehouse_url = config('services.shipstation.shipstation_warehouse_url');
+        $ship_station_api_key = config('services.shipstation.key');
+        $ship_station_api_secret = config('services.shipstation.secret');
+        
+        $headers = [
+            "Content-Type: application/json",
+            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        ];
+
+        $responseBody = null;
+
+        try {
+            $response = $client->get($shipstation_warehouse_url, [
+                'headers' => $headers,
+            ]);
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+
+        } catch (\Exception $e) {
+            $statusCode = $e->getCode();
+            $responseBody = $e->getMessage();
+        }
+
+        $default_ship_from_address = null;
+
+        if ($statusCode == 200) {
+            $responseBody = json_decode($responseBody, true); // Decoded as an array
+
+            if (!empty($responseBody) && count($responseBody) > 0) {
+                // First, try to find the default warehouse
+                foreach ($responseBody as $warehouse) {
+                    if ($warehouse['isDefault'] === true) {
+                        $default_ship_from_address = [
+                            'name' => $warehouse['originAddress']['name'],
+                            'company' => $warehouse['originAddress']['company'],
+                            'street1' => $warehouse['originAddress']['street1'],
+                            'street2' => $warehouse['originAddress']['street2'],
+                            'city' => $warehouse['originAddress']['city'],
+                            'state' => $warehouse['originAddress']['state'],
+                            'postalCode' => $warehouse['originAddress']['postalCode'],
+                            'country' => $warehouse['originAddress']['country'],
+                            'phone' => $warehouse['originAddress']['phone'],
+                        ];
+                        break; // Stop loop once default is found
+                    }
+                }
+
+                // If no default warehouse found, fall back to the first one
+                if ($default_ship_from_address === null) {
+                    $warehouse = $responseBody[0]; // Fallback to the first warehouse
+                    if (!empty($warehouse)) {
+                        $default_ship_from_address = [
+                            'name' => $warehouse['originAddress']['name'],
+                            'company' => $warehouse['originAddress']['company'],
+                            'street1' => $warehouse['originAddress']['street1'],
+                            'street2' => $warehouse['originAddress']['street2'],
+                            'city' => $warehouse['originAddress']['city'],
+                            'state' => $warehouse['originAddress']['state'],
+                            'postalCode' => $warehouse['originAddress']['postalCode'],
+                            'country' => $warehouse['originAddress']['country'],
+                            'phone' => $warehouse['originAddress']['phone'],
+                        ];
+                    } else {
+                        $default_ship_from_address = null; // Set to null if no warehouse found
+                    }
+                }
+            }
+        }
+
+        return [
+            'statusCode' => $statusCode,
+            'responseBody' => $responseBody,
+            'default_ship_from_address' => $default_ship_from_address,
+        ];
+    }
+
+
+    public static function prepare_data_for_creating_label($orderData , $default_ship_from_address) {
+        $data = [
+            'carrierCode' => $orderData['carrierCode'],
+            'serviceCode' => $orderData['serviceCode'],
+            'packageCode' => $orderData['packageCode'],
+            'confirmation' => $orderData['confirmation'],
+            'shipDate' => $orderData['shipDate'],
+            'weight' => [
+                'value' => !empty($orderData['weight']) && !empty($orderData['weight']['value']) ? $orderData['weight']['value'] : 0,
+                'units' => !empty($orderData['weight']) && !empty($orderData['weight']['units']) ? $orderData['weight']['units'] : 'ounces',
+            ],
+            'dimensions' => [
+                'units' => !empty(!empty($orderData['dimensions'])) && !empty($orderData['dimensions']['units']) ? $orderData['dimensions']['units'] : 'inches',
+                'length' => !empty(!empty($orderData['dimensions'])) && !empty($orderData['dimensions']['length']) ? floatval($orderData['dimensions']['length']) : 0,
+                'width' => !empty(!empty($orderData['dimensions'])) && !empty($orderData['dimensions']['width']) ? floatval($orderData['dimensions']['width']) : 0,
+                'height' => !empty(!empty($orderData['dimensions'])) && !empty($orderData['dimensions']['height']) ? floatval($orderData['dimensions']['height']) : 0,
+            ],
+            'shipTo' => [
+                'name' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['name']) ? $orderData['shipTo']['name'] : null,
+                'company' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['company']) ? $orderData['shipTo']['company'] : null,
+                'street1' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['street1']) ? $orderData['shipTo']['street1'] : null,
+                'street2' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['street2']) ? $orderData['shipTo']['street2'] : null,
+                'street3' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['street3']) ? $orderData['shipTo']['street3'] : null,
+                'city' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['city']) ? $orderData['shipTo']['city'] : null,
+                'state' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['state']) ? $orderData['shipTo']['state'] : null,
+                'postalCode' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['postalCode']) ? $orderData['shipTo']['postalCode'] : null,
+                'country'=> !empty($orderData['shipTo']) && !empty($orderData['shipTo']['country']) ? $orderData['shipTo']['country'] : null,
+                'phone' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['phone']) ? $orderData['shipTo']['phone'] : null,
+                'residential' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['residential']) ? $orderData['shipTo']['residential'] : null,
+                'addressVerified' => !empty($orderData['shipTo']) && !empty($orderData['shipTo']['addressVerified']) ? $orderData['shipTo']['addressVerified'] : null,
+            ],
+            'shipFrom' => $default_ship_from_address,
+            'insuranceOptions' => [
+                'provider' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['provider']) ? $orderData['insuranceOptions']['provider'] : null,
+                'insureShipment' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insureShipment']) ? $orderData['insuranceOptions']['insureShipment'] : null,
+                'insuredValue' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insuredValue']) ? $orderData['insuranceOptions']['insuredValue'] : null,
+            ],
+            'testLabel' => true,
+        ];
+
+        return $data;
+    }
 
     public static function switch_price_tier(Request $request) {
         $user_id = auth()->id();
@@ -513,8 +904,10 @@ class UserHelper
             ->where('user_id' , $user_id)
             ->first();
             $productPrice = 0;
-            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->where('contact_id' , $contact_id)->get();
             $cart_items = [];
+            $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
+            ->where('contact_id' , $contact_id)
+            ->get();
             $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
             if (count($cartItems) > 0) {
                 foreach ($cartItems as $cartItem) {

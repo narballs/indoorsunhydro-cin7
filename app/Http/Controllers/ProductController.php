@@ -1300,14 +1300,24 @@ class ProductController extends Controller
     
         // Step 5: Retrieve or initialize the cart from session
         $cart = session()->get('cart', []);
+        $cart_hash = session()->get('cart_hash');
         
         // Step 6: Check if the product is already in the cart for the assigned contact
-        $product_in_active_cart = Cart::where('qoute_id', $id)->where('contact_id', $assigned_contact)->first();
-    
-        if ($product_in_active_cart) {
-            return $this->updateCartItem($product_in_active_cart, $request->quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state);
+        if (auth()->user()) {
+            $product_in_active_cart = Cart::where('qoute_id', $id)->where('contact_id', $assigned_contact)->first();
+        
+            if ($product_in_active_cart) {
+                return $this->updateCartItem($product_in_active_cart, $request->quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state);
+            } else {
+                return $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state);
+            }
         } else {
-            return $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state);
+            $product_in_active_cart = Cart::where('qoute_id', $id)->where('cart_hash', $cart_hash)->first();
+            if ($product_in_active_cart) {
+                return $this->updateCartItem($product_in_active_cart, $request->quantity, $actual_stock, $cart, $main_contact_id, $free_postal_state);
+            } else {
+                return $this->addNewCartItem($cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state);
+            } 
         }
     }
     
@@ -1338,7 +1348,7 @@ class ProductController extends Controller
         if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'You cannot add more than ' . intval($actual_stock) . ' items to the cart',
+                'message' => 'You already added max ' . intval($actual_stock) . 'items to the cart',
                 'cart_items' => $cart,
                 'cart' => $cart,
                 'actual_stock' => $actual_stock,
