@@ -232,7 +232,9 @@
                         }
                         
                         // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
-                        jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
+                        // jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
+                        jQuery('.cart-total-number-' + id).html(response.actual_stock);
+                        jQuery('.swap_qty_number_'+id).val(response.actual_stock);
                         Swal.fire({
                             toast: true,
                             icon: 'error',
