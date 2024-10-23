@@ -3005,6 +3005,115 @@ class UserController extends Controller
     // }
 
 
+    // public function switch_company(Request $request)
+    // {
+    //     $user_id = auth()->user()->id;
+    //     $contact_id = $request->companyId;
+
+    //     // Fetch the primary contact by contact_id
+    //     $contact = Contact::where('contact_id', $contact_id)->first();
+    //     $company_type = null;
+    //     $active_contact_id = null;
+    //     $active_company = null;
+    //     $get_company_address = null;
+    //     $cartItems = [];
+    //     $cart_data = [];
+
+    //     // Determine active contact (primary or secondary)
+    //     if (!empty($contact)) {
+    //         $active_contact_id = $contact->contact_id;
+    //         $active_company = $contact->company;
+    //         $company_type = 'primary';
+    //     } else {
+    //         $contact = Contact::where('secondary_id', $contact_id)->first();
+    //         $active_contact_id = $contact->secondary_id;
+    //         $active_company = $contact->company;
+    //         $company_type = 'secondary';
+    //     }
+
+    //     // Store company details in session
+    //     Session::put([
+    //         'contact_id' => $active_contact_id,
+    //         'company' => $active_company,
+    //     ]);
+
+    //     // Fetch the selected contact for the user
+    //     $getSelectedContact = Contact::where('user_id', $user_id)
+    //         ->where(function ($query) use ($active_contact_id) {
+    //             $query->where('contact_id', $active_contact_id)
+    //                 ->orWhere('secondary_id', $active_contact_id);
+    //         })
+    //         ->first();
+
+    //     // Retrieve cart items, including those with null contact_id
+    //     $cartItems = Cart::where('user_id', $getSelectedContact->user_id)
+    //         ->where(function ($query) use ($active_contact_id) {
+    //             $query->where('contact_id', $active_contact_id)
+    //                 ->orWhereNull('contact_id');
+    //         })
+    //         ->get();
+
+    //     // Group the cart items by product and option_id for merging quantities
+    //     $cartItemsGrouped = $cartItems->groupBy(function ($item) {
+    //         return $item->product_id . '-' . $item->option_id;
+    //     });
+
+    //     $getPriceColumn = UserHelper::getUserPriceColumn(false, $getSelectedContact->user_id);
+
+    //     // Process the cart items
+    //     foreach ($cartItemsGrouped as $groupKey => $groupItems) {
+    //         $cartItem = $groupItems->first();
+            
+    //         // Fetch the product pricing
+    //         $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
+    //         $productPrice = $productPricing->$getPriceColumn ?? $productPricing['sacramentoUSD'] ?? $productPricing['retailUSD'] ?? 0;
+
+    //         // Merge the quantities of grouped items
+    //         $totalQuantity = $groupItems->sum('quantity');
+
+    //         // Update or create cart item with the current active contact_id and price
+    //         // Cart::updateOrCreate(
+    //         //     ['user_id' => $user_id, 'product_id' => $cartItem['product_id'], 'option_id' => $cartItem['option_id']],
+    //         //     ['contact_id' => $active_contact_id, 'quantity' => $totalQuantity, 'price' => $productPrice]
+    //         // );
+
+    //         Cart::updateOrCreate(
+    //             ['user_id' => $user_id, 'product_id' => $cartItem['product_id'], 'option_id' => $cartItem['option_id'], 'contact_id' => $active_contact_id], // Include 'contact_id' in the condition
+    //             ['quantity' => $totalQuantity, 'price' => $productPrice]
+    //         );
+
+    //         // Store updated cart data for session
+    //         $cart_data[$cartItem['qoute_id']] = [
+    //             "product_id" => $cartItem['product_id'],
+    //             "name" => $cartItem['name'],
+    //             "quantity" => $totalQuantity,
+    //             "price" => $productPrice,
+    //             "code" => $cartItem['code'],
+    //             "image" => $cartItem['image'],
+    //             'option_id' => $cartItem['option_id'],
+    //             "slug" => $cartItem['slug'],
+    //         ];
+    //     }
+
+    //     // Store updated cart in session
+    //     Session::put('cart', $cart_data);
+
+    //     // Get company address based on primary or secondary contact
+    //     if ($company_type == 'primary') {
+    //         $get_company_address = Contact::where('contact_id', $active_contact_id)->first();
+    //     } elseif ($company_type == 'secondary') {
+    //         $secondary_contact_user = Contact::where('secondary_id', $active_contact_id)->first();
+    //         $get_company_address = Contact::where('contact_id', $secondary_contact_user->parent_id)->where('is_parent', 1)->first();
+    //     }
+
+    //     return response()->json([
+    //         'status' => '204',
+    //         'message' => 'Company Switch Successfully!',
+    //         'success' => true,
+    //         'update_address' => $get_company_address,
+    //     ]);
+    // }
+
     public function switch_company(Request $request)
     {
         $user_id = auth()->user()->id;
@@ -3037,6 +3146,11 @@ class UserController extends Controller
             'company' => $active_company,
         ]);
 
+        // Update all cart items with null contact_id to the selected company (active contact_id)
+        Cart::where('user_id', $user_id)
+            ->whereNull('contact_id')
+            ->update(['contact_id' => $active_contact_id]);
+
         // Fetch the selected contact for the user
         $getSelectedContact = Contact::where('user_id', $user_id)
             ->where(function ($query) use ($active_contact_id) {
@@ -3045,12 +3159,9 @@ class UserController extends Controller
             })
             ->first();
 
-        // Retrieve cart items, including those with null contact_id
+        // Retrieve cart items, now with updated contact_id
         $cartItems = Cart::where('user_id', $getSelectedContact->user_id)
-            ->where(function ($query) use ($active_contact_id) {
-                $query->where('contact_id', $active_contact_id)
-                    ->orWhereNull('contact_id');
-            })
+            ->where('contact_id', $active_contact_id) // Fetch only items with the current contact_id
             ->get();
 
         // Group the cart items by product and option_id for merging quantities
@@ -3063,7 +3174,7 @@ class UserController extends Controller
         // Process the cart items
         foreach ($cartItemsGrouped as $groupKey => $groupItems) {
             $cartItem = $groupItems->first();
-            
+
             // Fetch the product pricing
             $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
             $productPrice = $productPricing->$getPriceColumn ?? $productPricing['sacramentoUSD'] ?? $productPricing['retailUSD'] ?? 0;
@@ -3073,8 +3184,8 @@ class UserController extends Controller
 
             // Update or create cart item with the current active contact_id and price
             Cart::updateOrCreate(
-                ['user_id' => $user_id, 'product_id' => $cartItem['product_id'], 'option_id' => $cartItem['option_id']],
-                ['contact_id' => $active_contact_id, 'quantity' => $totalQuantity, 'price' => $productPrice]
+                ['user_id' => $user_id, 'product_id' => $cartItem['product_id'], 'option_id' => $cartItem['option_id'], 'contact_id' => $active_contact_id],
+                ['quantity' => $totalQuantity, 'price' => $productPrice]
             );
 
             // Store updated cart data for session
@@ -3108,6 +3219,7 @@ class UserController extends Controller
             'update_address' => $get_company_address,
         ]);
     }
+
 
 
 
