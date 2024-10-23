@@ -462,53 +462,106 @@ class UtilHelper
     }
 
 
-    public static function cart_detail ($total_quantity , $grand_total) {
-        $company = session()->get('company');
-        $contact_id = session()->get('contact_id');
-        $total = 0;
-        $grand_total = 0;
-        if (!auth()->user()) {
-            $cart_items = Session::get('cart');
-            if (!empty($cart_items)) {
-                foreach ($cart_items as $cart) {
-                    $total_q[] = $cart['quantity'];
-                    $total_quantity = array_sum($total_q);
-                    $total_price[] = $cart['price'] * $cart['quantity'];
-                    $grand_total = array_sum($total_price);
-                }
-            }
-        } else {
-            if (empty($company) || (!$company) && (!empty(!auth()->user()))) {
-                $cart_items = Cart::where('user_id' , auth()->user()->id)
-                ->get();
-                if (count($cart_items) > 0) {
-                    foreach ($cart_items as $cart) {
-                        $total_q[] = $cart->quantity;
-                        $total_quantity = array_sum($total_q);
-                        $total_price[] = $cart->price * $cart->quantity;
-                        $grand_total = array_sum($total_price);
-                    }
-                }
-            }
-            else {
-                $cart_items = Cart::where('contact_id', $contact_id)
-                ->where('user_id' , auth()->user()->id)
-                ->get();
-                if (count($cart_items) > 0) {
-                    foreach ($cart_items as $cart) {
-                        $total_q[] = $cart->quantity;
-                        $total_quantity = array_sum($total_q);
-                        $total_price[] = $cart->price * $cart->quantity;
-                        $grand_total = array_sum($total_price);
-                    }
-                }
-            }
-        }
+    // public static function cart_detail ($total_quantity , $grand_total) {
+    //     $company = session()->get('company');
+    //     $contact_id = session()->get('contact_id');
+    //     $total = 0;
+    //     $grand_total = 0;
+    //     if (!auth()->user()) {
+    //         $cart_items = Session::get('cart');
+    //         if (!empty($cart_items)) {
+    //             foreach ($cart_items as $cart) {
+    //                 $total_q[] = $cart['quantity'];
+    //                 $total_quantity = array_sum($total_q);
+    //                 $total_price[] = $cart['price'] * $cart['quantity'];
+    //                 $grand_total = array_sum($total_price);
+    //             }
+    //         }
+    //     } else {
+    //         if (empty($company) || (!$company) && (!empty(!auth()->user()))) {
+    //             $cart_items = Cart::where('user_id' , auth()->user()->id)
+    //             ->get();
+    //             if (count($cart_items) > 0) {
+    //                 foreach ($cart_items as $cart) {
+    //                     $total_q[] = $cart->quantity;
+    //                     $total_quantity = array_sum($total_q);
+    //                     $total_price[] = $cart->price * $cart->quantity;
+    //                     $grand_total = array_sum($total_price);
+    //                 }
+    //             }
+    //         }
+    //         else {
+    //             $cart_items = Cart::where('contact_id', $contact_id)
+    //             ->where('user_id' , auth()->user()->id)
+    //             ->get();
+    //             if (count($cart_items) > 0) {
+    //                 foreach ($cart_items as $cart) {
+    //                     $total_q[] = $cart->quantity;
+    //                     $total_quantity = array_sum($total_q);
+    //                     $total_price[] = $cart->price * $cart->quantity;
+    //                     $grand_total = array_sum($total_price);
+    //                 }
+    //             }
+    //         }
+    //     }
     
-        return [
-            'total_quantity' => $total_quantity,
-            'grand_total' => $grand_total
-        ];
+    //     return [
+    //         'total_quantity' => $total_quantity,
+    //         'grand_total' => $grand_total
+    //     ];
 
+    // }
+
+    public static function cart_detail()
+{
+    $company = session()->get('company');
+    $contact_id = session()->get('contact_id');
+    $total_quantity = 0;
+    $grand_total = 0;
+    $total_q = [];
+    $total_price = [];
+
+    // Handle unauthenticated (guest) users with session-based cart
+    if (!auth()->check()) {
+        $cart_items = Session::get('cart', []); // Default to empty array if session cart is missing
+        if (!empty($cart_items)) {
+            foreach ($cart_items as $cart) {
+                $total_q[] = $cart['quantity'];
+                $total_price[] = $cart['price'] * $cart['quantity'];
+            }
+            // Calculate totals after the loop
+            $total_quantity = array_sum($total_q);
+            $grand_total = array_sum($total_price);
+        }
     }
+    // Handle authenticated users with database-based cart
+    else {
+        $query = Cart::where('user_id', auth()->user()->id);
+
+        // If the user has a company (contact_id), filter by it
+        if (!empty($contact_id)) {
+            $query->where('contact_id', $contact_id);
+        }
+
+        // Retrieve cart items
+        $cart_items = $query->get();
+
+        if ($cart_items->isNotEmpty()) {
+            foreach ($cart_items as $cart) {
+                $total_q[] = $cart->quantity;
+                $total_price[] = $cart->price * $cart->quantity;
+            }
+            // Calculate totals after the loop
+            $total_quantity = array_sum($total_q);
+            $grand_total = array_sum($total_price);
+        }
+    }
+
+    // Return the cart details
+    return [
+        'total_quantity' => $total_quantity,
+        'grand_total' => $grand_total,
+    ];
+}
+
 }

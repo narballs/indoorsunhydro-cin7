@@ -3198,7 +3198,18 @@ class UserController extends Controller
                 "image" => $cartItem['image'],
                 'option_id' => $cartItem['option_id'],
                 "slug" => $cartItem['slug'],
+                "qoute_id" => $cartItem['qoute_id'],
+                "user_id" => $cartItem['user_id'],
+                "contact_id" => $cartItem['contact_id'],
             ];
+
+            // Delete the duplicate items (those after the first one in the group)
+            Cart::where('user_id', $user_id)
+                ->where('product_id', $cartItem['product_id'])
+                ->where('option_id', $cartItem['option_id'])
+                ->where('contact_id', $active_contact_id)
+                ->where('id', '!=', $cartItem['id']) // Exclude the updated one
+                ->delete();
         }
 
         // Store updated cart in session
@@ -3219,6 +3230,7 @@ class UserController extends Controller
             'update_address' => $get_company_address,
         ]);
     }
+
 
 
 
