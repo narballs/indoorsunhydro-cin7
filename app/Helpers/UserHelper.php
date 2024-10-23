@@ -119,44 +119,7 @@ class UserHelper
                 'company' => $active_company,
             ]);
 
-            // $getSelectedContact = Contact::where('user_id' , $user_id)
-            // ->where('contact_id' , $active_contact_id)
-            // ->orWhere('secondary_id' , $active_contact_id)
-            // ->first();
-            // $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)->get();
-            // $all_cart_items = [];
-            // $productPrice = 0;
-            // $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-            // if (count($cartItems) > 0) {
-            //     foreach ($cartItems as $cartItem) {
-            //         $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-            //         $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
-            //         if ($productPrice == 0) {
-            //             $productPrice = $productPricing['sacramentoUSD'];
-            //         }
-                    
-            //         if ($productPrice == 0) { 
-            //             $productPrice = $productPricing['retailUSD'];
-            //         }
-            //         $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
-            //         if (!empty($cart)) {
-            //             $cart->price = $productPrice;
-            //             $cart->save();
-            //         }
-            //         $all_cart_items[$cartItem['qoute_id']] = [
-            //             "product_id" => $cartItem['product_id'],
-            //             "name" => $cartItem['name'],
-            //             "quantity" => $cartItem['quantity'],
-            //             "price" => $cart['price'],
-            //             "code" => $cartItem['code'],
-            //             "image" => $cartItem['image'],
-            //             'option_id' => $cartItem['option_id'],
-            //             "slug" => $cartItem['slug'],
-            //         ];
-            //     }
-            //     session()->forget('cart');
-            //     Session::put('cart', $all_cart_items);
-            // }
+            
 
             $getSelectedContact = Contact::where('user_id', $user_id)
             ->where(function ($query) use ($active_contact_id) {
@@ -199,10 +162,10 @@ class UserHelper
                             [
                                 'user_id' => $user_id,
                                 'product_id' => $cartItem['product_id'],
-                                'option_id' => $cartItem['option_id']
+                                'option_id' => $cartItem['option_id'],
+                                'contact_id' => $active_contact_id,
                             ],
                             [
-                                'contact_id' => $active_contact_id,
                                 'quantity' => $totalQuantity,
                                 'price' => $productPrice
                             ]
@@ -218,6 +181,9 @@ class UserHelper
                             "image" => $cartItem['image'],
                             'option_id' => $cartItem['option_id'],
                             "slug" => $cartItem['slug'],
+                            "qoute_id" => $cartItem['qoute_id'],
+                            'user_id' => $cartItem['user_id'],
+                            'contact_id' => $cartItem['contact_id'],                            
                         ];
                     }
 
@@ -999,6 +965,9 @@ class UserHelper
                     "image" => $cartItem['image'],
                     "option_id" => $cartItem['option_id'],
                     "slug" => $cartItem['slug'],
+                    'qoute_id' => $cartItem['qoute_id'],
+                    'user_id' => $cartItem['user_id'],
+                    'contact_id' => $cartItem['contact_id'],
                 ];
             }
     
