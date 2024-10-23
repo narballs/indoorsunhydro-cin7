@@ -1475,47 +1475,50 @@ class ProductController extends Controller
     //     return redirect()->back()->with('success', 'Product removed successfully!');
     // }
 
-    public function removeProductByCategory(Request $request , $id)
+    public function removeProductByCategory(Request $request, $id)
     {
-        
         if (empty($id)) {
-            return redirect()->back()->with('error', 'Product not found!');
+            return redirect()->back()->with('error', 'There is an issue with removing the product. Please contact Admin.');
         }
 
-        $session_contact_id = session()->get('contact_id');
-        if (auth()->check()) {
-            $user_id = auth()->user()->id;
+        
+        $user_id = auth()->id();
+        $contact_id = Session::get('contact_id');
+        $cart = session()->get('cart');
 
-            // Attempt to find the quote with matching quote_id, contact_id, and user_id
-            $quote = Cart::where('qoute_id', $id)
-                        ->where('contact_id', $session_contact_id)
-                        ->where('user_id', $user_id)
-                        ->first();
+        // Prepare the query to delete the product
+        $query = Cart::where('qoute_id', intval($id));
 
-            if ($quote) {
-                $quote->delete();
-            } else {
-                // If quote doesn't match the contact_id, attempt to find with just user_id and quote_id
-                $cart_delete = Cart::where('qoute_id', $id)
-                                ->where('user_id', $user_id)
-                                ->first();
-                if ($cart_delete) {
-                    $cart_delete->delete();
-                }
-            }
-            
+        if (!Auth::user()) {
+            $query->where('user_id', 0);
         } else {
-            // Handle unauthenticated users, delete by just quote_id
-            Cart::where('qoute_id', $id)->delete();
+            $query->where('user_id', $user_id);
+            if (!empty($contact_id)) {
+                $query->where('contact_id', $contact_id);
+            } else {
+                $query->where('contact_id', null);
+            }
         }
 
-        return redirect()->back()->with('success', 'Product removed successfully!');
+        // Execute the deletion
+        $deleted = $query->delete();
+        unset($cart[$id]);
+        $request->session()->put('cart', $cart);
+
+        // Return a success or error message based on the deletion result
+        if ($deleted) {
+            return redirect()->back()->with('success', 'Product removed successfully!');
+        } else {
+            return redirect()->back()->with('error', 'There is an issue with removing the product. Please contact Admin.');
+        }
     }
+
 
 
 
     public function cart(Request $request)
     {
+        
         $contact = [];
         $subtotal = 0;
         $cart_total = 0;
@@ -1531,6 +1534,11 @@ class ProductController extends Controller
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
         $is_child = false; 
+
+        if (empty($contact_id) && !empty($user_id)) {
+            
+            return redirect()->route('home')->with('error', 'Please select a company to proceed');
+        }
         
         if (!empty($user_id) && !empty($contact_id)) {
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
