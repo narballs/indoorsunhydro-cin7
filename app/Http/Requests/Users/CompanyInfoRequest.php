@@ -25,10 +25,10 @@ class CompanyInfoRequest extends FormRequest
     {
         if ($this->request->has('company_name') || $this->request->has('company_website') || $this->request->get('phone') || ($this->request->all()) == 0) {
             return [
-                'company_name' => [
-                    'required',
-                    'regex:/^[a-zA-Z0-9\s]+$/'
-                ],
+                // 'company_name' => [
+                //     'required',
+                //     'regex:/^[a-zA-Z0-9\s]+$/'
+                // ],
                 // 'company_website' => [
                 //     'required',
                 //     'regex:/(?:https?:\/\/)?(?:[a-zA-Z0-9.-]+?\.(?:[a-zA-Z])|\d+\.\d+\.\d+\.\d+)/'
