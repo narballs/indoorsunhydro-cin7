@@ -1293,10 +1293,10 @@ class UserController extends Controller
                         if (count($companies) > 0 ) {
                             if ($companies[0]->contact_id == null) {
                                 UserHelper::switch_company($companies[0]->secondary_id);
-                                $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
+                                // $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
                             } else {
                                 UserHelper::switch_company($companies[0]->contact_id);
-                                $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
+                                // $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
                             }
                             Session::put('companies', $companies);
                         }
@@ -1354,10 +1354,10 @@ class UserController extends Controller
                     if (count($companies) > 0 ) {
                         if ($companies[0]->contact_id == null) {
                             UserHelper::switch_company($companies[0]->secondary_id);
-                            $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
+                            // $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
                         } else {
                             UserHelper::switch_company($companies[0]->contact_id);
-                            $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
+                            // $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
                         }
                         Session::put('companies', $companies);
                     }

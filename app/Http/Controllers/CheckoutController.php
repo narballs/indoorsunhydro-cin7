@@ -2560,10 +2560,10 @@ class CheckoutController extends Controller
                         if (count($companies) > 0 ) {
                             if ($companies[0]->contact_id == null) {
                                 UserHelper::switch_company($companies[0]->secondary_id);
-                                $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
+                                // $session_contact_id = !empty($companies[0])  && !empty($companies[0]->secondary_id) ? $companies[0]->secondary_id : null;
                             } else {
                                 UserHelper::switch_company($companies[0]->contact_id);
-                                $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
+                                // $session_contact_id = !empty($companies[0])  && !empty($companies[0]->contact_id) ? $companies[0]->contact_id : null;
                             }
                             Session::put('companies', $companies);
                         }
@@ -2573,7 +2573,7 @@ class CheckoutController extends Controller
                             $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
                             foreach ($cart_items as $cart_item) {
                                 $cart_item->user_id = $auth_user->id;
-                                $cart_item->contact_id = $session_contact_id;
+                                // $cart_item->contact_id = $session_contact_id;
                                 $cart_item->save();
                             }
                         }
