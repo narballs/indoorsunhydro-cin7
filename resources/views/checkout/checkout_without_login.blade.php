@@ -407,7 +407,7 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="company_name" id="company_name" class="form-control update_checkout_input mb-1 company_name" placeholder="Enter Company Name Company Name (Optional)">
+                                        <input type="text" name="company_name" id="company_name" class="form-control update_checkout_input mb-1 company_name" placeholder="Enter Company Name (Optional)">
                                         <div class="company_name_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
