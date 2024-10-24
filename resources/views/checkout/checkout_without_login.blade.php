@@ -407,7 +407,7 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" name="company_name" id="company_name" class="form-control update_checkout_input mb-1 company_name" placeholder="Enter Company Name">
+                                        <input type="text" name="company_name" id="company_name" class="form-control update_checkout_input mb-1 company_name" placeholder="Enter Company Name Company Name (Optional)">
                                         <div class="company_name_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
@@ -871,13 +871,13 @@ $cart_price = 0;
                                 $('.state_errors').html('');
                             }
 
-                            if (errors.company) {
-                                var error_company = errors.company[0];
-                                $('.company_name_errors').html(error_company);
-                            }
-                            else {
-                                $('.company_name_errors').html('');
-                            }
+                            // if (errors.company) {
+                            //     var error_company = errors.company[0];
+                            //     $('.company_name_errors').html(error_company);
+                            // }
+                            // else {
+                            //     $('.company_name_errors').html('');
+                            // }
 
                             if (errors.zip_code) {
                                 var error_zip_code = errors.zip_code[0];

@@ -452,6 +452,15 @@
             font-weight: 500;
             letter-spacing: 1px;
         }
+        .select_company_button_pop_up , .select_company_button_pop_up:hover , .select_company_button_pop_up:focus {
+            background-color: #7CC633;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Poppins';
+            /* border-radius: 30px; */
+            color: #FFFFFF;
+            border: 1px solid #7CC633;
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>
