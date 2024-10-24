@@ -445,6 +445,13 @@
             transform: translateX(-50%); /* Center adjustment */
             font-size: 14px; /* Adjust size as necessary */
         }
+        .selection_company_heading {
+            font-family: 'poppins';
+            color:#000000;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>
