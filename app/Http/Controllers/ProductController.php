@@ -1535,10 +1535,10 @@ class ProductController extends Controller
         $contact_id = session()->get('contact_id');
         $is_child = false; 
 
-        if (empty($contact_id) && !empty($user_id)) {
+        // if (empty($contact_id) && !empty($user_id)) {
             
-            return redirect()->route('home')->with('error', 'Please select a company to proceed');
-        }
+        //     return redirect()->route('home')->with('error', 'Please select a company to proceed');
+        // }
         
         if (!empty($user_id) && !empty($contact_id)) {
             $contact = Contact::where('user_id', $user_id)->where('contact_id', $contact_id)
