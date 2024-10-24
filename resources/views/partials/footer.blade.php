@@ -1062,33 +1062,39 @@
                 <h5 class="modal-title selection_company_heading" id="exampleModalLabel">Please Select Company first for which you want to restore the cart</h5>
             </div>
             <div class="modal-body">
-                <div class="dropdown">
-                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Select Company
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        @if ($user_companies)
-                            @foreach ($user_companies as $company)
-                                @php
-                                    $contact_id = $company->contact_id ?? $company->secondary_id;
-                                    $primary = $company->contact_id ? '(primary)' : '(secondary)';
-                                    $disabled = $company->status == 0 ? 'disabled' : '';
-                                    $disable_text = $company->status == 0 ? '(Disabled)' : '';
-                                    $muted = $company->status == 0 ? 'text-muted' : '';
-                                @endphp
-                                @if($company->type != "Supplier")
-                                    <a type="button"
-                                        class="dropdown-item {{ $disabled }} {{ $muted }}"
-                                        onclick="switch_company_user({{ $contact_id }})">
-                                        {{ $company->company }}
-                                        <span style="font-size: 9px;font-family: 'Poppins';" class="{{ $muted }}">
-                                            {{ $primary }} {{ $disable_text }}
-                                        </span>
-                                    </a>
-                                @endif
-                            @endforeach
-                        @endif
-                    </ul>
+                <div class="dropdown text-center">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <button class="btn btn-info dropdown-toggle select_company_button_pop_up" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Select Company
+                            </button>
+                            <div class="row">
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    @if ($user_companies)
+                                        @foreach ($user_companies as $company)
+                                            @php
+                                                $contact_id = $company->contact_id ?? $company->secondary_id;
+                                                $primary = $company->contact_id ? '(primary)' : '(secondary)';
+                                                $disabled = $company->status == 0 ? 'disabled' : '';
+                                                $disable_text = $company->status == 0 ? '(Disabled)' : '';
+                                                $muted = $company->status == 0 ? 'text-muted' : '';
+                                            @endphp
+                                            @if($company->type != "Supplier")
+                                                <a type="button"
+                                                    class="dropdown-item {{ $disabled }} {{ $muted }}"
+                                                    onclick="switch_company_user({{ $contact_id }})">
+                                                    {{ $company->company }}
+                                                    <span style="font-size: 9px;font-family: 'Poppins';" class="{{ $muted }}">
+                                                        {{ $primary }} {{ $disable_text }}
+                                                    </span>
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
