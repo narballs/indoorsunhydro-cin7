@@ -121,11 +121,25 @@ class UserHelper
 
             
 
+            // $getSelectedContact = Contact::where('user_id', $user_id)
+            // ->where(function ($query) use ($active_contact_id) {
+            //     $query->where('contact_id', $active_contact_id)
+            //         ->orWhere('secondary_id', $active_contact_id);
+            // })
+            // ->first();
+
+
+            // Update all cart items with null contact_id to the selected company (active contact_id)
+            Cart::where('user_id', $user_id)
+            ->whereNull('contact_id')
+            ->update(['contact_id' => $active_contact_id]);
+
+            // Fetch the selected contact for the user
             $getSelectedContact = Contact::where('user_id', $user_id)
-            ->where(function ($query) use ($active_contact_id) {
-                $query->where('contact_id', $active_contact_id)
-                    ->orWhere('secondary_id', $active_contact_id);
-            })
+                ->where(function ($query) use ($active_contact_id) {
+                    $query->where('contact_id', $active_contact_id)
+                        ->orWhere('secondary_id', $active_contact_id);
+                })
             ->first();
 
             if ($getSelectedContact) {
@@ -185,6 +199,14 @@ class UserHelper
                             'user_id' => $cartItem['user_id'],
                             'contact_id' => $cartItem['contact_id'],                            
                         ];
+
+                        // Delete the duplicate items (those after the first one in the group)
+                        Cart::where('user_id', $user_id)
+                        ->where('product_id', $cartItem['product_id'])
+                        ->where('option_id', $cartItem['option_id'])
+                        ->where('contact_id', $active_contact_id)
+                        ->where('id', '!=', $cartItem['id']) // Exclude the updated one
+                        ->delete();
                     }
 
                     // Store updated cart in session
