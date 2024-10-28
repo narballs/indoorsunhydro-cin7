@@ -3322,9 +3322,16 @@ class UserController extends Controller
         // Retrieve the user first
         $user = User::where('email', $request->email)->first();
 
+
+
         if (!$user) {
             return redirect()->back()->withErrors(['email' => 'User not found.']);
         }
+
+        $request->validate([
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password'
+        ]);
 
         // Update user fields
         $user->update([
