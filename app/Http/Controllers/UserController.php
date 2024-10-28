@@ -3317,20 +3317,25 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Password Send Successfully !');
     }
 
-
     public function reset_password(Request $request)
     {
-        $user = User::where('email', $request->email)
-            ->update([
-                'password' => bcrypt($request->password),
-                'is_updated' => 1,
-                'hash' => null,
-                // 'updated_at' => Carbon::now()
-            ]);
+        // Retrieve the user first
+        $user = User::where('email', $request->email)->first();
 
+        if (!$user) {
+            return redirect()->back()->withErrors(['email' => 'User not found.']);
+        }
 
-        
-        $auth_user = Auth::loginUsingId($user->id);
+        // Update user fields
+        $user->update([
+            'password' => bcrypt($request->password),
+            'is_updated' => 1,
+            'hash' => null,
+            // 'updated_at' => Carbon::now()
+        ]);
+
+        // Log in the user
+        Auth::loginUsingId($user->id);
 
         if ($request->session()->has('cart_hash')) {
             $cart_hash = $request->session()->get('cart_hash');
@@ -3341,20 +3346,20 @@ class UserController extends Controller
             }
         }
 
-        $companies = Contact::where('user_id', $auth_user->id)->get();
-        if (count($companies) > 0 ) {
+        // Handle company switch logic
+        $companies = Contact::where('user_id', $user->id)->get();
+        if (count($companies) > 0) {
             if ($companies[0]->contact_id == null) {
                 UserHelper::switch_company($companies[0]->secondary_id);
-                
             } else {
                 UserHelper::switch_company($companies[0]->contact_id);
-                
             }
             Session::put('companies', $companies);
         }
 
         return redirect('my-account');
     }
+
 
     public function user_order_approve(Request $request)
     {
