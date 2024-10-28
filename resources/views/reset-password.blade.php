@@ -31,7 +31,7 @@
 				</div>
 				<div class="col-md-12">
 					<input type="password" placeholder="&#xf023;  Password" id="company_name"
-						name="password" class="form-control mt-2 company-info fontAwesome mt-3">
+						name="password" class="form-control mt-2 company-info fontAwesome mt-3" value="{{ old('password') }}">
 					@if ($errors->has('password'))
                     <span class="text-danger">{{ $errors->first('password') }}</span>
                     @endif
