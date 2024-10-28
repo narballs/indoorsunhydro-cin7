@@ -1124,8 +1124,13 @@ class UserController extends Controller
             $price_column = ucfirst($default_price_column->option_value);
         }
         else {
+            $price_column = 'SacramentoUSD';
+        }
+
+        if (empty($price_column)) {
             $price_column = 'RetailUSD';
         }
+
         $validatedData = $request->validate(
             [
                 'street_address' => [
@@ -3312,21 +3317,56 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Password Send Successfully !');
     }
 
-
     public function reset_password(Request $request)
     {
-        User::where('email', $request->email)
-            ->update([
-                'password' => bcrypt($request->password),
-                'is_updated' => 1,
-                'hash' => null,
-                // 'updated_at' => Carbon::now()
-            ]);
-        $user_id = auth()->user()->id;
-        $companies = Contact::where('user_id', $user_id)->get();
-        Session::put('companies', $companies);
+        // Retrieve the user first
+        $user = User::where('email', $request->email)->first();
+
+
+
+        if (!$user) {
+            return redirect()->back()->withErrors(['email' => 'User not found.']);
+        }
+
+        $request->validate([
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password'
+        ]);
+
+        // Update user fields
+        $user->update([
+            'password' => bcrypt($request->password),
+            'is_updated' => 1,
+            'hash' => null,
+            // 'updated_at' => Carbon::now()
+        ]);
+
+        // Log in the user
+        Auth::loginUsingId($user->id);
+
+        if ($request->session()->has('cart_hash')) {
+            $cart_hash = $request->session()->get('cart_hash');
+            $cart_items = Cart::where('cart_hash', $cart_hash)->where('is_active', 1)->where('user_id', 0)->get();
+            foreach ($cart_items as $cart_item) {
+                $cart_item->user_id = auth()->user()->id;
+                $cart_item->save();
+            }
+        }
+
+        // Handle company switch logic
+        $companies = Contact::where('user_id', $user->id)->get();
+        if (count($companies) > 0) {
+            if ($companies[0]->contact_id == null) {
+                UserHelper::switch_company($companies[0]->secondary_id);
+            } else {
+                UserHelper::switch_company($companies[0]->contact_id);
+            }
+            Session::put('companies', $companies);
+        }
+
         return redirect('my-account');
     }
+
 
     public function user_order_approve(Request $request)
     {
@@ -3495,7 +3535,7 @@ class UserController extends Controller
             if (Carbon::now()->greaterThan($tokenExpirationTime)) {
                 return redirect()->route('lost.password')->with('error', 'Your link has been expired . Please try again.');
             } else {
-                Auth::login($user);
+                // Auth::login($user);
                 return view('reset-password', compact('user'));
             }
     
