@@ -231,8 +231,13 @@ class UserHelper
             $price_column = $default_price_column->option_value;
         }
         else {
+            $price_column = 'sacramentoUSD';
+        }
+
+        if (empty($price_column)) {
             $price_column = 'retailUSD';
         }
+
         if ($is_admin === false) {
 
             $user_id = Auth::id();
@@ -264,7 +269,6 @@ class UserHelper
                 }
             }    
         }
-
 
         return lcfirst($price_column);
     }
