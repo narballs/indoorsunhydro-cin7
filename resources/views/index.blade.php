@@ -397,9 +397,8 @@
     
                             var product_id = item.prd_id;
                             var price = parseFloat(item.price);
-                            var quantity = parseFloat(item.quantity);
-    
-                            var subtotal = parseInt(price * quantity);
+                            var quantity = parseInt(item.quantity);
+                            var subtotal = parseFloat(price * quantity);
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$' + subtotal);
@@ -432,9 +431,8 @@
     
                             var product_id = item.prd_id;
                             var price = parseFloat(item.price);
-                            var quantity = parseFloat(item.quantity);
-    
-                            var subtotal = parseInt(price * quantity);
+                            var quantity = parseInt(item.quantity);
+                            var subtotal = parseFloat(price * quantity);
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$' + subtotal);
