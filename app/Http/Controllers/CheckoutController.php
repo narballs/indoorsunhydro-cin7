@@ -2432,6 +2432,11 @@ class CheckoutController extends Controller
                         $price_column = ucfirst($default_price_column->option_value);
                     }
                     else {
+                        $price_column = 'SacramentoUSD';
+                    }
+                    
+            
+                    if (empty($price_column)) {
                         $price_column = 'RetailUSD';
                     }
 
