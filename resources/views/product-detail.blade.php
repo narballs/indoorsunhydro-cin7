@@ -1655,7 +1655,7 @@
                             <div class="row">
                                 <div class="form-group">
                                     <label for="" class="bulk_label">
-                                        Where will these items be delievered? <span>(Optional)</span>
+                                        Where will these items be delivered? <span>(Optional)</span>
                                     </label>
                                     <p class="bulk_paragraph">
                                         Please put City, State, and Country e.g. (California, USA)
