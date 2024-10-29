@@ -2505,8 +2505,7 @@
         });
     }
     
-    function saveBulkQuantityDiscount(e) {
-        e.preventDefault();
+    function saveBulkQuantityDiscount() {
         var product_name_bulk = $('#bulk_product_list').val();
         var quantity_bulk  =  $('#bulk_quantity').val();
         var phone_number_bulk =  $('#bulk_phone_number').val();
