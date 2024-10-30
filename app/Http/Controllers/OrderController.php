@@ -1426,7 +1426,8 @@ class OrderController extends Controller
             'texClasses'
         )->first();
         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
-        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+        $shipstation_order_status = 'create_order';
+        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
     
         if ($shiping_order['statusCode'] == 200) {
             $orderUpdate = ApiOrder::where('id', $order_id)->update([
@@ -1795,8 +1796,8 @@ class OrderController extends Controller
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                     $order_contact = Contact::where('contact_id', $current_Order->memberId)->orWhere('parent_id' , $current_Order->memberId)->first();
                     if (!empty($order_contact)) {
-                        UserHelper::shipping_order($order_id , $current_Order , $order_contact);
-                        $shiping_order = UserHelper::shipping_order($order_id , $current_Order , $order_contact);
+                        $shipstation_order_status = 'create_order';
+                        $shiping_order = UserHelper::shipping_order($order_id , $current_Order , $order_contact, $shipstation_order_status);
                         if ($shiping_order['statusCode'] == 200) {
                             $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                 'shipstation_orderId' => $shiping_order['responseBody']->orderId,
@@ -1939,8 +1940,8 @@ class OrderController extends Controller
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                     $order_contact = Contact::where('contact_id', $current_Order->memberId)->orWhere('parent_id' , $current_Order->memberId)->first();
                     if (!empty($order_contact)) {
-                        UserHelper::shipping_order($order_id , $current_Order , $order_contact);
-                        $shiping_order = UserHelper::shipping_order($order_id , $current_Order , $order_contact);
+                        $shipstation_order_status = 'create_order';
+                        $shiping_order = UserHelper::shipping_order($order_id , $current_Order , $order_contact, $shipstation_order_status);
                         if ($shiping_order['statusCode'] == 200) {
                             $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                 'shipstation_orderId' => $shiping_order['responseBody']->orderId,

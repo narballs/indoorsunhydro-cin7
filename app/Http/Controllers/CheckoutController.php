@@ -971,8 +971,8 @@ class CheckoutController extends Controller
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && (strtolower($currentOrder->logisticsCarrier) !== 'pickup order')) {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
-                            // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            $shipstation_order_status = 'create_order';
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
                             if ($shiping_order['statusCode'] == 200) {
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                     'shipstation_orderId' => $shiping_order['responseBody']->orderId,
@@ -1139,8 +1139,8 @@ class CheckoutController extends Controller
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact) && $pickup == false) {
-                            // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            $shipstation_order_status = 'create_order';
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
                             if ($shiping_order['statusCode'] == 200) {
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                     'shipstation_orderId' => $shiping_order['responseBody']->orderId,
@@ -2939,6 +2939,7 @@ class CheckoutController extends Controller
                 $refundAmount = $charge->amount_refunded / 100; // Convert amount from cents to dollars
                 $order_id = $charge->metadata->order_id;
                 $currentOrder = ApiOrder::find($order_id);
+                $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
 
                 if (!empty($currentOrder) && ($refundAmount < $total_amount)) {
                     $currentOrder->payment_status = 'partially refunded';
@@ -2967,6 +2968,10 @@ class CheckoutController extends Controller
                     $order_comment->order_id = $order_id;
                     $order_comment->comment = 'Order marked as refunded through webhook. (charge.refunded)';
                     $order_comment->save();
+
+
+                    $shipstation_order_status = 'update_order';
+                    $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
 
                     // Log refund information or perform any other necessary actions
                     Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
