@@ -668,7 +668,8 @@ class OrderManagementController extends Controller
                 if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                     if (!empty($order_contact)) {
-                        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                        $shipstation_order_status = 'create_order';
+                        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
                         if ($shiping_order['statusCode'] == 200) {
                             $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                 'shipstation_orderId' => $shiping_order['responseBody']->orderId,

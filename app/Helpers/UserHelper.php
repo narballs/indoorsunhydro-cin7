@@ -340,7 +340,7 @@ class UserHelper
     
 
 
-    public static function shipping_order($order_id , $currentOrder , $order_contact) {
+    public static function shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status) {
         $api_order = ApiOrder::where('id', $order_id)->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
@@ -426,17 +426,19 @@ class UserHelper
         $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
         $tax = $calculate_tax - $currentOrder->shipment_price;
         $orderStatus = null;
-        if ($api_order->shipstation_orderId == null) {
-            if ($currentOrder->payment_status == 'paid') {
-                $orderStatus = 'awaiting_shipment';
-            } else {
-                $orderStatus = 'awaiting_payment';
-            }
+        if (!empty($shipstation_order_status) && ($shipstation_order_status == 'update_order')) {
+            $orderStatus = 'cancelled';
         } else {
-            $orderStatus = 'awaiting_shipment';
+            if ($api_order->shipstation_orderId == null) {
+                if ($currentOrder->payment_status == 'paid') {
+                    $orderStatus = 'awaiting_shipment';
+                } else {
+                    $orderStatus = 'awaiting_payment';
+                }
+            } else {
+                $orderStatus = 'awaiting_shipment';
+            }
         }
-
-        
 
         // Billing Address
         $firstName = self::get_AddressValue($currentOrder->BillingFirstName, $order_contact->firstName);
