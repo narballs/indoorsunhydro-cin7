@@ -2767,7 +2767,7 @@ class UserController extends Controller
             } else {
                 $active_contact_id = $contact->contact_id;
             }
-            $active_company = $contact->company;
+            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
 
             Session::put([
                 'contact_id' => $active_contact_id,
@@ -2780,7 +2780,7 @@ class UserController extends Controller
             $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
             if (!empty($contact)) {
                 $active_contact_id = $contact->secondary_id;
-                $active_company = $contact->company;
+                $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;;
                 Session::put([
                     'contact_id' => $active_contact_id,
                     'company' => $active_company
@@ -3172,12 +3172,12 @@ class UserController extends Controller
         // Determine active contact (primary or secondary)
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
-            $active_company = $contact->company;
+            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
             $company_type = 'primary';
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
-            $active_company = $contact->company;
+            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
             $company_type = 'secondary';
         }
 
@@ -3289,7 +3289,7 @@ class UserController extends Controller
             $contact = Contact::where('secondary_id', $rawContactID[0])->first();
             $active_contact_id = $contact->secondary_id;
         }
-        $active_company = $contact->company;
+        $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
         Session::put([
             'contact_id' => $active_contact_id,
             'company' => $active_company
