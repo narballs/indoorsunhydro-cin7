@@ -73,7 +73,7 @@ class UserHelper
         $active_contact_id = $active_company = null;
         $new_register_contact = Contact::where('contact_id' , null)->where('user_id' , $user_id)->where('is_parent' , 1)->first();
         if (!empty($new_register_contact)) {
-            $active_company = $new_register_contact->company;
+            $active_company = !empty($new_register_contact->company) ? $new_register_contact->company : $new_register_contact->firstName . ' ' . $new_register_contact->lastName;
             Session::put([
                 'contact_id' => null,
                 'company' => $active_company,
@@ -86,13 +86,13 @@ class UserHelper
                     $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
                     if (!empty($contact)) {
                         $active_contact_id = $contact->contact_id;
-                        $active_company = $contact->company;
+                        $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
                     } 
                     else {
                         $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
                         if (!empty($contact)) {
                             $active_contact_id = $contact->secondary_id;
-                            $active_company = $contact->company;
+                            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
                             
                         }
                     }
