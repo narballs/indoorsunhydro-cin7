@@ -36,7 +36,7 @@
                                                 </div>
                                                 <div class="card-body">
                                                     @php
-                                                       $secondary_contacts = App\Models\Contact::with('allow_user')->where('company', $company->company)->get();
+                                                       $secondary_contacts = App\Models\Contact::with('allow_user')->where('parent_id', $company->contact_id)->get();
                                                     @endphp
                                                     <div class="table-responsive">
                                                         <table class="table address-table-items-data m-0 ">
