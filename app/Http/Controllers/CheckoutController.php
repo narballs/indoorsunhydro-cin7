@@ -565,11 +565,11 @@ class CheckoutController extends Controller
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
                             $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
-                            // dd($get_shipping_rates_greater);
+                            
                             if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
                                 $shipment_error = 1;
                                 $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
-                                // $shipstation_shipment_prices = 250.00;
+                                
                             } else {
                                 $shipment_price = $get_shipping_rates_greater['shipment_price'];
                                 $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
@@ -581,19 +581,7 @@ class CheckoutController extends Controller
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
                             $get_shipping_rates_new = $this->get_shipping_rate_new($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
-                            // $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
-                            // old code
-                            // if (($get_shipping_rates['shipment_prices'] === null)) {
-                            //     $shipment_error = 1;
-                            // }
-                            // else {
-                            //     $shipment_price = $get_shipping_rates['shipment_price'];
-                            //     $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
-                            //     $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
-                            // }
-
-                            // new code
-
+                            
                             if (($get_shipping_rates_new['shipment_prices'] === null)) {
                                 $shipment_error = 1;
                             }
@@ -606,21 +594,6 @@ class CheckoutController extends Controller
                             
                         }
                         
-                        // if (count($selected_shipment_quotes) > 0 && $products_weight < 151) {
-                        //     foreach ($selected_shipment_quotes as $selected_shipment_quote) {
-                        //         if (!empty($selected_shipment_quote->shipping_quote)) {
-                        //             if (!empty($shipstation_shipment_prices)) {
-                        //                 foreach ($shipstation_shipment_prices as $shipstation_shipment_price) {
-                        //                     if ($shipstation_shipment_price->serviceCode == ($selected_shipment_quote->shipping_quote->service_code)) {
-                        //                         array_push($admin_selected_shipping_quote, $shipstation_shipment_price);
-                        //                     }
-                        //                 }
-                                    
-                        //             }
-                        //         }
-                                
-                        //     }
-                        // }
                     }
                     else {
                         $client = new \GuzzleHttp\Client();
