@@ -1083,7 +1083,7 @@
                                                 <a type="button"
                                                     class="dropdown-item {{ $disabled }} {{ $muted }}"
                                                     onclick="switch_company_user({{ $contact_id }})">
-                                                    {{ $company->company }}
+                                                    {{ !empty($company->company) ? $company->company : $company->firstName . ' ' . $company->lastName }}
                                                     <span style="font-size: 9px;font-family: 'Poppins';" class="{{ $muted }}">
                                                         {{ $primary }} {{ $disable_text }}
                                                     </span>
