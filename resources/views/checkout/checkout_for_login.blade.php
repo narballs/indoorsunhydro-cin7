@@ -3698,9 +3698,25 @@ $cart_price = 0;
 
                 function accept_pickUp() {
                     var old_total = $('#old_incl_tax').val();
-                    $('#incl_tax').val(old_total);
-                    $('#checkout_order_total').html('$' + old_total);
-                    $('#pick_up_modal').modal('hide');
+                    var newTotal = $('#incl_tax').val();
+                    var product_weight = $('.product_weight').val() != null ? parseFloat($('.product_weight').val()) : 0;
+                    var original_shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
+                    if (product_weight > 150) {
+                        var total = parseFloat(newTotal) - parseFloat(original_shipment_price);
+                        $('#shipment_price_heavy_weight').val(0);
+                        $('#shipment_price').val(0);
+                        $('#checkout_shipping_price').html('$' + 0);
+                        $('#incl_tax').val(total.toFixed(2));
+                        $('#old_incl_tax').val(total.toFixed(2));
+                        $('#checkout_order_total').html('$' + total.toFixed(2));
+                        $('#pick_up_modal').modal('hide');
+                    } else {
+                        $('#incl_tax').val(old_total);
+                        $('#checkout_order_total').html('$' + old_total);
+                        $('#pick_up_modal').modal('hide');
+                    }
+                    
+                    
                 }
 
                 // add new shipping address
