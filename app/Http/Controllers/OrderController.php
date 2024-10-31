@@ -53,7 +53,6 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-
         $request->validate(
             [
                 'method_name' => 'required',
@@ -80,7 +79,7 @@ class OrderController extends Controller
         if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
             if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
                 if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                    if (!empty($request->product_weight) && $request->product_weight > 150) {
+                    if (!empty($request->product_weight) && floatval($request->product_weight) > 150) {
                         $actual_shipping_price = $request->shipment_cost_single;
                         $shipping_service_code = $request->shipping_service_code;
                         $shipping_carrier_code = $request->shipping_carrier_code;
