@@ -360,7 +360,7 @@ class CheckoutController extends Controller
         }
         $zip_code_is_valid = true;
 
-        if (Auth::check() && (!empty($contact->contact_id) || !empty($contact->secondary_id)) && $contact->status == 1) {
+        if (Auth::check() && (!empty($contact->contact_id) && !empty($contact->secondary_id)) && $contact->status == 1) {
             // $tax_class = TaxClass::where('is_default', 1)->first();
             $extra_charges_for_total_over_499 = 0;
             $extra_charges_for_total_over_499_value_setting = AdminSetting::where('option_name', 'extra_charges_for_total_over_499')->first();
