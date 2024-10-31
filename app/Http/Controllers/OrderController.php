@@ -53,7 +53,7 @@ class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        
+
         $request->validate(
             [
                 'method_name' => 'required',

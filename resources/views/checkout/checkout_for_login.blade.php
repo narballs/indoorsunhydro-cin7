@@ -3697,6 +3697,9 @@ $cart_price = 0;
                 }
 
                 function accept_pickUp() {
+                    var old_total = $('#old_incl_tax').val();
+                    $('#incl_tax').val(old_total);
+                    $('#checkout_order_total').html('$' + old_total);
                     $('#pick_up_modal').modal('hide');
                 }
 
