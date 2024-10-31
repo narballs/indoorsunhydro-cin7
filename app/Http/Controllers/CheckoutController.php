@@ -2449,7 +2449,7 @@ class CheckoutController extends Controller
                     $user_id = $user->id;
                     $contact = new Contact([
                         // 'website' => $request->input('company_website'),
-                        'company' => !empty($company) ? $company : $user->first_name . ' ' . $user->last_name,
+                        'company' => !empty($company) ? $company : '',
                         'phone' => $phone,
                         'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                         'priceColumn' => $price_column,

@@ -1217,7 +1217,7 @@ class UserController extends Controller
                 // }
                 $contact = new Contact([
                     'website' => $request->input('company_website'),
-                    'company' => !empty($request->input('company_name')) ? $request->input('company_name') : $user->first_name . ' ' . $user->last_name ,
+                    'company' => !empty($request->input('company_name')) ? $request->input('company_name') : '',
                     'phone' => $request->input('phone'),
                     'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                     'priceColumn' => $price_column,
