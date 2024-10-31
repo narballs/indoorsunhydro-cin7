@@ -74,14 +74,15 @@ class CheckoutController extends Controller
     public function old_checkout(Request $request)
     {
         $user_id = auth()->user()->id;
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         if (!$selected_company) {
             Session::flash('message', "Please select a company for which you want to make an order for");
             return redirect('/cart/');
         }
         $contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
-            ->where('company', $selected_company)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->with('states')
             ->with('cities')
             ->first();
@@ -278,14 +279,15 @@ class CheckoutController extends Controller
             return view ('checkout.checkout_without_login' ,compact('states','cart_total' , 'cart_items' , 'tax_class' , 'shipment_price'));
         }
         $user_id = auth()->user()->id;
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         if (!$selected_company) {
             Session::flash('message', "Please select a company for which you want to make an order for");
             return redirect('/cart');
         }
         $contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
-            ->where('company', $selected_company)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->with('states')
             ->with('cities')
             ->first();

@@ -247,11 +247,12 @@ class UserHelper
             return $price_column;
         }
 
-        $company = Session::get('company');
+        $company = Session::get('contact_id');
         if (!empty($company)) {
             $contact = Contact::where('user_id', $user_id)
-                ->where('company', $company)
-                ->first();
+            ->where('contact_id', $company)
+            ->orWhere('secondary_id', $company)
+            ->first();
 
             if (!empty($contact)) {
                 // if it's parent-id and secondary-id both exists then get price column from parent contact
