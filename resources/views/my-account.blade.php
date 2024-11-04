@@ -218,12 +218,17 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="header-row-mbl-my-account shipping_to_my_account">
+                                                                        <input type="hidden" name="" id="" value="{{$user_order->isApproved}}">
                                                                         @if($user_order->order_id != null && $user_order->isApproved == 1)
                                                                             <span class="badge badge-success">FullFilled</span>
                                                                         @elseif($user_order->order_id == null && $user_order->isApproved == 0)
                                                                             <span class="badge badge-primary">New</span>
                                                                         @elseif($user_order->order_id == null && $user_order->isApproved == 2)
                                                                             <span class="badge badge-danger">Cancelled</span>
+                                                                        @elseif ($user_order->isApproved == 3)
+                                                                            <span class="badge badge-info">Refunded</span>
+                                                                        @elseif ($user_order->isApproved == 4)
+                                                                            <span class="badge badge-info">Partially Refunded</span>
                                                                         @endif
                                                                     </span>
                                                                 </td>

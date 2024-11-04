@@ -74,14 +74,15 @@ class CheckoutController extends Controller
     public function old_checkout(Request $request)
     {
         $user_id = auth()->user()->id;
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         if (!$selected_company) {
             Session::flash('message', "Please select a company for which you want to make an order for");
             return redirect('/cart/');
         }
         $contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
-            ->where('company', $selected_company)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->with('states')
             ->with('cities')
             ->first();
@@ -278,14 +279,15 @@ class CheckoutController extends Controller
             return view ('checkout.checkout_without_login' ,compact('states','cart_total' , 'cart_items' , 'tax_class' , 'shipment_price'));
         }
         $user_id = auth()->user()->id;
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         if (!$selected_company) {
             Session::flash('message', "Please select a company for which you want to make an order for");
             return redirect('/cart');
         }
         $contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
-            ->where('company', $selected_company)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->with('states')
             ->with('cities')
             ->first();
@@ -563,11 +565,11 @@ class CheckoutController extends Controller
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
                             $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
-                            // dd($get_shipping_rates_greater);
+                            
                             if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
                                 $shipment_error = 1;
                                 $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
-                                // $shipstation_shipment_prices = 250.00;
+                                
                             } else {
                                 $shipment_price = $get_shipping_rates_greater['shipment_price'];
                                 $shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
@@ -579,19 +581,7 @@ class CheckoutController extends Controller
                             $shipping_carrier_code = null;
                             $shipping_service_code = null;
                             $get_shipping_rates_new = $this->get_shipping_rate_new($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
-                            // $get_shipping_rates = $this->get_shipping_rate($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address);
-                            // old code
-                            // if (($get_shipping_rates['shipment_prices'] === null)) {
-                            //     $shipment_error = 1;
-                            // }
-                            // else {
-                            //     $shipment_price = $get_shipping_rates['shipment_price'];
-                            //     $shipping_carrier_code = $get_shipping_rates['shipping_carrier_code'];
-                            //     $shipstation_shipment_prices = $get_shipping_rates['shipment_prices'];
-                            // }
-
-                            // new code
-
+                            
                             if (($get_shipping_rates_new['shipment_prices'] === null)) {
                                 $shipment_error = 1;
                             }
@@ -604,21 +594,6 @@ class CheckoutController extends Controller
                             
                         }
                         
-                        // if (count($selected_shipment_quotes) > 0 && $products_weight < 151) {
-                        //     foreach ($selected_shipment_quotes as $selected_shipment_quote) {
-                        //         if (!empty($selected_shipment_quote->shipping_quote)) {
-                        //             if (!empty($shipstation_shipment_prices)) {
-                        //                 foreach ($shipstation_shipment_prices as $shipstation_shipment_price) {
-                        //                     if ($shipstation_shipment_price->serviceCode == ($selected_shipment_quote->shipping_quote->service_code)) {
-                        //                         array_push($admin_selected_shipping_quote, $shipstation_shipment_price);
-                        //                     }
-                        //                 }
-                                    
-                        //             }
-                        //         }
-                                
-                        //     }
-                        // }
                     }
                     else {
                         $client = new \GuzzleHttp\Client();
@@ -971,8 +946,8 @@ class CheckoutController extends Controller
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && (strtolower($currentOrder->logisticsCarrier) !== 'pickup order')) {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
-                            // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            $shipstation_order_status = 'create_order';
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
                             if ($shiping_order['statusCode'] == 200) {
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                     'shipstation_orderId' => $shiping_order['responseBody']->orderId,
@@ -1139,8 +1114,8 @@ class CheckoutController extends Controller
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact) && $pickup == false) {
-                            // UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
-                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact);
+                            $shipstation_order_status = 'create_order';
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
                             if ($shiping_order['statusCode'] == 200) {
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                     'shipstation_orderId' => $shiping_order['responseBody']->orderId,
@@ -2449,7 +2424,7 @@ class CheckoutController extends Controller
                     $user_id = $user->id;
                     $contact = new Contact([
                         // 'website' => $request->input('company_website'),
-                        'company' => !empty($company) ? $company : $user->first_name . ' ' . $user->last_name,
+                        'company' => !empty($company) ? $company : '',
                         'phone' => $phone,
                         'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                         'priceColumn' => $price_column,
@@ -2939,6 +2914,7 @@ class CheckoutController extends Controller
                 $refundAmount = $charge->amount_refunded / 100; // Convert amount from cents to dollars
                 $order_id = $charge->metadata->order_id;
                 $currentOrder = ApiOrder::find($order_id);
+                $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
 
                 if (!empty($currentOrder) && ($refundAmount < $total_amount)) {
                     $currentOrder->payment_status = 'partially refunded';
@@ -2967,6 +2943,10 @@ class CheckoutController extends Controller
                     $order_comment->order_id = $order_id;
                     $order_comment->comment = 'Order marked as refunded through webhook. (charge.refunded)';
                     $order_comment->save();
+
+
+                    $shipstation_order_status = 'update_order';
+                    $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
 
                     // Log refund information or perform any other necessary actions
                     Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);

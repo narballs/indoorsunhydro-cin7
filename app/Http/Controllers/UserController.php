@@ -1217,7 +1217,7 @@ class UserController extends Controller
                 // }
                 $contact = new Contact([
                     'website' => $request->input('company_website'),
-                    'company' => !empty($request->input('company_name')) ? $request->input('company_name') : $user->first_name . ' ' . $user->last_name ,
+                    'company' => !empty($request->input('company_name')) ? $request->input('company_name') : '',
                     'phone' => $request->input('phone'),
                     'status' => !empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes' ? 1 : 0,
                     'priceColumn' => $price_column,
@@ -1446,7 +1446,7 @@ class UserController extends Controller
         } else {
             $user = User::where('id', $user_id)->first();
             $can_approve_order = $user->hasRole('Order Approver');
-            $selected_company = Session::get('company');
+            $selected_company = Session::get('contact_id');
             $all_ids = UserHelper::getAllMemberIds($user);
             $contact_ids = Contact::whereIn('id', $all_ids)
                 ->pluck('contact_id')
@@ -1564,16 +1564,35 @@ class UserController extends Controller
             }
             if (empty($submitter_filter)) {
                 $submitter_filter = 'all';
-            } 
-            $custom_roles_with_company = DB::table('custom_roles')
-                ->where('user_id', $user_id)
-                ->where('company', $selected_company)
-                ->first();
+            }
+
+            // $custom_roles_with_company = DB::table('custom_roles')
+            //     ->where('user_id', $user_id)
+            //     ->where('contact_id', $selected_company)
+            //     ->orWhere('secondary_id', $selected_company)
+            //     ->first();
                 
-            if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
-                $order_approver_for_company = true;
-            } else {
+            // if (!empty($custom_roles_with_company) && ($custom_roles_with_company->contact_id == $selected_company  || $custom_roles_with_company->secondary_id == $selected_company)) {
+            //     $order_approver_for_company = true;
+            // } else {
+            //     $order_approver_for_company = false;
+            // }
+            $find_order_approver = Contact::where('user_id', $user_id)
+                ->where('contact_id', $selected_company)
+                ->orWhere('secondary_id', $selected_company)
+                ->first();
+
+            if (empty($find_order_approver)) {
                 $order_approver_for_company = false;
+            } else {
+                $custom_roles_with_company = DB::table('custom_roles')
+                ->where('user_id', $user_id)
+                ->first();
+                if (!empty($custom_roles_with_company) && $custom_roles_with_company->user_id == $find_order_approver->user_id) {
+                    $order_approver_for_company = true;
+                } else {
+                    $order_approver_for_company = false;
+                }
             }
 
             $user_address = Contact::where('user_id', $user_id)->first();
@@ -1595,7 +1614,8 @@ class UserController extends Controller
             
             $get_contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
-            ->where('company', $selected_company)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->with('states')
             ->with('cities')
             ->first();
@@ -1729,10 +1749,11 @@ class UserController extends Controller
             return $user_orders;
         }
         $wishlist = BuyList::with('list_products')->where('user_id', $user_id)->first();
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         $get_contact = Contact::where('user_id', $user_id)
             ->where('status', 1)
-            ->where('company', $selected_company)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->with('states')
             ->with('cities')
             ->first();
@@ -1790,17 +1811,26 @@ class UserController extends Controller
             ->orderBy('id', 'desc')
             ->get();
         $can_approve_order = $user->hasRole('Order Approver');
-        $selected_company = Session::get('company');
-
-        $custom_roles_with_company = DB::table('custom_roles')
-            ->where('user_id', $user_id)
-            ->where('company', $selected_company)
+        $selected_company = Session::get('contact_id');
+        $find_order_approver = Contact::where('user_id', $user_id)
+            ->where('contact_id', $selected_company)
+            ->orWhere('secondary_id', $selected_company)
             ->first();
-        if (!empty($custom_roles_with_company) && $custom_roles_with_company->company == $selected_company) {
-            $order_approver_for_company = true;
-        } else {
+
+        if (empty($find_order_approver)) {
             $order_approver_for_company = false;
+        } else {
+            $custom_roles_with_company = DB::table('custom_roles')
+            ->where('user_id', $user_id)
+            ->first();
+            if (!empty($custom_roles_with_company) && $custom_roles_with_company->user_id == $find_order_approver->user_id) {
+                $order_approver_for_company = true;
+            } else {
+                $order_approver_for_company = false;
+            }
         }
+
+       
 
         $states = UsState::all();
         return view('my-account.my-orders', compact(
@@ -1914,10 +1944,11 @@ class UserController extends Controller
             ->with('list_products.product.options.price')
             ->where('title', 'My Favorites')
             ->get();
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         $get_contact = Contact::where('user_id', $user_id)
         ->where('status', 1)
-        ->where('company', $selected_company)
+        ->where('contact_id', $selected_company)
+        ->orWhere('secondary_id', $selected_company)
         ->with('states')
         ->with('cities')
         ->first();
@@ -2011,10 +2042,11 @@ class UserController extends Controller
             $parent = "";
         }
         $states = UsState::all();
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         $get_contact = Contact::where('user_id', $user_id)
         ->where('status', 1)
-        ->where('company', $selected_company)
+        ->where('contact_id', $selected_company)
+        ->orWhere('secondary_id', $selected_company)
         ->with('states')
         ->with('cities')
         ->first();
@@ -2099,10 +2131,11 @@ class UserController extends Controller
                 }
             }
         }
-        $selected_company = Session::get('company');
+        $selected_company = Session::get('contact_id');
         $get_contact = Contact::where('user_id', $user_id)
         ->where('status', 1)
-        ->where('company', $selected_company)
+        ->where('contact_id', $selected_company)
+        ->orWhere('secondary_id', $selected_company)
         ->with('states')
         ->with('cities')
         ->first();
@@ -2734,7 +2767,7 @@ class UserController extends Controller
             } else {
                 $active_contact_id = $contact->contact_id;
             }
-            $active_company = $contact->company;
+            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
 
             Session::put([
                 'contact_id' => $active_contact_id,
@@ -2747,7 +2780,7 @@ class UserController extends Controller
             $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
             if (!empty($contact)) {
                 $active_contact_id = $contact->secondary_id;
-                $active_company = $contact->company;
+                $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;;
                 Session::put([
                     'contact_id' => $active_contact_id,
                     'company' => $active_company
@@ -3139,12 +3172,12 @@ class UserController extends Controller
         // Determine active contact (primary or secondary)
         if (!empty($contact)) {
             $active_contact_id = $contact->contact_id;
-            $active_company = $contact->company;
+            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
             $company_type = 'primary';
         } else {
             $contact = Contact::where('secondary_id', $contact_id)->first();
             $active_contact_id = $contact->secondary_id;
-            $active_company = $contact->company;
+            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
             $company_type = 'secondary';
         }
 
@@ -3256,7 +3289,7 @@ class UserController extends Controller
             $contact = Contact::where('secondary_id', $rawContactID[0])->first();
             $active_contact_id = $contact->secondary_id;
         }
-        $active_company = $contact->company;
+        $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
         Session::put([
             'contact_id' => $active_contact_id,
             'company' => $active_company

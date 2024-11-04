@@ -283,7 +283,7 @@
                                                         
                                                     @endphp
                                                     @if($company->type != "Supplier")
-                                                        <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                        <a class="dropdown-item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ !empty($company->company) ? $company->company : $company->firstName . ' ' . $company->lastName }}
                                                             <span
                                                                 style="font-size: 9px;font-family: 'Poppins';"
                                                                 class="{{ $muted }}">{{ $primary }}

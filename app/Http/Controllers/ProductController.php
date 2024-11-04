@@ -775,6 +775,21 @@ class ProductController extends Controller
 
         $ai_setting = AdminSetting::where('option_name', 'enable_ai_prompt')->first();
 
+        $active_contact = null;
+        if (auth()->user()) {
+            $contact_id = session()->get('contact_id');
+            if (!empty($contact_id)) {
+                $active_contact = Contact::where('contact_id', $contact_id)
+                ->orWhere('secondary_id', $contact_id)
+                ->first();
+            } else {
+                $active_contact = Contact::where('user_id', auth()->id())->first();
+            }
+            
+        } else {
+            $active_contact = null;
+        }
+
         return view('product-detail', compact(
             'productOption',
             'pname',
@@ -795,7 +810,8 @@ class ProductController extends Controller
             'customer_demand_inventory_number',
             'products_to_hide',
             'ai_questions',
-            'ai_setting'
+            'ai_setting',
+            'active_contact'
         ));
 
         
@@ -3071,23 +3087,23 @@ class ProductController extends Controller
     // request bulk quantity 
     public function bulk_products_request(Request $request) {
         try {
-            // Validate incoming request data
-            $validatedData = $request->validate([
+
+            $request->validate([
                 'items_list' => 'required',
                 'quantity' => 'required|numeric',
                 'phone_number' => 'required',
                 'email' => 'required|email',
-                'name' => 'required|string',
-                'delievery' => 'required|string',
+                'name' => 'required',
+                // 'delievery' => 'required|string',
             ]);
 
             $bulkQuantity = new BulkQuantityDiscount();
-            $bulkQuantity->items_list = $validatedData['items_list']; // Save the raw list
-            $bulkQuantity->quantity = $validatedData['quantity'];
-            $bulkQuantity->phone_number = $validatedData['phone_number'];
-            $bulkQuantity->email = $validatedData['email'];
-            $bulkQuantity->name = $validatedData['name'];
-            $bulkQuantity->delievery = $validatedData['delievery'];
+            $bulkQuantity->items_list = $request->items_list;
+            $bulkQuantity->quantity = $request->quantity;
+            $bulkQuantity->phone_number = $request->phone_number;
+            $bulkQuantity->email = $request->email;
+            $bulkQuantity->name = $request->name;
+            $bulkQuantity->delievery = $request->delievery;
             $bulkQuantity->save();
 
             // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
@@ -3126,9 +3142,9 @@ class ProductController extends Controller
             $client->setAuth('basic', ['username' => $username, 'token' => $token]);
 
             $subject = 'New Bulk Products Request Received';
-            $description = "Items: " . $validatedData['items_list'] . "\nQuantity: " . $validatedData['quantity'] . "\nPhone Number: " . $validatedData['phone_number'] . "\nDelivery: " . $validatedData['delievery'];
-            $requesterName = $validatedData['name'];
-            $requesterEmail = $validatedData['email'];
+            $description = "Items: " . $request->items_list . "\nQuantity: " . $request->quantity . "\nPhone Number: " . $request->phone_number . "\nDelivery: " . $request->delievery;
+            $requesterName = $request->name;
+            $requesterEmail = $request->email;
 
             $ticketData = [
                 'subject' => $subject,
@@ -3144,7 +3160,6 @@ class ProductController extends Controller
             return response()->json(['message' => 'Your request has been recieved , We will get back to you soon!'], 200);
         } 
         catch (\Exception $e) {
-            // Log the error
             Log::error('Error submitting bulk product request: ' . $e->getMessage());
             return response()->json(['message' => 'Error submitting bulk product request'], 500);
         }

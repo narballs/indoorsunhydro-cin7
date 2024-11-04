@@ -73,7 +73,7 @@ class UserHelper
         $active_contact_id = $active_company = null;
         $new_register_contact = Contact::where('contact_id' , null)->where('user_id' , $user_id)->where('is_parent' , 1)->first();
         if (!empty($new_register_contact)) {
-            $active_company = $new_register_contact->company;
+            $active_company = !empty($new_register_contact->company) ? $new_register_contact->company : $new_register_contact->firstName . ' ' . $new_register_contact->lastName;
             Session::put([
                 'contact_id' => null,
                 'company' => $active_company,
@@ -86,13 +86,13 @@ class UserHelper
                     $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
                     if (!empty($contact)) {
                         $active_contact_id = $contact->contact_id;
-                        $active_company = $contact->company;
+                        $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
                     } 
                     else {
                         $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
                         if (!empty($contact)) {
                             $active_contact_id = $contact->secondary_id;
-                            $active_company = $contact->company;
+                            $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
                             
                         }
                     }
@@ -247,11 +247,12 @@ class UserHelper
             return $price_column;
         }
 
-        $company = Session::get('company');
+        $company = Session::get('contact_id');
         if (!empty($company)) {
             $contact = Contact::where('user_id', $user_id)
-                ->where('company', $company)
-                ->first();
+            ->where('contact_id', $company)
+            ->orWhere('secondary_id', $company)
+            ->first();
 
             if (!empty($contact)) {
                 // if it's parent-id and secondary-id both exists then get price column from parent contact
@@ -340,7 +341,7 @@ class UserHelper
     
 
 
-    public static function shipping_order($order_id , $currentOrder , $order_contact) {
+    public static function shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status) {
         $api_order = ApiOrder::where('id', $order_id)->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
@@ -426,17 +427,19 @@ class UserHelper
         $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
         $tax = $calculate_tax - $currentOrder->shipment_price;
         $orderStatus = null;
-        if ($api_order->shipstation_orderId == null) {
-            if ($currentOrder->payment_status == 'paid') {
-                $orderStatus = 'awaiting_shipment';
-            } else {
-                $orderStatus = 'awaiting_payment';
-            }
+        if (!empty($shipstation_order_status) && ($shipstation_order_status == 'update_order')) {
+            $orderStatus = 'cancelled';
         } else {
-            $orderStatus = 'awaiting_shipment';
+            if ($api_order->shipstation_orderId == null) {
+                if ($currentOrder->payment_status == 'paid') {
+                    $orderStatus = 'awaiting_shipment';
+                } else {
+                    $orderStatus = 'awaiting_payment';
+                }
+            } else {
+                $orderStatus = 'awaiting_shipment';
+            }
         }
-
-        
 
         // Billing Address
         $firstName = self::get_AddressValue($currentOrder->BillingFirstName, $order_contact->firstName);
