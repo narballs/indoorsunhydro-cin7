@@ -3072,7 +3072,7 @@
             // Add the rest of the product details
             productHtml += `
                 <div class="card-body d-flex flex-column text-center mt-1 prd_mbl_card_bdy p-2">
-                    <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500; font-size: 16px;" data-title="${product.products.name}" id="product_name_${product.products.id}">
+                    <h5 class="card-title card_product_title tooltip-product similar_product_name_${product.products.id}" style="font-weight: 500; font-size: 16px;" data-title="${product.products.name}" id="product_name_${product.products.id}">
                         <a class="product-row-product-title" href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
                             ${shortenedName}
                             <div class="tooltip-product-text bg-white text-primary">
@@ -3109,7 +3109,7 @@
                                 <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('${product.products.id}', '${product.option_id}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
                             </div>
                             
-                            <input type="number" id="swap_qty_number_${product.products.id}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_${product.products.id}"  style="font-weight: 500" min="1" max="${product.stockAvailable}">
+                            <input type="number" id="swap_qty_number_${product.products.id}" onchange="update_qty_text_new('${product.products.id}', '${product.option_id}' ,this)" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_${product.products.id}"  style="font-weight: 500" min="1" max="${product.stockAvailable}">
                             <div class="input-group-prepend custom-border qty_plus_mobile">
                                 <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('${product.products.id}', '${product.option_id}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
                             </div>
@@ -3245,7 +3245,7 @@
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$' + subtotal);
-                        var product_name = $('#product_name_' + id).attr('data-title');
+                        var product_name = $('.similar_product_name_' + id).attr('data-title');
                     }
 
                     // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
@@ -3282,8 +3282,9 @@
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$' + subtotal);
-                        var product_name = $('#product_name_' + id).attr('data-title');
+                        
                     }
+                    var product_name = $('.similar_product_name_' + id).attr('data-title');
                     // jQuery('.cart-total-number-' + id).html($('#swap_qty_number_' + id).val());
                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
 
