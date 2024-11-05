@@ -517,7 +517,7 @@
                                                 @else
                                                     <button 
                                                         class="ml-0 w-100 button-cards product-detail-button-cards opacity-50 text-uppercase" 
-                                                        type="submit"
+                                                        type="button"
                                                     >
                                                         <a class="text-white">Add to cart</a>
                                                     </button>
@@ -867,12 +867,12 @@
                                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                             @if ($total_stock > 0)
                                                     <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
-                                                    type="submit" id="ajaxSubmit_mbl">
+                                                    type="button" id="ajaxSubmit_mbl">
                                                     Add to cart
                                                 </button>
                                             @elseif ($productOption->stockAvailable > 0)
                                                 <button class="button-cards product-detail-button-cards text-uppercase  w-100" 
-                                                    type="submit" id="ajaxSubmit_mbl">
+                                                    type="button" id="ajaxSubmit_mbl">
                                                     Add to cart
                                                 </button>
                                             @else
@@ -920,7 +920,7 @@
                                                     <a class="text-white">Add to cart</a>
                                                 </button>
                                             @else
-                                                <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="submit">
+                                                <button class="button-cards product-detail-button-cards opacity-50 text-uppercase w-100" type="button">
                                                     <a class="text-white">Add to cart</a>
                                                 </button>
                                             @endif
@@ -1352,7 +1352,7 @@
                                     @else
                                         <button 
                                             class="button-cards product-detail-button-cards opacity-50 text-uppercase"
-                                            type="submit" 
+                                            type="button" 
                                             style="font-size: 16px !important; width: 130px  !important;">
                                             <a class="text-white">Add to cart</a>
                                         </button>
