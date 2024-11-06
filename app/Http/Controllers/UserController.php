@@ -2495,8 +2495,8 @@ class UserController extends Controller
         // $response = $client->tickets()->create($ticketData);
         $request->validate([
             'first_name' => 'required',
-            'last_name' => 'required',
-            'company_name' => 'required',
+            // 'last_name' => 'required',
+            // 'company_name' => 'required',
             'address' => 'required',
             'state' => 'required',
             'phone' => 'required',
