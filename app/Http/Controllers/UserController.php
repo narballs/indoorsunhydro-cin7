@@ -2515,7 +2515,6 @@ class UserController extends Controller
         $responseBody = null;
         $cin7_status = null;
 
-
         if (!empty($request->type) && $request->type == 'update shipping address') {
             $address_type = 'shipping';
         }
@@ -2546,7 +2545,12 @@ class UserController extends Controller
             if ($address_type === 'shipping') {
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
-                $get_contact->company = $request->company_name;
+                
+                if (!empty($request->check_company_count) && $request->check_company_count == 1) {
+                    $get_contact->company = $request->company_name;
+                }
+
+
                 $get_contact->address1 = $request->address;
                 $get_contact->address2 = $request->address2;
                 $get_contact->state = $request->state;
@@ -2562,7 +2566,11 @@ class UserController extends Controller
             if ($address_type === 'billing') {
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
-                $get_contact->company = $request->company_name;
+
+                if (!empty($request->check_company_count) && $request->check_company_count == 1) {
+                    $get_contact->company = $request->company_name;
+                }
+
                 $get_contact->postalAddress1 = $request->address;
                 $get_contact->postalAddress2 = $request->address2;
                 $get_contact->postalState = $request->state;
@@ -2581,6 +2589,18 @@ class UserController extends Controller
 
         if ($response_status == true) {
             $contact = Contact::where('id', $get_contact->id)->first();
+            
+            $companies = Contact::where('user_id', auth()->user()->id)->get();
+
+            if ($companies->count() == 1) {
+                if ($companies[0]->contact_id == null) {
+                    UserHelper::switch_company($companies[0]->secondary_id);
+                } else {
+                    UserHelper::switch_company($companies[0]->contact_id);
+                }
+            }
+
+            Session::put('companies', $companies);
 
             $body = [
                 'id'=> $contact->contact_id,
@@ -2598,6 +2618,7 @@ class UserController extends Controller
                 'postalState' => $contact->postalState,
                 'postalPostCode' => $contact->postalPostCode,
                 'phone' => $contact->phone,
+                'company' => $companies->count() == 1 ? $contact->company : '',
             ];
 
             
