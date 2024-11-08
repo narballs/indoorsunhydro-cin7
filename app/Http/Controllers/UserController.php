@@ -2543,6 +2543,8 @@ class UserController extends Controller
 
         if (!empty($get_contact) && !empty($address_type)) {
             if ($address_type === 'shipping') {
+
+
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
                 
@@ -2560,7 +2562,8 @@ class UserController extends Controller
                 $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
                 $get_contact->save();
                 $response = $get_contact;
-                $response_status = true;
+                $response_status = true;       
+
             }
 
             if ($address_type === 'billing') {
@@ -2581,6 +2584,34 @@ class UserController extends Controller
                 $get_contact->save();
                 $response = $get_contact;
                 $response_status = true;
+
+
+                $check_billing_address = ContactsAddress::where('contact_id', $get_contact->contact_id)
+                ->where('address_type', 'Billing')
+                ->get();
+
+                if (count($check_billing_address) > 0) {
+                    foreach ($check_billing_address as $address) {
+                        $address->is_default = 0;
+                        $address->save();
+                    }
+                }
+
+                $billing_address = new ContactsAddress();
+                $billing_address->contact_id = $get_contact->contact_id;
+                $billing_address->address_type = 'Billing';
+                $billing_address->BillingFirstName = $get_contact->firstName;
+                $billing_address->BillingLastName = $get_contact->lastName;
+                $billing_address->BillingCompany = $get_contact->company;
+                $billing_address->BillingPhone = $get_contact->phone;
+                $billing_address->BillingAddress1 = $get_contact->postalAddress1;  
+                $billing_address->BillingAddress2 = $get_contact->postalAddress2;
+                $billing_address->BillingCity = $get_contact->postalCity;
+                $billing_address->BillingState = $get_contact->postalState;
+                $billing_address->BillingZip = $get_contact->postalPostCode;
+                $billing_address->BillingCountry = 'US';
+                $billing_address->is_default = 1;
+                $billing_address->save();
             }
         } else {
             $response_status = false;
