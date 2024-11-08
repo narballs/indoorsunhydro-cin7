@@ -1424,7 +1424,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="company">Select Location</label>
                             @php
                                 $companies = Session::get('companies');
@@ -1463,13 +1463,78 @@
                                                 </label>
                                             </div>
                                         @endif
-                                        {{-- <input type="text" class="form-control bg-light" name="company" id="companyName" placeholder="Enter you company name" value="{{ $address_user->company }}" required> --}}
                                     @endforeach
                                 @endif
                                 </div>
                             </div>
                             <div id="error_company_billing" class="text-danger"> </div>
-                        </div>
+                        </div> --}}
+                        @php
+                            $companies = Session::get('companies');
+                            $session_company = Session::get('company');
+                        @endphp
+
+                        @if (count($companies) > 0)
+                            <div class="mb-3">
+                                <label for="company">Company</label>
+                                <div class="input-group">
+                                    <div class="row">
+                                        @if (count($companies) == 1)
+                                            @php
+                                                $company = $companies[0];
+                                                $contact_id = $company->contact_id ?? $company->secondary_id;
+                                                $primary = $company->contact_id ? '(primary)' : '(secondary)';
+                                                $disabled = $company->status == 0 ? 'disabled' : '';
+                                                $muted = $company->status == 0 ? 'text-muted' : '';
+                                                 $placeholder = !empty($company) && $company->firstName ? $company->firstName : '' . ' ' . !empty($company) && $company->lastName ? $company->lastName;
+                                                $companyName = $company->company ?: '';
+                                            @endphp
+
+                                            @if($company->type != "Supplier")
+                                                <div class="col-md-12">
+                                                    <input type="text"
+                                                        value="{{ $companyName }}"
+                                                        placeholder="{{ $companyName ?: $placeholder }}"
+                                                        name="company"
+                                                        class="form-control bg-light companyName companyNameBilling {{ $muted }}"
+                                                        id="companyName"
+                                                        {{ $disabled }}>
+                                                </div>
+                                            @endif
+                                        @else
+                                            @foreach ($companies as $company)
+                                                @php
+                                                    $contact_id = $company->contact_id ?? $company->secondary_id;
+                                                    $primary = $company->contact_id ? '(primary)' : '(secondary)';
+                                                    $disabled = $company->status == 0 ? 'disabled' : '';
+                                                    $muted = $company->status == 0 ? 'text-muted' : '';
+                                                     $placeholder = !empty($company) && $company->firstName ? $company->firstName : '' . ' ' . !empty($company) && $company->lastName ? $company->lastName;
+                                                    $companyName = $company->company ?: '';
+                                                @endphp
+
+                                                @if($company->type != "Supplier")
+                                                    <div class="col-md-12">
+                                                        <input type="radio"
+                                                            value="{{ $companyName }}"
+                                                            name="company"
+                                                            onclick="change_company_billing(this, {{ $contact_id }})"
+                                                            class="companyName companyNameBilling {{ $muted }}"
+                                                            id="companyName_{{ $loop->index }}"
+                                                            {{ !empty($session_company) && $session_company === $companyName ? 'checked' : '' }}
+                                                            {{ $disabled }}>
+                                                        <label for="companyName_{{ $loop->index }}" class="{{ $muted }}">
+                                                            {{ $companyName ?: $placeholder }}
+                                                            <span style="font-size: 9px; font-family: 'Poppins';">{{ $primary }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                                <div id="error_company_billing" class="text-danger"></div>
+                            </div>
+                        @endif
 
                         <div class="mb-3">
                             <label for="username">Country</label>&nbsp;<span>United States</span>
@@ -1607,52 +1672,148 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="company">Select Location</label>
-                            @php
-                                $companies = Session::get('companies');
-                                $session_company = Session::get('company');
-                            @endphp
-                            <div class="input-group">
-                                <div class="row">
-                                    @if ($companies)
-                                    @foreach ($companies as $company)
-                                        @php
-                                            if ($company->contact_id) {
-                                                $contact_id = $company->contact_id;
-                                                $primary = '(primary)';
-                                            } else {
-                                                $contact_id = $company->secondary_id;
-                                                $primary = '(secondary)';
-                                            }
-                                            if ($company->status == 0) {
-                                                $disabled = 'disabled';
-                                                $disable_text = '(Disabled)';
-                                                $muted = 'text-muted';
-                                            } else {
-                                                $disabled = '';
-                                                $disable_text = '';
-                                                $muted = '';
-                                            }
-                                        @endphp
-                                        @if($company->type != "Supplier")
-                                            <div class="col-md-12">
-                                                <input type="radio"  {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="change_company_shipping(this  , {{ $contact_id }})" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
-                                                <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
-                                                    <span
-                                                    style="font-size: 9px;font-family: 'Poppins';"
-                                                    class="{{ $muted }}">{{ $primary }}
-                                                </span>
-                                                </label>
-                                            </div>
+                        {{-- @php
+                            $companies = Session::get('companies');
+                            $session_company = Session::get('company');
+                        @endphp
+                        @if (count($companies) > 0)
+                            <div class="mb-3">
+                                <label for="company">Select Location</label>
+                                <div class="input-group">
+                                    <div class="row">
+                                        @if (count($companies) > 1)
+                                            @foreach ($companies as $company)
+                                                @php
+                                                    if ($company->contact_id) {
+                                                        $contact_id = $company->contact_id;
+                                                        $primary = '(primary)';
+                                                    } else {
+                                                        $contact_id = $company->secondary_id;
+                                                        $primary = '(secondary)';
+                                                    }
+                                                    if ($company->status == 0) {
+                                                        $disabled = 'disabled';
+                                                        $disable_text = '(Disabled)';
+                                                        $muted = 'text-muted';
+                                                    } else {
+                                                        $disabled = '';
+                                                        $disable_text = '';
+                                                        $muted = '';
+                                                    }
+                                                @endphp
+                                                @if($company->type != "Supplier")
+                                                    <div class="col-md-12">
+                                                        <label for="">Company</label>
+                                                        <input type="text" value="{{ !empty($company->company) ? $company->company : ''}}" placeholder="{{ !empty($company->company) ? $company->company : $company->firstName .' '. $company->lastName}}" name="company" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            @foreach ($companies as $company)
+                                                @php
+                                                    if ($company->contact_id) {
+                                                        $contact_id = $company->contact_id;
+                                                        $primary = '(primary)';
+                                                    } else {
+                                                        $contact_id = $company->secondary_id;
+                                                        $primary = '(secondary)';
+                                                    }
+                                                    if ($company->status == 0) {
+                                                        $disabled = 'disabled';
+                                                        $disable_text = '(Disabled)';
+                                                        $muted = 'text-muted';
+                                                    } else {
+                                                        $disabled = '';
+                                                        $disable_text = '';
+                                                        $muted = '';
+                                                    }
+                                                @endphp
+                                                @if($company->type != "Supplier")
+                                                    <div class="col-md-12">
+                                                        <input type="radio"  {{!empty($session_company) && $session_company === $company->company ? 'checked' : ''}} value="{{ $company->company }}" name="company" onclick="change_company_shipping(this  , {{ $contact_id }})" class="companyName companyNameShipping" id="companyName" {{ $disabled }} {{ $muted }}>
+                                                        <label for="" {{ $disabled }} {{ $muted }}>{{ $company->company }}
+                                                            <span
+                                                            style="font-size: 9px;font-family: 'Poppins';"
+                                                            class="{{ $muted }}">{{ $primary }}
+                                                        </span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            @endforeach
                                         @endif
-                                    @endforeach
-                                @endif
+                                    </div>
                                 </div>
+                                <div id="error_company_shipping" class="text-danger"> </div>
                             </div>
-                            <div id="error_company_shipping" class="text-danger"> </div>
-                        </div>
+                        @endif --}}
+                        @php
+                            $companies = Session::get('companies');
+                            $session_company = Session::get('company');
+                        @endphp
+
+                        @if (count($companies) > 0)
+                            <div class="mb-3">
+                                <label for="company">Company</label>
+                                <div class="input-group">
+                                    <div class="row">
+                                        @if (count($companies) == 1)
+                                            @php
+                                                $company = $companies[0];
+                                                $contact_id = $company->contact_id ?? $company->secondary_id;
+                                                $primary = $company->contact_id ? '(primary)' : '(secondary)';
+                                                $disabled = $company->status == 0 ? 'disabled' : '';
+                                                $muted = $company->status == 0 ? 'text-muted' : '';
+                                                $placeholder = !empty($company) && $company->firstName ? $company->firstName : '' . ' ' . !empty($company) && $company->lastName ? $company->lastName;
+                                                $companyName = $company->company ?: '';
+                                            @endphp
+
+                                            @if($company->type != "Supplier")
+                                                <div class="col-md-12">
+                                                    <input type="text"
+                                                        value="{{ $companyName }}"
+                                                        placeholder="{{ $companyName ?: $placeholder }}"
+                                                        name="company"
+                                                        class="form-control bg-light companyName companyNameShipping {{ $muted }}"
+                                                        id="companyName"
+                                                        {{ $disabled }}>
+                                                </div>
+                                            @endif
+                                        @else
+                                            @foreach ($companies as $company)
+                                                @php
+                                                    $contact_id = $company->contact_id ?? $company->secondary_id;
+                                                    $primary = $company->contact_id ? '(primary)' : '(secondary)';
+                                                    $disabled = $company->status == 0 ? 'disabled' : '';
+                                                    $muted = $company->status == 0 ? 'text-muted' : '';
+                                                    $placeholder = !empty($company) && $company->firstName ? $company->firstName : '' . ' ' . !empty($company) && $company->lastName ? $company->lastName;
+                                                    $companyName = $company->company ?: '';
+                                                @endphp
+
+                                                @if($company->type != "Supplier")
+                                                    <div class="col-md-12">
+                                                        <input type="radio"
+                                                            value="{{ $companyName }}"
+                                                            name="company"
+                                                            onclick="change_company_shipping(this, {{ $contact_id }})"
+                                                            class="companyName companyNameShipping {{ $muted }}"
+                                                            id="companyName_{{ $loop->index }}"
+                                                            {{ !empty($session_company) && $session_company === $companyName ? 'checked' : '' }}
+                                                            {{ $disabled }}>
+                                                        <label for="companyName_{{ $loop->index }}" class="{{ $muted }}">
+                                                            {{ $companyName ?: $placeholder }}
+                                                            <span style="font-size: 9px; font-family: 'Poppins';">{{ $primary }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                                <div id="error_company_shipping" class="text-danger"></div>
+                            </div>
+                        @endif
+
+
 
                         <div class="mb-3">
                             <label for="username">Country</label>&nbsp;<span>United States</span>
