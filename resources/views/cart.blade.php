@@ -15,6 +15,77 @@
         {{ session('success') }}
     </div>
 @endif
+@if (auth()->user())
+    @php
+        $pass_out_of_stock_items = session('out_of_stock_items') ?? $out_of_stock_items ?? [];
+        $pass_original_items_quantity = session('original_items_quantity') ?? $original_items_quantity ?? [];
+    @endphp
+
+    @if (!empty($pass_out_of_stock_items) || !empty($pass_original_items_quantity))
+        <div class="row justify-content-center my-3">
+            <div class="col-md-12 col-lg-12 col-xl-9">
+                <div class="table-responsive">
+                    <h5 class="mt-3 text-white mb-3 product-btn h-auto p-3">
+                        The following items are out of stock or have been updated to the maximum available stock
+                    </h5>
+                    <div class="row mb-3">
+                        @foreach ([
+                            ['Notify', 'primary', 'send_notification_to_admin', $pass_out_of_stock_items, 'Send Notification for Out of Stock Items'],
+                            ['Update', 'info', 'update_quantity_to_original', $pass_original_items_quantity, 'Update Quantity for Updated Items'],
+                            ['Remove', 'danger', 'remove_out_of_stock_items', $pass_out_of_stock_items, 'Remove Out of Stock Items From Cart']
+                        ] as [$label, $btnClass, $funcName, $data, $text])
+                            <div class="col-12 col-md-4 mb-2">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>{{ $text }}</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-{{ $btnClass }}" type="button" onclick="{{ $funcName }}({{ json_encode($data) }})">
+                                            {{ $label }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Table for Out of Stock and Updated Items -->
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Stock Available</th>
+                                <th>Requested Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Out of Stock Items -->
+                            @foreach ($pass_out_of_stock_items as $item)
+                                <tr class="text-danger">
+                                    <td>{{ $item['product_name'] }}</td>
+                                    <td><span class="badge badge-danger">Out of Stock</span></td>
+                                    <td>{{ $item['quantity'] }}</td>
+                                </tr>
+                            @endforeach
+
+                            <!-- Updated Items -->
+                            @foreach ($pass_original_items_quantity as $item)
+                                <tr class="text-secondary">
+                                    <td>{{ $item['product_name'] }}</td>
+                                    <td>{{ $item['stock_available'] }}</td>
+                                    <td>{{ $item['quantity'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
+@endif
+
+
+
 @php
     $address_url = 'my-account/address';
 @endphp
@@ -1360,6 +1431,66 @@
     }
     
 </script>
+<script>
+    function send_notification_to_admin(outOfStockItems) {
+        if (!outOfStockItems.length) return;
+
+        $.ajax({
+            url: "{{ route('notifyOutOfStock') }}",  // Update with your route name
+            method: "POST",
+            data: {
+                items: outOfStockItems,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                alert(response.message || "Notification sent successfully.");
+            },
+            error: function(error) {
+                alert("Failed to send notification.");
+            }
+        });
+    }
+
+    function update_quantity_to_original(updatedItems) {
+        if (!updatedItems.length) return;
+
+        $.ajax({
+            url: "{{ route('updateItemQuantitytoOriginal') }}",  // Update with your route name
+            method: "POST",
+            data: {
+                items: updatedItems,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                alert(response.message || "Quantities updated successfully.");
+            },
+            error: function(error) {
+                alert("Failed to update quantities.");
+            }
+        });
+    }
+
+    function remove_out_of_stock_items(outOfStockItems) {
+        if (!outOfStockItems.length) return;
+
+        $.ajax({
+            url: "{{ route('removeOutOfStock') }}",  // Update with your route name
+            method: "POST",
+            data: {
+                items: outOfStockItems,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                alert(response.message || "Out of stock items removed successfully.");
+                location.reload();  // Refresh the page if needed to reflect changes
+            },
+            error: function(error) {
+                alert("Failed to remove out of stock items.");
+            }
+        });
+    }
+</script>
+
 <style>
 
     #mbl_chk_btn {

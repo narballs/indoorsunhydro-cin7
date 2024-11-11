@@ -1580,6 +1580,44 @@ class ProductController extends Controller
         }
         
         $cart_items = UserHelper::switch_price_tier($request);
+        $out_of_stock_items = [];
+        $original_items_quantity = [];
+
+        foreach ($cart_items as $cart_item) {
+            $product_options = ProductOption::with('products')
+                ->where('product_id', $cart_item['product_id'])
+                ->where('option_id', $cart_item['option_id'])
+                ->get();
+
+            foreach ($product_options as $product_option) {
+                // Check if the product is out of stock
+                if ($product_option->stockAvailable < 1) {
+                    $out_of_stock_items[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+
+                // Check if the available stock is less than the required quantity
+                if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
+                    $original_items_quantity[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+            }
+        }
+
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
 
         if (!empty($cart_items)) {
@@ -1632,7 +1670,9 @@ class ProductController extends Controller
             'free_shipping',
             'd_none',
             'congrats_div_dnone',
-            'new_checkout_flow'
+            'new_checkout_flow',
+            'out_of_stock_items',
+            'original_items_quantity'
 
         ));
     }
@@ -3725,6 +3765,20 @@ class ProductController extends Controller
     
     //     return $similarProducts; // Return all aggregated similar products
     // }
+
+
+
+    public function removeOutOfStock(Request $request) {
+        $items = $request->items;
+    }
+
+    public function updateItemQuantitytoOriginal(Request $request) {
+        $items = $request->items;
+    }
+
+    public function notifyOutOfStock(Request $request) {
+        $items = $request->items;
+    }
 
     
 }
