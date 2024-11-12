@@ -2,6 +2,14 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<style>
+    .cart-behaviour-button , .cart-button-slogen {
+        font-family: 'poppins';
+    }
+    .cart-behaviour-table > tr , td {
+        font-family: 'poppins';
+    }
+</style>
 
 {{-- <input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}"> --}}
 <div class="row desktop-view cart-title mt-4">
@@ -19,8 +27,9 @@
     @php
         $pass_out_of_stock_items = session('out_of_stock_items') ?? $out_of_stock_items ?? [];
         $pass_original_items_quantity = session('original_items_quantity') ?? $original_items_quantity ?? [];
+        
     @endphp
-
+    <input type="hidden" name="pass_original_items_quantity" id="pass_original_items_quantity" value='{{ json_encode($pass_original_items_quantity) }}'>
     @if (!empty($pass_out_of_stock_items) || !empty($pass_original_items_quantity))
         <div class="row justify-content-center my-3">
             <div class="col-md-12 col-lg-12 col-xl-9">
@@ -36,11 +45,11 @@
                         ] as [$label, $btnClass, $funcName, $data, $text])
                             <div class="col-12 col-md-4 mb-2">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <span>{{ $text }}</span>
+                                    <div class="col-12 mb-2">
+                                        <span class="cart-button-slogen">{{ $text }}</span>
                                     </div>
                                     <div class="col-12">
-                                        <button class="btn btn-{{ $btnClass }}" type="button" onclick="{{ $funcName }}({{ json_encode($data) }})">
+                                        <button class="btn btn-{{ $btnClass }} cart-behaviour-button" type="button" onclick="{{ $funcName }}({{ json_encode($data) }})">
                                             {{ $label }}
                                         </button>
                                     </div>
@@ -50,7 +59,7 @@
                     </div>
 
                     <!-- Table for Out of Stock and Updated Items -->
-                    <table class="table table-bordered">
+                    <table class="table table-bordered cart-behaviour-table">
                         <thead class="thead-light">
                             <tr>
                                 <th>Product Name</th>
@@ -70,10 +79,10 @@
 
                             <!-- Updated Items -->
                             @foreach ($pass_original_items_quantity as $item)
-                                <tr class="text-secondary">
+                                <tr class="text-secondary" id="pass_original_items_quantity_{{$item['product_primary_id']}}">
                                     <td>{{ $item['product_name'] }}</td>
                                     <td>{{ $item['stock_available'] }}</td>
-                                    <td>{{ $item['quantity'] }}</td>
+                                    <td id="pass_original_items_quantity_child_{{$item['product_primary_id']}}">{{ $item['quantity'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -1130,31 +1139,33 @@
 
     /* *****   DECREASE QTY   ****  */
     function decrease_qty(pk_product_id) {
+        var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
         var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
         var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
         if (qty_input > 1) {
             var new_qty = parseFloat(qty_input - 1);
-            if (new_qty > stock_available) {
-                Swal.fire({
-                    toast: true,
-                    icon: 'error',
-                    title: 'Maximum stock limit reached',
-                    timer: 3000,
-                    position: 'top',
-                    showConfirmButton: true,  // Show the confirm (OK) button
-                    confirmButtonText: 'Okay',
-                    timerProgressBar: true,
-                    customClass: {
-                        confirmButton: 'my-confirm-button',  // Class for the confirm button
-                        actions: 'my-actions-class'  // Class for the actions container
-                    }
-                });
-                $('#row_quantity_' + pk_product_id).val(old_qty);
-                return false;
-            }
+            // if (new_qty > stock_available) {
+            //     Swal.fire({
+            //         toast: true,
+            //         icon: 'error',
+            //         title: 'Maximum stock limit reached',
+            //         timer: 3000,
+            //         position: 'top',
+            //         showConfirmButton: true,  // Show the confirm (OK) button
+            //         confirmButtonText: 'Okay',
+            //         timerProgressBar: true,
+            //         customClass: {
+            //             confirmButton: 'my-confirm-button',  // Class for the confirm button
+            //             actions: 'my-actions-class'  // Class for the actions container
+            //         }
+            //     });
+            //     $('#row_quantity_' + pk_product_id).val(old_qty);
+            //     return false;
+            // }
             var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
+            var session_quantity = $('#pass_original_items_quantity_' + pk_product_id).find('#pass_original_items_quantity_child_' + pk_product_id).html(new_qty);
         } else {
             var new_qty = parseFloat(1);
             var new_qty_value = $('#row_quantity_' + pk_product_id).val(1);
@@ -1166,7 +1177,8 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "items_quantity": new_qty,
-                "product_id": product_id
+                "product_id": product_id,
+                'pass_original_items_quantity' : pass_original_items_quantity
             },
             success: function(response) {
                 var row_price = response.cart_items[product_id].price;
@@ -1234,6 +1246,7 @@
 
     // on change update cart
     function update_cart_products(pk_product_id) {
+        var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var qty_input = 0;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
@@ -1268,7 +1281,8 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "items_quantity": qty_input,
-                "product_id": product_id
+                "product_id": product_id,
+                'pass_original_items_quantity' : pass_original_items_quantity
             },
             success: function(response) {
                 var row_price = response.cart_items[product_id].price;
@@ -1340,6 +1354,7 @@
     
 
     function update_cart_products_mbl(pk_product_id) {
+        var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var qty_input = 0;
         var old_qty = parseInt($('#itm_qty' + pk_product_id).attr('data-old'));
@@ -1378,7 +1393,8 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "items_quantity": new_qty,
-                "product_id": product_id
+                "product_id": product_id,
+                'pass_original_items_quantity' : pass_original_items_quantity
             },
             success: function(response) {
                 var row_price = response.cart_items[product_id].price;
@@ -1431,65 +1447,7 @@
     }
     
 </script>
-<script>
-    function send_notification_to_admin(outOfStockItems) {
-        if (!outOfStockItems.length) return;
 
-        $.ajax({
-            url: "{{ route('notifyOutOfStock') }}",  // Update with your route name
-            method: "POST",
-            data: {
-                items: outOfStockItems,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(response) {
-                alert(response.message || "Notification sent successfully.");
-            },
-            error: function(error) {
-                alert("Failed to send notification.");
-            }
-        });
-    }
-
-    function update_quantity_to_original(updatedItems) {
-        if (!updatedItems.length) return;
-
-        $.ajax({
-            url: "{{ route('updateItemQuantitytoOriginal') }}",  // Update with your route name
-            method: "POST",
-            data: {
-                items: updatedItems,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(response) {
-                alert(response.message || "Quantities updated successfully.");
-            },
-            error: function(error) {
-                alert("Failed to update quantities.");
-            }
-        });
-    }
-
-    function remove_out_of_stock_items(outOfStockItems) {
-        if (!outOfStockItems.length) return;
-
-        $.ajax({
-            url: "{{ route('removeOutOfStock') }}",  // Update with your route name
-            method: "POST",
-            data: {
-                items: outOfStockItems,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(response) {
-                alert(response.message || "Out of stock items removed successfully.");
-                location.reload();  // Refresh the page if needed to reflect changes
-            },
-            error: function(error) {
-                alert("Failed to remove out of stock items.");
-            }
-        });
-    }
-</script>
 
 <style>
 
