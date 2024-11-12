@@ -35,6 +35,8 @@ use App\Models\AiQuestion;
 use App\Models\ApiOrderItem;
 use App\Models\BulkQuantityDiscount;
 use App\Models\ProductStock;
+use App\Models\ProductStockNotification;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -1580,6 +1582,44 @@ class ProductController extends Controller
         }
         
         $cart_items = UserHelper::switch_price_tier($request);
+        $out_of_stock_items = [];
+        $original_items_quantity = [];
+
+        foreach ($cart_items as $cart_item) {
+            $product_options = ProductOption::with('products')
+                ->where('product_id', $cart_item['product_id'])
+                ->where('option_id', $cart_item['option_id'])
+                ->get();
+
+            foreach ($product_options as $product_option) {
+                // Check if the product is out of stock
+                if ($product_option->stockAvailable < 1) {
+                    $out_of_stock_items[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+
+                // Check if the available stock is less than the required quantity
+                if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
+                    $original_items_quantity[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+            }
+        }
+
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
 
         if (!empty($cart_items)) {
@@ -1632,13 +1672,16 @@ class ProductController extends Controller
             'free_shipping',
             'd_none',
             'congrats_div_dnone',
-            'new_checkout_flow'
+            'new_checkout_flow',
+            'out_of_stock_items',
+            'original_items_quantity'
 
         ));
     }
 
     public function updateCart(Request $request)
     {
+        $pass_original_items_quantity =  $request->pass_original_items_quantity;
         $quantity = $request->post('items_quantity');
         $cart_items = session()->get('cart');
         $session_contact_id = session()->get('contact_id');
@@ -1694,6 +1737,18 @@ class ProductController extends Controller
                             $cart->quantity = $quantity;
                             $cart->save();
                         }
+                    }
+
+                    if (!empty($pass_original_items_quantity)) {
+                        foreach (json_decode($pass_original_items_quantity) as $original_item) {
+                            if ($original_item['product_primary_id'] == $product_id) {
+                                $original_item['quantity'] =  $quantity;
+                            }
+
+                            break;
+                        }
+
+                        // session()->put('original_items_quantity', $pass_original_items_quantity);
                     }
                 }
                 else {
@@ -3726,5 +3781,183 @@ class ProductController extends Controller
     //     return $similarProducts; // Return all aggregated similar products
     // }
 
+
+
+    public function removeOutOfStock(Request $request) {
+        $items = json_decode($request->items, true);
+        $contact_id = session()->get('contact_id');
+        $session_cart = session()->get('cart', []);
+        $status = false;
     
+        try {
+            if (!empty($items) && !empty($contact_id)) {
+                foreach ($items as $item) {
+                    $cart = Cart::where('user_id', auth()->user()->id)
+                        ->where('contact_id', $contact_id)
+                        ->where('product_id', $item['product_id'])
+                        ->where('option_id', $item['option_id'])
+                        ->first();
+    
+                    if ($cart) {
+                        $cart->delete();
+                        unset($session_cart[$cart->qoute_id]);
+                        $status = true;
+                    }
+                }
+    
+                session()->put('cart', $session_cart);
+    
+                return response()->json([
+                    'status' => $status,
+                    'message' => $status ? 'Items removed successfully' : 'No items removed.'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Items or contact ID is missing.'
+                ], 400);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while removing items.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+
+    public function updateItemQuantitytoOriginal(Request $request) {
+        try {
+            $items = $request->items;
+            $contact_id = session()->get('contact_id');
+            $session_cart = session()->get('cart');
+            $status = false;
+        
+            if (!empty($items) && !empty($contact_id)) {
+                $items = is_string($items) ? json_decode($items) : $items;
+                foreach ($items as $item) {
+                    $cart = Cart::where('user_id', auth()->user()->id)
+                        ->where('contact_id', $contact_id)
+                        ->where('product_id', $item['product_id'])
+                        ->where('option_id', $item['option_id'])
+                        ->first();
+        
+                    if (!empty($cart)) {
+                        // Update cart quantity and save to the database
+                        $cart->quantity = $item['stock_available'];
+                        $cart->save();
+                        
+                        // Update session cart if structure is the same
+                        if (isset($session_cart[$cart->quote_id])) {
+                            $session_cart[$cart->quote_id]['quantity'] = $item['stock_available'];
+                        }
+
+                        $status = true;
+                    }
+                }
+                
+                // Update session with modified cart
+                session()->put('cart', $session_cart);
+
+                return response()->json([
+                    'status' => $status,
+                    'message' => $status ? 'Quantity updated successfully.' : 'No items were updated.',
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Items or contact ID is missing',
+            ], 400);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while updating item quantities',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    
+
+    public function notifyOutOfStock(Request $request) {
+        try {
+            $items = $request->items;
+            $contact_id = session()->get('contact_id');
+            $email = auth()->user()->email;
+            $status = false;
+
+            if (!empty($items) && !empty($contact_id)) {
+                // Decode items if needed (ensure items are an array)
+                $items = is_string($items) ? json_decode($items) : $items;
+                foreach ($items as $item) {
+                    $product_id = $item['product_primary_id'];
+                    $sku = $item['sku'];
+                    // Check if notification already sent for this product and SKU
+                    $check_product_stock_notification = ProductStockNotification::where('product_id', $product_id)
+                        ->where('sku', $sku)
+                        ->where('email', $email)
+                        ->first();
+
+                    // Skip if notification already exists
+                    if (!empty($check_product_stock_notification)) {
+                        return response()->json([
+                            'status' => false,
+                            'message' => 'Notification already sent for this product.',
+                        ]);
+                    }
+
+                    // Create a new stock notification
+                    $product_stock_notification = ProductStockNotification::create([
+                        'product_id' => $product_id,
+                        'sku' => $sku,
+                        'email' => $email,
+                    ]);
+                    
+
+                    if ($product_stock_notification) {
+                        
+                        // Prepare data for email notification
+                        $data = [
+                            'product' => $product_stock_notification->product,
+                            'product_options' => $product_stock_notification->product->product_options,
+                            'email' => $email,
+                            'subject' => 'Product Stock Request',
+                            'from' => SettingHelper::getSetting('noreply_email_address')
+                        ];
+
+                        // Send email notification to specific admin contacts
+                        $specific_admin_notifications = SpecificAdminNotification::all();
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            $data['email'] = $specific_admin_notification->email;
+                            MailHelper::stockMailNotification('emails.admin-stock-notification', $data);
+                        }
+
+                        $status = true;
+                    } else {
+                        $status = false;
+                    }
+                }
+                return response()->json([
+                    'status' => $status,
+                    'message' => $status ? 'Notifications sent successfully.' : 'Failed to send notifications.',
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'No items or contact ID provided.'
+            ], 400);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while processing notifications.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+       
 }

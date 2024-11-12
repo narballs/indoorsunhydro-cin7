@@ -2,6 +2,14 @@
 @include('partials.header')
 @include('partials.top-bar')
 @include('partials.search-bar')
+<style>
+    .cart-behaviour-button , .cart-button-slogen {
+        font-family: 'poppins';
+    }
+    .cart-behaviour-table > tr , td {
+        font-family: 'poppins';
+    }
+</style>
 
 {{-- <input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}"> --}}
 <div class="row desktop-view cart-title mt-4">
@@ -15,6 +23,78 @@
         {{ session('success') }}
     </div>
 @endif
+@if (auth()->user())
+    @php
+        $pass_out_of_stock_items = session('out_of_stock_items') ?? $out_of_stock_items ?? [];
+        $pass_original_items_quantity = session('original_items_quantity') ?? $original_items_quantity ?? [];
+        
+    @endphp
+    <input type="hidden" name="pass_original_items_quantity" id="pass_original_items_quantity" value='{{ json_encode($pass_original_items_quantity) }}'>
+    @if (!empty($pass_out_of_stock_items) || !empty($pass_original_items_quantity))
+        <div class="row justify-content-center my-3">
+            <div class="col-md-12 col-lg-12 col-xl-9">
+                <div class="table-responsive">
+                    <h5 class="mt-3 text-white mb-3 product-btn h-auto p-3">
+                        The following items are out of stock or have been updated to the maximum available stock
+                    </h5>
+                    <div class="row mb-3">
+                        @foreach ([
+                            ['Notify', 'primary', 'send_notification_to_admin', $pass_out_of_stock_items, 'Send Notification for Out of Stock Items'],
+                            ['Update', 'info', 'update_quantity_to_original', $pass_original_items_quantity, 'Update Quantity for Updated Items'],
+                            ['Remove', 'danger', 'remove_out_of_stock_items', $pass_out_of_stock_items, 'Remove Out of Stock Items From Cart']
+                        ] as [$label, $btnClass, $funcName, $data, $text])
+                            <div class="col-12 col-md-4 mb-2">
+                                <div class="row">
+                                    <div class="col-12 mb-2">
+                                        <span class="cart-button-slogen">{{ $text }}</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-{{ $btnClass }} cart-behaviour-button" type="button" onclick="{{ $funcName }}({{ json_encode($data) }})">
+                                            {{ $label }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Table for Out of Stock and Updated Items -->
+                    <table class="table table-bordered cart-behaviour-table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Stock Available</th>
+                                <th>Requested Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Out of Stock Items -->
+                            @foreach ($pass_out_of_stock_items as $item)
+                                <tr class="text-danger">
+                                    <td>{{ $item['product_name'] }}</td>
+                                    <td><span class="badge badge-danger">Out of Stock</span></td>
+                                    <td>{{ $item['quantity'] }}</td>
+                                </tr>
+                            @endforeach
+
+                            <!-- Updated Items -->
+                            @foreach ($pass_original_items_quantity as $item)
+                                <tr class="text-secondary" id="pass_original_items_quantity_{{$item['product_primary_id']}}">
+                                    <td>{{ $item['product_name'] }}</td>
+                                    <td>{{ $item['stock_available'] }}</td>
+                                    <td id="pass_original_items_quantity_child_{{$item['product_primary_id']}}">{{ $item['quantity'] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
+@endif
+
+
+
 @php
     $address_url = 'my-account/address';
 @endphp
@@ -1059,31 +1139,33 @@
 
     /* *****   DECREASE QTY   ****  */
     function decrease_qty(pk_product_id) {
+        var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
         var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
         var qty_input = parseFloat($('#row_quantity_' + pk_product_id).val());
         if (qty_input > 1) {
             var new_qty = parseFloat(qty_input - 1);
-            if (new_qty > stock_available) {
-                Swal.fire({
-                    toast: true,
-                    icon: 'error',
-                    title: 'Maximum stock limit reached',
-                    timer: 3000,
-                    position: 'top',
-                    showConfirmButton: true,  // Show the confirm (OK) button
-                    confirmButtonText: 'Okay',
-                    timerProgressBar: true,
-                    customClass: {
-                        confirmButton: 'my-confirm-button',  // Class for the confirm button
-                        actions: 'my-actions-class'  // Class for the actions container
-                    }
-                });
-                $('#row_quantity_' + pk_product_id).val(old_qty);
-                return false;
-            }
+            // if (new_qty > stock_available) {
+            //     Swal.fire({
+            //         toast: true,
+            //         icon: 'error',
+            //         title: 'Maximum stock limit reached',
+            //         timer: 3000,
+            //         position: 'top',
+            //         showConfirmButton: true,  // Show the confirm (OK) button
+            //         confirmButtonText: 'Okay',
+            //         timerProgressBar: true,
+            //         customClass: {
+            //             confirmButton: 'my-confirm-button',  // Class for the confirm button
+            //             actions: 'my-actions-class'  // Class for the actions container
+            //         }
+            //     });
+            //     $('#row_quantity_' + pk_product_id).val(old_qty);
+            //     return false;
+            // }
             var new_qty_value = $('#row_quantity_' + pk_product_id).val(new_qty);
+            var session_quantity = $('#pass_original_items_quantity_' + pk_product_id).find('#pass_original_items_quantity_child_' + pk_product_id).html(new_qty);
         } else {
             var new_qty = parseFloat(1);
             var new_qty_value = $('#row_quantity_' + pk_product_id).val(1);
@@ -1095,7 +1177,8 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "items_quantity": new_qty,
-                "product_id": product_id
+                "product_id": product_id,
+                'pass_original_items_quantity' : pass_original_items_quantity
             },
             success: function(response) {
                 var row_price = response.cart_items[product_id].price;
@@ -1163,6 +1246,7 @@
 
     // on change update cart
     function update_cart_products(pk_product_id) {
+        var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var qty_input = 0;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
@@ -1197,7 +1281,8 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "items_quantity": qty_input,
-                "product_id": product_id
+                "product_id": product_id,
+                'pass_original_items_quantity' : pass_original_items_quantity
             },
             success: function(response) {
                 var row_price = response.cart_items[product_id].price;
@@ -1269,6 +1354,7 @@
     
 
     function update_cart_products_mbl(pk_product_id) {
+        var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var qty_input = 0;
         var old_qty = parseInt($('#itm_qty' + pk_product_id).attr('data-old'));
@@ -1307,7 +1393,8 @@
             data: {
                 "_token": "{{ csrf_token() }}",
                 "items_quantity": new_qty,
-                "product_id": product_id
+                "product_id": product_id,
+                'pass_original_items_quantity' : pass_original_items_quantity
             },
             success: function(response) {
                 var row_price = response.cart_items[product_id].price;
@@ -1360,6 +1447,8 @@
     }
     
 </script>
+
+
 <style>
 
     #mbl_chk_btn {
