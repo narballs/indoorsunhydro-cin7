@@ -1741,6 +1741,7 @@ class ProductController extends Controller
 
                     if (!empty($pass_original_items_quantity)) {
                         foreach (json_decode($pass_original_items_quantity) as $original_item) {
+                            $original_item = (array) $original_item;
                             if ($original_item['product_primary_id'] == $product_id) {
                                 $original_item['quantity'] =  $quantity;
                             }
