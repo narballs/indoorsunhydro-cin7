@@ -85,7 +85,7 @@
                                             </td>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    {{-- <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }}
@@ -118,6 +118,70 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['mobile'] != null)
+                                                {{$addresses['billing_address']['mobile']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['phone'] != null)
+                                                {{$addresses['billing_address']['phone']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody> --}}
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{!empty($currentOrder->BillingFirstName) ? $currentOrder->BillingFirstName : $addresses['billing_address']['firstName']}} {{!empty($currentOrder->BillingLastName) ? ' '.$currentOrder->BillingLastName : ' ' .$addresses['billing_address']['lastName']}}
+                                                {{-- {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }} --}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($currentOrder->BillingAddress1 != null)
+                                                    {{$currentOrder->BillingAddress1}}
+                                                @elseif ($addresses['shipping_address']['postalAddress1'] != null)
+                                                    {{$addresses['shipping_address']['postalAddress1']}}
+                                                @endif
+                                                {{-- @if ($addresses['shipping_address']['postalAddress1'] != null)
+                                                    {{$addresses['shipping_address']['postalAddress1']}}
+                                                @endif --}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($currentOrder->BillingAddress2 != null)
+                                                {{$currentOrder->BillingAddress2}}
+                                                @elseif ($addresses['shipping_address']['postalAddress2'] != null)
+                                                    {{$addresses['shipping_address']['postalAddress2']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($currentOrder->BillingCity != null)
+                                                    {{$currentOrder->BillingCity}}
+                                                @elseif ($addresses['shipping_address']['postalCity'] != null)
+                                                    {{$addresses['shipping_address']['postalCity']}}
+                                                @endif
+
+                                                @if ($currentOrder->BillingState != null)
+                                                    {{$currentOrder->BillingState}}
+                                                @elseif ($addresses['shipping_address']['postalState'] != null)
+                                                    {{$addresses['shipping_address']['postalState']}}
+                                                @endif
+
+                                                @if ($currentOrder->BillingZip != null)
+                                                    {{$currentOrder->BillingZip}}
+                                                @elseif ($addresses['shipping_address']['postalPostCode'] != null)
+                                                    {{$addresses['shipping_address']['postalPostCode']}}
+                                                @endif
+                                            </td>
+                                        </tr>
                                         {{-- <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['shipping_address']['postalState'] != null)
@@ -138,14 +202,14 @@
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['billing_address']['mobile'] != null)
-                                                {{$addresses['billing_address']['mobile']}}
+                                                    {{$addresses['billing_address']['mobile']}}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['billing_address']['phone'] != null)
-                                                {{$addresses['billing_address']['phone']}}
+                                                    {{$addresses['billing_address']['phone']}}
                                                 @endif
                                             </td>
                                         </tr>
@@ -161,7 +225,7 @@
                                             </td>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    {{-- <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }}
@@ -194,6 +258,68 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['mobile'] != null)
+                                                {{$addresses['billing_address']['mobile']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                            <td>
+                                                @if ($addresses['billing_address']['phone'] != null)
+                                                {{$addresses['billing_address']['phone']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody> --}}
+                                    <tbody>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                {{!empty($currentOrder->DeliveryFirstName) ? $currentOrder->DeliveryFirstName : $addresses['billing_address']['firstName']}} {{!empty($currentOrder->DeliveryLastName) ? ' '.$currentOrder->DeliveryLastName : ' ' .$addresses['billing_address']['lastName']}}
+                                                {{-- {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }} --}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($currentOrder->DeliveryAddress1 != null)
+                                                    {{$currentOrder->DeliveryAddress1}}
+                                                @elseif ($addresses['billing_address']['address1'] != null)
+                                                    {{$addresses['billing_address']['address1']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                @if ($currentOrder->DeliveryAddress2 != null)
+                                                    {{$currentOrder->DeliveryAddress2}}
+                                                @elseif ($addresses['billing_address']['address2'] != null)
+                                                    {{$addresses['billing_address']['address2']}}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                                
+                                                @if ($currentOrder->DeliveryCity != null)
+                                                    {{$currentOrder->DeliveryCity}}
+                                                @elseif ($addresses['billing_address']['city'] != null)
+                                                    {{$addresses['billing_address']['city']}}
+                                                @endif
+
+                                                @if ($currentOrder->DeliveryState != null)
+                                                    {{$currentOrder->DeliveryState}}
+                                                @elseif ($addresses['billing_address']['state'] != null)
+                                                    {{$addresses['billing_address']['state']}}
+                                                @endif
+
+                                                @if ($currentOrder->DeliveryZip != null)
+                                                    {{$currentOrder->DeliveryZip}}
+                                                @elseif ($addresses['billing_address']['zip'] != null)
+                                                    {{$addresses['billing_address']['zip']}}
+                                                @endif
+                                            </td>
+                                        </tr>
                                         {{-- <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($addresses['billing_address']['state'] != null)
@@ -220,9 +346,14 @@
                                         </tr>
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
-                                                @if ($addresses['billing_address']['phone'] != null)
-                                                {{$addresses['billing_address']['phone']}}
+                                                @if ($currentOrder->DeliveryPhone != null)
+                                                    {{$currentOrder->DeliveryPhone}}
+                                                @elseif ($addresses['billing_address']['phone'] != null)
+                                                    {{$addresses['billing_address']['phone']}}
                                                 @endif
+                                                {{-- @if ($addresses['billing_address']['phone'] != null)
+                                                    {{$addresses['billing_address']['phone']}}
+                                                @endif --}}
                                             </td>
                                         </tr>
                                     </tbody>
