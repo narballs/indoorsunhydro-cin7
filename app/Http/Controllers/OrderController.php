@@ -1265,7 +1265,16 @@ class OrderController extends Controller
                 ]);
             
                 $packingSlipFileName = 'packing-slip-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                $packingSlipPath = 'public/' . $packingSlipFileName;
+                $packingSlipDir = 'public/packing_slips';
+
+                // Check if the directory exists
+                if (!file_exists($packingSlipDir)) {
+                    // Create the directory if it doesn't exist
+                    mkdir($packingSlipDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                }
+
+                // Define the full file path
+                $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
                 Storage::disk('local')->put($packingSlipPath, $packingSlipPdf->output());
                 
                 
@@ -1360,7 +1369,16 @@ class OrderController extends Controller
                     ]);
                 
                     $packingSlipFileName = 'packing-slip-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                    $packingSlipPath = 'public/' . $packingSlipFileName;
+                    $packingSlipDir = 'public/packing_slips';
+
+                    // Check if the directory exists
+                    if (!file_exists($packingSlipDir)) {
+                        // Create the directory if it doesn't exist
+                        mkdir($packingSlipDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                    }
+
+                    // Define the full file path
+                    $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
                     Storage::disk('local')->put($packingSlipPath, $packingSlipPdf->output());
                     
                     $order->update([
