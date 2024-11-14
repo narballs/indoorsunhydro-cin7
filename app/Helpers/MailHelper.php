@@ -69,25 +69,52 @@ class MailHelper
         });
     }
 
+    // public static function sendShipstationLabelMail($template, $data) {
+    //     try {
+    //         Mail::send($template, $data, function($message) use ($data) {
+    //             $message->from($data['from']);
+    //             $message->to($data['email'])->subject($data['subject']);
+    
+    //             // Check if a file is provided and exists before attaching
+    //             if (!empty($data['file']) && file_exists(storage_path('app/' . $data['file']))) {
+    //                 $message->attach(storage_path('app/' . $data['file']), [
+    //                     'as' => basename($data['file']), // Filename in the email
+    //                     'mime' => 'application/pdf',     // MIME type for PDF
+    //                 ]);
+    //             }
+    //         });
+
+    //         return true; // Email queued successfully
+    //     } catch (\Exception $e) {
+    //         // Log the error or handle it as needed
+
+    //         Log::error('Failed to send email: ' . $e->getMessage());
+    //         return false; // Email sending failed
+    //     }
+    // }
+
     public static function sendShipstationLabelMail($template, $data) {
         try {
             Mail::send($template, $data, function($message) use ($data) {
                 $message->from($data['from']);
                 $message->to($data['email'])->subject($data['subject']);
     
-                // Check if a file is provided and exists before attaching
-                if (!empty($data['file']) && file_exists(storage_path('app/' . $data['file']))) {
-                    $message->attach(storage_path('app/' . $data['file']), [
-                        'as' => basename($data['file']), // Filename in the email
-                        'mime' => 'application/pdf',     // MIME type for PDF
-                    ]);
+                // Loop through each file in the 'files' array and attach if it exists
+                if (!empty($data['files'])) {
+                    foreach ($data['files'] as $filename => $path) {
+                        if (file_exists($path)) {
+                            $message->attach($path, [
+                                'as' => basename($path), // Filename as it appears in the email
+                                'mime' => 'application/pdf', // Assuming PDF for all attachments
+                            ]);
+                        }
+                    }
                 }
             });
-
+    
             return true; // Email queued successfully
         } catch (\Exception $e) {
             // Log the error or handle it as needed
-
             Log::error('Failed to send email: ' . $e->getMessage());
             return false; // Email sending failed
         }

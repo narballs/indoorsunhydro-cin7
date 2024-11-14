@@ -1314,9 +1314,11 @@ class OrderController extends Controller
                         'label_link' => $file_name,
                     ]);
 
-                    return response($label_data)
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    // return response($label_data)
+                    // ->header('Content-Type', 'application/pdf')
+                    // ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    // return redirect('admin/orders')->with('success', 'Label created successfully.');
+                    return redirect('admin/orders')->with('success', 'Label created successfully.');
                 } else {
                     return redirect('admin/orders')->with('error', 'Error sending email.');
                 }
@@ -1417,9 +1419,10 @@ class OrderController extends Controller
                             'label_link' => $file_name,
                         ]);
     
-                        return response($label_data)
-                        ->header('Content-Type', 'application/pdf')
-                        ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                        // return response($label_data)
+                        // ->header('Content-Type', 'application/pdf')
+                        // ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                        return redirect('admin/orders')->with('success', 'Label created successfully.');
                     } else {
                         return redirect('admin/orders')->with('error', 'Error sending email.');
                     }
