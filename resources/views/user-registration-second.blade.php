@@ -331,7 +331,7 @@
                                                 <div class="input-placeholder col-md-12 mt-3">
                                                     <input type="text" name="company_name" id="company_name" required="" class="sign-up-fields p-3 pl-0 w-100">
                                                     <div class="placeholder pl-3 fontAwesome_new top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
-                                                        <i class="fa fa-building  ml-2 mr-2"></i>Company Name (Optional)
+                                                        <i class="fa fa-building  ml-2 mr-2"></i>Company Name
                                                     </div>
                                                 </div>
                                                 <div class="text-danger" id="company_name_errors"></div>
@@ -439,7 +439,7 @@
                                     <div class="input-placeholder col-md-12 mt-2">
                                         <input type="text" name="suit_apartment" id="suit_apartment" required="" class="sign-up-fields p-3 pl-0 w-100">
                                         <div class="placeholder pl-3 fontAwesome_new  top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
-                                            <i class="fa fa-road  ml-2 mr-2"></i>Apartment, Suit, unit 
+                                            <i class="fa fa-road  ml-2 mr-2"></i>Apartment, Suit, unit etc
                                         </div>
                                     </div>
                                     <div class="input-placeholder col-md-12 mt-2 ">
