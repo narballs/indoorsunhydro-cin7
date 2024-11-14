@@ -34,6 +34,7 @@ use App\Models\Discount;
 use App\Models\OrderRefund;
 use App\Models\OrderStatus;
 use App\Models\SpecificAdminNotification;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -1217,8 +1218,6 @@ class OrderController extends Controller
             ]);
         
             $orderData = json_decode($response->getBody()->getContents(), true);
-
-            
             if (empty($orderData)) {
                 return redirect('admin/orders')->with('error', 'Order not found in ShipStation.');
             }
@@ -1244,6 +1243,32 @@ class OrderController extends Controller
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
                 
+                $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
+                    'order_id' => $orderData['orderNumber'],
+                    'reference' => $orderData['orderKey'],
+                    'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                    'name' => $orderData['shipTo']['name'],
+                    'street1' => $orderData['shipTo']['street1'],
+                    'street2' => $orderData['shipTo']['street2'],
+                    'city' => $orderData['shipTo']['city'],
+                    'state' => $orderData['shipTo']['state'],
+                    'postalCode' => $orderData['shipTo']['postalCode'],
+                    'country' => $orderData['shipTo']['country'],
+                    'phone' => $orderData['shipTo']['phone'],
+                    'email' => $user_email,
+                    'shipDate' => $orderData['shipDate'],
+                    'orderDate' => $orderData['orderDate'],
+                    'order_items' => $order_items,
+                    'orderTotal' => $orderData['orderTotal'],
+                    'taxAmount' => $orderData['taxAmount'],
+                    'shippingAmount' => $orderData['shippingAmount'],
+                ]);
+            
+                $packingSlipFileName = 'packing-slip-' . $order_id . '-' . date('YmdHis') . '.pdf';
+                $packingSlipPath = 'public/' . $packingSlipFileName;
+                Storage::disk('local')->put($packingSlipPath, $packingSlipPdf->output());
+                
+                
                 $labelData = UserHelper::shipment_label();
                 $label_data = base64_decode($labelData);
                 $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
@@ -1253,7 +1278,10 @@ class OrderController extends Controller
                 $label_email_data = [
                     'email' => $user_email,
                     'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                    'file' => $label_path,
+                    'files' => [
+                        'packing_slip' => $packingSlipPath,
+                        'label' => $label_path
+                    ],
                     'content' => [
                         'order_id' => $order_id,
                         'company' => $prepare_data_for_creating_label['shipTo']['company'],
@@ -1264,6 +1292,7 @@ class OrderController extends Controller
                         'state' => $prepare_data_for_creating_label['shipTo']['state'],
                         'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
                         'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                        'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
                     ],
                     'order_items' => $order_items_array,
                     'from' => SettingHelper::getSetting('noreply_email_address')
@@ -1307,6 +1336,32 @@ class OrderController extends Controller
                     $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
                     $label_path = 'public/' . $file_name;
                     Storage::disk('local')->put($label_path, $label_data);
+
+
+                    $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
+                        'order_id' => $orderData['orderNumber'],
+                        'reference' => $orderData['orderKey'],
+                        'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                        'name' => $orderData['shipTo']['name'],
+                        'street1' => $orderData['shipTo']['street1'],
+                        'street2' => $orderData['shipTo']['street2'],
+                        'city' => $orderData['shipTo']['city'],
+                        'state' => $orderData['shipTo']['state'],
+                        'postalCode' => $orderData['shipTo']['postalCode'],
+                        'country' => $orderData['shipTo']['country'],
+                        'phone' => $orderData['shipTo']['phone'],
+                        'email' => $user_email,
+                        'shipDate' => $orderData['shipDate'],
+                        'orderDate' => $orderData['orderDate'],
+                        'order_items' => $order_items,
+                        'orderTotal' => $orderData['orderTotal'],
+                        'taxAmount' => $orderData['taxAmount'],
+                        'shippingAmount' => $orderData['shippingAmount'],
+                    ]);
+                
+                    $packingSlipFileName = 'packing-slip-' . $order_id . '-' . date('YmdHis') . '.pdf';
+                    $packingSlipPath = 'public/' . $packingSlipFileName;
+                    Storage::disk('local')->put($packingSlipPath, $packingSlipPdf->output());
                     
                     $order->update([
                         'is_shipped' => 1,
@@ -1323,7 +1378,10 @@ class OrderController extends Controller
                     $label_email_data = [
                         'email' => $user_email,
                         'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                        'file' => $label_path,
+                        'files' => [
+                            'packing_slip' => $packingSlipPath,
+                            'label' => $label_path
+                        ],
                         'content' => [
                             'subject' => 'Ship Web Order ' . $order_id . ' Label',
                             'email' => $user_email,
@@ -1336,6 +1394,7 @@ class OrderController extends Controller
                             'state' => $prepare_data_for_creating_label['shipTo']['state'],
                             'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
                             'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                            'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
                         ],
                         'order_items' => $order_items_array,
                         'from' => SettingHelper::getSetting('noreply_email_address')
