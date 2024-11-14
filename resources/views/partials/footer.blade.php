@@ -645,6 +645,8 @@
                         button: "OK",
                     });
                 }
+
+                location.reload();
             },
             error: function(xhr, status, error) {
                 console.error("Error updating quantities:", error, "Status:", status);
@@ -686,6 +688,8 @@
                         button: "OK",
                     });
                 }
+
+                location.reload();
             },
             error: function(xhr, status, error) {
                 console.error("Error removing out of stock items:", error, "Status:", status);
