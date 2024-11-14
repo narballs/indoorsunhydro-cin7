@@ -3810,18 +3810,18 @@ class ProductController extends Controller
     
                 return response()->json([
                     'status' => $status,
-                    'message' => $status ? 'Items removed successfully' : 'No items removed.'
+                    'message' => $status ? 'Item(s) removed successfully' : 'No item(s) removed.'
                 ], 200);
             } else {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Items or contact ID is missing.'
+                    'message' => 'Item(s) or contact ID is missing.'
                 ], 400);
             }
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'An error occurred while removing items.',
+                'message' => 'An error occurred while removing item(s).',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -3863,13 +3863,13 @@ class ProductController extends Controller
 
                 return response()->json([
                     'status' => $status,
-                    'message' => $status ? 'Quantity updated successfully.' : 'No items were updated.',
+                    'message' => $status ? 'Quantity updated successfully.' : 'No item(s) were updated.',
                 ]);
             }
 
             return response()->json([
                 'status' => false,
-                'message' => 'Items or contact ID is missing',
+                'message' => 'Item(s) or contact ID is missing',
             ], 400);
 
         } catch (\Exception $e) {
@@ -3943,13 +3943,13 @@ class ProductController extends Controller
                 }
                 return response()->json([
                     'status' => $status,
-                    'message' => $status ? 'Notifications sent successfully.' : 'Failed to send notifications.',
+                    'message' => $status ? 'Notification(s) sent successfully.' : 'Failed to send notification(s).',
                 ]);
             }
 
             return response()->json([
                 'status' => false,
-                'message' => 'No items or contact ID provided.'
+                'message' => 'No item(s) or contact ID provided.'
             ], 400);
 
         } catch (\Exception $e) {
@@ -3959,6 +3959,11 @@ class ProductController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+
+    public function PackingSlip(Request $request) {
+        return view ('partials.packing_slip');
     }
        
 }
