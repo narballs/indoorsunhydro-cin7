@@ -103,7 +103,7 @@
                                     <tbody>
                                         <tr>
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
-                                                {{!empty($currentOrder->BillingFirstName) ? $currentOrder->BillingFirstName : $addresses['billing_address']['firstName']}} {{!empty($currentOrder->BillingFirstName) ? ' '.$currentOrder->BillingFirstName : ' ' .$addresses['billing_address']['lastName']}}
+                                                {{!empty($currentOrder->BillingFirstName) ? $currentOrder->BillingFirstName : $addresses['billing_address']['firstName']}} {{!empty($currentOrder->BillingLastName) ? ' '.$currentOrder->BillingLastName : ' ' .$addresses['billing_address']['lastName']}}
                                                 {{-- {{ $addresses['billing_address']['firstName'] .' ' . ' '.$addresses['billing_address']['lastName'] }} --}}
                                             </td>
                                         </tr>

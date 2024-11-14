@@ -1200,8 +1200,9 @@ class UserController extends Controller
             try {
                 $states = UsState::where('id', $request->state_id)->first();
                 $state_name = $states->state_name;
-                $cities = UsCity::where('id', $request->city_id)->first();
-                $city_name = $cities->city;
+                // $cities = UsCity::where('id', $request->city_id)->first();
+                // $city_name = $cities->city;
+                $city_name =  $request->city_id;
                 $user = User::create([
                     'email' => strtolower($request->get('email')),
                     "first_name" => $request->get('first_name'),
