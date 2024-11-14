@@ -589,6 +589,7 @@ Route::post('/add-new-address', [UserController::class, 'add_new_address'])->nam
 Route::post('/notifyOutOfStock', [ProductController::class, 'notifyOutOfStock'])->name('notifyOutOfStock');
 Route::post('/updateItemQuantitytoOriginal', [ProductController::class, 'updateItemQuantitytoOriginal'])->name('updateItemQuantitytoOriginal');
 Route::post('/removeOutOfStock', [ProductController::class, 'removeOutOfStock'])->name('removeOutOfStock');
+Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('PackingSlip');
 
 
 // get filter products from pythone api

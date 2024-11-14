@@ -615,7 +615,7 @@
         if (!updatedItems.length)  {
             Swal.fire({
                 title: "Error!",
-                text: "This item is out of stock.",
+                text: "Item(s) are out of stock.",
                 icon: "error",
                 button: "OK",
             });
@@ -683,7 +683,7 @@
                 } else {
                     Swal.fire({
                         title: "Error!",
-                        text: "Failed to remove out of stock items.",
+                        text: "Failed to remove out of stock item(s).",
                         icon: "error",
                         button: "OK",
                     });
@@ -696,7 +696,7 @@
                 console.error("Response:", xhr.responseText);
                 Swal.fire({
                     title: "Error!",
-                    text: "Failed to remove out of stock items.",
+                    text: "Failed to remove out of stock item(s).",
                     icon: "error",
                     button: "OK",
                 });
