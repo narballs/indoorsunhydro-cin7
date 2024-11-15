@@ -103,7 +103,7 @@
                     <p>{{$city}}, {{$state}} {{$postalCode}} US</p>
                 </td>
                 <td class="order-details">
-                    <p><strong>Order #</strong>: {{$order_id}}</p>
+                    <p><strong>Order #</strong> {{$order_id}}</p>
                     <p><strong>Order Reference</strong>: {{$reference}}</p>
                     <p><strong>Date</strong>: {{ \Carbon\Carbon::parse($orderDate)->format('Y-m-d H:i:s') }}</p>
                     <p><strong>Ship Date</strong>: {{$shipDate}}</p>

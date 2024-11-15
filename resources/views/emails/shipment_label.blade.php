@@ -60,14 +60,14 @@
                             <td style="padding: 10px 20px; color: #000;">
                                 <h4 style="font-size: 16px; font-weight: 600;">Shipping to:</h4>
                                 <p style="font-size: 14px; margin: 0;">
-                                    {{!empty( $content['name']) ?  $content['name'] : '' }}<br>
-                                    <b>{{ !empty($content['company']) ? $content['company'] : '' }}</b><br>
-                                    {{ !empty($content['street1']) ? $content['street1'] : '' }}<br>
-                                    {{ !empty($content['street2']) ? $content['street2'] : '' }}<br>
-                                    {{ !empty($content['street3']) ? $content['street3'] : '' }}<br>
-                                    {{ !empty($content['city']) ? $content['city'] : '' }}, {{ !empty($content['state']) ? $content['state'] : '' }} {{ !empty($content['postalCode']) ? $content['postalCode'] : '' }}<br>
-                                    {{ !empty($content['country']) ? $content['country'] : '' }}<br>
-                                    {{ !empty($content['phone']) ? $content['phone'] : '' }}
+                                    Name : {{!empty( $content['name']) ?  $content['name'] : '' }}<br/>
+                                    Company : {{ !empty($content['company']) ? $content['company'] : '' }}</b><br/>
+                                    Address : {{ !empty($content['street1']) ? $content['street1'] : '' }}<br/>
+                                    {{ !empty($content['street2']) ? $content['street2'] : '' }}<br/>
+                                    {{ !empty($content['street3']) ? $content['street3'] : '' }}<br/>
+                                    {{ !empty($content['city']) ? $content['city'] : '' }}, {{ !empty($content['state']) ? $content['state'] : '' }} {{ !empty($content['postalCode']) ? $content['postalCode'] : '' }}<br/>
+                                    Country : {{ !empty($content['country']) ? $content['country'] : '' }}<br/>
+                                    Phone : {{ !empty($content['phone']) ? $content['phone'] : '' }}
                                 </p>
                             </td>
                         </tr>
