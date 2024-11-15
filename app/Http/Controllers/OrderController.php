@@ -1273,10 +1273,6 @@ class OrderController extends Controller
                     mkdir($packingSlipDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
                 }
 
-                // Define the full file path
-                // $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
-                // Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
-
                 $packingSlipPath = public_path('packing_slips/' . $packingSlipFileName);
 
                 // Save the Packing Slip PDF directly to the public directory
@@ -1293,22 +1289,12 @@ class OrderController extends Controller
                     mkdir($labelDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
                 }
 
-                // Define the full file path
-                // $label_path = $labelDir . '/' . $file_name;
-                // Storage::disk('public')->put($label_path, $file_name);
-
                 $labelPath = public_path('labels/' . $file_name);
-
-                // Save the Label PDF directly to the public directory
                 file_put_contents($labelPath, $label_data);
                 
                 $label_email_data = [
                     'email' => $user_email,
                     'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                    // 'files' => [
-                    //     $packingSlipPath, // Full path to the packing slip PDF
-                    //     $labelPath       // Full path to the label PDF
-                    // ],
                     'content' => [
                         'order_id' => $order_id,
                         'company' => $prepare_data_for_creating_label['shipTo']['company'],
@@ -1343,9 +1329,7 @@ class OrderController extends Controller
                         'label_link' => $file_name,
                     ]);
 
-                    // return response($label_data)
-                    // ->header('Content-Type', 'application/pdf')
-                    // ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    
                     return redirect('admin/orders')->with('success', 'Shipment label created and email sent successfully.');
                 } else {
                     return redirect('admin/orders')->with('error', 'Error sending email.');
@@ -1372,9 +1356,7 @@ class OrderController extends Controller
                         mkdir($labelDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
                     }
 
-                    // Define the full file path
-                    // $label_path = $labelDir . '/' . $file_name;
-                    // Storage::disk('public')->put($label_path, $file_name);
+                    
 
                     $labelPath = public_path('labels/' . $file_name);
 
@@ -1412,10 +1394,6 @@ class OrderController extends Controller
                         mkdir($packingSlipDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
                     }
 
-                    // Define the full file path
-                    // $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
-                    // Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
-
                     $packingSlipPath = public_path('packing_slips/' . $packingSlipFileName);
 
                     // Save the Packing Slip PDF directly to the public directory
@@ -1436,10 +1414,6 @@ class OrderController extends Controller
                     $label_email_data = [
                         'email' => $user_email,
                         'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                        // 'files' => [
-                        //     $packingSlipPath, // Full path to the packing slip PDF
-                        //     $labelPath       // Full path to the label PDF
-                        // ],
                         'content' => [
                             'subject' => 'Ship Web Order ' . $order_id . ' Label',
                             'email' => $user_email,
