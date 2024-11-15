@@ -331,7 +331,7 @@
                                                 <div class="input-placeholder col-md-12 mt-3">
                                                     <input type="text" name="company_name" id="company_name" required="" class="sign-up-fields p-3 pl-0 w-100">
                                                     <div class="placeholder pl-3 fontAwesome_new top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
-                                                        <i class="fa fa-building  ml-2 mr-2"></i>Company Name (Optional)
+                                                        <i class="fa fa-building  ml-2 mr-2"></i>Company Name
                                                     </div>
                                                 </div>
                                                 <div class="text-danger" id="company_name_errors"></div>
@@ -439,7 +439,7 @@
                                     <div class="input-placeholder col-md-12 mt-2">
                                         <input type="text" name="suit_apartment" id="suit_apartment" required="" class="sign-up-fields p-3 pl-0 w-100">
                                         <div class="placeholder pl-3 fontAwesome_new  top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
-                                            <i class="fa fa-road  ml-2 mr-2"></i>Apartment, Suit, unit 
+                                            <i class="fa fa-road  ml-2 mr-2"></i>Apartment, Suit, unit etc
                                         </div>
                                     </div>
                                     <div class="input-placeholder col-md-12 mt-2 ">
@@ -461,7 +461,7 @@
                                         </div>
                                         <div class="text-danger" id="state_errors"></div>
                                     </div>
-                                    <div class="input-placeholder col-md-6 mt-2">
+                                    {{-- <div class="input-placeholder col-md-6 mt-2">
                                         <div class="add_steric_city">
                                             <select id="city-dd"  name="city" class="sign-up-fields p-3 pl-0 w-100" style="" required>
                                                 <option value="" name="town_city" class="">
@@ -469,7 +469,12 @@
                                                 </option>
                                             </select>
                                         </div>
-                                        <div class="text-danger" id="town_city_errors"></div>
+                                    </div> --}}
+                                    <div class="input-placeholder col-md-6 mt-2">
+                                        <input type="text" name="city" id="city-dd" required="" class="sign-up-fields p-3 pl-0 w-100">
+                                        <div class="placeholder pl-3 fontAwesome_new  top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                            <i class="fa fa-city  ml-2 mr-2"></i>City
+                                        </div>
                                     </div>
                                     <div class="input-placeholder col-md-6 mt-2">
                                         <input type="text" name="zip" id="zip" required="" class="sign-up-fields p-3 pl-0 w-100">
@@ -970,34 +975,31 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#state-dd').on('change', function() {
-            $('#city-dd').on('change', function() {
-                var cityId = this.value;
-                // alert(cityId);
-            });
-            var idState = this.value;
-            $("#city-dd").html('');
-            $.ajax({
-                url: "{{ url('api/fetch-cities') }}",
-                type: "POST",
-                data: {
-                    state_id: idState,
-                    // city_id: cityId,
-                    _token: '{{ csrf_token() }}'
-                },
-                dataType: 'json',
-                success: function(result) {
-                    $('#city-dd').html(
-                        '<option value="" placeholder="&#xf5a0;  Town/City" name="town_city"class="form-control mt-2 company-info fontAwesome"> &#xf5a0; Town/City</option>'
-                    );
-                    $.each(result.cities, function(key, value) {
-                        $("#city-dd").append('<option value="' + value
-                            .id + '">' + value.city + '</option>');
-                    });
-                    // $('#zip-dd').html('<option value="">Select Zip</option>');
-                }
-            });
-        });
+        // $('#state-dd').on('change', function() {
+        //     $('#city-dd').on('change', function() {
+        //         var cityId = this.value;
+        //     });
+        //     var idState = this.value;
+        //     $("#city-dd").html('');
+        //     $.ajax({
+        //         url: "{{ url('api/fetch-cities') }}",
+        //         type: "POST",
+        //         data: {
+        //             state_id: idState,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         dataType: 'json',
+        //         success: function(result) {
+        //             $('#city-dd').html(
+        //                 '<option value="" placeholder="&#xf5a0;  Town/City" name="town_city"class="form-control mt-2 company-info fontAwesome"> &#xf5a0; Town/City</option>'
+        //             );
+        //             $.each(result.cities, function(key, value) {
+        //                 $("#city-dd").append('<option value="' + value
+        //                     .id + '">' + value.city + '</option>');
+        //             });
+        //         }
+        //     });
+        // });
         // $('#city-dd').on('change', function () {
         //     var idZip = this.value;
         //     $("#zip-dd").html('');

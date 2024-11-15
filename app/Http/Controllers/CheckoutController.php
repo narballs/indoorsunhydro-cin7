@@ -63,6 +63,54 @@ class CheckoutController extends Controller
         //     echo "Distance between ZIPCODE1 and ZIPCODE2 is {$distance} kilometers.";exit;
         // }
         // echo "Distance between ZIPCODE1 and ZIPCODE2 is {$distance} kilometers.";exit;
+        $out_of_stock_items = [];
+        $original_items_quantity = [];
+
+        $cart_items = UserHelper::switch_price_tier($request);
+
+        foreach ($cart_items as $cart_item) {
+            $product_options = ProductOption::with('products')
+                ->where('product_id', $cart_item['product_id'])
+                ->where('option_id', $cart_item['option_id'])
+                ->get();
+
+            foreach ($product_options as $product_option) {
+                // Check if the product is out of stock
+                if ($product_option->stockAvailable < 1) {
+                    $out_of_stock_items[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+
+                // Check if the available stock is less than the required quantity
+                if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
+                    $original_items_quantity[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+            }
+        }
+
+        if (!empty($out_of_stock_items) || !empty($original_items_quantity)) {
+            return redirect()->route('cart')
+                ->with([
+                    'out_of_stock_items' => $out_of_stock_items,
+                    'original_items_quantity' => $original_items_quantity
+                ]);
+        }
+
         $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
         if (!empty($new_checkout) && strtolower($new_checkout->option_value) == 'yes') {
             return $this->new_checkout($request);

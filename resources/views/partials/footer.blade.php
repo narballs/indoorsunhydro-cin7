@@ -566,6 +566,143 @@
             });
         }
     }
+
+    function send_notification_to_admin(outOfStockItems) {
+        // Ensure there are items to process
+        if (!outOfStockItems.length) return;
+
+        $.ajax({
+            url: "{{ route('notifyOutOfStock') }}",  // Correct route for the notification endpoint
+            method: "POST",
+            data: {
+                items: outOfStockItems,
+                _token: "{{ csrf_token() }}"  // CSRF token for security
+            },
+            success: function(response) {
+                if (response.status == true) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Notification sent successfully.",
+                        icon: "success",
+                        button: "OK",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: response.message,
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+                
+
+                location.reload();
+            },
+            error: function(error) {
+                console.error("Error sending notification:", error);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to send notification.",
+                    icon: "error",
+                    button: "OK",
+                });
+            }
+        });
+    }
+
+    function update_quantity_to_original(updatedItems) {
+        console.log(updatedItems);
+        if (!updatedItems.length)  {
+            Swal.fire({
+                title: "Error!",
+                text: "Item(s) are out of stock.",
+                icon: "error",
+                button: "OK",
+            });
+            return;
+        }
+
+        $.ajax({
+            url: "{{ route('updateItemQuantitytoOriginal') }}",
+            method: "POST",
+            data: {
+                items: updatedItems,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.status == true) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: response.message,
+                        icon: "success",
+                        button: "OK",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to update quantities.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error updating quantities:", error, "Status:", status);
+                console.error("Response:", xhr.responseText);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to update quantities.",
+                    icon: "error",
+                    button: "OK",
+                });
+            }
+        });
+    }
+
+
+    function remove_out_of_stock_items(outOfStockItems) {
+        if (!outOfStockItems.length) return;
+
+        $.ajax({
+            url: "{{ route('removeOutOfStock') }}",
+            method: "POST",
+            data: {
+                items: JSON.stringify(outOfStockItems),
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.status == true) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: response.message,
+                        icon: "success",
+                        button: "OK",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to remove out of stock item(s).",
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error removing out of stock items:", error, "Status:", status);
+                console.error("Response:", xhr.responseText);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to remove out of stock item(s).",
+                    icon: "error",
+                    button: "OK",
+                });
+            }
+        });
+    }
 </script>
 
 <script type="text/javascript">

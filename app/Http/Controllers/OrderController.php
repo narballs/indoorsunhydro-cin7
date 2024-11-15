@@ -34,6 +34,7 @@ use App\Models\Discount;
 use App\Models\OrderRefund;
 use App\Models\OrderStatus;
 use App\Models\SpecificAdminNotification;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -1217,8 +1218,6 @@ class OrderController extends Controller
             ]);
         
             $orderData = json_decode($response->getBody()->getContents(), true);
-
-            
             if (empty($orderData)) {
                 return redirect('admin/orders')->with('error', 'Order not found in ShipStation.');
             }
@@ -1244,16 +1243,58 @@ class OrderController extends Controller
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
                 
+                $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
+                    'order_id' => $orderData['orderNumber'],
+                    'reference' => $orderData['orderKey'],
+                    'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                    'name' => $orderData['shipTo']['name'],
+                    'street1' => $orderData['shipTo']['street1'],
+                    'street2' => $orderData['shipTo']['street2'],
+                    'city' => $orderData['shipTo']['city'],
+                    'state' => $orderData['shipTo']['state'],
+                    'postalCode' => $orderData['shipTo']['postalCode'],
+                    'country' => $orderData['shipTo']['country'],
+                    'phone' => $orderData['shipTo']['phone'],
+                    'email' => $user_email,
+                    'shipDate' => $orderData['shipDate'],
+                    'orderDate' => $orderData['orderDate'],
+                    'order_items' => $order_items,
+                    'orderTotal' => $orderData['orderTotal'],
+                    'taxAmount' => $orderData['taxAmount'],
+                    'shippingAmount' => $orderData['shippingAmount'],
+                ]);
+            
+                $packingSlipFileName = 'packing-slip-' . $order_id . '-' . date('YmdHis') . '.pdf';
+                $packingSlipDir = 'public/packing_slips';
+
+                // Check if the directory exists
+                if (!file_exists($packingSlipDir)) {
+                    // Create the directory if it doesn't exist
+                    mkdir($packingSlipDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                }
+
+                $packingSlipPath = public_path('packing_slips/' . $packingSlipFileName);
+
+                // Save the Packing Slip PDF directly to the public directory
+                file_put_contents($packingSlipPath, $packingSlipPdf->output());
+                
+                
                 $labelData = UserHelper::shipment_label();
                 $label_data = base64_decode($labelData);
                 $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                $label_path = 'public/' . $file_name;
-                Storage::disk('local')->put($label_path, $label_data);
+                $labelDir = 'public/labels';
+                // Check if the directory exists
+                if (!file_exists($labelDir)) {
+                    // Create the directory if it doesn't exist
+                    mkdir($labelDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                }
+
+                $labelPath = public_path('labels/' . $file_name);
+                file_put_contents($labelPath, $label_data);
                 
                 $label_email_data = [
                     'email' => $user_email,
                     'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                    'file' => $label_path,
                     'content' => [
                         'order_id' => $order_id,
                         'company' => $prepare_data_for_creating_label['shipTo']['company'],
@@ -1264,9 +1305,12 @@ class OrderController extends Controller
                         'state' => $prepare_data_for_creating_label['shipTo']['state'],
                         'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
                         'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                        'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
                     ],
                     'order_items' => $order_items_array,
-                    'from' => SettingHelper::getSetting('noreply_email_address')
+                    'from' => SettingHelper::getSetting('noreply_email_address'),
+                    'packingSlipFileName' => $packingSlipFileName,  // Packing slip file name
+                    'labelFileName' => $file_name,   
                 ];
 
                 $ship_station_api_logs  = new ShipstationApiLogs();      
@@ -1285,9 +1329,8 @@ class OrderController extends Controller
                         'label_link' => $file_name,
                     ]);
 
-                    return response($label_data)
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    
+                    return redirect('admin/orders')->with('success', 'Shipment label created and email sent successfully.');
                 } else {
                     return redirect('admin/orders')->with('error', 'Error sending email.');
                 }
@@ -1305,8 +1348,56 @@ class OrderController extends Controller
                     $label_data = base64_decode($label_api_response->labelData);
                     
                     $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                    $label_path = 'public/' . $file_name;
-                    Storage::disk('local')->put($label_path, $label_data);
+
+                    $labelDir = 'public/labels';
+                    // Check if the directory exists
+                    if (!file_exists($labelDir)) {
+                        // Create the directory if it doesn't exist
+                        mkdir($labelDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                    }
+
+                    
+
+                    $labelPath = public_path('labels/' . $file_name);
+
+                    // Save the Label PDF directly to the public directory
+                    file_put_contents($labelPath, $label_data);
+
+
+                    $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
+                        'order_id' => $orderData['orderNumber'],
+                        'reference' => $orderData['orderKey'],
+                        'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                        'name' => $orderData['shipTo']['name'],
+                        'street1' => $orderData['shipTo']['street1'],
+                        'street2' => $orderData['shipTo']['street2'],
+                        'city' => $orderData['shipTo']['city'],
+                        'state' => $orderData['shipTo']['state'],
+                        'postalCode' => $orderData['shipTo']['postalCode'],
+                        'country' => $orderData['shipTo']['country'],
+                        'phone' => $orderData['shipTo']['phone'],
+                        'email' => $user_email,
+                        'shipDate' => $orderData['shipDate'],
+                        'orderDate' => $orderData['orderDate'],
+                        'order_items' => $order_items,
+                        'orderTotal' => $orderData['orderTotal'],
+                        'taxAmount' => $orderData['taxAmount'],
+                        'shippingAmount' => $orderData['shippingAmount'],
+                    ]);
+                
+                    $packingSlipFileName = 'packing-slip-' . $order_id . '-' . date('YmdHis') . '.pdf';
+                    $packingSlipDir = 'public/packing_slips';
+
+                    // Check if the directory exists
+                    if (!file_exists($packingSlipDir)) {
+                        // Create the directory if it doesn't exist
+                        mkdir($packingSlipDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                    }
+
+                    $packingSlipPath = public_path('packing_slips/' . $packingSlipFileName);
+
+                    // Save the Packing Slip PDF directly to the public directory
+                    file_put_contents($packingSlipPath, $packingSlipPdf->output());
                     
                     $order->update([
                         'is_shipped' => 1,
@@ -1323,7 +1414,6 @@ class OrderController extends Controller
                     $label_email_data = [
                         'email' => $user_email,
                         'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                        'file' => $label_path,
                         'content' => [
                             'subject' => 'Ship Web Order ' . $order_id . ' Label',
                             'email' => $user_email,
@@ -1336,9 +1426,12 @@ class OrderController extends Controller
                             'state' => $prepare_data_for_creating_label['shipTo']['state'],
                             'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
                             'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                            'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
                         ],
                         'order_items' => $order_items_array,
-                        'from' => SettingHelper::getSetting('noreply_email_address')
+                        'from' => SettingHelper::getSetting('noreply_email_address'),
+                        'packingSlipFileName' => $packingSlipFileName,  // Packing slip file name
+                        'labelFileName' => $file_name, 
                     ];
         
         
@@ -1358,9 +1451,10 @@ class OrderController extends Controller
                             'label_link' => $file_name,
                         ]);
     
-                        return response($label_data)
-                        ->header('Content-Type', 'application/pdf')
-                        ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                        // return response($label_data)
+                        // ->header('Content-Type', 'application/pdf')
+                        // ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                        return redirect('admin/orders')->with('success', 'Shipment label created and email sent successfully.');
                     } else {
                         return redirect('admin/orders')->with('error', 'Error sending email.');
                     }
@@ -1390,10 +1484,21 @@ class OrderController extends Controller
 
     // download shipment label for order
     public function download_label($filename) {
-        $file = Storage::disk('public')->get($filename);
+        // Get the full file path from the public directory
+        $filePath = public_path('labels/' . $filename);
+    
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+    
+        // Get the file contents
+        $file = file_get_contents($filePath);
+    
+        // Return the file as a downloadable response
         return response($file)
-        ->header('Content-Type', 'application/pdf')
-        ->header('Content-Disposition', 'attachment; filename='.$filename);
+            ->header('Content-Type', 'application/pdf') // Set content type for PDF
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"'); // Make it downloadable
     }
 
     // uppdate order status manually 

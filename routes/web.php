@@ -586,6 +586,10 @@ Route::post('/send-sms/{id}', [SmsController::class, 'send_sms'])->name('send_sm
 Route::get('/thank-you', [ContactUsController::class, 'thankyou_page'])->name('thankyou_page');
 Route::get('/ai-answer', [ProductController::class, 'ai_answer'])->name('ai_answer');
 Route::post('/add-new-address', [UserController::class, 'add_new_address'])->name('add_new_address');
+Route::post('/notifyOutOfStock', [ProductController::class, 'notifyOutOfStock'])->name('notifyOutOfStock');
+Route::post('/updateItemQuantitytoOriginal', [ProductController::class, 'updateItemQuantitytoOriginal'])->name('updateItemQuantitytoOriginal');
+Route::post('/removeOutOfStock', [ProductController::class, 'removeOutOfStock'])->name('removeOutOfStock');
+Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('PackingSlip');
 
 
 // get filter products from pythone api

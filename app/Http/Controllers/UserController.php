@@ -1138,12 +1138,12 @@ class UserController extends Controller
                     // 'regex:/^[a-zA-Z0-9\s-]+$/'
                 ],
                 'state_id' => 'required',
-                'city_id' => 'required',
+                // 'city_id' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
             ],
             [
                 'state_id.required' => 'The state field is required.',
-                'city_id.required' => 'The city field is required.',
+                // 'city_id.required' => 'The city field is required.',
             ] 
                 
         );
@@ -1200,8 +1200,9 @@ class UserController extends Controller
             try {
                 $states = UsState::where('id', $request->state_id)->first();
                 $state_name = $states->state_name;
-                $cities = UsCity::where('id', $request->city_id)->first();
-                $city_name = $cities->city;
+                // $cities = UsCity::where('id', $request->city_id)->first();
+                // $city_name = $cities->city;
+                $city_name =  $request->city_id;
                 $user = User::create([
                     'email' => strtolower($request->get('email')),
                     "first_name" => $request->get('first_name'),
@@ -2515,7 +2516,6 @@ class UserController extends Controller
         $responseBody = null;
         $cin7_status = null;
 
-
         if (!empty($request->type) && $request->type == 'update shipping address') {
             $address_type = 'shipping';
         }
@@ -2544,9 +2544,16 @@ class UserController extends Controller
 
         if (!empty($get_contact) && !empty($address_type)) {
             if ($address_type === 'shipping') {
+
+
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
-                $get_contact->company = $request->company_name;
+                
+                if (!empty($request->check_company_count) && $request->check_company_count == 1) {
+                    $get_contact->company = $request->company_name;
+                }
+
+
                 $get_contact->address1 = $request->address;
                 $get_contact->address2 = $request->address2;
                 $get_contact->state = $request->state;
@@ -2556,13 +2563,18 @@ class UserController extends Controller
                 $get_contact->tax_class = strtolower($request->state) == strtolower('California') ? '8.75%' : 'Out of State';
                 $get_contact->save();
                 $response = $get_contact;
-                $response_status = true;
+                $response_status = true;       
+
             }
 
             if ($address_type === 'billing') {
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
-                $get_contact->company = $request->company_name;
+
+                if (!empty($request->check_company_count) && $request->check_company_count == 1) {
+                    $get_contact->company = $request->company_name;
+                }
+
                 $get_contact->postalAddress1 = $request->address;
                 $get_contact->postalAddress2 = $request->address2;
                 $get_contact->postalState = $request->state;
@@ -2573,6 +2585,34 @@ class UserController extends Controller
                 $get_contact->save();
                 $response = $get_contact;
                 $response_status = true;
+
+
+                $check_billing_address = ContactsAddress::where('contact_id', $get_contact->contact_id)
+                ->where('address_type', 'Billing')
+                ->get();
+
+                if (count($check_billing_address) > 0) {
+                    foreach ($check_billing_address as $address) {
+                        $address->is_default = 0;
+                        $address->save();
+                    }
+                }
+
+                $billing_address = new ContactsAddress();
+                $billing_address->contact_id = $get_contact->contact_id;
+                $billing_address->address_type = 'Billing';
+                $billing_address->BillingFirstName = $get_contact->firstName;
+                $billing_address->BillingLastName = $get_contact->lastName;
+                $billing_address->BillingCompany = $get_contact->company;
+                $billing_address->BillingPhone = $get_contact->phone;
+                $billing_address->BillingAddress1 = $get_contact->postalAddress1;  
+                $billing_address->BillingAddress2 = $get_contact->postalAddress2;
+                $billing_address->BillingCity = $get_contact->postalCity;
+                $billing_address->BillingState = $get_contact->postalState;
+                $billing_address->BillingZip = $get_contact->postalPostCode;
+                $billing_address->BillingCountry = 'US';
+                $billing_address->is_default = 1;
+                $billing_address->save();
             }
         } else {
             $response_status = false;
@@ -2581,6 +2621,18 @@ class UserController extends Controller
 
         if ($response_status == true) {
             $contact = Contact::where('id', $get_contact->id)->first();
+            
+            $companies = Contact::where('user_id', auth()->user()->id)->get();
+
+            if ($companies->count() == 1) {
+                if ($companies[0]->contact_id == null) {
+                    UserHelper::switch_company($companies[0]->secondary_id);
+                } else {
+                    UserHelper::switch_company($companies[0]->contact_id);
+                }
+            }
+
+            Session::put('companies', $companies);
 
             $body = [
                 'id'=> $contact->contact_id,
@@ -2598,6 +2650,7 @@ class UserController extends Controller
                 'postalState' => $contact->postalState,
                 'postalPostCode' => $contact->postalPostCode,
                 'phone' => $contact->phone,
+                'company' => $companies->count() == 1 ? $contact->company : '',
             ];
 
             
