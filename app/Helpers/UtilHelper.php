@@ -476,7 +476,7 @@ class UtilHelper
         foreach ($order->orderItem as $order_item) {
             $product_id = $order_item->product_id;
             $option_id = $order_item->option_id;
-            $quantity = $order_item->quantity;
+            $quantity = intval($order_item->quantity);
             
             $product_option = ProductOption::where('option_id', $option_id)
             ->where('product_id', $product_id)
