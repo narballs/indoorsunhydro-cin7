@@ -1485,7 +1485,8 @@ class OrderController extends Controller
     // download shipment label for order
     public function download_label($filename) {
         // Get the file content from the public disk
-        $file = Storage::disk('public')->get('labels/' . $filename);
+        // $file = Storage::disk('public')->get('labels/' . $filename);
+        $file = public_path('labels/' . $filename);
 
         // Check if the file exists
         if (!$file) {
