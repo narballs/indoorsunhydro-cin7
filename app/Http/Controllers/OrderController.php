@@ -1484,18 +1484,20 @@ class OrderController extends Controller
 
     // download shipment label for order
     public function download_label($filename) {
-        // Get the file content from the public disk
-        // $file = Storage::disk('public')->get('labels/' . $filename);
-        $file = public_path('labels/' . $filename);
-
+        // Get the full file path from the public directory
+        $filePath = public_path('labels/' . $filename);
+    
         // Check if the file exists
-        if (!$file) {
+        if (!file_exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
-
+    
+        // Get the file contents
+        $file = file_get_contents($filePath);
+    
         // Return the file as a downloadable response
         return response($file)
-            ->header('Content-Type', 'application/pdf') // Set content type
+            ->header('Content-Type', 'application/pdf') // Set content type for PDF
             ->header('Content-Disposition', 'attachment; filename="' . $filename . '"'); // Make it downloadable
     }
 
