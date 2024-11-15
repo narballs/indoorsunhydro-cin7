@@ -63,9 +63,7 @@
                                     @if(!empty($content['name']))
                                         Name: {{ $content['name'] }}<br/>
                                     @endif
-                                    @if(!empty($content['company']))
-                                        Company: {{ $content['company'] }}<br/>
-                                    @endif
+                                    Company: {{ !empty($content['company']) ? $content['company'] : '' }}<br/>
                                     @if(!empty($content['street1']))
                                         Address: {{ $content['street1'] }}<br/>
                                     @endif
@@ -80,6 +78,12 @@
                                     @endif
                                     @if(!empty($content['postalCode']))
                                         {{ $content['postalCode'] }}
+                                    @endif
+                                    @if(!empty($content['phone']))
+                                        Phone: {{ $content['phone'] }}<br/>
+                                    @endif
+                                    @if(!empty($content['country']))
+                                        Country: {{ $content['country'] }}<br/>
                                     @endif
                                 </p>
                             </td>
