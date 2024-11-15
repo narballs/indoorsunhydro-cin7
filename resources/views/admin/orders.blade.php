@@ -13,11 +13,17 @@
                         {{ Session::get('error')}}
                     </div>
                 @endif
+                @if (Session::has('success'))
+                    <div class="alert alert-success alert-dismissible mt-2 ml-4">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ Session::get('success')}}
+                    </div>
+                @endif
                 
                 <div class="col-md-12">
                     <div class="row justify-content-center mt-2">
                         <div class="col-md-12">
-                            @if((isset($show_alert)) && $show_alert == true)
+                            {{-- @if((isset($show_alert)) && $show_alert == true)
                                 @if (!empty($order_ids))
                                 <div class="alert alert-danger alert-dismissible mb-0 unprocess_alert p-1">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -26,6 +32,17 @@
                                     </a>
                                     <span>Order #{{ $order_ids }}</span>
                                 </div>
+                                @endif
+                            @endif --}}
+                            @if (request()->url() == 'https://www.indoorsunhydro.com/admin/orders' && isset($show_alert) && $show_alert == true)
+                                @if (!empty($order_ids))
+                                    <div class="alert alert-danger alert-dismissible mb-0 unprocess_alert p-1">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <a class="text-white mx-3" href="{{ url('admin/orders?show_unfulled_orders=1') }}">
+                                            click here
+                                        </a>
+                                        <span>Order #{{ $order_ids }}</span>
+                                    </div>
                                 @endif
                             @endif
                         </div>
