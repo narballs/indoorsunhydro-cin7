@@ -1275,7 +1275,7 @@ class OrderController extends Controller
 
                 // Define the full file path
                 $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
-                Storage::disk('local')->put($packingSlipPath, $packingSlipPdf->output());
+                Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
                 
                 
                 $labelData = UserHelper::shipment_label();
@@ -1290,7 +1290,7 @@ class OrderController extends Controller
 
                 // Define the full file path
                 $label_path = $labelDir . '/' . $file_name;
-                Storage::disk('local')->put($label_path, $file_name);
+                Storage::disk('public')->put($label_path, $file_name);
                 
                 $label_email_data = [
                     'email' => $user_email,
@@ -1362,7 +1362,7 @@ class OrderController extends Controller
 
                     // Define the full file path
                     $label_path = $labelDir . '/' . $file_name;
-                    Storage::disk('local')->put($label_path, $file_name);
+                    Storage::disk('public')->put($label_path, $file_name);
 
 
                     $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
@@ -1397,7 +1397,7 @@ class OrderController extends Controller
 
                     // Define the full file path
                     $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
-                    Storage::disk('local')->put($packingSlipPath, $packingSlipPdf->output());
+                    Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
                     
                     $order->update([
                         'is_shipped' => 1,
