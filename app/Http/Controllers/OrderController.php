@@ -1282,9 +1282,6 @@ class OrderController extends Controller
                 $label_data = base64_decode($labelData);
                 $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
                 $labelDir = 'public/labels';
-                // $label_path = 'public/' . $file_name;
-                // Storage::disk('local')->put($label_path, $label_data);
-
                 // Check if the directory exists
                 if (!file_exists($labelDir)) {
                     // Create the directory if it doesn't exist
@@ -1334,9 +1331,10 @@ class OrderController extends Controller
                         'label_link' => $file_name,
                     ]);
 
-                    return response($label_data)
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    // return response($label_data)
+                    // ->header('Content-Type', 'application/pdf')
+                    // ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                    return redirect('admin/orders')->with('success', 'Shipment label created and email sent successfully.');
                 } else {
                     return redirect('admin/orders')->with('error', 'Error sending email.');
                 }
@@ -1354,13 +1352,8 @@ class OrderController extends Controller
                     $label_data = base64_decode($label_api_response->labelData);
                     
                     $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                    // $label_path = 'public/' . $file_name;
-                    // Storage::disk('local')->put($label_path, $label_data);
 
                     $labelDir = 'public/labels';
-                    // $label_path = 'public/' . $file_name;
-                    // Storage::disk('local')->put($label_path, $label_data);
-
                     // Check if the directory exists
                     if (!file_exists($labelDir)) {
                         // Create the directory if it doesn't exist
@@ -1460,9 +1453,10 @@ class OrderController extends Controller
                             'label_link' => $file_name,
                         ]);
     
-                        return response($label_data)
-                        ->header('Content-Type', 'application/pdf')
-                        ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                        // return response($label_data)
+                        // ->header('Content-Type', 'application/pdf')
+                        // ->header('Content-Disposition', 'attachment; filename='.$file_name);
+                        return redirect('admin/orders')->with('success', 'Shipment label created and email sent successfully.');
                     } else {
                         return redirect('admin/orders')->with('error', 'Error sending email.');
                     }

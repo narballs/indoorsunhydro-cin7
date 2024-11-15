@@ -82,12 +82,12 @@
 
         <table style="width: 100%; margin-bottom: 20px;">
             <tr>
-                <td style="width: 75%;">
+                <td style="width: 70%;">
                     <p><strong>{{$website_name}} INC</strong></p>
                     <p>{{$address1}}</p>
                     <p>{{$address2}}</p>
                 </td>
-                <td style="width: 25%;">
+                <td style="width: 30%;vertical-align:top;">
                     <img src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" style="width: 100%;">
                 </td>
             </tr>
@@ -130,7 +130,7 @@
                         <td>{{$item['sku']}}</td>
                         <td>{{$item['name']}}</td>
                         <td>{{$item['quantity']}}</td>
-                        <td>{{$item['unitPrice']}}</td>
+                        <td>${{number_format($item['unitPrice'] , 2)}}</td>
                     </tr>
                     @endforeach  
                 </tbody>          
@@ -138,9 +138,9 @@
         @endif
 
         <div class="summary">
-            <p>Sub Total: ${{ number_format($sub_total , 2) }}</p>
-            <p>Tax: ${{ number_format($taxAmount , 2) }}</p>
-            <p>Shipping: ${{ number_format($shippingAmount , 2) }}</p>
+            <p style="margin-bottom:5px;">Sub Total: ${{ number_format($sub_total , 2) }}</p>
+            <p style="margin-bottom:5px;">Tax: ${{ number_format($taxAmount , 2) }}</p>
+            <p style="margin-bottom:5px;">Shipping: ${{ number_format($shippingAmount , 2) }}</p>
             <p class="total">Total: ${{ number_format($orderTotal , 2) }}</p>
         </div>
     </div>
