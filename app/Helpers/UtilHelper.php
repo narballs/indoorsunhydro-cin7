@@ -487,12 +487,12 @@ class UtilHelper
             ->first();
 
             if (!empty($product_option)) {
-                $product_option->stockAvailable = empty($product_option->stockAvailable) || intval($product_option->stockAvailable) < 1 ? 0 + $quantity : intval($product_option->stockAvailable) + $quantity;
+                $product_option->stockAvailable = intval($product_option->stockAvailable) + $quantity;
                 $product_option->save();
             }
 
             if (!empty($product_stock)) {
-                $product_option->available_stock = empty($product_option->available_stock) || intval($product_option->available_stock) < 1 ? 0 + $quantity : intval($product_option->available_stock) + $quantity;
+                $product_option->available_stock = intval($product_option->available_stock) + $quantity;
                 $product_stock->save();
             }
         }
