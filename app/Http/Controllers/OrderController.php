@@ -1550,7 +1550,7 @@ class OrderController extends Controller
         $order_id = $request->order_id;
         $payment_status = $request->payment_status;
         $order_status_id = $request->order_status_id;
-        $order = ApiOrder::where('id', $order_id)->first();
+        $order = ApiOrder::with('apiOrderItem')->where('id', $order_id)->first();
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
@@ -1699,6 +1699,10 @@ class OrderController extends Controller
                 'payment_status' => $order->payment_status,
                 'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
             ]);
+
+            if ($current_order_status->status == 'Cancelled' && $order->isApproved == 2) {
+                UtilHelper::update_product_stock_on_cancellation($order);
+            }
 
             if ($order->isApproved == 2 && $order->payment_status == 'paid') {
                 $order->update([

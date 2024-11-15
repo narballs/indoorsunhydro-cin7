@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Helpers\MailHelper;
 use App\Helpers\OrderHelper;
 use App\Helpers\SettingHelper;
+use App\Helpers\UtilHelper;
 use App\Http\Controllers\Admin\OrderManagementController;
 use Carbon\Carbon;
 use App\Models\ApiOrder;
@@ -74,8 +75,10 @@ class CancelOrder extends Command
                     'contact',
                     'user.contact',
                     'apiOrderItem.product.options',
-                    'texClasses'
+                    'texClasses',
+                    'apiOrderItem'
                 )->first();
+                UtilHelper::update_product_stock_on_cancellation($currentOrder);
                 $addresses = [
                     'billing_address' => [
                         'firstName' => $customer->contact->firstName,
