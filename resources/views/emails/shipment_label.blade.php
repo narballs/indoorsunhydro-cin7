@@ -79,6 +79,7 @@
                                     @if(!empty($content['postalCode']))
                                         {{ $content['postalCode'] }}
                                     @endif
+                                    <br/>
                                     @if(!empty($content['phone']))
                                         Phone: {{ $content['phone'] }}<br/>
                                     @endif
