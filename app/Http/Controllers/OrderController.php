@@ -1281,15 +1281,26 @@ class OrderController extends Controller
                 $labelData = UserHelper::shipment_label();
                 $label_data = base64_decode($labelData);
                 $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                $label_path = 'public/' . $file_name;
-                Storage::disk('local')->put($label_path, $label_data);
+                $labelDir = 'public/labels';
+                // $label_path = 'public/' . $file_name;
+                // Storage::disk('local')->put($label_path, $label_data);
+
+                // Check if the directory exists
+                if (!file_exists($labelDir)) {
+                    // Create the directory if it doesn't exist
+                    mkdir($labelDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                }
+
+                // Define the full file path
+                $label_path = $labelDir . '/' . $file_name;
+                Storage::disk('local')->put($label_path, $file_name);
                 
                 $label_email_data = [
                     'email' => $user_email,
                     'subject' => 'Ship Web Order ' . $order_id . ' Label',
                     'files' => [
-                        'packing_slip' => $packingSlipPath,
-                        'label' => $label_path
+                        $packingSlipPath, // Full path to the packing slip PDF
+                        $label_path       // Full path to the label PDF
                     ],
                     'content' => [
                         'order_id' => $order_id,
@@ -1343,8 +1354,22 @@ class OrderController extends Controller
                     $label_data = base64_decode($label_api_response->labelData);
                     
                     $file_name = 'label-' . $order_id . '-' . date('YmdHis') . '.pdf';
-                    $label_path = 'public/' . $file_name;
-                    Storage::disk('local')->put($label_path, $label_data);
+                    // $label_path = 'public/' . $file_name;
+                    // Storage::disk('local')->put($label_path, $label_data);
+
+                    $labelDir = 'public/labels';
+                    // $label_path = 'public/' . $file_name;
+                    // Storage::disk('local')->put($label_path, $label_data);
+
+                    // Check if the directory exists
+                    if (!file_exists($labelDir)) {
+                        // Create the directory if it doesn't exist
+                        mkdir($labelDir, 0777, true); // 0777 gives full permissions and 'true' ensures recursive directory creation
+                    }
+
+                    // Define the full file path
+                    $label_path = $labelDir . '/' . $file_name;
+                    Storage::disk('local')->put($label_path, $file_name);
 
 
                     $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
@@ -1397,8 +1422,8 @@ class OrderController extends Controller
                         'email' => $user_email,
                         'subject' => 'Ship Web Order ' . $order_id . ' Label',
                         'files' => [
-                            'packing_slip' => $packingSlipPath,
-                            'label' => $label_path
+                            $packingSlipPath, // Full path to the packing slip PDF
+                            $label_path       // Full path to the label PDF
                         ],
                         'content' => [
                             'subject' => 'Ship Web Order ' . $order_id . ' Label',
