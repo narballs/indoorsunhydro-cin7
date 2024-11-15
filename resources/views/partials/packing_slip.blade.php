@@ -1,20 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Packing Slip</title>
-    {{-- <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet"> --}}
     <style>
-        /* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
-
-        /* @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 400;
-            src: url(https://fonts.gstatic.com/s/poppins/v20/pgitxiEyp8kv8JHgFVrJJbecmNE.woff2) format('woff2');
-        } */
         body {
             font-family: Arial, sans-serif;
             max-width: 816px;
@@ -27,7 +17,7 @@
             background-color: #808080;
             padding: 5px;
             text-align: center;
-            font-weight: 500;
+            font-weight: bold;
             color: #FFFFFF;
         }
 
@@ -36,52 +26,31 @@
             margin-bottom: 20px;
         }
 
-        .company-info p {
-            margin: 0;
-        }
-
         .shipping-info,
         .order-details {
             width: 48%;
-            display: inline-block;
             vertical-align: top;
-        }
-
-        .order-details {
-            text-align: right;
+            display: inline-block;
+            font-size: 12px;
         }
 
         .table-container {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            font-size: 12px;
         }
 
-        .table-container th {
+        .table-container th, .table-container td {
             border: 1px solid #808080;
             padding: 5px;
             text-align: left;
-            color: #FFFFFF;
-            font-weight: 500;
-            border: 1px solid #808080;
-        }
-        .table-container td {
-            /* border: 1px solid #808080; */
-            padding: 5px;
-            /* text-align: center; */
-            font-weight: 500;
-
         }
 
         .table-container th {
             background-color: #808080;
-        }
-
-        .table-container tr {
-            border-bottom: 2px solid #A3A3A3;
-            border-left: 2px solid #A3A3A3;
-            border-right: 2px solid #A3A3A3;
-
+            color: #FFFFFF;
+            font-weight: bold;
         }
 
         .summary {
@@ -90,16 +59,15 @@
         }
 
         .summary p {
-            display: flex;
-            justify-content: flex-end;
             margin: 0;
+            text-align: right;
+            font-size: 12px;
         }
 
         .total {
             font-weight: bold;
         }
     </style>
-    
 </head>
 
 <body>
@@ -111,51 +79,38 @@
             $address2 = App\Helpers\SettingHelper::getSetting('store_address_line_2');
             $sub_total = 0;
         @endphp
-        <div class="" style="display: flex;">
-            <div class="company-info" style="width:75%;">
-                <p><strong>{{$website_name}} INC</strong></p>
-                <p>{{$address1}}</p>
-                <p>{{$address2}}</p>
-            </div>
-            <div class="" style="width:25%;">
-                <img class="" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" ;
-                    style="width:100%;">
-            </div>
-        </div>
 
-        <div class="order-info" style="display: flex; justify-content: center;">
-            <div style="display: flex; width: 100%; max-width: 600px; justify-content: space-between;">
-                <!-- Shipping Info Section -->
-                <div class="shipping-info" style="width: 50%;">
+        <table style="width: 100%; margin-bottom: 20px;">
+            <tr>
+                <td style="width: 75%;">
+                    <p><strong>{{$website_name}} INC</strong></p>
+                    <p>{{$address1}}</p>
+                    <p>{{$address2}}</p>
+                </td>
+                <td style="width: 25%;">
+                    <img src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" style="width: 100%;">
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; margin-bottom: 20px;">
+            <tr>
+                <td class="shipping-info">
                     <p><strong>Ship To:</strong></p>
                     <p>{{$name}}</p>
                     <p>{{!empty($street1) ? $street1 : ''}}</p>
                     <p>{{!empty($street2) ? $street2 : ''}}</p>
                     <p>{{$city}}, {{$state}} {{$postalCode}} US</p>
-                </div>
-        
-                <!-- Order Details Section -->
-                <div class="" style="width: 50%; display: flex;">
-                    <div class="order-details" style="width: 50%;padding:5px;">
-                        <div style="border-right:1px solid #ddd;padding-right:5px;">
-                            <p><strong>Order #</strong></p>
-                            <p><strong>Order Reference</strong></p>
-                            <p><strong>Date</strong></p>
-                            <p><strong>Ship Date</strong></p>
-                        </div>
-                    </div>
-                    <div class="order-details-dates" style="width: 50%;padding:5px;">
-                        <p>{{$order_id}}</p>
-                        <p>{{$reference}}</p>
-                        <p>
-                            {{ \Carbon\Carbon::parse($orderDate)->format('Y-m-d H:i:s') }}
-                        </p>
-                        <p>{{$shipDate}}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+                </td>
+                <td class="order-details">
+                    <p><strong>Order #</strong>: {{$order_id}}</p>
+                    <p><strong>Order Reference</strong>: {{$reference}}</p>
+                    <p><strong>Date</strong>: {{ \Carbon\Carbon::parse($orderDate)->format('Y-m-d H:i:s') }}</p>
+                    <p><strong>Ship Date</strong>: {{$shipDate}}</p>
+                </td>
+            </tr>
+        </table>
+
         @if (!empty($order_items))
             <table class="table-container">
                 <thead>
@@ -182,15 +137,12 @@
             </table>
         @endif
 
-        <div class="" style="display: flex;justify-content:flex-end">
-            <div class="" style="width: 20%;">
-                <p><span style="margin-right:10px;">Sub Total:</span> <span> ${{number_format($sub_total , 2)}}</span></p>
-                <p><span style="margin-right:10px;">Tax:</span> <span> ${{number_format($taxAmount , 2)}}</span></p>
-                <p><span style="margin-right:10px;">Shipping:</span> <span> ${{number_format($shippingAmount , 2)}}</span></p>
-                <p class="total"><span  style="margin-right:10px;">Total:</span> <span> ${{number_format($orderTotal , 2)}}</span></p>
-            </div>
+        <div class="summary">
+            <p>Sub Total: ${{ number_format($sub_total , 2) }}</p>
+            <p>Tax: ${{ number_format($taxAmount , 2) }}</p>
+            <p>Shipping: ${{ number_format($shippingAmount , 2) }}</p>
+            <p class="total">Total: ${{ number_format($orderTotal , 2) }}</p>
         </div>
     </div>
 </body>
-
 </html>
