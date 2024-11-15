@@ -66,7 +66,7 @@
                                     {{ !empty($content['street2']) ? $content['street2'] : '' }}<br>
                                     {{ !empty($content['street3']) ? $content['street3'] : '' }}<br>
                                     {{ !empty($content['city']) ? $content['city'] : '' }}, {{ !empty($content['state']) ? $content['state'] : '' }} {{ !empty($content['postalCode']) ? $content['postalCode'] : '' }}<br>
-                                    {{ !empty($content['country']) ? $content['country'] : '' }}
+                                    {{ !empty($content['country']) ? $content['country'] : '' }}<br>
                                     {{ !empty($content['phone']) ? $content['phone'] : '' }}
                                 </p>
                             </td>
