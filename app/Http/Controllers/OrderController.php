@@ -1274,8 +1274,13 @@ class OrderController extends Controller
                 }
 
                 // Define the full file path
-                $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
-                Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
+                // $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
+                // Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
+
+                $packingSlipPath = public_path('packing_slips/' . $packingSlipFileName);
+
+                // Save the Packing Slip PDF directly to the public directory
+                file_put_contents($packingSlipPath, $packingSlipPdf->output());
                 
                 
                 $labelData = UserHelper::shipment_label();
@@ -1289,16 +1294,21 @@ class OrderController extends Controller
                 }
 
                 // Define the full file path
-                $label_path = $labelDir . '/' . $file_name;
-                Storage::disk('public')->put($label_path, $file_name);
+                // $label_path = $labelDir . '/' . $file_name;
+                // Storage::disk('public')->put($label_path, $file_name);
+
+                $labelPath = public_path('labels/' . $file_name);
+
+                // Save the Label PDF directly to the public directory
+                file_put_contents($labelPath, $label_data);
                 
                 $label_email_data = [
                     'email' => $user_email,
                     'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                    'files' => [
-                        $packingSlipPath, // Full path to the packing slip PDF
-                        $label_path       // Full path to the label PDF
-                    ],
+                    // 'files' => [
+                    //     $packingSlipPath, // Full path to the packing slip PDF
+                    //     $labelPath       // Full path to the label PDF
+                    // ],
                     'content' => [
                         'order_id' => $order_id,
                         'company' => $prepare_data_for_creating_label['shipTo']['company'],
@@ -1312,7 +1322,9 @@ class OrderController extends Controller
                         'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
                     ],
                     'order_items' => $order_items_array,
-                    'from' => SettingHelper::getSetting('noreply_email_address')
+                    'from' => SettingHelper::getSetting('noreply_email_address'),
+                    'packingSlipFileName' => $packingSlipFileName,  // Packing slip file name
+                    'labelFileName' => $file_name,   
                 ];
 
                 $ship_station_api_logs  = new ShipstationApiLogs();      
@@ -1361,8 +1373,13 @@ class OrderController extends Controller
                     }
 
                     // Define the full file path
-                    $label_path = $labelDir . '/' . $file_name;
-                    Storage::disk('public')->put($label_path, $file_name);
+                    // $label_path = $labelDir . '/' . $file_name;
+                    // Storage::disk('public')->put($label_path, $file_name);
+
+                    $labelPath = public_path('labels/' . $file_name);
+
+                    // Save the Label PDF directly to the public directory
+                    file_put_contents($labelPath, $label_data);
 
 
                     $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
@@ -1396,8 +1413,13 @@ class OrderController extends Controller
                     }
 
                     // Define the full file path
-                    $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
-                    Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
+                    // $packingSlipPath = $packingSlipDir . '/' . $packingSlipFileName;
+                    // Storage::disk('public')->put($packingSlipPath, $packingSlipPdf->output());
+
+                    $packingSlipPath = public_path('packing_slips/' . $packingSlipFileName);
+
+                    // Save the Packing Slip PDF directly to the public directory
+                    file_put_contents($packingSlipPath, $packingSlipPdf->output());
                     
                     $order->update([
                         'is_shipped' => 1,
@@ -1414,10 +1436,10 @@ class OrderController extends Controller
                     $label_email_data = [
                         'email' => $user_email,
                         'subject' => 'Ship Web Order ' . $order_id . ' Label',
-                        'files' => [
-                            $packingSlipPath, // Full path to the packing slip PDF
-                            $label_path       // Full path to the label PDF
-                        ],
+                        // 'files' => [
+                        //     $packingSlipPath, // Full path to the packing slip PDF
+                        //     $labelPath       // Full path to the label PDF
+                        // ],
                         'content' => [
                             'subject' => 'Ship Web Order ' . $order_id . ' Label',
                             'email' => $user_email,
@@ -1433,7 +1455,9 @@ class OrderController extends Controller
                             'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
                         ],
                         'order_items' => $order_items_array,
-                        'from' => SettingHelper::getSetting('noreply_email_address')
+                        'from' => SettingHelper::getSetting('noreply_email_address'),
+                        'packingSlipFileName' => $packingSlipFileName,  // Packing slip file name
+                        'labelFileName' => $file_name, 
                     ];
         
         
