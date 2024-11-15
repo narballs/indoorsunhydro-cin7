@@ -60,14 +60,27 @@
                             <td style="padding: 10px 20px; color: #000;">
                                 <h4 style="font-size: 16px; font-weight: 600;">Shipping to:</h4>
                                 <p style="font-size: 14px; margin: 0;">
-                                    Name : {{!empty( $content['name']) ?  $content['name'] : '' }}<br/>
-                                    Company : {{ !empty($content['company']) ? $content['company'] : '' }}</b><br/>
-                                    Address : {{ !empty($content['street1']) ? $content['street1'] : '' }}<br/>
-                                    {{ !empty($content['street2']) ? $content['street2'] : '' }}<br/>
-                                    {{ !empty($content['street3']) ? $content['street3'] : '' }}<br/>
-                                    {{ !empty($content['city']) ? $content['city'] : '' }}, {{ !empty($content['state']) ? $content['state'] : '' }} {{ !empty($content['postalCode']) ? $content['postalCode'] : '' }}<br/>
-                                    Country : {{ !empty($content['country']) ? $content['country'] : '' }}<br/>
-                                    Phone : {{ !empty($content['phone']) ? $content['phone'] : '' }}
+                                    @if(!empty($content['name']))
+                                        Name: {{ $content['name'] }}<br/>
+                                    @endif
+                                    @if(!empty($content['company']))
+                                        Company: {{ $content['company'] }}<br/>
+                                    @endif
+                                    @if(!empty($content['street1']))
+                                        Address: {{ $content['street1'] }}<br/>
+                                    @endif
+                                    @if(!empty($content['street2']))
+                                        {{ $content['street2'] }}<br/>
+                                    @endif
+                                    @if(!empty($content['city']))
+                                        {{ $content['city'] }},
+                                    @endif
+                                    @if(!empty($content['state']))
+                                        {{ $content['state'] }}
+                                    @endif
+                                    @if(!empty($content['postalCode']))
+                                        {{ $content['postalCode'] }}
+                                    @endif
                                 </p>
                             </td>
                         </tr>
