@@ -1714,9 +1714,6 @@ class OrderController extends Controller
                 'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
             ]);
 
-            if ($current_order_status->status == 'Cancelled' && $order->isApproved == 2) {
-                UtilHelper::update_product_stock_on_cancellation($order);
-            }
 
             if ($order->isApproved == 2 && $order->payment_status == 'paid') {
                 $order->update([
@@ -1733,11 +1730,17 @@ class OrderController extends Controller
                     'payment_status' => $payment_status
                 ]);
             }
-        } else {
+        } 
+        else {
             $order->update([
                 'order_status_id' => $order_status_id,
                 'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
             ]);
+        }
+
+        
+        if (($current_order_status->status == 'Cancelled') && $order->isApproved == 2) {
+            UtilHelper::update_product_stock_on_cancellation($order);
         }
         
 
