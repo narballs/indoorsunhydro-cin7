@@ -337,7 +337,7 @@
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid')
-                                                    @if ($order->label_created == 0 && $order->is_shipped == 0)
+                                                    @if ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1 || $order->isApproved == 0))
                                                         <form action="{{url('admin/orders/create/label')}}" method="post">
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
