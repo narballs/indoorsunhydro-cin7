@@ -1807,13 +1807,7 @@ class OrderController extends Controller
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
         $template = 'emails.admin-order-received';
-        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-
-        $admin_users = $admin_users->toArray();
-
-        $users_with_role_admin = User::select("email")
-            ->whereIn('id', $admin_users)
-            ->get();
+        
         $data = [
             'name' =>  $name,
             'email' => $email,
@@ -1829,20 +1823,21 @@ class OrderController extends Controller
             'from' => SettingHelper::getSetting('noreply_email_address')
         ];
 
-        if (!empty($users_with_role_admin)) {
-            foreach ($users_with_role_admin as $role_admin) {
-                $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
-                $adminTemplate = 'emails.admin-order-received';
-                $data['subject'] = $subject;
-                $data['email'] = $role_admin->email;
-                MailHelper::sendMailNotification($email_template, $data);
-            }
-        }
-
         if (!empty($email)) {
             $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
             $data['email'] = $email;
             MailHelper::sendMailNotification($email_template, $data);
+        }
+
+        $specific_admin_notifications = SpecificAdminNotification::all();
+        if (count($specific_admin_notifications) > 0) {
+            foreach ($specific_admin_notifications as $specific_admin_notification) {
+                $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
+                $adminTemplate = 'emails.admin-order-received';
+                $data['subject'] = $subject;
+                $data['email'] = $specific_admin_notification->email;
+                MailHelper::sendMailNotification($email_template, $data);
+            }
         }
 
 
