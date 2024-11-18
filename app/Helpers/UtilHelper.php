@@ -473,7 +473,7 @@ class UtilHelper
             return false;
         }
 
-        foreach ($order->orderItem as $order_item) {
+        foreach ($order->apiOrderItem as $order_item) {
             $product_id = $order_item->product_id;
             $option_id = $order_item->option_id;
             $quantity = intval($order_item->quantity);
