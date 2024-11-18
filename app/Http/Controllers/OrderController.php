@@ -1656,6 +1656,11 @@ class OrderController extends Controller
                                         'order_status_id' => $order_status_id,
                                         'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                                     ]);
+
+                                    if (($current_order_status->status == 'Refunded') && $order->isApproved == 3) {
+                                        UtilHelper::update_product_stock_on_cancellation($order);
+                                    }
+
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
@@ -1738,15 +1743,12 @@ class OrderController extends Controller
             ]);
         }
 
-        $get_order = ApiOrder::with('apiOrderItem')->where('id', $order_id)->first();
-
-
-        if (
-            (($current_order_status->status == 'Cancelled' && $order->isApproved == 2) || 
-            ($current_order_status->status == 'Refunded' && $order->isApproved == 3))
-        ) {
-            UtilHelper::update_product_stock_on_cancellation($get_order);
+        
+        if (($current_order_status->status == 'Cancelled') && $order->isApproved == 2) {
+            UtilHelper::update_product_stock_on_cancellation($order);
         }
+        
+
 
         $update_order_status_comment = new OrderComment;
         $update_order_status_comment->order_id = $order_id;
@@ -1810,7 +1812,7 @@ class OrderController extends Controller
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
         $template = 'emails.admin-order-received';
-
+        
         $data = [
             'name' =>  $name,
             'email' => $email,
