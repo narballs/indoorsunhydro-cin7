@@ -462,6 +462,45 @@ class UtilHelper
     }
 
 
+    public static function update_product_stock_on_cancellation($order)
+    {
+        
+        if (empty($order)) {
+            return false;
+        }
+
+        if (count($order->apiOrderItem) == 0) {
+            return false;
+        }
+
+        foreach ($order->apiOrderItem as $order_item) {
+            $product_id = $order_item->product_id;
+            $option_id = $order_item->option_id;
+            $quantity = intval($order_item->quantity);
+            
+            $product_option = ProductOption::where('option_id', $option_id)
+            ->where('product_id', $product_id)
+            ->first();
+
+            $product_stock = ProductStock::where('product_id' ,  $product_id)
+            ->where('option_id' , $option_id)
+            ->first();
+
+            if (!empty($product_option)) {
+                $product_option->stockAvailable = intval($product_option->stockAvailable) + $quantity;
+                $product_option->save();
+            }
+
+            if (!empty($product_stock)) {
+                $product_option->available_stock = intval($product_option->available_stock) + $quantity;
+                $product_stock->save();
+            }
+        }
+
+        return true;
+    }
+
+
     // public static function cart_detail ($total_quantity , $grand_total) {
     //     $company = session()->get('company');
     //     $contact_id = session()->get('contact_id');

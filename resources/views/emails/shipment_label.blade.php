@@ -50,7 +50,7 @@
                         <tr>
                             <td align="center" style="padding-top: 10px;padding-bottom: 20px;">
                                 <p style="color:#000000;font-size: 14px;font-weight: 400;">
-                                    Your shipment label for order #{{ $content['order_id'] }} is attached.
+                                    Shipment label for order #{{ $content['order_id'] }} is attached.
                                 </p>
                             </td>
                         </tr>

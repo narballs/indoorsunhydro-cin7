@@ -1321,6 +1321,13 @@ class OrderController extends Controller
                 $ship_station_api_logs->save();
 
                 $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                $specific_admin_notifications = SpecificAdminNotification::all();
+                if (count($specific_admin_notifications) > 0) {
+                    foreach ($specific_admin_notifications as $specific_admin_notification) {
+                        $label_email_data['email'] = $specific_admin_notification->email;
+                        $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    }
+                }
                 
                 if ($mail_send) {
                     $order->update([
@@ -1443,6 +1450,13 @@ class OrderController extends Controller
                     $ship_station_api_logs->save();
 
                     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            $label_email_data['email'] = $specific_admin_notification->email;
+                            $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                        }
+                    }
 
                     if ($mail_send) {
                         $order->update([
@@ -1550,7 +1564,7 @@ class OrderController extends Controller
         $order_id = $request->order_id;
         $payment_status = $request->payment_status;
         $order_status_id = $request->order_status_id;
-        $order = ApiOrder::where('id', $order_id)->first();
+        $order = ApiOrder::with('apiOrderItem')->where('id', $order_id)->first();
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
@@ -1700,6 +1714,7 @@ class OrderController extends Controller
                 'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
             ]);
 
+
             if ($order->isApproved == 2 && $order->payment_status == 'paid') {
                 $order->update([
                     'payment_status' => 'unpaid'
@@ -1715,14 +1730,23 @@ class OrderController extends Controller
                     'payment_status' => $payment_status
                 ]);
             }
-        } else {
+        } 
+        else {
             $order->update([
                 'order_status_id' => $order_status_id,
                 'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
             ]);
         }
-        
 
+        $get_order = ApiOrder::with('apiOrderItem')->where('id', $order_id)->first();
+
+
+        if (
+            (($current_order_status->status == 'Cancelled' && $order->isApproved == 2) || 
+            ($current_order_status->status == 'Refunded' && $order->isApproved == 3))
+        ) {
+            UtilHelper::update_product_stock_on_cancellation($get_order);
+        }
 
         $update_order_status_comment = new OrderComment;
         $update_order_status_comment->order_id = $order_id;
@@ -1769,7 +1793,7 @@ class OrderController extends Controller
                 'postalState' => $customer->contact->postalPostCode,
                 'postalPostCode' => $customer->contact->postalPostCode
             ],
-            'payment_terms' => !empty($customer->contact->payment_terms) ? $customer->contact->payment_terms : '30 Days from Invoice',
+            'payment_terms' => !empty($customer->contact->paymentTerms) ? $customer->contact->paymentTerms : '30 Days from Invoice',
             'best_product' => $best_products,
             'user_email' =>   $customer->contact->email,
             'currentOrder' => $currentOrder,
@@ -1786,13 +1810,7 @@ class OrderController extends Controller
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
         $template = 'emails.admin-order-received';
-        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
 
-        $admin_users = $admin_users->toArray();
-
-        $users_with_role_admin = User::select("email")
-            ->whereIn('id', $admin_users)
-            ->get();
         $data = [
             'name' =>  $name,
             'email' => $email,
@@ -1808,20 +1826,21 @@ class OrderController extends Controller
             'from' => SettingHelper::getSetting('noreply_email_address')
         ];
 
-        if (!empty($users_with_role_admin)) {
-            foreach ($users_with_role_admin as $role_admin) {
-                $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
-                $adminTemplate = 'emails.admin-order-received';
-                $data['subject'] = $subject;
-                $data['email'] = $role_admin->email;
-                MailHelper::sendMailNotification($email_template, $data);
-            }
-        }
-
         if (!empty($email)) {
             $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
             $data['email'] = $email;
             MailHelper::sendMailNotification($email_template, $data);
+        }
+
+        $specific_admin_notifications = SpecificAdminNotification::all();
+        if (count($specific_admin_notifications) > 0) {
+            foreach ($specific_admin_notifications as $specific_admin_notification) {
+                $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
+                $adminTemplate = 'emails.admin-order-received';
+                $data['subject'] = $subject;
+                $data['email'] = $specific_admin_notification->email;
+                MailHelper::sendMailNotification($email_template, $data);
+            }
         }
 
 
