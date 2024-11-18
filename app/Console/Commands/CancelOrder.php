@@ -191,7 +191,9 @@ class CancelOrder extends Command
                         'apiOrderItem'
                     )->first();
 
-                    UtilHelper::update_product_stock_on_cancellation($currentOrder);
+                    if (($currentOrder->status == 'Cancelled') && $currentOrder->isApproved == 2) {
+                        UtilHelper::update_product_stock_on_cancellation($currentOrder);
+                    }
 
                     $addresses = [
                         'billing_address' => [
