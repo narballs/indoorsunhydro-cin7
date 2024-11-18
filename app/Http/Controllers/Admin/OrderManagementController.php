@@ -477,6 +477,7 @@ class OrderManagementController extends Controller
         $order_id = $request->input('order_id');
         $user_id = Auth::user()->id;
         $order_status = OrderStatus::where('status', 'Cancelled')->first();
+        
 
         $quotes_id = BuyList::insertGetId([
             'title' => 'cancel order order',
@@ -506,6 +507,8 @@ class OrderManagementController extends Controller
                 'updated_at' => Carbon::now(),
             ]);
         }
+        $previous_order_status = OrderStatus::where('id', $currentOrder->order_status_id)->first();
+       
         $user_cancel_order = ApiOrder::where(['id' =>  $order_id])->update([
             'isApproved' => 2,
             'order_status_id' => $order_status->id,
@@ -520,7 +523,9 @@ class OrderManagementController extends Controller
         $get_order = ApiOrder::with('contact','user.contact','apiOrderItem','apiOrderItem.product.options','texClasses','apiOrderItem')
         ->where('id', $order_id)->first();
 
-        if (!empty($get_order) && ($get_order->status == 'Cancelled') && $get_order->isApproved == 2) {
+        $current_order_status = OrderStatus::where('id', $get_order->order_status_id)->first();
+
+        if (!empty($get_order) && (!empty($current_order_status) && $current_order_status->status == 'Cancelled') && $get_order->isApproved == 2) {
             UtilHelper::update_product_stock_on_cancellation($get_order);
         }
 
@@ -567,8 +572,8 @@ class OrderManagementController extends Controller
             'company' => $currentOrder->contact->company,
             'order_status' => 'updated',
             'delivery_method' => $currentOrder->logisticsCarrier,
-            'new_order_status' => 'Cancelled',
-            'previous_order_status' => 'Cancelled',
+            'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
+            'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
             'reference' => $currentOrder->reference,
         ];
 
