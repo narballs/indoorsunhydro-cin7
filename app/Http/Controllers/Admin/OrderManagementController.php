@@ -32,8 +32,10 @@ use App\Helpers\UserHelper;
 use DateTime;
 
 use App\Helpers\SettingHelper;
+use App\Helpers\UtilHelper;
 use App\Models\SalePaymentOrderItem;
 use App\Models\SalePayments;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\DB;
 
 class OrderManagementController extends Controller
@@ -486,7 +488,13 @@ class OrderManagementController extends Controller
         ]);
 
 
-        $currentOrder = ApiOrder::where('id', $order_id)->first();
+        $currentOrder = ApiOrder::where('id', $order_id)->with(
+            'contact',
+            'user.contact',
+            'apiOrderItem.product.options',
+            'texClasses',
+            'order_refund'
+        )->first();
         $order_items = ApiOrderItem::with('product.options')->where('order_id', $order_id)->get();
         foreach ($order_items as $order_item) {
             $buy_list_product =  ProductBuyList::create([
@@ -503,6 +511,102 @@ class OrderManagementController extends Controller
             'order_status_id' => $order_status->id,
             'updated_at' => Carbon::now(),
         ]);
+
+        $best_products = Product::where('status', '!=', 'Inactive')
+                ->orderBy('views', 'DESC')
+                ->limit(4)
+                ->get();
+
+        $get_order = ApiOrder::with('contact','user.contact','apiOrderItem.product.options','texClasses','apiOrderItem')
+        ->where('id', $order_id)->first();
+
+        if (!empty($get_order) && ($get_order->status == 'Cancelled') && $get_order->isApproved == 2) {
+            UtilHelper::update_product_stock_on_cancellation($get_order);
+        }
+
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+            ->where('order_id', $get_order->id)
+            ->get();
+
+        $count = $order_items->count();
+
+        $customer = ApiOrder::with(['createdby'])
+        ->where('memberId', $get_order->memberId)
+        ->with('contact', function ($query) {
+            $query->orderBy('company');
+        })
+        ->with('apiOrderItem.product')
+        ->where('id', $order_id)->first();
+
+        $addresses = [
+            'billing_address' => [
+                'firstName' => $customer->contact->firstName,
+                'lastName' => $customer->contact->lastName,
+                'address1' => $customer->contact->address1,
+                'address2' => $customer->contact->address2,
+                'city' => $customer->contact->city,
+                'state' => $customer->contact->state,
+                'zip' => $customer->contact->postCode,
+                'mobile' => $customer->contact->mobile,
+                'phone' => $customer->contact->phone,
+            ],
+            'shipping_address' => [
+                'postalAddress1' => $customer->contact->postalAddress1,
+                'postalAddress2' => $customer->contact->postalAddress2,
+                'phone' => $customer->contact->postalCity,
+                'postalCity' => $customer->contact->postalState,
+                'postalState' => $customer->contact->postalPostCode,
+                'postalPostCode' => $customer->contact->postalPostCode,
+            ],
+            'payment_terms' => !empty($customer->contact->paymentTerms) ? $customer->contact->paymentTerms : '30 Days from Invoice',
+            'best_product' => $best_products,
+            'user_email' => $customer->contact->email,
+            'currentOrder' => $currentOrder,
+            'count' => $count,
+            'order_id' => $order_id,
+            'company' => $currentOrder->contact->company,
+            'order_status' => 'updated',
+            'delivery_method' => $currentOrder->logisticsCarrier,
+            'new_order_status' => 'Cancelled',
+            'previous_order_status' => 'Cancelled',
+            'reference' => $currentOrder->reference,
+        ];
+
+        $name = $customer->contact->firstName;
+        $email = $customer->contact->email;
+        $reference = $currentOrder->reference;
+
+        $data = [
+            'name' => $name,
+            'email' => $email,
+            'subject' => 'Order Cancelled',
+            'reference' => $reference,
+            'order_items' => $order_items,
+            'dateCreated' => now(),
+            'addresses' => $addresses,
+            'best_product' => $best_products,
+            'user_email' => $email,
+            'currentOrder' => $currentOrder,
+            'count' => $count,
+            'from' => SettingHelper::getSetting('noreply_email_address'),
+        ];
+
+        if (!empty($email)) {
+            $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
+            $data['email'] = $email;
+            MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
+        }
+
+        $specific_admin_notifications = SpecificAdminNotification::all();
+        if (count($specific_admin_notifications) > 0) {
+            foreach ($specific_admin_notifications as $specific_admin_notification) {
+                $subject = 'Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
+                $adminTemplate = 'emails.admin-order-received';
+                $data['subject'] = $subject;
+                $data['email'] = $specific_admin_notification->email;
+                MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
+            }
+        }
 
         return response()->json([
             'buy_list_product' =>  $buy_list_product,

@@ -14,6 +14,7 @@ use App\Jobs\SalesOrders;
 use App\Models\ApiOrderItem;
 use App\Models\AdminSetting;
 use App\Models\Product;
+use App\Models\SpecificAdminNotification;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -249,9 +250,19 @@ class CancelOrder extends Command
                     ];
 
                     if (!empty($email)) {
-                        $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' status has been Cancelled';
+                        $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
                         $data['email'] = $email;
                         MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
+                    }
+
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            $subject = 'Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
+                            $data['subject'] = $subject;
+                            $data['email'] = $specific_admin_notification->email;
+                            MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
+                        }
                     }
                 }
 
