@@ -1739,12 +1739,10 @@ class OrderController extends Controller
         }
 
         
-        if (($current_order_status->status == 'Cancelled') && $order->isApproved == 2) {
+        if ((($current_order_status->status == 'Cancelled') && $order->isApproved == 2) || ($current_order_status->status == 'Refunded') && $order->isApproved == 3) {
             UtilHelper::update_product_stock_on_cancellation($order);
         }
         
-
-
         $update_order_status_comment = new OrderComment;
         $update_order_status_comment->order_id = $order_id;
         $update_order_status_comment->comment = 'Order status updated manually from' . ' ' . (!empty($previous_order_status->status) ? $previous_order_status->status : '') . ' ' . 'to' . ' ' .  (!empty($current_order_status->status) ? $current_order_status->status : '');
@@ -1807,7 +1805,7 @@ class OrderController extends Controller
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
         $template = 'emails.admin-order-received';
-        
+
         $data = [
             'name' =>  $name,
             'email' => $email,
