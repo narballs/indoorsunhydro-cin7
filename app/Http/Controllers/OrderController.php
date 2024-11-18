@@ -1738,11 +1738,16 @@ class OrderController extends Controller
             ]);
         }
 
-        
-        if ((($current_order_status->status == 'Cancelled') && $order->isApproved == 2) || ($current_order_status->status == 'Refunded') && $order->isApproved == 3) {
-            UtilHelper::update_product_stock_on_cancellation($order);
+        $get_order = ApiOrder::with('apiOrderItem')->where('id', $order_id)->first();
+
+
+        if (
+            (($current_order_status->status == 'Cancelled' && $order->isApproved == 2) || 
+            ($current_order_status->status == 'Refunded' && $order->isApproved == 3))
+        ) {
+            UtilHelper::update_product_stock_on_cancellation($get_order);
         }
-        
+
         $update_order_status_comment = new OrderComment;
         $update_order_status_comment->order_id = $order_id;
         $update_order_status_comment->comment = 'Order status updated manually from' . ' ' . (!empty($previous_order_status->status) ? $previous_order_status->status : '') . ' ' . 'to' . ' ' .  (!empty($current_order_status->status) ? $current_order_status->status : '');
