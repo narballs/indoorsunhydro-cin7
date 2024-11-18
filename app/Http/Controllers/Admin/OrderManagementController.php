@@ -517,7 +517,7 @@ class OrderManagementController extends Controller
                 ->limit(4)
                 ->get();
 
-        $get_order = ApiOrder::with('contact','user.contact','apiOrderItem.product.options','texClasses','apiOrderItem')
+        $get_order = ApiOrder::with('contact','user.contact','apiOrderItem','apiOrderItem.product.options','texClasses','apiOrderItem')
         ->where('id', $order_id)->first();
 
         if (!empty($get_order) && ($get_order->status == 'Cancelled') && $get_order->isApproved == 2) {
