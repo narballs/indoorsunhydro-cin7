@@ -1321,6 +1321,13 @@ class OrderController extends Controller
                 $ship_station_api_logs->save();
 
                 $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                $specific_admin_notifications = SpecificAdminNotification::all();
+                if (count($specific_admin_notifications) > 0) {
+                    foreach ($specific_admin_notifications as $specific_admin_notification) {
+                        $label_email_data['email'] = $specific_admin_notification->email;
+                        $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    }
+                }
                 
                 if ($mail_send) {
                     $order->update([
@@ -1443,6 +1450,13 @@ class OrderController extends Controller
                     $ship_station_api_logs->save();
 
                     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            $label_email_data['email'] = $specific_admin_notification->email;
+                            $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                        }
+                    }
 
                     if ($mail_send) {
                         $order->update([
