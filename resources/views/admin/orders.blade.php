@@ -341,6 +341,8 @@
                                                         <form action="{{url('admin/orders/create/label')}}" method="post">
                                                             @csrf
                                                             <input type="hidden" name="order_id" id="order_id"
+                                                                value="{{ $order->id }}">
+                                                            <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
                                                                 value="{{ $order->shipstation_orderId }}">
                                                             <button type="submit" class="badge badge-primary p-2 border-0">
                                                                 Create Label

@@ -1181,7 +1181,7 @@ class OrderController extends Controller
         $client = new \GuzzleHttp\Client();
         $order_id = $request->order_id;
         $order = ApiOrder::where('id', $order_id)->first();
-        $shipstation_order_id = $request->order_id;
+        $shipstation_order_id = $request->shipstation_orderId;
         $order_items_array = [];
 
         if ($order->label_created == 1 ) {
