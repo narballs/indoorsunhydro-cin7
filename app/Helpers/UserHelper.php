@@ -874,7 +874,7 @@ class UserHelper
                 'insureShipment' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insureShipment']) ? $orderData['insuranceOptions']['insureShipment'] : null,
                 'insuredValue' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insuredValue']) ? $orderData['insuranceOptions']['insuredValue'] : null,
             ],
-            'testLabel' => true,
+            'testLabel' => false,
         ];
 
         return $data;
