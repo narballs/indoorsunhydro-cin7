@@ -1657,10 +1657,6 @@ class OrderController extends Controller
                                         'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                                     ]);
 
-                                    if (($current_order_status->status == 'Refunded') && $order->isApproved == 3) {
-                                        UtilHelper::update_product_stock_on_cancellation($order);
-                                    }
-
                                     $curent_order_voided = $get_order->isVoid ?? false;
                                     
                                     if ($curent_order_voided == false) {
@@ -1745,6 +1741,11 @@ class OrderController extends Controller
 
         
         if (($current_order_status->status == 'Cancelled') && $order->isApproved == 2) {
+            UtilHelper::update_product_stock_on_cancellation($order);
+        }
+
+
+        if (($current_order_status->status == 'Refunded') && $order->isApproved == 3) {
             UtilHelper::update_product_stock_on_cancellation($order);
         }
         
