@@ -838,6 +838,7 @@ class UserHelper
 
     public static function prepare_data_for_creating_label($orderData , $default_ship_from_address) {
         $data = [
+            "orderId" => $orderData['orderId'],
             'carrierCode' => $orderData['carrierCode'],
             'serviceCode' => $orderData['serviceCode'],
             'packageCode' => $orderData['packageCode'],
