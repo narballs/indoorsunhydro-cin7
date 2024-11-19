@@ -1634,64 +1634,65 @@ class OrderController extends Controller
                         $order_refund->save();
 
                         if (!empty($order->order_id)) {
-                            try {
-                                $client = new \GuzzleHttp\Client();
+                            $this->cancel_order($order , $current_order_status , $order_status_id,$cin7_auth_username , $cin7_auth_password);
+                            // try {
+                            //     $client = new \GuzzleHttp\Client();
                                 
-                                $res = $client->request(
-                                    'GET', 
-                                    'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
-                                    [
-                                        'auth' => [
-                                            $cin7_auth_username,
-                                            $cin7_auth_password
-                                        ]                    
-                                    ]
-                                );
+                            //     $res = $client->request(
+                            //         'GET', 
+                            //         'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
+                            //         [
+                            //             'auth' => [
+                            //                 $cin7_auth_username,
+                            //                 $cin7_auth_password
+                            //             ]                    
+                            //         ]
+                            //     );
                         
-                                $cin7_order = $res->getBody()->getContents();
-                                $get_order = json_decode($cin7_order);
+                            //     $cin7_order = $res->getBody()->getContents();
+                            //     $get_order = json_decode($cin7_order);
                         
-                                if (!empty($get_order)) {
-                                    $order->update([
-                                        'order_status_id' => $order_status_id,
-                                        'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
-                                    ]);
+                            //     if (!empty($get_order)) {
+                            //         $order->update([
+                            //             'order_status_id' => $order_status_id,
+                            //             'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
+                            //         ]);
 
-                                    $curent_order_voided = $get_order->isVoid ?? false;
+                            //         $curent_order_voided = $get_order->isVoid ?? false;
                                     
-                                    if ($curent_order_voided == false) {
-                                        $url = 'https://api.cin7.com/api/v1/SalesOrders';
-                                        $authHeaders = [
-                                            'headers' => ['Content-Type' => 'application/json'],
-                                            'auth' => [
-                                                $cin7_auth_username,
-                                                $cin7_auth_password,
-                                            ],
-                                        ];
+                            //         if ($curent_order_voided == false) {
+                            //             $url = 'https://api.cin7.com/api/v1/SalesOrders';
+                            //             $authHeaders = [
+                            //                 'headers' => ['Content-Type' => 'application/json'],
+                            //                 'auth' => [
+                            //                     $cin7_auth_username,
+                            //                     $cin7_auth_password,
+                            //                 ],
+                            //             ];
 
-                                        $update_array = [
-                                            [
-                                                "id" => $order->order_id,
-                                                "isVoid" => true,
-                                                "isApproved" => false,
-                                            ]
-                                        ];
+                            //             $update_array = [
+                            //                 [
+                            //                     "id" => $order->order_id,
+                            //                     "isVoid" => true,
+                            //                     "isApproved" => false,
+                            //                 ]
+                            //             ];
 
-                                        $authHeaders['json'] = $update_array;
+                            //             $authHeaders['json'] = $update_array;
 
-                                        $res = $client->put($url, $authHeaders);
+                            //             $res = $client->put($url, $authHeaders);
 
-                                        $response = json_decode($res->getBody()->getContents());
+                            //             $response = json_decode($res->getBody()->getContents());
 
-                                    }
-                                }
-                            } catch (\Exception $e) {
-                                // Handle request exception (e.g., log the error)
-                                Log::info('request_failded' . $e->getMessage());
-                            } catch (\Exception $e) {
-                                // Handle other exceptions
-                                Log::info("An error occurred: " . $e->getMessage());
-                            }
+                            //         }
+                            //     }
+                            // } catch (\Exception $e) {
+                            //     // Handle request exception (e.g., log the error)
+                            //     Log::info('request_failded' . $e->getMessage());
+                            // } catch (\Exception $e) {
+                            //     // Handle other exceptions
+                            //     Log::info("An error occurred: " . $e->getMessage());
+                            // }
                         }
                         
                         
@@ -1742,6 +1743,7 @@ class OrderController extends Controller
         
         if (($current_order_status->status == 'Cancelled') && $order->isApproved == 2) {
             UtilHelper::update_product_stock_on_cancellation($order);
+            $this->cancel_order($order , $current_order_status , $order_status_id,$cin7_auth_username , $cin7_auth_password);
         }
 
 
@@ -1865,6 +1867,77 @@ class OrderController extends Controller
         }
         
         return response()->json(['success' => $request_status , 'message' => $message]);
+    }
+
+
+    public function cancel_order($order , $current_order_status ,$order_status_id, $cin7_auth_username , $cin7_auth_password) {
+        try {
+            $client = new \GuzzleHttp\Client();
+            
+            $res = $client->request(
+                'GET', 
+                'https://api.cin7.com/api/v1/SalesOrders/' . $order->order_id,
+                [
+                    'auth' => [
+                        $cin7_auth_username,
+                        $cin7_auth_password
+                    ]                    
+                ]
+            );
+    
+            $cin7_order = $res->getBody()->getContents();
+            $get_order = json_decode($cin7_order);
+    
+            if (!empty($get_order)) {
+                if ($current_order_status->status == 'Refunded') {
+                    $order->update([
+                        'order_status_id' => $order_status_id,
+                        'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
+                    ]);
+                }
+
+                if ($current_order_status->status == 'Cancelled') {
+                    $order->update([
+                        'order_status_id' => $order_status_id,
+                        'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
+                    ]);
+                }
+
+                $curent_order_voided = $get_order->isVoid ?? false;
+                
+                if ($curent_order_voided == false) {
+                    $url = 'https://api.cin7.com/api/v1/SalesOrders';
+                    $authHeaders = [
+                        'headers' => ['Content-Type' => 'application/json'],
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password,
+                        ],
+                    ];
+
+                    $update_array = [
+                        [
+                            "id" => $order->order_id,
+                            "isVoid" => true,
+                            "isApproved" => false,
+                        ]
+                    ];
+
+                    $authHeaders['json'] = $update_array;
+
+                    $res = $client->put($url, $authHeaders);
+
+                    $response = json_decode($res->getBody()->getContents());
+
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle request exception (e.g., log the error)
+            Log::info('request_failded' . $e->getMessage());
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            Log::info("An error occurred: " . $e->getMessage());
+        }
     }
 
     public function apply_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value , $parcel_guard) {
