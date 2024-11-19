@@ -43,6 +43,7 @@ use App\Models\Pricing;
 use App\Models\Pricingnew;
 use App\Models\ProductBuyList;
 use App\Models\ProductOption;
+use App\Models\SpecificAdminNotification;
 use App\Models\TaxClass;
 use App\Models\WholesaleApplicationInformation;
 use App\Models\WholesaleApplicationAddress;
@@ -1394,10 +1395,18 @@ class UserController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
                 if ($registration_status == true) {
-                    if (!empty($users_with_role_admin)) {
-                        foreach ($users_with_role_admin as $role_admin) {
+                    // if (!empty($users_with_role_admin)) {
+                    //     foreach ($users_with_role_admin as $role_admin) {
+                    //         $subject = 'New Register User';
+                    //         $data['email'] = $role_admin->email;
+                    //         MailHelper::sendMailNotification('emails.admin_notification', $data);
+                    //     }
+                    // }
+                    $specific_admin_notifications = SpecificAdminNotification::all();
+                    if (count($specific_admin_notifications) > 0) {
+                        foreach ($specific_admin_notifications as $specific_admin_notification) {
                             $subject = 'New Register User';
-                            $data['email'] = $role_admin->email;
+                            $data['email'] = $specific_admin_notification->email;
                             MailHelper::sendMailNotification('emails.admin_notification', $data);
                         }
                     }
