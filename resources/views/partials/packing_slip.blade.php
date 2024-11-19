@@ -101,12 +101,13 @@
                     <p>{{!empty($street1) ? $street1 : ''}}</p>
                     <p>{{!empty($street2) ? $street2 : ''}}</p>
                     <p>{{$city}}, {{$state}} {{$postalCode}} US</p>
+                    <p>{{$phone}}/p>
                 </td>
                 <td class="order-details">
                     <p><strong>Order #</strong> {{$order_id}}</p>
-                    <p><strong>Order Reference</strong>: {{$reference}}</p>
+                    {{-- <p><strong>Order Reference</strong>: {{$reference}}</p>
                     <p><strong>Date</strong>: {{ \Carbon\Carbon::parse($orderDate)->format('Y-m-d H:i:s') }}</p>
-                    <p><strong>Ship Date</strong>: {{$shipDate}}</p>
+                    <p><strong>Ship Date</strong>: {{$shipDate}}</p> --}}
                 </td>
             </tr>
         </table>
