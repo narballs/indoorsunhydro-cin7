@@ -252,7 +252,7 @@ class CancelOrder extends Command
                     if (!empty($email)) {
                         $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
                         $data['email'] = $email;
-                        MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
+                        MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
                     }
 
                     $specific_admin_notifications = SpecificAdminNotification::all();
@@ -261,7 +261,7 @@ class CancelOrder extends Command
                             $subject = 'Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
                             $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
-                            MailHelper::sendMailNotification('emails.cancel_order_new_email_template', $data);
+                            MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
                         }
                     }
                 }
