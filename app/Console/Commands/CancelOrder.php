@@ -221,7 +221,7 @@ class CancelOrder extends Command
                         'user_email' => $customer->contact->email,
                         'currentOrder' => $currentOrder,
                         'count' => $count,
-                        'order_id' => $pending_order->order_id,
+                        'order_id' => $pending_order->id,
                         'company' => $currentOrder->contact->company,
                         'order_status' => 'updated',
                         'delivery_method' => $currentOrder->logisticsCarrier,
