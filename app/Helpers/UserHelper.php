@@ -456,7 +456,7 @@ class UserHelper
         $DeliverylastName = self::get_AddressValue($currentOrder->DeliveryLastName, $order_contact->lastName);
         $Deliverycompany = self::get_AddressValue($currentOrder->DeliveryCompany, $order_contact->company);
         $Deliveryaddress1 = self::get_AddressValue($currentOrder->DeliveryAddress1, $order_contact->address1, $order_contact->postalAddress1);
-        $Deliveryaddress2 = self::get_AddressValue($currentOrder->DeliveryAddress2, $order_contact->address2, $order_contact->postalAddress2);
+        $Deliveryaddress2 = self::get_AddressValue($currentOrder->DeliveryAddress2, $order_contact->address2);
         $Deliverycity = self::get_AddressValue($currentOrder->DeliveryCity, $order_contact->city, $order_contact->postalCity);
         $Deliverystate = self::get_AddressValue($currentOrder->DeliveryState, $order_contact->state, $order_contact->postalState);
         $Deliveryzip = self::get_AddressValue($currentOrder->DeliveryZip, $order_contact->postCode, $order_contact->postalPostCode);
