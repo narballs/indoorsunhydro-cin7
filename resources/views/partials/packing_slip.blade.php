@@ -98,8 +98,12 @@
                 <td class="shipping-info">
                     <p><strong>Ship To:</strong></p>
                     <p>{{$name}}</p>
-                    <p>{{!empty($street1) ? $street1 : ''}}</p>
-                    <p>{{!empty($street2) ? $street2 : ''}}</p>
+                    @if (!empty($street1))
+                        <p>{{$street1}}</p>
+                    @endif
+                    @if (!empty($street2))
+                        <p>{{$street2}}</p>
+                    @endif
                     <p>{{$city}}, {{$state}} {{$postalCode}} US</p>
                     <p>{{$phone}}</p>
                 </td>
