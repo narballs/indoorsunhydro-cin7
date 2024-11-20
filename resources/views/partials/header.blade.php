@@ -461,6 +461,54 @@
             color: #FFFFFF;
             border: 1px solid #7CC633;
         }
+        @media screen and (min-width: 768px) {
+            .all_blogs_div_padding {
+                background-color: #F8FAF8;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            .guide_to_growth {
+                font-size: 12px;
+            }
+            .latest_from_blogs {
+                font-size: 18px;
+            }
+            .blog_separate_head {
+                font-size: 18px;
+            }
+            .tips_trends {
+                font-size: 14px;
+            }
+            .blog_date {
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .blog_date_div {
+                border-bottom: 1px solid #EBEBEB;
+            }
+            .single_blog_heading {
+                font-size: 18px;
+            }
+            .single_blog_description {
+                font-size: 14px;
+            }
+            .single_blog_detail_btn {
+                font-size: 14px;
+            }
+            .blog_div {
+                background-color: #F8FAF8;
+                border: none;
+                border-radius: 15px !important;
+            }
+            .blogs_heading_div {
+                padding: 15px;
+            }
+            .all_blogs_div_padding {
+                padding: 0px 30px;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 </head>

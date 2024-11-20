@@ -1,5 +1,5 @@
 @include('partials.header')
-    <main>
+    <main style="overflow: hidden;">
         @include('partials.top-bar')
         @include('partials.search-bar')
         @if(!empty($page))
@@ -48,10 +48,10 @@
                                 <div class="container-sm mt-5">
                                     <div class="row align-items-end">
                                         <div class="col-md-8">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-1 border-bottom-blog-color">
+                                            <div class="row align-items-center blogs_heading_div">
+                                                <div class="col-md-1 col-2 border-bottom-blog-color">
                                                 </div>
-                                                <div class="col-md-11">
+                                                <div class="col-md-11 col-10">
                                                     <span class="guide_to_growth">
                                                         Guide to Growth
                                                     </span>
@@ -85,8 +85,8 @@
                         </div>
                     </div>
                     <div class="container-sm">
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row blog_main_div_mobile">
+                            {{-- <div class="col-xl-12 col-md-12 col-sm-12 col-xs-12"> --}}
                                 {{-- <div class="row justify-content-center mt-3">
                                     <div class="col-md-10">
                                         @if (count($blogs) > 0)
@@ -123,16 +123,16 @@
                                     </div>
                                 @endif
                                 @foreach ($blogs as $blog)
-                                    <div class="col-md-12 mb-4 ">
-                                        <div class="row justify-content-between border rounded py-3">
+                                    <div class="col-md-12 mb-4 all_blogs_div_padding">
+                                        <div class="row justify-content-between  rounded py-3 blog_div">
                                             <div class="col-md-8 col-lg-8 col-xl-9 col-12 order-md-1 order-2 mt-2">
                                                 <div class="row">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-12 py-2 blog_date_div">
                                                         <span class="blog_date">
                                                             {{ $blog->created_at->format('j M Y') }}
                                                         </span>
                                                     </div>
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-12 py-1">
                                                         <a href="{{route('blog_detail' , $blog->slug)}}" class="text-decoration-none single_blog_heading">
                                                             {!! \Illuminate\Support\Str::limit($blog->title, 100) !!}
                                                         </a>
@@ -159,7 +159,7 @@
                                     </div>
                                 @endforeach
 	                            {{ $blogs->links('pagination.custom_pagination') }}
-                            </div>
+                            {{-- </div> --}}
                         </div>
                     </div>
                 </div>

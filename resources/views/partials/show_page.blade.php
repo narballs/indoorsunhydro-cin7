@@ -43,7 +43,7 @@ $blogs = NavHelper::getBlogs();
     }
 </style>
 <body>
-    <main>
+    <main style="overflow: hidden;">
         @include('partials.top-bar')
         @include('partials.search-bar')
         @if(!empty($page))
@@ -71,7 +71,7 @@ $blogs = NavHelper::getBlogs();
                                 <div class="container-sm mt-5">
                                     <div class="row align-items-end">
                                         <div class="col-md-8">
-                                            <div class="row align-items-center">
+                                            <div class="row align-items-center blogs_heading_div">
                                                 <div class="col-md-1 border-bottom-blog-color col-2">
                                                 </div>
                                                 <div class="col-md-11 col-10">
