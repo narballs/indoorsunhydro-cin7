@@ -101,7 +101,7 @@
                     <p>{{!empty($street1) ? $street1 : ''}}</p>
                     <p>{{!empty($street2) ? $street2 : ''}}</p>
                     <p>{{$city}}, {{$state}} {{$postalCode}} US</p>
-                    <p>{{$phone}}/p>
+                    <p>{{$phone}}</p>
                 </td>
                 <td class="order-details">
                     <p><strong>Order #</strong> {{$order_id}}</p>
