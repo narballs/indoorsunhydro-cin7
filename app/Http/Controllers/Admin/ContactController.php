@@ -930,6 +930,7 @@ class ContactController extends Controller
                 'postalState' => $api_contact->postalState,
                 'postalCity' => $api_contact->postalCity,
                 'status' => $api_contact->isActive,
+                'paymentTerms' => $api_contact->paymentTerms,
                 'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : $contact->tax_class,
             ]);
 
