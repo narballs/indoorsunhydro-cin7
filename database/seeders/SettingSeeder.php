@@ -485,6 +485,12 @@ class SettingSeeder extends Seeder
                 'option_value' => '6',
             ],
 
+            [
+                'option_name' => 'naris_indoor_email',
+                'type' => 'text',
+                'option_value' => 'naris@indoorsunhydro.com',
+            ],
+
 
 
 
