@@ -212,8 +212,8 @@
                                             <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                                 @if ($currentOrder->DeliveryAddress2 != null)
                                                     {{$currentOrder->DeliveryAddress2}}
-                                                @elseif ($addresses['billing_address']['address2'] != null)
-                                                    {{$addresses['billing_address']['address2']}}
+                                                {{-- @elseif ($addresses['billing_address']['address2'] != null)
+                                                    {{$addresses['billing_address']['address2']}} --}}
                                                 @endif
                                             </td>
                                         </tr>
@@ -222,8 +222,8 @@
                                                 
                                                 @if ($currentOrder->DeliveryCity != null)
                                                     {{$currentOrder->DeliveryCity}}
-                                                @elseif ($addresses['billing_address']['city'] != null)
-                                                    {{$addresses['billing_address']['city']}}
+                                                {{-- @elseif ($addresses['billing_address']['city'] != null)
+                                                    {{$addresses['billing_address']['city']}} --}}
                                                 @endif
 
                                                 @if ($currentOrder->DeliveryState != null)

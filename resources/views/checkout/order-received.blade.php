@@ -1026,15 +1026,15 @@
 													<p class="order-confirmation-page-address-line-one-title mb-1">
 														@if (!empty($order->DeliveryAddress2))
 															{{$order->DeliveryAddress2 . ','}}
-														@else
-															{{$order_contact->address2 ? $order_contact->address2: ''}}
+														{{-- @else
+															{{$order_contact->address2 ? $order_contact->address2: ''}} --}}
 														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														@if (!empty($order->DeliveryCity))
 															{{$order->DeliveryCity . ','}}
-														@else
-															{{$order_contact->city ? $order_contact->city . ',' : ''}}
+														{{-- @else
+															{{$order_contact->city ? $order_contact->city . ',' : ''}} --}}
 														@endif
 
 														@if (!empty($order->DeliveryState))
