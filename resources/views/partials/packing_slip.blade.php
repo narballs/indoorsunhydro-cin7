@@ -72,7 +72,7 @@
 
 <body>
     <div class="packing_slip_main_div">
-        <div class="header">Packing Slip # {{$order_id}}</div>
+        <div class="header">Packing Slip</div>
         @php
             $website_name = App\Helpers\SettingHelper::getSetting('website_name');
             $address1 = App\Helpers\SettingHelper::getSetting('store_address_line_1');
@@ -105,8 +105,9 @@
                 </td>
                 <td class="order-details">
                     <p><strong>Order #</strong> {{$order_id}}</p>
+                    <p><strong>Order Date</strong>: {{ \Carbon\Carbon::parse($orderDate)->format('F d, Y') }}</p>
+                    {{-- <p><strong>Order Date</strong>: {{ $orderDate}}</p> --}}
                     {{-- <p><strong>Order Reference</strong>: {{$reference}}</p>
-                    <p><strong>Date</strong>: {{ \Carbon\Carbon::parse($orderDate)->format('Y-m-d H:i:s') }}</p>
                     <p><strong>Ship Date</strong>: {{$shipDate}}</p> --}}
                 </td>
             </tr>
