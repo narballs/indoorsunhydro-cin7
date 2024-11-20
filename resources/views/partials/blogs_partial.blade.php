@@ -12,7 +12,7 @@
         }
     }
 </style>
-<div class="row justify-content-center mt-3">
+<div class="row justify-content-center mt-3 blog_main_div_mobile">
 	@if (count($blogs) == 0)
 		<div class="row">
 			<h4 class="text-center font-weight-bold">
@@ -21,16 +21,16 @@
 		</div>
 	@endif
 	@foreach ($blogs as $blog)
-		<div class="col-md-12 mb-4 ">
+		<div class="col-md-12 mb-4 all_blogs_div_padding">
 			<div class="row justify-content-between rounded py-3 blog_div">
 				<div class="col-md-8 col-lg-8 col-xl-9 col-12 order-md-1 order-2 mt-2">
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-12 py-2 blog_date_div">
 							<span class="blog_date">
 								{{ $blog->created_at->format('j M Y') }}
 							</span>
 						</div>
-						<div class="col-md-12">
+						<div class="col-md-12 py-1">
 							<a href="{{route('blog_detail' , $blog->slug)}}" class="text-decoration-none single_blog_heading">
 								{!! \Illuminate\Support\Str::limit($blog->title, 100) !!}
 							</a>
