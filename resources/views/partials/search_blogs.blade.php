@@ -158,7 +158,13 @@
                                         </div>
                                     </div>
                                 @endforeach
-	                            {{ $blogs->links('pagination.custom_pagination') }}
+	                            <div class="row">
+                                    <div class="container">
+                                        <div class="col-md-6 m-auto">
+                                            {{ $blogs->appends(Request::all())->links() }}
+                                        </div>
+                                    </div>
+                                </div>
                             {{-- </div> --}}
                         </div>
                     </div>
