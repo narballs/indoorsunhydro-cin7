@@ -26,8 +26,8 @@
     }
 </style>
 
-<body bgcolor="#000000" style="background-color: #000000;padding-top: 20px;padding-bottom: 0px;padding-right:0px;padding-left:0px;" width="100%;">
-    <table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;" width="50%" border="0" align="center" cellpadding="0">
+<body style="padding-top: 20px;padding-bottom: 0px;padding-right:0px;padding-left:0px;" width="100%;">
+    <table padding="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:5px;border: 1px solid #EBEBEB;" width="50%" border="0" align="center" cellpadding="0">
         <tbody>
             <tr>
                 <td>
