@@ -1294,7 +1294,7 @@ class OrderController extends Controller
                 
                 $label_email_data = [
                     'email' => $user_email,
-                    'subject' => 'Ship Web Order ' . $order_id . ' Label',
+                    'subject' => 'Ship Web Order ' . $order_id,
                     'content' => [
                         'order_id' => $order_id,
                         'company' => $prepare_data_for_creating_label['shipTo']['company'],
@@ -1436,9 +1436,9 @@ class OrderController extends Controller
 
                     $label_email_data = [
                         'email' => $user_email,
-                        'subject' => 'Ship Web Order ' . $order_id . ' Label',
+                        'subject' => 'Ship Web Order ' . $order_id,
                         'content' => [
-                            'subject' => 'Ship Web Order ' . $order_id . ' Label',
+                            'subject' => 'Ship Web Order ' . $order_id,
                             'email' => $user_email,
                             'order_id' => $order_id,
                             'company' => $prepare_data_for_creating_label['shipTo']['company'],
