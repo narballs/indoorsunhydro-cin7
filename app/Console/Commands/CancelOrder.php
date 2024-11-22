@@ -211,9 +211,9 @@ class CancelOrder extends Command
                         'shipping_address' => [
                             'postalAddress1' => $customer->contact->postalAddress1,
                             'postalAddress2' => $customer->contact->postalAddress2,
-                            'phone' => $customer->contact->postalCity,
-                            'postalCity' => $customer->contact->postalState,
-                            'postalState' => $customer->contact->postalPostCode,
+                            'phone' => $customer->contact->phone,
+                            'postalCity' => $customer->contact->postalCity,
+                            'postalState' => $customer->contact->postalState,
                             'postalPostCode' => $customer->contact->postalPostCode,
                         ],
                         'payment_terms' => !empty($customer->contact->paymentTerms) ? $customer->contact->paymentTerms : '30 Days from Invoice',
