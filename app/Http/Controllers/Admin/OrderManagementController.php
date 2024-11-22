@@ -571,7 +571,7 @@ class OrderManagementController extends Controller
             'order_id' => $order_id,
             'company' => $currentOrder->contact->company,
             'order_status' => 'updated',
-            'delivery_method' => $currentOrder->logisticsCarrier,
+            'delievery_method' => $currentOrder->logisticsCarrier,
             'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
             'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
             'reference' => $currentOrder->reference,

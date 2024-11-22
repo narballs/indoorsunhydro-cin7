@@ -224,7 +224,7 @@ class CancelOrder extends Command
                         'order_id' => $pending_order->id,
                         'company' => $currentOrder->contact->company,
                         'order_status' => 'updated',
-                        'delivery_method' => $currentOrder->logisticsCarrier,
+                        'delievery_method' => $currentOrder->logisticsCarrier,
                         'new_order_status' => 'Cancelled',
                         'previous_order_status' => 'Cancelled',
                         'reference' => $currentOrder->reference,
