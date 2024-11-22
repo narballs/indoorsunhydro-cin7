@@ -68,6 +68,10 @@ class CheckoutController extends Controller
 
         $cart_items = UserHelper::switch_price_tier($request);
 
+        if (count($cart_items) == 0) {
+            return redirect('/')->with('error', 'Your cart for the selected company is empty! Please add some items to your cart before proceeding to checkout.');
+        }
+
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::with('products')
                 ->where('product_id', $cart_item['product_id'])
