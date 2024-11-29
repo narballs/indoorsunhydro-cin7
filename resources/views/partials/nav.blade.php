@@ -390,71 +390,57 @@
 
                     {{-- new code  --}}
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav d-flex">
+                        <ul class="navbar-nav">
+                            <!-- Dropdown with Submenu -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle product-mega-menu ps-1" href="#"
-                                    id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false" style="width: 100%;">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Products
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-dark mt-0 px-4" aria-labelledby="navbarDarkDropdownMenuLink" style="width: 100%;">
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu pl-2" href="{{ url('products') }}">
-                                            <b>All Products</b>
-                                        </a>
+                                        <a class="dropdown-item" href="{{ url('products') }}"><b>All Products</b></a>
                                     </li>
                                     @foreach ($categories as $category)
                                         @if ($category->parent_id == 0)
-                                            <li>
-                                                <a class="link-dark dropdown-item text-decoration-none nav-link product-mega-menu pl-2"
-                                                    id="category_{{ $category->id }}"
-                                                    href="{{ url('products/' . $category->id . '/' . $category->slug) }}">
+                                            <li class="dropdown-submenu-small-mobile" style="border-bottom:1px solid #D9D9D9;">
+                                                <a class="dropdown-item dropdown-toggle" href="{{ url('products/' . $category->id . '/' . $category->slug) }}">
                                                     {{ $category->name }}
                                                 </a>
-                                            </li>
-                                            @if (isset($category->children) && count($category->children) > 0)
-                                                <ul class="dropdown-menu-dark px-0 py-2 border mt-0 dropdown-submenu text-center">
-                                                    <div class="row gx-0">
-                                                        @foreach ($category->children as $key => $cat)
+                                                @if (isset($category->children) && count($category->children) > 0)
+                                                    <ul class="dropdown-menu dropdown-menu-small-mobile border-0 px-4">
+                                                        @foreach ($category->children as $cat)
                                                             @if ($cat->is_active == 1)
-                                                                <div class="col-12">
-                                                                    <li class="dropdown-item">
-                                                                        <a class="link-dark text-decoration-none nav-link product-mega-menu"
-                                                                            id="category_{{ $cat->id }}"
-                                                                            href="{{ url('products/' . $cat->id . '/' . $cat->slug . '-' . $cat->slug) }}">
-                                                                            {{ $cat->name }}
-                                                                        </a>
-                                                                    </li>
-                                                                </div>
+                                                                <li class="" style="border-bottom:0.92px solid #D9D9D947;">
+                                                                    <a class="dropdown-item py-1" href="{{ url('products/' . $cat->id . '/' . $cat->slug) }}">
+                                                                        {{ $cat->name }}
+                                                                    </a>
+                                                                </li>
                                                             @endif
                                                         @endforeach
-                                                    </div>
-                                                </ul>
-                                            @endif
+                                                    </ul>
+                                                @endif
+                                            </li>
                                         @endif
                                     @endforeach
                                 </ul>
                             </li>
                             <!-- Additional Menu Items -->
-                            <li class="nav-item me-4">
-                                <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('page/about') }}">About</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('page/about') }}">About</a>
                             </li>
-                            <li class="nav-item me-4">
-                                <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('page/blogs') }}">Blogs</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('page/blogs') }}">Blogs</a>
                             </li>
-                            <li class="nav-item me-4">
-                                <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('contact-us') }}">Contact</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('contact-us') }}">Contact</a>
                             </li>
                             @if(auth()->user())
-                                <li class="nav-item me-4">
-                                    <a class="nav-link text-uppercase nav-item-links ps-1" href="{{ url('/products/buy-again') }}">Buy Again</a>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url('/products/buy-again') }}">Buy Again</a>
                                 </li>
                             @endif
-                            <li class="nav-item me-4">
-                                <a type="button" class="nav-link text-uppercase nav-item-links ps-1"
-                                    onclick="showZendesk()">
-                                    Suggestions & feature request
-                                </a>
+                            <li class="nav-item">
+                                <a type="button" class="nav-link" onclick="showZendesk()">Suggestions & feature request</a>
                             </li>
                         </ul>
                     </div>
@@ -511,4 +497,26 @@
             }
         });
     }
+</script>
+
+<script>
+    // Enable touch support for submenu
+    document.querySelectorAll('.dropdown-submenu-small-mobile > a').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            const nextEl = this.nextElementSibling;
+            if (nextEl && nextEl.classList.contains('dropdown-menu-small-mobile')) {
+                e.preventDefault();
+                nextEl.classList.toggle('show');
+            }
+        });
+    });
+
+    // Close submenu when clicking outside
+    document.addEventListener('click', function(e) {
+        document.querySelectorAll('.dropdown-menu-small-mobile.show').forEach(function(submenu) {
+            if (!submenu.contains(e.target)) {
+                submenu.classList.remove('show');
+            }
+        });
+    });
 </script>

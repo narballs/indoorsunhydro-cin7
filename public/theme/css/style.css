@@ -11,6 +11,25 @@
         padding-bottom: 0rem !important;
     }
 }
+@media only screen and (max-width : 600px)  {
+    .dropdown-menu-small-mobile .dropdown-menu-small-mobile {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .dropdown-submenu-small-mobile {
+        position: relative;
+    }
+    .dropdown-submenu-small-mobile > .dropdown-menu-small-mobile {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+    }
+    .dropdown-submenu-small-mobile:hover > .dropdown-menu-small-mobile,
+    .dropdown-submenu-small-mobile > .dropdown-menu-small-mobile.show {
+        display: block;
+    }
+}
 .my-confirm-button {
     background-color: #7BC533 !important;
     color: #FFFFFF !important;
