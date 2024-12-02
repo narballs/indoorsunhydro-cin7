@@ -392,7 +392,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav">
                             <!-- Dropdown with Submenu -->
-                            <li class="nav-item dropdown">
+                            {{-- <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Products
                                 </a>
@@ -423,7 +423,44 @@
                                         @endif
                                     @endforeach
                                 </ul>
+                            </li> --}}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle new-dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Products
+                                    <i class="fa fa-angle-right toggle-arrow toggle-arrow-new"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item dropdown-submenu-small-mobile-main-1" href="{{ url('products') }}"><b>All Products</b></a>
+                                    </li>
+                                    @foreach ($categories as $category)
+                                        @if ($category->parent_id == 0)
+                                            <li class="dropdown-submenu-small-mobile-main" style="border-bottom:1px solid #D9D9D9;">
+                                                <a class="dropdown-item dropdown-toggle new-dropdown-toggle" href="{{ url('products/' . $category->id . '/' . $category->slug) }}">
+                                                    {{ $category->name }}
+                                                    @if (isset($category->children) && count($category->children) > 0)
+                                                        <i class="fa fa-angle-right toggle-arrow toggle-arrow-new"></i>
+                                                    @endif
+                                                </a>
+                                                @if (isset($category->children) && count($category->children) > 0)
+                                                    <ul class="dropdown-menu-small-mobile-main border-0 px-4">
+                                                        @foreach ($category->children as $cat)
+                                                            @if ($cat->is_active == 1)
+                                                                <li style="border-bottom:0.92px solid #D9D9D947;">
+                                                                    <a class="dropdown-item py-1" href="{{ url('products/' . $cat->id . '/' . $cat->slug) }}">
+                                                                        {{ $cat->name }}
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
                             </li>
+                            
                             <!-- Additional Menu Items -->
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('page/about') }}">About</a>
@@ -500,23 +537,66 @@
 </script>
 
 <script>
-    // Enable touch support for submenu
-    document.querySelectorAll('.dropdown-submenu-small-mobile > a').forEach(function(element) {
-        element.addEventListener('click', function(e) {
-            const nextEl = this.nextElementSibling;
-            if (nextEl && nextEl.classList.contains('dropdown-menu-small-mobile')) {
+    document.addEventListener('DOMContentLoaded', function () {
+    // Handle click events for toggling submenus
+    document.querySelectorAll('.new-dropdown-toggle').forEach(function (toggle) {
+        toggle.addEventListener('click', function (e) {
+            const nextEl = this.nextElementSibling; // Get the submenu of the clicked category
+            const arrowIcon = this.querySelector('.toggle-arrow-new'); // Get the arrow icon inside the anchor tag
+
+            // Check if the clicked item has a child submenu
+            if (nextEl && nextEl.classList.contains('dropdown-menu-small-mobile-main')) {
                 e.preventDefault();
-                nextEl.classList.toggle('show');
+
+                // Close all other open submenus except the current one
+                document.querySelectorAll('.dropdown-menu-small-mobile-main').forEach(function (menu) {
+                    const prevSibling = menu.previousElementSibling; // Get the previous sibling
+                    if (menu !== nextEl) {
+                        // Close other submenus and reset their arrows
+                        // menu.classList.add('d-none');
+                        if (prevSibling) {
+                            const arrow = prevSibling.querySelector('.toggle-arrow-new');
+                            if (arrow) {
+                                arrow.classList.remove('fa-angle-down');
+                                arrow.classList.add('fa-angle-right');
+                            }
+                        }
+                    }
+                });
+
+                // Toggle the visibility of the current submenu
+                // nextEl.classList.toggle('d-none'); // Toggle visibility of the submenu
+
+                // Toggle the arrow direction for the current menu
+                if (arrowIcon) {
+                    if (nextEl.classList.contains('d-none')) {
+                        arrowIcon.classList.remove('fa-angle-down');
+                        arrowIcon.classList.add('fa-angle-right');
+                    } else {
+                        arrowIcon.classList.remove('fa-angle-right');
+                        arrowIcon.classList.add('fa-angle-down');
+                    }
+                }
             }
         });
     });
 
-    // Close submenu when clicking outside
-    document.addEventListener('click', function(e) {
-        document.querySelectorAll('.dropdown-menu-small-mobile.show').forEach(function(submenu) {
-            if (!submenu.contains(e.target)) {
-                submenu.classList.remove('show');
-            }
-        });
+    // Close all submenus when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.nav-item.dropdown')) {
+            document.querySelectorAll('.dropdown-menu-small-mobile-main').forEach(function (menu) {
+                // menu.classList.add('d-none'); // Hide all submenus
+                const prevSibling = menu.previousElementSibling; // Get the previous sibling
+                if (prevSibling) {
+                    const arrow = prevSibling.querySelector('.toggle-arrow-new');
+                    if (arrow) {
+                        arrow.classList.remove('fa-angle-down');
+                        arrow.classList.add('fa-angle-right');
+                    }
+                }
+            });
+        }
     });
+});
+
 </script>
