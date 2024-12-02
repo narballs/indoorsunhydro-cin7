@@ -837,13 +837,18 @@ class UserHelper
 
 
     public static function prepare_data_for_creating_label($orderData , $default_ship_from_address) {
+        $currentDate = date('Y-m-d');
+        if (isset($orderData['shipDate']) && $orderData['shipDate'] < $currentDate) {
+            $orderData['shipDate'] = $currentDate; // Set to the current date
+        }
+        
         $data = [
             "orderId" => $orderData['orderId'],
             'carrierCode' => $orderData['carrierCode'],
             'serviceCode' => $orderData['serviceCode'],
             'packageCode' => $orderData['packageCode'],
             'confirmation' => $orderData['confirmation'],
-            'shipDate' => $orderData['shipDate'],
+            'shipDate' => $currentDate,
             'weight' => [
                 'value' => !empty($orderData['weight']) && !empty($orderData['weight']['value']) ? $orderData['weight']['value'] : 0,
                 'units' => !empty($orderData['weight']) && !empty($orderData['weight']['units']) ? $orderData['weight']['units'] : 'ounces',

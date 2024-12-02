@@ -11,6 +11,25 @@
         padding-bottom: 0rem !important;
     }
 }
+@media only screen and (max-width : 600px)  {
+    .dropdown-menu-small-mobile .dropdown-menu-small-mobile {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .dropdown-submenu-small-mobile {
+        position: relative;
+    }
+    .dropdown-submenu-small-mobile > .dropdown-menu-small-mobile {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+    }
+    .dropdown-submenu-small-mobile:hover > .dropdown-menu-small-mobile,
+    .dropdown-submenu-small-mobile > .dropdown-menu-small-mobile.show {
+        display: block;
+    }
+}
 .my-confirm-button {
     background-color: #7BC533 !important;
     color: #FFFFFF !important;
@@ -4920,6 +4939,24 @@ select.list-dt:focus {
     }
     
 }
+@media (max-width: 550px) {
+    .dropdown-menu {
+        width: 100%; /* Ensure full width for smaller screens */
+        overflow-y: auto;
+        max-height: 300px; /* Prevent excessive scrolling */
+    }
+
+    .dropdown-menu .row {
+        flex-direction: column; /* Adjust rows to stack vertically */
+        margin: 0;
+    }
+
+    .dropdown-menu li a {
+        padding: 10px 15px; /* Add padding for easier tapping */
+        font-size: 14px; /* Adjust text size */
+    }
+}
+
 @media only screen and (max-width: 550px) and (min-width: 280px) {
     .my_account_order_detail_page_table_title , .order_detail_page_prices , .order_detail_page_product_name ,  
     .my_account_all_items , .my_account_order_details_page_date_title , 

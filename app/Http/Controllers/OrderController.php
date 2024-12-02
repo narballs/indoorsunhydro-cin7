@@ -1177,6 +1177,7 @@ class OrderController extends Controller
 
     public function create_label(Request $request) {
         
+        $currentDate = date('Y-m-d');
         $data = [];
         $client = new \GuzzleHttp\Client();
         $order_id = $request->order_id;
@@ -1240,6 +1241,10 @@ class OrderController extends Controller
             $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
             $template = 'emails.shipment_label';
 
+            if (isset($orderData['shipDate']) && $orderData['shipDate'] < $currentDate) {
+                $orderData['shipDate'] = $currentDate; // Set to the current date
+            }
+
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
                 
@@ -1256,7 +1261,7 @@ class OrderController extends Controller
                     'country' => $orderData['shipTo']['country'],
                     'phone' => $orderData['shipTo']['phone'],
                     'email' => $user_email,
-                    'shipDate' => $orderData['shipDate'],
+                    'shipDate' => $currentDate,
                     'orderDate' => $orderData['orderDate'],
                     'order_items' => $order_items,
                     'orderTotal' => $orderData['orderTotal'],
@@ -1400,7 +1405,7 @@ class OrderController extends Controller
                         'country' => $orderData['shipTo']['country'],
                         'phone' => $orderData['shipTo']['phone'],
                         'email' => $user_email,
-                        'shipDate' => $orderData['shipDate'],
+                        'shipDate' => $currentDate,
                         'orderDate' => $orderData['orderDate'],
                         'order_items' => $order_items,
                         'orderTotal' => $orderData['orderTotal'],
