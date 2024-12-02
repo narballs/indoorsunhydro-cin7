@@ -1552,6 +1552,7 @@ class ProductController extends Controller
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
         $is_child = false; 
+        
 
         // if (empty($contact_id) && !empty($user_id)) {
             
@@ -1584,6 +1585,10 @@ class ProductController extends Controller
         $cart_items = UserHelper::switch_price_tier($request);
         $out_of_stock_items = [];
         $original_items_quantity = [];
+
+        if (empty($cart_items) || count($cart_items) == 0) {
+            return view('empty-cart', compact('contact'));
+        }
 
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::with('products')
@@ -1655,12 +1660,8 @@ class ProductController extends Controller
         }
 
         $new_checkout_flow = AdminSetting::where('option_name', 'new_checkout_flow')->first();
-        if (!empty($cart_items) && count($cart_items) > 0) {
-            $view = 'cart';
-        } else {
-            $view = 'empty-cart';
-        }
-        return view($view, compact(
+        
+        return view('cart', compact(
             'cart_items',
             'contact',
             'tax_class',
