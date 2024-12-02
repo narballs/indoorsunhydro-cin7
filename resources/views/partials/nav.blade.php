@@ -552,8 +552,7 @@
                 document.querySelectorAll('.dropdown-menu-small-mobile-main').forEach(function (menu) {
                     const prevSibling = menu.previousElementSibling; // Get the previous sibling
                     if (menu !== nextEl) {
-                        // Close other submenus and reset their arrows
-                        // menu.classList.add('d-none');
+                        // menu.classList.add('d-none'); // Hide the submenu
                         if (prevSibling) {
                             const arrow = prevSibling.querySelector('.toggle-arrow-new');
                             if (arrow) {
@@ -565,18 +564,13 @@
                 });
 
                 // Toggle the visibility of the current submenu
-                // nextEl.classList.toggle('d-none'); // Toggle visibility of the submenu
+                // nextEl.classList.toggle('d-none');
 
-                // Toggle the arrow direction for the current menu
-                if (arrowIcon) {
-                    if (nextEl.classList.contains('d-none')) {
-                        arrowIcon.classList.remove('fa-angle-down');
-                        arrowIcon.classList.add('fa-angle-right');
-                    } else {
-                        arrowIcon.classList.remove('fa-angle-right');
-                        arrowIcon.classList.add('fa-angle-down');
-                    }
-                }
+                // Update the arrow direction for the current menu
+                // if (arrowIcon) {
+                //     arrowIcon.classList.toggle('fa-angle-down');
+                //     arrowIcon.classList.toggle('fa-angle-right');
+                // }
             }
         });
     });
