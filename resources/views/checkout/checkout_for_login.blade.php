@@ -1014,7 +1014,7 @@ $cart_price = 0;
                                                 @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
                                                     <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
                                                     <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
-                                                    @if (!empty($products_weight) && $products_weight > 150)
+                                                    @if (!empty($products_weight) && $products_weight > 99)
                                                         @php
                                                             $adding_surcharge = 0;
                                                             $shipment_plus_surcharge = 0;

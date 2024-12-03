@@ -377,13 +377,18 @@ class UserHelper
             }
         }
 
-        if ($products_weight > 150) {
-            $product_width = $sum_of_width;
-            $product_length = $sum_of_length;
-        } else {
-            // Check if arrays are not empty before calling max()
-            $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
-            $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
+        // if ($products_weight > 99) {
+        //     $product_width = $sum_of_width;
+        //     $product_length = $sum_of_length;
+        // } else {
+        //     // Check if arrays are not empty before calling max()
+        //     $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
+        //     $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
+        // }
+
+        $girth = 2 * ($product_width + $product_height); 
+        if ($girth > 165  && $products_weight < 100) {
+            $products_weight = 100;
         }
 
 
@@ -476,11 +481,11 @@ class UserHelper
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
             'shipDate' => $ship_by_date,
-            'carrierCode' => !empty($products_weight) && $products_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
-            'serviceCode' => !empty($products_weight) && $products_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
+            'carrierCode' => !empty($products_weight) && $products_weight > 99 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
+            'serviceCode' => !empty($products_weight) && $products_weight > 99 ? $service_code_2->option_value : $api_order->shipping_service_code,
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
-            'packageCode' => !empty($products_weight) && $products_weight > 150 ? 'container' : 'package',
+            'packageCode' => !empty($products_weight) && $products_weight > 99 ? 'container' : 'package',
             'confirmation' => $confirmation_value,
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
@@ -583,41 +588,44 @@ class UserHelper
 
         // Calculate the girth
         $girth = 2 * ($product_width + $product_height); 
-        if ($products_weight > 150) {
-            if ($girth > 165) {
-                // Stack the items if girth exceeds 165
-                $max_items_per_row = 10;  // Example stacking configuration
-                $max_items_per_column = 10;
-
-                // Calculate stacked height and adjust dimensions
-                $stacked_height = ceil($order_item->quantity / ($max_items_per_row * $max_items_per_column));  // Using $order_item->quantity here
-                $product_width = $product_width * $max_items_per_row;
-                $product_length = $product_length * $max_items_per_column;
-                $product_height = $stacked_height;
-            } else {
-                // Use normal dimensions if girth <= 165 inches
-                $product_width = $product_width;
-                $product_length = $product_length;
-                $product_height = $product_height;
-            }
-        } else {
-            if ($girth > 165) {
-                // Stack the items if girth exceeds 165 for weight <= 150 lbs
-                $max_items_per_row = 10; // Example: 10 items per row (width)
-                $max_items_per_column = 10; // Example: 10 items per column (length)
-
-                // Calculate stacked height and adjust dimensions
-                $stacked_height = ceil($order_item->quantity / ($max_items_per_row * $max_items_per_column));
-                $product_width = $product_width * $max_items_per_row;
-                $product_length = $product_length * $max_items_per_column;
-                $product_height = $stacked_height ;
-            } else {
-                // Use normal dimensions if girth <= 165 inches
-                $product_width = $product_width;
-                $product_length = $product_length;
-                $product_height = $product_height;
-            }
+        if ($girth > 165  && $products_weight < 100) {
+            $products_weight = 100;
         }
+        // if ($products_weight > 99) {
+        //     if ($girth > 165) {
+        //         // Stack the items if girth exceeds 165
+        //         $max_items_per_row = 10;  // Example stacking configuration
+        //         $max_items_per_column = 10;
+
+        //         // Calculate stacked height and adjust dimensions
+        //         $stacked_height = ceil($order_item->quantity / ($max_items_per_row * $max_items_per_column));  // Using $order_item->quantity here
+        //         $product_width = $product_width * $max_items_per_row;
+        //         $product_length = $product_length * $max_items_per_column;
+        //         $product_height = $stacked_height;
+        //     } else {
+        //         // Use normal dimensions if girth <= 165 inches
+        //         $product_width = $product_width;
+        //         $product_length = $product_length;
+        //         $product_height = $product_height;
+        //     }
+        // } else {
+        //     if ($girth > 165) {
+        //         // Stack the items if girth exceeds 165 for weight <= 150 lbs
+        //         $max_items_per_row = 10; // Example: 10 items per row (width)
+        //         $max_items_per_column = 10; // Example: 10 items per column (length)
+
+        //         // Calculate stacked height and adjust dimensions
+        //         $stacked_height = ceil($order_item->quantity / ($max_items_per_row * $max_items_per_column));
+        //         $product_width = $product_width * $max_items_per_row;
+        //         $product_length = $product_length * $max_items_per_column;
+        //         $product_height = $stacked_height ;
+        //     } else {
+        //         // Use normal dimensions if girth <= 165 inches
+        //         $product_width = $product_width;
+        //         $product_length = $product_length;
+        //         $product_height = $product_height;
+        //     }
+        // }
 
 
         $client = new \GuzzleHttp\Client();
@@ -707,11 +715,11 @@ class UserHelper
             'orderKey' => $currentOrder->reference,
             'orderDate' => $order_created_date,
             'shipDate' => $ship_by_date,
-            'carrierCode' => !empty($products_weight) && $products_weight > 150 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
-            'serviceCode' => !empty($products_weight) && $products_weight > 150 ? $service_code_2->option_value : $api_order->shipping_service_code,
+            'carrierCode' => !empty($products_weight) && $products_weight > 99 ? $carrier_code_2->option_value : $api_order->shipping_carrier_code,
+            'serviceCode' => !empty($products_weight) && $products_weight > 99 ? $service_code_2->option_value : $api_order->shipping_service_code,
             'orderStatus' => $orderStatus,
             'customerEmail'=> $order_contact->email,
-            'packageCode' => !empty($products_weight) && $products_weight > 150 ? 'container' : 'package',
+            'packageCode' => !empty($products_weight) && $products_weight > 99 ? 'container' : 'package',
             'confirmation' => $confirmation_value,
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),

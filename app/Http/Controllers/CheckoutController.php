@@ -220,7 +220,7 @@ class CheckoutController extends Controller
                 $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
                 $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
-                if ($products_weight > 150) {
+                if ($products_weight > 99) {
                     $carrier_code = $carrier_code_2->option_value;
                     $service_code = $service_code_2->option_value;
                 } else {
@@ -391,45 +391,50 @@ class CheckoutController extends Controller
 
 
         // Calculate the girth
+        // $girth = 2 * ($product_width + $product_height); 
+        // if ($products_weight > 99) {
+        //     if ($girth > 165) {
+        //         // Stack the items if girth exceeds 165
+        //         $max_items_per_row = 10;  // Example stacking configuration
+        //         $max_items_per_column = 10;
+
+        //         // Calculate stacked height and adjust dimensions
+        //         $stacked_height = ceil($cart_item['quantity'] / ($max_items_per_row * $max_items_per_column));  // Using $cart_item['quantity'] here
+        //         $product_width = $product_width * $max_items_per_row;
+        //         $product_length = $product_length * $max_items_per_column;
+        //         $product_height = $stacked_height ;
+        //     } else {
+        //         // Use normal dimensions if girth <= 165 inches
+        //         $product_width = $product_width;
+        //         $product_length = $product_length;
+        //         $product_height = $product_height;
+        //     }
+        // } else {
+        //     if ($girth > 165) {
+        //         // Stack the items if girth exceeds 165 for weight <= 150 lbs
+        //         $max_items_per_row = 10; // Example: 10 items per row (width)
+        //         $max_items_per_column = 10; // Example: 10 items per column (length)
+
+        //         // Calculate stacked height and adjust dimensions
+        //         $stacked_height = ceil($cart_item['quantity'] / ($max_items_per_row * $max_items_per_column));
+        //         $product_width = $product_width * $max_items_per_row;
+        //         $product_length = $product_length * $max_items_per_column;
+        //         $product_height = $stacked_height ;
+        //     } else {
+        //         // Use normal dimensions if girth <= 165 inches
+        //         $product_width = $product_width;
+        //         $product_length = $product_length;
+        //         $product_height = $product_height;
+        //     }
+        // }
+
         $girth = 2 * ($product_width + $product_height); 
-        if ($products_weight > 150) {
-            if ($girth > 165) {
-                // Stack the items if girth exceeds 165
-                $max_items_per_row = 10;  // Example stacking configuration
-                $max_items_per_column = 10;
-
-                // Calculate stacked height and adjust dimensions
-                $stacked_height = ceil($cart_item['quantity'] / ($max_items_per_row * $max_items_per_column));  // Using $cart_item['quantity'] here
-                $product_width = $product_width * $max_items_per_row;
-                $product_length = $product_length * $max_items_per_column;
-                $product_height = $stacked_height ;
-            } else {
-                // Use normal dimensions if girth <= 165 inches
-                $product_width = $product_width;
-                $product_length = $product_length;
-                $product_height = $product_height;
-            }
-        } else {
-            if ($girth > 165) {
-                // Stack the items if girth exceeds 165 for weight <= 150 lbs
-                $max_items_per_row = 10; // Example: 10 items per row (width)
-                $max_items_per_column = 10; // Example: 10 items per column (length)
-
-                // Calculate stacked height and adjust dimensions
-                $stacked_height = ceil($cart_item['quantity'] / ($max_items_per_row * $max_items_per_column));
-                $product_width = $product_width * $max_items_per_row;
-                $product_length = $product_length * $max_items_per_column;
-                $product_height = $stacked_height ;
-            } else {
-                // Use normal dimensions if girth <= 165 inches
-                $product_width = $product_width;
-                $product_length = $product_length;
-                $product_height = $product_height;
-            }
+        if ($girth > 165  && $products_weight < 100) {
+            $products_weight = 100;
         }
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
-        if ($enable_extra_shipping_value == true && !empty($extra_shipping_value) &&  $products_weight > 150) {
+        if ($enable_extra_shipping_value == true && !empty($extra_shipping_value) &&  $products_weight > 99) {
             if ($sum_of_width > 40 || $product_height > 40 || $sum_of_length > 40) {
                 $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
             } else {
@@ -643,7 +648,7 @@ class CheckoutController extends Controller
                 } 
                 else {
                     if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                        if ($products_weight > 150) {
+                        if ($products_weight > 99) {
                             $shipping_carrier_code = $carrier_code_2->option_value;
                             $shipping_service_code = $service_code_2->option_value;
                             $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
@@ -684,7 +689,7 @@ class CheckoutController extends Controller
                         $ship_station_api_secret = config('services.shipstation.secret');
                         
                         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
-                        if ($products_weight > 150) {
+                        if ($products_weight > 99) {
                             $carrier_code = $carrier_code_2->option_value;
                             $service_code = $service_code_2->option_value;
                         } else {
@@ -2870,8 +2875,8 @@ class CheckoutController extends Controller
             if (!empty($quote->selected_shipping_quote)) {
                 $shipping_carrier_code = $quote->carrier_code;
                 $data = [
-                    'carrierCode' => $products_weight > 150 ? $carrier_code_2->option_value : $quote->carrier_code,
-                    'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : null,
+                    'carrierCode' => $products_weight > 99 ? $carrier_code_2->option_value : $quote->carrier_code,
+                    'serviceCode' => $products_weight > 99 ? $service_code_2->option_value : null,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
                     'toPostalCode' => '95899',
@@ -2923,7 +2928,7 @@ class CheckoutController extends Controller
         return [
             'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
             'shipment_price' => $shipment_price,
-            'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
+            'shipping_carrier_code' => $products_weight > 99 ? $carrier_code_2->option_value : $shipping_carrier_code,    
         ];
     }
 
@@ -3116,8 +3121,8 @@ class CheckoutController extends Controller
                 // Prepare data for ShipStation request
                 $shipping_carrier_code = $quote->carrier_code;
                 $data = [
-                    'carrierCode' => $products_weight > 150 ? $carrier_code_2->option_value : $quote->carrier_code,
-                    'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : $quote->service_code,
+                    'carrierCode' => $products_weight > 99 ? $carrier_code_2->option_value : $quote->carrier_code,
+                    'serviceCode' => $products_weight > 99 ? $service_code_2->option_value : $quote->service_code,
                     'fromPostalCode' => '95826', // Default sender postal code
                     'toCountry' => 'US',
                     'toPostalCode' => $get_user_default_shipping_address->DeliveryZip ?? $get_user_default_billing_address->BillingZip,
@@ -3203,7 +3208,7 @@ class CheckoutController extends Controller
             return [
                 'shipment_prices' => $mergedArray,
                 'shipment_price' => $shipment_price,
-                'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
+                'shipping_carrier_code' => $products_weight > 99 ? $carrier_code_2->option_value : $shipping_carrier_code,    
                 'selected_shipping_methods' => $selected_shipping_methods,
             ];
         }
