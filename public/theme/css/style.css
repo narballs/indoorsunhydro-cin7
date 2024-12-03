@@ -981,10 +981,6 @@ a {
     .product-detail-button-cards {
         margin-left: 0px !important;
     }
-
-    #quantity {
-        margin-bottom: 10px !important;
-    }
     .icon_div {
         width: 13% !important;
     }
@@ -1745,10 +1741,9 @@ body.swal2-toast-shown .swal2-container {
 .product-detail-price {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600;
-    font-size: 27px;
-    line-height: 45px;
-    color: #DC4E41;
+    font-weight: 700;
+    font-size: 28px;
+    color: #DE1919;
 }
 
 .product-detail-quantity {
@@ -1776,9 +1771,9 @@ body.swal2-toast-shown .swal2-container {
 .category-title-heading {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600 !important;
-    font-size: 20px;
-    line-height: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #2B3136;
 }
 
 .description-content {
@@ -1945,16 +1940,17 @@ input[type=number] {
     font-family: 'Poppins';
     font-style: normal;
     font-size: 16px;
-    line-height: 30px;
-    text-align: center
+    text-align: center;
+    font-weight: 400;
+    color: #2B3136;
 }
 
 .category-description {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600 !important;
-    font-size: 20px;
-    line-height: 71px;
+    font-weight: 700;
+    font-size: 24px;
+    color:#529213;
 }
 
 .form-select {
@@ -5535,7 +5531,7 @@ select.list-dt:focus {
         color: #000000 !important;
     }
 
-    .product-detail-price {
+    /* .product-detail-price {
         font-family: 'Poppins' !important;
         font-style: normal !important;
         font-weight: 600 !important;
@@ -5543,7 +5539,7 @@ select.list-dt:focus {
         line-height: 20px !important;
         color: #DC4E41 !important;
 
-    }
+    } */
 
     .instock-label {
         font-family: 'Poppins';
@@ -5615,9 +5611,8 @@ select.list-dt:focus {
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 600;
-        font-size: 9px;
-        line-height: 14px;
-        color: #000000;
+        font-size: 14px;
+        color: #2B3136;
     }
 
     .category-title {
@@ -5630,17 +5625,15 @@ select.list-dt:focus {
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 400;
-        font-size: 9px;
-        line-height: 14px;
-        color: #000000;
+        font-size: 14px;
     }
 
     .category-description {
-        font-family: 'Poppins' !important;
-        font-style: normal !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
-        line-height: 36px !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        color: #292929;
     }
 
     .category-pra {
