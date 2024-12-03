@@ -382,20 +382,50 @@ class CheckoutController extends Controller
                     array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
                     
                     $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
-                    $sum_of_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
-                    $sum_of_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                    $product_width += !empty($product_option->products->width) ? $product_option->products->width : 0;
+                    $product_length += !empty($product_option->products->length) ? $product_option->products->length : 0;
                     
                 }
             }            
         }
 
+
+        // Calculate the girth
+        $girth = 2 * ($product_width + $product_height); 
         if ($products_weight > 150) {
-            $product_width = $sum_of_width;
-            $product_length = $sum_of_length;
+            if ($girth > 165) {
+                // Stack the items if girth exceeds 165
+                $max_items_per_row = 10;  // Example stacking configuration
+                $max_items_per_column = 10;
+
+                // Calculate stacked height and adjust dimensions
+                $stacked_height = ceil($cart_item['quantity'] / ($max_items_per_row * $max_items_per_column));  // Using $cart_item['quantity'] here
+                $product_width = $product_width * $max_items_per_row;
+                $product_length = $product_length * $max_items_per_column;
+                $product_height = $stacked_height ;
+            } else {
+                // Use normal dimensions if girth <= 165 inches
+                $product_width = $product_width;
+                $product_length = $product_length;
+                $product_height = $product_height;
+            }
         } else {
-            // Check if arrays are not empty before calling max()
-            $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
-            $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
+            if ($girth > 165) {
+                // Stack the items if girth exceeds 165 for weight <= 150 lbs
+                $max_items_per_row = 10; // Example: 10 items per row (width)
+                $max_items_per_column = 10; // Example: 10 items per column (length)
+
+                // Calculate stacked height and adjust dimensions
+                $stacked_height = ceil($cart_item['quantity'] / ($max_items_per_row * $max_items_per_column));
+                $product_width = $product_width * $max_items_per_row;
+                $product_length = $product_length * $max_items_per_column;
+                $product_height = $stacked_height ;
+            } else {
+                // Use normal dimensions if girth <= 165 inches
+                $product_width = $product_width;
+                $product_length = $product_length;
+                $product_height = $product_height;
+            }
         }
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
