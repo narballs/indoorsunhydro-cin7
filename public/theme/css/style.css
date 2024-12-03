@@ -5531,15 +5531,18 @@ select.list-dt:focus {
         color: #000000 !important;
     }
 
-    /* .product-detail-price {
-        font-family: 'Poppins' !important;
+    .product-detail-price {
+        /* font-family: 'Poppins' !important;
         font-style: normal !important;
         font-weight: 600 !important;
-        font-size: 13px !important;
+        font-size: 17px !important;
         line-height: 20px !important;
         color: #DC4E41 !important;
+         */
 
-    } */
+        font-size: 18px;
+
+    }
 
     .instock-label {
         font-family: 'Poppins';
