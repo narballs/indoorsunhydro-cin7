@@ -11,6 +11,198 @@
     .no-border {
         border: none;
     }
+
+    .product-detail-sku-head-new {
+        font-size: 14px;
+        font-weight: 500;
+        font-family: 'Poppins';
+        line-height: 21px;
+    }
+
+    .product-detail-sku-new {
+        font-size: 14px;
+        font-weight: 400;
+        font-family: 'Poppins';
+        line-height: 21px;
+    }
+
+    .sku-div {
+        background-color: #7CC633;
+        color: #fff;
+        padding: 5px 10px;
+        display: inline-flex;
+    }
+
+    '
+ .product-detail-heading-text-new {
+        font-size: 28px;
+        font-weight: 600;
+        font-family: 'Poppins';
+    }
+
+    .stock_number_new {
+        font-size: 18px;
+        font-weight: 400;
+        font-family: 'Poppins';
+        color: #37B34A
+    }
+
+    .instock-label-new {
+        font-size: 18px;
+        font-weight: 400;
+        font-family: 'Poppins';
+        color: #37B34A;
+    }
+
+    .out-of-stock-label-new {
+        font-size: 18px;
+        font-weight: 400;
+        font-family: 'Poppins';
+        color: #DE1919;
+    }
+
+    .product-detail-quantity-increase-decrease-div {
+        border: 1px solid #798490;
+    }
+
+    .product-detail-quantity-number-new {
+        border: none;
+        font-size: 20px;
+        font-weight: 400;
+        font-family: 'Poppins';
+    }
+
+    .product-detail-quantity-number-new:focus {
+        box-shadow: 0 0 0 0rem rgba(0, 123, 255, .25)
+    }
+
+    .product-detail-quantity-increase,
+    .product-detail-quantity-decrease {
+        font-size: 14px;
+        color: #798490;
+        cursor: pointer;
+    }
+
+    .product-detail-call-to-order-new,
+    .product-detail-notify-new {
+        background-color: #008BD3;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        font-family: 'Poppins';
+        cursor: pointer;
+        text-transform: uppercase;
+        border-radius: 0px;
+        border: none;
+    }
+
+    .see-similar-order-button-new,
+    .product-detail-add-to-cart-new {
+        background-color: #7CC633;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        font-family: 'Poppins';
+        cursor: pointer;
+        text-transform: uppercase;
+        border-radius: 0px;
+    }
+
+    .see-similar-order-button-new:hover {
+        background-color: #7CC633;
+        color: #fff;
+        border: none;
+    }
+
+    .bulk_discount_href:hover {
+        text-decoration: none;
+        color: #fff;
+        border: none;
+    }
+    .ai_questions {
+        padding: 10px;
+        border: 1px solid #7cc63e;
+        border-radius: 20px;
+        background: #7cc63e;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 300;
+        font-family: 'poppins';
+    }
+    .circle-right-ai {
+        color: #7cc63e;
+        font-size: 20px;
+        font-family: 'poppins';
+        font-weight: 400;
+        
+    }
+    .ai_content {
+        font-family: 'poppins';
+        font-weight: 300;
+        font-size: 14px;
+    }
+
+    .circle-right-ai:focus {
+        border-color: transparent;
+    }
+
+    .ai_text_field {
+        font-family: 'poppins';
+        font-weight: 400;
+        font-size: 14px;
+        
+    }
+
+    .ai_spinner {
+        color: #7cc63e;
+        border: 1px solid #7cc63e;
+    }
+
+    .ai_text_field:focus  {
+        border-color: #7cc63e;
+        box-shadow: 0 0 0 0rem rgba(124, 198, 62, 0.25);
+        
+    }
+    .clear_prompt , .clear_prompt:hover , .clear_prompt:focus , .clear_prompt:active {
+        font-family: 'poppins';
+        font-weight: 400;
+        font-size: 14px;
+        color: #7cc63e;
+        border: 1px solid #7cc63e;
+        border-radius: 20px;
+        background: #fff;
+    }
+    .add_custom_question {
+        cursor: pointer;
+    }
+    @media only screen and (max-width: 768px) {
+        .ai_row {
+            background-color: #fff !important;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+        .ai_row_title {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .ai_row_card_body {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        .ai_row_footer {
+            padding-left: 0rem !important;
+            padding-right: 0rem !important;
+        }
+
+        .add_custom_question {
+            margin-top : 0.5rem !important;
+            margin-bottom : 0.5rem !important;
+        }
+        
+    }
 </style>
 
 @php
@@ -152,13 +344,16 @@ $paymentTerms = false;
                 <div class="card py-3 no-border">
                     <div class="row">
                         <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                            <div class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
+                            <div
+                                class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
                                 <div class="row justify-content-center align-items-center">
                                     <div class="col-md-8">
                                         @if ($productOption->products->images)
-                                            <img id="main-image" src="{{$productOption->products->images}}" class="img-fluid" />
-                                            @else
-                                            <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid" />
+                                        <img id="main-image" src="{{$productOption->products->images}}"
+                                            class="img-fluid" />
+                                        @else
+                                        <img id="main-image" src="/theme/img/image_not_available.png"
+                                            class="img-fluid" />
                                         @endif
                                     </div>
                                 </div>
@@ -182,298 +377,332 @@ $paymentTerms = false;
                                 id="product_name">
                                 <div class="row">
                                     <div class="col-md-11">
-                                        <h3 class="product-detail-heading product_name_detail_page"
+                                        <p class="product-detail-heading-text-new product_name_detail_page"
                                             data-title="{{$productOption->products->name}}" id="product-detail-id">
-                                            {{$productOption->products->name}}</h3>
+                                            {{$productOption->products->name}}</p>
                                     </div>
                                     @if (!empty($contact_id))
-                                        <div class="col-md-1 d-flex justify-content-center">
-                                            <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
-                                                <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
-                                                    id="{{ $productOption->option_id }}" data-toggle="popover"
-                                                    onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
-                                                </i>
-                                            </a>
-                                        </div>
+                                    <div class="col-md-1 d-flex justify-content-center">
+                                        <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
+                                            <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
+                                                id="{{ $productOption->option_id }}" data-toggle="popover"
+                                                onclick="addToList('{{ $productOption->product_id }}', '{{ $productOption->option_id }}', '{{ isset($user_buy_list_options[$productOption->option_id]) }}')">
+                                            </i>
+                                        </a>
+                                    </div>
                                     @endif
+                                    <div class="col-md-12">
+                                        <span class="sku-div">
+                                            <span class="product-detail-sku-head-new">SKU: </span>
+                                            <span class="product-detail-sku-new">{{$productOption->code}}
+                                            </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="row align-items-center">
                                     @if ($show_price == true)
-                                        <div class="col-md-12">
-                                            <span class="text-danger product-detail-price" id="product_price">
-                                                ${{number_format($retail_price, 2)}}
-                                            </span>
-                                        </div>
+                                    <div class="col-md-12">
+                                        <span class="text-danger product-detail-price" id="product_price">
+                                            ${{number_format($retail_price, 2)}}
+                                        </span>
+                                    </div>
                                     @endif
                                     <div class="col-md-12 ">
-                                        <div class="my-2"> <span class="text-uppercase text-muted brand"></span>                                                
+                                        <div class="my-2"> <span class="text-uppercase text-muted brand"></span>
                                             <div class="price d-flex flex-row align-items-center">
                                                 @if ($productOption->products->status != 'Inactive')
-                                                    @if($stock_updated == true)
-                                                        <span class="text-success"
-                                                            data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
-                                                            data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
-                                                                {{$total_stock}}</span></span>
-                                                        <div>
-                                                            <small class="dis-price">&nbsp;</small>
-                                                            <span class="instock-label">IN STOCK</span>
-                                                        </div>
-                                                    @elseif ($productOption->stockAvailable > 0)
-                                                        <span class="text-success"
-                                                            data-toggle="popover-hover" data-bs-container="body" data-placement="top" data-bs-placement="top"
-                                                            data-bs-content="Top popover" style=" cursor: pointer;"><span class="stock_number">
-                                                                {{$productOption->stockAvailable}}</span></span>
-                                                        <div>
-                                                            <small class="dis-price">&nbsp;</small>
-                                                            <span class="instock-label">IN STOCK</span>
-                                                        </div>
-                                                    @else
-                                                        <div>
-                                                            <small class="dis-price">&nbsp;</small>
-                                                            <span class="text-danger">{{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');
-                                                                }}</span>
-                                                        </div>
-                                                    @endif
+                                                @if($stock_updated == true)
+                                                <span class="text-success" data-toggle="popover-hover"
+                                                    data-bs-container="body" data-placement="top"
+                                                    data-bs-placement="top" data-bs-content="Top popover"
+                                                    style=" cursor: pointer;"><span class="stock_number_new">
+                                                        {{$total_stock}}</span></span>
+                                                <div>
+                                                    <small class="dis-price">&nbsp;</small>
+                                                    <span class="instock-label-new">IN STOCK</span>
+                                                </div>
+                                                @elseif ($productOption->stockAvailable > 0)
+                                                <span class="text-success" data-toggle="popover-hover"
+                                                    data-bs-container="body" data-placement="top"
+                                                    data-bs-placement="top" data-bs-content="Top popover"
+                                                    style=" cursor: pointer;"><span class="stock_number_new">
+                                                        {{$productOption->stockAvailable}}</span></span>
+                                                <div>
+                                                    <small class="dis-price">&nbsp;</small>
+                                                    <span class="instock-label-new">IN STOCK</span>
+                                                </div>
                                                 @else
-                                                    <div>
-                                                        <small class="dis-price">&nbsp;</small><span class="text-danger">NOT AVAILABLE FOR SALE</span>
-                                                    </div>
+                                                <div>
+                                                    <small class="dis-price">&nbsp;</small>
+                                                    <span class="out-of-stock-label-new">{{
+                                                        App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT
+                                                        OF STOCK');
+                                                        }}</span>
+                                                </div>
+                                                @endif
+                                                @else
+                                                <div>
+                                                    <small class="dis-price">&nbsp;</small><span class="text-danger">NOT
+                                                        AVAILABLE FOR SALE</span>
+                                                </div>
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         @if ($customer_demand_inventory_number === 1)
-                                            @if ($inventory_update_time_flag == true)
-                                                @if($stock_updated)
-                                                    @if (!empty($locations))
-                                                        @foreach ($locations as $location)
-                                                            <div>
-                                                                <p class="mb-1"> 
-                                                                    <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                                    <span class="text-success">{{ $location['available'] >= 0 ? $location['available'] : 0  }}</span>
-                                                                </p>
-                                                            </div>
-                                                        @endforeach
-                                                    @endif
-                                                @endif
-                                            @else
-                                                @if (!empty($locations))
-                                                    @foreach ($locations as $location)
-                                                        <div>
-                                                            <p class="mb-1"> 
-                                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                                <span class="text-success">{{ $location['available'] >= 0 ? $location['available'] : 0  }}</span>
-                                                            </p>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            @endif
+                                        @if ($inventory_update_time_flag == true)
+                                        @if($stock_updated)
+                                        @if (!empty($locations))
+                                        @foreach ($locations as $location)
+                                        <div>
+                                            <p class="mb-1">
+                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                <span class="text-success">{{ $location['available'] >= 0 ?
+                                                    $location['available'] : 0 }}</span>
+                                            </p>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                        @endif
                                         @else
-                                            @if (!empty($locations))
-                                                @foreach ($locations as $location)
-                                                    <div>
-                                                        <p class="mb-1"> 
-                                                            <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                            <span class="text-success">{{ $location['available'] >= 0 ? $location['available'] : 0  }}</span>
-                                                        </p>
-                                                    </div>
-                                                @endforeach
-                                            @endif
+                                        @if (!empty($locations))
+                                        @foreach ($locations as $location)
+                                        <div>
+                                            <p class="mb-1">
+                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                <span class="text-success">{{ $location['available'] >= 0 ?
+                                                    $location['available'] : 0 }}</span>
+                                            </p>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                        @endif
+                                        @else
+                                        @if (!empty($locations))
+                                        @foreach ($locations as $location)
+                                        <div>
+                                            <p class="mb-1">
+                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                <span class="text-success">{{ $location['available'] >= 0 ?
+                                                    $location['available'] : 0 }}</span>
+                                            </p>
+                                        </div>
+                                        @endforeach
+                                        @endif
                                         @endif
                                     </div>
-                                    <div class="col-md-12 mt-2 mb-3">
-                                        @if (!empty($productOption->option1) || !empty($productOption->option2) || !empty($productOption->option3))
-                                            @php
-                                                $image_src = [];
-                                                $options_array = ['option1', 'option2', 'option3'];
-                                                $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png' , 'pack' => 'case.png' ];
-                                                foreach ($options_array as $option) {
-                                                    foreach ($image_type_array as $key => $image_type) {
-                                                        if (strpos(strtolower($productOption[$option]), $key) !== false) {
-                                                            $image_src[$option] = $image_type;
-                                                        }
-                                                    }
-                                                }
 
-                                            @endphp
-                                            <div class="row align-items-center">
-                                                <div class="col-md-3 col-xl-2">
-                                                    @if (isset($image_src['option1']))
-                                                        <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}" style="max-width: 40px;" />
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-9 col-xl-10">
-                                                <p class="mb-0">{{ $productOption->option1 }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="row align-items-center">
-                                                <div class="col-md-3 col-xl-2">
-                                                    @if (isset($image_src['option2']))
-                                                        <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}" style="max-width: 40px;" />
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-9 col-xl-10">
-                                                <p class="mb-0">{{ $productOption->option2 }}</p> 
-                                                </div>
-                                            </div>
-                                            <div class="row align-items-center">
-                                                <div class="col-md-3 col-xl-2">
-                                                    @if (isset($image_src['option3']))
-                                                        <img src= "{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}" style="max-width: 40px;" />
-                                                    @endif
-                                                </div>
-                                                <div class="col-md-9 col-xl-10">
-                                                <p class="mb-0">{{ $productOption->option3 }}</p> 
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <form id="cart" class="mb-2">
+                                    <form id="cart" class="mb-2 px-0">
                                         @csrf
-                                        <div class="cart row mt-3  w-100 justify-content-between">
-                                            <div class="col-md-4">
+                                        <div class="col-md-12 col-xl-10">
+                                            <div class="cart row mt-3 justify-content-between">
                                                 @if ($add_to_cart == true)
-                                                <div class="d-flex align-items-center py-1 px-2" style="border:1px solid #798490;">
-                                                    <i class="fa fa-minus"></i>
-                                                    <input type="number" name="quantity" id="quantity" min="1"
-                                                        max="{{$productOption->stockAvailable}}" step="1" value="1" class="text-center form-control" style="border: none;">
-                                                    <input type="hidden" name="p_id" id="p_id"
-                                                        value="{{$productOption->products->id}}">
-                                                    <input type="hidden" name="option_id" id="option_id"
-                                                        value="{{$productOption->option_id}}">
-                                                        <input type="hidden" name="product_slug"  id="product_slug" value="{{$productOption->products->code}}">
-                                                    {{-- <div class="quantity-nav">
-                                                        <div class="quantity-div quantity-up"></div>
-                                                        <div class="quantity-div quantity-down greyed"></div>
-                                                    </div> --}}
-                                                    <i class="fa fa-plus"></i>
-                                                </div>
-                                                @endif
-                                            </div>
-                                            <div class="col-md-8">
-                                                @if ($add_to_cart == true)
-                                                @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                                    @if ($total_stock > 0)
-                                                        <button type="button" class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
-                                                            type="button" id="ajaxSubmit">
-                                                            <a class="text-white">Add to cart </a>
-                                                        </button>
-                                                    @elseif ($productOption->stockAvailable > 0)
-                                                        <button type="button" class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
-                                                            type="button" id="ajaxSubmit">
-                                                            <a class="text-white">Add to cart </a>
-                                                        </button>
-                                                    @else
-                                                        @if (auth()->user())
-                                                            <input type="hidden" name="notify_user_email_input" class="notify_user_email_input" id="auth_user_email" value="{{auth()->user()->email}}">
-                                                            <input type="hidden" name="sku" id="sku_value" class="sku_value" value="{{$productOption->products->code}}">
-                                                            <input type="hidden" name="product_id" id="product_id_value" class="product_id_value" value="{{$productOption->products->id}}">
-                                                            <div class="row justify-content-between align-items-center">
-                                                                <div class="col-md-10">
-                                                                    <button type="button" class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase"
-                                                                        type="button" id="" onclick="notify_user_about_product_stock()">
+                                                    <div class="col-md-3">
+                                                        <div
+                                                            class="d-flex align-items-center px-2 product-detail-quantity-increase-decrease-div">
+                                                            <i class="fa fa-minus product-detail-quantity-decrease"></i>
+                                                            <input type="number" name="quantity" id="quantity" min="1"
+                                                                max="{{$productOption->stockAvailable}}" step="1" value="1"
+                                                                class="text-center form-control product-detail-quantity-number-new">
+                                                            <input type="hidden" name="p_id" id="p_id"
+                                                                value="{{$productOption->products->id}}">
+                                                            <input type="hidden" name="option_id" id="option_id"
+                                                                value="{{$productOption->option_id}}">
+                                                            <input type="hidden" name="product_slug" id="product_slug"
+                                                                value="{{$productOption->products->code}}">
+                                                            <i class="fa fa-plus product-detail-quantity-increase"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
+                                                            @if ($total_stock > 0)
+                                                                <button type="button"
+                                                                    class="btn product-detail-add-to-cart-new w-100" type="button"
+                                                                    id="ajaxSubmit">
+                                                                    <a class="text-white">Add to cart </a>
+                                                                </button>
+                                                            @elseif ($productOption->stockAvailable > 0)
+                                                                <button type="button"
+                                                                    class="btn product-detail-add-to-cart-new w-100" type="button"
+                                                                    id="ajaxSubmit">
+                                                                    <a class="text-white">Add to cart </a>
+                                                                </button>
+                                                            @else
+                                                                @if (auth()->user())
+                                                                    <input type="hidden" name="notify_user_email_input"
+                                                                        class="notify_user_email_input" id="auth_user_email"
+                                                                        value="{{auth()->user()->email}}">
+                                                                    <input type="hidden" name="sku" id="sku_value" class="sku_value"
+                                                                        value="{{$productOption->products->code}}">
+                                                                    <input type="hidden" name="product_id" id="product_id_value"
+                                                                        class="product_id_value"
+                                                                        value="{{$productOption->products->id}}">
+                                                                    <div class="row justify-content-between align-items-center">
+                                                                        <div class="col-md-10">
+                                                                            <button type="button"
+                                                                                class="product-detail-notify-new w-100" type="button"
+                                                                                id="" onclick="notify_user_about_product_stock()">
+                                                                                <a class="text-white">Notify When in Stock </a>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="col-md-2">
+                                                                            <div class="spinner-border text-primary stock_spinner d-none"
+                                                                                role="status">
+                                                                                <span class="sr-only"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @else
+                                                                    <button type="button"
+                                                                        class="product-detail-notify-new w-100 notify_popup_modal_btn"
+                                                                        type="button" id="notify_popup_modal"
+                                                                        onclick="show_notify_popup_modal()">
                                                                         <a class="text-white">Notify When in Stock </a>
                                                                     </button>
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <div class="spinner-border text-primary stock_spinner d-none" role="status">
-                                                                        <span class="sr-only"></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            @if (!empty($enable_see_similar_products))
-                                                                <div class="row justify-content-between align-items-center">
-                                                                    <div class="col-md-10">
-                                                                        <button type="button" class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')" data-bs-target="#see_similar_pop_up_detail" style="max-height: 46px;">
-                                                                            See Similar
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
+                                                                @endif
                                                             @endif
                                                         @else
-                                                            <button type="button" class="w-100 ml-0 bg-primary button-cards product-detail-button-cards text-uppercase notify_popup_modal_btn"
-                                                                type="button" id="notify_popup_modal" onclick="show_notify_popup_modal()">
-                                                                <a class="text-white">Notify When in Stock </a>
-                                                            </button>
-                                                            @if (!empty($enable_see_similar_products))
-                                                                <button type="button" class="w-100 ml-0 see-similar-order-button text-uppercase mt-2 rounded btn-sm" onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')" data-bs-target="#see_similar_pop_up_detail" style="max-height: 46px;">
-                                                                    See Similar
+                                                            <?php 
+                                                                // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
+                                                                $enable_add_to_cart = true;
+                                                            ?>
+                                                            @if ($enable_add_to_cart)
+                                                                <button class="btn product-detail-add-to-cart-new w-100"
+                                                                    type="button" id="ajaxSubmit">
+                                                                    <a class="text-white">Add to cart </a>
                                                                 </button>
+                                                            @else
+                                                                <button class="product-detail-add-to-cart-new" type="button">
+                                                                    <a class="text-white">Add to cart</a>
+                                                                </button>
+                                                                @endif
                                                             @endif
-                                                        @endif
-                                                    @endif
+                                                    </div>
                                                 @else
-                                                    <?php 
-                                                        // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
-                                                        $enable_add_to_cart = true;
-                                                    ?>
-                                                    @if ($enable_add_to_cart)
-                                                        <button 
-                                                            class="w-100 ml-0 button-cards product-detail-button-cards text-uppercase"
-                                                            type="button" id="ajaxSubmit"
-                                                        >
-                                                            <a class="text-white">Add to cart </a>
+                                                    <div class="col-md-12">
+                                                        <button type="button" class="product-detail-call-to-order-new w-100">
+                                                            Call To Order
                                                         </button>
-                                                    @else
-                                                        <button 
-                                                            class="ml-0 w-100 button-cards product-detail-button-cards opacity-50 text-uppercase" 
-                                                            type="button"
-                                                        >
-                                                            <a class="text-white">Add to cart</a>
-                                                        </button>
-                                                    @endif
-                                                @endif
-                                                @else
-                                                <button type="button" class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">
-                                                    Call To Order
-                                                </button>
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
                                         <span class="text-uppercase text-muted brand"></span>
                                     </form>
-                                    
-                                    <div class="col-md-12">
-                                        @if (!empty($request_bulk_quantity_discount) && strtolower($request_bulk_quantity_discount->option_value) === 'yes')
-                                            <a href="" data-bs-toggle="modal" data-bs-target="#bulk_quantity_modal" id="bulk_discount_href" class="bulk_discount_href btn btn-warning text-white">Request bulk quantity Discount</a>
+
+                                    <div class="col-md-12 col-xl-10 my-3">
+                                        @if (!empty($request_bulk_quantity_discount) &&
+                                        strtolower($request_bulk_quantity_discount->option_value) === 'yes')
+                                        <button type="button" href="" data-bs-toggle="modal"
+                                            data-bs-target="#bulk_quantity_modal" id="bulk_discount_href"
+                                            class="bulk_discount_href btn w-100">Buy in Bulk</button>
                                         @endif
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <span class="category-title-heading">Category :</span>
-                                @if($pname)
-                                <span class="category-title mt-4 ps-2">{{$pname}}</span>
-                                @endif
-                            </div>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-3 col-xl-3 col-lg-4">
-                                        <span><strong>Weight :</strong> 
-                                            <span>{{!empty($productOption->optionWeight) ? $productOption->optionWeight . 'lbs' : ''}}</span>
-                                        </span>
-                                    </div>
-                                    @if (!empty($productOption->products->width) && !empty($productOption->products->height) && !empty($productOption->products->length))
-                                        <div class="col-md-9 col-xl-9 col-lg-8">
-                                            <span>
-                                                <strong>Dimensions : </strong> 
-                                                <span>
-                                                    {{!empty($productOption->products->length) ? $productOption->products->length . ' ' .  "x" : ''}}
-                                                    {{!empty($productOption->products->width) ? $productOption->products->width . ' ' . "x" : ''}}
-                                                    {{!empty($productOption->products->height) ? $productOption->products->height : ''}}
-                                                </span>
-                                            </span>
+                                    @if (!empty($enable_see_similar_products) && $total_stock === 0 && $productOption->stockAvailable === 0)
+                                        <div class="col-md-12 col-xl-10 my-3">
+                                            <button type="button" class="see-similar-order-button-new btn w-100"
+                                                onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')"
+                                                data-bs-target="#see_similar_pop_up_detail">
+                                                See Similar
+                                            </button>
                                         </div>
                                     @endif
                                 </div>
                             </div>
+                            <div class="col-md-12 mt-3 mb-3">
+                                @if (!empty($productOption->option1) || !empty($productOption->option2) ||
+                                !empty($productOption->option3))
+                                @php
+                                $image_src = [];
+                                $options_array = ['option1', 'option2', 'option3'];
+                                $image_type_array = ['case' => 'case.png', 'pallet' => 'pallet.png', 'box' => 'box.png'
+                                , 'pack' => 'case.png' ];
+                                foreach ($options_array as $option) {
+                                foreach ($image_type_array as $key => $image_type) {
+                                if (strpos(strtolower($productOption[$option]), $key) !== false) {
+                                $image_src[$option] = $image_type;
+                                }
+                                }
+                                }
+
+                                @endphp
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 col-xl-2">
+                                        @if (isset($image_src['option1']))
+                                        <img src="{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}"
+                                            style="max-width: 40px;" />
+                                        @endif
+                                    </div>
+                                    <div class="col-md-9 col-xl-10">
+                                        <p class="mb-0">{{ $productOption->option1 }}</p>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 col-xl-2">
+                                        @if (isset($image_src['option2']))
+                                        <img src="{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}"
+                                            style="max-width: 40px;" />
+                                        @endif
+                                    </div>
+                                    <div class="col-md-9 col-xl-10">
+                                        <p class="mb-0">{{ $productOption->option2 }}</p>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 col-xl-2">
+                                        @if (isset($image_src['option3']))
+                                        <img src="{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}"
+                                            style="max-width: 40px;" />
+                                        @endif
+                                    </div>
+                                    <div class="col-md-9 col-xl-10">
+                                        <p class="mb-0">{{ $productOption->option3 }}</p>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <span class="category-title-heading">Category :</span>
+                                    @if($pname)
+                                    <span class="category-title mt-4 ps-2">{{$pname}}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <span><strong>Weight :</strong>
+                                        <span>{{!empty($productOption->optionWeight) ? $productOption->optionWeight .
+                                            'lbs' : ''}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @if (!empty($productOption->products->width) && !empty($productOption->products->height)
+                                && !empty($productOption->products->length))
+                                <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <span>
+                                        <strong>Dimensions : </strong>
+                                        <span>
+                                            {{!empty($productOption->products->length) ?
+                                            $productOption->products->length . ' ' . "x" : ''}}
+                                            {{!empty($productOption->products->width) ? $productOption->products->width
+                                            . ' ' . "x" : ''}}
+                                            {{!empty($productOption->products->height) ?
+                                            $productOption->products->height : ''}}
+                                        </span>
+                                    </span>
+                                </div>
+                                @endif
+                            </div>
                             <div class="col-md-12">
-                                <div class="category-description category-description mt-1  lh-lg"><span>Description</span></div>
+                                <div class="category-description category-description mt-1  lh-lg">
+                                    <span>Description</span></div>
                                 <div class="">
                                     <span class="about product-details-description mt-2 product_description">
                                         {!! $productOption->products->description !!}
@@ -481,11 +710,108 @@ $paymentTerms = false;
                                 </div>
                             </div>
                         </div>
+                        @if (!empty($ai_setting) && (strtolower($ai_setting->option_value) == 'yes'))
+                            <div class="row ai_row">
+                                <div class="col-md-12 col-xl-8 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
+                                    <div class="card my-3 w-100">
+                                        <div class="card-header ai_row_title bg-light">
+                                            <h5 class="card-title mb-0">Looking for Specific Info ?</h5>
+                                        </div>
+                                        <div class="card-body ai_row_card_body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="input-group mb-3">
+                                                        <input type="text" class="form-control border-right-0 ai_text_field" id="ai_text_field" onfocus="mark_arrow_border_green()" placeholder="Ask any question about this product!" aria-label="Ask Refus About this product" aria-describedby="basic-addon2">
+                                                        <span class="input-group-text circle-right-ai border-left-0 bg-transparent" type="button"  id="basic-addon2"><i class="fa-solid fa-circle-arrow-right"></i></span>
+                                                    </div>
+                                                    <div class="text-danger ai_error"></div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="spinner-grow ai_spinner d-none" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p class="ai_content px-2"></p>
+                                                    <button class="btn clear_prompt btn-sm ml-2 d-none mt-3" type="button" onclick="clear_prompt()">
+                                                        Clear
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (count($ai_questions) > 0)
+                                            <div class="card-footer py-3 px-1">
+                                                <div class="col-md-12 ai_row_footer d-flex justify-space-evenly">
+                                                    {{-- <div class="row align-items-center"> --}}
+                                                        @foreach($ai_questions as $question)
+                                                        {{-- <div class="col-xl-4 col-lg-4 col-md-6 col-12 mt-2 add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);"> --}}
+                                                            <span class="ai_questions mx-3 w-auto add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);">
+                                                                <strong class="ai_question_strong">{{ \Illuminate\Support\Str::limit($question->question, 40) }}</strong>
+                                                            </span>
+                                                        {{-- </div> --}}
+                                                        @endforeach
+                                                    {{-- </div> --}}
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div id="popover-form" class="inventory_pop_over_form">
+    <form id="myform" class="form-inline p-0 w-100" role="form">
+        <div class="form-group" style="width:800px">
+            <div style="font-family: 'Poppins';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    padding:1px;
+                    color: white;
+                    max-width:800px;
+                    z-index:9999;
+                ">
+                <span class="inventory_info" style="width: 800px !important">
+                    @if ($customer_demand_inventory_number === 1)
+                    @if ($inventory_update_time_flag == true)
+                    @if (!$stock_updated)
+                    Unable to show accurate stock levels.<br />
+                    @endif
+                    @if (!empty($locations))
+                    @foreach ($locations as $location)
+                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                    @endforeach
+                    @else
+                    Unable to show accurate stock levels.<br />
+                    @endif
+                    @else
+                    @if (!empty($locations))
+                    @foreach ($locations as $location)
+                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                    @endforeach
+                    @else
+                    Unable to show accurate stock levels.<br />
+                    @endif
+                    @endif
+                    @else
+                    @if (!empty($locations))
+                    @foreach ($locations as $location)
+                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                    @endforeach
+                    @else
+                    Unable to show accurate stock levels.<br />
+                    @endif
+                    @endif
+                </span>
+            </div>
+        </div>
+    </form>
 </div>
 
 
@@ -926,10 +1252,13 @@ $paymentTerms = false;
 
     .bulk_discount_href {
         font-family: 'Poppins';
-        font-size: 18px;
-        font-weight: 400;
+        font-size: 16px;
+        font-weight: 600;
         text-decoration: none;
-        color: #7BC533;
+        color: #fff;
+        background-color: #F4D130;
+        border-radius: 0px;
+        padding: 10px 20px;
     }
 
     .greyed {
@@ -1076,7 +1405,9 @@ $paymentTerms = false;
             font-size: 12px;
             font-weight: 400;
             text-decoration: none;
-            color: #7BC533;
+            color: #fff;
+            background-color: #F4D130;
+            border-radius: 0px;
         }
 
         .bulk_head {
@@ -1268,9 +1599,9 @@ $paymentTerms = false;
                     var newVal = oldValue + 1;
                 }
                 spinner.find("input[id=quantity]").val(newVal);
-                let stock = jQuery(".stock_number").html();
-                let stock_number = parseInt(stock);
-                if (newVal === stock_number) {
+                let stock = jQuery(".stock_number_new").html();
+                let stock_number_new = parseInt(stock);
+                if (newVal === stock_number_new) {
                     btnUp.addClass('greyed');
 
                 } else {
@@ -1289,9 +1620,9 @@ $paymentTerms = false;
                 var newVal = oldValue - 1;
                 }
                 spinner.find("input[id=quantity]").val(newVal);
-                let stock = jQuery(".stock_number").html();
-                let stock_number = parseInt(stock);
-                if (newVal !== stock_number) {
+                let stock = jQuery(".stock_number_new").html();
+                let stock_number_new = parseInt(stock);
+                if (newVal !== stock_number_new) {
                     btnUp.removeClass('greyed');
                     btnDown.removeClass('greyed');
 
@@ -1304,9 +1635,9 @@ $paymentTerms = false;
 
             desktop_input.change(function() {
                 var input_qty = parseInt($(this).val());
-                var qty_stock_number = parseInt($(this).attr('max'));
-                if (input_qty > qty_stock_number) {
-                    $(this).val(qty_stock_number);
+                var qty_stock_number_new = parseInt($(this).attr('max'));
+                if (input_qty > qty_stock_number_new) {
+                    $(this).val(qty_stock_number_new);
                     Swal.fire({
                         toast: true,
                         icon: 'error',
@@ -1458,9 +1789,9 @@ $paymentTerms = false;
                     var newVal = oldValue + 1;
                 }
                 mobile_input.val(newVal);
-                let stock = jQuery(".stock_number").html();
-                let stock_number = parseInt(stock);
-                if (newVal === stock_number) {
+                let stock = jQuery(".stock_number_new").html();
+                let stock_number_new = parseInt(stock);
+                if (newVal === stock_number_new) {
                     btnUp.addClass('greyed');
 
                 } else {
@@ -1479,9 +1810,9 @@ $paymentTerms = false;
                 var newVal = oldValue - 1;
                 }
                 mobile_input.val(newVal);
-                let stock = jQuery(".stock_number").html();
-                let stock_number = parseInt(stock);
-                if (newVal !== stock_number) {
+                let stock = jQuery(".stock_number_new").html();
+                let stock_number_new = parseInt(stock);
+                if (newVal !== stock_number_new) {
                     btnUp.removeClass('greyed');
                     btnDown.removeClass('greyed');
 
@@ -1494,9 +1825,9 @@ $paymentTerms = false;
 
             mobile_input.change(function() {
                 var input_value = $(this).val();
-                var stock_number = $(this).attr('max');
-                if (input_value >= stock_number) {
-                    $(this).val(stock_number);
+                var stock_number_new = $(this).attr('max');
+                if (input_value >= stock_number_new) {
+                    $(this).val(stock_number_new);
                     Swal.fire({
                         toast: true,
                         icon: 'error',
