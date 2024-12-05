@@ -187,7 +187,7 @@
             Best Selling Products
         </p>
         <div class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-10 col-10">
                 <div class="owl-carousel similar_products_owl_carasoul owl-theme mt-4" id="similar_products_owl_carasoul">
                     @foreach($best_selling_products->take(24) as $best_selling_product)
                         @foreach ($best_selling_product->product->options as $option)

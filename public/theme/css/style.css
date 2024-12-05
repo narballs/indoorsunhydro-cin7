@@ -2,6 +2,57 @@
 @import url('https://fonts.googleapis.com/css?family=Mukta');
 @import url('https://fonts.cdnfonts.com/css/regular');
 
+
+
+
+
+    /* product detail end */
+
+@media screen and (min-width:768px) {
+    .bg-custom-background {
+        background-color: #E3F5F5;
+    }
+
+    .bg-custom-mobile-background {
+        background-color: none;
+    }
+}
+
+
+@media screen and (max-width:767px) {
+    .bg-custom-mobile-background {
+        background-color: #E3F5F5;
+    }
+
+    .bg-custom-background {
+        background-color: none;
+    }
+}
+
+
+.similar_items_div {
+    width: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+    .similar_items_div {
+        width: 75%;
+        margin:auto;
+    }
+}
+
+
+@media only screen and (max-width: 700px) {
+    #similar_products_owl_carasoul > .owl-nav > .owl-prev {
+        left : -30px;
+    }
+    #similar_products_owl_carasoul > .owl-nav > .owl-next {
+        right : -30px;
+    }
+} 
+
+
+
 @media only screen and (min-width: 768) and (max-width : 895px)  {
     .continue_account_wholesale {
         margin-top: 0rem !important;
@@ -204,7 +255,7 @@
 }
 
 .popover {
-    *transform: translate(314px, 457px) !important;
+    transform: translate(314px, 457px) !important;
     max-width: 350px !important;
 }
 
@@ -981,10 +1032,6 @@ a {
     .product-detail-button-cards {
         margin-left: 0px !important;
     }
-
-    #quantity {
-        margin-bottom: 10px !important;
-    }
     .icon_div {
         width: 13% !important;
     }
@@ -1745,10 +1792,9 @@ body.swal2-toast-shown .swal2-container {
 .product-detail-price {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600;
-    font-size: 27px;
-    line-height: 45px;
-    color: #DC4E41;
+    font-weight: 700;
+    font-size: 28px;
+    color: #DE1919;
 }
 
 .product-detail-quantity {
@@ -1776,10 +1822,12 @@ body.swal2-toast-shown .swal2-container {
 .category-title-heading {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600 !important;
-    font-size: 20px;
-    line-height: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #2B3136;
 }
+
+
 
 .description-content {
     font-family: 'Poppins';
@@ -1945,16 +1993,17 @@ input[type=number] {
     font-family: 'Poppins';
     font-style: normal;
     font-size: 16px;
-    line-height: 30px;
-    text-align: center
+    text-align: center;
+    font-weight: 400;
+    color: #2B3136;
 }
 
 .category-description {
     font-family: 'Poppins';
     font-style: normal;
-    font-weight: 600 !important;
-    font-size: 20px;
-    line-height: 71px;
+    font-weight: 700;
+    font-size: 24px;
+    color:#529213;
 }
 
 .form-select {
@@ -5536,12 +5585,15 @@ select.list-dt:focus {
     }
 
     .product-detail-price {
-        font-family: 'Poppins' !important;
+        /* font-family: 'Poppins' !important;
         font-style: normal !important;
         font-weight: 600 !important;
-        font-size: 13px !important;
+        font-size: 17px !important;
         line-height: 20px !important;
         color: #DC4E41 !important;
+         */
+
+        font-size: 18px;
 
     }
 
@@ -5615,9 +5667,8 @@ select.list-dt:focus {
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 600;
-        font-size: 9px;
-        line-height: 14px;
-        color: #000000;
+        font-size: 14px;
+        color: #2B3136;
     }
 
     .category-title {
@@ -5630,17 +5681,15 @@ select.list-dt:focus {
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 400;
-        font-size: 9px;
-        line-height: 14px;
-        color: #000000;
+        font-size: 14px;
     }
 
     .category-description {
-        font-family: 'Poppins' !important;
-        font-style: normal !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
-        line-height: 36px !important;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        color: #292929;
     }
 
     .category-pra {
@@ -5768,7 +5817,7 @@ select.list-dt:focus {
     .fa-plus:before {
         content: "\2b";
         color: gray;
-        border: 1px solid gray !important;
+        border: 1px solid gray;
         padding: 3px !important;
         /* background-color: #fff !important; */
     }

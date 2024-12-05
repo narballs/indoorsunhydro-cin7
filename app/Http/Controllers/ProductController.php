@@ -792,7 +792,7 @@ class ProductController extends Controller
             $active_contact = null;
         }
 
-        return view('product-detail', compact(
+        return view('product-detail-2', compact(
             'productOption',
             'pname',
             'pricing',
@@ -819,40 +819,107 @@ class ProductController extends Controller
         
         
     }
-    public function getSimilarProducts(Request $request ,$id, $option_id) {
-        $similar_products = null;
-        $perPage = 4;
-        $currentPage = $request->get('page', 1);
+
+    // old code 
+    // public function getSimilarProducts(Request $request ,$id, $option_id) {
+    //     $similar_products = null;
+    //     $perPage = 4;
+    //     $currentPage = $request->get('page', 1);
+    //     $offset = ($currentPage - 1) * $perPage;
+    //     $product = Product::with('categories' , 'brand')
+    //     ->where('id', $id)
+    //     ->where('status', '!=', 'Inactive')->first();
+    //     if (empty($product)) {
+    //         session()->flash('error', 'This product is not available! Please search another product.');
+    //         return redirect('/products');
+    //     }
+    //     if (!empty($product->category_id) && !empty($product)) {
+                
+    //             $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
+    //             ->where('category_id', $product->category_id)
+    //             ->where('id', '!=', $product->id)
+    //             ->whereHas('categories' , function ($q){
+    //                 $q->where('is_active' , 1);
+    //             })
+    //             ->where('status', '!=', 'Inactive');
+                
+    //             $total_products = $similar_products_query->count();
+    //             $similar_products_query = $similar_products_query->take($perPage)
+    //             ->skip($offset)
+    //             ->get();
+    //             $total = $total_products >= 16 ? 16 : $total_products;
+    //             $similar_products = new LengthAwarePaginator($similar_products_query, $total, $perPage, $currentPage, [
+    //                 'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
+    //                 'query' => $request->query(),
+    //             ]);
+    //     }
+    //     return $similar_products;
+    // }
+
+    // new code
+
+    public function getSimilarProducts(Request $request, $id, $option_id)
+    {
+        // Validate the 'perPage' and 'page' parameters to ensure they are numeric
+        $perPage = is_numeric($request->get('perPage')) ? (int)$request->get('perPage', 4) : 4;
+        $currentPage = is_numeric($request->get('page')) ? (int)$request->get('page', 1) : 1;
+
         $offset = ($currentPage - 1) * $perPage;
-        $product = Product::with('categories' , 'brand')
-        ->where('id', $id)
-        ->where('status', '!=', 'Inactive')->first();
+        
+        $product = Product::with('categories', 'brand')
+            ->where('id', $id)
+            ->where('status', '!=', 'Inactive')
+            ->first();
+
         if (empty($product)) {
-            session()->flash('error', 'This product is not available! Please search another product.');
+            session()->flash('error', 'This product is not available! Please search for another product.');
             return redirect('/products');
         }
-        if (!empty($product->category_id) && !empty($product)) {
-                
-                $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
+
+        $similar_products = collect(); // Initialize as empty collection
+
+        if (!empty($product->category_id)) {
+            $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
                 ->where('category_id', $product->category_id)
                 ->where('id', '!=', $product->id)
-                ->whereHas('categories' , function ($q){
-                    $q->where('is_active' , 1);
+                ->whereHas('categories', function ($q) {
+                    $q->where('is_active', 1);
                 })
                 ->where('status', '!=', 'Inactive');
-                
-                $total_products = $similar_products_query->count();
-                $similar_products_query = $similar_products_query->take($perPage)
+            
+            // Total similar products for pagination
+            $total_products = $similar_products_query->count();
+
+            // Fetch the similar products based on the perPage and offset
+            $similar_products_query = $similar_products_query->take($perPage)
                 ->skip($offset)
                 ->get();
-                $total = $total_products >= 16 ? 16 : $total_products;
-                $similar_products = new LengthAwarePaginator($similar_products_query, $total, $perPage, $currentPage, [
+            
+            // Limit the total number of similar products to 16 (if more than 16 found)
+            $total = $total_products >= 16 ? 16 : $total_products;
+
+            // Create a paginator instance with the products and pagination info
+            $similar_products = new LengthAwarePaginator(
+                $similar_products_query, 
+                $total, 
+                $perPage, 
+                $currentPage, 
+                [
                     'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
                     'query' => $request->query(),
-                ]);
+                ]
+            );
         }
-        return $similar_products;
+
+        // Return the paginated results as a JSON response
+        return response()->json([
+            'data' => $similar_products->items(),
+            'current_page' => $similar_products->currentPage(),
+            'last_page' => $similar_products->lastPage(),
+            'total' => $similar_products->total(),
+        ]);
     }
+
     public function showProductByCategory_slug($slug)
     {
         $category = Category::where('slug', $slug)->first();
