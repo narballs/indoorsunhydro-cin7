@@ -140,13 +140,13 @@
 .see-similar-order-button-new:hover {
     background-color: #7CC633;
     color: #fff;
-    border: none;
+    /* border: none; */
 }
 
 .bulk_discount_href:hover {
     text-decoration: none;
     color: #fff;
-    border: none;
+    /* border: none; */
 }
 .ai_row_footer {
     display: flex;
@@ -737,7 +737,7 @@ p {
         $('.circle-right-ai').css('border-color', '#ced4da');
     });
 
-    
+
     jQuery(document).on('click', '#ajaxSubmit' , function(e) {
         var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
         var tax = 0;
@@ -1291,13 +1291,13 @@ p {
             var text_class = '';
             var products_to_hide = JSON.parse($('#products_to_hide').val());
             var show_price = true;
-            var paymentTerms = $('#payment_terms').val();
-            var auth_value = $('#auth_value').val();
+            var paymentTerms = $('#paymentTerms').val() == '' || $('#paymentTerms').val() == null || $('#paymentTerms').val() == 0 || $('#paymentTerms').val() === '0' ? false : true;
+            var auth_value = $('#auth_value').val() == '' || $('#auth_value').val() == null || $('#auth_value').val() == 0 || $('#auth_value').val() === '0' ? false : true;
             var retail_price = 0;
 
             for (var i = 0; i < productData.options.length; i++) {
                 if (products_to_hide.includes(productData.options[i].option_id)) {
-                    show_price = paymentTerms === 'true' && auth_value;
+                    show_price = auth_value == true && paymentTerms == true;
                 }
                 if (productData.options[i].stockAvailable > 0) {
                     stock_label = 'In Stock';
@@ -1336,39 +1336,80 @@ p {
             }
         }
 
+        
         function buildButtonRow(productData) {
+            // Parse required values from DOM
             var products_to_hide = JSON.parse($('#products_to_hide').val());
-            var add_to_cart = true;
-            var paymentTerms = $('#payment_terms').val();
-            var auth_value = $('#auth_value').val();
+            var paymentTerms = $('#paymentTerms').val() != '' && $('#paymentTerms').val() != null && $('#paymentTerms').val() != 0;
+            var auth_value = $('#auth_value').val() != '' && $('#auth_value').val() != null && $('#auth_value').val() != 0;
+
             var buttonRowHtml = '';
 
+            // Iterate over product options
             for (var i = 0; i < productData.options.length; i++) {
-                if (products_to_hide.includes(productData.options[i].option_id)) {
-                    add_to_cart = paymentTerms === 'true' && auth_value;
-                }
-                if (productData.options[i].stockAvailable > 0) {
-                    buttonRowHtml += `<div class="row justify-content-center mt-4">
-                                        <div class="col-md-10">
-                                            <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart('${productData.id}', '${productData.options[i].option_id}')">Add to Cart</button>
+                var option = productData.options[i];
+
+                // Determine if Add to Cart is allowed
+                var add_to_cart = products_to_hide.includes(option.option_id) ? (auth_value && paymentTerms) : true;
+
+                // Start row
+                buttonRowHtml += `<div class="row justify-content-center mt-4">`;
+
+                if (add_to_cart) {
+                    if (option.stockAvailable > 0) {
+                        // Add to Cart Button
+                        buttonRowHtml += `
+                            <div class="col-md-10">
+                                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" 
+                                    onclick="similar_product_add_to_cart('${productData.id}', '${option.option_id}')">
+                                    Add to Cart
+                                </button>
+                            </div>`;
+                    } else {
+                        if (!auth_value) {
+                            // Notify Button for Unauthenticated Users
+                            buttonRowHtml += `
+                                <div class="col-md-10">
+                                    <button type="button" id="notify_popup_modal" 
+                                        onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')" 
+                                        class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded">
+                                        <a class="text-white">Notify</a>
+                                    </button>
+                                </div>`;
+                        } else {
+                            // Notify Button for Authenticated Users with Spinner
+                            buttonRowHtml += `
+                                <div class="col-md-10">
+                                    <button type="button" id="notify_popup_modal" 
+                                        data-product-id="${productData.id}" 
+                                        onclick="notify_user_about_product_stock_similar_portion('${productData.id}', '${productData.code}')" 
+                                        class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center">
+                                        <a class="text-white">Notify</a>
+                                        <div class="spinner-border text-white custom_stock_spinner stock_spinner_${productData.id} ml-1 d-none" role="status">
+                                            <span class="sr-only"></span>
                                         </div>
-                                    </div>`;
-                } else {
-                    if (add_to_cart) {
-                        if (!auth_user) {
-                            buttonRowHtml += `<div class="row justify-content-center mt-4">
-                                                    <div class="col-md-10">
-                                                        <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded">
-                                                            <a class="text-white">Notify</a>
-                                                        </button>
-                                                    </div>
-                                                </div>`;
+                                    </button>
+                                </div>`;
                         }
                     }
+                } else {
+                    // Call to Order Button
+                    buttonRowHtml += `
+                        <div class="col-md-10">
+                            <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">
+                                Call To Order
+                            </button>
+                        </div>`;
                 }
+
+                // End row
+                buttonRowHtml += `</div>`;
             }
+
             return buttonRowHtml;
         }
+
+
 
         function generatePaginationLinks(totalPages, currentPage) {
             var paginationLinks = '';
