@@ -1368,10 +1368,10 @@ class OrderController extends Controller
                 }
 
 
-                if (!empty($wally_shipstation_email)) {
-                    $label_email_data['email'] = $wally_shipstation_email;
-                    $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
-                } 
+                // if (!empty($wally_shipstation_email)) {
+                //     $label_email_data['email'] = $wally_shipstation_email;
+                //     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                // } 
                 
                 if ($mail_send) {
                     $order->update([
@@ -1528,10 +1528,10 @@ class OrderController extends Controller
                         }
                     }
 
-                    if (!empty($wally_shipstation_email)) {
-                        $label_email_data['email'] = $wally_shipstation_email;
-                        $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
-                    } 
+                    // if (!empty($wally_shipstation_email)) {
+                    //     $label_email_data['email'] = $wally_shipstation_email;
+                    //     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    // } 
 
                     if ($mail_send) {
                         $order->update([
