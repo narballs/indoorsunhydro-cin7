@@ -1348,11 +1348,8 @@ class OrderController extends Controller
 
                 // Check if both emails are not empty
                 if (!empty($naris_indoor_email) && !empty($wally_shipstation_email)) {
-                    // Combine both email addresses as a comma-separated string
-                    $email_addresses = $naris_indoor_email . ',' . $wally_shipstation_email;
-                    
-                    // Prepare email data
-                    $label_email_data['email'] = $email_addresses;
+                    // Prepare email data with emails as an array
+                    $label_email_data['email'] = [$naris_indoor_email, $wally_shipstation_email];
                     
                     // Send the email to both recipients
                     $mail_send = MailHelper::sendShipstationLabelMail($template, $label_email_data);
@@ -1509,11 +1506,8 @@ class OrderController extends Controller
 
                     // Check if both emails are not empty
                     if (!empty($naris_indoor_email) && !empty($wally_shipstation_email)) {
-                        // Combine both email addresses as a comma-separated string
-                        $email_addresses = $naris_indoor_email . ',' . $wally_shipstation_email;
-                        
-                        // Prepare email data
-                        $label_email_data['email'] = $email_addresses;
+                        // Prepare email data with emails as an array
+                        $label_email_data['email'] = [$naris_indoor_email, $wally_shipstation_email];
                         
                         // Send the email to both recipients
                         $mail_send = MailHelper::sendShipstationLabelMail($template, $label_email_data);
