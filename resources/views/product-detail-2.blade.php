@@ -35,72 +35,73 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
     value="{{ htmlspecialchars(json_encode($products_to_hide)) }}">
 
 
-@php
+    @php
+    
+    $add_to_cart = true;
+    $show_price = true;
+    $auth = false;
+    $paymentTerms = false;
+    if (!empty($products_to_hide)) {
+        if (in_array($productOption->option_id, $products_to_hide)) {
+            if (!auth()->user()) {
+                $add_to_cart = false;
+                $show_price = false;
+            } else {
+                if (auth()->user()) {
+                    $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+                    if (empty($contact)) {
+                        $add_to_cart = false;
+                        $show_price = false;
+                    }
+                    $contact_id_new = null; 
+                    if ($contact->is_parent == 1) {
+                        $contact_id_new = $contact->contact_id;
+                    } else {
+                        $contact_id_new = $contact->parent_id;
+                    }
 
-$add_to_cart = true;
-$show_price = true;
-$auth = false;
-$paymentTerms = false;
-if (!empty($products_to_hide)) {
-if (in_array($productOption->option_id, $products_to_hide)) {
-if (!auth()->user()) {
-$add_to_cart = false;
-$show_price = false;
-} else {
-if (auth()->user()) {
-$contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
-if (empty($contact)) {
-$add_to_cart = false;
-$show_price = false;
-}
-$contact_id_new = null;
-if ($contact->is_parent == 1) {
-$contact_id_new = $contact->contact_id;
-} else {
-$contact_id_new = $contact->parent_id;
-}
+                    $get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
+                    if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+                        $add_to_cart = false;
+                        $show_price = false;
+                    } else {
+                        $add_to_cart = true;
+                        $show_price = true;
+                    }
+                }
+                
+            }
+        }
+    }
 
-$get_main_contact = App\Models\Contact::where('contact_id', $contact_id_new)->first();
-if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
-$add_to_cart = false;
-$show_price = false;
-} else {
-$add_to_cart = true;
-$show_price = true;
-}
-}
+    if (auth()->user()) {
+        $auth = true;
+        $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+        if (empty($contact)) {
+            $paymentTerms = false;
+        }
+        $contact_id_new = null; 
+        if ($contact->is_parent == 1) {
+            $contact_id_new = $contact->contact_id;
+        } else {
+            $contact_id_new = $contact->parent_id;
+        }
 
-}
-}
-}
-
-if (auth()->user()) {
-$auth = true;
-$contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
-if (empty($contact)) {
-$paymentTerms = false;
-}
-$contact_id_new = null;
-if ($contact->is_parent == 1) {
-$contact_id_new = $contact->contact_id;
-} else {
-$contact_id_new = $contact->parent_id;
-}
-
-$get_main_contact = App\Models\Contact::where('id', $contact_id_new)->first();
-if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
-$paymentTerms = true;
-} else {
-$paymentTerms = false;
-}
-} else {
-$auth = false;
-$paymentTerms = false;
-}
+        $get_main_contact = App\Models\Contact::where('id', $contact_id_new)->first();
+        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+            $paymentTerms = true;
+        } else {
+            $paymentTerms = false;
+        }
+    } else {
+        $auth = false;
+        $paymentTerms = false;
+    }
 @endphp
 
-<input type="hidden" name="paymentTerms" id="paymentTerms" value="{{$paymentTerms}}">
-<input type="hidden" name="auth_value" id="auth_value" value="{{$auth}}">
+<input type="hidden" name="paymentTerms" id="paymentTerms" value="{{$paymentTerms === false ? 0 : 1}}">
+<input type="hidden" name="auth_value" id="auth_value" value="{{$auth === false ? 0 : 1}}">
+
 
 
 <div class="row justify-content-center w-100">
