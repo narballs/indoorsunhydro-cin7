@@ -48,7 +48,7 @@
                         }
                     @endphp
                     <div class="row mt-4 mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-12 py-3" style="border: 1px solid #DFDFDF59;">
                             <div class="row">
                                 <div class="col-md-4 image-div image-div-account d-flex justify-content-center">
                                     @if(!empty($product->images))
@@ -105,7 +105,7 @@
                                     <div class="col-md-10">
                                         <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart('{{ $product->id }}', '{{ $option->option_id }}')">Add to Cart</button>
                                     </div>
-                                    <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>
+                                    
                                 @else
                                     <div class="col-md-10">
                                         <button class="w-100 ml-0 call-to-order-button text-uppercase" style="max-height: 46px;">

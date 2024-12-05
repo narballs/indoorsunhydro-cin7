@@ -705,10 +705,19 @@
     }
 </script>
 
-<script type="text/javascript">
-    var popover = new bootstrap.Popover(document.querySelector('.cart-price'), {
-        container: 'body',
-        html: true
+<script>
+    // var popover = new bootstrap.Popover(document.querySelector('.cart-price'), {
+    //     container: 'body',
+    //     html: true
+    // });
+    document.addEventListener("DOMContentLoaded", function() {
+        var cartPriceElement = document.querySelector('.cart-price');
+        if (cartPriceElement) {
+            var popover = new bootstrap.Popover(cartPriceElement, {
+                container: 'body',
+                html: true
+            });
+        }
     });
     feather.replace();
 </script>
@@ -860,31 +869,63 @@
     });
 </script>
 <script>
-    $(document).ready(function() {
+    // $(document).ready(function() {
+    //     var input = $('.mobileFormat').html();
+    //     var formattedInput = formatPhoneNumber(input);
+    //     $('.mobileFormat').html(formattedInput);
+    // });
+
+    // function formatPhoneNumber(input) {
+    //     // Remove all non-digit characters from the input
+    //     var digits = input.replace(/\D/g, '');
+
+    //     // Format the digits as (555) 123-4567
+    //     var formattedInput = '';
+    //     for (var i = 0; i < digits.length; i++) {
+    //         if (i === 0) {
+    //             formattedInput += '(';
+    //         } else if (i === 3) {
+    //             formattedInput += ') ';
+    //         } else if (i === 6) {
+    //             formattedInput += '-';
+    //         }
+    //         formattedInput += digits.charAt(i);
+    //     }
+
+    //     return formattedInput;
+    // }
+
+    $(document).ready(function () {
         var input = $('.mobileFormat').html();
-        var formattedInput = formatPhoneNumber(input);
-        $('.mobileFormat').html(formattedInput);
-    });
 
-    function formatPhoneNumber(input) {
-        // Remove all non-digit characters from the input
-        var digits = input.replace(/\D/g, '');
-
-        // Format the digits as (555) 123-4567
-        var formattedInput = '';
-        for (var i = 0; i < digits.length; i++) {
-            if (i === 0) {
-                formattedInput += '(';
-            } else if (i === 3) {
-                formattedInput += ') ';
-            } else if (i === 6) {
-                formattedInput += '-';
-            }
-            formattedInput += digits.charAt(i);
+        if (input) { // Check if input is not undefined or empty
+            var formattedInput = formatPhoneNumber(input);
+            $('.mobileFormat').html(formattedInput);
+        } else {
+            console.warn('The .mobileFormat element is empty or does not exist.');
         }
 
-        return formattedInput;
-    }
+        function formatPhoneNumber(input) {
+            // Remove all non-digit characters from the input
+            var digits = input.replace(/\D/g, '');
+
+            // Format the digits as (555) 123-4567
+            var formattedInput = '';
+            for (var i = 0; i < digits.length; i++) {
+                if (i === 0) {
+                    formattedInput += '(';
+                } else if (i === 3) {
+                    formattedInput += ') ';
+                } else if (i === 6) {
+                    formattedInput += '-';
+                }
+                formattedInput += digits.charAt(i);
+            }
+
+            return formattedInput;
+        }
+    });
+
 </script>
 <script>
     $(document).ready(function() {
@@ -1051,13 +1092,13 @@
                     responsive:{
                         0:{
                             items:calculateItemsToShow(),
-                            nav:false,
+                            nav:true,
                             slideBy:1,
                             dots:false,
                         },
                         600:{
                             items:calculateItemsToShow(),                    
-                            nav:false,
+                            nav:true,
                             slideBy:2,
                             dots:false,
                         },
@@ -1098,6 +1139,7 @@
                 $('.similar_products_owl_carasoul .owl-stage-outer').css('display', 'block');    
             }
         });
+
         function showZendesk() {
             var first_name = $('#zendesk_first_name').val();
             var last_name = $('#zendesk_last_name').val();

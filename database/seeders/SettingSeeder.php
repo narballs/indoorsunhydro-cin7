@@ -490,6 +490,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'naris@indoorsunhydro.com',
             ],
+            [
+                'option_name' => 'wally_shipstation_email',
+                'type' => 'text',
+                'option_value' => 'wally@indoorsunhydro.com',
+            ],
 
 
 
