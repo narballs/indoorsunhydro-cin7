@@ -745,8 +745,8 @@ $paymentTerms = false;
                                     {{-- <input type="text" name="items_list" id="bulk_product_list"
                                         class="form-control bulk_input"> --}}
                                     <textarea type="text" readonly name="items_list" id="bulk_product_list"
-                                        class="form-control bulk_input" cols="10" rows="3">{{!empty($productOption->products->name) ? $productOption->products->name : ''}} 
-                                        {{'Sku'}}: {{!empty($productOption->products->code) ? $productOption->products->code : ''}}
+                                        class="form-control bulk_input" cols="10" rows="3">{{!empty($productOption->products->name) ? $productOption->products->name  : ''}} 
+{{'Sku'}}: {{!empty($productOption->products->code) ? $productOption->products->code : ''}}
                                     </textarea>
                                     <div class="text-danger" id="bulk_product_list_error"></div>
                                 </div>
