@@ -108,7 +108,7 @@ $paymentTerms = false;
         <div class="row justify-content-between ml-1">
             {{-- similar product partial --}}
             <div
-                class="col-md-8 col-xl-4 col-xxl-4 col-lg-4 col-sm-12 col-xs-12 col-12 order-md-2 order-lg-1 order-xl-1 order-xs-2 order-2">
+                class="col-md-8 col-xl-4 col-xxl-4 col-lg-4 col-sm-12 col-xs-12 col-12 order-md-2 order-lg-1 order-xl-1 order-xs-2 order-2 ">
                 <div class="card rounded buy_again_div px-3">
                     @include('partials.product-detail.similar-products')
                 </div>
@@ -140,7 +140,7 @@ $paymentTerms = false;
 
                 <div class="card py-3 no-border">
                     <div class="row">
-                        <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
                             <div
                                 class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
                                 <div class="row justify-content-center align-items-center">
@@ -156,7 +156,7 @@ $paymentTerms = false;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-8 col-lg-9 col-md-12 col-sm-12 col-xs-12 product-detail-content">
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 col-12 product-detail-content">
                             <?php
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                 $retail_price = 0;
@@ -304,7 +304,7 @@ $paymentTerms = false;
                                             <div class="cart row mt-0 mt-md-3 justify-content-between">
                                                 @if ($add_to_cart == true)
                                                     @if ($total_stock > 0 || $productOption->stockAvailable > 0)
-                                                        <div class="col-md-3 col-5">
+                                                        <div class="col-md-4 col-5 col-lg-4 col-xl-3">
                                                             <div
                                                                 class="d-flex align-items-center px-2 product-detail-quantity-increase-decrease-div">
                                                                 <i class="fa fa-minus product-detail-quantity-decrease"></i>
@@ -316,7 +316,7 @@ $paymentTerms = false;
                                                             </div>
                                                         </div>
                                                     @endif
-                                                    <div class="{{$total_stock > 0 || $productOption->stockAvailable > 0 ? 'col-md-9 col-7' : 'col-12'}}">
+                                                    <div class="{{$total_stock > 0 || $productOption->stockAvailable > 0 ? 'col-md-8 col-7 col-lg-8 col-xl-9' : 'col-12'}}">
                                                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                                             @if ($total_stock > 0)
                                                                 <button type="button"
@@ -429,35 +429,35 @@ $paymentTerms = false;
 
                                     @endphp
                                     <div class="row align-items-center">
-                                        <div class="col-md-3 col-xl-2">
+                                        <div class="col-md-3 col-xl-2 col-3">
                                             @if (isset($image_src['option1']))
                                             <img src="{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}"
-                                                style="max-width: 40px;" />
+                                                class="img-fluid"/>
                                             @endif
                                         </div>
-                                        <div class="col-md-9 col-xl-10">
+                                        <div class="col-md-9 col-xl-10 col-9">
                                             <p class="mb-0">{{ $productOption->option1 }}</p>
                                         </div>
                                     </div>
                                     <div class="row align-items-center">
-                                        <div class="col-md-3 col-xl-2">
+                                        <div class="col-md-3 col-xl-2 col-3">
                                             @if (isset($image_src['option2']))
                                             <img src="{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}"
-                                                style="max-width: 40px;" />
+                                                class="img-fluid"/>
                                             @endif
                                         </div>
-                                        <div class="col-md-9 col-xl-10">
+                                        <div class="col-md-9 col-xl-10 col-9">
                                             <p class="mb-0">{{ $productOption->option2 }}</p>
                                         </div>
                                     </div>
                                     <div class="row align-items-center">
-                                        <div class="col-md-3 col-xl-2">
+                                        <div class="col-md-3 col-xl-2 col-3">
                                             @if (isset($image_src['option3']))
                                             <img src="{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}"
-                                                style="max-width: 40px;" />
+                                                class="img-fluid"/>
                                             @endif
                                         </div>
-                                        <div class="col-md-9 col-xl-10">
+                                        <div class="col-md-9 col-xl-10 col-9">
                                             <p class="mb-0">{{ $productOption->option3 }}</p>
                                         </div>
                                     </div>
@@ -501,7 +501,7 @@ $paymentTerms = false;
                             @endif
                             <div class="">
                                 <div class="p-1">
-                                    <div class="category-description category-description p-2">
+                                    <div class="category-description category-description px-2 py-0">
                                         <span>Description</span></div>
                                     <div class="p-1">
                                         <span class="about product-details-description mt-2 product_description">
@@ -513,10 +513,10 @@ $paymentTerms = false;
                         </div>
                         @if (!empty($ai_setting) && (strtolower($ai_setting->option_value) == 'yes'))
                             <div class="row ai_row">
-                                <div class="col-md-12 col-xl-8 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
+                                <div class="col-md-12 col-xl-12 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
                                     <div class="card my-3 w-100 mx-2">
                                         <div class="card-header ai_row_title bg-light">
-                                            <h5 class="card-title mb-0">Looking for Specific Info ?</h5>
+                                            <h5 class="card-title mb-0 ai-section-heading-title">Need help? Simply ask and get real-time answers</h5>
                                         </div>
                                         <div class="card-body ai_row_card_body">
                                             <div class="row">
@@ -542,16 +542,14 @@ $paymentTerms = false;
                                         </div>
                                         @if (count($ai_questions) > 0)
                                             <div class="card-footer py-3 px-1">
-                                                <div class="col-md-12 ai_row_footer d-flex justify-space-evenly">
-                                                    {{-- <div class="row align-items-center"> --}}
-                                                        @foreach($ai_questions as $question)
-                                                        {{-- <div class="col-xl-4 col-lg-4 col-md-6 col-12 mt-2 add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);"> --}}
-                                                            <span class="ai_questions mx-3 w-auto add_custom_question" title="{{$question->question}}"  onclick="add_custom_question(this);">
-                                                                <strong class="ai_question_strong">{{ \Illuminate\Support\Str::limit($question->question, 40) }}</strong>
-                                                            </span>
-                                                        {{-- </div> --}}
-                                                        @endforeach
-                                                    {{-- </div> --}}
+                                                <div class="col-md-12 ai_row_footer d-flex flex-wrap justify-content-start">
+                                                    @foreach($ai_questions as $question)
+                                                        <span class="ai_questions mx-3 w-auto add_custom_question" 
+                                                            title="{{ $question->question }}" 
+                                                            onclick="add_custom_question(this);">
+                                                            <strong class="ai_question_strong">{{ \Illuminate\Support\Str::limit($question->question, 40) }}</strong>
+                                                        </span>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         @endif

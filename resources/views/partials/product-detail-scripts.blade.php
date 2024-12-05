@@ -12,6 +12,16 @@
         display: none;
     }
 }
+
+.ai-section-heading-title {
+    font-size: 24px;
+    font-weight: 600;
+    font-family: 'Poppins';
+    color: #FFFFFF;
+    background-color: #008BD3;
+    padding: 10px 20px;
+    line-height: 43px;
+}
 .product-detail-new-image-div {
     width: 100%;
     height: 100%;
@@ -138,15 +148,24 @@
     color: #fff;
     border: none;
 }
+.ai_row_footer {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping to the next line when items exceed the container width */
+    gap: 10px; /* Add spacing between items */
+}
+
 .ai_questions {
-    padding: 10px;
+    padding: 6px;
+    background-color: #7cc63e;
     border: 1px solid #7cc63e;
-    border-radius: 20px;
-    background: #7cc63e;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 300;
-    font-family: 'poppins';
+    /* border-radius: 5px; */
+    cursor: pointer;
+    white-space: nowrap; /* Prevent text from breaking */
+}
+
+.ai_questions:hover {
+    background-color: #7cc63e;
+    border: 1px solid #7cc63e;
 }
 .circle-right-ai {
     color: #7cc63e;
@@ -191,8 +210,12 @@
     border-radius: 20px;
     background: #fff;
 }
-.add_custom_question {
+.add_custom_question , .ai_question_strong {
     cursor: pointer;
+    font-family: 'poppins';
+    font-weight: 400;
+    font-size: 12px;
+    color: #FFFFFF;
 }
 
 .product-weight-heading {
@@ -302,6 +325,12 @@
     .product-dimension-data {
         font-size: 14px;
         font-weight: 400;
+    }
+
+    .ai-section-heading-title {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 18px;
     }
     
 }
