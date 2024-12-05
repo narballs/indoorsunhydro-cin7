@@ -1211,7 +1211,7 @@ p {
                 dataType: 'json',
                 success: function(response) {
                     console.log(response , 'sds');
-                    if (response) {
+                    if (response.data.length > 0) {
                         var html = buildSimilarProductsHtml(response);
                         $('#products-container').html(html);
                         updateSimilarProductsPaginationLinks(response);
