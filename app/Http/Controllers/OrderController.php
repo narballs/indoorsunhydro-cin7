@@ -1336,12 +1336,28 @@ class OrderController extends Controller
                 //     }
                 // }
 
+                // $naris_indoor_email = SettingHelper::getSetting('naris_indoor_email');
+                // $wally_shipstation_email = SettingHelper::getSetting('wally_shipstation_email');
+                // if (!empty($naris_indoor_email)) {
+                //     $label_email_data['email'] = $naris_indoor_email;
+                //     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                // } 
+
                 $naris_indoor_email = SettingHelper::getSetting('naris_indoor_email');
                 $wally_shipstation_email = SettingHelper::getSetting('wally_shipstation_email');
-                if (!empty($naris_indoor_email)) {
-                    $label_email_data['email'] = $naris_indoor_email;
-                    $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
-                } else {
+
+                // Check if both emails are not empty
+                if (!empty($naris_indoor_email) && !empty($wally_shipstation_email)) {
+                    // Combine both email addresses as a comma-separated string
+                    $email_addresses = $naris_indoor_email . ',' . $wally_shipstation_email;
+                    
+                    // Prepare email data
+                    $label_email_data['email'] = $email_addresses;
+                    
+                    // Send the email to both recipients
+                    $mail_send = MailHelper::sendShipstationLabelMail($template, $label_email_data);
+                }
+                else {
                     $specific_admin_notifications = SpecificAdminNotification::all();
                     if (count($specific_admin_notifications) > 0) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
@@ -1481,11 +1497,28 @@ class OrderController extends Controller
                     
                     
 
+                    // $naris_indoor_email = SettingHelper::getSetting('naris_indoor_email');
+                    // $wally_shipstation_email = SettingHelper::getSetting('wally_shipstation_email');
+                    // if (!empty($naris_indoor_email)) {
+                    //     $label_email_data['email'] = $naris_indoor_email;
+                    //     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    // }
+                    
                     $naris_indoor_email = SettingHelper::getSetting('naris_indoor_email');
-                    if (!empty($naris_indoor_email)) {
-                        $label_email_data['email'] = $naris_indoor_email;
-                        $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
-                    } else {
+                    $wally_shipstation_email = SettingHelper::getSetting('wally_shipstation_email');
+
+                    // Check if both emails are not empty
+                    if (!empty($naris_indoor_email) && !empty($wally_shipstation_email)) {
+                        // Combine both email addresses as a comma-separated string
+                        $email_addresses = $naris_indoor_email . ',' . $wally_shipstation_email;
+                        
+                        // Prepare email data
+                        $label_email_data['email'] = $email_addresses;
+                        
+                        // Send the email to both recipients
+                        $mail_send = MailHelper::sendShipstationLabelMail($template, $label_email_data);
+                    }
+                    else {
                         $specific_admin_notifications = SpecificAdminNotification::all();
                         if (count($specific_admin_notifications) > 0) {
                             foreach ($specific_admin_notifications as $specific_admin_notification) {
