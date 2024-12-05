@@ -1337,6 +1337,7 @@ class OrderController extends Controller
                 // }
 
                 $naris_indoor_email = SettingHelper::getSetting('naris_indoor_email');
+                $wally_shipstation_email = SettingHelper::getSetting('wally_shipstation_email');
                 if (!empty($naris_indoor_email)) {
                     $label_email_data['email'] = $naris_indoor_email;
                     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
@@ -1349,6 +1350,12 @@ class OrderController extends Controller
                         }
                     }
                 }
+
+
+                if (!empty($wally_shipstation_email)) {
+                    $label_email_data['email'] = $wally_shipstation_email;
+                    $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                } 
                 
                 if ($mail_send) {
                     $order->update([
@@ -1487,6 +1494,11 @@ class OrderController extends Controller
                             }
                         }
                     }
+
+                    if (!empty($wally_shipstation_email)) {
+                        $label_email_data['email'] = $wally_shipstation_email;
+                        $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
+                    } 
 
                     if ($mail_send) {
                         $order->update([
