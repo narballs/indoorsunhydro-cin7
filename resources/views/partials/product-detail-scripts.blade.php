@@ -1313,7 +1313,7 @@ p {
                                     <div class="row">
                                         <div class="col-md-10">
                                             <p class="product_name mb-1">
-                                                <a class="product_name" data-title="${productData.name}" id="prd_name_${productData.id}" href="/product-detail/${productData.id}/${productData.options[i].option_id}/${productData.code}">${productData.name}</a>
+                                                <a class="product_name" data-title="${productData.name}" id="prd_name_${productData.id}" href="/product-detail/${productData.id}/${productData.options[i].option_id}/${productData.slug}">${productData.name}</a>
                                             </p>
                                         </div>
                                         <div class="col-md-10">
