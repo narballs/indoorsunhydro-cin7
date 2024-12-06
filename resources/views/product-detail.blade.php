@@ -2597,207 +2597,207 @@
         var option_id=jQuery('#option_id').val();
         var slug= jQuery('#product_slug').val();
         var auth_user = $('.notifyEmail').val() === '' ? null : $('.notifyEmail').val();    
-        loadSimilarProducts(1);
+        // loadSimilarProducts(1);
         
-        function loadSimilarProducts(page) {
+        // function loadSimilarProducts(page) {
             
-            $.ajax({
-                url: '/products/' + p_id + '/' + option_id + '/' + slug + '/get-similar-products?page=${page}',
-                method: 'GET',
-                data: { page: page },
-                dataType: 'json',
-                success: function(response) {
+        //     $.ajax({
+        //         url: '/products/' + p_id + '/' + option_id + '/' + slug + '/get-similar-products?page=${page}',
+        //         method: 'GET',
+        //         data: { page: page },
+        //         dataType: 'json',
+        //         success: function(response) {
                     
-                    if (response.data.length > 0) {
-                        var html = buildSimilarProductsHtml(response);
-                        $('#products-container').html(html);
-                        updateSimilarProductsPaginationLinks();
-                    } else {
-                        var html = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">No similar products found</p></div></div>';
-                        $('#products-container').html(html);
-                    }
-                }
-            });
-        }
+        //             if (response.data.length > 0) {
+        //                 var html = buildSimilarProductsHtml(response);
+        //                 $('#products-container').html(html);
+        //                 updateSimilarProductsPaginationLinks();
+        //             } else {
+        //                 var html = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">No similar products found</p></div></div>';
+        //                 $('#products-container').html(html);
+        //             }
+        //         }
+        //     });
+        // }
 
-        function updateSimilarProductsPaginationLinks() {
-            $('body').on('click', '.pagination-link', function(e) { 
-                e.preventDefault();
-                // $('html, body').animate({ scrollTop: 0 }, 'slow');
-                var page = $(this).text();
-                loadSimilarProducts(page);
-            });
+        // function updateSimilarProductsPaginationLinks() {
+        //     $('body').on('click', '.pagination-link', function(e) { 
+        //         e.preventDefault();
+        //         // $('html, body').animate({ scrollTop: 0 }, 'slow');
+        //         var page = $(this).text();
+        //         loadSimilarProducts(page);
+        //     });
             
-        }
+        // }
 
-        function buildSimilarProductsHtml(response) {
-            var html = '';
-            var data = response.data;
-            var header = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">Similar Products</p></div></div>';
-            html += header;
-            for (var i = 0; i < data.length; i++) {
-                html += buildProductRow(data[i]);
-            }
+        // function buildSimilarProductsHtml(response) {
+        //     var html = '';
+        //     var data = response.data;
+        //     var header = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">Similar Products</p></div></div>';
+        //     html += header;
+        //     for (var i = 0; i < data.length; i++) {
+        //         html += buildProductRow(data[i]);
+        //     }
 
-            var totalPages = response.last_page;
-            var currentPage = response.current_page;
-            var paginationHtml = $('#pagination-list').html(generatePaginationLinks(totalPages, currentPage));
-            // html += paginationHtml;
+        //     var totalPages = response.last_page;
+        //     var currentPage = response.current_page;
+        //     var paginationHtml = $('#pagination-list').html(generatePaginationLinks(totalPages, currentPage));
+        //     // html += paginationHtml;
 
-            return html;
-        }
+        //     return html;
+        // }
 
-        function buildProductRow(productData) {
-            var rowHtml = '<div class="row mt-4 mb-3">';
-            rowHtml += '    <div class="col-md-12">';
-            rowHtml += '        <div class="row">';
-            rowHtml += buildImageColumn(productData.images);
-            rowHtml += buildDataColumn(productData);
-            rowHtml += '        </div>';
-            rowHtml += buildButtonRow(productData);
-            rowHtml += '    </div>';
-            rowHtml += '</div>';
+        // function buildProductRow(productData) {
+        //     var rowHtml = '<div class="row mt-4 mb-3">';
+        //     rowHtml += '    <div class="col-md-12">';
+        //     rowHtml += '        <div class="row">';
+        //     rowHtml += buildImageColumn(productData.images);
+        //     rowHtml += buildDataColumn(productData);
+        //     rowHtml += '        </div>';
+        //     rowHtml += buildButtonRow(productData);
+        //     rowHtml += '    </div>';
+        //     rowHtml += '</div>';
 
-            return rowHtml;
-        }
+        //     return rowHtml;
+        // }
 
-        function buildImageColumn(imageUrl) {
-            if (imageUrl != '') {
-                imageUrl = imageUrl;
-            } else {
-                imageUrl = '/theme/img/image_not_available.png';
-            }
-            return '            <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account">' +
-                '                <img src="' + imageUrl + '" alt="Product Image" class="img-fluid">' +
-                '            </div>';
-        }
+        // function buildImageColumn(imageUrl) {
+        //     if (imageUrl != '') {
+        //         imageUrl = imageUrl;
+        //     } else {
+        //         imageUrl = '/theme/img/image_not_available.png';
+        //     }
+        //     return '            <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account">' +
+        //         '                <img src="' + imageUrl + '" alt="Product Image" class="img-fluid">' +
+        //         '            </div>';
+        // }
 
-        function buildDataColumn(productData) {
-            var column = $('#get_column').val();
-            var stock_label = '';  
-            var text_class = '';
-            var products_to_hide = JSON.parse($('#products_to_hide').val());
-            var show_price = true;
-            var paymentTerms = $('#payment_terms').val();
-            var auth_value = $('#auth_value').val();
+        // function buildDataColumn(productData) {
+        //     var column = $('#get_column').val();
+        //     var stock_label = '';  
+        //     var text_class = '';
+        //     var products_to_hide = JSON.parse($('#products_to_hide').val());
+        //     var show_price = true;
+        //     var paymentTerms = $('#payment_terms').val();
+        //     var auth_value = $('#auth_value').val();
 
             
-            retail_price = 0;
-            for (var i = 0; i < productData.options.length; i++) {
-                if (products_to_hide.includes(productData.options[i].option_id)) {
-                    if (auth_value == false) {
-                        show_price = false;
-                    } else {
-                        if (paymentTerms == true) {
-                            show_price = true;
-                        } else {
-                            show_price = false;
-                        }
-                    }
-                }
-                if (productData.options[i].stockAvailable > 0) {
-                    stock_label = 'In Stock';
-                    text_class = 'text-success';
-                } else {
-                    stock_label = 'Out of Stock';
-                    text_class = 'text-danger';
-                }
-                retail_price = productData.options[i].default_price[column];
-                if (retail_price == 0) {
-                    retail_price = productData.options[i].default_price.sacramentoUSD;
-                }
-                if (retail_price == 0) {
-                    retail_price = productData.options[i].default_price.retailUSD;
-                }
+        //     retail_price = 0;
+        //     for (var i = 0; i < productData.options.length; i++) {
+        //         if (products_to_hide.includes(productData.options[i].option_id)) {
+        //             if (auth_value == false) {
+        //                 show_price = false;
+        //             } else {
+        //                 if (paymentTerms == true) {
+        //                     show_price = true;
+        //                 } else {
+        //                     show_price = false;
+        //                 }
+        //             }
+        //         }
+        //         if (productData.options[i].stockAvailable > 0) {
+        //             stock_label = 'In Stock';
+        //             text_class = 'text-success';
+        //         } else {
+        //             stock_label = 'Out of Stock';
+        //             text_class = 'text-danger';
+        //         }
+        //         retail_price = productData.options[i].default_price[column];
+        //         if (retail_price == 0) {
+        //             retail_price = productData.options[i].default_price.sacramentoUSD;
+        //         }
+        //         if (retail_price == 0) {
+        //             retail_price = productData.options[i].default_price.retailUSD;
+        //         }
 
-                var dataHtml = '            <div class="col-md-8 col-lg-8 col-xl-7 data-div data-div-account">';
-                dataHtml += '                <div class="row">';
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="product_name mb-1">';
-                dataHtml += '                            <a class="product_name" data-title="'+productData.name+'" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
-                dataHtml += '                        </p>';
-                dataHtml += '                    </div>';
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="'+text_class+' mb-0">'+stock_label+'</p>';
-                dataHtml += '                    </div>';
-                if (show_price == true) {
-                    dataHtml += '                    <div class="col-md-10">';
-                    dataHtml += '                        <p class="product_price mb-1">$' + retail_price.toFixed(2) + '</p>';
-                    dataHtml += '                    </div>';
-                }
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="category_name mb-1">Category:';
-                dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
-                dataHtml += '                        </p>';
-                dataHtml += '                    </div>';
-                dataHtml += '                </div>';
-                dataHtml += '            </div>';
-            }
+        //         var dataHtml = '            <div class="col-md-8 col-lg-8 col-xl-7 data-div data-div-account">';
+        //         dataHtml += '                <div class="row">';
+        //         dataHtml += '                    <div class="col-md-10">';
+        //         dataHtml += '                        <p class="product_name mb-1">';
+        //         dataHtml += '                            <a class="product_name" data-title="'+productData.name+'" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[i].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
+        //         dataHtml += '                        </p>';
+        //         dataHtml += '                    </div>';
+        //         dataHtml += '                    <div class="col-md-10">';
+        //         dataHtml += '                        <p class="'+text_class+' mb-0">'+stock_label+'</p>';
+        //         dataHtml += '                    </div>';
+        //         if (show_price == true) {
+        //             dataHtml += '                    <div class="col-md-10">';
+        //             dataHtml += '                        <p class="product_price mb-1">$' + retail_price.toFixed(2) + '</p>';
+        //             dataHtml += '                    </div>';
+        //         }
+        //         dataHtml += '                    <div class="col-md-10">';
+        //         dataHtml += '                        <p class="category_name mb-1">Category:';
+        //         dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
+        //         dataHtml += '                        </p>';
+        //         dataHtml += '                    </div>';
+        //         dataHtml += '                </div>';
+        //         dataHtml += '            </div>';
+        //     }
             
-            return dataHtml;
-        }
+        //     return dataHtml;
+        // }
 
-        function buildButtonRow(productData) {
-            var products_to_hide = JSON.parse($('#products_to_hide').val());
-            var add_to_cart = true;
-            var paymentTerms = $('#payment_terms').val();
-            var auth_value = $('#auth_value').val();
-            for (var i = 0; i < productData.options.length; i++) {
-                if (products_to_hide.includes(productData.options[i].option_id)) {
-                    if (auth_value == false) {
-                        add_to_cart = false;
-                    } else {
-                        if (paymentTerms == true) {
-                            add_to_cart = true;
-                        } else {
-                            add_to_cart = false;
-                        }
-                    }
-                }
-                var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
-                if (productData.options[i].stockAvailable > 0) {
-                    buttonRowHtml += '            <div class="col-md-10">';
-                    buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
-                    buttonRowHtml += '            </div>';
-                    buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                    buttonRowHtml += '        </div>';
-                } else {
-                    if (add_to_cart == true) {
-                        if (auth_user === null) {
-                            buttonRowHtml += '            <div class="col-md-10">';
-                            buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
-                            buttonRowHtml += '            </div>';
-                            buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                            buttonRowHtml += '        </div>';
-                        } else {
-                            buttonRowHtml += '            <div class="col-md-10">';
-                            buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
-                            buttonRowHtml += '            </div>';
-                            buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                            buttonRowHtml += '        </div>';
-                        }
-                    } else {
-                        buttonRowHtml += '            <div class="col-md-10">';
-                        buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">Call To Order</button>';
-                        buttonRowHtml += '            </div>';
-                        buttonRowHtml += '        </div>';
-                    }
-                }
+        // function buildButtonRow(productData) {
+        //     var products_to_hide = JSON.parse($('#products_to_hide').val());
+        //     var add_to_cart = true;
+        //     var paymentTerms = $('#payment_terms').val();
+        //     var auth_value = $('#auth_value').val();
+        //     for (var i = 0; i < productData.options.length; i++) {
+        //         if (products_to_hide.includes(productData.options[i].option_id)) {
+        //             if (auth_value == false) {
+        //                 add_to_cart = false;
+        //             } else {
+        //                 if (paymentTerms == true) {
+        //                     add_to_cart = true;
+        //                 } else {
+        //                     add_to_cart = false;
+        //                 }
+        //             }
+        //         }
+        //         var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
+        //         if (productData.options[i].stockAvailable > 0) {
+        //             buttonRowHtml += '            <div class="col-md-10">';
+        //             buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="similar_product_add_to_cart(\'' + productData.id + '\', \'' + productData.options[i].option_id + '\')">Add to Cart</button>';
+        //             buttonRowHtml += '            </div>';
+        //             buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+        //             buttonRowHtml += '        </div>';
+        //         } else {
+        //             if (add_to_cart == true) {
+        //                 if (auth_user === null) {
+        //                     buttonRowHtml += '            <div class="col-md-10">';
+        //                     buttonRowHtml += '                <button type="button" id="notify_popup_modal" onclick="show_notify_popup_modal_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded><a class="text-white">Notify</a></button>';
+        //                     buttonRowHtml += '            </div>';
+        //                     buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+        //                     buttonRowHtml += '        </div>';
+        //                 } else {
+        //                     buttonRowHtml += '            <div class="col-md-10">';
+        //                     buttonRowHtml += '                <button type="button" id="notify_popup_modal" data-product-id= '+productData.id+' onclick="notify_user_about_product_stock_similar_portion(\'' + productData.id + '\', \'' + productData.code + '\')" class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center"><a class="text-white">Notify</a><div class="spinner-border text-white custom_stock_spinner stock_spinner_'+productData.id+' ml-1 d-none" role="status"><span class="sr-only"></span></div></button>';
+        //                     buttonRowHtml += '            </div>';
+        //                     buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+        //                     buttonRowHtml += '        </div>';
+        //                 }
+        //             } else {
+        //                 buttonRowHtml += '            <div class="col-md-10">';
+        //                 buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">Call To Order</button>';
+        //                 buttonRowHtml += '            </div>';
+        //                 buttonRowHtml += '        </div>';
+        //             }
+        //         }
                 
-            }
-             return buttonRowHtml;
-        }
+        //     }
+        //      return buttonRowHtml;
+        // }
 
-        function generatePaginationLinks(totalPages, currentPage) {
-            var paginationHtml = '';
+        // function generatePaginationLinks(totalPages, currentPage) {
+        //     var paginationHtml = '';
 
-            for (var i = 1; i <= totalPages; i++) {
-                var activeClass = (i === currentPage) ? 'active' : '';
-                paginationHtml += '<li class="pagination-item"><a href="#" class="pagination-link ' + activeClass + '">' + i + '</a></li>';
-            }
+        //     for (var i = 1; i <= totalPages; i++) {
+        //         var activeClass = (i === currentPage) ? 'active' : '';
+        //         paginationHtml += '<li class="pagination-item"><a href="#" class="pagination-link ' + activeClass + '">' + i + '</a></li>';
+        //     }
 
-            return paginationHtml;
-        }
+        //     return paginationHtml;
+        // }
 
     });
 </script>
