@@ -12,6 +12,7 @@ use App\Models\AdminSetting;
 
 
 use App\Helpers\OrderHelper;
+use App\Models\Contact;
 
 class AutoOrdersSync extends Command
 {
@@ -72,17 +73,26 @@ class AutoOrdersSync extends Command
         }
 
         foreach ($orders as $order) {
-            $this->info('Order Date ' . $order->created_at);
-            if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
-                if (strtolower($order->payment_status) === 'paid') {
+            if (empty($order->memberId)) {
+                $this->info('Contact not found for user: ' . $order->memberId);
+                continue;
+            }
+
+            $contact = Contact::where('contact_id', $order->memberId)->first();
+
+            if (!empty($contact) && $contact->is_test_user == 0) {
+                $this->info('Order Date ' . $order->created_at);
+                if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                    if (strtolower($order->payment_status) === 'paid') {
+                        $order_data = OrderHelper::get_order_data_to_process($order);
+                        SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                        sleep(20);
+                    }
+                } else {
                     $order_data = OrderHelper::get_order_data_to_process($order);
                     SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
                     sleep(20);
                 }
-            } else {
-                $order_data = OrderHelper::get_order_data_to_process($order);
-                SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
-                sleep(20);
             }
         }
 

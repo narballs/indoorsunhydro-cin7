@@ -57,11 +57,36 @@
     <td class="customer-items-row">
         <span class="text-bold text-dark">{{ $contact->type }}</span>        
     </td>
-    <td title="{{ $contact->notes }}" class="customer-items-row">
+    {{-- <td title="{{ $contact->notes }}" class="customer-items-row">
         <span>
             {{ Illuminate\Support\Str::limit($contact->notes, 30) }}
         </span>
-    </td>
+    </td> --}}
+    @if ($contact && $contact->is_test_user == 1)
+        <td class="customer-items-row">
+            <span class="d-flex">
+                <span class="badge badge-success">Test User</span>
+                <label class="custom-control custom-checkbox ">
+                    <input type="checkbox" id="{{ $contact->id }}" value="{{ $contact->is_test_user }}"
+                        class="custom-control-input general_switch" onchange="update_user_job({{ $contact->id }})"
+                        {{ isset($contact->is_test_user) && $contact->is_test_user == 1 ? 'checked="checked"' : '' }}>
+                    <span class="custom-control-indicator"></span>
+                </label>
+            </span>
+        </td>
+    @else
+        <td class="customer-items-row">
+            <span class="d-flex">
+                <span class="badge badge-warning">Actual User</span>
+                <label class="custom-control custom-checkbox ">
+                    <input type="checkbox" id="{{ $contact->id }}" value="{{ $contact->is_test_user }}"
+                        class="custom-control-input general_switch" onchange="update_user_job({{ $contact->id }})"
+                        {{ isset($contact->is_test_user) && $contact->is_test_user == 0 ? '' : 'checked' }}>
+                    <span class="custom-control-indicator"></span>
+                </label>
+            </span>
+        </td>
+    @endif
     <td class="customer-items-row">
         {{$contact->created_at->format('m/d/Y') }}
     </td>

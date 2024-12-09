@@ -269,6 +269,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/order/label/download/{filename}', [OrderController::class, 'download_label'])->name('download_label');
     Route::post('admin/customer/update-order-status', [OrderController::class, 'update_order_status'])->name('update_order_status');
     Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
+    Route::post('admin/update_user_job', [ContactController::class, 'update_user_job'])->name('update_user_job');
 
 
     // send orer to shipstation

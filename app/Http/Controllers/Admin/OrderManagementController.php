@@ -446,8 +446,22 @@ class OrderManagementController extends Controller
         $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
         
         if (empty($job)) {
-            if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
-                if (strtolower($order->payment_status) === 'paid') {
+
+            $contact = Contact::where('contact_id', $order->memberId)->first();
+
+            if (!empty($contact) && $contact->is_test_user == 0) {
+
+                if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                    if (strtolower($order->payment_status) === 'paid') {
+                        $order_data = OrderHelper::get_order_data_to_process($order);
+                        SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+                        return response()->json([
+                            'status' => 'success',
+                        ]);
+                    }
+                } 
+                else {
                     $order_data = OrderHelper::get_order_data_to_process($order);
                     SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
 
@@ -455,13 +469,9 @@ class OrderManagementController extends Controller
                         'status' => 'success',
                     ]);
                 }
-            } 
-            else {
-                $order_data = OrderHelper::get_order_data_to_process($order);
-                SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
-
+            } else {
                 return response()->json([
-                    'status' => 'success',
+                    'status' => 'failed',
                 ]);
             }
             

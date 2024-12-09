@@ -1321,7 +1321,7 @@
                         });
                     }
                     else if (response.status === 'failed') {
-                        alert('This order is already in process. Please wait for a while.');
+                        alert('Order fullfill failed');
                         location.reload();
                     }
                 }
