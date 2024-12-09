@@ -42,6 +42,22 @@
         background-color: #7BC533;
     }
 
+    .banner_title_text {
+        font-size: 32px;
+    }
+
+    @media (max-width: 768px) {
+        .banner_title_text {
+            font-size: 22px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .banner_title_text {
+            font-size: 16px;
+        }
+    }
+
 
 </style>
 <body>
@@ -60,7 +76,7 @@
                             <div class="row">
                                 <h1 class="page-title-head border-0">
                                     <div class="banner-title">
-                                        <div class="text-uppercase font-weight-bold text-dark mx-1 border-element">{{$blog_detail->title}}</div>
+                                        <div class="text-uppercase font-weight-bold text-dark mx-1 border-element banner_title_text">{{$blog_detail->title}}</div>
                                     </div>
                                 </h1>
                             </div>
