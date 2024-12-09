@@ -1031,7 +1031,7 @@
             rtl:false,
             loop:false,
             margin:10,
-            dots:false,
+            dots:true,
             nav:true,
             navText: ["<i class='fas fa-angle-left'></i>", "<i class='fas fa-angle-right'></i>"],
             responsive:{
