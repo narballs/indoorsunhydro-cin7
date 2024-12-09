@@ -1105,4 +1105,31 @@ class ContactController extends Controller
             ], 200);
         }
     }
+
+
+    public function update_user_job(Request $request)
+    {
+        $contact_primary_id = $request->contact_primary_id;
+
+        $contact = Contact::where('id', $contact_primary_id)->first();
+
+        if (!empty($contact)) {
+            if ($contact->is_test_user == 1) {
+                $contact->is_test_user = 0;
+            } else {
+                $contact->is_test_user = 1;
+            }
+
+            $contact->save();
+
+            return response()->json([
+                'msg' => 'success'
+            ], 200);
+        }
+
+        return response()->json([
+            'msg' => 'failed'
+        ], 200);
+    }
+            
 }

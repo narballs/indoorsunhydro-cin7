@@ -80,7 +80,7 @@ class AutoOrdersSync extends Command
 
             $contact = Contact::where('contact_id', $order->memberId)->first();
 
-            if (!empty($contact) && $contact->is_test_user == 1) {
+            if (!empty($contact) && $contact->is_test_user == 0) {
                 $this->info('Order Date ' . $order->created_at);
                 if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
                     if (strtolower($order->payment_status) === 'paid') {

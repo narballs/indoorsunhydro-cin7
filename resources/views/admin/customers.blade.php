@@ -141,7 +141,7 @@
                                     Type
                                 </td>
                                 <td>
-                                    <span class="d-flex table-row-item"> Notes</span>
+                                    <span class="d-flex table-row-item">Is Test User</span>
                                 </td>
                                 <td>
                                     <span class="d-flex table-row-item"> Created Date</span>
@@ -602,6 +602,29 @@
                     if (response.msg == 'success') {
                         window.location.reload();
                     }
+                }
+            });
+        }
+
+
+        function update_user_job(contact_primary_id) {
+            jQuery.ajax({
+                url: "{{ url('/admin/update_user_job') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "contact_primary_id": contact_primary_id,
+                },
+                success: function(response) {
+                    if (response.msg == 'success') {
+                        window.location.reload();
+                    } else {
+                        swal("Error", "User is not changed", "error");
+                    }
+                }, 
+                error: function(response) {
+                    console.log(response);
+                    swal("Error", "User is not changed", "error");
                 }
             });
         }

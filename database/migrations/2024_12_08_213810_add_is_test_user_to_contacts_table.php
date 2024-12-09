@@ -14,7 +14,7 @@ class AddIsTestUserToContactsTable extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->boolean('is_test_user')->default(true)->nullable()->after('is_default');
+            $table->boolean('is_test_user')->default(false)->nullable()->after('is_default');
         });
     }
 
