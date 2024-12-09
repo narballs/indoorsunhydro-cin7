@@ -53,6 +53,7 @@ class Contact extends Model
         'billingEmail',
         'accountsFirstName',
         'accountsLastName',
+        'is_test_user'
     ];
 
     public function orders()
