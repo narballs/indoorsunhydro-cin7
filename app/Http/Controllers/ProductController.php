@@ -858,52 +858,116 @@ class ProductController extends Controller
 
     // new code
 
+    // public function getSimilarProducts(Request $request, $id, $option_id)
+    // {
+    //     // Validate the 'perPage' and 'page' parameters to ensure they are numeric
+    //     $perPage = is_numeric($request->get('perPage')) ? (int)$request->get('perPage', 4) : 4;
+    //     $currentPage = is_numeric($request->get('page')) ? (int)$request->get('page', 1) : 1;
+
+    //     $offset = ($currentPage - 1) * $perPage;
+        
+    //     $product = Product::with('categories', 'brand')
+    //         ->where('id', $id)
+    //         ->where('status', '!=', 'Inactive')
+    //         ->first();
+
+    //     if (empty($product)) {
+    //         session()->flash('error', 'This product is not available! Please search for another product.');
+    //         return redirect('/products');
+    //     }
+
+    //     if (!empty($product->category_id)) {
+    //         $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
+    //             ->where('category_id', $product->category_id)
+    //             ->where('id', '!=', $product->id)
+    //             ->whereHas('categories', function ($q) {
+    //                 $q->where('is_active', 1);
+    //             })
+    //             ->where('status', '!=', 'Inactive');
+            
+    //         // Total similar products for pagination
+    //         $total_products = $similar_products_query->count();
+
+    //         // Fetch the similar products based on the perPage and offset
+    //         $similar_products_query = $similar_products_query->take($perPage)
+    //             ->skip($offset)
+    //             ->get();
+            
+    //         // Limit the total number of similar products to 16 (if more than 16 found)
+    //         $total = $total_products >= 16 ? 16 : $total_products;
+
+    //         // Create a paginator instance with the products and pagination info
+    //         $similar_products = new LengthAwarePaginator(
+    //             $similar_products_query, 
+    //             $total, 
+    //             $perPage, 
+    //             $currentPage, 
+    //             [
+    //                 'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
+    //                 'query' => $request->query(),
+    //             ]
+    //         );
+    //     }
+
+    //     // Return the paginated results as a JSON response
+    //     return response()->json([
+    //         'data' => $similar_products->items(),
+    //         'current_page' => $similar_products->currentPage(),
+    //         'last_page' => $similar_products->lastPage(),
+    //         'total' => $similar_products->total(),
+    //     ]);
+    // }
+
     public function getSimilarProducts(Request $request, $id, $option_id)
     {
-        // Validate the 'perPage' and 'page' parameters to ensure they are numeric
-        $perPage = is_numeric($request->get('perPage')) ? (int)$request->get('perPage', 4) : 4;
-        $currentPage = is_numeric($request->get('page')) ? (int)$request->get('page', 1) : 1;
+        // Validate 'perPage' and 'page' parameters with defaults
+        $perPage = is_numeric($request->get('perPage')) ? (int) $request->get('perPage', 4) : 4;
+        $currentPage = is_numeric($request->get('page')) ? (int) $request->get('page', 1) : 1;
 
         $offset = ($currentPage - 1) * $perPage;
-        
+
+        // Fetch the main product with required relationships
         $product = Product::with('categories', 'brand')
             ->where('id', $id)
             ->where('status', '!=', 'Inactive')
             ->first();
 
         if (empty($product)) {
-            session()->flash('error', 'This product is not available! Please search for another product.');
-            return redirect('/products');
+            return response()->json([
+                'error' => 'This product is not available! Please search for another product.'
+            ], 404);
         }
 
-        $similar_products = collect(); // Initialize as empty collection
+        $similar_products = null;
 
         if (!empty($product->category_id)) {
-            $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
+            $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'categories', 'product_stock')
                 ->where('category_id', $product->category_id)
                 ->where('id', '!=', $product->id)
-                ->whereHas('categories', function ($q) {
-                    $q->where('is_active', 1);
+                ->whereHas('categories', function ($query) {
+                    $query->where('is_active', 1);
                 })
-                ->where('status', '!=', 'Inactive');
-            
-            // Total similar products for pagination
-            $total_products = $similar_products_query->count();
-
-            // Fetch the similar products based on the perPage and offset
-            $similar_products_query = $similar_products_query->take($perPage)
+                ->where('status', '!=', 'Inactive')
+                ->take(16) // Limit results to 16 at most
                 ->skip($offset)
+                ->take($perPage) // Fetch only the results for the current page
                 ->get();
-            
-            // Limit the total number of similar products to 16 (if more than 16 found)
-            $total = $total_products >= 16 ? 16 : $total_products;
 
-            // Create a paginator instance with the products and pagination info
+            $total_products = Product::where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->whereHas('categories', function ($query) {
+                    $query->where('is_active', 1);
+                })
+                ->where('status', '!=', 'Inactive')
+                ->count();
+
+            $total = min($total_products, 16); // Cap total at 16 for pagination
+
             $similar_products = new LengthAwarePaginator(
-                $similar_products_query, 
-                $total, 
-                $perPage, 
-                $currentPage, 
+                $similar_products_query,
+                $total,
+                $perPage,
+                $currentPage,
                 [
                     'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
                     'query' => $request->query(),
@@ -911,7 +975,13 @@ class ProductController extends Controller
             );
         }
 
-        // Return the paginated results as a JSON response
+        if (!$similar_products) {
+            return response()->json([
+                'error' => 'No similar products found.'
+            ], 404);
+        }
+
+        // Return the paginated results
         return response()->json([
             'data' => $similar_products->items(),
             'current_page' => $similar_products->currentPage(),
