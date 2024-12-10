@@ -104,7 +104,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
 
 
 
-<div class="row justify-content-center w-100">
+<div class="row justify-content-center">
     <div class="col-md-12 col-xl-10 col-lg-12 col-sm-12 col-xs-12 mt-3 mb-3">
         <div class="row justify-content-between ml-1">
             {{-- similar product partial --}}
@@ -174,13 +174,13 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                             <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12 mb-2"
                                 id="product_name">
                                 <div class="row">
-                                    <div class="col-md-11">
+                                    <div class="col-md-11 col-10">
                                         <p class="product-detail-heading-text-new product_name_detail_page"
                                             data-title="{{$productOption->products->name}}" id="product-detail-id">
                                             {{$productOption->products->name}}</p>
                                     </div>
                                     @if (!empty($contact_id))
-                                    <div class="col-md-1 d-flex justify-content-center">
+                                    <div class="col-md-1 col-2 d-flex justify-content-center mt-3 mt-lg-0">
                                         <a style="width:20px !important;" href="javascript:void(0);" class="subscribe">
                                             <i class="fa-solid fav-{{ $productOption->option_id }} fa-heart {{ isset($user_buy_list_options[$productOption->option_id]) ? '' : 'text-muted' }} "
                                                 id="{{ $productOption->option_id }}" data-toggle="popover"
@@ -305,19 +305,19 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                             <div class="cart row mt-0 mt-md-3 justify-content-between">
                                                 @if ($add_to_cart == true)
                                                     @if ($total_stock > 0 || $productOption->stockAvailable > 0)
-                                                        <div class="col-md-4 col-5 col-lg-4 col-xl-3">
+                                                        <div class="col-md-4 col-5 col-lg-4 col-xl-4">
                                                             <div
                                                                 class="d-flex align-items-center px-2 product-detail-quantity-increase-decrease-div">
                                                                 <i class="fa fa-minus product-detail-quantity-decrease"></i>
                                                                 <input type="number" name="quantity" id="quantity" min="1"
                                                                     max="{{$productOption->stockAvailable}}" step="1" value="1"
-                                                                    class="text-center form-control product-detail-quantity-number-new">
+                                                                    class="text-center form-control product-detail-quantity-number-new mb-0">
                                                                 
                                                                 <i class="fa fa-plus product-detail-quantity-increase"></i>
                                                             </div>
                                                         </div>
                                                     @endif
-                                                    <div class="{{$total_stock > 0 || $productOption->stockAvailable > 0 ? 'col-md-8 col-7 col-lg-8 col-xl-9' : 'col-12'}}">
+                                                    <div class="{{$total_stock > 0 || $productOption->stockAvailable > 0 ? 'col-md-8 col-7 col-lg-8 col-xl-8' : 'col-12'}}">
                                                         @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
                                                             @if ($total_stock > 0)
                                                                 <button type="button"
