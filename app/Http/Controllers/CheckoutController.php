@@ -3179,7 +3179,12 @@ class CheckoutController extends Controller
         if (!empty($get_shipping_api_response)) {
             // dd($get_shipping_api_response);
             // Merge the shipping responses from ShipStation
-            $mergedArray = count($get_shipping_api_response) > 1 ?  array_merge($get_shipping_api_response[0], $get_shipping_api_response[1] , $get_shipping_api_response[2]) : $get_shipping_api_response[0];
+            // $mergedArray = count($get_shipping_api_response) > 1 ?  array_merge($get_shipping_api_response[0], $get_shipping_api_response[1] , $get_shipping_api_response[2]) : $get_shipping_api_response[0];
+            if (count($get_shipping_api_response) > 1) {
+                $mergedArray = array_merge(...array_slice($get_shipping_api_response, 0, 3));
+            } else {
+                $mergedArray = $get_shipping_api_response[0] ?? [];
+            }
             $selected_shipping_methods = []; // Initialize the selected shipping methods array
             
             // Populate selected shipping methods based on the settings
