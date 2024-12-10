@@ -3097,6 +3097,7 @@ class CheckoutController extends Controller
 
 
     public function get_shipping_rate_new($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address ,$productTotal) {
+        
         $shipment_prices = [];
         $client = new \GuzzleHttp\Client();
         $ship_station_host_url = config('services.shipstation.host_url');
@@ -3116,6 +3117,7 @@ class CheckoutController extends Controller
                 'shipping_carrier_code' => $carrier_code_2->option_value,    
             ];
         }
+
         foreach ($shipping_quotes_settings as $quote) {
             if (!empty($quote->service_code)) {
                 // Prepare data for ShipStation request
@@ -3172,11 +3174,12 @@ class CheckoutController extends Controller
                 }
             }
         }
+
+
         if (!empty($get_shipping_api_response)) {
+            // dd($get_shipping_api_response);
             // Merge the shipping responses from ShipStation
-            $mergedArray = count($get_shipping_api_response) > 1 ?  array_merge($get_shipping_api_response[0], $get_shipping_api_response[1]) : $get_shipping_api_response[0];
-            // dd($mergedArray);
-        
+            $mergedArray = count($get_shipping_api_response) > 1 ?  array_merge($get_shipping_api_response[0], $get_shipping_api_response[1] , $get_shipping_api_response[2]) : $get_shipping_api_response[0];
             $selected_shipping_methods = []; // Initialize the selected shipping methods array
             
             // Populate selected shipping methods based on the settings
