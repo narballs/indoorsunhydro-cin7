@@ -248,6 +248,17 @@
 }
 
 
+@media only screen and (min-width:280px) and (max-width:319px) {
+    .product-detail-quantity-number-new {
+        font-size: 14px;
+    }
+
+    .product-detail-quantity-decrease , .product-detail-quantity-increase {
+        font-size: 12px !important;
+    }
+}
+
+
 
 @media only screen and (max-width: 768px) {
     .ai_row {
