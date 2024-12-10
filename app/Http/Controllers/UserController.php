@@ -479,9 +479,8 @@ class UserController extends Controller
                             }
                             
                             Session::put('companies', $companies);
-                            $previousUrl = session('previous_url', '/'); 
-                            return redirect()->intended($previousUrl);
-                            // return redirect()->route('my_account');
+                            $previousUrl = session('previous_url', '/');
+                            return redirect('/');
                         } else {
                             $companies = Contact::where('user_id', auth()->user()->id)->get();
                             if ($companies->count() == 1) {
