@@ -542,13 +542,13 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                             </div>
                                         </div>
                                         @if (count($ai_questions) > 0)
-                                            <div class="card-footer py-3 px-1">
+                                            <div class="card-footer py-3 px-1 overflow-x-scroll">
                                                 <div class="col-md-12 ai_row_footer d-flex flex-wrap justify-content-start">
                                                     @foreach($ai_questions as $question)
                                                         <span class="ai_questions mx-3 w-auto add_custom_question" 
                                                             title="{{ $question->question }}" 
                                                             onclick="add_custom_question(this);">
-                                                            <strong class="ai_question_strong">{{ \Illuminate\Support\Str::limit($question->question, 40) }}</strong>
+                                                            <strong class="ai_question_strong">{{ $question->question }}</strong>
                                                         </span>
                                                     @endforeach
                                                 </div>
