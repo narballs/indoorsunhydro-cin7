@@ -647,13 +647,20 @@
                     }
 
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'error',
                         title: response.message,
-                        timer: 3000,
-                        showConfirmButton: false,
-                        position: 'top',
-                        timerProgressBar: true
+                        position: 'center',
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            popup: 'swal2-popup-class',  // Class for the actions container
+                            actions: 'my-actions-class'  // Class for the actions container
+                        },
                     });
                 }
                 if (response.status == 'success') {
@@ -676,14 +683,21 @@
                     }
 
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'success',
                         title: 1 + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+  '<div class="added_tocart">Added to your cart</div>',
-                        timer: 300000,
-                        showConfirmButton: false,
-                        position: 'top',
-                        timerProgressBar: true,
-                        customClass: {popup: 'short-toast-popup'}
+                        // customClass: {popup: 'short-toast-popup'}
+                        position: 'center',
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
+                        customClass: {
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                popup: 'swal2-popup-class',  // Class for the actions container
+                                actions: 'my-actions-class'  // Class for the actions container
+                        },
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
