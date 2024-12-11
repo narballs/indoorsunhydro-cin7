@@ -3509,7 +3509,7 @@ class ProductController extends Controller
             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra', // Math
             'quantum', 'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
             'gold', 'silver', 'ruby', 'emerald', 'sapphire', // Precious materials
-            'koala', 'kangaroo', 'elephant', 'dolphin', 'penguin', 'giraffe', 'fish'
+            'koala', 'kangaroo', 'elephant', 'dolphin', 'penguin', 'giraffe'
 
         ];
 
