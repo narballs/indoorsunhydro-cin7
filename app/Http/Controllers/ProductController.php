@@ -3502,7 +3502,7 @@ class ProductController extends Controller
         $irrelevantTerms = [
             'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
             'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
-            'earth', 'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
+            'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
             'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
