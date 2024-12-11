@@ -137,7 +137,7 @@
                         ?>
                         @if (!empty($option) && $option->stockAvailable > 0)
                             <div class="mt-1 mb-1">
-                                <span class="text-success">{{$option->stockAvailable . ' In Stock'}}</span>
+                                <span class="text-success">{{'In Stock'}}</span>
                             </div>
                         @else
                             <div class="mt-1 mb-1">

@@ -236,7 +236,7 @@
                                                     @endphp
                                                     @if (!empty($similar_product_option) && $similar_product_option->stockAvailable > 0)
                                                         <div>
-                                                            <span class="text-success">{{$similar_product_option->stockAvailable . ' In Stock'}}</span>
+                                                            <span class="text-success">{{'In Stock'}}</span>
                                                         </div>
                                                     @else
                                                         <div>
@@ -484,7 +484,7 @@
                                                     @endphp
                                                     @if (!empty($similar_product_option) && $similar_product_option->stockAvailable > 0)
                                                         <div>
-                                                            <span class="text-success">{{$similar_product_option->stockAvailable . ' In Stock'}}</span>
+                                                            <span class="text-success">{{'In Stock'}}</span>
                                                         </div>
                                                     @else
                                                         <div>
