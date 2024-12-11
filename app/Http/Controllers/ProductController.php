@@ -3492,8 +3492,8 @@ class ProductController extends Controller
         $genericKeywords = [
             'buy', 'price', 'specifications', 'features', 'availability', 'order', 
             'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
-            'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
-            'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
+            'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 'earth', 'liquid',
+            'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 'plants', 'flowers', 'seeds', 'grow', 'growing', 'garden', 'gardening', 'hydroponics', 'indoor', 'outdoor', 'light', 'lights', 'led', 'bulb', 'bulbs', 'lamp', 'lamps', 'fixture', 'fixtures', 'system', 'systems', 'kit', 'kits', 'tent', 'tents', 'room', 'rooms', 'box', 'boxes', 'grower', 'growers',
             'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
             'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences', 'used' , 'explain'   
         ];
