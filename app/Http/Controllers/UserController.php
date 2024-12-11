@@ -1682,7 +1682,11 @@ class UserController extends Controller
 
         $order_ids = ApiOrder::whereIn('memberId', $contact_ids)->pluck('id')->toArray();
         $product_ids = ApiOrderItem::whereIn('order_id', $order_ids)->pluck('product_id')->toArray();
-        $option_ids = ProductOption::whereIn('product_id', $product_ids)->pluck('option_id')->toArray();
+        $option_ids = ProductOption::whereIn('product_id', $product_ids)
+        ->where('stockAvailable', '!=', null)
+        ->where('stockAvailable', '>', 0)
+        ->pluck('option_id')
+        ->toArray();
         $price_ids = Pricingnew::whereIn('option_id', $option_ids)->where($user_price_column, '>' , 0)->pluck('option_id')->toArray();
         $product_options_ids = ProductOption::whereIn('option_id', $price_ids)->pluck('product_id')->toArray();
         $category_ids = Product::whereIn('product_id', $product_options_ids)->pluck('category_id')->toArray();
