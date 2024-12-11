@@ -2789,16 +2789,20 @@ class UserController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
-    public function switch_user($id, $contactId)
+    public function switch_user($id, $contactId , $admin_id)
     {
+        
         Session::forget('contact_id');
         Session::forget('company');
         Session::forget('companies');
         Session::forget('cart');
         $switch_user = Auth::loginUsingId($id);
         $auth_user_email = $switch_user->email;
-        session()->put('logged_in_as_another_user', $auth_user_email);
+        if (!empty($admin_id)) {
+            session()->put('admin_id_from_switching', $admin_id);
+        }
 
+        session()->put('logged_in_as_another_user', $auth_user_email);
         Auth::loginUsingId($id);
         $active_qoutes = Cart::where('user_id', $id)->where('is_active', 1)->get();
         foreach ($active_qoutes as $active_qoute) {
@@ -2855,8 +2859,16 @@ class UserController extends Controller
 
     public function switch_user_back()
     {
-        $auth_user_id = auth()->user()->id;
-        $admin = User::role('Admin')->where('id' , $auth_user_id)->first();
+        
+        $get_admin_id_from_session = session()->get('admin_id_from_switching');
+        if (!empty($get_admin_id_from_session)) {
+            $admin = User::role('Admin')->where('id' , $get_admin_id_from_session)->first();
+            Auth::loginUsingId($admin->id);
+            session()->forget('admin_id_from_switching');
+            return redirect('admin/dashboard');
+        }
+
+        $admin = User::role('Admin')->first();
         Auth::loginUsingId($admin->id);
         session()->flash('logged_in_as_another_user', '');
         return redirect('admin/dashboard');

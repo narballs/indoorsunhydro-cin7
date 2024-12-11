@@ -257,7 +257,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::post('admin/assign-parent-child', [ContactController::class, 'assingParentChild']);
-    Route::get('admin/user-switch/{id}/{contactId}', [UserController::class, 'switch_user']);
+    Route::get('admin/user-switch/{id}/{contactId}/{admin_id}', [UserController::class, 'switch_user']);
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('admin/api-sync-logs', [LogsController::class, 'index']);
@@ -377,7 +377,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::post('admin/refresh-contact', [ContactController::class, 'refreshContact']);
     Route::post('admin/disable-secondary', [ContactController::class, 'disableSecondary']);
-    Route::get('admin/user-switch/{id}', [UserController::class, 'switch_user'])->name('users.switch');
     Route::get('admin/send-password/{id}', [UserController::class, 'send_password'])->name('users.send_password');
     Route::get('admin/go-back', [UserController::class, 'switch_user_back'])->name('users.switch_user_back');
     Route::get('/site', [UserController::class, 'switch_admin'])->name('switch_admin');

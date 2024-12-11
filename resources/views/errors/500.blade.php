@@ -127,7 +127,7 @@
                 <div class="row mt-4">
                     <div class="col-md-12">
                         <h5 class="appologies text-center mb-4">
-                            Appologies
+                            Looks like we encountered an error
                         </h5>
                         <p class="text-center internal_error_msg mb-4">
                             {{$error_message}}
