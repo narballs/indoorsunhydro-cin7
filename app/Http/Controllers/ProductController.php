@@ -3492,8 +3492,8 @@ class ProductController extends Controller
         $genericKeywords = [
             'buy', 'price', 'specifications', 'features', 'availability', 'order', 
             'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
-            'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 
-            'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 
+            'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 'earth', 'liquid',
+            'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 'plants', 'flowers', 'seeds', 'grow', 'growing', 'garden', 'gardening', 'hydroponics', 'indoor', 'outdoor', 'light', 'lights', 'led', 'bulb', 'bulbs', 'lamp', 'lamps', 'fixture', 'fixtures', 'system', 'systems', 'kit', 'kits', 'tent', 'tents', 'room', 'rooms', 'box', 'boxes', 'grower', 'growers',
             'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
             'refund', 'condition', 'guarantee','similar', 'alternate', 'usage','use', 'benefit', 'advantage', 'disadvantage', 'pros', 'cons', 'comparison', 'compare', 'difference', 'similarities', 'differences', 'used' , 'explain'   
         ];
@@ -3502,13 +3502,13 @@ class ProductController extends Controller
         $irrelevantTerms = [
             'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
             'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
-            'earth', 'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
+            'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
             'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra', // Math
             'quantum', 'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
-            'gold', 'silver', 'diamond', 'ruby', 'emerald', 'sapphire', // Precious materials
+            'gold', 'silver', 'ruby', 'emerald', 'sapphire', // Precious materials
             'koala', 'kangaroo', 'elephant', 'dolphin', 'penguin', 'giraffe', 'fish'
 
         ];

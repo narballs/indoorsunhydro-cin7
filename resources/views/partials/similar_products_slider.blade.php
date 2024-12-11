@@ -282,7 +282,7 @@
                                                 @endphp
                                                 @if (!empty($similar_product_option) && $similar_product_option->stockAvailable > 0)
                                                     <div>
-                                                        <span class="text-success">{{'In Stock'}}</span>
+                                                        <span class="text-success">{{$similar_product_option->stockAvailable . ' In Stock'}}</span>
                                                     </div>
                                                 @else
                                                     <div>
@@ -519,17 +519,19 @@
                             .val()).innerHTML;
                     }
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'error',
                         title: response.message,
-                        timer: 3000,
-                        position: 'top',
+                        position: 'center',
                         showConfirmButton: true,  // Show the confirm (OK) button
-                        confirmButtonText: 'Okay',
-                        timerProgressBar: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
                         customClass: {
-                            confirmButton: 'my-confirm-button',  // Class for the confirm button
-                            actions: 'my-actions-class'  // Class for the actions container
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                popup: 'swal2-popup-class',  // Class for the actions container
+                                actions: 'my-actions-class'  // Class for the actions container
                         }
                     });
                 }
@@ -574,18 +576,20 @@
                         $('.promotional_banner_div_congrats').addClass('d-none');
                     } 
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'success',
                         title: 1 + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ '<div class="added_tocart">Added to your cart</div>',
-                        timer: 3000,
-                        customClass: {popup: 'short-toast-popup'},
-                        position: 'top',
+                        // customClass: {popup: 'short-toast-popup'},
+                        position: 'center',
                         showConfirmButton: true,  // Show the confirm (OK) button
-                        confirmButtonText: 'Okay',
-                        timerProgressBar: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
                         customClass: {
-                            confirmButton: 'my-confirm-button',  // Class for the confirm button
-                            actions: 'my-actions-class'  // Class for the actions container
+                                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                popup: 'swal2-popup-class',  // Class for the actions container
+                                actions: 'my-actions-class'  // Class for the actions container
                         }
                     });
                 }

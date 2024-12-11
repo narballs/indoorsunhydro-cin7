@@ -3,7 +3,14 @@
 @import url('https://fonts.cdnfonts.com/css/regular');
 
 
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
+    box-shadow: 0 0 0 0 rgba(112, 102, 224, .5);
+}
 
+.overflow-x-scroll {
+    overflow-x: scroll;
+    white-space: nowrap;
+}
 
 
     /* product detail end */

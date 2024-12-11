@@ -116,16 +116,18 @@
         var result = plus + 1;
         if (result > stock_number) {
             Swal.fire({
-                toast: true,
+                toast: false,
                 icon: 'error',
                 title: 'Maximum stock limit reached',
-                timer: 3000,
-                position: 'top',
+                position: 'center',
                 showConfirmButton: true,  // Show the confirm (OK) button
-                confirmButtonText: 'Okay',
-                timerProgressBar: true,
+                confirmButtonText: 'Confirm',
+                timerProgressBar: false,
+                allowOutsideClick: false, // Disable clicking outside to close the modal
+                allowEscapeKey: false, // Disable Esc key to close the modal
                 customClass: {
                     confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    popup: 'swal2-popup-class',  // Class for the actions container
                     actions: 'my-actions-class'  // Class for the actions container
                 }
             });
@@ -209,16 +211,16 @@
                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
                     jQuery('.swap_qty_number_'+id).val(response.actual_stock);
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'error',
                         title: response.message,
-                        timer: 3000,
                         position: 'top',
                         showConfirmButton: true,  // Show the confirm (OK) button
-                        confirmButtonText: 'Okay',
-                        timerProgressBar: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
                         customClass: {
                             confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            popup: 'swal2-popup-class',  // Class for the actions container
                             actions: 'my-actions-class'  // Class for the actions container
                         }
                     });
@@ -554,18 +556,112 @@
     //     updateBodyClickEventStatus(false);
     // }
 
-    function update_qty_text_new (id, option_id , element) {
-        var newValue = parseInt($(element).val());
-        if (newValue == 0 && newValue != null && newValue != '')  {
-            $('.swap_qty_number_'+id).each(function() {
-                $(this).val(1);
-            });
-        } else {
-            $('.swap_qty_number_'+id).each(function() {
-                $(this).val(newValue);
-            });
-        }
+    // function update_qty_text_new (id, option_id , element) {
+    //     var newValue = parseInt($(element).val());
+    //     var getActualStock = parseInt($('.swap_qty_number_'+id).attr('max'));
+    //     if (newValue == 0 && newValue != null && newValue != '')  {
+    //         if (newValue > getActualStock) {
+    //             Swal.fire({
+    //                 toast: true,
+    //                 icon: 'error',
+    //                 title: 'Maximum stock limit reached',
+    //                 position: 'top',
+    //                 showConfirmButton: true,  // Show the confirm (OK) button
+    //                 confirmButtonText: 'Okay',
+    //                 timerProgressBar: false,
+    //                 customClass: {
+    //                     confirmButton: 'my-confirm-button',  // Class for the confirm button
+    //                     actions: 'my-actions-class'  // Class for the actions container
+    //                 }
+    //             });
+    //             $(this).val(1);
+    //             return false;
+    //         }
+    //         else {
+    //             $('.swap_qty_number_'+id).each(function() {
+    //                 $(this).val(1);
+    //             });
+    //         }
+    //     } else {
+    //         if (newValue > getActualStock) {
+    //             Swal.fire({
+    //                 toast: true,
+    //                 icon: 'error',
+    //                 title: 'Maximum stock limit reached',
+    //                 position: 'top',
+    //                 showConfirmButton: true,  // Show the confirm (OK) button
+    //                 confirmButtonText: 'Okay',
+    //                 timerProgressBar: false,
+    //                 customClass: {
+    //                     confirmButton: 'my-confirm-button',  // Class for the confirm button
+    //                     actions: 'my-actions-class'  // Class for the actions container
+    //                 }
+    //             });
+    //             $(this).val(newValue);
+    //             return false;
+    //         } else {
+    //             $('.swap_qty_number_'+id).each(function() {
+    //                 $(this).val(newValue);
+    //             });
+    //         }
+    //     }
+    // }
+
+    function update_qty_text_new(id, option_id, element) {
+    var newValue = parseInt($(element).val());
+    var getActualStock = parseInt($('.swap_qty_number_' + id).attr('max'));
+
+    if (newValue == 0 || isNaN(newValue)) {
+        newValue = 1; // Set to 1 if invalid value is entered
     }
+
+    if (newValue > getActualStock) {
+        // Add overlay to disable the background
+        if ($('#screen-overlay').length === 0) { // Avoid duplicate overlays
+            $('body').append('<div id="screen-overlay" style="position: relative; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998;"></div>');
+        }
+
+        Swal.fire({
+            toast: false, // Disable toast style for full-screen modal
+            icon: 'error',
+            title: 'Maximum stock limit reached',
+            text: 'Please adjust the quantity.',
+            position: 'center',
+            showConfirmButton: true,
+            confirmButtonText: 'Confirm',
+            allowOutsideClick: false, // Disable clicking outside to close the modal
+            allowEscapeKey: false, // Disable Esc key to close the modal
+            customClass: {
+                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                popup: 'swal2-popup-class',  // Class for the actions container
+                actions: 'my-actions-class'  // Class for the actions container
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Remove the overlay and update the quantity
+                $('#screen-overlay').remove();
+                $('.swap_qty_number_' + id).each(function () {
+                    $(this).val(1); // Reset to 1
+                });
+            }
+        });
+
+        // Increase z-index of SweetAlert modal to be above the overlay
+        $('.swal2-popup-class').css('z-index', '9999');
+
+        return false;
+    } else {
+        // Update the quantity if it's valid
+        $('.swap_qty_number_' + id).each(function () {
+            $(this).val(newValue);
+        });
+    }
+}
+
+
+
+
+
 
     function send_notification_to_admin(outOfStockItems) {
         // Ensure there are items to process
