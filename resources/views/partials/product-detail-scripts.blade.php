@@ -1302,9 +1302,10 @@ p {
                     product.options.forEach(option => {
                         html += buildProductRow(product, option);
                     });
-                } else {
-                    html += buildProductRow(product, null);
-                }
+                } 
+                // else {
+                //     html += buildProductRow(product, null);
+                // }
             });
 
             const paginationHtml = generatePaginationLinks(response.last_page, response.current_page);
