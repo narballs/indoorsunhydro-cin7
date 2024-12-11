@@ -137,7 +137,7 @@
                         ?>
                         @if (!empty($option) && $option->stockAvailable > 0)
                             <div class="mt-1 mb-1">
-                                <span class="text-success">{{'In Stock'}}</span>
+                                <span class="text-success">{{$option->stockAvailable . ' In Stock'}}</span>
                             </div>
                         @else
                             <div class="mt-1 mb-1">
@@ -188,7 +188,8 @@
                         <div class="col-md-12 add-to-cart-button-section">
                             @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) == 'yes')
                                 @if ($option->stockAvailable > 0)
-                                    <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
+                                    {{-- <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}"> --}}
+                                    <div  class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
                                         <div class="input-group">
                                             <div class="input-group-prepend custom-border qty_minus_mobile">
                                                 <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
@@ -243,7 +244,8 @@
                                 @endif
                             @else
                                 @if ($enable_add_to_cart)
-                                    <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
+                                    {{-- <div onclick="button_swap_quantity('{{ $product->id }}', '{{ $option->option_id }}')" class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}"> --}}
+                                    <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
                                         <div class="input-group">
                                             <div class="input-group-prepend custom-border qty_minus_mobile">
                                                 <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('{{ $product->id }}', '{{ $option->option_id }}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>

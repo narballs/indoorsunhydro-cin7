@@ -788,16 +788,18 @@ p {
                 var product_price = document.getElementById("product_price").innerHTML;
                 
                 Swal.fire({
-                    toast: true,
+                    toast: false,
                     icon: 'error',
                     title: response.message,
-                    timer: 3000,
-                    position: 'top',
+                    position: 'center',
                     showConfirmButton: true,  // Show the confirm (OK) button
-                    confirmButtonText: 'Okay',
-                    timerProgressBar: true,
+                    confirmButtonText: 'Confirm',
+                    timerProgressBar: false,
+                    allowOutsideClick: false, // Disable clicking outside to close the modal
+                    allowEscapeKey: false, // Disable Esc key to close the modal
                     customClass: {
                         confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        popup: 'swal2-popup-class',  // Class for the actions container
                         actions: 'my-actions-class'  // Class for the actions container
                     }
                 });
@@ -841,14 +843,21 @@ p {
                     $('.promotional_banner_div_congrats').addClass('d-none');
                 } 
                 Swal.fire({
-                    toast: true,
+                    toast: false,
                     icon: 'success',
                     title: jQuery('#quantity').val() + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ '<div class="added_tocart">Added to your cart</div>',
-                    timer: 3000,
-                    showConfirmButton: false,
-                    position: 'top',
-                    timerProgressBar: true,
-                    customClass: {popup: 'short-toast-popup'}
+                    // customClass: {popup: 'short-toast-popup'}
+                    position: 'center',
+                    showConfirmButton: true,  // Show the confirm (OK) button
+                    confirmButtonText: 'Confirm',
+                    timerProgressBar: false,
+                    allowOutsideClick: false, // Disable clicking outside to close the modal
+                    allowEscapeKey: false, // Disable Esc key to close the modal
+                    customClass: {
+                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        popup: 'swal2-popup-class',  // Class for the actions container
+                        actions: 'my-actions-class'  // Class for the actions container
+                    }
                 });
             }
             $('#top_cart_quantity').html(total_cart_quantity);
@@ -863,16 +872,18 @@ p {
             console.log(response.responseJSON);
             var error_message = response.responseJSON;
                 Swal.fire({
-                    toast: true,
+                    toast: false,
                     icon: 'error',
                     title: error_message.message,
-                    timer: 3000,
-                    position: 'top',
+                    position: 'center',
                     showConfirmButton: true,  // Show the confirm (OK) button
-                    confirmButtonText: 'Okay',
-                    timerProgressBar: true,
+                    confirmButtonText: 'Confirm',
+                    timerProgressBar: false,
+                    allowOutsideClick: false, // Disable clicking outside to close the modal
+                    allowEscapeKey: false, // Disable Esc key to close the modal
                     customClass: {
                         confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        popup: 'swal2-popup-class',  // Class for the actions container
                         actions: 'my-actions-class'  // Class for the actions container
                     }
                 });
@@ -947,17 +958,19 @@ p {
     // Show error toast
     function showErrorToast() {
         Swal.fire({
-            toast: true,
+            toast: false,
             icon: 'error',
             title: 'Quantity must be less than or equal to stock quantity',
-            timer: 3000,
-            position: 'top',
-            showConfirmButton: true,
-            confirmButtonText: 'Okay',
-            timerProgressBar: true,
+            position: 'center',
+            showConfirmButton: true,  // Show the confirm (OK) button
+            confirmButtonText: 'Confirm',
+            timerProgressBar: false,
+            allowOutsideClick: false, // Disable clicking outside to close the modal
+            allowEscapeKey: false, // Disable Esc key to close the modal
             customClass: {
-                confirmButton: 'my-confirm-button',
-                actions: 'my-actions-class'
+                confirmButton: 'my-confirm-button',  // Class for the confirm button
+                popup: 'swal2-popup-class',  // Class for the actions container
+                actions: 'my-actions-class'  // Class for the actions container
             }
         });
     }
@@ -1028,16 +1041,18 @@ p {
                     }
 
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'error',
                         title: response.message,
-                        timer: 3000,
-                        position: 'top',
+                        position: 'center',
                         showConfirmButton: true,  // Show the confirm (OK) button
-                        confirmButtonText: 'Okay',
-                        timerProgressBar: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
                         customClass: {
                             confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            popup: 'swal2-popup-class',  // Class for the actions container
                             actions: 'my-actions-class'  // Class for the actions container
                         }
                     });
@@ -1082,17 +1097,19 @@ p {
                     } 
 
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'success',
                         title: 1 + 'X ' + '<span class="text-dark toast_title">'+ productName+'</span>' + '<br/>'+ '<div class="added_tocart">Added to your cart</div>',
-                        timer: 3000,
-                        customClass: {popup: 'short-toast-popup'},
-                        position: 'top',
+                        // customClass: {popup: 'short-toast-popup'},
+                        position: 'center',
                         showConfirmButton: true,  // Show the confirm (OK) button
-                        confirmButtonText: 'Okay',
-                        timerProgressBar: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
                         customClass: {
                             confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            popup: 'swal2-popup-class',  // Class for the actions container
                             actions: 'my-actions-class'  // Class for the actions container
                         }
                     });
@@ -1841,16 +1858,18 @@ p {
         var itemQuantity = $('.swap_qty_number_'+id).val();
         if (parseInt(itemQuantity) <= 0 || itemQuantity === '' || itemQuantity === null) {
             Swal.fire({
-                toast: true,
+                toast: false,
                 icon: 'error',
                 title: 'Quantity must be greater than 0 and not Empty!',
-                timer: 3000,
-                position: 'top',
+                position: 'center',
                 showConfirmButton: true,  // Show the confirm (OK) button
-                confirmButtonText: 'Okay',
-                timerProgressBar: true,
+                confirmButtonText: 'Confirm',
+                timerProgressBar: false,
+                allowOutsideClick: false, // Disable clicking outside to close the modal
+                allowEscapeKey: false, // Disable Esc key to close the modal
                 customClass: {
                     confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    popup: 'swal2-popup-class',  // Class for the actions container
                     actions: 'my-actions-class'  // Class for the actions container
                 }
             });
@@ -1896,16 +1915,18 @@ p {
                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
                     jQuery('.swap_qty_number_'+id).val(response.actual_stock);
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'error',
                         title: response.message,
-                        timer: 3000,
-                        position: 'top',
+                        position: 'center',
                         showConfirmButton: true,  // Show the confirm (OK) button
-                        confirmButtonText: 'Okay',
-                        timerProgressBar: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
                         customClass: {
                             confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            popup: 'swal2-popup-class',  // Class for the actions container
                             actions: 'my-actions-class'  // Class for the actions container
                         }
                     });
@@ -1952,13 +1973,20 @@ p {
                         $('.promotional_banner_div_congrats').addClass('d-none');
                     } 
                     Swal.fire({
-                        toast: true,
+                        toast: false,
                         icon: 'success',
                         title:itemQuantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ '<div class="added_tocart text-left">Added to your cart</div>',
-                        timer: 3000,
-                        showConfirmButton: false,
-                        position: 'top',
-                        timerProgressBar: true
+                        position: 'center',
+                        showConfirmButton: true,  // Show the confirm (OK) button
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false, // Disable clicking outside to close the modal
+                        allowEscapeKey: false, // Disable Esc key to close the modal
+                        customClass: {
+                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                            popup: 'swal2-popup-class',  // Class for the actions container
+                            actions: 'my-actions-class'  // Class for the actions container
+                        }
                     });
                 }
                 $('#top_cart_quantity').html(total_cart_quantity);
@@ -1968,16 +1996,18 @@ p {
             error: function(response) {
             var error_message = response.responseJSON;
                 Swal.fire({
-                    toast: true,
+                    toast: false,
                     icon: 'error',
                     title: error_message.message,
-                    timer: 3000,
-                    position: 'top',
+                    position: 'center',
                     showConfirmButton: true,  // Show the confirm (OK) button
-                    confirmButtonText: 'Okay',
-                    timerProgressBar: true,
+                    confirmButtonText: 'Confirm',
+                    timerProgressBar: false,
+                    allowOutsideClick: false, // Disable clicking outside to close the modal
+                    allowEscapeKey: false, // Disable Esc key to close the modal
                     customClass: {
                         confirmButton: 'my-confirm-button',  // Class for the confirm button
+                        popup: 'swal2-popup-class',  // Class for the actions container
                         actions: 'my-actions-class'  // Class for the actions container
                     }
                 });
