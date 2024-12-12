@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNav">
             <div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
                 <div class="collapse navbar-collapse justify-content-center collapse show" id="navbarNavDarkDropdown">
-                    <ul class="navbar-nav d-flex main_nav_holder">
+                    <ul class="navbar-nav d-flex main_nav_holder" style="overflow: auto;">
                         <li class="nav-item dropdown mx-4">
                             <a class="nav-link dropdown-toggle product-mega-menu font_style_menu" href="#"
                                 id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
