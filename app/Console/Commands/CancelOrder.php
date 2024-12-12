@@ -255,15 +255,15 @@ class CancelOrder extends Command
                         MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
                     }
 
-                    $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
-                        foreach ($specific_admin_notifications as $specific_admin_notification) {
-                            $subject = 'Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
-                            $data['subject'] = $subject;
-                            $data['email'] = $specific_admin_notification->email;
-                            MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
-                        }
-                    }
+                    // $specific_admin_notifications = SpecificAdminNotification::all();
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         $subject = 'Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
+                    //         $data['subject'] = $subject;
+                    //         $data['email'] = $specific_admin_notification->email;
+                    //         MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
+                    //     }
+                    // }
                 }
 
                 $this->info('Orders Cancelled');
