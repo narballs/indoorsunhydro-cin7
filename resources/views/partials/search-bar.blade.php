@@ -1,6 +1,6 @@
 <div class="container-fluid mt-3 header-top">
-    <div class="row header-top justify-content-center align-items-center">
-        <div class="col-md-3 col-xl-4 col-lg-4 d-flex align-items-center justify-content-center">
+    <div class="row header-top justify-content-center align-items-center align-items-md-start">
+        <div class="col-md-3 col-xl-4 col-lg-4 d-flex align-items-center align-items-md-start justify-content-center">
             <a class="navbar-brand d-flex justify-content-center" href="/">
                 <img class="logo_image_main" src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" ;>
             </a>

@@ -7,7 +7,7 @@
         MY ACCOUNT
     </p>
 </div>
-<input type="hidden" name="products_to_hide" id="products_to_hide" value="{{ htmlspecialchars(json_encode($products_to_hide)) }}">
+{{-- <input type="hidden" name="products_to_hide" id="products_to_hide" value="{{ htmlspecialchars(json_encode($products_to_hide)) }}">
 @php
     $auth = false;
     $paymentTerms = false;
@@ -37,16 +37,61 @@
 @endphp
 
 <input type="hidden" name="paymentTerms" id="paymentTerms" value="{{$paymentTerms}}">
-<input type="hidden" name="auth_value" id="auth_value" value="{{$auth}}">
+<input type="hidden" name="auth_value" id="auth_value" value="{{$auth}}"> --}}
+
+<input type="hidden" value="{{App\Helpers\UserHelper::getUserPriceColumn()}}" id="get_column">
+<input type="hidden" name="products_to_hide" id="products_to_hide"
+    value="{{ htmlspecialchars(json_encode($products_to_hide)) }}">
+
+
+@php
+    $auth = false;
+    $paymentTerms = false;
+    
+    if (auth()->user()) {
+        $auth = true;
+        $contact = App\Models\Contact::where('user_id', auth()->user()->id)->first();
+        if (empty($contact)) {
+            $paymentTerms = false;
+        }
+        $contact_id_new = null; 
+        if ($contact->is_parent == 1) {
+            $contact_id_new = $contact->contact_id;
+        } else {
+            $contact_id_new = $contact->parent_id;
+        }
+
+        $get_main_contact = App\Models\Contact::where('id', $contact_id_new)->first();
+        if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
+            $paymentTerms = true;
+        } else {
+            $paymentTerms = false;
+        }
+    } else {
+        $auth = false;
+        $paymentTerms = false;
+    }
+@endphp
+
+<input type="hidden" name="paymentTerms" id="paymentTerms" value="{{$paymentTerms === false ? 0 : 1}}">
+<input type="hidden" name="auth_value" id="auth_value" value="{{$auth === false ? 0 : 1}}">
+
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 m-auto">
+            <div class="w-100 my-3">
+                <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div_detail">
+                    <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
+                    <span class="notify_text_detail"></span>
+                </div>
+            </div>
             <div class="row mt-3">
-                <div class="col-md-8 col-xl-6">
+                <div class="col-md-12 col-xl-6">
                     @include('my-account.my-account-side-bar')
                 </div>
                 
-                <div class="col-md-4 col-xl-6">
+                <div class="col-md-12 col-xl-6">
                     <div class="row search_row_my_account_page">
                         <div class="col-md-12 d-flex">
                             <div class="has-search my_account_search w-100 mt-0">
@@ -66,9 +111,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-10 col-xl-8">
+                                <div class="col-md-12 col-lg-10 col-xl-8">
                                     <div class="row mt-3 filter-div-mbl-account">
-                                        <div class="col-md-5 d-flex filter1_mbl">
+                                        <div class="col-lg-6 col-md-6 col-xl-5 d-flex filter1_mbl col-12">
                                             <span>
                                                 <p class="total_order_my_account mt-2">@if(!empty($date_filter)) {{$user_orders->total()}} @else {{$user_orders->total()}} @endif orders
                                                     <span class="placed_in_my_account">
@@ -94,7 +139,7 @@
                                                 </select>
                                             </span>
                                         </div>
-                                        <div class="col-md-5 d-flex filter2_mbl">
+                                        <div class="col-lg-6 col-md-6 col-xl-5 d-flex filter2_mbl justify-content-start col-12">
                                             <span>
                                                 <p class="total_order_my_account mt-2">
                                                     Submitter
@@ -122,7 +167,7 @@
                                                 @endif
                                             </span>
                                         </div>
-                                        <div class="col-md-2 d-flex filter2_mbl">
+                                        <div class="col-lg-6 col-md-12 col-xl-2 d-flex filter2_mbl justify-content-start col-12">
                                             <ul class="nav ">
                                                 <li class="text-center">
                                                     <select id="handle_sort_by" name="sort_by" class="py-1" onchange="handleSortBY()">
@@ -136,7 +181,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-9 col-xl-8">
+                                <div class="col-md-12 col-xl-8">
                                     @foreach ($user_orders as $user_order)
                                         @if(!empty($user_order->apiOrderItem))
                                         <div class="card my_account_order_card my-3">
@@ -471,7 +516,7 @@
                                         {{-- {{ $user_orders->appends(Request::all())->links('pagination.front_custom_pagination') }} --}}
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-xl-4 p-3">
+                                <div class="col-md-6 col-xl-4 p-3">
                                     <div class="card rounded buy_again_div">
                                         @include('my-account.buy_again_slider')
                                     </div>
@@ -484,6 +529,127 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade notify_popup_modal_similar_portion" id="notify_user_modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Notify User About Product Stock Portion</h5>
+                <button type="button" class="close" onclick="close_notify_user_modal_similar()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="">Email <span class="text-danger">*</span></label>
+                            <input type="hidden" name="sku" id="sku_value" class="similar_productSku_value" value="">
+                            <input type="hidden" name="product_id" id="product_id_value" class="similar_productId_value"
+                                value="">
+                            <div class="col-md-12">
+                                <input type="text" name="notify_user_email" id="notify_user_email"
+                                    class="form-control similar_notifyEmail_sidebar" value=""
+                                    placeholder="Enter your email">
+                                <div class="text-danger email_required_alert_similar"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="spinner-border text-primary stock_spinner_modal_similar d-none" role="status">
+                    <span class="sr-only"></span>
+                </div>
+                <button type="button" class="btn btn-secondary"
+                    onclick="notify_user_about_product_stock_similar_portion ($('.similar_productId_value').val() , $('.similar_productSku_value').val())">Submit</button>
+                <!-- You can add additional buttons here if needed -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function show_notify_popup_modal_similar_portion (id , sku_value) {
+            $('.notify_popup_modal_similar_portion').modal('show');
+            $('.similar_productId_value').val(id);
+            $('.similar_productSku_value').val(sku_value);
+        } 
+        function close_notify_user_modal_similar () {
+            $('.notify_popup_modal_similar_portion').modal('hide');
+            $('.notify_stock_btn_class').each(function() {
+                $(this).attr('disabled', false);
+            });
+        }
+        
+        function  notify_user_about_product_stock_similar_portion  (id , sku_value) {
+            $('.notify_stock_btn_class').each(function() {
+                var p_id = $(this).attr('data-product-id');
+                if (p_id != id) {
+                    $(this).attr('disabled', true);
+                }
+            });
+            var email = $('.similar_notifyEmail_sidebar').val();
+            var sku = sku_value;
+            var product_id = id;
+            $('.stock_spinner_modal_similar').removeClass('d-none');
+            $('.stock_spinner_'+product_id).removeClass('d-none');
+            if (email != '') {
+                $('.email_required_alert_similar').html('');
+            }
+            if (email == '') {
+                $('.email_required_alert_similar').html('Email is Required');
+                $('.stock_spinner_modal_similar').addClass('d-none');
+                $('.stock_spinner_'+product_id).addClass('d-none');
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: "{{ url('product-stock/notification') }}",
+                    method: 'post',
+                    data: {
+                    "_token": "{{ csrf_token() }}",
+                        email : email,
+                        sku : sku,
+                        product_id : product_id
+                    },
+                    success: function(response){
+
+                        if (response.status === true) {
+                            $('.stock_spinner_modal_similar').addClass('d-none');
+                            $('.stock_spinner_'+product_id).addClass('d-none');
+                            $('.notify_user_div_detail').removeClass('d-none');
+                            close_notify_user_modal_similar();
+                            $('.notify_text_detail').html(response.message);
+                        } else {
+                            $('.stock_spinner_modal_similar').addClass('d-none');
+                            $('.stock_spinner_'+product_id).addClass('d-none');
+                            $('.notify_user_div_detail').removeClass('d-none');
+                            $('.notify_text_detail').html('Something went wrong!');
+                        }
+                    },
+                    error: function(response) {
+                        var error_message = response.responseJSON;
+                        $('.stock_spinner_modal_similar').addClass('d-none');
+                        $('.stock_spinner_'+product_id).addClass('d-none');
+                        $('.notify_user_div').addClass('d-none');
+                        var error_text  = error_message.errors.email[0];
+                        $('.email_required_alert').html(error_text)
+                    },
+                    complete: function() {
+                        // Re-enable all buttons with class 'notify_stock_btn_class'
+                        $('.notify_stock_btn_class').prop('disabled', false);
+                    }
+                });
+            }
+        }
+        
+        function hide_notify_user_div() {
+            $('.notify_text_detail').html('');
+            $('.notify_user_div_detail').addClass('d-none');
+        }
+</script>
 <style>
     #handle_sort_by {
         border-radius: 6px;
@@ -754,9 +920,20 @@
             var data = response.data;
             var header = '<div class="row"><div class="col-md-12"><p class="buy_again_heading">Buy Again</p></div></div>';
             html += header;
-            for (var i = 0; i < data.length; i++) {
-                html += buildProductRow(data[i]);
-            }
+            // for (var i = 0; i < data.length; i++) {
+            //     html += buildProductRow(data[i]);
+            // }
+
+            data.forEach(product => {
+                if (product.options && product.options.length > 0) {
+                    product.options.forEach(option => {
+                        html += buildProductRow(product, option);
+                    });
+                } 
+                // else {
+                //     html += buildProductRow(product, null);
+                // }
+            });
 
             var totalPages = response.last_page;
             var currentPage = response.current_page;
@@ -766,14 +943,16 @@
             return html;
         }
 
-        function buildProductRow(productData) {
+        
+
+        function buildProductRow(productData , option) {
             var rowHtml = '<div class="row mt-4 mb-3">';
             rowHtml += '    <div class="col-md-12">';
             rowHtml += '        <div class="row">';
             rowHtml += buildImageColumn(productData.images);
-            rowHtml += buildDataColumn(productData);
+            rowHtml += buildDataColumn(productData , option);
             rowHtml += '        </div>';
-            rowHtml += buildButtonRow(productData);
+            rowHtml += buildButtonRow(productData , option);
             rowHtml += '    </div>';
             rowHtml += '</div>';
 
@@ -791,77 +970,194 @@
                 '</div>';
         }
 
-        function buildDataColumn(productData) {
-            var products_to_hide = JSON.parse($('#products_to_hide').val());
-            var show_price = true;
-            var paymentTerms = $('#payment_terms').val();
-            var auth_value = $('#auth_value').val();
+        // function buildDataColumn(productData , option) {
+        //     var products_to_hide = JSON.parse($('#products_to_hide').val());
+        //     var show_price = true;
+        //     var paymentTerms = $('#payment_terms').val();
+        //     var auth_value = $('#auth_value').val();
 
             
-            if ((productData.options[0].option_id != null) && (products_to_hide.includes(productData.options[0].option_id))) {
-                if (auth_value == false) {
+        //     if ((option.option_id != null) && (products_to_hide.includes(option.option_id))) {
+        //         if (auth_value == false) {
+        //             show_price = false;
+        //         } else {
+        //             if (paymentTerms == true) {
+        //                 show_price = true;
+        //             } else {
+        //                 show_price = false;
+        //             }
+        //         }
+        //     }
+        //     var dataHtml = '            <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account d-flex align-items-center">';
+        //     dataHtml += '                <div class="row">';
+        //     dataHtml += '                    <div class="col-md-10">';
+        //     dataHtml += '                        <p class="product_name mb-1">';
+        //     dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + option.option_id +'/'+ productData.code +'">' + productData.name + '</a>';
+        //     dataHtml += '                        </p>';
+        //     dataHtml += '                    </div>';
+        //     if (show_price == true) {
+        //         dataHtml += '                    <div class="col-md-10">';
+        //         dataHtml += '                        <p class="product_price mb-1">$' + productData.retail_price.toFixed(2) + '</p>';
+        //         dataHtml += '                    </div>';
+        //     }
+        //     dataHtml += '                    <div class="col-md-10">';
+        //     dataHtml += '                        <p class="category_name mb-1">Category:';
+        //     dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
+        //     dataHtml += '                        </p>';
+        //     dataHtml += '                    </div>';
+        //     dataHtml += '                </div>';
+        //     dataHtml += '            </div>';
+        //     return dataHtml;
+        // }
+
+        // function buildButtonRow(productData , option) {
+        //     var products_to_hide = JSON.parse($('#products_to_hide').val());
+        //     var add_to_cart = true;
+        //     var paymentTerms = $('#payment_terms').val();
+        //     var auth_value = $('#auth_value').val();
+        //     if ((option.option_id != null) && (products_to_hide.includes(option.option_id))) {
+        //         if (auth_value == false) {
+        //             add_to_cart = false;
+        //         } else {
+        //             if (paymentTerms == true) {
+        //                 add_to_cart = true;
+        //             } else {
+        //                 add_to_cart = false;
+        //             }
+        //         }
+        //     }
+        //     var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
+        //     if (add_to_cart == true) {
+        //         buttonRowHtml += '            <div class="col-md-10">';
+        //         buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart(\'' + productData.id + '\', \'' + option.option_id + '\')">Add to Cart</button>';
+        //         buttonRowHtml += '            </div>';
+        //         buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
+        //         buttonRowHtml += '        </div>';
+        //     } else {
+        //         buttonRowHtml += '            <div class="col-md-10">';
+        //         buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">Call To Order</button>';
+        //         buttonRowHtml += '            </div>';
+        //         buttonRowHtml += '        </div>';
+        //     }
+        //     return buttonRowHtml;
+        // }
+
+        function buildDataColumn(productData, option) {
+            const products_to_hide = JSON.parse($('#products_to_hide').val() || '[]');
+            let show_price = true;
+            const paymentTerms = $('#payment_terms').val() === 'true';
+            const auth_value = $('#auth_value').val() === 'true';
+
+            // Determine whether to show the price based on product hiding and authorization/payment terms
+            if (option?.option_id && products_to_hide.includes(option.option_id)) {
+                if (!auth_value || !paymentTerms) {
                     show_price = false;
-                } else {
-                    if (paymentTerms == true) {
-                        show_price = true;
-                    } else {
-                        show_price = false;
-                    }
                 }
             }
-            var dataHtml = '            <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account d-flex align-items-center">';
-            dataHtml += '                <div class="row">';
-            dataHtml += '                    <div class="col-md-10">';
-            dataHtml += '                        <p class="product_name mb-1">';
-            dataHtml += '                            <a class="product_name" id="prd_name_' + productData.id + '" href="' + '/product-detail/' + productData.id + '/' + productData.options[0].option_id +'/'+ productData.code +'">' + productData.name + '</a>';
-            dataHtml += '                        </p>';
-            dataHtml += '                    </div>';
-            if (show_price == true) {
-                dataHtml += '                    <div class="col-md-10">';
-                dataHtml += '                        <p class="product_price mb-1">$' + productData.retail_price.toFixed(2) + '</p>';
-                dataHtml += '                    </div>';
+
+            // Start building HTML
+            let dataHtml = `
+                <div class="col-md-8 col-xl-7 col-lg-8 data-div data-div-account d-flex align-items-center">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p class="product_name mb-1">
+                                <a class="product_name" id="prd_name_${productData.id}" href="/product-detail/${productData.id}/${option?.option_id || ''}/${productData.slug}">
+                                    ${productData.name}
+                                </a>
+                            </p>
+                        </div>
+            `;
+
+            // Add price if applicable
+            if (show_price) {
+                dataHtml += `
+                    <div class="col-md-10">
+                        <p class="product_price mb-1">
+                            $${(productData.retail_price || 0).toFixed(2)}
+                        </p>
+                    </div>
+                `;
             }
-            dataHtml += '                    <div class="col-md-10">';
-            dataHtml += '                        <p class="category_name mb-1">Category:';
-            dataHtml += '                            <a class="category_name" href="' + '/products/' + productData.categories.id + '/' + productData.categories.slug +  '">' + productData.categories.name + '</a>';
-            dataHtml += '                        </p>';
-            dataHtml += '                    </div>';
-            dataHtml += '                </div>';
-            dataHtml += '            </div>';
+
+            // Add category information
+            if (productData.categories) {
+                dataHtml += `
+                    <div class="col-md-10">
+                        <p class="category_name mb-1">Category:
+                            <a class="category_name" href="/products/${productData.categories.id}/${productData.categories.slug}">
+                                ${productData.categories.name}
+                            </a>
+                        </p>
+                    </div>
+                `;
+            }
+
+            dataHtml += `
+                    </div>
+                </div>
+            `;
             return dataHtml;
         }
 
-        function buildButtonRow(productData) {
-            var products_to_hide = JSON.parse($('#products_to_hide').val());
-            var add_to_cart = true;
-            var paymentTerms = $('#payment_terms').val();
-            var auth_value = $('#auth_value').val();
-            if ((productData.options[0].option_id != null) && (products_to_hide.includes(productData.options[0].option_id))) {
-                if (auth_value == false) {
+
+        function buildButtonRow(productData, option) {
+            const products_to_hide = JSON.parse($('#products_to_hide').val() || '[]');
+            let add_to_cart = true;
+            const paymentTerms = $('#paymentTerms').val() && $('#paymentTerms').val() !== '0';
+            const auth_value = $('#auth_value').val() && $('#auth_value').val() !== '0';
+
+            // Check conditions for hiding products and authorization/payment terms
+            if (products_to_hide.includes(option.option_id)) {
+                if (!auth_value || !paymentTerms) {
                     add_to_cart = false;
-                } else {
-                    if (paymentTerms == true) {
-                        add_to_cart = true;
-                    } else {
-                        add_to_cart = false;
-                    }
                 }
             }
-            var buttonRowHtml = '        <div class="row justify-content-center mt-4">';
-            if (add_to_cart == true) {
-                buttonRowHtml += '            <div class="col-md-10">';
-                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart(\'' + productData.id + '\', \'' + productData.options[0].option_id + '\')">Add to Cart</button>';
-                buttonRowHtml += '            </div>';
-                buttonRowHtml += '            <div class="col-md-10 mt-4 border-div d-flex align-items-center align-self-center"></div>';
-                buttonRowHtml += '        </div>';
+
+            let buttonRowHtml = '<div class="row justify-content-center mt-4">';
+            if (add_to_cart) {
+                if (option.stockAvailable > 0) {
+                    // Show "Add to Cart" button
+                    buttonRowHtml += `
+                        <div class="col-md-10">
+                            <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" onclick="add_to_cart('${productData.id}', '${option.option_id}')">
+                                Add to Cart
+                            </button>
+                        </div>`;
+                } else {
+                    // Show "Notify" button if out of stock
+                    if (auth_value) {
+                        buttonRowHtml += `
+                            <div class="col-md-10">
+                                <button type="button" class="btn btn-sm btn-primary w-100 p-2 rounded" onclick="notify_user_about_product_stock_similar_portion('${productData.id}', '${productData.code}')">
+                                    Notify
+                                </button>
+                                <div class="spinner-border text-white custom_stock_spinner stock_spinner_${productData.id} ml-1 d-none" role="status" style="position:absolute;top:5px,left:45% !important;">
+                                    <span class="sr-only"></span>
+                                </div>
+                            </div>`;
+                    } else {
+                        buttonRowHtml += `
+                            <div class="col-md-10">
+                                <button type="button" class="btn btn-sm btn-primary w-100 p-2 rounded" onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')">
+                                    Notify
+                                </button>
+                            </div>`;
+                    }
+                }
             } else {
-                buttonRowHtml += '            <div class="col-md-10">';
-                buttonRowHtml += '                <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">Call To Order</button>';
-                buttonRowHtml += '            </div>';
-                buttonRowHtml += '        </div>';
+                // Show "Call to Order" button
+                buttonRowHtml += `
+                    <div class="col-md-10">
+                        <button type="button" class="buy_frequent_again_btn_call_to_order btn-info btn-sm btn border-0 w-100 p-2">
+                            Call To Order
+                        </button>
+                    </div>`;
             }
+
+            buttonRowHtml += '</div>';
             return buttonRowHtml;
         }
+
 
         function generatePaginationLinks(totalPages, currentPage) {
             var paginationHtml = '';
@@ -873,7 +1169,6 @@
 
             return paginationHtml;
         }
-
     });
 </script>
 

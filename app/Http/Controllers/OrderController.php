@@ -1906,32 +1906,37 @@ class OrderController extends Controller
             MailHelper::sendMailNotification($email_template, $data);
         }
 
-        $specific_admin_notifications = SpecificAdminNotification::all();
-        if (count($specific_admin_notifications) > 0) {
-            foreach ($specific_admin_notifications as $specific_admin_notification) {
-                $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
-                $adminTemplate = 'emails.admin-order-received';
-                $data['subject'] = $subject;
-                $data['email'] = $specific_admin_notification->email;
-                MailHelper::sendMailNotification($email_template, $data);
-            }
-        }
 
 
-        $email_sent_to_users = [];
-        $all_members = Contact::whereIn('id', $all_ids)->get();
-        foreach ($all_members as $member) {
-            $member_user = User::find($member->user_id);
-            if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                if (isset($email_sent_to_users[$member_user->id])) {
-                    continue;
+        if ($current_order_status->status !== 'Cancelled') {
+
+            $specific_admin_notifications = SpecificAdminNotification::all();
+            if (count($specific_admin_notifications) > 0) {
+                foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
+                    $adminTemplate = 'emails.admin-order-received';
+                    $data['subject'] = $subject;
+                    $data['email'] = $specific_admin_notification->email;
+                    MailHelper::sendMailNotification($email_template, $data);
                 }
+            }
 
-                $email_sent_to_users[$member_user->id] = $member_user;
-                $data['name'] = $member_user->firstName;
-                $data['subject'] =  '#'.$currentOrder->id. ' ' .'Order status updated';
-                $data['email'] = $member_user->email;
-                MailHelper::sendMailNotification('emails.user-order-received', $data);
+
+            $email_sent_to_users = [];
+            $all_members = Contact::whereIn('id', $all_ids)->get();
+            foreach ($all_members as $member) {
+                $member_user = User::find($member->user_id);
+                if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+                    if (isset($email_sent_to_users[$member_user->id])) {
+                        continue;
+                    }
+
+                    $email_sent_to_users[$member_user->id] = $member_user;
+                    $data['name'] = $member_user->firstName;
+                    $data['subject'] =  '#'.$currentOrder->id. ' ' .'Order status updated';
+                    $data['email'] = $member_user->email;
+                    MailHelper::sendMailNotification('emails.user-order-received', $data);
+                }
             }
         }
         
