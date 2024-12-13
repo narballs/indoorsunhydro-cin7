@@ -448,7 +448,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Delivery Method</h3>
-                                        <span class="delievery">
+                                        <span class="delivery">
                                             @if (!empty($order->logisticsCarrier ))
                                                     @if (strtolower($order->logisticsCarrier) === 'delivery')
                                                         <span class="badge badge-success p-1">Delivery</span>
@@ -562,13 +562,13 @@
                         <div class="card  mb-3">
                             <div class="card-body">
                                 <h3 class="h6 summary-head"><strong>Internal Comments</strong></h3>
-                                <span class="delievery">{{ $order->internal_comments }}</span></p>
+                                <span class="delivery">{{ $order->internal_comments }}</span></p>
                             </div>
                         </div>
                         <div class="card  mb-3">
                             <div class="card-body">
-                                <h3 class="h6 summary-head"><strong>Delievery Instructions</strong></h3>
-                                <span class="delievery">{{ $order->memo }}</span></p>
+                                <h3 class="h6 summary-head"><strong>Delivery Instructions</strong></h3>
+                                <span class="delivery">{{ $order->memo }}</span></p>
                             </div>
                         </div>
                         <div class="card mb-4">
@@ -768,7 +768,7 @@
             background-color: rgba(220, 78, 65, 0.13) !important;
         }
 
-        .delievery {
+        .delivery {
             color: #242424;
             font-size: 14px;
             font-style: normal;
