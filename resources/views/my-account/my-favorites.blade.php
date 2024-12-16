@@ -117,27 +117,27 @@
                                                         @endphp
                                                         <div id="">
                                                             @foreach ($option->price as $price)
-                                                                <input type="hidden" value="{{ $product->id }}"
-                                                                    id="prd_{{ $product->id }}">
+                                                                <input type="hidden" value="{{ $product->product->id }}"
+                                                                    id="prd_{{ $product->product->id }}">
                                                                 <input type="hidden"
                                                                     value="{{ $product->product->name }}"
-                                                                    id="prd_name_{{ $product->id }}">
+                                                                    id="prd_name_{{ $product->product->id }}">
                                                                 <tr style="border-bottom :1px solid lightgray;"
-                                                                    id="p_{{ $product->id }}">
+                                                                    id="p_{{ $product->product->id }}">
                                                                     <td>
                                                                         <div
                                                                             class="custom-checkbox-input tabel-checkbox d-flex pl-0">
                                                                             <input type="checkbox"
                                                                                 class="single_fav_check" name=""
-                                                                                product-id="{{ $product->id }}"
+                                                                                product-id="{{ $product->product->id }}"
                                                                                 option-id="{{ $product->option_id }}"
-                                                                                id="check_{{ $product->id }}_{{ $product->option_id }}"
+                                                                                id="check_{{ $product->product->id }}_{{ $product->option_id }}"
                                                                                 class="single_fav_check mt-1">
                                                                             <span class="ml-2">{{ $i++ }}</span>
                                                                     </td>
                                                                     <td
                                                                         style="border:none; vertical-align: middle; width: 26rem">
-                                                                        <a href="{{ url('product-detail/' . $product->id . '/' . $product->option_id . '/' . $product->product->slug) }}"
+                                                                        <a href="{{ url('product-detail/' . $product->product->id . '/' . $product->option_id . '/' . $product->product->slug) }}"
                                                                             class="favorite_product_name_slug">{{ $product->product->name }}
                                                                         </a>
                                                                     </td>
@@ -166,7 +166,7 @@
                                                                         @if ($show_price == true)
                                                                             <button type="submit"
                                                                                 style="border:none; background:none;"
-                                                                                onclick="add_favorite_to_cart('{{ $product->id }}', '{{ $product->option_id }}')">
+                                                                                onclick="add_favorite_to_cart('{{ $product->product->id }}', '{{ $product->option_id }}')">
                                                                                 <img src="/theme/img/fav_cart_icon.png"
                                                                                     alt="">
                                                                             </button>
