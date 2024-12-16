@@ -950,7 +950,7 @@
                     Swal.fire({
                         toast: false,
                         icon: 'success',
-                        title: quantity + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' <div class="added_tocart">Added to your cart</div>',
+                        title: 1 + 'X ' + '<span class="text-dark toast_title">'+ product_name+'</span>' + '<br/>'+ ' <div class="added_tocart">Added to your cart</div>',
                         // customClass: {popup: 'short-toast-popup'}
                         position: 'center',
                         showConfirmButton: true,  // Show the confirm (OK) button
