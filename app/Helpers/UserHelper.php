@@ -402,55 +402,30 @@ class UserHelper
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
 
-        $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
-        $getDate = $created_date->format('Y-m-d');
-        $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
-        $order_created_date = $getDate . 'T' . $getTime ;
+        
 
+        $created_date = \Carbon\Carbon::parse($currentOrder->created_at)->setTimezone('America/Los_Angeles');
 
-        // Check if the created date is Friday
-        // if ($created_date->isFriday()) {
-        //     // If it's Friday, ship day should be Monday (add 3 days)
-        //     $shipDate = $created_date->addDays(3);
-        // }
-        // // Check if the created date is on Saturday or Sunday
-        // elseif ($created_date->isSaturday()) {
-        //     // If it's Saturday, ship day should be Monday (add 2 days)
-        //     $shipDate = $created_date->addDays(2);
-        // } elseif ($created_date->isSunday()) {
-        //     // If it's Sunday, ship day should be Monday (add 1 day)
-        //     $shipDate = $created_date->addDay();
-        // } else {
-        //     // Otherwise, add 1 day as usual for other weekdays (Monday to Thursday)
-        //     $shipDate = $created_date->addDay();
-        // }
-
-        // // Format the final shipping date as a string in 'Y-m-dTH:i:s' format
-        // $ship_by_date = $shipDate->format('Y-m-d');
-
+        // Format order created date as ISO-8601 string
+        $order_created_date = $created_date->format('Y-m-d\TH:i:s');
 
         // Check if the created date is Sunday
         if ($created_date->isSunday()) {
-            // If Sunday, set the shipping date to Tuesday
-            $shipDate = $created_date->addDays(2);
+            $shipDate = $created_date->copy()->addDays(2);
         } else {
             // Add 48 hours to the created date
-            $shipDate = $created_date->addHours(48);
+            $shipDate = $created_date->copy()->addHours(48);
 
-            // Ensure the shipping date does not land on a weekend
+            // Adjust for weekends
             if ($shipDate->isSaturday()) {
-                // Move to Monday if it falls on Saturday
-                $shipDate->addDays(2);
+                $shipDate = $shipDate->addDays(2); // Move to Monday
             } elseif ($shipDate->isSunday()) {
-                // Move to Monday if it falls on Sunday
-                $shipDate->addDay();
+                $shipDate = $shipDate->addDay(); // Move to Monday
             }
         }
 
-        // Format the final shipping date as 'Y-m-d'
+        // Format the shipping date as 'Y-m-d'
         $ship_by_date = $shipDate->format('Y-m-d');
-
-
 
         $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
         $tax = $calculate_tax - $currentOrder->shipment_price;
@@ -554,6 +529,7 @@ class UserHelper
             ],
             'items'=> $items
         ];
+
         $headers = [
             "Content-Type: application/json",
             'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
@@ -661,52 +637,47 @@ class UserHelper
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
 
-        $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
-        $getDate = $created_date->format('Y-m-d');
-        $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
-        $order_created_date = $getDate . 'T' . $getTime ;
+        // $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
+        // $getDate = $created_date->format('Y-m-d');
+        // $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
+        // $order_created_date = $getDate . 'T' . $getTime ;
 
-
-        // Check if the created date is Friday
-        // if ($created_date->isFriday()) {
-        //     // If it's Friday, ship day should be Monday (add 3 days)
-        //     $shipDate = $created_date->addDays(3);
-        // }
-        // // Check if the created date is on Saturday or Sunday
-        // elseif ($created_date->isSaturday()) {
-        //     // If it's Saturday, ship day should be Monday (add 2 days)
+        // // Check if Sunday
+        // if ($created_date->isSunday()) {
         //     $shipDate = $created_date->addDays(2);
-        // } elseif ($created_date->isSunday()) {
-        //     // If it's Sunday, ship day should be Monday (add 1 day)
-        //     $shipDate = $created_date->addDay();
         // } else {
-        //     // Otherwise, add 1 day as usual for other weekdays (Monday to Thursday)
-        //     $shipDate = $created_date->addDay();
+        //     $shipDate = $created_date->copy()->addHours(48);
+
+        //     if ($shipDate->isSaturday()) {
+        //         $shipDate = $shipDate->addDays(2);
+        //     } elseif ($shipDate->isSunday()) {
+        //         $shipDate = $shipDate->addDay();
+        //     }
         // }
 
-        // // Format the final shipping date as a string in 'Y-m-dTH:i:s' format
         // $ship_by_date = $shipDate->format('Y-m-d');
 
+        $created_date = \Carbon\Carbon::parse($currentOrder->created_at)->setTimezone('America/Los_Angeles');
+
+        // Format order created date as ISO-8601 string
+        $order_created_date = $created_date->format('Y-m-d\TH:i:s');
 
         // Check if the created date is Sunday
         if ($created_date->isSunday()) {
-            // If Sunday, set the shipping date to Tuesday
-            $shipDate = $created_date->addDays(2);
+            $shipDate = $created_date->copy()->addDays(2);
         } else {
             // Add 48 hours to the created date
-            $shipDate = $created_date->addHours(48);
+            $shipDate = $created_date->copy()->addHours(48);
 
-            // Ensure the shipping date does not land on a weekend
+            // Adjust for weekends
             if ($shipDate->isSaturday()) {
-                // Move to Monday if it falls on Saturday
-                $shipDate->addDays(2);
+                $shipDate = $shipDate->addDays(2); // Move to Monday
             } elseif ($shipDate->isSunday()) {
-                // Move to Monday if it falls on Sunday
-                $shipDate->addDay();
+                $shipDate = $shipDate->addDay(); // Move to Monday
             }
         }
 
-        // Format the final shipping date as 'Y-m-d'
+        // Format the shipping date as 'Y-m-d'
         $ship_by_date = $shipDate->format('Y-m-d');
 
 
