@@ -2839,7 +2839,7 @@ class OrderController extends Controller
                 // Request payload
                 $update_array = [
                     [
-                        'orderRef' => $order_id,
+                        'orderId' => $order_id,
                         'method' => 'Credit Card CPP',
                         'paymentDate' => $api_order_sync_date,
                         'amount' => floatval($total_amount),
