@@ -2689,20 +2689,19 @@ class OrderController extends Controller
         // }
 
         if (!empty($calculate_tax) && floatval($calculate_tax) > 0) {
-            // Convert tax to cents and format as a string
-            $tax_value = (string)round($calculate_tax * 100, 2);
-        
-            // Create tax product and price in Stripe
+            $tax_value = (int)round($calculate_tax * 100); // Convert to cents and integer
             $products_tax = $stripe->products->create([
                 'name' => 'Tax',
             ]);
         
             $taxproductPrice = $stripe->prices->create([
-                'unit_amount_decimal' => $tax_value, // Correct format
+                'unit_amount' => $tax_value, // Use integer value
                 'currency' => 'usd',
                 'product' => $products_tax->id,
             ]);
         }
+        
+        
 
         for ($i = 0; $i <= count($product_prices) - 1; $i++){
             $items[] = [
@@ -2735,24 +2734,21 @@ class OrderController extends Controller
         //     ];
         // }
 
+        // Freight/shipping calculation
         if (!empty($freightTotal) && $freightTotal > 0) {
-            // Convert freight total to cents and format as a string
-            $shipment_value = (string)round($freightTotal * 100, 2);
-        
-            // Create shipment product and price in Stripe
+            $shipment_value = (int)round($freightTotal * 100); // Convert to cents and integer
             $shipment_product = $stripe->products->create([
                 'name' => 'Shipment',
             ]);
         
             $shipment_product_price = $stripe->prices->create([
-                'unit_amount_decimal' => $shipment_value, // Correct format
+                'unit_amount' => $shipment_value, // Use integer value
                 'currency' => 'usd',
                 'product' => $shipment_product->id,
             ]);
-        
             $items[] = [
                 'price' => $shipment_product_price->id,
-                'quantity' => '1',
+                'quantity' => 1, // Ensure quantity is an integer
             ];
         }
 
