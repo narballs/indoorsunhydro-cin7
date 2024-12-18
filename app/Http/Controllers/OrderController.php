@@ -2672,19 +2672,35 @@ class OrderController extends Controller
             ]);
             array_push($product_prices, $productPrice);
         }
+        // if (!empty($calculate_tax) && floatval($calculate_tax) > 0) {
+        //     $formatted_tax = number_format($calculate_tax, 2);
+        //     $formatted_tax_rate = str_replace(',', '', $formatted_tax);
+        //     $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
+        //     $tax_value = str_replace(',', '', $formatted_tax_value);
+        //     $products_tax= $stripe->products->create([
+        //         'name' => 'Tax',
+        //     ]);
+
+        //     $taxproductPrice = $stripe->prices->create([
+        //         'unit_amount_decimal' => $tax_value,
+        //         'currency' => 'usd',
+        //         'product' => $products_tax->id
+        //     ]);
+        // }
+
         if (!empty($calculate_tax) && floatval($calculate_tax) > 0) {
-            $formatted_tax = number_format($calculate_tax, 2);
-            $formatted_tax_rate = str_replace(',', '', $formatted_tax);
-            $formatted_tax_value = number_format(($formatted_tax_rate * 100) , 2);
-            $tax_value = str_replace(',', '', $formatted_tax_value);
-            $products_tax= $stripe->products->create([
+            // Convert tax to cents and format as a string
+            $tax_value = (string)round($calculate_tax * 100, 2);
+        
+            // Create tax product and price in Stripe
+            $products_tax = $stripe->products->create([
                 'name' => 'Tax',
             ]);
-
+        
             $taxproductPrice = $stripe->prices->create([
-                'unit_amount_decimal' => $tax_value,
+                'unit_amount_decimal' => $tax_value, // Correct format
                 'currency' => 'usd',
-                'product' => $products_tax->id
+                'product' => $products_tax->id,
             ]);
         }
 
@@ -2702,17 +2718,38 @@ class OrderController extends Controller
         }
 
 
+        // if (!empty($freightTotal) && $freightTotal > 0) {
+        //     $shipment_price = number_format(($freightTotal * 100) , 2);
+        //     $shipment_value = str_replace(',', '', $shipment_price);
+        //     $shipment_product = $stripe->products->create([
+        //         'name' => 'Shipment',
+        //     ]);
+        //     $shipment_product_price = $stripe->prices->create([
+        //         'unit_amount_decimal' => $shipment_value,
+        //         'currency' => 'usd',
+        //         'product' => $shipment_product->id
+        //     ]);
+        //     $items[] = [
+        //         'price' => $shipment_product_price->id,
+        //         'quantity' => '1',
+        //     ];
+        // }
+
         if (!empty($freightTotal) && $freightTotal > 0) {
-            $shipment_price = number_format(($freightTotal * 100) , 2);
-            $shipment_value = str_replace(',', '', $shipment_price);
+            // Convert freight total to cents and format as a string
+            $shipment_value = (string)round($freightTotal * 100, 2);
+        
+            // Create shipment product and price in Stripe
             $shipment_product = $stripe->products->create([
                 'name' => 'Shipment',
             ]);
+        
             $shipment_product_price = $stripe->prices->create([
-                'unit_amount_decimal' => $shipment_value,
+                'unit_amount_decimal' => $shipment_value, // Correct format
                 'currency' => 'usd',
-                'product' => $shipment_product->id
+                'product' => $shipment_product->id,
             ]);
+        
             $items[] = [
                 'price' => $shipment_product_price->id,
                 'quantity' => '1',
@@ -2786,64 +2823,64 @@ class OrderController extends Controller
 
             // Add payment to Cin7
             
-            // try {
-            //     // Get authentication credentials
-            //     $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-            //     $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+            try {
+                // Get authentication credentials
+                $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+                $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
 
-            //     $createdTimestamp = $session->created;
+                $createdTimestamp = $session->created;
 
-            //     // Convert the timestamp to a Carbon instance
-            //     $createdDate = Carbon::createFromTimestamp($createdTimestamp);
+                // Convert the timestamp to a Carbon instance
+                $createdDate = Carbon::createFromTimestamp($createdTimestamp);
 
-            //     // Format the date to ISO 8601
-            //     $api_order_sync_date = $createdDate->format('Y-m-d\TH:i:s\Z');
+                // Format the date to ISO 8601
+                $api_order_sync_date = $createdDate->format('Y-m-d\TH:i:s\Z');
             
-            //     // API URL
-            //     $url = 'https://api.cin7.com/api/v1/Payments';
+                // API URL
+                $url = 'https://api.cin7.com/api/v1/Payments';
             
-            //     // Request payload
-            //     $update_array = [
-            //         [
-            //             'orderRef' => $order_id,
-            //             'method' => 'Credit Card CPP',
-            //             'paymentDate' => $api_order_sync_date,
-            //             'amount' => floatval($total_amount),
-            //         ]
-            //     ];
+                // Request payload
+                $update_array = [
+                    [
+                        'orderRef' => $order_id,
+                        'method' => 'Credit Card CPP',
+                        'paymentDate' => $api_order_sync_date,
+                        'amount' => floatval($total_amount),
+                    ]
+                ];
             
-            //     // Guzzle client
-            //     $client = new \GuzzleHttp\Client();
+                // Guzzle client
+                $client = new \GuzzleHttp\Client();
             
-            //     // Prepare the request
-            //     $response = $client->post($url, [
-            //         'auth' => [$cin7_auth_username, $cin7_auth_password],
-            //         'json' => $update_array,
-            //         'headers' => [
-            //             'Content-Type' => 'application/json',
-            //         ],
-            //     ]);
+                // Prepare the request
+                $response = $client->post($url, [
+                    'auth' => [$cin7_auth_username, $cin7_auth_password],
+                    'json' => $update_array,
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                    ],
+                ]);
             
-            //     // Parse and handle the response
-            //     $responseBody = json_decode($response->getBody()->getContents(), true);
+                // Parse and handle the response
+                $responseBody = json_decode($response->getBody()->getContents(), true);
             
-            //     if ($response->getStatusCode() === 200) {
-            //         // Log successful response
-            //         Log::info('Payment synced successfully', ['response' => $responseBody]);
-            //     } else {
-            //         // Log non-200 responses
-            //         Log::error('Payment API response error', [
-            //             'status' => $response->getStatusCode(),
-            //             'response' => $responseBody,
-            //         ]);
-            //     }
-            // } catch (\Exception $e) {
-            //     // Log general exceptions
-            //     Log::error('Cin7 Payment API Error: ' . $e->getMessage(), [
-            //         'order_id' => $order_id,
-            //     ]);
-            // }
+                if ($response->getStatusCode() === 200) {
+                    // Log successful response
+                    Log::info('Payment synced successfully', ['response' => $responseBody]);
+                } else {
+                    // Log non-200 responses
+                    Log::error('Payment API response error', [
+                        'status' => $response->getStatusCode(),
+                        'response' => $responseBody,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                // Log general exceptions
+                Log::error('Cin7 Payment API Error: ' . $e->getMessage(), [
+                    'order_id' => $order_id,
+                ]);
+            }
 
             return view('cin7.invoice', [
                 'order_reference' => $order_reference,
