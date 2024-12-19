@@ -57,7 +57,7 @@
                 border-collapse: collapse;
                 margin-bottom: 20px;
                 overflow-x: auto;
-                display: block;
+                display: table;
             }
             th, td {
                 padding: 10px;
@@ -108,7 +108,16 @@
                 .container {
                     padding: 15px;
                 }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                    overflow-x: auto;
+                    display: block;
+                }
             }
+            
         </style>
     </head>
     <body>
@@ -122,26 +131,24 @@
 
             <div class="details">
                 <div>
-                    <p><strong>Order ID:</strong> {{ optional($invoice)->id ?? 'N/A' }}</p>
-                    <p><strong>Payment ID:</strong> {{ optional($invoice)->payment_intent ?? 'N/A' }}</p>
+                    <p><strong>Order ID:</strong> {{ $order_id ?? 'N/A' }}</p>
+                    <p><strong>Payment ID:</strong> {{ optional($session)->payment_intent ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <p><strong>Created Date:</strong> {{ optional($invoice)->created ? \Carbon\Carbon::parse($invoice->created)->format('M d, h:i A') : 'N/A' }}</p>
-                    <p><strong>Payment Method:</strong> **** {{ optional($invoice)->payment_method_details->card->last4 ?? 'N/A' }}</p>
+                    <p><strong>Created Date:</strong> {{ optional($session)->created ? \Carbon\Carbon::parse($session->created)->format('M d, h:i A') : 'N/A' }}</p>
+                    <p><strong>Payment Method:</strong> **** {{ optional($session)->payment_method_details->card->last4 ?? 'N/A' }}</p>
                 </div>
             </div>
 
             <h2>Checkout Summary</h2>
             <table>
                 <tr>
-                    <th>Customer</th>
                     <th>Name</th>
                     <th>Email</th>
                 </tr>
                 <tr>
-                    <td>{{ optional($invoice)->customer_email ?? 'N/A' }}</td>
-                    <td>{{ optional($invoice)->customer_name ?? 'N/A' }}</td>
-                    <td>{{ optional($invoice)->customer_email ?? 'N/A' }}</td>
+                    <td>{{ $customer_name ?? 'N/A' }}</td>
+                    <td>{{ $customer_email ?? 'N/A' }}</td>
                 </tr>
             </table>
 
@@ -152,17 +159,17 @@
                     <th>Unit Price</th>
                     <th>Amount</th>
                 </tr>
-                @foreach(optional($invoice)->lines->data ?? [] as $item)
+                @foreach($get_line_items as $item)
                     <tr>
                         <td>{{ $item->description ?? 'N/A' }}</td>
                         <td>{{ $item->quantity ?? 'N/A' }}</td>
-                        <td>${{ number_format($item->amount / 100, 2) ?? '0.00' }}</td>
-                        <td>${{ number_format($item->amount * $item->quantity / 100, 2) ?? '0.00' }}</td>
+                        <td>${{ number_format($item->amount_total / 100, 2) ?? '0.00' }}</td>
+                        <td>${{ number_format($item->amount_total * $item->quantity / 100, 2) ?? '0.00' }}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td colspan="3" class="total">Total</td>
-                    <td>${{ number_format(optional($invoice)->amount_paid / 100, 2) }}</td>
+                    <td>${{ number_format(optional($session)->amount_total / 100, 2) }}</td>
                 </tr>
             </table>
 
@@ -170,15 +177,15 @@
             <table class="payment_breakdown_table">
                 <tr>
                     <th>Payment Amount</th>
-                    <td>${{ number_format(optional($invoice)->amount_paid / 100, 2) }} USD</td>
+                    <td>${{ number_format(optional($session)->amount_total / 100, 2) }} USD</td>
                 </tr>
                 <tr>
                     <th>Stripe Processing Fees</th>
-                    <td>-${{ number_format(optional($invoice)->fee / 100, 2) }} USD</td>
+                    <td>-${{ number_format($processing_fee_in_dollars, 2) }} USD</td>
                 </tr>
                 <tr>
                     <th>Net Amount</th>
-                    <td>${{ number_format((optional($invoice)->amount_paid - optional($invoice)->fee) / 100, 2) }} USD</td>
+                    <td>${{ number_format((optional($session)->amount_total - $processing_fee_in_dollars) / 100, 2) }} USD</td>
                 </tr>
             </table>
         </div>
