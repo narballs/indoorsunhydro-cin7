@@ -70,13 +70,13 @@ class MailHelper
     }
 
 
-    public static function sendWholesalePaymentInvoice($template, $session, $order_id, $customer_name, $customer_email, $email, $processing_fee_in_dollars, $get_line_items)
+    public static function sendWholesalePaymentInvoice($template, $session, $order_id, $customer_name, $customer_email, $email, $processing_fee_in_dollars, $get_line_items , $order_reference)
     {
         try {
             // Send email
             Mail::send($template, [
                 'session' => $session,
-                'order_id' => $order_id,
+                'order_id' => $order_reference,
                 'customer_name' => $customer_name,
                 'customer_email' => $customer_email,
                 'processing_fee_in_dollars' => $processing_fee_in_dollars,

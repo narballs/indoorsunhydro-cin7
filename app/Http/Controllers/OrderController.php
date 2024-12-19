@@ -2849,15 +2849,15 @@ class OrderController extends Controller
             $customer_name = $name;
 
             if (!empty($wholesale_invoice_email_1)) {
-                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_1, $processing_fee_in_dollars, $get_line_items);
+                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_1, $processing_fee_in_dollars, $get_line_items , $order_reference);
             }
     
             if (!empty($wholesale_invoice_email_2)) {
-                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_2, $processing_fee_in_dollars, $get_line_items);
+                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_2, $processing_fee_in_dollars, $get_line_items , $order_reference);
             }
     
             if (!empty($wholesale_invoice_email_3)) {
-                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_3, $processing_fee_in_dollars, $get_line_items);
+                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_3, $processing_fee_in_dollars, $get_line_items , $order_reference);
             }
 
 
