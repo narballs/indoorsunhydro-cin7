@@ -79,8 +79,6 @@ class MailHelper
 
     public static function SendWholesalePaymentInvoice($template, $invoice, $email) {
 
-        Log::info("Sending Wholesale Payment Invoice to: " . $email , $invoice);
-
         try {
 
             if (is_array($invoice) && !empty($invoice)) {
