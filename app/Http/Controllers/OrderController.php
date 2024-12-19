@@ -2791,6 +2791,7 @@ class OrderController extends Controller
         $get_line_items = [];
     
         try {
+
             $session = $stripe->checkout->sessions->retrieve($session_id);
             $line_items  = $stripe->checkout->sessions->allLineItems(
                 $session_id,
@@ -2817,26 +2818,46 @@ class OrderController extends Controller
                 ];
             }
 
-
-            $invoice = null;
-            if (!empty($session->invoice)) {
-                $invoice = $stripe->invoices->retrieve($session->invoice);
-            }
-
             $wholesale_invoice_email_1 = SettingHelper::getSetting('wholesale_invoice_email_1'); 
             $wholesale_invoice_email_2 = SettingHelper::getSetting('wholesale_invoice_email_2');
             $wholesale_invoice_email_3 = SettingHelper::getSetting('wholesale_invoice_email_3');
 
+
+            $invoice = $session;
+            
+            $payment_intent = $stripe->paymentIntents->retrieve($session->payment_intent);
+            
+            $charge = $stripe->charges->retrieve($payment_intent->latest_charge);
+            
+            $balance_transaction = $stripe->balanceTransactions->retrieve($charge->balance_transaction);
+
+            // Step 4: Extract the processing fee from the Balance Transaction's fee_details
+            $processing_fee = 0;
+            foreach ($balance_transaction->fee_details as $fee_detail) {
+                if ($fee_detail->type === 'stripe_fee') {
+                    $processing_fee = $fee_detail->amount; // Amount is in cents
+                    break;
+                }
+            }
+
+            // Convert the processing fee from cents to dollars
+            $processing_fee_in_dollars = $processing_fee / 100;
+
+
+            $customer_email = $email;
+            $order_id = $order_id;
+            $customer_name = $name;
+
             if (!empty($wholesale_invoice_email_1)) {
-                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $invoice , $wholesale_invoice_email_1);
+                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_1, $processing_fee_in_dollars, $get_line_items);
             }
-
+    
             if (!empty($wholesale_invoice_email_2)) {
-                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $invoice , $wholesale_invoice_email_2);
+                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_2, $processing_fee_in_dollars, $get_line_items);
             }
-
+    
             if (!empty($wholesale_invoice_email_3)) {
-                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $invoice , $wholesale_invoice_email_3);
+                MailHelper::sendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $session, $order_id, $customer_name, $customer_email, $wholesale_invoice_email_3, $processing_fee_in_dollars, $get_line_items);
             }
 
 
