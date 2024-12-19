@@ -69,6 +69,34 @@ class MailHelper
         });
     }
 
+
+    // public static function SendWholesalePaymentInvoice($template, $invoice , $email) {
+    //     Mail::send($template, $invoice, function($message) use ($invoice , $email){
+    //         $message->from(SettingHelper::getSetting('noreply_email_address'));
+    //         $message->to($email)->subject('Wholesale Payment Invoice');
+    //     });
+    // }
+
+    public static function SendWholesalePaymentInvoice($template, $invoice, $email) {
+        try {
+            // Send email
+            Mail::send($template, ['invoice' => $invoice], function($message) use ($invoice, $email) {
+                // Set sender email
+                $message->from(SettingHelper::getSetting('noreply_email_address'));
+    
+                // Set recipient email
+                $message->to($email)->subject('Wholesale Payment Invoice' ); // Add dynamic invoice number in subject
+            });
+            
+            // Log successful email send
+            Log::info("Wholesale Payment Invoice sent successfully to: " . $email);
+        } catch (\Exception $e) {
+            // Log any errors that occur
+            Log::error("Error sending Wholesale Payment Invoice: " . $e->getMessage());
+        }
+    }
+    
+
     
 
     // public static function sendShipstationLabelMail($template, $data)

@@ -496,6 +496,24 @@ class SettingSeeder extends Seeder
                 'option_value' => 'wally@indoorsunhydro.com',
             ],
 
+            [
+                'option_name' => 'wholesale_invoice_email_1',
+                'type' => 'text',
+                'option_value' => 'Vanessa@indoorsunhydro.com',
+            ],
+
+            [
+                'option_name' => 'wholesale_invoice_email_2',
+                'type' => 'text',
+                'option_value' => 'mariana@indoorsunhydro.com',
+            ],
+
+            [
+                'option_name' => 'wholesale_invoice_email_2',
+                'type' => 'text',
+                'option_value' => 'naris@indoorsunhydro.com',
+            ],
+
 
 
 
