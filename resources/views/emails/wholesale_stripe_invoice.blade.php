@@ -122,12 +122,12 @@
 
             <div class="details">
                 <div>
-                    <p><strong>Order ID:</strong> {{ $invoice->id ?? 'N/A' }}</p>
-                    <p><strong>Payment ID:</strong> {{ $invoice->payment_intent ?? 'N/A' }}</p>
+                    <p><strong>Order ID:</strong> {{ optional($invoice)->id ?? 'N/A' }}</p>
+                    <p><strong>Payment ID:</strong> {{ optional($invoice)->payment_intent ?? 'N/A' }}</p>
                 </div>
                 <div>
-                    <p><strong>Created Date:</strong> {{ \Carbon\Carbon::parse($invoice->created)->format('M d, h:i A') ?? 'N/A' }}</p>
-                    <p><strong>Payment Method:</strong> **** {{ substr($invoice->payment_method_details->card->last4 ?? '', 0, 4) ?? 'N/A' }}</p>
+                    <p><strong>Created Date:</strong> {{ optional($invoice)->created ? \Carbon\Carbon::parse($invoice->created)->format('M d, h:i A') : 'N/A' }}</p>
+                    <p><strong>Payment Method:</strong> **** {{ optional($invoice)->payment_method_details->card->last4 ?? 'N/A' }}</p>
                 </div>
             </div>
 
@@ -139,9 +139,9 @@
                     <th>Email</th>
                 </tr>
                 <tr>
-                    <td>{{ $invoice->customer_email ?? 'N/A' }}</td>
-                    <td>{{ $invoice->customer_name ?? 'N/A' }}</td>
-                    <td>{{ $invoice->customer_email ?? 'N/A' }}</td>
+                    <td>{{ optional($invoice)->customer_email ?? 'N/A' }}</td>
+                    <td>{{ optional($invoice)->customer_name ?? 'N/A' }}</td>
+                    <td>{{ optional($invoice)->customer_email ?? 'N/A' }}</td>
                 </tr>
             </table>
 
@@ -152,7 +152,7 @@
                     <th>Unit Price</th>
                     <th>Amount</th>
                 </tr>
-                @foreach($invoice->lines->data as $item)
+                @foreach(optional($invoice)->lines->data ?? [] as $item)
                     <tr>
                         <td>{{ $item->description ?? 'N/A' }}</td>
                         <td>{{ $item->quantity ?? 'N/A' }}</td>
@@ -162,7 +162,7 @@
                 @endforeach
                 <tr>
                     <td colspan="3" class="total">Total</td>
-                    <td>${{ number_format($invoice->amount_paid / 100, 2) }}</td>
+                    <td>${{ number_format(optional($invoice)->amount_paid / 100, 2) }}</td>
                 </tr>
             </table>
 
@@ -170,15 +170,15 @@
             <table class="payment_breakdown_table">
                 <tr>
                     <th>Payment Amount</th>
-                    <td>${{ number_format($invoice->amount_paid / 100, 2) }} USD</td>
+                    <td>${{ number_format(optional($invoice)->amount_paid / 100, 2) }} USD</td>
                 </tr>
                 <tr>
                     <th>Stripe Processing Fees</th>
-                    <td>-${{ number_format($invoice->fee / 100, 2) }} USD</td>
+                    <td>-${{ number_format(optional($invoice)->fee / 100, 2) }} USD</td>
                 </tr>
                 <tr>
                     <th>Net Amount</th>
-                    <td>${{ number_format(($invoice->amount_paid - $invoice->fee) / 100, 2) }} USD</td>
+                    <td>${{ number_format((optional($invoice)->amount_paid - optional($invoice)->fee) / 100, 2) }} USD</td>
                 </tr>
             </table>
         </div>
