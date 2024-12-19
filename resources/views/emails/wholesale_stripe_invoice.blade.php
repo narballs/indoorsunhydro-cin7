@@ -121,7 +121,12 @@
             
         </style>
     </head>
-    <body>
+    <body style="font-family: Arial, sans-serif;
+                margin: 10px;
+                padding: 5px;
+                background-color: #f8f9fa;
+                color: #333;
+                font-size: 16px;">
         <div class="container">
             <div class="header">
                 <div class="logo_div">
