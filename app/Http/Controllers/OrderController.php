@@ -2785,6 +2785,7 @@ class OrderController extends Controller
     
     
     public function cin7_payments_success(Request $request , $order_id) {
+
         $session_id = $request->query('session_id');
         $stripe = new \Stripe\StripeClient(config('services.stripe.wholesale_secret'));
         $get_line_items = [];
@@ -2817,66 +2818,88 @@ class OrderController extends Controller
             }
 
 
+            $invoice = null;
+            if (!empty($session->invoice)) {
+                $invoice = $stripe->invoices->retrieve($session->invoice);
+            }
+
+            $wholesale_invoice_email_1 = SettingHelper::getSetting('wholesale_invoice_email_1'); 
+            $wholesale_invoice_email_2 = SettingHelper::getSetting('wholesale_invoice_email_2');
+            $wholesale_invoice_email_3 = SettingHelper::getSetting('wholesale_invoice_email_3');
+
+            if (!empty($wholesale_invoice_email_1)) {
+                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice.blade', $invoice , $wholesale_invoice_email_1);
+            }
+
+            if (!empty($wholesale_invoice_email_2)) {
+                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice.blade', $invoice , $wholesale_invoice_email_2);
+            }
+
+            if (!empty($wholesale_invoice_email_3)) {
+                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice.blade', $invoice , $wholesale_invoice_email_3);
+            }
+
+
             // Add payment to Cin7
             
-            try {
-                // Get authentication credentials
-                $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-                $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+            // try {
+            //     // Get authentication credentials
+            //     $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+            //     $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
 
-                $createdTimestamp = $session->created;
+            //     $createdTimestamp = $session->created;
 
-                // Convert the timestamp to a Carbon instance
-                $createdDate = Carbon::createFromTimestamp($createdTimestamp);
+            //     // Convert the timestamp to a Carbon instance
+            //     $createdDate = Carbon::createFromTimestamp($createdTimestamp);
 
-                // Format the date to ISO 8601
-                $api_order_sync_date = $createdDate->format('Y-m-d\TH:i:s\Z');
+            //     // Format the date to ISO 8601
+            //     $api_order_sync_date = $createdDate->format('Y-m-d\TH:i:s\Z');
             
-                // API URL
-                $url = 'https://api.cin7.com/api/v1/Payments';
+            //     // API URL
+            //     $url = 'https://api.cin7.com/api/v1/Payments';
             
-                // Request payload
-                $update_array = [
-                    [
-                        'orderId' => $order_id,
-                        'method' => 'Credit Card CPP',
-                        'paymentDate' => $api_order_sync_date,
-                        'amount' => floatval($total_amount),
-                    ]
-                ];
+            //     // Request payload
+            //     $update_array = [
+            //         [
+            //             'orderId' => $order_id,
+            //             'method' => 'Credit Card CPP',
+            //             'paymentDate' => $api_order_sync_date,
+            //             'amount' => floatval($total_amount),
+            //         ]
+            //     ];
             
-                // Guzzle client
-                $client = new \GuzzleHttp\Client();
+            //     // Guzzle client
+            //     $client = new \GuzzleHttp\Client();
             
-                // Prepare the request
-                $response = $client->post($url, [
-                    'auth' => [$cin7_auth_username, $cin7_auth_password],
-                    'json' => $update_array,
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                    ],
-                ]);
+            //     // Prepare the request
+            //     $response = $client->post($url, [
+            //         'auth' => [$cin7_auth_username, $cin7_auth_password],
+            //         'json' => $update_array,
+            //         'headers' => [
+            //             'Content-Type' => 'application/json',
+            //         ],
+            //     ]);
             
-                // Parse and handle the response
-                $responseBody = json_decode($response->getBody()->getContents(), true);
+            //     // Parse and handle the response
+            //     $responseBody = json_decode($response->getBody()->getContents(), true);
             
-                if ($response->getStatusCode() === 200) {
-                    // Log successful response
-                    Log::info('Payment synced successfully', ['response' => $responseBody]);
-                } else {
-                    // Log non-200 responses
-                    Log::error('Payment API response error', [
-                        'status' => $response->getStatusCode(),
-                        'response' => $responseBody,
-                    ]);
-                }
-            } catch (\Exception $e) {
-                // Log general exceptions
-                Log::error('Cin7 Payment API Error: ' . $e->getMessage(), [
-                    'order_id' => $order_id,
-                ]);
-            }
+            //     if ($response->getStatusCode() === 200) {
+            //         // Log successful response
+            //         Log::info('Payment synced successfully', ['response' => $responseBody]);
+            //     } else {
+            //         // Log non-200 responses
+            //         Log::error('Payment API response error', [
+            //             'status' => $response->getStatusCode(),
+            //             'response' => $responseBody,
+            //         ]);
+            //     }
+            // } catch (\Exception $e) {
+            //     // Log general exceptions
+            //     Log::error('Cin7 Payment API Error: ' . $e->getMessage(), [
+            //         'order_id' => $order_id,
+            //     ]);
+            // }
 
             return view('cin7.invoice', [
                 'order_reference' => $order_reference,
