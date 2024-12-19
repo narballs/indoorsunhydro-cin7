@@ -2824,8 +2824,6 @@ class OrderController extends Controller
 
 
             $invoice = $session;
-
-            dd($invoice);
             
             $payment_intent = $stripe->paymentIntents->retrieve($session->payment_intent);
             
