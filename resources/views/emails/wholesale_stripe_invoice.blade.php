@@ -20,6 +20,7 @@
                 padding: 20px;
                 border-radius: 8px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                border-bottom: 1px solid #ddd;
             }
             .header {
                 margin-bottom: 20px;
@@ -130,14 +131,15 @@
             </div>
 
             <div class="details">
-                <div>
+                <div style="margin-bottom: 10px;width: 100%;">
                     <p><strong>Order ID:</strong> {{ $order_id ?? 'N/A' }}</p>
                     <p><strong>Payment ID:</strong> {{ optional($session)->payment_intent ?? 'N/A' }}</p>
-                </div>
-                <div>
                     <p><strong>Created Date:</strong> {{ optional($session)->created ? \Carbon\Carbon::parse($session->created)->format('M d, h:i A') : 'N/A' }}</p>
-                    <p><strong>Payment Method:</strong> **** {{ optional($session)->payment_method_details->card->last4 ?? 'N/A' }}</p>
                 </div>
+                {{-- <div style="margin-bottom: 10px;width: 50%;">
+                    
+                    <p><strong>Payment Method:</strong> **** {{ optional($session)->payment_method_details->card->last4 ?? 'N/A' }}</p>
+                </div> --}}
             </div>
 
             <h2>Checkout Summary</h2>
