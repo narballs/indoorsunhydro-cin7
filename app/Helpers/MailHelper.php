@@ -70,39 +70,34 @@ class MailHelper
     }
 
 
-    // public static function SendWholesalePaymentInvoice($template, $invoice , $email) {
-    //     Mail::send($template, $invoice, function($message) use ($invoice , $email){
-    //         $message->from(SettingHelper::getSetting('noreply_email_address'));
-    //         $message->to($email)->subject('Wholesale Payment Invoice');
-    //     });
-    // }
-
-    public static function SendWholesalePaymentInvoice($template, $invoice, $email) {
-
+    public static function sendWholesalePaymentInvoice($template, $session, $order_id, $customer_name, $customer_email, $email, $processing_fee_in_dollars, $get_line_items)
+    {
         try {
-
-            if (is_array($invoice) && !empty($invoice)) {
-                $invoice = (object) $invoice;
-            }
-
-
             // Send email
-            Mail::send($template, ['invoice' => $invoice], function($message) use ($invoice, $email) {
+            Mail::send($template, [
+                'session' => $session,
+                'order_id' => $order_id,
+                'customer_name' => $customer_name,
+                'customer_email' => $customer_email,
+                'processing_fee_in_dollars' => $processing_fee_in_dollars,
+                'get_line_items' => $get_line_items
+            ], function($message) use ($session, $email) {
                 // Set sender email
                 $message->from(SettingHelper::getSetting('noreply_email_address'));
-    
+
                 // Set recipient email
-                $message->to($email)->subject('Wholesale Payment Invoice' ); // Add dynamic invoice number in subject
+                $message->to($email)->subject('Wholesale Payment Invoice');
             });
-            
+
             // Log successful email send
             Log::info("Wholesale Payment Invoice sent successfully to: " . $email);
         } catch (\Exception $e) {
             // Log any errors that occur
-            Log::error("Error sending Wholesale Payment Invoice: " . $invoice->invoice_number . " to: " . $email . " - " . $e->getMessage());
             Log::error("Error sending Wholesale Payment Invoice: " . $e->getMessage());
         }
     }
+
+    
     
 
     
