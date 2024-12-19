@@ -2828,15 +2828,15 @@ class OrderController extends Controller
             $wholesale_invoice_email_3 = SettingHelper::getSetting('wholesale_invoice_email_3');
 
             if (!empty($wholesale_invoice_email_1)) {
-                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice.blade', $invoice , $wholesale_invoice_email_1);
+                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $invoice , $wholesale_invoice_email_1);
             }
 
             if (!empty($wholesale_invoice_email_2)) {
-                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice.blade', $invoice , $wholesale_invoice_email_2);
+                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $invoice , $wholesale_invoice_email_2);
             }
 
             if (!empty($wholesale_invoice_email_3)) {
-                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice.blade', $invoice , $wholesale_invoice_email_3);
+                MailHelper::SendWholesalePaymentInvoice('emails.wholesale_stripe_invoice', $invoice , $wholesale_invoice_email_3);
             }
 
 
