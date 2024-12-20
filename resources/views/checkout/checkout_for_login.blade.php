@@ -607,7 +607,47 @@
 
 
     }
+
+    .page-spinner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 9999;
+    }
+
+    .page-spinner::after {
+        content: '';
+        width: 3em;
+        height: 3em;
+        border: 0.4em solid transparent;
+        border-right-color: white;
+        border-radius: 50%;
+        animation: button-anim 0.7s linear infinite;
+    }
+
+    .page-spinner.loading {
+        opacity: 1;
+        visibility: visible;
+    }
+    @keyframes button-anim {
+        from {
+            transform: rotate(0);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
 </style>
+<div id="page-spinner" class="page-spinner"></div>
 <div class="mb-4 desktop-view">
     <p style="line-height: 95px;" class="fw-bold fs-2 product-btn my-auto border-0 text-white text-center align-middle">
         Checkout
@@ -1431,7 +1471,7 @@ $cart_price = 0;
                             </div>
                             <div class="col-md-12 mb-2">
                                 <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
-                                <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()" disabled>Place Order</button>
+                                <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()" disabled>{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced' ? 'Continue To Payment Screen'  :'Place Order'}}</button>
                                 
                             </div>
                         </div>
@@ -3431,7 +3471,7 @@ $cart_price = 0;
                     $('.discount_variation').val('percentage');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
-                        if (product_weight > 150) {
+                        if (product_weight > 99) {
                             shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                             add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
                             subtotal = productTotal - add_discount;
@@ -3509,7 +3549,7 @@ $cart_price = 0;
                     $('.discount_variation').val('fixed');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
-                        if (product_weight > 150) {
+                        if (product_weight > 99) {
                             shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                             add_discount = parseFloat(response.discount_variation_value);
                             if (add_discount >= productTotal) {
@@ -3676,6 +3716,10 @@ $cart_price = 0;
                             $('.shipping_main_div').removeClass('d-none');
                             $('.remove_shipping_price').addClass('d-none');
                             $('#pick_up_modal').modal('hide');
+
+                            $('.page-spinner').addClass('loading');
+
+                            window.location.href = '/checkout';
                         }
                     } 
                 }
@@ -3701,7 +3745,7 @@ $cart_price = 0;
                     var newTotal = $('#incl_tax').val();
                     var product_weight = $('.product_weight').val() != null ? parseFloat($('.product_weight').val()) : 0;
                     var original_shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
-                    if (product_weight > 150) {
+                    if (product_weight > 99) {
                         var total = parseFloat(newTotal) - parseFloat(original_shipment_price);
                         $('#shipment_price_heavy_weight').val(0);
                         $('#shipment_price').val(0);
@@ -3889,11 +3933,11 @@ $cart_price = 0;
                     update_total_with_shipping_selected();
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
-                    if (admin_area_for_shipping_check === 'true' && product_weight > 150) {
+                    if (admin_area_for_shipping_check === 'true' && product_weight > 99) {
                         update_total_with_shipping_for_greater_weight();
                     }
                     // default ups ground checked
-                    if (admin_area_for_shipping_check === 'true' && product_weight <= 150 && product_weight > 0) {
+                    if (admin_area_for_shipping_check === 'true' && product_weight <= 99 && product_weight > 0) {
                         var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
                         var var_pro_total = p_total.replace(/\$/g, '');
                         var p_total_new = var_pro_total.split(',').join('');
