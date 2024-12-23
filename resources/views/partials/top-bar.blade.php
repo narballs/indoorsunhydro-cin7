@@ -4,8 +4,7 @@
     $tax = 0;
     $free_shipping = 0;
     $contact_id = session()->get('contact_id');
-    // $cart_items = session()->get('cart');
-    $user_id = auth()->id();
+    $user_id = Auth::user() ? Auth::user()->id : null;
     $d_none = 'd-none'; 
     $calculate_free_shipping = 0;
     $enable_free_shipping_banner = App\Models\AdminSetting::where('option_name', 'enable_free_shipping_banner')->first();
