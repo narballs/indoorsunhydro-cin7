@@ -285,8 +285,14 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="10" class="mobile-screen">
+                                    {{-- <td colspan="10" class="mobile-screen">
                                         {{ $data->links('pagination.custom_pagination') }}
+                                    </td> --}}
+
+                                    <td colspan="10" class="mobile-screen">
+                                        {{ $data->appends(['search' => request('search'), 'usersData' => request('usersData'), 'secondaryUser' => request('secondaryUser'), 'sort_by_desc' => request('sort_by_desc'), 'sort_by_asc' => request('sort_by_asc'), 'sort_by_name' => request('sort_by_name'), 'sort_by_email' => request('sort_by_email')])->links('pagination.custom_pagination') }}
+
+                                        {{-- {{ $data->links('pagination.custom_pagination') }} --}}
                                     </td>
                                 </tr>
                             </tfoot>
