@@ -259,8 +259,16 @@
 }
 
 
+.chat_gpt_search_footer {
+    overflow-x: auto;
+}
+
+
 
 @media only screen and (max-width: 768px) {
+    .chat_gpt_search_footer {
+        overflow-x: scroll;
+    }
     .ai_row {
         background-color: #fff !important;
         
