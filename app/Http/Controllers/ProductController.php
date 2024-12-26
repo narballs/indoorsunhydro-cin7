@@ -3580,7 +3580,8 @@ class ProductController extends Controller
     {
         $genericKeywords = [
             'buy', 'price', 'specifications', 'features', 'availability', 'order', 
-            'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
+            'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost',
+            'quantum', 'gold', 'silver', 'emerald', 'jet','protocol', 'series',
             'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 'earth', 'liquid',
             'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 'plants', 'flowers', 'seeds', 'grow', 'growing', 'garden', 'gardening', 'hydroponics', 'indoor', 'outdoor', 'light', 'lights', 'led', 'bulb', 'bulbs', 'lamp', 'lamps', 'fixture', 'fixtures', 'system', 'systems', 'kit', 'kits', 'tent', 'tents', 'room', 'rooms', 'box', 'boxes', 'grower', 'growers',
             'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
@@ -3590,14 +3591,14 @@ class ProductController extends Controller
         // List of irrelevant terms to exclude
         $irrelevantTerms = [
             'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
-            'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
+            'bus', 'train', 'helicopter', 'ship', 'submarine', // Vehicles
             'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
-            'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
+            'movie', 'song', 'actor', 'director', 'album', 'game', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra', // Math
-            'quantum', 'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
-            'gold', 'silver', 'emerald', 'sapphire', // Precious materials
+            'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
+            'sapphire', // Precious materials
             'koala', 'kangaroo', 'elephant', 'dolphin', 'penguin', 'giraffe'
 
         ];
