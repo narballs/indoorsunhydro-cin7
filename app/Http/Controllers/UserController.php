@@ -518,8 +518,19 @@ class UserController extends Controller
     }
 
     public function checkEmail(Request $request) {
-        $validatedData = $request->validate([
-            'email' => 'required|email'
+        // $validatedData = $request->validate([
+        //     'email' => 'required|email'
+            
+        // ]);
+        $request->validate([
+            'email' => [
+                'required',
+                'email',
+                'regex:/^(?!\.)(?!.*\.\.)[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+(?<!\.)@[a-zA-Z0-9](?!.*\.\.)[a-zA-Z0-9-]*(?<!-)\.[a-zA-Z]{2,}$/',
+            ],
+        ], [
+            'email.required' => 'The email field is required.',
+            'email.regex' => 'Please provide a valid email address.',
         ]);
         $user = User::where('email', $request->get('email'))->first();
         if (!empty($user)) {
@@ -3658,11 +3669,16 @@ class UserController extends Controller
         $Validated = $request->validate([
             'email' => 'required|email|unique:users,email,' . $request->id,
             'firstName' => 'required',
-            'lastName' => 'required',
             'phone' => 'required',
-            'password' => 'required',
-            'password_confirmation' => 'required_with:password|same:password'
         ]);
+
+        if ($request->password) {
+            $Validated = $request->validate([
+                'password' => 'required|min:6',
+                'password_confirmation' => 'required_with:password|same:password'
+            ]);
+        }
+
         $user_id = $request->id;
         $user_profile = User::find($user_id);
         $user_profile->email = $request->input('email');
