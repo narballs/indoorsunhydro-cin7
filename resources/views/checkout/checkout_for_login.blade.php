@@ -2080,7 +2080,7 @@ $cart_price = 0;
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="lastName">Last name</label>
+                                <label for="lastName">Last name  <span class="text-muted">(Optional)</span></label>
                                 <input type="text" class="form-control bg-light" id="shipping_new_last_name" name="last_name_new" placeholder=""
                                     value="" required>
                                 <div id="error_last_name_shipping_new" class="text-danger">
@@ -3831,10 +3831,10 @@ $cart_price = 0;
                             var error_text = '';
                             if (typeof error_message.errors.first_name != 'undefined') {
                                 error_text = error_message.errors.first_name;
-                                $('#error_shipping_new_first_name').html(error_text);
+                                $('#error_first_name_shipping_new').html(error_text);
                             } else {
                                 error_text = '';
-                                $('#error_shipping_new_first_name').html(error_text);
+                                $('#error_first_name_shipping_new').html(error_text);
                             }
                             if (typeof error_message.errors.company_name != 'undefined') {
                                 var error_text = error_message.errors.company_name;

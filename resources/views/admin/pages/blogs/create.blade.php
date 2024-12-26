@@ -318,6 +318,14 @@
                 border-radius: 6px;
                 box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
             }
+            .ck-dropdown__panel .ck-list .ck-button {
+                padding: 2px 8px; /* Adjust padding for dropdown items */
+                font-size: 14px;  /* Adjust font size for dropdown text */
+            }
+
+            .ck-button__label {
+                font-size: 12px !important;
+            }
         </style>
     @stop
 
@@ -579,6 +587,10 @@
                     { model: 'heading5', view: 'h5', title: 'Heading 5', class: 'ck-heading_heading5' },
                     { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
                 ]
+            },
+            fontSize: {
+                options: [8, 10, 12, 14, 16, 18, 20,22 ,24, 28, 30, 32 , 36, 48],
+                supportAllValues: false // Disables manual input to keep the dropdown clean
             },
             mediaEmbed: {
                 previewsInData: true,
