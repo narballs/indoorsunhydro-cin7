@@ -27,8 +27,8 @@
         $product_by_category = true;
     }
 ?>
-@if ($product_by_category == true)
-    @if ($product_price > 0)
+{{-- @if ($product_by_category == true)
+    @if ($product_price > 0) --}}
         <div class="col-md-6 col-xl-3 col-lg-4 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1">
             <div class="p-2 shadow-sm  w-100 h-100" style="background-color: #fff;
             background-clip: border-box;
@@ -308,8 +308,8 @@
                 </form>
             </div>
         </div>
-    @endif
-@endif
+    {{-- @endif
+@endif --}}
 
 <style>
 

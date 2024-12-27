@@ -126,11 +126,11 @@ class ProductController extends Controller
                 $sub_category_ids = Category::where('parent_id', $selected_category_id)->pluck('id')->toArray();
             }
 
-            $products = $products_query->with('options.price', 'brand')
+            $products = $products_query->with('options.price', 'brand');
             // ->whereHas('options.defaultPrice', function ($q) {
             //     $q->where('retailUSD', '!=', 0);
             // })
-            ->paginate($per_page);
+            // ->paginate($per_page);
 
             // $queries = DB::getQueryLog();
         }
@@ -195,6 +195,29 @@ class ProductController extends Controller
             ->take(24)
             ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+
+
+        $user_price_column = UserHelper::getUserPriceColumn();
+        
+
+        $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
+
+        // Fetch products that belong to active categories
+        $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
+
+        // Fetch valid option IDs with a non-zero price
+        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+            ->where('status', '!=', 'Disabled')
+            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+            ->where($user_price_column, '>', 0)
+            ->pluck('product_options.option_id');
+
+        // Fetch accurate product IDs from valid options
+        $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
+
+        // Filter and paginate products
+        $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
+
         return view('categories', compact(
             'products',
             'brands',
@@ -294,21 +317,21 @@ class ProductController extends Controller
         if (empty($search_queries)) {
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
+            }]);
             // ->whereHas('options.defaultPrice', function ($q) {
             //     $q->where('retailUSD', '!=', 0);
             // })
-            ->paginate($per_page);
+            // ->paginate($per_page);
             // $products = $products_query->paginate($per_page);
         } else {
             // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
+            }]);
             // ->whereHas('options.defaultPrice', function ($q) {
             //     $q->where('retailUSD', '!=', 0);
             // })
-            ->paginate($per_page);
+            // ->paginate($per_page);
         }
 
 
@@ -380,11 +403,11 @@ class ProductController extends Controller
             // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
+            }]);
             // ->whereHas('options.defaultPrice', function ($q) {
             //     $q->where('retailUSD', '!=', 0);
             // })
-            ->paginate($per_page);
+            // ->paginate($per_page);
         }
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -441,6 +464,29 @@ class ProductController extends Controller
             ->take(24)
             ->get();
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+
+        $user_price_column = UserHelper::getUserPriceColumn();
+        
+
+        $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
+
+        // Fetch products that belong to active categories
+        $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
+
+        // Fetch valid option IDs with a non-zero price
+        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+            ->where('status', '!=', 'Disabled')
+            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+            ->where($user_price_column, '>', 0)
+            ->pluck('product_options.option_id');
+
+        // Fetch accurate product IDs from valid options
+        $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
+
+        // Filter and paginate products
+        $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
+        
+
         return view('all_products', compact(
             'products',
             'brands',
@@ -1130,14 +1176,14 @@ class ProductController extends Controller
             $products = $products_query
             ->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
-            ->paginate($per_page);
+            }]);
+            // ->paginate($per_page);
         } else {
             $products = $products_query
             ->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
-            ->paginate($per_page);
+            }]);
+            // ->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
@@ -1278,6 +1324,27 @@ class ProductController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
+
+        $user_price_column = UserHelper::getUserPriceColumn();
+        
+
+        $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
+
+        // Fetch products that belong to active categories
+        $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
+
+        // Fetch valid option IDs with a non-zero price
+        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+            ->where('status', '!=', 'Disabled')
+            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+            ->where($user_price_column, '>', 0)
+            ->pluck('product_options.option_id');
+
+        // Fetch accurate product IDs from valid options
+        $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
+
+        // Filter and paginate products
+        $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
         return view(
             'products-by-brand',
             compact(
@@ -2207,21 +2274,21 @@ class ProductController extends Controller
         if (empty($search_queries)) {
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
+            }]);
             // ->whereHas('options.defaultPrice', function ($q) {
             //     $q->where('retailUSD', '!=', 0);
             // })
-            ->paginate($per_page);
+            // ->paginate($per_page);
             // $products = $products_query->paginate($per_page);
         } else {
             // $products = $products_query->with('options', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','brand','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
-            }])
+            }]);
             // ->whereHas('options.defaultPrice', function ($q) {
             //     $q->where('retailUSD', '!=', 0);
             // })
-            ->paginate($per_page);
+            // ->paginate($per_page);
         }
         $brands = [];
         if (!empty($brand_ids)) {
@@ -2331,8 +2398,8 @@ class ProductController extends Controller
                 ->where('code',  $searchvalue )
                 ->where('status', '!=', 'Disabled');
             })
-            ->where('status', '!=', 'Inactive')
-            ->paginate($per_page);
+            ->where('status', '!=', 'Inactive');
+            // ->paginate($per_page);
             $products = $main_query;
         } 
 
@@ -2357,8 +2424,8 @@ class ProductController extends Controller
                 ->where('code',  $searchvalue )
                 ->where('status', '!=', 'Disabled');
             })
-            ->where('status', '!=', 'Inactive')
-            ->paginate($per_page);
+            ->where('status', '!=', 'Inactive');
+            // ->paginate($per_page);
             $products = $main_query;
         }
 
@@ -2384,8 +2451,8 @@ class ProductController extends Controller
                 ->where('code',  $searchvalue )
                 ->where('status', '!=', 'Disabled');
             })
-            ->where('status', '!=', 'Inactive')
-            ->paginate($per_page);
+            ->where('status', '!=', 'Inactive');
+            // ->paginate($per_page);
             $products = $main_query;
         }
 
@@ -2463,6 +2530,28 @@ class ProductController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
+
+
+        $user_price_column = UserHelper::getUserPriceColumn();
+        
+
+        $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
+
+        // Fetch products that belong to active categories
+        $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
+
+        // Fetch valid option IDs with a non-zero price
+        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+            ->where('status', '!=', 'Disabled')
+            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+            ->where($user_price_column, '>', 0)
+            ->pluck('product_options.option_id');
+
+        // Fetch accurate product IDs from valid options
+        $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
+
+        // Filter and paginate products
+        $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
 
        
         return view('search_product.search_product', compact(
@@ -3491,7 +3580,8 @@ class ProductController extends Controller
     {
         $genericKeywords = [
             'buy', 'price', 'specifications', 'features', 'availability', 'order', 
-            'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost', 
+            'info', 'detail', 'stock', 'summary', 'use', 'helping', 'cost',
+            'quantum', 'gold', 'silver', 'emerald', 'jet','protocol', 'series',
             'discount', 'warranty', 'model', 'brand', 'size', 'color', 'material', 'earth', 'liquid',
             'reviews', 'rating', 'quantity', 'shipping', 'delivery', 'return', 'plants', 'flowers', 'seeds', 'grow', 'growing', 'garden', 'gardening', 'hydroponics', 'indoor', 'outdoor', 'light', 'lights', 'led', 'bulb', 'bulbs', 'lamp', 'lamps', 'fixture', 'fixtures', 'system', 'systems', 'kit', 'kits', 'tent', 'tents', 'room', 'rooms', 'box', 'boxes', 'grower', 'growers',
             'how', 'what', 'where', 'when', 'why', 'which', 'who', 'whom','information','instructions','manual','guide','details','specification','specifications','features','feature','price','cost','buy','purchase','order','availability','stock',
@@ -3501,14 +3591,14 @@ class ProductController extends Controller
         // List of irrelevant terms to exclude
         $irrelevantTerms = [
             'car', 'truck', 'aeroplane', 'airplane', 'boat', 'motorcycle', 'scooter', 'bicycle', 'bike', 
-            'bus', 'train', 'helicopter', 'ship', 'submarine', 'jet', // Vehicles
+            'bus', 'train', 'helicopter', 'ship', 'submarine', // Vehicles
             'moon', 'physics', 'capital', 'country', 'continent', 'equation', 'atom', 'galaxy', // General knowledge
             'algorithm', 'software', 'hardware', 'network', 'protocol', 'database', 'encryption', // Tech terms
-            'movie', 'song', 'actor', 'director', 'album', 'game', 'series', 'concert', 'festival', // Entertainment
+            'movie', 'song', 'actor', 'director', 'album', 'game', 'concert', 'festival', // Entertainment
             'football', 'soccer', 'basketball', 'tennis', 'olympics', 'team', 'player', 'coach', // Sports
             'subtraction', 'multiplication', 'division', 'calculus', 'geometry', 'algebra', // Math
-            'quantum', 'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
-            'gold', 'silver', 'emerald', 'sapphire', // Precious materials
+            'gravity', 'black hole', 'supernova', 'wormhole', 'dark matter', // Science fiction terms
+            'sapphire', // Precious materials
             'koala', 'kangaroo', 'elephant', 'dolphin', 'penguin', 'giraffe'
 
         ];
