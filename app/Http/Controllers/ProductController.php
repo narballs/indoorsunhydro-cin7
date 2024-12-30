@@ -2368,93 +2368,129 @@ class ProductController extends Controller
         $replace_special_characters = preg_replace('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', ' ', $searchvalue);
         $explode_search_value = explode(' ', $replace_special_characters);
         
+        // if ($filter_value_main === 'title_description') {
+        //     $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+        //         $q->where('status', '!=', 'Disabled');
+        //     }])
+        //     ->where(function (Builder $query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->where('name', 'LIKE', '%' . $searchvalue . '%')
+        //             ->where('status', '!=', 'Inactive');
+        //         }
+        //     })
+        //     ->orWhere(function (Builder $query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->where('description', 'LIKE', '%' . $searchvalue . '%')
+        //             ->where('status', '!=', 'Inactive');
+        //         }
+        //     })
+        //     ->orWhere(function (Builder $query) use ($searchvalue) {
+        //         $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+        //         ->where('status', '!=', 'Inactive');
+        //     })
+        //     ->orWhereExists(function ($q) use ($searchvalue) {
+        //         $q->select(DB::raw(1))
+        //         ->from('product_options')
+        //         ->whereColumn('products.product_id', 'product_options.product_id')
+        //         ->where('code',  $searchvalue )
+        //         ->where('status', '!=', 'Disabled');
+        //     })
+        //     ->where('status', '!=', 'Inactive');
+        //     // ->paginate($per_page);
+        //     $products = $main_query;
+        // } 
+
+        // if ($filter_value_main === 'title') {
+        //     $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+        //         $q->where('status', '!=', 'Disabled');
+        //     }])
+        //     ->where(function (Builder $query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->where('name', 'LIKE', '%' . $searchvalue . '%')
+        //             ->where('status', '!=', 'Inactive');
+        //         }
+        //     })
+        //     ->orWhere(function (Builder $query) use ($searchvalue) {
+        //         $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+        //         ->where('status', '!=', 'Inactive');
+        //     })
+        //     ->orWhereExists(function ($q) use ($searchvalue) {
+        //         $q->select(DB::raw(1))
+        //         ->from('product_options')
+        //         ->whereColumn('products.product_id', 'product_options.product_id')
+        //         ->where('code',  $searchvalue )
+        //         ->where('status', '!=', 'Disabled');
+        //     })
+        //     ->where('status', '!=', 'Inactive');
+        //     // ->paginate($per_page);
+        //     $products = $main_query;
+        // }
+
+
+        // if ($filter_value_main === 'description') {
+        //     $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+        //         $q->where('status', '!=', 'Disabled');
+        //     }])
+        //     ->where(function (Builder $query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->where('description', 'LIKE', '%' . $searchvalue . '%')
+        //             ->where('status', '!=', 'Inactive');
+        //         }
+        //     })
+        //     ->orWhere(function (Builder $query) use ($searchvalue) {
+        //         $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+        //         ->where('status', '!=', 'Inactive');
+        //     })
+        //     ->orWhereExists(function ($q) use ($searchvalue) {
+        //         $q->select(DB::raw(1))
+        //         ->from('product_options')
+        //         ->whereColumn('products.product_id', 'product_options.product_id')
+        //         ->where('code',  $searchvalue )
+        //         ->where('status', '!=', 'Disabled');
+        //     })
+        //     ->where('status', '!=', 'Inactive');
+        //     // ->paginate($per_page);
+        //     $products = $main_query;
+        // }
+
+        $user_price_column = UserHelper::getUserPriceColumn();
+
+        $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+        }])
+        ->where('status', '!=', 'Inactive');
+
         if ($filter_value_main === 'title_description') {
-            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])
-            // ->whereHas('options.defaultPrice', function ($q) {
-            //     $q->where('retailUSD', '!=', 0);
-            // })
-            ->where(function (Builder $query) use ($explode_search_value) {
+            $main_query->where(function ($query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
+                    $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
                 }
-            })
-            ->orWhere(function (Builder $query) use ($explode_search_value) {
+            });
+        } elseif ($filter_value_main === 'title') {
+            $main_query->where(function ($query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
+                    $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
                 }
-            })
-            ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-                ->where('status', '!=', 'Inactive');
-            })
-            ->orWhereExists(function ($q) use ($searchvalue) {
-                $q->select(DB::raw(1))
-                ->from('product_options')
-                ->whereColumn('products.product_id', 'product_options.product_id')
-                ->where('code',  $searchvalue )
-                ->where('status', '!=', 'Disabled');
-            })
-            ->where('status', '!=', 'Inactive');
-            // ->paginate($per_page);
-            $products = $main_query;
-        } 
-
-        if ($filter_value_main === 'title') {
-            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])
-            ->where(function (Builder $query) use ($explode_search_value) {
+            });
+        } elseif ($filter_value_main === 'description') {
+            $main_query->where(function ($query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
+                    $query->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
                 }
-            })
-            ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-                ->where('status', '!=', 'Inactive');
-            })
-            ->orWhereExists(function ($q) use ($searchvalue) {
-                $q->select(DB::raw(1))
-                ->from('product_options')
-                ->whereColumn('products.product_id', 'product_options.product_id')
-                ->where('code',  $searchvalue )
-                ->where('status', '!=', 'Disabled');
-            })
-            ->where('status', '!=', 'Inactive');
-            // ->paginate($per_page);
-            $products = $main_query;
+            });
         }
 
+        $main_query->orWhereExists(function ($q) use ($searchvalue) {
+            $q->select(DB::raw(1))
+            ->from('product_options')
+            ->whereColumn('products.product_id', 'product_options.product_id')
+            ->where('code', $searchvalue)
+            ->where('status', '!=', 'Disabled');
+        });
 
-        if ($filter_value_main === 'description') {
-            $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])
-            ->where(function (Builder $query) use ($explode_search_value) {
-                foreach ($explode_search_value as $searchvalue) {
-                    $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
-                }
-            })
-            ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-                ->where('status', '!=', 'Inactive');
-            })
-            ->orWhereExists(function ($q) use ($searchvalue) {
-                $q->select(DB::raw(1))
-                ->from('product_options')
-                ->whereColumn('products.product_id', 'product_options.product_id')
-                ->where('code',  $searchvalue )
-                ->where('status', '!=', 'Disabled');
-            })
-            ->where('status', '!=', 'Inactive');
-            // ->paginate($per_page);
-            $products = $main_query;
-        }
+        $products = $main_query;
+
 
         
         $searched_value = $request->value;
@@ -2532,32 +2568,22 @@ class ProductController extends Controller
         }
 
 
-        $user_price_column = UserHelper::getUserPriceColumn();
-        
+        $active_category_ids = Category::where('is_active', 1)->pluck('category_id');
+        $product_ids_in_categories = $products->whereIn('category_id', $active_category_ids)->pluck('product_id');
 
-        $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
+        // Validate options and prices
+        $valid_option_ids = ProductOption::whereIn('product_id', $product_ids_in_categories)
+            ->where('status', '!=', 'Disabled')
+            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+            ->whereNotNull('pricingnews.' . $user_price_column) // Ensure pricing column is not null
+            ->where('pricingnews.' . $user_price_column, '>', 0) // Ensure pricing column is greater than zero
+            ->pluck('product_options.option_id');
 
-        // Fetch products that belong to active categories
-        $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
+        // Fetch valid product IDs from valid options
+        $valid_product_ids = ProductOption::whereIn('option_id', $valid_option_ids)->pluck('product_id');
 
-        // Fetch valid option IDs with a non-zero price
-        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
-        ->whereHas('price', function ($q) use ($user_price_column) {
-            $q->where($user_price_column, '>', 0)
-              ->whereNotNull('pricingnews.' . $user_price_column);
-        })
-        ->where('status', '!=', 'Disabled')
-        ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-        ->where('pricingnews.' . $user_price_column, '>', 0)
-        ->whereNotNull('pricingnews.' . $user_price_column)
-        ->pluck('product_options.option_id');
-    
-
-        // Fetch accurate product IDs from valid options
-        $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
-
-        // Filter and paginate products
-        $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
+        // Final product filtering
+        $products = $products->whereIn('product_id', $valid_product_ids)->paginate($per_page);
 
        
         return view('search_product.search_product', compact(
