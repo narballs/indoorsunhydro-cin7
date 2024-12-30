@@ -206,11 +206,22 @@ class ProductController extends Controller
         $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
 
         // Fetch valid option IDs with a non-zero price
+        // $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+        //     ->where('status', '!=', 'Disabled')
+        //     ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        //     ->where($user_price_column, '>', 0)
+        //     ->pluck('product_options.option_id');
+
         $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
-            ->where('status', '!=', 'Disabled')
-            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-            ->where($user_price_column, '>', 0)
-            ->pluck('product_options.option_id');
+        ->where('status', '!=', 'Disabled')
+        ->leftJoin('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        ->where(function($query) use ($user_price_column) {
+            // Check if there's no entry in pricingnews (pricingnews.option_id is null)
+            $query->whereNull('pricingnews.option_id')
+                // Or check if the user price column is greater than 0 for existing entries
+                ->orWhere($user_price_column, '>', 0);
+        })
+        ->pluck('product_options.option_id');
 
         // Fetch accurate product IDs from valid options
         $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
@@ -474,12 +485,22 @@ class ProductController extends Controller
         $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
 
         // Fetch valid option IDs with a non-zero price
-        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
-            ->where('status', '!=', 'Disabled')
-            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-            ->where($user_price_column, '>', 0)
-            ->pluck('product_options.option_id');
+        // $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+        //     ->where('status', '!=', 'Disabled')
+        //     ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        //     ->where($user_price_column, '>', 0)
+        //     ->pluck('product_options.option_id');
 
+        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+        ->where('status', '!=', 'Disabled')
+        ->leftJoin('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        ->where(function($query) use ($user_price_column) {
+            // Check if there's no entry in pricingnews (pricingnews.option_id is null)
+            $query->whereNull('pricingnews.option_id')
+                // Or check if the user price column is greater than 0 for existing entries
+                ->orWhere($user_price_column, '>', 0);
+        })
+        ->pluck('product_options.option_id');
         // Fetch accurate product IDs from valid options
         $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
 
@@ -1334,11 +1355,22 @@ class ProductController extends Controller
         $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
 
         // Fetch valid option IDs with a non-zero price
+        // $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+        //     ->where('status', '!=', 'Disabled')
+        //     ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        //     ->where($user_price_column, '>', 0)
+        //     ->pluck('product_options.option_id');
+
         $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
-            ->where('status', '!=', 'Disabled')
-            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-            ->where($user_price_column, '>', 0)
-            ->pluck('product_options.option_id');
+        ->where('status', '!=', 'Disabled')
+        ->leftJoin('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        ->where(function($query) use ($user_price_column) {
+            // Check if there's no entry in pricingnews (pricingnews.option_id is null)
+            $query->whereNull('pricingnews.option_id')
+                // Or check if the user price column is greater than 0 for existing entries
+                ->orWhere($user_price_column, '>', 0);
+        })
+        ->pluck('product_options.option_id');
 
         // Fetch accurate product IDs from valid options
         $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
@@ -2541,11 +2573,23 @@ class ProductController extends Controller
         $get_query_products_ids = $products->whereIn('category_id', $get_query_categories_ids)->pluck('product_id');
 
         // Fetch valid option IDs with a non-zero price
+        // $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
+        //     ->where('status', '!=', 'Disabled')
+        //     ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        //     ->where($user_price_column, '>', 0)
+        //     ->pluck('product_options.option_id');
+    
         $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
-            ->where('status', '!=', 'Disabled')
-            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-            ->where($user_price_column, '>', 0)
-            ->pluck('product_options.option_id');
+        ->where('status', '!=', 'Disabled')
+        ->leftJoin('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
+        ->where(function($query) use ($user_price_column) {
+            // Check if there's no entry in pricingnews (pricingnews.option_id is null)
+            $query->whereNull('pricingnews.option_id')
+                // Or check if the user price column is greater than 0 for existing entries
+                ->orWhere($user_price_column, '>', 0);
+        })
+        ->pluck('product_options.option_id');
+
 
         // Fetch accurate product IDs from valid options
         $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
