@@ -2481,13 +2481,13 @@ class ProductController extends Controller
             });
         }
 
-        $main_query->orWhereExists(function ($q) use ($searchvalue) {
-            $q->select(DB::raw(1))
-            ->from('product_options')
-            ->whereColumn('products.product_id', 'product_options.product_id')
-            ->where('code', $searchvalue)
-            ->where('status', '!=', 'Disabled');
-        });
+        // $main_query->orWhereExists(function ($q) use ($searchvalue) {
+        //     // $q->select(DB::raw(1))
+        //     ->from('product_options')
+        //     ->whereColumn('products.product_id', 'product_options.product_id')
+        //     ->where('code', $searchvalue)
+        //     ->where('status', '!=', 'Disabled');
+        // });
 
         $products = $main_query;
 
