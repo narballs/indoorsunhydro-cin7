@@ -2506,25 +2506,24 @@ class ProductController extends Controller
             });
         }
 
-        // Add condition for product options with pricing info and user-specific pricing column
-        $main_query = $main_query->orWhereExists(function ($q) use ($explode_search_value, $user_price_column) {
-            foreach ($explode_search_value as $searchvalue) {
-                $q->select(DB::raw(1))
+       
+
+
+        $main_query = $main_query->orWhereExists(function ($query) use ($explode_search_value, $user_price_column) {
+            $query->select(DB::raw(1))
                 ->from('product_options')
                 ->whereColumn('products.product_id', 'product_options.product_id')
-                ->where('product_options.code', $searchvalue)
                 ->where('product_options.status', '!=', 'Disabled')
-                ->whereNotNull('pricingnews.option_id')
-                ->join('pricingnews AS pricingnews1', 'product_options.option_id', '=', 'pricingnews1.option_id')  // Alias pricingnews table
-                ->where('pricingnews1.' . $user_price_column, '>', 0)
-                ->whereNotNull('pricingnews1.' . $user_price_column);
+                ->join('pricingnews AS pricingnews_alias', 'product_options.option_id', '=', 'pricingnews_alias.option_id')
+                ->whereNotNull('pricingnews_alias.' . $user_price_column)
+                ->where('pricingnews_alias.' . $user_price_column, '>', 0);
+        
+            foreach ($explode_search_value as $searchvalue) {
+                $query->where('products.code', 'LIKE', '%' . $searchvalue . '%');
             }
         });
 
-
         $products =  $main_query;
-
-        
 
         
         $searched_value = $request->value;
