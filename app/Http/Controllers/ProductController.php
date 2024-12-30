@@ -2475,89 +2475,43 @@ class ProductController extends Controller
         //     // ->paginate($per_page);
         //     $products = $main_query;
         // }
+        
+
         $user_price_column = UserHelper::getUserPriceColumn();
 
+        $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
+            $q->where('status', '!=', 'Disabled');
+        }])
+        ->where('status', '!=', 'Inactive');  // Ensure the status is active for all products
+
         if ($filter_value_main === 'title_description') {
-            $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])
-            ->where(function (Builder $query) use ($explode_search_value) {
+            $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                        ->where('status', '!=', 'Inactive');
+                        ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
                 }
-            })
-            ->orWhere(function (Builder $query) use ($explode_search_value) {
-                foreach ($explode_search_value as $searchvalue) {
-                    $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-                        ->where('status', '!=', 'Inactive');
-                }
-            })
-            ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
-            })
-            ->orWhereExists(function ($q) use ($searchvalue, $user_price_column) {
-                $q->select(DB::raw(1))
-                    ->from('product_options')
-                    ->whereColumn('products.product_id', 'product_options.product_id')
-                    ->where('product_options.code', $searchvalue)
-                    ->where('product_options.status', '!=', 'Disabled')
-                    ->whereNotNull('pricingnews.option_id')
-                    ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-                    ->where('pricingnews.' . $user_price_column, '>', 0)
-                    ->whereNotNull('pricingnews.' . $user_price_column);
-            })
-            ->where('status', '!=', 'Inactive');
-
-            $products = $main_query->get(); // Use get() to retrieve the results
+            });
         }
 
         if ($filter_value_main === 'title') {
-            $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])
-            ->where(function (Builder $query) use ($explode_search_value) {
+            $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-                        ->where('status', '!=', 'Inactive');
+                    $query->where('name', 'LIKE', '%' . $searchvalue . '%');
                 }
-            })
-            ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
-            })
-            ->orWhereExists(function ($q) use ($searchvalue, $user_price_column) {
-                $q->select(DB::raw(1))
-                    ->from('product_options')
-                    ->whereColumn('products.product_id', 'product_options.product_id')
-                    ->where('product_options.code', $searchvalue)
-                    ->where('product_options.status', '!=', 'Disabled')
-                    ->whereNotNull('pricingnews.option_id')
-                    ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-                    ->where('pricingnews.' . $user_price_column, '>', 0)
-                    ->whereNotNull('pricingnews.' . $user_price_column);
-            })
-            ->where('status', '!=', 'Inactive');
-
-            $products = $main_query->get(); // Use get() to retrieve the results
+            });
         }
 
         if ($filter_value_main === 'description') {
-            $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
-                $q->where('status', '!=', 'Disabled');
-            }])
-            ->where(function (Builder $query) use ($explode_search_value) {
+            $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-                        ->where('status', '!=', 'Inactive');
+                    $query->where('description', 'LIKE', '%' . $searchvalue . '%');
                 }
-            })
-            ->orWhere(function (Builder $query) use ($searchvalue) {
-                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-                    ->where('status', '!=', 'Inactive');
-            })
-            ->orWhereExists(function ($q) use ($searchvalue, $user_price_column) {
+            });
+        }
+
+        // Add condition for product options with pricing info and user-specific pricing column
+        $main_query = $main_query->orWhereExists(function ($q) use ($explode_search_value, $user_price_column) {
+            foreach ($explode_search_value as $searchvalue) {
                 $q->select(DB::raw(1))
                     ->from('product_options')
                     ->whereColumn('products.product_id', 'product_options.product_id')
@@ -2567,11 +2521,11 @@ class ProductController extends Controller
                     ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
                     ->where('pricingnews.' . $user_price_column, '>', 0)
                     ->whereNotNull('pricingnews.' . $user_price_column);
-            })
-            ->where('status', '!=', 'Inactive');
+            }
+        });
 
-            $products = $main_query; // Use get() to retrieve the results
-        }
+
+        $products = $main_query;
 
         
 
@@ -2658,7 +2612,7 @@ class ProductController extends Controller
         $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
 
         // Fetch products that belong to active categories (Query Builder)
-        $products_query = Product::whereIn('category_id', $get_query_categories_ids)
+        $products_query = $products->whereIn('category_id', $get_query_categories_ids)
             ->where('status', '!=', 'Inactive'); // Add other conditions as needed
 
         // Fetch the product IDs for products that belong to active categories
