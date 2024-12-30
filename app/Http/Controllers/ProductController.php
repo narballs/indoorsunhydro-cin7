@@ -2484,6 +2484,7 @@ class ProductController extends Controller
         }])
         ->where('status', '!=', 'Inactive');  // Ensure the status is active for all products
 
+        // Apply search filters based on the main filter value
         if ($filter_value_main === 'title_description') {
             $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
@@ -2491,17 +2492,13 @@ class ProductController extends Controller
                         ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
                 }
             });
-        }
-
-        if ($filter_value_main === 'title') {
+        } elseif ($filter_value_main === 'title') {
             $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('name', 'LIKE', '%' . $searchvalue . '%');
                 }
             });
-        }
-
-        if ($filter_value_main === 'description') {
+        } elseif ($filter_value_main === 'description') {
             $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
                     $query->where('description', 'LIKE', '%' . $searchvalue . '%');
@@ -2513,19 +2510,19 @@ class ProductController extends Controller
         $main_query = $main_query->orWhereExists(function ($q) use ($explode_search_value, $user_price_column) {
             foreach ($explode_search_value as $searchvalue) {
                 $q->select(DB::raw(1))
-                    ->from('product_options')
-                    ->whereColumn('products.product_id', 'product_options.product_id')
-                    ->where('product_options.code', $searchvalue)
-                    ->where('product_options.status', '!=', 'Disabled')
-                    ->whereNotNull('pricingnews.option_id')
-                    ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')
-                    ->where('pricingnews.' . $user_price_column, '>', 0)
-                    ->whereNotNull('pricingnews.' . $user_price_column);
+                ->from('product_options')
+                ->whereColumn('products.product_id', 'product_options.product_id')
+                ->where('product_options.code', $searchvalue)
+                ->where('product_options.status', '!=', 'Disabled')
+                ->whereNotNull('pricingnews.option_id')
+                ->join('pricingnews AS pricingnews1', 'product_options.option_id', '=', 'pricingnews1.option_id')  // Alias pricingnews table
+                ->where('pricingnews1.' . $user_price_column, '>', 0)
+                ->whereNotNull('pricingnews1.' . $user_price_column);
             }
         });
 
 
-        $products = $main_query;
+        $products =  $main_query;
 
         
 
@@ -2609,30 +2606,26 @@ class ProductController extends Controller
         
 
         // Fetch active category IDs
-        $get_query_categories_ids = Category::where('is_active', 1)->pluck('category_id');
+        $active_category_ids = Category::where('is_active', 1)->pluck('category_id');
 
-        // Fetch products that belong to active categories (Query Builder)
-        $products_query = $products->whereIn('category_id', $get_query_categories_ids)
-            ->where('status', '!=', 'Inactive'); // Add other conditions as needed
+        // Fetch the product IDs that belong to active categories and are not inactive
+        $products_query = $products->whereIn('category_id', $active_category_ids)
+                                    ->where('status', '!=', 'Inactive');
 
-        // Fetch the product IDs for products that belong to active categories
-        $get_query_products_ids = $products_query->pluck('product_id');
-
-        // Fetch valid product options from the products with pricing info
-        $get_query_option_ids = ProductOption::whereIn('product_id', $get_query_products_ids)
-            ->where('status', '!=', 'Disabled')  // Filter out disabled products
-            ->join('pricingnews', 'product_options.option_id', '=', 'pricingnews.option_id')  // Ensure matching pricingnews for each product option
-            ->whereNotNull('pricingnews.option_id')  // Ensure there is a relation (option_id exists in pricingnews)
-            ->whereNotNull('pricingnews.' . $user_price_column)  // Ensure that pricing column is not NULL
-            ->where('pricingnews.' . $user_price_column, '>', 0)  // Dynamically reference the price column
+        // Fetch valid product options with pricing info
+        $valid_product_options = ProductOption::whereIn('product_id', $products_query->pluck('product_id'))
+            ->where('status', '!=', 'Disabled')
+            ->join('pricingnews AS pricingnews2', 'product_options.option_id', '=', 'pricingnews2.option_id')
+            ->whereNotNull('pricingnews2.' . $user_price_column)
+            ->where('pricingnews2.' . $user_price_column, '>', 0)
             ->pluck('product_options.option_id');
 
-        // Fetch accurate product IDs from valid options
-        $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)
+        // Filter products that have valid options
+        $accurate_product_ids = ProductOption::whereIn('option_id', $valid_product_options)
             ->pluck('product_id');
 
-        // Final query to filter products that have valid options
-        $filtered_products = $products_query->whereIn('product_id', $get_accurate_product_ids);
+        // Final query to filter products that match the valid options
+        $filtered_products = $products_query->whereIn('product_id', $accurate_product_ids);
 
         // Paginate the filtered products
         $products = $filtered_products->paginate($per_page);  // Add the $per_page value for pagination
