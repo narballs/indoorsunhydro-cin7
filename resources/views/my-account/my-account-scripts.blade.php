@@ -1681,7 +1681,7 @@
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn btn-info"
+                <button type="button" class="btn  btn-update-defaul-addresses"
                     onclick="updateContact('{{'update billing address'}}' , '{{ auth()->user()->id }}'  )">Update Billing</button>
             </div>
         </div>
@@ -1883,7 +1883,7 @@
                 <div class="spinner-border text-primary d-none" role="status" id="address_loader_shipping">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <button type="button" class="btn btn-info"
+                <button type="button" class="btn btn-update-defaul-addresses"
                     onclick="updateContact('{{'update shipping address'}}'  , '{{ auth()->user()->id }}' )">Update Shipping</button>
             </div>
         </div>
