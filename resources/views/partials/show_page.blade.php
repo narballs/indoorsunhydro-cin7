@@ -209,13 +209,13 @@ $blogs = NavHelper::getBlogs();
         left: 10%;
     }
     .read_more_button {
-        border-radius: 7px;
+        border-radius: 0px;
         border: 1.353px solid #7BC533;
         background: #7BC533;
     }
 
     .read_more_button:hover {
-        border-radius: 7px;
+        border-radius: 0px;
         border: 1.353px solid #7BC533;
         background: #7BC533;
     }
