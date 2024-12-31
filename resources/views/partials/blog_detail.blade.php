@@ -54,7 +54,7 @@
 
     @media (max-width: 600px) {
         .banner_title_text {
-            font-size: 16px;
+            font-size: 18px;
         }
     }
 
