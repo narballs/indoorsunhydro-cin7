@@ -26,7 +26,7 @@
                         </p>
                     </div>
                     <div class="card-body">
-                        <div class="row my-5">
+                        <div class="row my-1">
                             <div class="col-md-6">
                                 <p class="default_billing_address">
                                     Default Billing Address

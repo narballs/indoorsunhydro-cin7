@@ -509,6 +509,15 @@
                 padding: 0px 30px;
             }
         }
+        .btn-update-defaul-addresses  , .btn-update-defaul-addresses:hover , .btn-update-defaul-addresses:focus {
+            background-color: #7CC633;
+            font-size: 14px;
+            font-weight: 400;
+            font-family: 'Poppins';
+            border-radius: 0px;
+            color: #FFFFFF;
+            border-color: #7CC633;
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 
