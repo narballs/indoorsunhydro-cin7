@@ -44,17 +44,14 @@
 
     .banner_title_text {
         font-size: 32px;
+        font-family: 'Poppins';
     }
 
     @media (max-width: 768px) {
         .banner_title_text {
-            font-size: 22px;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .banner_title_text {
-            font-size: 18px;
+            font-size: 20px;
+            font-family: 'Poppins';
+            font-weight: 700;
         }
     }
 
@@ -129,13 +126,13 @@
         left: 30%;
     }
     .read_more_button {
-        border-radius: 7px;
+        border-radius: 0px;
         border: 1.353px solid #7BC533;
         background: #7BC533;
     }
 
     .read_more_button:hover {
-        border-radius: 7px;
+        border-radius: 0px;
         border: 1.353px solid #7BC533;
         background: #7BC533;
     }
@@ -147,27 +144,60 @@
         height: auto;
     }
     .blog_detail_description p,li {
-        /* color: #4F4F4F; */
         font-size: 18px;
         font-style: normal;
         font-weight: 400;
         line-height: 35.035px; /* 225.175% */
+        font-family': 'Poppins';
     }
     .blog_detail_description h1,h2,h3,h4,h5,h6,strong {
-        /* color: #242424; */
         font-size: 26px;
         font-style: normal;
         font-weight: 700;
-        line-height: 34.923px; /* 140.383% */
+        line-height: 34.923px;
+        font-family': 'Poppins';
     }
     .blog_header {
         font-size: 22px !important;
         background-color:#7BC533;
         font-weight:600;
+        font-family: 'Poppins';
     }
     .img-fluid-custom {
         width: 100%; /* Make the image fill the entire width of its container */
         height: auto; /* Maintain the image's aspect ratio */
         display: block; 
     }
+
+    @media screen and (max-width: 768px) {
+    .blog_detail_description h1, h2 {
+        font-size: 18px !important;
+        font-style: normal;
+        font-weight: 700 !important;
+        font-family: 'Poppins';
+        line-height: 24.3px;
+    }
+    .blog_detail_description, h3, h4, h5, h6 {
+        font-size: 16px !important;
+        font-style: normal;
+        font-weight: 600 !important;
+        font-family: 'Poppins';
+        line-height: 21.6px;
+    }
+    .blog_detail_description strong {
+        font-size: 14px !important;
+        font-style: normal;
+        font-weight: 600 !important;
+        font-family: 'Poppins';
+        line-height: 20.3px;
+    }
+    .blog_detail_description p, li {
+        font-size: 14px !important;
+        font-style: normal;
+        font-weight: 400 !important;
+        font-family: 'Poppins';
+        line-height: 20.3px;
+    }
+}
+
 </style>
