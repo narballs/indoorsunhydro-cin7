@@ -342,7 +342,7 @@
             font-size: 15px;
             font-weight: 500;
             font-family: 'Poppins';
-            border-radius: 30px;
+            border-radius: 0px;
             color: #FFFFFF;
         }
         .blog_div {
