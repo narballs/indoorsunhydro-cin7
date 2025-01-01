@@ -1963,7 +1963,7 @@
 
         // Check if passwords match
         if (confirmPasswordValue && passwordValue !== confirmPasswordValue) {
-            confirmPasswordError.textContent = "Passwords do not match";
+            confirmPasswordError.textContent = "Password do not match";
         } else {
             confirmPasswordError.textContent = "";
         }
