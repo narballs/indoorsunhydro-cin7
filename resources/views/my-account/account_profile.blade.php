@@ -112,7 +112,7 @@
                                                 class="my_profile_form_label form-label">New
                                                 Password</label>
                                             <input type="password" class="form-control my_profile_form"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                id="newPassword_check" aria-describedby="emailHelp"
                                                 placeholder="Enter your new password" value=""
                                                 name="password">
                                             <span>
@@ -120,6 +120,7 @@
                                                     <div class="text-danger">Enter Your New password</div>
                                                 @enderror
                                             </span>
+                                            <span id="newPasswordError" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -128,20 +129,22 @@
                                                 class="my_profile_form_label form-label">Confirm New
                                                 Password</label>
                                             <input type="password" class="form-control my_profile_form"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                id="confirmPassword_check" aria-describedby="emailHelp"
                                                 placeholder="Confirm your new password" value=""
                                                 name="password_confirmation">
                                             <span>
                                                 @error('password_confirmation')
                                                     <div class="text-danger">Enter Your Confirm password</div>
                                                 @enderror
+                                            </span>
+                                            <span id="confirmPasswordError" class="text-danger"></span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <button type="submit" id="edit_savechange_btn"
-                                                    class="btn profile_save_changes w-100 mb-5"> Save
-                                                    Changes</button>
-                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="submit" id="edit_savechange_btn"
+                                                class="btn profile_save_changes w-100 mb-5"> Save
+                                                Changes</button>
                                         </div>
                                     </div>
                                     <input type="hidden" name="id" value="{{ $user->id }}">
