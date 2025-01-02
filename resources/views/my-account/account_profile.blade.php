@@ -96,7 +96,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1"
                                                 class="my_profile_form_label form-label">Old
@@ -105,7 +105,7 @@
                                                 id="exampleInputEmail1" aria-describedby="emailHelp"
                                                 value="{{ $user->password }}" disabled>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1"
