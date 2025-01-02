@@ -1946,3 +1946,26 @@
     }
     
 </script>
+
+<script>
+    // Select input fields
+    const newPassword = document.getElementById('newPassword_check');
+    const confirmPassword = document.getElementById('confirmPassword_check');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    // Add event listeners for real-time validation
+    newPassword.addEventListener('input', validatePasswords);
+    confirmPassword.addEventListener('input', validatePasswords);
+
+    function validatePasswords() {
+        const passwordValue = newPassword.value;
+        const confirmPasswordValue = confirmPassword.value;
+
+        // Check if passwords match
+        if (confirmPasswordValue && passwordValue !== confirmPasswordValue) {
+            confirmPasswordError.textContent = "Password do not match";
+        } else {
+            confirmPasswordError.textContent = "";
+        }
+    }
+</script>

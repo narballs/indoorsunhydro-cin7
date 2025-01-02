@@ -3771,22 +3771,34 @@ class ProductController extends Controller
         }
     
         // Add to cart and show price logic
+        $products_to_hide = !empty($request->products_to_hide) 
+            ? array_map('intval', $request->products_to_hide) 
+            : [];
+
         foreach ($get_in_stock_products as $option) {
             $add_to_cart = true;
             $show_price = true;
-    
-            if (!empty($request->products_to_hide) && in_array($option->option_id, $request->products_to_hide)) {
+
+            // Check if the product should be hidden
+            if (!empty($products_to_hide) && in_array($option->option_id, $products_to_hide)) {
                 if (!auth()->user()) {
+                    // User is not logged in
                     $add_to_cart = false;
                     $show_price = false;
                 } else {
+                    // Retrieve the authenticated user's contact
                     $contact = Contact::where('user_id', auth()->user()->id)->first();
-                    if (empty($contact)) {
+                    
+                    if (!$contact) {
+                        // No contact found
                         $add_to_cart = false;
                         $show_price = false;
                     } else {
+                        // Determine main contact
                         $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
                         $get_main_contact = Contact::where('contact_id', $contact_id_new)->first();
+
+                        // Check payment terms
                         if (!empty($get_main_contact) && strtolower($get_main_contact->paymentTerms) == 'pay in advanced') {
                             $add_to_cart = false;
                             $show_price = false;
@@ -3794,11 +3806,12 @@ class ProductController extends Controller
                     }
                 }
             }
-    
+
+            // Assign values to the option
             $option->add_to_cart = $add_to_cart;
             $option->show_price = $show_price;
         }
-        
+                
         return response()->json([
             'message' => 'Products found',
             'status' => 'success',
