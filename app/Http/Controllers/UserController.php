@@ -3674,9 +3674,21 @@ class UserController extends Controller
 
         if ($request->password) {
             $Validated = $request->validate([
-                'password' => 'required|min:6',
+                // 'password' => 'required|min:6',
                 'password_confirmation' => 'required_with:password|same:password'
             ]);
+        }
+
+        if ($request->password_confirmation) {
+            $Validated = $request->validate(
+                [
+                'password' => 'required|min:6',
+                // 'password_confirmation' => 'required_with:password|same:password'
+                ], 
+                [
+                    'password.required' => 'Password is required',
+                ]
+            );
         }
 
         $user_id = $request->id;
