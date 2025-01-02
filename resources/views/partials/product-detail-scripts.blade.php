@@ -1649,6 +1649,7 @@ p {
 
 
     function see_similar_products(product_id  , option_id) {
+        var products_to_hide = JSON.parse($('#products_to_hide').val() || '[]');
         $.ajax({
             url: "{{ url('/see-similar-products/') }}",
             method: 'post',
@@ -1656,6 +1657,7 @@ p {
                 "_token": "{{ csrf_token() }}",
                 product_id,
                 option_id,
+                products_to_hide,
             },
             success: function(response) {
                 if (response.status == 'success') {
@@ -1771,7 +1773,7 @@ p {
                 `;
             }
 
-            if (product.add_to_cart == true) {
+            if (product.add_to_cart === true) {
                 productHtml += `
                     <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_${product.products.id} mb-2" id="button_swap_${product.products.id}">
                         <div class="input-group">
