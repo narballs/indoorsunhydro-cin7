@@ -1952,6 +1952,7 @@
     const newPassword = document.getElementById('newPassword_check');
     const confirmPassword = document.getElementById('confirmPassword_check');
     const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const passwordError = document.getElementById('newPasswordError');
 
     // Add event listeners for real-time validation
     newPassword.addEventListener('input', validatePasswords);
@@ -1960,6 +1961,16 @@
     function validatePasswords() {
         const passwordValue = newPassword.value;
         const confirmPasswordValue = confirmPassword.value;
+
+        if (confirmPasswordValue === '' || passwordValue === '') {
+            passwordError.textContent = "Password is required";
+            return;
+        }
+
+        if (confirmPasswordValue === '' || passwordValue === '') {
+            confirmPasswordError.textContent = "confirm Password is required";
+            return;
+        }
 
         // Check if passwords match
         if (confirmPasswordValue && passwordValue !== confirmPasswordValue) {
