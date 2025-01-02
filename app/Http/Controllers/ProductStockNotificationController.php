@@ -51,6 +51,7 @@ class ProductStockNotificationController extends Controller
                 'product' => $product_stock_notification->product,
                 'product_options' => $product_stock_notification->product->product_options,
                 'email' => $email,
+                'user_email' => $email,
                 'subject' => 'Product Stock Request',
                 'from' => SettingHelper::getSetting('noreply_email_address')
             ];
