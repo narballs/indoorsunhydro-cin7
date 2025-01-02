@@ -10,7 +10,7 @@
                 <img src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" width="200">
             </div>
             <h5 style="text-align: center; margin-bottom:5px;font-weight:600;font-size:20px;">Product Stock Request</h5>
-            <p style="text-align: center; margin-bottom:25px;font-weight:500;font-size:16px;">{{$email}}</p>
+            <p style="text-align: center; margin-bottom:25px;font-weight:500;font-size:16px;">{{$user_email}}</p>
             <table width="60%" align="center" border="1" style="margin-bottom: 10px;">
                 <tr>
                     <th>
