@@ -2460,24 +2460,69 @@ class ProductController extends Controller
         }])
         ->where('status', '!=', 'Inactive');
 
+        // if ($filter_value_main === 'title_description') {
+        //     $main_query->where(function ($query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%')
+        //                 ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
+        //         }
+        //     });
+        // } elseif ($filter_value_main === 'title') {
+        //     $main_query->where(function ($query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
+        //         }
+        //     });
+        // } elseif ($filter_value_main === 'description') {
+        //     $main_query->where(function ($query) use ($explode_search_value) {
+        //         foreach ($explode_search_value as $searchvalue) {
+        //             $query->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
+        //         }
+        //     });
+        // }
+
         if ($filter_value_main === 'title_description') {
-            $main_query->where(function ($query) use ($explode_search_value) {
+
+            $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
+                    $query->where(function (Builder $q) use ($searchvalue) {
+                        $q->where('description', 'LIKE', '%' . $searchvalue . '%')
+                            ->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
+                    });
                 }
+            })
+            ->orWhere(function (Builder $query) use ($searchvalue) {
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchvalue . '%')
+                    ->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
             });
-        } elseif ($filter_value_main === 'title') {
-            $main_query->where(function ($query) use ($explode_search_value) {
+        }
+
+        if ($filter_value_main === 'title') {
+            $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
+                    foreach ($explode_search_value as $searchvalue) {
+                        $query->where(function (Builder $q) use ($searchvalue) {
+                            $q->where('name', 'LIKE', '%' . $searchvalue . '%');
+                        });
+                    }
+                })
+                ->orWhere(function (Builder $query) use ($searchvalue) {
+                    $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+                        ->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
+                });
+        }
+        if ($filter_value_main === 'description') {
+
+            $main_query = $main_query->where(function (Builder $query) use ($explode_search_value) {
                 foreach ($explode_search_value as $searchvalue) {
-                    $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
+                    $query->where(function (Builder $q) use ($searchvalue) {
+                        $q->where('description', 'LIKE', '%' . $searchvalue . '%');
+                    });
                 }
-            });
-        } elseif ($filter_value_main === 'description') {
-            $main_query->where(function ($query) use ($explode_search_value) {
-                foreach ($explode_search_value as $searchvalue) {
-                    $query->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
-                }
+            })
+            ->orWhere(function (Builder $query) use ($searchvalue) {
+                $query->where('code', 'LIKE', '%' . $searchvalue . '%')
+                ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
             });
         }
 
