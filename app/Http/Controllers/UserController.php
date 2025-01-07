@@ -3667,7 +3667,7 @@ class UserController extends Controller
     public function account_profile_update(Request $request)
     {
         $Validated = $request->validate([
-            'email' => 'required|email|unique:users,email,' . $request->id,
+            // 'email' => 'required|email|unique:users,email,' . $request->id,
             'firstName' => 'required',
             'phone' => 'required',
         ]);
@@ -3693,7 +3693,7 @@ class UserController extends Controller
 
         $user_id = $request->id;
         $user_profile = User::find($user_id);
-        $user_profile->email = $request->input('email');
+        // $user_profile->email = $request->input('email');
         $user_profile->password = Hash::make($request->input('password'));
         $user_profile->save();
         $user_profile_contact = Contact::where('user_id', $user_id)->first();

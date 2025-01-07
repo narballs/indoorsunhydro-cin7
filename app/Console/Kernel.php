@@ -57,6 +57,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
+        $schedule->command('create:label')->timezone('Asia/Karachi')->dailyAt('06:00');
+
 
         // Internal endpoints ends here
     }
