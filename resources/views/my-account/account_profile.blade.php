@@ -71,7 +71,7 @@
                                             <label for="exampleInputEmail1"
                                                 class="my_profile_form_label form-label">Email</label>
                                             <input type="email" class="form-control my_profile_form"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                id="exampleInputEmail1" readonly aria-describedby="emailHelp"
                                                 placeholder="you@company.com" value="{{ $user->email }}"
                                                 name="email">
                                             <span>
