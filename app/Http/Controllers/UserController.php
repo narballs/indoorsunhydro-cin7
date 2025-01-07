@@ -2896,6 +2896,7 @@ class UserController extends Controller
         Session::forget('cart');
         $admin = User::role('Admin')->where('id' , auth()->user()->id)->first();
         Auth::loginUsingId($admin->id);
+        session()->put('admin_id_from_switching', $admin->id);
         $companies = Contact::where('user_id', $admin->id)->get();
         if ($companies->count() >= 1) {
             foreach ($companies as $company) {
