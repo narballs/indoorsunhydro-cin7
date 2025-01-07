@@ -2879,13 +2879,13 @@ class UserController extends Controller
         if (!empty($get_admin_id_from_session)) {
             $admin = User::role('Admin')->where('id' , $get_admin_id_from_session)->first();
             Auth::loginUsingId($admin->id);
-            session()->forget('admin_id_from_switching');
             return redirect('admin/dashboard');
         }
 
         $admin = User::role('Admin')->first();
         Auth::loginUsingId($admin->id);
         session()->flash('logged_in_as_another_user', '');
+        session()->forget('admin_id_from_switching');
         return redirect('admin/dashboard');
     }
     public function switch_admin()
