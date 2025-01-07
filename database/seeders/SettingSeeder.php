@@ -514,6 +514,12 @@ class SettingSeeder extends Seeder
                 'option_value' => 'naris@indoorsunhydro.com',
             ],
 
+            [
+                'option_name' => 'auto_create_label',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
 
 
 
