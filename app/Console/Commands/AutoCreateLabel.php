@@ -410,6 +410,8 @@ class AutoCreateLabel extends Command
                     }
                 }
 
+                Log::info('Shipment label created and email sent successfully.');
+
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 Log::error($e->getMessage());
                 $this->info('Error creating label: ' . $e->getMessage());
