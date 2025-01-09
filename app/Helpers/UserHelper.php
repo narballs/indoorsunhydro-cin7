@@ -377,14 +377,8 @@ class UserHelper
             }
         }
 
-        // if ($products_weight > 99) {
-        //     $product_width = $sum_of_width;
-        //     $product_length = $sum_of_length;
-        // } else {
-        //     // Check if arrays are not empty before calling max()
-        //     $product_width = !empty($products_widths) ? max($products_widths) : 0;  // Set default value to 0 if array is empty
-        //     $product_length = !empty($products_lengths) ? max($products_lengths) : 0;  // Set default value to 0 if array is empty
-        // }
+        $product_length = max($products_lengths);
+        $product_width = max($products_widths);
 
         $girth = 2 * ($product_width + $product_height); 
         if ($girth > 165  && $products_weight < 100) {
@@ -585,47 +579,15 @@ class UserHelper
             }
         }
 
+        $product_length = max($products_lengths);
+        $product_width = max($products_widths);
+
         // Calculate the girth
         $girth = 2 * ($product_width + $product_height); 
         if ($girth > 165  && $products_weight < 100) {
             $products_weight = 100;
         }
-        // if ($products_weight > 99) {
-        //     if ($girth > 165) {
-        //         // Stack the items if girth exceeds 165
-        //         $max_items_per_row = 10;  // Example stacking configuration
-        //         $max_items_per_column = 10;
-
-        //         // Calculate stacked height and adjust dimensions
-        //         $stacked_height = ceil($order_item->quantity / ($max_items_per_row * $max_items_per_column));  // Using $order_item->quantity here
-        //         $product_width = $product_width * $max_items_per_row;
-        //         $product_length = $product_length * $max_items_per_column;
-        //         $product_height = $stacked_height;
-        //     } else {
-        //         // Use normal dimensions if girth <= 165 inches
-        //         $product_width = $product_width;
-        //         $product_length = $product_length;
-        //         $product_height = $product_height;
-        //     }
-        // } else {
-        //     if ($girth > 165) {
-        //         // Stack the items if girth exceeds 165 for weight <= 150 lbs
-        //         $max_items_per_row = 10; // Example: 10 items per row (width)
-        //         $max_items_per_column = 10; // Example: 10 items per column (length)
-
-        //         // Calculate stacked height and adjust dimensions
-        //         $stacked_height = ceil($order_item->quantity / ($max_items_per_row * $max_items_per_column));
-        //         $product_width = $product_width * $max_items_per_row;
-        //         $product_length = $product_length * $max_items_per_column;
-        //         $product_height = $stacked_height ;
-        //     } else {
-        //         // Use normal dimensions if girth <= 165 inches
-        //         $product_width = $product_width;
-        //         $product_length = $product_length;
-        //         $product_height = $product_height;
-        //     }
-        // }
-
+        
 
         $client = new \GuzzleHttp\Client();
         $shipstation_label_url = config('services.shipstation.shipment_label_url');
@@ -637,25 +599,7 @@ class UserHelper
         $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
 
-        // $created_date = \Carbon\Carbon::parse($currentOrder->createdDate);
-        // $getDate = $created_date->format('Y-m-d');
-        // $getTime = date('H:i:s' ,strtotime($currentOrder->createdDate));
-        // $order_created_date = $getDate . 'T' . $getTime ;
-
-        // // Check if Sunday
-        // if ($created_date->isSunday()) {
-        //     $shipDate = $created_date->addDays(2);
-        // } else {
-        //     $shipDate = $created_date->copy()->addHours(48);
-
-        //     if ($shipDate->isSaturday()) {
-        //         $shipDate = $shipDate->addDays(2);
-        //     } elseif ($shipDate->isSunday()) {
-        //         $shipDate = $shipDate->addDay();
-        //     }
-        // }
-
-        // $ship_by_date = $shipDate->format('Y-m-d');
+        
 
         $created_date = \Carbon\Carbon::parse($currentOrder->created_at)->setTimezone('America/Los_Angeles');
 
