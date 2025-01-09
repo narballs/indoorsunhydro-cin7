@@ -44,6 +44,21 @@ class AdminSettingsController extends Controller
                 'msg' => 'Updated!'
             ]);
     }
+    public function autoCreateLabel(Request $request) {
+        // dd($request->all());
+        $option = AdminSetting::where('option_name', 'auto_create_label')->first();
+        if (strtolower($option->option_value) == 'yes') {
+            $option->option_value = 'No';
+        }
+        else {
+            $option->option_value = 'Yes';
+        }
+        $option->save();
+        return response()->json([
+                'success' => true, 
+                'msg' => 'Updated!'
+            ]);
+    }
 
     public function index() {
         $settings = AdminSetting::where('is_visible', true)->get();

@@ -372,6 +372,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::post('admin/auto-full-fill', [AdminSettingsController::class, 'autoFullfill']);
+    Route::post('admin/auto-create-label', [AdminSettingsController::class, 'autoCreateLabel']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);
     Route::get('admin/get-parent', [ContactController::class, 'getParent']);

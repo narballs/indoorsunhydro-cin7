@@ -55,6 +55,15 @@ class OrderManagementController extends Controller
             $auto_fullfill = false;
         }
 
+
+        $auto_create_label = AdminSetting::where('option_name', 'auto_create_label')->first();
+        $auto_create_label_value = strtolower($auto_create_label->option_value);
+        if ($auto_create_label_value == 'yes') {
+            $auto_createLabel = true;
+        } else {
+            $auto_createLabel = false;
+        }
+
         $sort_by_desc = $request->get('sort_by_desc');
         $sort_by_asc = $request->get('sort_by_asc');
         $sort_by_created_at = $request->get('sort_by_date');
@@ -63,6 +72,10 @@ class OrderManagementController extends Controller
         $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact']);
         $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
         $auto_fulfill = $option->option_value;
+
+        $autoCreateLabel = AdminSetting::where('option_name', 'auto_create_label')->first();
+        $auto_createlabel = $autoCreateLabel->option_value;
+
         if (!empty($search)) {
             $orders_query = $orders_query->where('order_id', 'LIKE', '%' . $search . '%')
                 ->orWhere('createdDate', 'like', '%' . $search . '%')
@@ -118,7 +131,7 @@ class OrderManagementController extends Controller
             $show_alert = true;
         }
         $order_ids = implode(',', $get_order_ids);
-        return view('admin/orders', compact('orders','order_ids', 'search','pending_orders','show_alert', 'auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
+        return view('admin/orders', compact('orders','order_ids', 'search','pending_orders','show_alert', 'auto_createlabel','auto_createLabel','auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
     }
 
     public function show($id)
