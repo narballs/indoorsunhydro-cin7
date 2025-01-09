@@ -62,6 +62,32 @@
                         <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
                             <div class="d-flex">
                                 <span class="fullfill_btn_mbl">
+                                    @if (strtolower($auto_createlabel) == 'yes')
+                                        <span class="d-flex">
+                                            <a class=" btn  btn-sm fulfill-row-items-order-page w-auto">
+                                                Auto Create Label
+                                            </a>
+                                            <label class="custom-control custom-checkbox ">
+                                                <input type="checkbox" id="auto_create_label" value="{{ $auto_createlabel }}"
+                                                    class="custom-control-input general_switch" onchange="autocreateLabel()"
+                                                    {{ isset($auto_createlabel) && strtolower($auto_createlabel) == 'yes' ? 'checked="checked"' : '' }}>
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
+                                        </span>
+                                    @else
+                                        <span class="d-flex ">
+                                            <a class=" btn  btn-sm fulfill-row-items-order-page w-auto">
+                                                Auto Create Label
+                                            </a>
+                                            <label class="custom-control custom-checkbox ">
+                                                <input type="checkbox" id="auto_create_label" value=""
+                                                    class="custom-control-input general_switch" onchange="autocreateLabel()">
+                                                <span class="custom-control-indicator"></span>
+                                            </label>
+                                        </span>
+                                    @endif
+                                </span>
+                                <span class="fullfill_btn_mbl">
                                     @if ($auto_fulfill == 1)
                                         <span class="d-flex">
                                             <a class=" btn  btn-sm fulfill-row-items-order-page">
@@ -935,6 +961,26 @@
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "auto_fullfill": auto_fullfill
+                },
+                success: function(response) {
+                    setInterval('location.reload()', 1000);
+                }
+            });
+        }
+        function autocreateLabel() {
+            var value = $('#auto_create_label').val();
+            if (value == 'yes') {
+                var auto_create_label = true;
+            } else {
+                auto_create_label = false;
+            }
+
+            jQuery.ajax({
+                url: "{{ url('admin/auto-create-label') }}",
+                method: 'post',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "auto_create_label": auto_create_label
                 },
                 success: function(response) {
                     setInterval('location.reload()', 1000);
