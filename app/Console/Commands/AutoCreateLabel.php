@@ -78,7 +78,7 @@ class AutoCreateLabel extends Command
 
         foreach ($all_orders as $order) {
             $this->processOrder($order, $client , $currentDate , $data);
-            sleep(5);        
+            // sleep(5);        
         }    
         
     }
@@ -97,7 +97,7 @@ class AutoCreateLabel extends Command
 
             $get_default_ship_from_address =  UserHelper::get_default_shipstation_warehouse();
             if (empty($get_default_ship_from_address) || empty($get_default_ship_from_address['default_ship_from_address'])) {
-                $this->info('Default Ship From Address not found.');
+                return Log::info('Default Ship From Address not found.');
             } else {
                 $default_ship_from_address = $get_default_ship_from_address['default_ship_from_address'];
             }
@@ -116,7 +116,7 @@ class AutoCreateLabel extends Command
             
                 $orderData = json_decode($response->getBody()->getContents(), true);
                 if (empty($orderData)) {
-                    return redirect('admin/orders')->with('error', 'Order not found in ShipStation.');
+                    return Log::info('Order not found in ShipStation.');
                 }
 
                 $user_email = $orderData['customerEmail'];
@@ -392,9 +392,9 @@ class AutoCreateLabel extends Command
                                 'label_created' => 1,
                                 'label_link' => $file_name,
                             ]);
-                            return redirect('admin/orders')->with('success', 'Shipment label created and email sent successfully.');
+                            return Log::info('Shipment label created and email sent successfully.');
                         } else {
-                            return redirect('admin/orders')->with('error', 'Error sending email.');
+                            return Log::info('Error sending email.');
                         }
                         
                     } catch (\Exception $e) {
@@ -407,7 +407,7 @@ class AutoCreateLabel extends Command
                         $ship_station_api_logs->status = $response->getStatusCode();
                         $ship_station_api_logs->save();
             
-                        return redirect('admin/orders')->with('error', $e->getMessage());
+                        $this->info('Error creating label: ' . $e->getMessage());
                     }
                 }
 
