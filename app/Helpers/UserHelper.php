@@ -872,12 +872,15 @@ class UserHelper
             ],
             'shipFrom' => $default_ship_from_address,
             'insuranceOptions' => [
-                'provider' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['provider']) ? $orderData['insuranceOptions']['provider'] : null,
-                'insureShipment' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insureShipment']) ? $orderData['insuranceOptions']['insureShipment'] : null,
-                'insuredValue' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insuredValue']) ? $orderData['insuranceOptions']['insuredValue'] : null,
+                'provider' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['provider']) ? $orderData['insuranceOptions']['provider'] : 'none',
+                'insureShipment' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insureShipment']) ? $orderData['insuranceOptions']['insureShipment'] : false,
+                'insuredValue' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insuredValue']) ? floatval($orderData['insuranceOptions']['insuredValue']) : 0,
             ],
-            'testLabel' => false,
         ];
+
+        if ($orderData['carrierCode'] !== 'seko_ltl_walleted') {
+            $data['testLabel'] = false;
+        }
 
         return $data;
     }
