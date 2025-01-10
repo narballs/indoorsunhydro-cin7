@@ -62,10 +62,11 @@ class AutoCreateLabel extends Command
         $all_orders = ApiOrder::where('is_shipped', 0)
         ->where('label_created', 0)
         ->where('is_stripe', 1)
-        ->where('shipment_price' , '>', 0)
-        ->where('shipstation_orderId' , '!=' , null)
+        ->where('shipment_price', '>', 0)
+        ->whereNotNull('shipstation_orderId') // Correct way to check for NOT NULL
         ->where('payment_status', 'paid')
         ->where('isApproved', 1)
+        ->where('created_at', '>=', '2025-01-09 12:23:51') // Added date condition
         ->get();
 
 
