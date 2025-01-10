@@ -1219,6 +1219,7 @@ class OrderController extends Controller
             ]);
         
             $orderData = json_decode($response->getBody()->getContents(), true);
+            dd($orderData);
             if (empty($orderData)) {
                 return redirect('admin/orders')->with('error', 'Order not found in ShipStation.');
             }
