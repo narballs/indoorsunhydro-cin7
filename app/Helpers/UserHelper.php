@@ -874,7 +874,7 @@ class UserHelper
             'insuranceOptions' => [
                 'provider' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['provider']) ? $orderData['insuranceOptions']['provider'] : 'none',
                 'insureShipment' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insureShipment']) ? $orderData['insuranceOptions']['insureShipment'] : false,
-                'insuredValue' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insuredValue']) ? floatval($orderData['insuranceOptions']['insuredValue']) : 0,
+                'insuredValue' => !empty($orderData['insuranceOptions']) && !empty($orderData['insuranceOptions']['insuredValue']) ? floatval($orderData['insuranceOptions']['insuredValue']) : null,
             ],
         ];
 
