@@ -59,11 +59,19 @@
                                         Your order has been Cancelled !
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
-                                        Your cancellation request  #{{ $addresses['order_id'] }} has been successfully processed.
-                                    </td>
-                                </tr>
+                                @if ($currentOrder->payment_status == 'unpaid')
+                                    <tr>
+                                        <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                            Your order #{{ $addresses['order_id'] }} was not processed, a charge was not made to your card, please try your order again.
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;font-weight:400;">
+                                            Your cancellation request  #{{ $addresses['order_id'] }} has been successfully processed.
+                                        </td>
+                                    </tr>
+                                @endif
                             @elseif (!empty($addresses['new_order_status']) && !empty($addresses['previous_order_status']))
                                 <tr>
                                     <td align="" style="text-align: center;color:#000000;font-color:#000000;font-size: 16px;font-weight:bold;">
