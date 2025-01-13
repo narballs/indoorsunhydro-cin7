@@ -350,11 +350,11 @@
                                             <td data-label="Payment Term :" class="td_padding_row">
                                                 @if (!empty($order->logisticsCarrier ))
                                                     @if (strtolower($order->logisticsCarrier) === 'delivery')
-                                                        @if ($order->shipment_price == 0)
+                                                        @if ($order->shipment_price == 0 && $order->is_stripe == 1)
                                                             <div class="row">
                                                                 <img src="{{asset('/theme/bootstrap5/images/free_shipping_icon.png')}}" class="" style="max-width:25%;min-width:25%;" alt="">
                                                             </div>
-                                                        @elseif($order->shipping_carrier_code == 'seko_ltl_walleted')
+                                                        @elseif($order->shipping_carrier_code == 'seko_ltl_walleted' && $order->is_stripe == 1)
                                                             <div class="row">
                                                                 <img src="{{asset('/theme/bootstrap5/images/seko_ltl.png')}}" class="" style="max-width:25%;min-width:25%;" alt="">
                                                             </div>
