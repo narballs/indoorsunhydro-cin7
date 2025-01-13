@@ -67,6 +67,7 @@ class AutoCreateLabel extends Command
         ->where('payment_status', 'paid')
         ->where('isApproved', 1)
         ->where('created_at', '>=', '2025-01-09 12:23:51') // Added date condition
+        ->where('shipping_carrier_code',  'ups_walleted')
         ->get();
 
 
