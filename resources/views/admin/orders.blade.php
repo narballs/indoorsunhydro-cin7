@@ -350,7 +350,17 @@
                                             <td data-label="Payment Term :" class="td_padding_row">
                                                 @if (!empty($order->logisticsCarrier ))
                                                     @if (strtolower($order->logisticsCarrier) === 'delivery')
-                                                        <span class="badge badge-success p-1">Delivery</span>
+                                                        @if ($order->shipment_price == 0)
+                                                            <div class="row">
+                                                                <img src="{{asset('/theme/bootstrap5/images/free_shipping_icon.png')}}" class="" style="max-width:25%;min-width:25%;" alt="">
+                                                            </div>
+                                                        @elseif($order->shipping_carrier_code == 'seko_ltl_walleted')
+                                                            <div class="row">
+                                                                <img src="{{asset('/theme/bootstrap5/images/seko_ltl.png')}}" class="" style="max-width:25%;min-width:25%;" alt="">
+                                                            </div>
+                                                        @else
+                                                            <span class="badge badge-success p-1">Delivery</span>
+                                                        @endif
                                                     @elseif (strtolower($order->logisticsCarrier) === 'pickup order')
                                                         <span class="badge badge-warning p-1">Pickup Order</span>
                                                     @else
@@ -363,22 +373,33 @@
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid')
-                                                    @if ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1 || $order->isApproved == 0))
-                                                        <form action="{{url('admin/orders/create/label')}}" method="post">
-                                                            @csrf
-                                                            <input type="hidden" name="order_id" id="order_id"
-                                                                value="{{ $order->id }}">
-                                                            <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
-                                                                value="{{ $order->shipstation_orderId }}">
-                                                            <button type="submit" class="badge badge-primary p-2 border-0">
-                                                                Create Label
-                                                            </button>
-                                                        </form>
+
+                                                    @if ($order->shipment_price == 0)
+                                                        <button type="button" class="badge badge-warning p-2 border-0">
+                                                            Manual Label
+                                                        </button>
                                                     @else
-                                                        @if ($order->label_link != '')
-                                                            <a href="{{route('download_label' , $order->label_link)}}" class="badge badge-success p-2 border-0">
-                                                                Download
-                                                            </a>
+                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1 || $order->isApproved == 0))
+                                                            <button type="button" class="badge badge-warning p-2 border-0">
+                                                                Manual Label
+                                                            </button>
+                                                        @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1 || $order->isApproved == 0))
+                                                            <form action="{{url('admin/orders/create/label')}}" method="post">
+                                                                @csrf
+                                                                <input type="hidden" name="order_id" id="order_id"
+                                                                    value="{{ $order->id }}">
+                                                                <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
+                                                                    value="{{ $order->shipstation_orderId }}">
+                                                                <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                    Create Label
+                                                                </button>
+                                                            </form>
+                                                        @else
+                                                            @if ($order->label_link != '')
+                                                                <a href="{{route('download_label' , $order->label_link)}}" class="badge badge-success p-2 border-0">
+                                                                    Download
+                                                                </a>
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 @endif
