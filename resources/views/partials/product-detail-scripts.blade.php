@@ -1368,11 +1368,13 @@ p {
 
             if (option) {
                 var stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
-                
-                if ((stock_label === 'Out of Stock') && (((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced'))) {
+
+                if (
+                    stock_label === 'Out of Stock' && 
+                    (get_wholesale_terms || "").trim() === "" // If empty
+                    || (get_wholesale_terms || "").trim().toLowerCase() !== 'pay in advanced' // If not 'pay in advanced'
+                ) {
                     stock_label = 'On back order';
-                } else {
-                    stock_label = stock_label;
                 }
 
                 const text_class = option.stockAvailable > 0 ? 'text-success' : 'text-danger';
@@ -1515,7 +1517,7 @@ p {
             let buttonHtml = '';
 
             if (add_to_cart) {
-                if (lowerCaseTerms !== 'pay in advanced') {
+                if (lowerCaseTerms !== 'pay in advanced' || lowerCaseTerms === '') {
                     buttonHtml = addToCartButton;
                 } else {
                     buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
