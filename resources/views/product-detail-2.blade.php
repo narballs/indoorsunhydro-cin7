@@ -306,6 +306,8 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                         @csrf
                                         <div class="col-md-12 col-xl-10">
                                             <div class="cart row mt-0 mt-md-3 justify-content-between">
+                                                <input type="hidden" name="get_wholesale_terms" id="get_wholesale_terms"
+                                                    value="{{$get_wholesale_terms}}">
                                                 @if ($add_to_cart == true)
                                                     @if (empty($get_wholesale_terms) && strtolower($get_wholesale_terms) != 'pay in advanced')
                                                         <div class="col-md-4 col-5 col-lg-4 col-xl-4">

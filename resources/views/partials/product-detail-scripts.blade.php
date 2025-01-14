@@ -913,31 +913,39 @@ p {
 
         var oldValue = parseInt(desktop_input.val());
         var newVal = oldValue;
+        let wholesaleTerms = ($('#get_wholesale_terms').val() || "").trim().toLowerCase();
 
-        if (jQuery(this).hasClass('product-detail-quantity-increase') && oldValue < max) {
+        if (jQuery(this).hasClass('product-detail-quantity-increase') && oldValue < max &&  wholesaleTerms === 'pay in advanced') {
             newVal = oldValue + 1;
-        } else if (jQuery(this).hasClass('product-detail-quantity-decrease') && oldValue > min) {
-            newVal = oldValue - 1;
+        } 
+        else if (jQuery(this).hasClass('product-detail-quantity-increase') && wholesaleTerms !== 'pay in advanced') {
+            newVal = oldValue + 1;
+        } 
+        else { 
+            if (jQuery(this).hasClass('product-detail-quantity-decrease') && oldValue > min) {
+                newVal = oldValue - 1;
+            }
         }
 
         desktop_input.val(newVal).trigger("change");
-
         // Toggle button state based on new value
         toggleButtonState(newVal);
 
         // Show error if quantity exceeds max
-        if (newVal > max) {
+        if (newVal > max && wholesaleTerms === 'pay in advanced') {
             showErrorToast();
         }
     });
 
     // Handle manual input changes
     jQuery('.product-detail-quantity-increase-decrease-div input[type="number"]').change(function () {
+        let wholesaleTerms = ($('#get_wholesale_terms').val() || "").trim().toLowerCase();
+
         var desktop_input = jQuery(this),
             input_qty = parseInt(desktop_input.val()),
             max = parseInt(desktop_input.attr('max'));
 
-        if (input_qty > max) {
+        if (input_qty > max && wholesaleTerms === 'pay in advanced') {
             desktop_input.val(max);
             showErrorToast();
         }
@@ -1361,7 +1369,7 @@ p {
             if (option) {
                 var stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
                 
-                if ((stock_label === 'Out of Stock') && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+                if ((stock_label === 'Out of Stock') && (((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced'))) {
                     stock_label = 'On back order';
                 } else {
                     stock_label = stock_label;
