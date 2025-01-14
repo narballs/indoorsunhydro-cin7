@@ -1517,7 +1517,7 @@ p {
             let buttonHtml = '';
 
             if (add_to_cart) {
-                if (lowerCaseTerms !== 'pay in advanced' || lowerCaseTerms === '') {
+                if (lowerCaseTerms === '' || lowerCaseTerms !== 'pay in advanced') { 
                     buttonHtml = addToCartButton;
                 } else {
                     buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
