@@ -441,6 +441,7 @@
                     </table>
                 </td>
             </tr>
+            @if ($currentOrder->payment_status == 'paid')
             <tr>
                 <td align="center">
                     <p style="font-weight:500;font-size:12px;padding:15px;">
@@ -448,6 +449,7 @@
                     </p>
                 </td>
             </tr>
+            @endif
             <tr>
                 <td align="center">
                     <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
