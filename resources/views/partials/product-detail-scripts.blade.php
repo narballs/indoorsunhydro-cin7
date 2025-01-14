@@ -1368,18 +1368,13 @@ p {
 
             if (option) {
                 let getWholesaleTerms = (get_wholesale_terms || "").trim().toLowerCase();
-                let stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
+                var stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
 
-                // If getWholesaleTerms is "pay in advanced", set stock_label to "Out of Stock"
-                if (getWholesaleTerms === "pay in advanced") {
-                    stock_label = "Out of Stock";
-                } 
-                // If stock is "Out of Stock" and getWholesaleTerms is not "pay in advanced", set to "On back order"
-                else if (
-                    stock_label === 'Out of Stock' &&
-                    (getWholesaleTerms === "" || getWholesaleTerms !== "pay in advanced")
-                ) {
+                
+                if (stock_label === 'Out of Stock' && (getWholesaleTerms !== "pay in advanced" || getWholesaleTerms == null || getWholesaleTerms == '') ) {
                     stock_label = "On back order";
+                } else {
+                    stock_label = "Out of Stock";
                 }
 
                 const text_class = option.stockAvailable > 0 ? 'text-success' : 'text-danger';
