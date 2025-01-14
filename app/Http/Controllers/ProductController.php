@@ -2554,6 +2554,8 @@ class ProductController extends Controller
         // Final product filtering
         $products = $products->whereIn('product_id', $valid_product_ids)->paginate($per_page);
 
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
 
         if (!empty($user_id)) {
             $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
