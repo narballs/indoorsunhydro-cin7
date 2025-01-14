@@ -109,12 +109,12 @@
     }
 </script> --}}
 <script>
-    function adding_quantity(product_id , option_id) {
-        // updateBodyClickEventStatus(false);
+    function adding_quantity(product_id , option_id ,get_wholesale_terms) {
+        
         var plus = parseInt($('.swap_qty_number_' + product_id).val()) === '' ? 1 : parseInt($('.swap_qty_number_' + product_id).val());
         var stock_number = $('.swap_qty_number_'+product_id).attr('max');
         var result = plus + 1;
-        if (result > stock_number) {
+        if ((result > stock_number) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             Swal.fire({
                 toast: false,
                 icon: 'error',
@@ -141,7 +141,7 @@
             $('.swap_qty_number_' + product_id).val(result)
         } 
     }
-    function subtracting_quantity(product_id , option_id) {
+    function subtracting_quantity(product_id , option_id , get_wholesale_terms) {
         // updateBodyClickEventStatus(false);
         var minus = $('.swap_qty_number_' + product_id).val() == '' ? 1 : parseInt($('.swap_qty_number_' + product_id).val());
         if (minus > 1) {
@@ -400,263 +400,57 @@
         });
         return false;
     }
-    // function update_qty_text(id , option_id) {
-    //     var stock_number = $('.swap_qty_number_'+id).attr('max');
-    //     var qty = parseInt($('.swap_qty_number_' + id).val()) == 0 || $('.swap_qty_number_' + id).val() === '' ? 1 : parseInt($('.swap_qty_number_' + id).val());
-    //     var initial_free_shipping_value = parseInt($('.initial_free_shipping_value').val());
-    //     var tax = 0;
-    //     var tax_rate = parseFloat($('#tax_rate_number').val());
-    //     $('.swap_qty_number_' + id).val(qty);
-    //     if (qty > stock_number) {
-    //         Swal.fire({
-    //             toast: true,
-    //             icon: 'error',
-    //             title: 'Maximum stock limit reached',
-    //             timer: 3000,
-    //             position: 'top',
-    //             showConfirmButton: true,  // Show the confirm (OK) button
-    //             confirmButtonText: 'Okay',
-    //             timerProgressBar: true,
-    //             customClass: {
-    //                 confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                 actions: 'my-actions-class'  // Class for the actions container
-    //             }
-    //         });
-    //         $('.button_swap_quantity_'+id).addClass('d-none');
-    //         $('.original_cart_btn_'+id).removeClass('d-none');
-    //         $('.cart-total-' + id).addClass('added-to-cart-on-change');
-    //         $('.swap_qty_number_' + id).val(0);
-    //         $('.cart-total-number-' + id).html(0);
-    //         return false;
-    //     }
-    //     else {
-    //         jQuery.ajax({
-    //             url: "{{ url('/add-to-cart/') }}",
-    //             method: 'post',
-    //             data: {
-    //                 "_token": "{{ csrf_token() }}",
-    //                 p_id: jQuery('#p_' + id).val(),
-    //                 option_id: option_id,
-    //                 quantity: qty
-    //             },
-    //             success: function(response) {
-    //                 if (response.status == 'error') {
-    //                     var cart_items = response.cart_items;
-    //                     var cart_total = 0;
-    //                     var total_cart_quantity = 0;
-    //                     var product_quantity = 0;
 
-    //                     for (var key in cart_items) {
-    //                         var item = cart_items[key];
+    function update_qty_text_new(id, option_id, get_wholesale_terms, element) {
+        var newValue = parseInt($(element).val());
+        var getActualStock = parseInt($('.swap_qty_number_' + id).attr('max'));
 
-    //                         var product_id = item.prd_id;
-    //                         var price = parseFloat(item.price);
-    //                         product_quantity = item.quantity;
-    //                         var quantity = parseFloat(item.quantity);
-
-    //                         var subtotal = parseFloat(price * quantity);
-    //                         var cart_total = cart_total + subtotal;
-    //                         var total_cart_quantity = total_cart_quantity + quantity;
-    //                         $('#subtotal_' + product_id).html('$' + subtotal);
-    //                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
-    //                             .val()).innerHTML;
-    //                     }
-
-    //                     // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
-    //                     // jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
-    //                     jQuery('.cart-total-number-' + id).html(response.actual_stock);
-    //                     jQuery('.swap_qty_number_'+id).val(response.actual_stock);
-    //                     Swal.fire({
-    //                         toast: true,
-    //                         icon: 'error',
-    //                         title: response.message,
-    //                         timer: 3000,
-    //                         position: 'top',
-    //                         showConfirmButton: true,  // Show the confirm (OK) button
-    //                         confirmButtonText: 'Okay',
-    //                         timerProgressBar: true,
-    //                         customClass: {
-    //                             confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                             actions: 'my-actions-class'  // Class for the actions container
-    //                         }
-    //                     });
-    //                 }
-    //                 if (response.status == 'success') {
-    //                     var cart_items = response.cart_items;
-    //                     var cart_total = 0;
-    //                     var total_cart_quantity = 0;
-    //                     var product_quantity = 0;
-
-    //                     for (var key in cart_items) {
-    //                         var item = cart_items[key];
-
-    //                         var product_id = item.prd_id;
-    //                         var price = parseFloat(item.price);
-    //                         product_quantity = item.quantity;
-    //                         var quantity = parseFloat(item.quantity);
-
-    //                         var subtotal = parseFloat(price * quantity);
-    //                         var cart_total = cart_total + subtotal;
-    //                         var total_cart_quantity = total_cart_quantity + quantity;
-    //                         $('#subtotal_' + product_id).html('$' + subtotal);
-    //                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
-    //                             .val()).innerHTML;
-    //                     }
-
-    //                     // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
-    //                     jQuery('.cart-total-number-' + id).html($('.swap_qty_number_' + id).val());
-    //                     var grand_total = 0;
-    //                     var grand_total = parseFloat(cart_total);
-    //                     var tax = cart_total * (tax_rate / 100);
-    //                     var grand_total_include_tax = 0;
-    //                     grand_total_include_tax = (tax + grand_total).toFixed(2);
-    //                     if (response.free_postal_state == true) {
-    //                         if (grand_total <= initial_free_shipping_value) {
-    //                             $('.promotional_banner_div_congrats').addClass('d-none');
-    //                             $('.promotional_banner_div').removeClass('d-none');
-    //                             $('.promotional_banner_span').html('$' + (initial_free_shipping_value - grand_total_include_tax).toFixed(2));
-    //                         } else {
-    //                             $('.promotional_banner_div').addClass('d-none');
-    //                             $('.promotional_banner_div_congrats').removeClass('d-none');
-    //                         }
-    //                     }
-    //                     else {
-    //                         $('.promotional_banner_div').addClass('d-none');
-    //                         $('.promotional_banner_div_congrats').addClass('d-none');
-    //                     }
-    //                     Swal.fire({
-    //                         toast: true,
-    //                         icon: 'success',
-    //                         title: qty + ' X ' + product_name +
-    //                             ' added to your cart',
-    //                         timer: 3000,
-    //                         position: 'top',
-    //                         showConfirmButton: true,  // Show the confirm (OK) button
-    //                         confirmButtonText: 'Okay',
-    //                         timerProgressBar: true,
-    //                         customClass: {
-    //                             confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                             actions: 'my-actions-class'  // Class for the actions container
-    //                         }
-    //                     });
-    //                 }
-    //                 $('#top_cart_quantity').html(total_cart_quantity);
-    //                 $('#cart_items_quantity').html(total_cart_quantity);
-    //                 $('.cartQtyipad').html(total_cart_quantity);
-    //                 $('.cartQtymbl').html(total_cart_quantity);
-    //                 $('#topbar_cart_total').html('$' + parseFloat(cart_total).toFixed(2));
-    //                 $('.topbar_cart_total_ipad').html('$'+parseFloat(cart_total).toFixed(2));
-    //                 var total = document.getElementById('#top_cart_quantity');
-    //             }
-    //         });
-    //     }
-        
-    // }
-    // function button_swap_quantity (id , option_id) {
-    //     updateBodyClickEventStatus(false);
-    // }
-
-    // function update_qty_text_new (id, option_id , element) {
-    //     var newValue = parseInt($(element).val());
-    //     var getActualStock = parseInt($('.swap_qty_number_'+id).attr('max'));
-    //     if (newValue == 0 && newValue != null && newValue != '')  {
-    //         if (newValue > getActualStock) {
-    //             Swal.fire({
-    //                 toast: true,
-    //                 icon: 'error',
-    //                 title: 'Maximum stock limit reached',
-    //                 position: 'top',
-    //                 showConfirmButton: true,  // Show the confirm (OK) button
-    //                 confirmButtonText: 'Okay',
-    //                 timerProgressBar: false,
-    //                 customClass: {
-    //                     confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                     actions: 'my-actions-class'  // Class for the actions container
-    //                 }
-    //             });
-    //             $(this).val(1);
-    //             return false;
-    //         }
-    //         else {
-    //             $('.swap_qty_number_'+id).each(function() {
-    //                 $(this).val(1);
-    //             });
-    //         }
-    //     } else {
-    //         if (newValue > getActualStock) {
-    //             Swal.fire({
-    //                 toast: true,
-    //                 icon: 'error',
-    //                 title: 'Maximum stock limit reached',
-    //                 position: 'top',
-    //                 showConfirmButton: true,  // Show the confirm (OK) button
-    //                 confirmButtonText: 'Okay',
-    //                 timerProgressBar: false,
-    //                 customClass: {
-    //                     confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                     actions: 'my-actions-class'  // Class for the actions container
-    //                 }
-    //             });
-    //             $(this).val(newValue);
-    //             return false;
-    //         } else {
-    //             $('.swap_qty_number_'+id).each(function() {
-    //                 $(this).val(newValue);
-    //             });
-    //         }
-    //     }
-    // }
-
-    function update_qty_text_new(id, option_id, element) {
-    var newValue = parseInt($(element).val());
-    var getActualStock = parseInt($('.swap_qty_number_' + id).attr('max'));
-
-    if (newValue == 0 || isNaN(newValue)) {
-        newValue = 1; // Set to 1 if invalid value is entered
-    }
-
-    if (newValue > getActualStock) {
-        // Add overlay to disable the background
-        if ($('#screen-overlay').length === 0) { // Avoid duplicate overlays
-            $('body').append('<div id="screen-overlay" style="position: relative; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998;"></div>');
+        if (newValue == 0 || isNaN(newValue)) {
+            newValue = 1; // Set to 1 if invalid value is entered
         }
-
-        Swal.fire({
-            toast: false, // Disable toast style for full-screen modal
-            icon: 'error',
-            title: 'Maximum stock limit reached',
-            text: 'Please adjust the quantity.',
-            position: 'center',
-            showConfirmButton: true,
-            confirmButtonText: 'Confirm',
-            allowOutsideClick: false, // Disable clicking outside to close the modal
-            allowEscapeKey: false, // Disable Esc key to close the modal
-            customClass: {
-                confirmButton: 'my-confirm-button',  // Class for the confirm button
-                popup: 'swal2-popup-class',  // Class for the actions container
-                actions: 'my-actions-class'  // Class for the actions container
+        
+        if ((newValue > getActualStock) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+            // Add overlay to disable the background
+            if ($('#screen-overlay').length === 0) { // Avoid duplicate overlays
+                $('body').append('<div id="screen-overlay" style="position: relative; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998;"></div>');
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Remove the overlay and update the quantity
-                $('#screen-overlay').remove();
-                $('.swap_qty_number_' + id).each(function () {
-                    $(this).val(1); // Reset to 1
-                });
-            }
-        });
 
-        // Increase z-index of SweetAlert modal to be above the overlay
-        $('.swal2-popup-class').css('z-index', '9999');
+            Swal.fire({
+                toast: false, // Disable toast style for full-screen modal
+                icon: 'error',
+                title: 'Maximum stock limit reached',
+                text: 'Please adjust the quantity.',
+                position: 'center',
+                showConfirmButton: true,
+                confirmButtonText: 'Confirm',
+                allowOutsideClick: false, // Disable clicking outside to close the modal
+                allowEscapeKey: false, // Disable Esc key to close the modal
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    popup: 'swal2-popup-class',  // Class for the actions container
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Remove the overlay and update the quantity
+                    $('#screen-overlay').remove();
+                    $('.swap_qty_number_' + id).each(function () {
+                        $(this).val(1); // Reset to 1
+                    });
+                }
+            });
 
-        return false;
-    } else {
-        // Update the quantity if it's valid
-        $('.swap_qty_number_' + id).each(function () {
-            $(this).val(newValue);
-        });
+            // Increase z-index of SweetAlert modal to be above the overlay
+            $('.swal2-popup-class').css('z-index', '9999');
+
+            return false;
+        } else {
+            // Update the quantity if it's valid
+            $('.swap_qty_number_' + id).each(function () {
+                $(this).val(newValue);
+            });
+        }
     }
-}
 
 
 

@@ -10,6 +10,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductView;
 use App\Models\BuyList;
+use App\Models\Contact;
 use App\Models\NewsletterSubscription;
 use App\Models\ProductBuyList;
 use Session;
@@ -95,7 +96,36 @@ class HomeController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
-        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists','user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide'));
+
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+
+
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+        
+        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists',
+        'user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide', 'get_wholesale_contact_id' , 'get_wholesale_terms'));
     }
 
     public function show_page($slug) {
