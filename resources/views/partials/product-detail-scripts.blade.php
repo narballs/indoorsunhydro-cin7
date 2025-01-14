@@ -1375,6 +1375,8 @@ p {
                     || (get_wholesale_terms || "").trim().toLowerCase() !== 'pay in advanced' // If not 'pay in advanced'
                 ) {
                     stock_label = 'On back order';
+                } else {
+                    stock_label = 'Out of Stock';
                 }
 
                 const text_class = option.stockAvailable > 0 ? 'text-success' : 'text-danger';
