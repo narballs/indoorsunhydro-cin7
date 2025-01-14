@@ -1313,7 +1313,7 @@ p {
                 </div>
             `;
 
-            var get_wholesale_terms = response.get_wholesale_terms != null ? response.get_wholesale_terms : null;
+            var get_wholesale_terms = response.get_wholesale_terms || null;
 
             response.data.forEach(product => {
                 if (product.options && product.options.length > 0) {
@@ -1367,16 +1367,14 @@ p {
             `;
 
             if (option) {
+                let lowerCaseTerms = (get_wholesale_terms || "").trim().toLowerCase();
                 var stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
 
                 if (
                     stock_label === 'Out of Stock' && 
-                    (get_wholesale_terms || "").trim() === "" // If empty
-                    || (get_wholesale_terms || "").trim().toLowerCase() !== 'pay in advanced' // If not 'pay in advanced'
+                    (lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced")
                 ) {
-                    stock_label = 'On back order';
-                } else {
-                    stock_label = 'Out of Stock';
+                    stock_label = "On back order";
                 }
 
                 const text_class = option.stockAvailable > 0 ? 'text-success' : 'text-danger';
@@ -1476,7 +1474,7 @@ p {
             //     </div>
             // `;
 
-            let lowerCaseTerms = (get_wholesale_terms?.trim() || "").toLowerCase();
+            let lowerCaseTerms = (get_wholesale_terms || "").trim().toLowerCase();
             let addToCartButton = `
                 <div class="col-md-10">
                     <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" 
@@ -1519,7 +1517,7 @@ p {
             let buttonHtml = '';
 
             if (add_to_cart) {
-                if (lowerCaseTerms === '' || lowerCaseTerms !== 'pay in advanced') { 
+                if (lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced") { 
                     buttonHtml = addToCartButton;
                 } else {
                     buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
