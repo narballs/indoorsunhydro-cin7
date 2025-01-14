@@ -979,13 +979,14 @@
             url: '/order/items/' + order_id,
             method: 'get',
             success: function(response) {
+                let lowerCaseTerms = (response.get_wholesale_terms?.trim() || "").toLowerCase();
                 if(response.status == 'success') {
                     if(response.order_items != null) {
                         var ordered_products = [];
                         if (response.order_items.api_order_item.length > 0 && response.order_items.api_order_item.length > 1) {
                             response.order_items.api_order_item.forEach(function(item) {
                                 item.product.options.forEach(element => {
-                                    if (element.stockAvailable > 0) {
+                                    if (lowerCaseTerms !== 'pay in advanced') {
                                         if (item.product.status != 'Inactive') {
                                             ordered_products.push({
                                                 product_id: item.product.id,
@@ -1011,24 +1012,53 @@
                                                 }
                                             });
                                         }
-                                    } 
+                                    }
                                     else {
-                                        Swal.fire({
-                                            toast: false,
-                                            icon: 'error',
-                                            title: 'Product is out of stock',
-                                            position: 'center',
-                                            showConfirmButton: true,  // Show the confirm (OK) button
-                                            confirmButtonText: 'Confirm',
-                                            timerProgressBar: false,
-                                            allowOutsideClick: false, // Disable clicking outside to close the modal
-                                            allowEscapeKey: false, // Disable Esc key to close the modal
-                                            customClass: {
-                                                    confirmButton: 'my-confirm-button',  // Class for the confirm button
-                                                    popup: 'swal2-popup-class',  // Class for the actions container
-                                                    actions: 'my-actions-class'  // Class for the actions container
+                                        if (element.stockAvailable > 0) {
+                                            if (item.product.status != 'Inactive') {
+                                                ordered_products.push({
+                                                    product_id: item.product.id,
+                                                    option_id: item.option_id,
+                                                    quantity: item.quantity
+                                                });
                                             }
-                                        });
+                                            else {
+                                                Swal.fire({
+                                                    toast: false,
+                                                    icon: 'error',
+                                                    title: 'Products are inactive',
+                                                    position: 'center',
+                                                    showConfirmButton: true,  // Show the confirm (OK) button
+                                                    confirmButtonText: 'Confirm',
+                                                    timerProgressBar: false,
+                                                    allowOutsideClick: false, // Disable clicking outside to close the modal
+                                                    allowEscapeKey: false, // Disable Esc key to close the modal
+                                                    customClass: {
+                                                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                                            popup: 'swal2-popup-class',  // Class for the actions container
+                                                            actions: 'my-actions-class'  // Class for the actions container
+                                                    }
+                                                });
+                                            }
+                                        } 
+                                        else {
+                                            Swal.fire({
+                                                toast: false,
+                                                icon: 'error',
+                                                title: 'Product is out of stock',
+                                                position: 'center',
+                                                showConfirmButton: true,  // Show the confirm (OK) button
+                                                confirmButtonText: 'Confirm',
+                                                timerProgressBar: false,
+                                                allowOutsideClick: false, // Disable clicking outside to close the modal
+                                                allowEscapeKey: false, // Disable Esc key to close the modal
+                                                customClass: {
+                                                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                                        popup: 'swal2-popup-class',  // Class for the actions container
+                                                        actions: 'my-actions-class'  // Class for the actions container
+                                                }
+                                            });
+                                        }
                                     }
                                 });
                                 
@@ -1039,7 +1069,7 @@
                         if (response.order_items.api_order_item.length == 1) {
                             response.order_items.api_order_item.forEach(function(item) {
                                 item.product.options.forEach(element => {
-                                    if (element.stockAvailable > 0) {
+                                    if (lowerCaseTerms !== 'pay in advanced') {
                                         if (item.product.status != 'Inactive') {
                                             ordered_products.push({
                                                 product_id: item.product.id,
@@ -1065,24 +1095,52 @@
                                                 }
                                             });
                                         }
-                                    }
-                                    else {
-                                        Swal.fire({
-                                            toast: false,
-                                            icon: 'error',
-                                            title: 'Product is out of stock',
-                                            position: 'center',
-                                            showConfirmButton: true,  // Show the confirm (OK) button
-                                            confirmButtonText: 'Confirm',
-                                            timerProgressBar: false,
-                                            allowOutsideClick: false, // Disable clicking outside to close the modal
-                                            allowEscapeKey: false, // Disable Esc key to close the modal
-                                            customClass: {
-                                                    confirmButton: 'my-confirm-button',  // Class for the confirm button
-                                                    popup: 'swal2-popup-class',  // Class for the actions container
-                                                    actions: 'my-actions-class'  // Class for the actions container
+                                    } else {
+                                        if (element.stockAvailable > 0) {
+                                            if (item.product.status != 'Inactive') {
+                                                ordered_products.push({
+                                                    product_id: item.product.id,
+                                                    option_id: item.option_id,
+                                                    quantity: item.quantity
+                                                });
+                                            } 
+                                            else {
+                                                Swal.fire({
+                                                    toast: false,
+                                                    icon: 'error',
+                                                    title: 'Product is inactive',
+                                                    position: 'center',
+                                                    showConfirmButton: true,  // Show the confirm (OK) button
+                                                    confirmButtonText: 'Confirm',
+                                                    timerProgressBar: false,
+                                                    allowOutsideClick: false, // Disable clicking outside to close the modal
+                                                    allowEscapeKey: false, // Disable Esc key to close the modal
+                                                    customClass: {
+                                                            confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                                            popup: 'swal2-popup-class',  // Class for the actions container
+                                                            actions: 'my-actions-class'  // Class for the actions container
+                                                    }
+                                                });
                                             }
-                                        });
+                                        }
+                                        else {
+                                            Swal.fire({
+                                                toast: false,
+                                                icon: 'error',
+                                                title: 'Product is out of stock',
+                                                position: 'center',
+                                                showConfirmButton: true,  // Show the confirm (OK) button
+                                                confirmButtonText: 'Confirm',
+                                                timerProgressBar: false,
+                                                allowOutsideClick: false, // Disable clicking outside to close the modal
+                                                allowEscapeKey: false, // Disable Esc key to close the modal
+                                                customClass: {
+                                                        confirmButton: 'my-confirm-button',  // Class for the confirm button
+                                                        popup: 'swal2-popup-class',  // Class for the actions container
+                                                        actions: 'my-actions-class'  // Class for the actions container
+                                                }
+                                            });
+                                        }
                                     }
                                 });
                             });

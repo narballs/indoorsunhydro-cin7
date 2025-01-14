@@ -1305,10 +1305,12 @@ p {
                 </div>
             `;
 
+            var get_wholesale_terms = response.get_wholesale_terms != null ? response.get_wholesale_terms : null;
+
             response.data.forEach(product => {
                 if (product.options && product.options.length > 0) {
                     product.options.forEach(option => {
-                        html += buildProductRow(product, option);
+                        html += buildProductRow(product, option , get_wholesale_terms);
                     });
                 } 
                 // else {
@@ -1322,22 +1324,22 @@ p {
         }
 
         // Build individual product row
-        function buildProductRow(productData, option) {
+        function buildProductRow(productData, option , get_wholesale_terms) {
             return `
                 <div class="row mt-4 mb-3">
                     <div class="col-md-12 py-3" style="border: 1px solid #DFDFDF59;">
                         <div class="row">
                             ${buildImageColumn(productData.images)}
-                            ${buildDataColumn(productData, option)}
+                            ${buildDataColumn(productData, option , get_wholesale_terms)}
                         </div>
-                        ${buildButtonRow(productData, option)}
+                        ${buildButtonRow(productData, option ,get_wholesale_terms)}
                     </div>
                 </div>
             `;
         }
 
         // Build data column
-        function buildDataColumn(productData, option) {
+        function buildDataColumn(productData, option , get_wholesale_terms) {
             const column = $('#get_column').val() || 'default';
             const products_to_hide = JSON.parse($('#products_to_hide').val() || '[]');
             const paymentTerms = $('#paymentTerms').val() == '' || $('#paymentTerms').val() == null || $('#paymentTerms').val() == 0 || $('#paymentTerms').val() === '0' ? false : true;
@@ -1357,9 +1359,18 @@ p {
             `;
 
             if (option) {
-                const stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
+                var stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
+                
+                if ((stock_label === 'Out of Stock') && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+                    stock_label = 'On back order';
+                } else {
+                    stock_label = stock_label;
+                }
+
                 const text_class = option.stockAvailable > 0 ? 'text-success' : 'text-danger';
-                const retail_price = option.default_price[column] || option.default_price.retailUSD || 0;
+                const retail_price = (option?.default_price?.[column]) ?? (option?.default_price?.retailUSD) ?? 0;
+
+
 
                 // Additional condition for add_to_cart based on product hiding and authorization/payment terms
                 if (products_to_hide.includes(option.option_id)) {
@@ -1392,7 +1403,7 @@ p {
             return dataHtml;
         }
 
-        function buildButtonRow(productData, option) {
+        function buildButtonRow(productData, option, get_wholesale_terms) {
             const products_to_hide = JSON.parse($('#products_to_hide').val() || '[]');
             let add_to_cart = true;
             const paymentTerms = $('#paymentTerms').val() == '' || $('#paymentTerms').val() == null || $('#paymentTerms').val() == 0 || $('#paymentTerms').val() === '0' ? false : true;
@@ -1412,44 +1423,103 @@ p {
             }
 
             // Return the appropriate button HTML based on conditions
+            // return `
+            //     <div class="row justify-content-center mt-4">
+            //         <!-- Check if Add to Cart should be shown -->
+            //         ${add_to_cart ? 
+            //             (option?.stockAvailable > 0 ? `
+            //                 <div class="col-md-10">
+            //                     <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" 
+            //                         onclick="similar_product_add_to_cart('${productData.id}', '${option.option_id}')">
+            //                         Add to Cart
+            //                     </button>
+            //                 </div>` 
+            //                 : `
+            //                 <!-- If stock is 0, show Notify button based on login status -->
+            //                 <div class="col-md-10">
+            //                     ${auth_value ? `
+            //                         <button type="button" id="notify_popup_modal_${option.option_id}" 
+            //                             data-product-id="${productData.id}" 
+            //                             onclick="notify_user_about_product_stock_similar_portion('${productData.id}', '${productData.code}')" 
+            //                             class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center">
+            //                             <a class="text-white">Notify</a>
+            //                             <div class="spinner-border text-white custom_stock_spinner stock_spinner_${productData.id} ml-1 d-none" role="status">
+            //                                 <span class="sr-only"></span>
+            //                             </div>
+            //                         </button>`
+            //                         : `
+            //                         <button type="button" id="notify_popup_modal_${option.option_id}" 
+            //                             onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')" 
+            //                             class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded">
+            //                             <a class="text-white">Notify</a>
+            //                         </button>`}
+            //                 </div>`)
+            //         : `
+            //             <!-- If Add to Cart is false, show Call to Order button -->
+            //             <div class="col-md-10">
+            //                 <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">
+            //                     Call To Order
+            //                 </button>
+            //             </div>`}
+            //     </div>
+            // `;
+
+            let lowerCaseTerms = (get_wholesale_terms?.trim() || "").toLowerCase();
+            let addToCartButton = `
+                <div class="col-md-10">
+                    <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" 
+                        onclick="similar_product_add_to_cart('${productData.id}', '${option.option_id}')">
+                        Add to Cart
+                    </button>
+                </div>
+            `;
+
+            let notifyButton = `
+                <div class="col-md-10">
+                    ${auth_value ? `
+                        <button type="button" id="notify_popup_modal_${option.option_id}" 
+                            data-product-id="${productData.id}" 
+                            onclick="notify_user_about_product_stock_similar_portion('${productData.id}', '${productData.code}')" 
+                            class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center">
+                            <a class="text-white">Notify</a>
+                            <div class="spinner-border text-white custom_stock_spinner stock_spinner_${productData.id} ml-1 d-none" role="status">
+                                <span class="sr-only"></span>
+                            </div>
+                        </button>`
+                        : `
+                        <button type="button" id="notify_popup_modal_${option.option_id}" 
+                            onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')" 
+                            class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded">
+                            <a class="text-white">Notify</a>
+                        </button>`}
+                </div>
+            `;
+
+            let callToOrderButton = `
+                <div class="col-md-10">
+                    <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">
+                        Call To Order
+                    </button>
+                </div>
+            `;
+
+            // Determine which button to show
+            let buttonHtml = '';
+
+            if (add_to_cart) {
+                if (lowerCaseTerms !== 'pay in advanced') {
+                    buttonHtml = addToCartButton;
+                } else {
+                    buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
+                }
+            } else {
+                buttonHtml = callToOrderButton;
+            }
+
+            // Final Template String
             return `
                 <div class="row justify-content-center mt-4">
-                    <!-- Check if Add to Cart should be shown -->
-                    ${add_to_cart ? 
-                        (option?.stockAvailable > 0 ? `
-                            <div class="col-md-10">
-                                <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" 
-                                    onclick="similar_product_add_to_cart('${productData.id}', '${option.option_id}')">
-                                    Add to Cart
-                                </button>
-                            </div>` 
-                            : `
-                            <!-- If stock is 0, show Notify button based on login status -->
-                            <div class="col-md-10">
-                                ${auth_value ? `
-                                    <button type="button" id="notify_popup_modal_${option.option_id}" 
-                                        data-product-id="${productData.id}" 
-                                        onclick="notify_user_about_product_stock_similar_portion('${productData.id}', '${productData.code}')" 
-                                        class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center">
-                                        <a class="text-white">Notify</a>
-                                        <div class="spinner-border text-white custom_stock_spinner stock_spinner_${productData.id} ml-1 d-none" role="status">
-                                            <span class="sr-only"></span>
-                                        </div>
-                                    </button>`
-                                    : `
-                                    <button type="button" id="notify_popup_modal_${option.option_id}" 
-                                        onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')" 
-                                        class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded">
-                                        <a class="text-white">Notify</a>
-                                    </button>`}
-                            </div>`)
-                    : `
-                        <!-- If Add to Cart is false, show Call to Order button -->
-                        <div class="col-md-10">
-                            <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">
-                                Call To Order
-                            </button>
-                        </div>`}
+                    ${buttonHtml}
                 </div>
             `;
         }

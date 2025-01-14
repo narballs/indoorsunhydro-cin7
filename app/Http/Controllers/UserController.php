@@ -1677,6 +1677,30 @@ class UserController extends Controller
     // buy again products 
     public function buy_again_products(Request $request) {
         $user_id = auth()->id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $contact_ids = Contact::whereIn('id', $all_ids)
@@ -1719,8 +1743,11 @@ class UserController extends Controller
             'query' => $request->query(),
         ]);
 
-        
-        return $frequent_products;
+        return [
+            'frequent_products' => $frequent_products,
+            'get_wholesale_terms' => $get_wholesale_terms
+        ];
+        // return $frequent_products;
     }
 
     //get favorites in separate page
