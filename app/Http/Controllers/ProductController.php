@@ -1536,6 +1536,7 @@ class ProductController extends Controller
     // Helper function to update existing cart item
     private function updateCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state)
     {
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
         if (!empty($user_id)) {
@@ -1598,6 +1599,7 @@ class ProductController extends Controller
     private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state)
     {
         
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
         if (!empty($user_id)) {
@@ -1996,6 +1998,7 @@ class ProductController extends Controller
 
     public function update_product_cart(Request $request) {
 
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
         if (!empty($user_id)) {
@@ -2971,6 +2974,7 @@ class ProductController extends Controller
     // Helper function to add a new cart item
     private function addFavouriteToCart(&$cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
     {
+        $user_id = Auth::id();
         // Check stock availability
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
@@ -3045,6 +3049,7 @@ class ProductController extends Controller
     // order buyed items again 
     public function order_items(Request $request , $id) {
         $order_items = ApiOrder::with('apiOrderItem' , 'apiOrderItem.product' , 'apiOrderItem.product.options')->where('id' , $id)->first();
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
 
@@ -3148,6 +3153,7 @@ class ProductController extends Controller
             return 'Product not found in the cart.';
         }
 
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
 
@@ -3200,6 +3206,7 @@ class ProductController extends Controller
         $actual_stock = $productOption->stockAvailable;
         $requested_quantity = $orderProduct['quantity'];
 
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
 
