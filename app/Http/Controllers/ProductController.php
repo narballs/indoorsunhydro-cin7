@@ -972,13 +972,14 @@ class ProductController extends Controller
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
 
+        $user_id = Auth::id();
 
         // Get wholesale_contact
         if (!empty($user_id)) {
             $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
 
             if (!empty($wholesale_contact)) {
-                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                if (($wholesale_contact->is_parent == 1) && !empty($wholesale_contact->contact_id)) {
                     $get_wholesale_contact_id = $wholesale_contact->contact_id;
                     $get_wholesale_terms = $wholesale_contact->paymentTerms;
                 } else {
@@ -1056,6 +1057,8 @@ class ProductController extends Controller
                 'error' => 'No similar products found.'
             ], 404);
         }
+
+        
 
         // Return the paginated results
         return response()->json([

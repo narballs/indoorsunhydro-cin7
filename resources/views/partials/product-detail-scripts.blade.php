@@ -1305,6 +1305,7 @@ p {
 
         // Build the HTML structure for similar products
         function buildSimilarProductsHtml(response) {
+            console.log(response);
             let html = `
                 <div class="row">
                     <div class="col-md-12">
@@ -1373,7 +1374,7 @@ p {
                 if (stock_label > 0) {
                     stock_label = 'In Stock';
                 } else {
-                    if ($getWholesaleTerms != '' &&  getWholesaleTerms === 'pay in advanced') {
+                    if (getWholesaleTerms != '' &&  getWholesaleTerms === 'pay in advanced') {
                         stock_label = 'Out of Stock';
                     } else {
                         stock_label = 'On back order';
