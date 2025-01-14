@@ -97,7 +97,7 @@ class HomeController extends Controller
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
 
-
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
 
