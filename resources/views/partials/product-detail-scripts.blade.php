@@ -1367,12 +1367,17 @@ p {
             `;
 
             if (option) {
-                let lowerCaseTerms = (get_wholesale_terms || "").trim().toLowerCase();
-                var stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
+                let getWholesaleTerms = (get_wholesale_terms || "").trim().toLowerCase();
+                let stock_label = option.stockAvailable > 0 ? 'In Stock' : 'Out of Stock';
 
-                if (
-                    stock_label === 'Out of Stock' && 
-                    (lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced")
+                // If getWholesaleTerms is "pay in advanced", set stock_label to "Out of Stock"
+                if (getWholesaleTerms === "pay in advanced") {
+                    stock_label = "Out of Stock";
+                } 
+                // If stock is "Out of Stock" and getWholesaleTerms is not "pay in advanced", set to "On back order"
+                else if (
+                    stock_label === 'Out of Stock' &&
+                    (getWholesaleTerms === "" || getWholesaleTerms !== "pay in advanced")
                 ) {
                     stock_label = "On back order";
                 }
