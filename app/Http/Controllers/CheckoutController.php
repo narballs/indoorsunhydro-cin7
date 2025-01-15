@@ -72,6 +72,39 @@ class CheckoutController extends Controller
             return redirect('/')->with('error', 'Your cart for the selected company is empty! Please add some items to your cart before proceeding to checkout.');
         }
 
+
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         foreach ($cart_items as $cart_item) {
             $product_options = ProductOption::with('products')
                 ->where('product_id', $cart_item['product_id'])
@@ -107,7 +140,7 @@ class CheckoutController extends Controller
             }
         }
 
-        if (!empty($out_of_stock_items) || !empty($original_items_quantity)) {
+        if (!empty($out_of_stock_items) || !empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced')) {
             return redirect()->route('cart')
                 // ->with([
                 //     'out_of_stock_items' => $out_of_stock_items,
