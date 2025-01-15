@@ -223,7 +223,21 @@
                                                                             <a class=" pe-3 cart-page-items"
                                                                                 href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                             </a>
+                                                                            
                                                                         </span>
+                                                                        @if (intval($cart['quantity']) > intval($stock_per_product))
+                                                                            <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
+                                                                                <div class="stock_tooltip_message">
+                                                                                    {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
+                                                                                </div>
+                                                                                <span class="badge badge-warning">
+                                                                                    Back Order 
+                                                                                </span>
+                                                                                <span class="ms-2 show_message">
+                                                                                    <i class="fas fa-question-circle"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -1702,5 +1716,16 @@
             return false;
         })
 
+    });
+
+    $(document).ready(function () {
+        $(".stock_tooltip").hover(
+            function () {
+                $(this).find(".stock_tooltip_message").stop(true, true).fadeIn();
+            },
+            function () {
+                $(this).find(".stock_tooltip_message").stop(true, true).fadeOut();
+            }
+        );
     });
 </script>

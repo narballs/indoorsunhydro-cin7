@@ -220,10 +220,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -233,6 +237,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -502,10 +507,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -515,6 +524,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -602,12 +612,17 @@ class ProductController extends Controller
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -617,6 +632,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -627,6 +643,7 @@ class ProductController extends Controller
         } else {
             $wholesale_contact = null;
         }
+
         return view('buy_again', compact(
             'products',
             'lists',
@@ -910,11 +927,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -924,6 +944,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -969,23 +990,27 @@ class ProductController extends Controller
     public function getSimilarProducts(Request $request, $id, $option_id)
     {
         
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
-        $user_id = Auth::id();
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
-                if (($wholesale_contact->is_parent == 1) && !empty($wholesale_contact->contact_id)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
                     $get_wholesale_contact_id = $wholesale_contact->contact_id;
                     $get_wholesale_terms = $wholesale_contact->paymentTerms;
                 } else {
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -1136,10 +1161,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -1149,6 +1178,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -1411,10 +1441,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -1424,6 +1458,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -1539,8 +1574,14 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -1550,6 +1591,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -1563,8 +1605,9 @@ class ProductController extends Controller
         
         
         $current_quantity = $product->quantity;
+        // dd($actual_stock);
     
-        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Stock limit exceeded',
@@ -1602,8 +1645,14 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -1613,6 +1662,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -1746,8 +1796,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -1757,6 +1813,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -2001,8 +2058,14 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -2012,6 +2075,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -2562,9 +2626,14 @@ class ProductController extends Controller
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -2574,6 +2643,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -2978,10 +3048,14 @@ class ProductController extends Controller
         // Check stock availability
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -2991,6 +3065,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -3052,10 +3127,14 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -3065,6 +3144,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -3075,6 +3155,7 @@ class ProductController extends Controller
         } else {
             $wholesale_contact = null;
         }
+
         return response()->json([
             'status' => 'success',
             'order_items' => $order_items ,
@@ -3156,10 +3237,14 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -3169,6 +3254,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
@@ -3209,10 +3295,14 @@ class ProductController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -3222,6 +3312,7 @@ class ProductController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id

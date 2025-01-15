@@ -13,12 +13,12 @@ use App\Models\BuyList;
 use App\Models\Contact;
 use App\Models\NewsletterSubscription;
 use App\Models\ProductBuyList;
-use Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\GoogleReview;
+use Illuminate\Support\Facades\Session;
 
 
 
@@ -100,10 +100,14 @@ class HomeController extends Controller
         $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-
-
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
@@ -113,6 +117,7 @@ class HomeController extends Controller
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
                         ->first();
                     
                     // Ensure $wholesale_contact_child is not null before accessing parent_id
