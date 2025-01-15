@@ -144,9 +144,9 @@
                                                     <div>
                                                         <span class="text-danger">
                                                             @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
-                                                                    On Back Order
+                                                                On Back Order
                                                             @else
-                                                            {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                                {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
                                                             @endif
                                                         </span>
                                                     </div>
