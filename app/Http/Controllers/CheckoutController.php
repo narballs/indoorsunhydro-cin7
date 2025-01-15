@@ -140,7 +140,7 @@ class CheckoutController extends Controller
             }
         }
 
-        if (!empty($out_of_stock_items) || !empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced')) {
+        if (!empty($out_of_stock_items) || (!empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced'))) {
             return redirect()->route('cart')
                 // ->with([
                 //     'out_of_stock_items' => $out_of_stock_items,
