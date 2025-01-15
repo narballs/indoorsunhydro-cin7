@@ -114,7 +114,7 @@
         var plus = parseInt($('.swap_qty_number_' + product_id).val()) === '' ? 1 : parseInt($('.swap_qty_number_' + product_id).val());
         var stock_number = $('.swap_qty_number_'+product_id).attr('max');
         var result = plus + 1;
-        if ((result > stock_number) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+        if ((result > stock_number) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             Swal.fire({
                 toast: false,
                 icon: 'error',
@@ -409,7 +409,7 @@
             newValue = 1; // Set to 1 if invalid value is entered
         }
         
-        if ((newValue > getActualStock) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+        if ((newValue > getActualStock) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             // Add overlay to disable the background
             if ($('#screen-overlay').length === 0) { // Avoid duplicate overlays
                 $('body').append('<div id="screen-overlay" style="position: relative; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998;"></div>');

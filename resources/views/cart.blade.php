@@ -1111,7 +1111,7 @@
         var qty_input = parseInt($('#row_quantity_' + pk_product_id).val());
         var product_id = pk_product_id;
         var new_qty = parseInt(qty_input + 1);
-        if ((new_qty > stock_available) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+        if ((new_qty > stock_available) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
         // if (new_qty > stock_available) {
             Swal.fire({
                 toast: true,
@@ -1329,7 +1329,7 @@
         var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
         
         // if (qty_input > stock_available) {
-        if ((qty_input > stock_available) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+        if ((qty_input > stock_available) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             Swal.fire({
                 toast: true,
                 icon: 'error',
@@ -1442,7 +1442,7 @@
         }
         
         // if (qty_input > stock_available) {
-        if ((qty_input > stock_available) && ((get_wholesale_terms || "").toLowerCase() !== 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+        if ((qty_input > stock_available) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             Swal.fire({
                 toast: true,
                 icon: 'error',
