@@ -140,14 +140,23 @@ class CheckoutController extends Controller
             }
         }
 
-        if (!empty($out_of_stock_items) || (!empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced'))) {
-            return redirect()->route('cart')
-                // ->with([
-                //     'out_of_stock_items' => $out_of_stock_items,
-                //     'original_items_quantity' => $original_items_quantity
-                // ]);
-                ->with('error', 'Some item(s) in your cart have insufficient stock. Please update or remove it from your cart to proceed.');
+        // dd($get_wholesale_terms);
+
+        if (strtolower($get_wholesale_terms) === 'pay in advanced') {
+            if (!empty($out_of_stock_items) || (!empty($original_items_quantity))) {
+                return redirect()->route('cart')
+                    ->with('error', 'Some item(s) in your cart have insufficient stock. Please update or remove it from your cart to proceed.');
+            }
         }
+
+        // if (!empty($out_of_stock_items) || (!empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced'))) {
+        //     return redirect()->route('cart')
+        //         // ->with([
+        //         //     'out_of_stock_items' => $out_of_stock_items,
+        //         //     'original_items_quantity' => $original_items_quantity
+        //         // ]);
+        //         ->with('error', 'Some item(s) in your cart have insufficient stock. Please update or remove it from your cart to proceed.');
+        // }
 
         $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
         if (!empty($new_checkout) && strtolower($new_checkout->option_value) == 'yes') {
