@@ -72,48 +72,82 @@ class CheckoutController extends Controller
             return redirect('/')->with('error', 'Your cart for the selected company is empty! Please add some items to your cart before proceeding to checkout.');
         }
 
-        // foreach ($cart_items as $cart_item) {
-        //     $product_options = ProductOption::with('products')
-        //         ->where('product_id', $cart_item['product_id'])
-        //         ->where('option_id', $cart_item['option_id'])
-        //         ->get();
 
-        //     foreach ($product_options as $product_option) {
-        //         // Check if the product is out of stock
-        //         if ($product_option->stockAvailable < 1) {
-        //             $out_of_stock_items[] = [  // Append to the array
-        //                 'product_primary_id' => $cart_item['qoute_id'],
-        //                 'product_id' => $cart_item['product_id'],
-        //                 'option_id' => $cart_item['option_id'],
-        //                 'product_name' => $cart_item['name'],
-        //                 'sku' => $cart_item['code'],
-        //                 'quantity' => $cart_item['quantity'],
-        //                 'stock_available' => $product_option->stockAvailable,
-        //             ];
-        //         }
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
 
-        //         // Check if the available stock is less than the required quantity
-        //         if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
-        //             $original_items_quantity[] = [  // Append to the array
-        //                 'product_primary_id' => $cart_item['qoute_id'],
-        //                 'product_id' => $cart_item['product_id'],
-        //                 'option_id' => $cart_item['option_id'],
-        //                 'product_name' => $cart_item['name'],
-        //                 'sku' => $cart_item['code'],
-        //                 'quantity' => $cart_item['quantity'],
-        //                 'stock_available' => $product_option->stockAvailable,
-        //             ];
-        //         }
-        //     }
-        // }
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
 
-        // if (!empty($out_of_stock_items) || !empty($original_items_quantity)) {
-        //     return redirect()->route('cart')
-        //         ->with([
-        //             'out_of_stock_items' => $out_of_stock_items,
-        //             'original_items_quantity' => $original_items_quantity
-        //         ]);
-        // }
+        foreach ($cart_items as $cart_item) {
+            $product_options = ProductOption::with('products')
+                ->where('product_id', $cart_item['product_id'])
+                ->where('option_id', $cart_item['option_id'])
+                ->get();
+
+            foreach ($product_options as $product_option) {
+                // Check if the product is out of stock
+                if ($product_option->stockAvailable < 1) {
+                    $out_of_stock_items[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+
+                // Check if the available stock is less than the required quantity
+                if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
+                    $original_items_quantity[] = [  // Append to the array
+                        'product_primary_id' => $cart_item['qoute_id'],
+                        'product_id' => $cart_item['product_id'],
+                        'option_id' => $cart_item['option_id'],
+                        'product_name' => $cart_item['name'],
+                        'sku' => $cart_item['code'],
+                        'quantity' => $cart_item['quantity'],
+                        'stock_available' => $product_option->stockAvailable,
+                    ];
+                }
+            }
+        }
+
+        if (!empty($out_of_stock_items) || !empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced')) {
+            return redirect()->route('cart')
+                // ->with([
+                //     'out_of_stock_items' => $out_of_stock_items,
+                //     'original_items_quantity' => $original_items_quantity
+                // ]);
+                ->with('error', 'Some item(s) in your cart have insufficient stock. Please update or remove it from your cart to proceed.');
+        }
 
         $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
         if (!empty($new_checkout) && strtolower($new_checkout->option_value) == 'yes') {

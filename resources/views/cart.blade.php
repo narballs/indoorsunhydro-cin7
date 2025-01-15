@@ -18,11 +18,11 @@
         <span class="cart-page-cart-title">CART</span>
     </p>
 </div>
-@if (session('success'))
+{{-- @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
-@endif
+@endif --}}
 {{-- @if (auth()->user())
     @php
         $pass_out_of_stock_items = session('out_of_stock_items') ?? $out_of_stock_items ?? [];
@@ -97,6 +97,21 @@
 <div class="container-fluid desktop-view">
     <div class="row justify-content-center">
         <div class="col-md-12 col-lg-12 col-xl-10">
+            @if (\Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('success') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @elseif (\Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('error') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="row">
                 @if(auth()->user())
                 <div class="col-sm-12 col-md-12 col-lg-9 mt-2">
@@ -601,6 +616,21 @@
 <div class="container-fluid mobile-view">
     <div class="row justify-content-center mt-0">
         <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0">
+            @if (\Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('success') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @elseif (\Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('error') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card border-0 px-0">
                 <div class="row">
                     <div class="col-md-12 mx-0">
