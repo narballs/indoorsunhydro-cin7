@@ -226,17 +226,26 @@
                                                                             
                                                                         </span>
                                                                         @if (intval($cart['quantity']) > intval($stock_per_product))
-                                                                            <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
-                                                                                <div class="stock_tooltip_message">
-                                                                                    {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
+                                                                            @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                                                <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
+                                                                                    <div class="stock_tooltip_message">
+                                                                                        {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
+                                                                                    </div>
+                                                                                    <span class="badge badge-warning">
+                                                                                        On Back Order 
+                                                                                    </span>
+                                                                                    <span class="ms-2 show_message">
+                                                                                        <i class="fas fa-question-circle"></i>
+                                                                                    </span>
                                                                                 </div>
-                                                                                <span class="badge badge-warning">
-                                                                                    Back Order 
-                                                                                </span>
-                                                                                <span class="ms-2 show_message">
-                                                                                    <i class="fas fa-question-circle"></i>
-                                                                                </span>
-                                                                            </div>
+                                                                            @else
+                                                                                <div class="d-flex">
+                                                                                    <span class="badge badge-danger">
+                                                                                        {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                                                    </span>
+                                                                                </div>
+                                                                            @endif
+
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -731,8 +740,29 @@
                                                                                             <a class="cart-page-items"
                                                                                                 href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                                             </a>
-                                                                                            
                                                                                         </div>
+                                                                                        @if (intval($cart['quantity']) > intval($stock_per_product_mbl))
+                                                                                            @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                                                                <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
+                                                                                                    <div class="stock_tooltip_message">
+                                                                                                        {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
+                                                                                                    </div>
+                                                                                                    <span class="badge badge-warning">
+                                                                                                        On Back Order 
+                                                                                                    </span>
+                                                                                                    <span class="ms-2 show_message">
+                                                                                                        <i class="fas fa-question-circle"></i>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            @else
+                                                                                                <div class="d-flex">
+                                                                                                    <span class="badge badge-danger">
+                                                                                                        {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            @endif
+
+                                                                                        @endif
                                                                                     </td>
                                                                                     <td class="p-0 text-right"  style="width:20%;" align="right">
                                                                                         <div class="cart-page-price ps-3"
