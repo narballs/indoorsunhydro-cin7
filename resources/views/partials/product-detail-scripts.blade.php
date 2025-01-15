@@ -13,6 +13,7 @@
     }
 }
 
+
 .ai-section-heading-title {
     font-size: 24px;
     font-weight: 600;
@@ -2141,4 +2142,6 @@ p {
         });
         $('.similar-products-carousel-ai-detail').trigger('refresh.owl.carousel');
     });
+
+    
 </script>

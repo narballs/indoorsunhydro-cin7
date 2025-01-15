@@ -241,7 +241,7 @@
                                                     @else
                                                         <div>
                                                             <span class="text-danger">
-                                                                @if (empty($get_wholesale_terms) && strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                                @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
                                                                     On Back Order
                                                                 @else
                                                                 {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
@@ -301,7 +301,7 @@
                                                 </div>
                                                 <div class="col-md-12 add-to-cart-button-section">
                                                     @if ($add_to_cart == true)
-                                                        @if (empty($get_wholesale_terms) && strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                        @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
                                                         <button 
                                                             class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
                                                             type="submit" id="ajaxSubmit_{{ $product->id }}"
@@ -504,7 +504,7 @@
                                                     @else
                                                         <div>
                                                             <span class="text-danger">
-                                                                @if (empty($get_wholesale_terms) && strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                                @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
                                                                     On Back Order
                                                                 @else
                                                                 {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
@@ -564,7 +564,7 @@
                                                 </div>
                                                 <div class="col-md-12 add-to-cart-button-section">
                                                     @if ($add_to_cart == true)
-                                                        @if (empty($get_wholesale_terms) && strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                        @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
                                                             <button 
                                                                 class="btn hover_effect prd_btn_resp p-2 ajaxSubmit button-cards-product-slider col w-100  mb-1" 
                                                                 type="submit" id="ajaxSubmit_{{ $product->id }}"

@@ -520,6 +520,14 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+            [
+                'option_name' => 'stock_tooltip_message',
+                'type' => 'text',
+                'option_value' => 'Inventory will arrive shortly, or internal teams will secure item for you to complete order in full.',
+            ],
+
+            
+
 
 
 
