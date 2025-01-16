@@ -271,7 +271,7 @@ class OrderController extends Controller
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $request->memo;
-                    $order->date = $request->date;
+                    $order->date = Carbon::parse($request->date)->setTimezone('UTC');
                     $order->internal_comments = $request->internal_comments;
                     // $order->delievery_instructions = $request->delievery_instructions;
                     $order->shipment_price = $request->shipment_price;
@@ -473,7 +473,7 @@ class OrderController extends Controller
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $delivery_instructions;
-                    $order->date = $request->date;
+                    $order->date = Carbon::parse($request->date)->setTimezone('UTC');
                     $order->internal_comments = $request->internal_comments;
                     // $order->delievery_instructions = $request->delievery_instructions;
                     $order->shipment_price = $actual_shipping_price;
@@ -624,7 +624,7 @@ class OrderController extends Controller
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
                     $order->memo = $delivery_instructions;
-                    $order->date = $request->date;
+                    $order->date = Carbon::parse($request->date)->setTimezone('UTC');
                     $order->internal_comments = $request->internal_comments;
                     // $order->delievery_instructions = $request->delievery_instructions;
                     $order->shipment_price = $actual_shipping_price;
