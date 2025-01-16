@@ -518,6 +518,29 @@
             color: #FFFFFF;
             border-color: #7CC633;
         }
+
+        .stock_tooltip {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .stock_tooltip_message {
+            position: absolute;
+            background: #fff;
+            color: #000;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            transform: translateX(-50%);
+            display: none;
+            z-index: 1000;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .show_message {
+            cursor: pointer;
+        }
     </style>
     <link rel="stylesheet" href="{{asset('theme/landing_page/landing_page_style.css')}}">
 

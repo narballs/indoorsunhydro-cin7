@@ -926,7 +926,7 @@ $cart_price = 0;
                                             $total_including_tax = $tax + $remove_discount  + $shipment_price;
                                             
                                         @endphp
-                                        <input type="hidden" name="paymentTerms" value="{{strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
+                                        <input type="hidden" name="paymentTerms" value="{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
                                         
                                         {{-- billing --}}
                                         <input type="hidden" name="billing_company" value="{{ !empty($get_user_default_billing_address->BillingCompany) ?  $get_user_default_billing_address->BillingCompany : $user_address->company }}">

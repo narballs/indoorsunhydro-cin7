@@ -234,10 +234,13 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                                 @else
                                                 <div>
                                                     
-                                                    <span class="out-of-stock-label-new">{{
-                                                        App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT
-                                                        OF STOCK');
-                                                        }}</span>
+                                                    <span class="out-of-stock-label-new">
+                                                        @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
+                                                            On Back Order
+                                                        @else
+                                                            {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                        @endif
+                                                    </span>
                                                 </div>
                                                 @endif
                                                 @else
@@ -303,8 +306,10 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                         @csrf
                                         <div class="col-md-12 col-xl-10">
                                             <div class="cart row mt-0 mt-md-3 justify-content-between">
+                                                <input type="hidden" name="get_wholesale_terms" id="get_wholesale_terms"
+                                                    value="{{$get_wholesale_terms}}">
                                                 @if ($add_to_cart == true)
-                                                    @if ($total_stock > 0 || $productOption->stockAvailable > 0)
+                                                    @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
                                                         <div class="col-md-4 col-5 col-lg-4 col-xl-4">
                                                             <div
                                                                 class="d-flex align-items-center px-2 product-detail-quantity-increase-decrease-div">
@@ -316,72 +321,93 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                                                 <i class="fa fa-plus product-detail-quantity-increase"></i>
                                                             </div>
                                                         </div>
-                                                    @endif
-                                                    <div class="{{$total_stock > 0 || $productOption->stockAvailable > 0 ? 'col-md-8 col-7 col-lg-8 col-xl-8' : 'col-12'}}">
-                                                        @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
-                                                            @if ($total_stock > 0)
-                                                                <button type="button"
-                                                                    class="btn product-detail-add-to-cart-new w-100" type="button"
-                                                                    id="ajaxSubmit">
-                                                                    <a class="text-white">Add to cart </a>
-                                                                </button>
-                                                            @elseif ($productOption->stockAvailable > 0)
-                                                                <button type="button"
-                                                                    class="btn product-detail-add-to-cart-new w-100" type="button"
-                                                                    id="ajaxSubmit">
-                                                                    <a class="text-white">Add to cart </a>
-                                                                </button>
-                                                            @else
-                                                                @if (auth()->user())
-                                                                    <input type="hidden" name="notify_user_email_input"
-                                                                        class="notify_user_email_input" id="auth_user_email"
-                                                                        value="{{auth()->user()->email}}">
-                                                                    <input type="hidden" name="sku" id="sku_value" class="sku_value"
-                                                                        value="{{$productOption->products->code}}">
-                                                                    <input type="hidden" name="product_id" id="product_id_value"
-                                                                        class="product_id_value"
-                                                                        value="{{$productOption->products->id}}">
-                                                                    <div class="row justify-content-between align-items-center">
-                                                                        <div class="col-md-10">
-                                                                            <button type="button"
-                                                                                class="product-detail-notify-new w-100" type="button"
-                                                                                id="" onclick="notify_user_about_product_stock()">
-                                                                                <a class="text-white">Notify When in Stock </a>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="col-md-2">
-                                                                            <div class="spinner-border text-primary stock_spinner d-none"
-                                                                                role="status">
-                                                                                <span class="sr-only"></span>
+                                                        <div class="col-md-8 col-7 col-lg-8 col-xl-8">
+                                                            <button type="button"
+                                                                class="btn product-detail-add-to-cart-new w-100" type="button"
+                                                                id="ajaxSubmit">
+                                                                <a class="text-white">Add to cart </a>
+                                                            </button>
+                                                        </div>
+                                                    @else
+                                                        @if ($total_stock > 0 || $productOption->stockAvailable > 0)
+                                                            <div class="col-md-4 col-5 col-lg-4 col-xl-4">
+                                                                <div
+                                                                    class="d-flex align-items-center px-2 product-detail-quantity-increase-decrease-div">
+                                                                    <i class="fa fa-minus product-detail-quantity-decrease"></i>
+                                                                    <input type="number" name="quantity" id="quantity" min="1"
+                                                                        max="{{$productOption->stockAvailable}}" step="1" value="1"
+                                                                        class="text-center form-control product-detail-quantity-number-new mb-0">
+                                                                    
+                                                                    <i class="fa fa-plus product-detail-quantity-increase"></i>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                        <div class="{{$total_stock > 0 || $productOption->stockAvailable > 0 ? 'col-md-8 col-7 col-lg-8 col-xl-8' : 'col-12'}}">
+                                                            @if (!empty($notify_user_about_product_stock) && strtolower($notify_user_about_product_stock->option_value) === 'yes')
+                                                                @if ($total_stock > 0)
+                                                                    <button type="button"
+                                                                        class="btn product-detail-add-to-cart-new w-100" type="button"
+                                                                        id="ajaxSubmit">
+                                                                        <a class="text-white">Add to cart </a>
+                                                                    </button>
+                                                                @elseif ($productOption->stockAvailable > 0)
+                                                                    <button type="button"
+                                                                        class="btn product-detail-add-to-cart-new w-100" type="button"
+                                                                        id="ajaxSubmit">
+                                                                        <a class="text-white">Add to cart </a>
+                                                                    </button>
+                                                                @else
+                                                                    @if (auth()->user())
+                                                                        <input type="hidden" name="notify_user_email_input"
+                                                                            class="notify_user_email_input" id="auth_user_email"
+                                                                            value="{{auth()->user()->email}}">
+                                                                        <input type="hidden" name="sku" id="sku_value" class="sku_value"
+                                                                            value="{{$productOption->products->code}}">
+                                                                        <input type="hidden" name="product_id" id="product_id_value"
+                                                                            class="product_id_value"
+                                                                            value="{{$productOption->products->id}}">
+                                                                        <div class="row justify-content-between align-items-center">
+                                                                            <div class="col-md-10">
+                                                                                <button type="button"
+                                                                                    class="product-detail-notify-new w-100" type="button"
+                                                                                    id="" onclick="notify_user_about_product_stock()">
+                                                                                    <a class="text-white">Notify When in Stock </a>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="col-md-2">
+                                                                                <div class="spinner-border text-primary stock_spinner d-none"
+                                                                                    role="status">
+                                                                                    <span class="sr-only"></span>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                @else
-                                                                    <button type="button"
-                                                                        class="product-detail-notify-new w-100 notify_popup_modal_btn"
-                                                                        type="button" id="notify_popup_modal"
-                                                                        onclick="show_notify_popup_modal()">
-                                                                        <a class="text-white">Notify When in Stock </a>
-                                                                    </button>
+                                                                    @else
+                                                                        <button type="button"
+                                                                            class="product-detail-notify-new w-100 notify_popup_modal_btn"
+                                                                            type="button" id="notify_popup_modal"
+                                                                            onclick="show_notify_popup_modal()">
+                                                                            <a class="text-white">Notify When in Stock </a>
+                                                                        </button>
+                                                                    @endif
                                                                 @endif
-                                                            @endif
-                                                        @else
-                                                            <?php 
-                                                                // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
-                                                                $enable_add_to_cart = true;
-                                                            ?>
-                                                            @if ($enable_add_to_cart)
-                                                                <button class="btn product-detail-add-to-cart-new w-100"
-                                                                    type="button" id="ajaxSubmit">
-                                                                    <a class="text-white">Add to cart </a>
-                                                                </button>
                                                             @else
-                                                                <button class="product-detail-add-to-cart-new" type="button">
-                                                                    <a class="text-white">Add to cart</a>
-                                                                </button>
+                                                                <?php 
+                                                                    // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
+                                                                    $enable_add_to_cart = true;
+                                                                ?>
+                                                                @if ($enable_add_to_cart)
+                                                                    <button class="btn product-detail-add-to-cart-new w-100"
+                                                                        type="button" id="ajaxSubmit">
+                                                                        <a class="text-white">Add to cart </a>
+                                                                    </button>
+                                                                @else
+                                                                    <button class="product-detail-add-to-cart-new" type="button">
+                                                                        <a class="text-white">Add to cart</a>
+                                                                    </button>
+                                                                    @endif
                                                                 @endif
-                                                            @endif
-                                                    </div>
+                                                        </div>
+                                                    @endif
                                                 @else
                                                     <div class="col-md-12">
                                                         <button type="button" class="product-detail-call-to-order-new w-100">

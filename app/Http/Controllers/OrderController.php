@@ -311,7 +311,12 @@ class OrderController extends Controller
                     $apiApproval = $currentOrder->apiApproval;
                     $random_string = Str::random(10);
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
+                    
+                    $delivery_date = !empty($currentOrder->date) && strtotime($currentOrder->date) < strtotime($currentOrder->created_at)
+                    ? $currentOrder->created_at
+                    : $currentOrder->date;
 
+                    $currentOrder->date = $delivery_date;
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'contact',
@@ -530,6 +535,12 @@ class OrderController extends Controller
                     
                     $currentOrder->reference = 'Stripe-Paid-CC-' .$random_string . '-' .$order_id;
 
+                    $delivery_date = !empty($currentOrder->date) && strtotime($currentOrder->date) < strtotime($currentOrder->created_at)
+                    ? $currentOrder->created_at
+                    : $currentOrder->date;
+
+                    $currentOrder->date = $delivery_date;
+
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'contact',
@@ -670,6 +681,11 @@ class OrderController extends Controller
                     $random_string = Str::random(10);
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
+                    $delivery_date = !empty($currentOrder->date) && strtotime($currentOrder->date) < strtotime($currentOrder->created_at)
+                    ? $currentOrder->created_at
+                    : $currentOrder->date;
+
+                    $currentOrder->date = $delivery_date;
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'contact',
@@ -2607,6 +2623,13 @@ class OrderController extends Controller
 
     //cin 7 wholesale payments
     public function cin7_payments($order_reference) {
+
+        $wholesale_stripe_settings = SettingHelper::getSetting('enable_wholesale_stripe_checkout');
+
+        if (empty($wholesale_stripe_settings) || strtolower($wholesale_stripe_settings) != 'yes') {
+            return abort(404)->with('error', 'Please contact the administrator');
+        }
+
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');

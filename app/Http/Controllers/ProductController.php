@@ -218,6 +218,37 @@ class ProductController extends Controller
         // Filter and paginate products
         $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
 
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         return view('categories', compact(
             'products',
             'brands',
@@ -237,7 +268,9 @@ class ProductController extends Controller
             'user_buy_list_options',
             'product_views',
             'best_selling_products',
-            'notify_user_about_product_stock','products_to_hide'
+            'notify_user_about_product_stock','products_to_hide',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
         ));
     }
 
@@ -318,20 +351,10 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }]);
-            // ->whereHas('options.defaultPrice', function ($q) {
-            //     $q->where('retailUSD', '!=', 0);
-            // })
-            // ->paginate($per_page);
-            // $products = $products_query->paginate($per_page);
         } else {
-            // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }]);
-            // ->whereHas('options.defaultPrice', function ($q) {
-            //     $q->where('retailUSD', '!=', 0);
-            // })
-            // ->paginate($per_page);
         }
 
 
@@ -404,10 +427,6 @@ class ProductController extends Controller
             $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }]);
-            // ->whereHas('options.defaultPrice', function ($q) {
-            //     $q->where('retailUSD', '!=', 0);
-            // })
-            // ->paginate($per_page);
         }
         $user_id = Auth::id();
         $lists = BuyList::where('user_id', $user_id)->get();
@@ -485,6 +504,37 @@ class ProductController extends Controller
 
         // Filter and paginate products
         $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
         
 
         return view('all_products', compact(
@@ -506,7 +556,9 @@ class ProductController extends Controller
             'product_views',
             'best_selling_products',
             'notify_user_about_product_stock',
-            'products_to_hide'
+            'products_to_hide',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
             // 'db_price_column'
         ));
     }
@@ -560,13 +612,47 @@ class ProductController extends Controller
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+        
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         return view('buy_again', compact(
             'products',
             'lists',
             'pricing',
             'user_buy_list_options',
             'contact_id', 'products_to_hide',
-            'notify_user_about_product_stock'
+            'notify_user_about_product_stock',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
         ));
     }
 
@@ -838,6 +924,38 @@ class ProductController extends Controller
             $active_contact = null;
         }
 
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         return view('product-detail-2', compact(
             'productOption',
             'pname',
@@ -859,113 +977,51 @@ class ProductController extends Controller
             'products_to_hide',
             'ai_questions',
             'ai_setting',
-            'active_contact'
+            'active_contact',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
         ));
 
         
         
     }
 
-    // old code 
-    // public function getSimilarProducts(Request $request ,$id, $option_id) {
-    //     $similar_products = null;
-    //     $perPage = 4;
-    //     $currentPage = $request->get('page', 1);
-    //     $offset = ($currentPage - 1) * $perPage;
-    //     $product = Product::with('categories' , 'brand')
-    //     ->where('id', $id)
-    //     ->where('status', '!=', 'Inactive')->first();
-    //     if (empty($product)) {
-    //         session()->flash('error', 'This product is not available! Please search another product.');
-    //         return redirect('/products');
-    //     }
-    //     if (!empty($product->category_id) && !empty($product)) {
-                
-    //             $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
-    //             ->where('category_id', $product->category_id)
-    //             ->where('id', '!=', $product->id)
-    //             ->whereHas('categories' , function ($q){
-    //                 $q->where('is_active' , 1);
-    //             })
-    //             ->where('status', '!=', 'Inactive');
-                
-    //             $total_products = $similar_products_query->count();
-    //             $similar_products_query = $similar_products_query->take($perPage)
-    //             ->skip($offset)
-    //             ->get();
-    //             $total = $total_products >= 16 ? 16 : $total_products;
-    //             $similar_products = new LengthAwarePaginator($similar_products_query, $total, $perPage, $currentPage, [
-    //                 'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
-    //                 'query' => $request->query(),
-    //             ]);
-    //     }
-    //     return $similar_products;
-    // }
-
-    // new code
-
-    // public function getSimilarProducts(Request $request, $id, $option_id)
-    // {
-    //     // Validate the 'perPage' and 'page' parameters to ensure they are numeric
-    //     $perPage = is_numeric($request->get('perPage')) ? (int)$request->get('perPage', 4) : 4;
-    //     $currentPage = is_numeric($request->get('page')) ? (int)$request->get('page', 1) : 1;
-
-    //     $offset = ($currentPage - 1) * $perPage;
-        
-    //     $product = Product::with('categories', 'brand')
-    //         ->where('id', $id)
-    //         ->where('status', '!=', 'Inactive')
-    //         ->first();
-
-    //     if (empty($product)) {
-    //         session()->flash('error', 'This product is not available! Please search for another product.');
-    //         return redirect('/products');
-    //     }
-
-    //     if (!empty($product->category_id)) {
-    //         $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'options.products', 'categories', 'apiorderItem', 'product_stock')
-    //             ->where('category_id', $product->category_id)
-    //             ->where('id', '!=', $product->id)
-    //             ->whereHas('categories', function ($q) {
-    //                 $q->where('is_active', 1);
-    //             })
-    //             ->where('status', '!=', 'Inactive');
-            
-    //         // Total similar products for pagination
-    //         $total_products = $similar_products_query->count();
-
-    //         // Fetch the similar products based on the perPage and offset
-    //         $similar_products_query = $similar_products_query->take($perPage)
-    //             ->skip($offset)
-    //             ->get();
-            
-    //         // Limit the total number of similar products to 16 (if more than 16 found)
-    //         $total = $total_products >= 16 ? 16 : $total_products;
-
-    //         // Create a paginator instance with the products and pagination info
-    //         $similar_products = new LengthAwarePaginator(
-    //             $similar_products_query, 
-    //             $total, 
-    //             $perPage, 
-    //             $currentPage, 
-    //             [
-    //                 'path' => url('/products/' . $id . '/' . $option_id . '/get-similar-products'),
-    //                 'query' => $request->query(),
-    //             ]
-    //         );
-    //     }
-
-    //     // Return the paginated results as a JSON response
-    //     return response()->json([
-    //         'data' => $similar_products->items(),
-    //         'current_page' => $similar_products->currentPage(),
-    //         'last_page' => $similar_products->lastPage(),
-    //         'total' => $similar_products->total(),
-    //     ]);
-    // }
-
+    
     public function getSimilarProducts(Request $request, $id, $option_id)
     {
+        
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+        
         // Validate 'perPage' and 'page' parameters with defaults
         $perPage = is_numeric($request->get('perPage')) ? (int) $request->get('perPage', 4) : 4;
         $currentPage = is_numeric($request->get('page')) ? (int) $request->get('page', 1) : 1;
@@ -1027,12 +1083,15 @@ class ProductController extends Controller
             ], 404);
         }
 
+        
+
         // Return the paginated results
         return response()->json([
             'data' => $similar_products->items(),
             'current_page' => $similar_products->currentPage(),
             'last_page' => $similar_products->lastPage(),
             'total' => $similar_products->total(),
+            'get_wholesale_terms' => $get_wholesale_terms,
         ]);
     }
 
@@ -1099,6 +1158,38 @@ class ProductController extends Controller
         if (!empty($products_to_hide)) {
             $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
         }
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         return view('categories', compact('products',
         'user_buy_list_options',
         'contact_id',
@@ -1106,7 +1197,9 @@ class ProductController extends Controller
         'product_views',
         'best_selling_products',
         'notify_user_about_product_stock',
-        'products_to_hide'
+        'products_to_hide',
+        'get_wholesale_contact_id',
+        'get_wholesale_terms'
         ));
     }
 
@@ -1345,6 +1438,38 @@ class ProductController extends Controller
 
         // Filter and paginate products
         $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         return view(
             'products-by-brand',
             compact(
@@ -1366,133 +1491,14 @@ class ProductController extends Controller
             'product_views',
             'best_selling_products',
             'notify_user_about_product_stock',
-            'products_to_hide' 
+            'products_to_hide' ,
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
             )
         );
     }
 
-    //old code
-
-    //  public function addToCart(Request $request)
-    // {
-        
-    //     $id = $request->p_id;
-    //     $option_id = $request->option_id;
-    //     $status = null;
-    //     $message = null;
-    //     $price = 0;
-    //     $main_contact_id = null;
-    //     $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-    //     $cart = session()->get('cart');
-    //     $free_postal_state = false;
-    //     if (Auth::id() !== null) {
-    //         $user_id = Auth::id();
-    //         $contact = Contact::where('user_id', $user_id)->first();
-    //         if (!empty($contact)) {
-    //             if ($contact->is_parent == 1) {
-    //                 $main_contact_id = $contact->contact_id;
-    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-    //             } else {
-    //                 $main_contact_id = $contact->parent_id;
-    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-    //             }
-    //         } else {
-    //             $main_contact_id = null;
-    //             $free_postal_state = false;
-    //         }
-    //     } else {
-    //         $user_id = '';
-    //         $free_postal_state = true;
-    //     }
-    //     $actual_stock = 0;
-    //     $actual_stock = !empty($productOption->stockAvailable)  ? $productOption->stockAvailable : 0;
-    //     $user_price_column = UserHelper::getUserPriceColumn();
-    //     foreach ($productOption->products->options as $option) {
-    //         foreach ($option->price as $price_get) {
-    //             // $price = !empty($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-    //             // if (empty($price) || $price == 0 || $price == null || $price == '' || $price == '0') {
-    //             //     $price = $price_get['sacramentoUSD'];
-    //             // } else {
-    //             //     $price = $price_get['retailUSD'];
-    //             // }
-
-    //             if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
-    //                 $price = $price_get[$user_price_column];
-    //             } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
-    //                 $price = $price_get['sacramentoUSD'];
-    //             } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
-    //                 $price = $price_get['retailUSD'];
-    //             }
-        
-    //         }
-    //     }
-        
-    //     if (isset($cart[$id])) {
-    //         $hash_cart = session()->get('cart_hash');
-    //         $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-    //         if ($product_in_active_cart) {
-    //             $current_quantity = $product_in_active_cart->quantity;
-    //             if ($current_quantity + $request->quantity > intval($actual_stock)) {
-    //                 $status = 'error';
-    //                 $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
-    //             } 
-    //             else {
-
-    //                 $product_in_active_cart->quantity = $current_quantity + $request->quantity;
-    //                 $product_in_active_cart->save();
-    //                 $status = 'success';
-    //                 $message = 'Product added to cart successfully';
-    //                 $cart[$id]['quantity'] += $request->quantity;
-    //             }
-    //         }
-    //     } else {
-    //         $hash_cart = $request->session()->get('cart_hash');
-    //         $cart_hash_exist = session()->has('cart_hash');
-
-
-    //         if ($cart_hash_exist == false) {
-    //             $request->session()->put('cart_hash', Str::random(10));
-    //         }
-    //         if ($request->quantity > intval($actual_stock)) {
-    //             $status = 'error';
-    //             $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
-    //         } 
-    //         else {
-    //             $cart[$id] = [
-    //                 "product_id" => $productOption->products->product_id,
-    //                 "name" => $productOption->products->name,
-    //                 "quantity" => $request->quantity,
-    //                 "price" => $price,
-    //                 "code" => $productOption->code,
-    //                 "image" => !empty($productOption->products) && !empty($productOption->products->images) ? $productOption->products->images : '',
-    //                 'option_id' => $productOption->option_id,
-    //                 "slug" => $productOption->products->slug,
-    //                 "cart_hash" => session()->get('cart_hash')
-    //             ];
-    //             $cart[$id]['user_id'] = $user_id;
-    //             $cart[$id]['is_active'] = 1;
-    //             $cart[$id]['qoute_id'] = $id;
-
-    //             $qoute = Cart::create($cart[$id]);
-    //             $status = 'success';
-    //             $message = 'Product added to cart successfully';
-    //         }
-    //     }
-
-    //     $request->session()->put('cart', $cart);
-    //     $cart_items = session()->get('cart');
-    //     return response()->json([
-    //         'status' => $status,
-    //         'cart_items' => $cart_items,
-    //         'cart' => $cart,
-    //         'message' => $message,
-    //         'actual_stock' => $actual_stock,
-    //         'main_contact_id' => $main_contact_id,
-    //         'free_postal_state' => $free_postal_state
-    //     ]);
-    // }
-
-
+    
     public function addToCart(Request $request)
     {
         // Step 1: Initialize variables and retrieve session data
@@ -1565,9 +1571,43 @@ class ProductController extends Controller
     // Helper function to update existing cart item
     private function updateCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state)
     {
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+        
+        
         $current_quantity = $product->quantity;
+        // dd($actual_stock);
     
-        if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
+        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Stock limit exceeded',
@@ -1602,8 +1642,40 @@ class ProductController extends Controller
     private function addNewCartItem(&$cart, $productOption, $request, $price, $assigned_contact, $user_id, $main_contact_id, $free_postal_state)
     {
         
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+        
         $actual_stock = $productOption->stockAvailable ?? 0; // Ensure stock availability
-        if ((intval($request->quantity)) > intval($actual_stock)) {
+        if ((intval($request->quantity)) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Stock limit exceeded',
@@ -1661,41 +1733,6 @@ class ProductController extends Controller
     
 
 
-    // public function removeProductByCategory(Request $request)
-    // {
-        
-    //     $session_contact_id = session()->get('contact_id');
-    //     if ($request->id) {
-    //         if (auth()->user()) {
-    //             $cart = session()->get('cart');
-    //             if (isset($cart[$request->id])) {
-    //                 $qoute = Cart::where('qoute_id', $request->id)
-    //                 ->where('contact_id', $session_contact_id)
-    //                 ->where('user_id', auth()->user()->id)
-    //                 ->first();
-    //                 if (!empty($qoute)) {
-    //                     $qoute->delete();
-    //                     unset($cart[$request->id]);
-    //                 } else{
-    //                     $qoute = Cart::where('qoute_id', $request->id)->delete();
-    //                     unset($cart[$request->id]);
-    //                 }
-    //                 $request->session()->put('cart', $cart);
-    //                 session()->flash('success', 'Product removed successfully');
-    //             }
-    //         }
-    //         $cart = session()->get('cart');
-    //         if (isset($cart[$request->id])) {
-    //             $qoute = Cart::where('qoute_id', $request->id)->delete();
-    //             unset($cart[$request->id]);
-    //         }
-
-    //         $request->session()->put('cart', $cart);
-
-    //         session()->flash('success', 'Product removed successfully');
-    //     }
-    //     return redirect()->back()->with('success', 'Product removed successfully!');
-    // }
 
     public function removeProductByCategory(Request $request, $id)
     {
@@ -1756,6 +1793,37 @@ class ProductController extends Controller
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
         $is_child = false; 
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
         
 
         // if (empty($contact_id) && !empty($user_id)) {
@@ -1794,40 +1862,40 @@ class ProductController extends Controller
             return view('empty-cart', compact('contact'));
         }
 
-        foreach ($cart_items as $cart_item) {
-            $product_options = ProductOption::with('products')
-                ->where('product_id', $cart_item['product_id'])
-                ->where('option_id', $cart_item['option_id'])
-                ->get();
+        // foreach ($cart_items as $cart_item) {
+        //     $product_options = ProductOption::with('products')
+        //         ->where('product_id', $cart_item['product_id'])
+        //         ->where('option_id', $cart_item['option_id'])
+        //         ->get();
 
-            foreach ($product_options as $product_option) {
-                // Check if the product is out of stock
-                if ($product_option->stockAvailable < 1) {
-                    $out_of_stock_items[] = [  // Append to the array
-                        'product_primary_id' => $cart_item['qoute_id'],
-                        'product_id' => $cart_item['product_id'],
-                        'option_id' => $cart_item['option_id'],
-                        'product_name' => $cart_item['name'],
-                        'sku' => $cart_item['code'],
-                        'quantity' => $cart_item['quantity'],
-                        'stock_available' => $product_option->stockAvailable,
-                    ];
-                }
+        //     foreach ($product_options as $product_option) {
+        //         // Check if the product is out of stock
+        //         if ($product_option->stockAvailable < 1) {
+        //             $out_of_stock_items[] = [  // Append to the array
+        //                 'product_primary_id' => $cart_item['qoute_id'],
+        //                 'product_id' => $cart_item['product_id'],
+        //                 'option_id' => $cart_item['option_id'],
+        //                 'product_name' => $cart_item['name'],
+        //                 'sku' => $cart_item['code'],
+        //                 'quantity' => $cart_item['quantity'],
+        //                 'stock_available' => $product_option->stockAvailable,
+        //             ];
+        //         }
 
-                // Check if the available stock is less than the required quantity
-                if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
-                    $original_items_quantity[] = [  // Append to the array
-                        'product_primary_id' => $cart_item['qoute_id'],
-                        'product_id' => $cart_item['product_id'],
-                        'option_id' => $cart_item['option_id'],
-                        'product_name' => $cart_item['name'],
-                        'sku' => $cart_item['code'],
-                        'quantity' => $cart_item['quantity'],
-                        'stock_available' => $product_option->stockAvailable,
-                    ];
-                }
-            }
-        }
+        //         // Check if the available stock is less than the required quantity
+        //         if ($product_option->stockAvailable < $cart_item['quantity'] && $product_option->stockAvailable > 0) {
+        //             $original_items_quantity[] = [  // Append to the array
+        //                 'product_primary_id' => $cart_item['qoute_id'],
+        //                 'product_id' => $cart_item['product_id'],
+        //                 'option_id' => $cart_item['option_id'],
+        //                 'product_name' => $cart_item['name'],
+        //                 'sku' => $cart_item['code'],
+        //                 'quantity' => $cart_item['quantity'],
+        //                 'stock_available' => $product_option->stockAvailable,
+        //             ];
+        //         }
+        //     }
+        // }
 
         $tax_class = TaxClass::where('name', $contact->tax_class)->first();
 
@@ -1879,7 +1947,9 @@ class ProductController extends Controller
             'congrats_div_dnone',
             'new_checkout_flow',
             'out_of_stock_items',
-            'original_items_quantity'
+            'original_items_quantity',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
 
         ));
     }
@@ -1984,6 +2054,39 @@ class ProductController extends Controller
     }
 
     public function update_product_cart(Request $request) {
+
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         $id = $request->p_id;
         $option_id = $request->option_id;
         $action = $request->action;
@@ -2056,7 +2159,7 @@ class ProductController extends Controller
                         
                         $product_in_active_cart->quantity = $current_quantity - $request->quantity;
                         $product_in_active_cart->save();
-                        if (intval($product_in_active_cart->quantity) > intval($actual_stock)) {
+                        if (intval($product_in_active_cart->quantity) > intval($actual_stock)  && strtolower($get_wholesale_terms === 'pay in advanced')) {
                             $cart[$id]['quantity'] -= $request->quantity;
                             $status = 'error';
                             $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
@@ -2079,7 +2182,7 @@ class ProductController extends Controller
                 if ($cart_hash_exist == false) {
                     $request->session()->put('cart_hash', Str::random(10));
                 }
-                if ($request->quantity > intval($actual_stock)) {
+                if ($request->quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
                     $status = 'error';
                     $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
                 }
@@ -2117,7 +2220,7 @@ class ProductController extends Controller
                 // $cart[$id]['quantity'] += $request->quantity;
                 if ($product_in_active_cart) {
                     $current_quantity = $product_in_active_cart->quantity;
-                    if (intval($current_quantity + $request->quantity) > intval($actual_stock)) {
+                    if (intval($current_quantity + $request->quantity) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
                         $status = 'error';
                         $message = 'You can not add this item more than ' . intval($actual_stock) . ' in the cart';
                     } 
@@ -2141,7 +2244,7 @@ class ProductController extends Controller
                 if ($cart_hash_exist == false) {
                     $request->session()->put('cart_hash', Str::random(10));
                 }
-                if ($request->quantity > intval($actual_stock)) {
+                if ($request->quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
                     $status = 'error';
                     $message = 'You can not add more this item than ' . intval($actual_stock) . ' in the cart';
                 } 
@@ -2368,91 +2471,7 @@ class ProductController extends Controller
         $replace_special_characters = preg_replace('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', ' ', $searchvalue);
         $explode_search_value = explode(' ', $replace_special_characters);
         
-        // if ($filter_value_main === 'title_description') {
-        //     $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-        //         $q->where('status', '!=', 'Disabled');
-        //     }])
-        //     ->where(function (Builder $query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-        //             ->where('status', '!=', 'Inactive');
-        //         }
-        //     })
-        //     ->orWhere(function (Builder $query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-        //             ->where('status', '!=', 'Inactive');
-        //         }
-        //     })
-        //     ->orWhere(function (Builder $query) use ($searchvalue) {
-        //         $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-        //         ->where('status', '!=', 'Inactive');
-        //     })
-        //     ->orWhereExists(function ($q) use ($searchvalue) {
-        //         $q->select(DB::raw(1))
-        //         ->from('product_options')
-        //         ->whereColumn('products.product_id', 'product_options.product_id')
-        //         ->where('code',  $searchvalue )
-        //         ->where('status', '!=', 'Disabled');
-        //     })
-        //     ->where('status', '!=', 'Inactive');
-        //     // ->paginate($per_page);
-        //     $products = $main_query;
-        // } 
-
-        // if ($filter_value_main === 'title') {
-        //     $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-        //         $q->where('status', '!=', 'Disabled');
-        //     }])
-        //     ->where(function (Builder $query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->where('name', 'LIKE', '%' . $searchvalue . '%')
-        //             ->where('status', '!=', 'Inactive');
-        //         }
-        //     })
-        //     ->orWhere(function (Builder $query) use ($searchvalue) {
-        //         $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-        //         ->where('status', '!=', 'Inactive');
-        //     })
-        //     ->orWhereExists(function ($q) use ($searchvalue) {
-        //         $q->select(DB::raw(1))
-        //         ->from('product_options')
-        //         ->whereColumn('products.product_id', 'product_options.product_id')
-        //         ->where('code',  $searchvalue )
-        //         ->where('status', '!=', 'Disabled');
-        //     })
-        //     ->where('status', '!=', 'Inactive');
-        //     // ->paginate($per_page);
-        //     $products = $main_query;
-        // }
-
-
-        // if ($filter_value_main === 'description') {
-        //     $main_query = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
-        //         $q->where('status', '!=', 'Disabled');
-        //     }])
-        //     ->where(function (Builder $query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->where('description', 'LIKE', '%' . $searchvalue . '%')
-        //             ->where('status', '!=', 'Inactive');
-        //         }
-        //     })
-        //     ->orWhere(function (Builder $query) use ($searchvalue) {
-        //         $query->where('code', 'LIKE', '%' . $searchvalue . '%')
-        //         ->where('status', '!=', 'Inactive');
-        //     })
-        //     ->orWhereExists(function ($q) use ($searchvalue) {
-        //         $q->select(DB::raw(1))
-        //         ->from('product_options')
-        //         ->whereColumn('products.product_id', 'product_options.product_id')
-        //         ->where('code',  $searchvalue )
-        //         ->where('status', '!=', 'Disabled');
-        //     })
-        //     ->where('status', '!=', 'Inactive');
-        //     // ->paginate($per_page);
-        //     $products = $main_query;
-        // }
-
+        
         $user_price_column = UserHelper::getUserPriceColumn();
 
         $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
@@ -2460,26 +2479,7 @@ class ProductController extends Controller
         }])
         ->where('status', '!=', 'Inactive');
 
-        // if ($filter_value_main === 'title_description') {
-        //     $main_query->where(function ($query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
-        //         }
-        //     });
-        // } elseif ($filter_value_main === 'title') {
-        //     $main_query->where(function ($query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->orWhere('name', 'LIKE', '%' . $searchvalue . '%');
-        //         }
-        //     });
-        // } elseif ($filter_value_main === 'description') {
-        //     $main_query->where(function ($query) use ($explode_search_value) {
-        //         foreach ($explode_search_value as $searchvalue) {
-        //             $query->orWhere('description', 'LIKE', '%' . $searchvalue . '%');
-        //         }
-        //     });
-        // }
+        
 
         if ($filter_value_main === 'title_description') {
 
@@ -2526,13 +2526,7 @@ class ProductController extends Controller
             });
         }
 
-        // $main_query->orWhereExists(function ($q) use ($searchvalue) {
-        //     // $q->select(DB::raw(1))
-        //     ->from('product_options')
-        //     ->whereColumn('products.product_id', 'product_options.product_id')
-        //     ->where('code', $searchvalue)
-        //     ->where('status', '!=', 'Disabled');
-        // });
+        
 
         $products = $main_query;
 
@@ -2630,6 +2624,37 @@ class ProductController extends Controller
         // Final product filtering
         $products = $products->whereIn('product_id', $valid_product_ids)->paginate($per_page);
 
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
        
         return view('search_product.search_product', compact(
             'products',
@@ -2650,7 +2675,9 @@ class ProductController extends Controller
             'product_views',
             'best_selling_products',
             'notify_user_about_product_stock',
-            'products_to_hide'
+            'products_to_hide',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms',
         ));
     }
 
@@ -2823,149 +2850,6 @@ class ProductController extends Controller
         ], 200);
     }
 
-    //old code
-    //add multi favorites to cart
-    // public function multi_favorites_to_cart(Request $request)
-    // {
-    //     $error = false;
-        
-    //     $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
-
-    //     $main_contact_id = null;
-    //     $free_postal_state = false;
-    //     if (Auth::id() !== null) {
-    //         $userId = Auth::id();
-    //         $contact = Contact::where('user_id', $userId)->first();
-    //         if (!empty($contact)) {
-    //             if ($contact->is_parent == 1) {
-    //                 $main_contact_id = $contact->contact_id;
-    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-    //             } else {
-    //                 $main_contact_id = $contact->parent_id;
-    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-    //             }
-    //         } else {
-    //             $main_contact_id = null;
-    //             $free_postal_state = false;
-    //         }
-    //     } else {
-    //         $free_postal_state = true;
-    //     }
-    
-    //     if (!empty($products_to_hide)) {
-    //         $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
-    //     }
-    //     if (!empty($request->all_fav)) {
-    //         foreach ($request->all_fav as $multi_favorites) {
-    //             $id = $multi_favorites['product_id'];
-    //             $option_id = $multi_favorites['option_id'];
-
-    //             $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->whereNotIn('option_id', $products_to_hide)->first();
-    //             if (empty($productOption) || empty($productOption->products)) {
-    //                 $error = true;
-    //                 continue;
-    //             }
-    //             $cart = session()->get('cart');
-    //             if (Auth::id() !== null) {
-    //                 $user_id = Auth::id();
-    //             } else {
-    //                 $user_id = '';
-    //             }
-
-    //             $contact_id = '';
-    //             $secondary_id = '';
-
-    //             if ($user_id) {
-    //                 $contact = Contact::where('user_id', $user_id)->first();
-    //                 $contact_id = $contact->contact_id;
-    //                 $secondary_id = $contact->secondary_id;
-    //             }
-
-    //             if ($contact_id || $secondary_id) {
-    //                 $pricing = $contact->priceColumn;
-    //             }
-
-    //             $user_price_column = UserHelper::getUserPriceColumn();
-    //             foreach ($productOption->products->options as $option) {
-    //                 foreach ($option->price as $price_get) {
-    //                     // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-    //                     // if ($price == 0) {
-    //                     //     $price = $price_get['sacramentoUSD'];
-    //                     // }
-        
-    //                     // if ($price == 0) {
-    //                     //     $price = $price_get['retailUSD'];
-    //                     // }
-
-    //                     if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
-    //                         $price = $price_get[$user_price_column];
-    //                     } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
-    //                         $price = $price_get['sacramentoUSD'];
-    //                     } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
-    //                         $price = $price_get['retailUSD'];
-    //                     }
-    //                 }
-    //             }
-
-    //             if (isset($cart[$id])) {
-    //                 $hash_cart = session()->get('cart_hash');
-    //                 $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-    //                 if ($product_in_active_cart) {
-    //                     $current_quantity = $product_in_active_cart->quantity;
-    //                     $product_in_active_cart->quantity = $current_quantity + $request->quantity;
-    //                     $product_in_active_cart->save();
-    //                 }
-    //                 $cart[$id]['quantity'] += $request->quantity;
-    //             } else {
-
-    //                 $hash_cart = $request->session()->get('cart_hash');
-    //                 $cart_hash_exist = session()->has('cart_hash');
-
-
-    //                 if ($cart_hash_exist == false) {
-    //                     $request->session()->put('cart_hash', Str::random(10));
-    //                 }
-
-    //                 $cart[$id] = [
-    //                     "product_id" => $productOption->products->product_id,
-    //                     "name" => $productOption->products->name,
-    //                     "quantity" => $request->quantity,
-    //                     "price" => $price,
-    //                     "code" => $productOption->code,
-    //                     "image" => $productOption->image,
-    //                     'option_id' => $productOption->option_id,
-    //                     "slug" => $productOption->products->slug,
-    //                     "cart_hash" => session()->get('cart_hash')
-    //                 ];
-    //                 $cart[$id]['user_id'] = $user_id;
-    //                 $cart[$id]['is_active'] = 1;
-    //                 $cart[$id]['qoute_id'] = $id;
-
-    //                 $qoute = Cart::create($cart[$id]);
-    //             }
-
-    //             $request->session()->put('cart', $cart);
-    //             $cart_items = session()->get('cart');
-    //         }
-
-    //         if ($error == true) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Some products are not available in the cart',
-    //                 'free_postal_state' => $free_postal_state,
-    //                 'main_contact_id' => $main_contact_id
-    //             ]);
-    //         }
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'cart_items' => $cart_items,
-    //             'cart' => $cart,
-    //             'main_contact_id' => $main_contact_id,
-    //             'free_postal_state' => $free_postal_state
-    //         ]);
-    //     }
-    // }
-
     
     
 
@@ -3110,10 +2994,38 @@ class ProductController extends Controller
             return 'Product not found in the cart.';
         }
 
+
+        // Check stock availability
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         $current_quantity = $product->quantity;
 
         // Check stock availability
-        if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
+        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
@@ -3132,9 +3044,41 @@ class ProductController extends Controller
     // Helper function to add a new cart item
     private function addFavouriteToCart(&$cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
     {
+        $user_id = Auth::id();
         // Check stock availability
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         $actual_stock = $productOption->stockAvailable;
-        if ($requested_quantity > intval($actual_stock)) {
+        if ($requested_quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
@@ -3180,134 +3124,46 @@ class ProductController extends Controller
     // order buyed items again 
     public function order_items(Request $request , $id) {
         $order_items = ApiOrder::with('apiOrderItem' , 'apiOrderItem.product' , 'apiOrderItem.product.options')->where('id' , $id)->first();
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         return response()->json([
             'status' => 'success',
-            'order_items' => $order_items
+            'order_items' => $order_items ,
+            'get_wholesale_terms' => $get_wholesale_terms,
         ],200);  
     }
 
-    //buy again items to cart and checkout
-    // old code
-    // public function buy_again_order_items(Request $request)
-    // {
-    //     if (Auth::id() !== null) {
-    //         $userId = Auth::id();
-    //         $contact = Contact::where('user_id', $userId)->first();
-    //         if (!empty($contact)) {
-    //             if ($contact->is_parent == 1) {
-    //                 $main_contact_id = $contact->contact_id;
-    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-    //             } else {
-    //                 $main_contact_id = $contact->parent_id;
-    //                 $free_postal_state = $contact->state == 'California' || $contact->state == 'CA' ? true : false;
-    //             }
-    //         } else {
-    //             $main_contact_id = null;
-    //             $free_postal_state = false;
-    //         }
-    //     } else {
-    //         $free_postal_state = true;
-    //     }
-    //     if (!empty($request->ordered_products)) {
-    //         foreach ($request->ordered_products as $orderProducts) {
-    //             $id = $orderProducts['product_id'];
-    //             $option_id = $orderProducts['option_id'];
-    //             $quantity = $orderProducts['quantity'];
-
-    //             $productOption = ProductOption::where('option_id', $option_id)->with('products.options.price')->first();
-    //             $cart = session()->get('cart');
-    //             if (Auth::id() !== null) {
-    //                 $user_id = Auth::id();
-    //             } else {
-    //                 $user_id = '';
-    //             }
-
-    //             $contact_id = '';
-    //             $secondary_id = '';
-
-    //             if ($user_id) {
-    //                 $contact = Contact::where('user_id', $user_id)->first();
-    //                 $contact_id = $contact->contact_id;
-    //                 $secondary_id = $contact->secondary_id;
-    //             }
-
-    //             if ($contact_id || $secondary_id) {
-    //                 $pricing = $contact->priceColumn;
-    //             }
-
-    //             $user_price_column = UserHelper::getUserPriceColumn();
-    //             foreach ($productOption->products->options as $option) {
-    //                 foreach ($option->price as $price_get) {
-    //                     // $price = isset($price_get[$user_price_column]) ? $price_get[$user_price_column] : 0;
-    //                     // if ($price == 0) {
-    //                     //     $price = $price_get['sacramentoUSD'];
-    //                     // }
-        
-    //                     // if ($price == 0) {
-    //                     //     $price = $price_get['retailUSD'];
-    //                     // }
-
-    //                     if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
-    //                         $price = $price_get[$user_price_column];
-    //                     } elseif (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
-    //                         $price = $price_get['sacramentoUSD'];
-    //                     } elseif (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
-    //                         $price = $price_get['retailUSD'];
-    //                     }
-    //                 }
-    //             }
-
-    //             if (isset($cart[$id])) {
-    //                 $hash_cart = session()->get('cart_hash');
-    //                 $product_in_active_cart = Cart::where('qoute_id', $id)->first();
-    //                 if ($product_in_active_cart) {
-    //                     $current_quantity = $product_in_active_cart->quantity;
-    //                     $product_in_active_cart->quantity = $current_quantity + $quantity;
-    //                     $product_in_active_cart->save();
-    //                 }
-    //                 $cart[$id]['quantity'] += $quantity;
-    //             } else {
-
-    //                 $hash_cart = $request->session()->get('cart_hash');
-    //                 $cart_hash_exist = session()->has('cart_hash');
-
-
-    //                 if ($cart_hash_exist == false) {
-    //                     $request->session()->put('cart_hash', Str::random(10));
-    //                 }
-
-    //                 $cart[$id] = [
-    //                     "product_id" => $productOption->products->product_id,
-    //                     "name" => $productOption->products->name,
-    //                     "quantity" => $quantity,
-    //                     "price" => $price,
-    //                     "code" => $productOption->code,
-    //                     "image" => $productOption->image,
-    //                     'option_id' => $productOption->option_id,
-    //                     "slug" => $productOption->products->slug,
-    //                     "cart_hash" => session()->get('cart_hash')
-    //                 ];
-    //                 $cart[$id]['user_id'] = $user_id;
-    //                 $cart[$id]['is_active'] = 1;
-    //                 $cart[$id]['qoute_id'] = $id;
-
-    //                 $qoute = Cart::create($cart[$id]);
-    //             }
-
-    //             $request->session()->put('cart', $cart);
-    //             $cart_items = session()->get('cart');
-    //         }
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'cart_items' => $cart_items,
-    //             'cart' => $cart,
-    //             'main_contact_id' => $main_contact_id,
-    //             'free_postal_state' => $free_postal_state
-    //         ]);
-    //     }
-    // }
-
-
+    
     public function buy_again_order_items(Request $request)
     {
         $user_id = Auth::id();
@@ -3378,10 +3234,42 @@ class ProductController extends Controller
             return 'Product not found in the cart.';
         }
 
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
         $current_quantity = $product->quantity;
 
         // Check stock availability
-        if (($current_quantity + $requested_quantity) > intval($actual_stock)) {
+        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
@@ -3404,7 +3292,40 @@ class ProductController extends Controller
         $actual_stock = $productOption->stockAvailable;
         $requested_quantity = $orderProduct['quantity'];
 
-        if ($requested_quantity > intval($actual_stock)) {
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+        }
+
+
+        if ($requested_quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
@@ -3466,30 +3387,7 @@ class ProductController extends Controller
             $bulkQuantity->delievery = $request->delievery;
             $bulkQuantity->save();
 
-            // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-
-            // $admin_users = $admin_users->toArray();
-
-            // $adminsEmails = User::whereIn('id', $admin_users)->pluck('email')->toArray();
-            // if (!empty($adminsEmails)) {
-            //     foreach ($adminsEmails as $adminEmail) {
-            //         MailHelper::send_discount_mail_request('emails.admin_bulk_request', [
-            //             'from' => SettingHelper::getSetting('noreply_email_address'),
-            //             'email' => $adminEmail,
-            //             'subject' => 'New Bulk Products Request Received',
-            //             'data' => $validatedData,
-            //         ]);
-            //     }
-            // }
-    
-            // // Send confirmation email to user
-            // MailHelper::send_discount_mail_request('emails.user_bulk_request', [
-            //     'from' => SettingHelper::getSetting('noreply_email_address'),
-            //     'email' => $validatedData['email'],
-            //     'subject' => 'Bulk Products Request Confirmation',
-            //     'data' => $validatedData,
-            // ]);
-
+            
 
             $subdomain = env('ZENDESK_SUBDOMAIN'); 
             $username = env('ZENDESK_USERNAME'); 
@@ -3868,238 +3766,7 @@ class ProductController extends Controller
     }
 
 
-    // public function see_similar_products(Request $request) {
-    //     $single_product_array = [];
-    //     $all_products_array = [];
-    //     $product_primary_id = $request->product_id;
-    //     $get_single_product = Product::where('id', $product_primary_id)->first();
-    //     $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
-    //     if (empty($get_single_product)) {
-    //         return response()->json([
-    //             'message' => 'No similar product found',
-    //             'status' => 'error'
-    //         ], 404);
-    //     }
-
-    //     // dd($get_single_product);
-    //     $single_product_array = [
-    //         'id'=> $get_single_product->id,
-    //         'product_id' => $get_single_product->product_id,
-    //         'product_name' => $get_single_product->name,
-    //         'product_code' => $get_single_product->code,
-    //         'product_description' => $get_single_product->description,
-    //         'Category' => !empty($get_single_product->categories) ? $get_single_product->categories->name : '',
-    //         'brand' => !empty($get_single_product->product_brand) ? $get_single_product->product_brand->name : '',    
-    //     ];
-
-    //     $user_id = Auth::id();
-    //     if (!auth()->user()) {
-    //         $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
-    //     } else {
-    //         $contact = Contact::where('user_id', $user_id)->first();
-    //         if (empty($contact)) {
-    //             $price_column = !empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD';
-    //         } else {
-    //             $contact_id_new = $contact->is_parent == 1 ? $contact->contact_id : $contact->parent_id;
-    //             $primary_contact = Contact::where('contact_id', $contact_id_new)->first();
-    //             $price_column = !empty($primary_contact) ? $primary_contact->priceColumn : (!empty($default_price_column) ? $default_price_column->option_value : 'sacramentoUSD');
-    //         }
-    //     }
-    //     $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
-    //     $all_products_ids = Product::whereIn('category_id' , $product_categories)
-    //     ->pluck('product_id')->toArray();
-    //     $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)
-    //     ->where('status', '!=', 'Disabled')
-    //     // ->where('optionWeight', '>', 0)
-    //     ->pluck('option_id')->toArray();
-    //     $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
-    //     ->where($price_column , '!=', null)
-    //     ->where($price_column , '>' , 0)
-    //     ->pluck('option_id')
-    //     ->toArray();
-    //     $products_ids = ProductOption::whereIn('option_id' , $product_pricing_option_ids)
-    //     ->pluck('product_id')->toArray();
-    //     $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
-    //     ->where('status' , '!=' , 'Inactive')
-    //     // ->where('barcode' , '!=' , '')
-    //     ->get();
-
-    //     if ($products->isEmpty()) {
-    //         return response()->json([
-    //             'message' => 'No similar product found',
-    //             'status' => 'error'
-    //         ], 404);
-    //     }
-
-    //     if (count($products) > 0) {
-    //         foreach ($products as $product) {
-    //             if (count($product->options) > 0) {
-    //                 foreach ($product->options as $option) {
-    //                     $all_products_array[] = [
-    //                         'id'=> $product->id,
-    //                         'product_id' => $product->product_id,
-    //                         'product_name' => $product->name,
-    //                         'product_code' => $product->code,
-    //                         'product_description' => $product->description,
-    //                         'Category' => !empty($product->categories) ? $product->categories->name : '',
-    //                         'brand' => !empty($product->product_brand) ? $product->product_brand->name : '',    
-    //                     ];
-    //                 }
-    //             } 
-    //         }
-    //     }
-
-
-    //     $findsimilarProducts = $this->sendToOpenAIInBatches($single_product_array , $all_products_array);
-    //     // dd($findsimilarProducts);
-
-    // }
-
-    // public function sendToOpenAI(array $singleProduct, array $allProducts) {
-    //     $apiKey = config('services.ai.ai_key');
-    //     // Create a new HTTP client
-    //     $client = new \GuzzleHttp\Client();
-        
-    //     // Prepare the message content
-    //     $singleProductDetails = json_encode($singleProduct, JSON_PRETTY_PRINT);
-    //     $allProductsDetails = json_encode($allProducts, JSON_PRETTY_PRINT);
-
-    //     // Construct the message to OpenAI
-    //     $messageContent = "Here is the product to find similar items for:\n" . $singleProductDetails . 
-    //                     "\n\nBased on this product, please find similar products from the following list:\n" . 
-    //                     $allProductsDetails;
-
-    //     // Send request to OpenAI
-    //     try {
-    //         $response = $client->post('https://api.openai.com/v1/chat/completions', [
-    //             'headers' => [
-    //                 'Authorization' => 'Bearer ' . $apiKey,
-    //                 'Content-Type' => 'application/json',
-    //             ],
-    //             'json' => [
-    //                 'model' => 'gpt-3.5-turbo',
-    //                 'messages' => [
-    //                     [
-    //                         'role' => 'system',
-    //                         'content' => 'You are a product recommendation assistant that finds similar items based on product details.'
-    //                     ],
-    //                     [
-    //                         'role' => 'user',
-    //                         'content' => $messageContent
-    //                     ]
-    //                 ],
-    //                 'temperature' => 0.7,
-    //             ],
-    //         ]);
-            
-    //         // Parse the response
-    //         $responseBody = json_decode($response->getBody(), true);
-            
-    //         // Check if the response contains the choices and get the first one
-    //         if (isset($responseBody['choices']) && !empty($responseBody['choices'])) {
-    //             // Extract the response content
-    //             $similarProducts = $responseBody['choices'][0]['message']['content'] ?? '';
-
-    //             // Assuming the OpenAI response is a JSON string with similar products
-    //             $similarProductsArray = json_decode($similarProducts, true) ?? [];
-
-    //             // Prepare the final result containing only names, codes, and IDs
-    //             $finalResults = [];
-    //             foreach ($similarProductsArray as $product) {
-    //                 if (isset($product['product_id'], $product['product_name'], $product['product_code'])) {
-    //                     $finalResults[] = [
-    //                         'product_id' => $product['product_id'],
-    //                         'product_name' => $product['product_name'],
-    //                         'product_code' => $product['product_code'],
-    //                     ];
-    //                 }
-    //             }
-
-    //             return $finalResults; // Return only the filtered similar products
-    //         } else {
-    //             return []; // Return an empty array if no choices are found
-    //         }
-    //     } catch (\Exception $e) {
-    //         // Log the error for debugging purposes
-    //         Log::error('OpenAI API request failed: ' . $e->getMessage());
-    //         return []; // Return an empty array on failure
-    //     }
-    // }
-
-    // public function sendToOpenAIInBatches(array $singleProduct, array $allProducts) {
-    //     $apiKey = config('services.ai.ai_key');
-    //     $client = new \GuzzleHttp\Client();
-        
-    //     $similarProducts = []; // Array to collect similar products from all batches
     
-    //     // Define the batch size (you can adjust this based on your testing)
-    //     $batchSize = 50; // Adjust this as necessary
-    //     $totalProducts = count($allProducts);
-    //     $numBatches = ceil($totalProducts / $batchSize); // Calculate the number of batches
-    
-    //     for ($i = 0; $i < $numBatches; $i++) {
-    //         // Slice the array to get the current batch
-    //         $currentBatch = array_slice($allProducts, $i * $batchSize, $batchSize);
-    
-    //         // Construct the message to OpenAI for the current batch
-    //         $messageContent = "Here is the product to find similar items for:\n" . json_encode($singleProduct, JSON_PRETTY_PRINT) . 
-    //                           "\n\nBased on this product, please find similar products from the following list:\n" . 
-    //                           json_encode($currentBatch, JSON_PRETTY_PRINT);
-    
-    //         try {
-    //             $response = $client->post('https://api.openai.com/v1/chat/completions', [
-    //                 'headers' => [
-    //                     'Authorization' => 'Bearer ' . $apiKey,
-    //                     'Content-Type' => 'application/json',
-    //                 ],
-    //                 'json' => [
-    //                     'model' => 'gpt-3.5-turbo',
-    //                     'messages' => [
-    //                         [
-    //                             'role' => 'system',
-    //                             'content' => 'You are a product recommendation assistant that finds similar items based on product details.'
-    //                         ],
-    //                         [
-    //                             'role' => 'user',
-    //                             'content' => $messageContent
-    //                         ]
-    //                     ],
-    //                     'temperature' => 0.7,
-    //                 ],
-    //             ]);
-    
-    //             // Parse the response
-    //             $responseBody = json_decode($response->getBody(), true);
-                
-    //             // Check if the response contains the choices and get the first one
-    //             if (isset($responseBody['choices']) && !empty($responseBody['choices'])) {
-    //                 // Extract the response content
-    //                 $similarProductsBatch = $responseBody['choices'][0]['message']['content'] ?? '';
-    
-    //                 // Assuming the OpenAI response is a JSON string with similar products
-    //                 $similarProductsArray = json_decode($similarProductsBatch, true) ?? [];
-    
-    //                 // Prepare the final result containing only names, codes, and IDs
-    //                 foreach ($similarProductsArray as $product) {
-    //                     if (isset($product['product_id'], $product['product_name'], $product['product_code'])) {
-    //                         $similarProducts[] = [
-    //                             'product_id' => $product['product_id'],
-    //                             'product_name' => $product['product_name'],
-    //                             'product_code' => $product['product_code'],
-    //                         ];
-    //                     }
-    //                 }
-    //             }
-    //         } catch (\Exception $e) {
-    //             // Log the error for debugging purposes
-    //             Log::error('OpenAI API request failed: ' . $e->getMessage());
-    //             continue; // Skip to the next batch on failure
-    //         }
-    //     }
-    
-    //     return $similarProducts; // Return all aggregated similar products
-    // }
-
 
 
     public function removeOutOfStock(Request $request) {

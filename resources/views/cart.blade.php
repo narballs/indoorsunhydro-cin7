@@ -18,12 +18,12 @@
         <span class="cart-page-cart-title">CART</span>
     </p>
 </div>
-@if (session('success'))
+{{-- @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
-@endif
-@if (auth()->user())
+@endif --}}
+{{-- @if (auth()->user())
     @php
         $pass_out_of_stock_items = session('out_of_stock_items') ?? $out_of_stock_items ?? [];
         $pass_original_items_quantity = session('original_items_quantity') ?? $original_items_quantity ?? [];
@@ -57,8 +57,6 @@
                             </div>
                         @endforeach
                     </div>
-
-                    <!-- Table for Out of Stock and Updated Items -->
                     <table class="table table-bordered cart-behaviour-table">
                         <thead class="thead-light">
                             <tr>
@@ -76,8 +74,6 @@
                                     <td>{{ $item['quantity'] }}</td>
                                 </tr>
                             @endforeach
-
-                            <!-- Updated Items -->
                             @foreach ($pass_original_items_quantity as $item)
                                 <tr class="text-secondary" id="pass_original_items_quantity_{{$item['product_primary_id']}}">
                                     <td>{{ $item['product_name'] }}</td>
@@ -91,7 +87,7 @@
             </div>
         </div>
     @endif
-@endif
+@endif --}}
 
 
 
@@ -101,6 +97,21 @@
 <div class="container-fluid desktop-view">
     <div class="row justify-content-center">
         <div class="col-md-12 col-lg-12 col-xl-10">
+            @if (\Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('success') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @elseif (\Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('error') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="row">
                 @if(auth()->user())
                 <div class="col-sm-12 col-md-12 col-lg-9 mt-2">
@@ -227,7 +238,38 @@
                                                                             <a class=" pe-3 cart-page-items"
                                                                                 href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                             </a>
+                                                                            
                                                                         </span>
+                                                                        @if (intval($cart['quantity']) > intval($stock_per_product))
+                                                                            @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
+                                                                                <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
+                                                                                    <div class="stock_tooltip_message">
+                                                                                        {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
+                                                                                    </div>
+                                                                                    <span class="badge badge-warning">
+                                                                                        On Back Order 
+                                                                                    </span>
+                                                                                    <span class="ms-2 show_message">
+                                                                                        <i class="fas fa-question-circle"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                            @else
+                                                                                @if (intval($stock_per_product) < 1) 
+                                                                                    <div class="d-flex">
+                                                                                        <span class="badge badge-danger">
+                                                                                            {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="d-flex">
+                                                                                        <span class="badge badge-danger">
+                                                                                            Stock Limit Exceeded
+                                                                                        </span>
+                                                                                    </div>
+                                                                                @endif
+                                                                            @endif
+
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -241,18 +283,18 @@
                                                                     <div class="quantity cart_qty">
                                                                         <input type="number" name="quantity" class="quantity_calculator" id={{ 'row_quantity_' . $pk_product_id }}
                                                                             min="1" max="{{$stock_per_product}}" step="1" data-old = "{{ $cart['quantity'] }}"
-                                                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products({{ $pk_product_id }})">
+                                                                            value="{{ $cart['quantity'] }}" onchange="update_cart_products('{{ $pk_product_id }}' , '{{$get_wholesale_terms}}')">
                                                                         <input type="hidden" name="p_id" id="p_id"
                                                                             value="{{ $cart['product_id'] }}">
                                                                         <input type="hidden" name="p_id" id="option_id"
                                                                             value="{{ $cart['option_id'] }}">
                                                                         <div class="quantity-nav cart-quantity-nav">
                                                                             <div class="quantity-div quantity-up"
-                                                                                onclick="increase_qty({{ $pk_product_id }})">
+                                                                                onclick="increase_qty('{{ $pk_product_id }}' , '{{$get_wholesale_terms}}')">
                                                                                 
                                                                             </div>
                                                                             <div class="quantity-div quantity-down"
-                                                                                onclick="decrease_qty({{ $pk_product_id }})">
+                                                                                onclick="decrease_qty('{{ $pk_product_id }}' , '{{$get_wholesale_terms}}')">
                                                                                 
                                                                             </div>
                                                                         </div>
@@ -582,6 +624,21 @@
 <div class="container-fluid mobile-view">
     <div class="row justify-content-center mt-0">
         <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0">
+            @if (\Session::has('success'))
+                <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('success') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @elseif (\Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                    {!! \Session::get('error') !!}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card border-0 px-0">
                 <div class="row">
                     <div class="col-md-12 mx-0">
@@ -721,8 +778,29 @@
                                                                                             <a class="cart-page-items"
                                                                                                 href="{{ url('product-detail/' . $pk_product_id . '/' . $cart['option_id'] . '/' . $cart['slug']) }}">{{ $cart['name'] }}
                                                                                             </a>
-                                                                                            
                                                                                         </div>
+                                                                                        @if (intval($cart['quantity']) > intval($stock_per_product_mbl))
+                                                                                            @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced' && auth()->user())
+                                                                                                <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
+                                                                                                    <div class="stock_tooltip_message">
+                                                                                                        {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
+                                                                                                    </div>
+                                                                                                    <span class="badge badge-warning">
+                                                                                                        On Back Order 
+                                                                                                    </span>
+                                                                                                    <span class="ms-2 show_message">
+                                                                                                        <i class="fas fa-question-circle"></i>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            @else
+                                                                                                <div class="d-flex">
+                                                                                                    <span class="badge badge-danger">
+                                                                                                        {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            @endif
+
+                                                                                        @endif
                                                                                     </td>
                                                                                     <td class="p-0 text-right"  style="width:20%;" align="right">
                                                                                         <div class="cart-page-price ps-3"
@@ -734,15 +812,15 @@
                                                                                 <tr>
                                                                                     <td class="p-0 pt-3" style="width:80%;">
                                                                                         <div class="d-flex">
-                                                                                            <button class="btn p-1 text-center mb_plusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="minusq({{ $pk_product_id }})">
+                                                                                            <button class="btn p-1 text-center mb_plusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="minusq('{{ $pk_product_id }}' , '{{$get_wholesale_terms}}')">
                                                                                                 <i class="fa fa-angle-left text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                             <div class="">
                                                                                                 <input type="number" class="py-1 text-center mb-0 qtyMob_input bg-white"  min="0" class="itm_qty" max="{{$stock_per_product_mbl}}" step="1" data-old="{{ $cart['quantity'] }}" id="itm_qty{{ $pk_product_id }}"
-                                                                                                data-type="{{ $pk_product_id }}" onchange="update_cart_products_mbl({{ $pk_product_id }})" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
+                                                                                                data-type="{{ $pk_product_id }}" onchange="update_cart_products_mbl('{{ $pk_product_id }}' , '{{$get_wholesale_terms}}')" value="{{ $cart['quantity'] }}" style="width: 31px;font-weight: 600;font-size: 10px !important;
                                                                                                 color: #7CC633;background-color: #ffffff !important;border-top:0.485995px solid #EBEBEB !important;border-bottom:0.485995px solid #EBEBEB !important;line-height: 15px !important;border-left:0px !important;border-right:0px !important;">
                                                                                             </div>
-                                                                                            <button class="btn p-1 text-center mb_minusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="plusq({{ $pk_product_id }})">
+                                                                                            <button class="btn p-1 text-center mb_minusqty" style="border: 0.485995px solid #EBEBEB; border-radius:0px;" onclick="plusq('{{ $pk_product_id }}' , '{{$get_wholesale_terms}}')">
                                                                                                 <i class="fa fa-angle-right text-dark align-middle" style="font-size: 8px;"></i>
                                                                                             </button>
                                                                                         </div>
@@ -1005,7 +1083,7 @@
     @include('partials.product-footer')
 </div>
 <script>
-    function plusq(pk_product_id) {
+    function plusq(pk_product_id , get_wholesale_terms) {
         var result = 0;
         var new_result = 0;
         var old_qty = parseInt($('#itm_qty' + pk_product_id).attr('data-old'));
@@ -1014,10 +1092,10 @@
         var result = plus + 1;
         var new_result = result > stock_available ? old_qty : result;
         var new_qty = $('#itm_qty' + pk_product_id).val(new_result);
-        increase_qty(pk_product_id)
+        increase_qty(pk_product_id , get_wholesale_terms)
     }
 
-    function minusq(pk_product_id) {
+    function minusq(pk_product_id ,get_wholesale_terms) {
         var result = 0;
         var new_result = 0;
         var old_qty = parseInt($('#itm_qty' + pk_product_id).attr('data-old'));
@@ -1027,7 +1105,7 @@
             var result = minus - 1;
             var new_result = result > stock_available ? old_qty : result;
             var new_qty = $('#itm_qty' + pk_product_id).val(new_result);
-            decrease_qty(pk_product_id);
+            decrease_qty(pk_product_id ,get_wholesale_terms);
         }
 
     }
@@ -1035,13 +1113,14 @@
     
 
     /* *****   INCREASE QTY   ****  */
-    function increase_qty(pk_product_id) { 
+    function increase_qty(pk_product_id , get_wholesale_terms) { 
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
         var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
         var qty_input = parseInt($('#row_quantity_' + pk_product_id).val());
         var product_id = pk_product_id;
         var new_qty = parseInt(qty_input + 1);
-        if (new_qty > stock_available) {
+        if ((new_qty > stock_available) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
+        // if (new_qty > stock_available) {
             Swal.fire({
                 toast: true,
                 icon: 'error',
@@ -1138,7 +1217,7 @@
     }
 
     /* *****   DECREASE QTY   ****  */
-    function decrease_qty(pk_product_id) {
+    function decrease_qty(pk_product_id ,get_wholesale_terms) {
         var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
@@ -1245,7 +1324,7 @@
     }
 
     // on change update cart
-    function update_cart_products(pk_product_id) {
+    function update_cart_products(pk_product_id ,get_wholesale_terms) {
         var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var qty_input = 0;
@@ -1256,7 +1335,9 @@
             qty_input = 1;
         }
         var stock_available = parseInt($('#row_quantity_' + pk_product_id).attr('max'));
-        if (qty_input > stock_available) {
+        
+        // if (qty_input > stock_available) {
+        if ((qty_input > stock_available) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             Swal.fire({
                 toast: true,
                 icon: 'error',
@@ -1355,7 +1436,7 @@
     }
     
 
-    function update_cart_products_mbl(pk_product_id) {
+    function update_cart_products_mbl(pk_product_id , get_wholesale_terms) {
         var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var qty_input = 0;
@@ -1368,7 +1449,8 @@
             qty_input = 0;
         }
         
-        if (qty_input > stock_available) {
+        // if (qty_input > stock_available) {
+        if ((qty_input > stock_available) && ((get_wholesale_terms || "").toLowerCase() == 'pay in advanced' && get_wholesale_terms.trim() !== '')) {
             Swal.fire({
                 toast: true,
                 icon: 'error',
@@ -1702,5 +1784,16 @@
             return false;
         })
 
+    });
+
+    $(document).ready(function () {
+        $(".stock_tooltip").hover(
+            function () {
+                $(this).find(".stock_tooltip_message").stop(true, true).fadeIn();
+            },
+            function () {
+                $(this).find(".stock_tooltip_message").stop(true, true).fadeOut();
+            }
+        );
     });
 </script>

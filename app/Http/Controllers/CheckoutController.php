@@ -68,8 +68,41 @@ class CheckoutController extends Controller
 
         $cart_items = UserHelper::switch_price_tier($request);
 
-        if (count($cart_items) == 0) {
+        if (empty($cart_items) || count($cart_items) == 0) {
             return redirect('/')->with('error', 'Your cart for the selected company is empty! Please add some items to your cart before proceeding to checkout.');
+        }
+
+
+        $user_id = Auth::id();
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
         }
 
         foreach ($cart_items as $cart_item) {
@@ -107,13 +140,23 @@ class CheckoutController extends Controller
             }
         }
 
-        if (!empty($out_of_stock_items) || !empty($original_items_quantity)) {
-            return redirect()->route('cart')
-                ->with([
-                    'out_of_stock_items' => $out_of_stock_items,
-                    'original_items_quantity' => $original_items_quantity
-                ]);
+        // dd($get_wholesale_terms);
+
+        if (strtolower($get_wholesale_terms) === 'pay in advanced') {
+            if (!empty($out_of_stock_items) || (!empty($original_items_quantity))) {
+                return redirect()->route('cart')
+                    ->with('error', 'Some item(s) in your cart have insufficient stock. Please update or remove it from your cart to proceed.');
+            }
         }
+
+        // if (!empty($out_of_stock_items) || (!empty($original_items_quantity) && (strtolower($get_wholesale_terms) === 'pay in advanced'))) {
+        //     return redirect()->route('cart')
+        //         // ->with([
+        //         //     'out_of_stock_items' => $out_of_stock_items,
+        //         //     'original_items_quantity' => $original_items_quantity
+        //         // ]);
+        //         ->with('error', 'Some item(s) in your cart have insufficient stock. Please update or remove it from your cart to proceed.');
+        // }
 
         $new_checkout = AdminSetting::where('option_name', 'new_checkout_flow')->first();
         if (!empty($new_checkout) && strtolower($new_checkout->option_value) == 'yes') {
@@ -584,7 +627,11 @@ class CheckoutController extends Controller
             } 
             else {
                 if (!empty($free_shipping_state)) {
-                    if ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState || $get_user_default_shipping_address->DeliveryState == 'CA') {
+                    if (
+                        ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState 
+                        || $get_user_default_shipping_address->DeliveryState == 'CA') 
+                        && (strtolower($user_address->paymentTerms ?? '') == 'pay in advanced')
+                    ) {
                         if ($sub_total_of_cart >= 1000) {
                             $shipping_free_over_1000 = 1;
                         } else {
