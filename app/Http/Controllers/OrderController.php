@@ -243,10 +243,10 @@ class OrderController extends Controller
                     } else {
                         $order->primaryId = $session_contact_id;
                     }
-                    $dateCreated = Carbon::now();
-                    $createdDate = Carbon::now();
-                    $order->createdDate = $createdDate;
-                    $order->modifiedDate = $createdDate;
+                    // $dateCreated = Carbon::now();
+                    // $createdDate = Carbon::now();
+                    // $order->createdDate = $createdDate;
+                    // $order->modifiedDate = $createdDate;
                     $order->createdBy = 79914;
                     $order->processedBy = 79914;
                     $order->isApproved = false;
@@ -446,10 +446,10 @@ class OrderController extends Controller
                     } else {
                         $order->primaryId = $session_contact_id;
                     }
-                    $dateCreated = Carbon::now();
-                    $createdDate = Carbon::now();
-                    $order->createdDate = $createdDate;
-                    $order->modifiedDate = $createdDate;
+                    // $dateCreated = Carbon::now();
+                    // $createdDate = Carbon::now();
+                    // $order->createdDate = $createdDate;
+                    // $order->modifiedDate = $createdDate;
                     $order->createdBy = 79914;
                     $order->processedBy = 79914;
                     $order->isApproved = false;
@@ -598,10 +598,10 @@ class OrderController extends Controller
                     } else {
                         $order->primaryId = $session_contact_id;
                     }
-                    $dateCreated = Carbon::now();
-                    $createdDate = Carbon::now();
-                    $order->createdDate = $createdDate;
-                    $order->modifiedDate = $createdDate;
+                    // $dateCreated = Carbon::now();
+                    // $createdDate = Carbon::now();
+                    // $order->createdDate = $createdDate;
+                    // $order->modifiedDate = $createdDate;
                     $order->createdBy = 79914;
                     $order->processedBy = 79914;
                     $order->isApproved = false;
