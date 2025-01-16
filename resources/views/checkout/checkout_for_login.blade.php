@@ -856,7 +856,7 @@ $cart_price = 0;
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- @if (strtolower($user_address->paymentTerms) !== 'pay in advanced') --}}
+                                        {{-- @if (strtolower($user_address->paymentTerms) === 'pay in advanced' !== 'pay in advanced') --}}
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
                                                 <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
@@ -926,7 +926,7 @@ $cart_price = 0;
                                             $total_including_tax = $tax + $remove_discount  + $shipment_price;
                                             
                                         @endphp
-                                        <input type="hidden" name="paymentTerms" value="{{strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
+                                        <input type="hidden" name="paymentTerms" value="{{strtolower($user_address->paymentTerms) === 'pay in advanced' === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">
                                         
                                         {{-- billing --}}
                                         <input type="hidden" name="billing_company" value="{{ !empty($get_user_default_billing_address->BillingCompany) ?  $get_user_default_billing_address->BillingCompany : $user_address->company }}">
@@ -1092,7 +1092,7 @@ $cart_price = 0;
                                                                 <div class="col-md-9 col-8">
                                                                     <span class="checkout_shipping_heading">Shipment Price</span>
                                                                     @if ($shipping_free_over_1000 == 1)
-                                                                        @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
+                                                                        @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes') && (strtolower($user_address->paymentTerms) === 'pay in advanced'))
                                                                             <div class="row align-items-center">
                                                                                 <div class="col-md-2 col-3">
                                                                                     <span>
@@ -1437,11 +1437,11 @@ $cart_price = 0;
                         
                         <div class="row justify-content-between mt-2 mb-3">
                             <div class="col-md-12 mb-2">
-                                <h5 class="checkout_default_address mb-0">{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced' ? 'Payment Method' : 'Payment Terms' }}</h5>
+                                <h5 class="checkout_default_address mb-0">{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) === 'pay in advanced' == 'pay in advanced' ? 'Payment Method' : 'Payment Terms' }}</h5>
                             </div>
                             <div class="col-md-12">
                                 {{-- <div class="row"> --}}
-                                    @if (!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced')
+                                    @if (!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) === 'pay in advanced' == 'pay in advanced')
                                     <div id="stripe_payment" class="d-flex col-md-6 border  m-0 payment-custom-radio py-1 mt-2 selected">
                                         <input type="radio" name="checkout_payment_type" class="radio_check_payment payment-hidden-radio border-0" value="stripe" id="stripe" >
                                         <span class="stripe-radio-label"></span>
@@ -1471,7 +1471,7 @@ $cart_price = 0;
                             </div>
                             <div class="col-md-12 mb-2">
                                 <div class="text-center d-none" id="progress_spinner"><img src="/theme/img/progress.gif" alt=""></div>
-                                <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()" disabled>{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) == 'pay in advanced' ? 'Continue To Payment Screen'  :'Place Order'}}</button>
+                                <button class="btn check_out_pay_now w-100 p-3" id="proceed_to_checkout" onclick="validate()" disabled>{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) === 'pay in advanced' == 'pay in advanced' ? 'Continue To Payment Screen'  :'Place Order'}}</button>
                                 
                             </div>
                         </div>
