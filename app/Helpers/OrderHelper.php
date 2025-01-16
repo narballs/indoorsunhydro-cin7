@@ -96,7 +96,7 @@ class OrderHelper {
         $order_data = [
             [
                 $order,
-                "createdDate" => $order->created_date,
+                "createdDate" => $order->created_at,
                 "modifiedDate" => "",
                 "createdBy" => $order->createdBy,
                 "processedBy" => $order->processedBy,
