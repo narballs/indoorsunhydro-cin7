@@ -1375,10 +1375,14 @@ p {
                 if (stock_label > 0) {
                     stock_label = 'In Stock';
                 } else {
-                    if (getWholesaleTerms != '' &&  getWholesaleTerms === 'pay in advanced') {
-                        stock_label = 'Out of Stock';
+                    if (auth_value) {
+                        if (getWholesaleTerms != '' &&  getWholesaleTerms === 'pay in advanced') {
+                            stock_label = 'Out of Stock';
+                        } else {
+                            stock_label = 'On back order';
+                        }
                     } else {
-                        stock_label = 'On back order';
+                        stock_label = 'Out of Stock';
                     }
                 } 
 
@@ -1522,8 +1526,12 @@ p {
             let buttonHtml = '';
 
             if (add_to_cart) {
-                if ((lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced") && ((auth_value == '' || auth_value == null || auth_value == false))) { 
-                    buttonHtml = addToCartButton;
+                if (auth_value) {
+                    if ((lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced")) { 
+                        buttonHtml = addToCartButton;
+                    } else {
+                        buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
+                    }
                 } else {
                     buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
                 }
