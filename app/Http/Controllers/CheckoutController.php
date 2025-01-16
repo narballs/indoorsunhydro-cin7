@@ -627,7 +627,11 @@ class CheckoutController extends Controller
             } 
             else {
                 if (!empty($free_shipping_state)) {
-                    if ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState || $get_user_default_shipping_address->DeliveryState == 'CA' && (strtolower($user_address->paymentTerms) == 'pay in advanced')) {
+                    if (
+                        ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState 
+                        || $get_user_default_shipping_address->DeliveryState == 'CA') 
+                        && (strtolower($user_address->paymentTerms ?? '') == 'pay in advanced')
+                    ) {
                         if ($sub_total_of_cart >= 1000) {
                             $shipping_free_over_1000 = 1;
                         } else {
