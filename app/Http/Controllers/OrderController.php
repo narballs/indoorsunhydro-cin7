@@ -311,7 +311,11 @@ class OrderController extends Controller
                     $apiApproval = $currentOrder->apiApproval;
                     $random_string = Str::random(10);
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
+                    $delivery_date = !empty($currentOrder->date) && $currentOrder->date->lessThan($currentOrder->created_at) 
+                    ? $currentOrder->created_at 
+                    : $currentOrder->date;
 
+                    $currentOrder->date = $delivery_date;
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'contact',
@@ -530,6 +534,12 @@ class OrderController extends Controller
                     
                     $currentOrder->reference = 'Stripe-Paid-CC-' .$random_string . '-' .$order_id;
 
+                    $delivery_date = !empty($currentOrder->date) && $currentOrder->date->lessThan($currentOrder->created_at) 
+                    ? $currentOrder->created_at 
+                    : $currentOrder->date;
+
+                    $currentOrder->date = $delivery_date;
+
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'contact',
@@ -670,6 +680,11 @@ class OrderController extends Controller
                     $random_string = Str::random(10);
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
+                    $delivery_date = !empty($currentOrder->date) && $currentOrder->date->lessThan($currentOrder->created_at) 
+                    ? $currentOrder->created_at 
+                    : $currentOrder->date;
+
+                    $currentOrder->date = $delivery_date;
                     $currentOrder->save();
                     $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'contact',
