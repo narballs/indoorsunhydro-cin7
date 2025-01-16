@@ -241,7 +241,7 @@
                                                                             
                                                                         </span>
                                                                         @if (intval($cart['quantity']) > intval($stock_per_product))
-                                                                            @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                                            @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
                                                                                 <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
                                                                                     <div class="stock_tooltip_message">
                                                                                         {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}
@@ -772,7 +772,7 @@
                                                                                             </a>
                                                                                         </div>
                                                                                         @if (intval($cart['quantity']) > intval($stock_per_product_mbl))
-                                                                                            @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                                                            @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced' && auth()->user())
                                                                                                 <div class="d-flex mt-2 stock_tooltip" id="badge_{{ $pk_product_id }}">
                                                                                                     <div class="stock_tooltip_message">
                                                                                                         {{ App\Helpers\SettingHelper::getSetting('stock_tooltip_message') }}

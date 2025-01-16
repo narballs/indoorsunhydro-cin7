@@ -139,7 +139,7 @@
                         @else
                             <div class="mt-1 mb-1">
                                 <span class="text-danger">
-                                    @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                    @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
                                         On Back Order
                                     @else
                                     {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
@@ -183,7 +183,7 @@
                         
                     </div>
                     @if ($add_to_cart == true)
-                        @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                        @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
                             <div class="col-md-12 add-to-cart-button-section">
                                 <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_{{$product->id}} mb-2" id="button_swap_{{ $product->id }}">
                                     <div class="input-group">

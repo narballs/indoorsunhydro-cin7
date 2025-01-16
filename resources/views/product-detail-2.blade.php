@@ -235,7 +235,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                                 <div>
                                                     
                                                     <span class="out-of-stock-label-new">
-                                                        @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                        @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
                                                             On Back Order
                                                         @else
                                                             {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
@@ -309,7 +309,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                                 <input type="hidden" name="get_wholesale_terms" id="get_wholesale_terms"
                                                     value="{{$get_wholesale_terms}}">
                                                 @if ($add_to_cart == true)
-                                                    @if (empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced')
+                                                    @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
                                                         <div class="col-md-4 col-5 col-lg-4 col-xl-4">
                                                             <div
                                                                 class="d-flex align-items-center px-2 product-detail-quantity-increase-decrease-div">

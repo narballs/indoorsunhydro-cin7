@@ -568,7 +568,8 @@
                         <div class="card  mb-3">
                             <div class="card-body">
                                 <h3 class="h6 summary-head"><strong>Delivery Instructions</strong></h3>
-                                <span class="delivery">{{ $order->memo }}</span></p>
+                                <p><span class="delivery">{{ $order->date }}</span></p>
+                                <p><span class="delivery">{{ $order->memo }}</span></p>
                             </div>
                         </div>
                         <div class="card mb-4">
