@@ -86,19 +86,26 @@ class OrderHelper {
         unset($order['primaryId']);
         unset($order['memberId']);
         
-        // $dateCreated = Carbon::now();
-        $dateCreated = Carbon::createFromTimestamp($order->created_at)->format('Y-m-d\TH:i:s\Z');
+        $dateCreated = Carbon::now();
 
-        // Convert both $order->date and $dateCreated to Carbon instances for comparison
-        $delivery_date = !empty($order->date) && Carbon::parse($order->date)->lt(Carbon::parse($dateCreated))
-            ? $dateCreated
+        
+
+        $product_sync_raw_date = Carbon::parse($order->created_at);
+        $product_sync_date = $product_sync_raw_date->format('Y-m-d');
+        $product_sync_time = $product_sync_raw_date->format('H:i:s');
+        $api_formatted_product_sync_date = $product_sync_date . 'T' . $product_sync_time . 'Z';
+
+        // Convert both $order->date and $api_formatted_product_sync_date to Carbon instances for comparison
+        $delivery_date = !empty($order->date) && Carbon::parse($order->date)->lt(Carbon::parse($api_formatted_product_sync_date))
+            ? $api_formatted_product_sync_date
             : $order->date;
+
 
         
         $order_data = [
             [
                 $order,
-                "createdDate" => $dateCreated,
+                "createdDate" => $api_formatted_product_sync_date,
                 "modifiedDate" => "",
                 "createdBy" => $order->createdBy,
                 "processedBy" => $order->processedBy,
