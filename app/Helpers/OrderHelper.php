@@ -87,6 +87,11 @@ class OrderHelper {
         unset($order['memberId']);
         
         $dateCreated = Carbon::now();
+
+        $date = !empty($order->date) && $order->date->lessThan($order->created_at) 
+        ? $order->created_at 
+        : $order->date;
+
         
         $order_data = [
             [
@@ -130,7 +135,7 @@ class OrderHelper {
                 "memberAlternativeTaxRate" => $order->texClasses->name,
                 "costCenter" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced' ? 'Online Sales' : Null,
                 "alternativeTaxRate" => $order->texClasses->name,
-                "estimatedDeliveryDate" => $order->date,
+                "estimatedDeliveryDate" => $date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
                 "paymentTerms" => $order->paymentTerms,
