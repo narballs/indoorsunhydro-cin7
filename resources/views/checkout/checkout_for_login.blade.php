@@ -1092,7 +1092,7 @@ $cart_price = 0;
                                                                 <div class="col-md-9 col-8">
                                                                     <span class="checkout_shipping_heading">Shipment Price</span>
                                                                     @if ($shipping_free_over_1000 == 1)
-                                                                        @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes') && (strtolower($user_address->paymentTerms) == 'pay in advanced'))
+                                                                        @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
                                                                             <div class="row align-items-center">
                                                                                 <div class="col-md-2 col-3">
                                                                                     <span>
