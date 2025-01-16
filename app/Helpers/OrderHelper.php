@@ -88,8 +88,8 @@ class OrderHelper {
         
         $dateCreated = Carbon::now();
 
-        $date = !empty($order->date) && $order->date->lessThan($order->created_at) 
-        ? $order->created_at 
+        $delivery_date = !empty($order->date) && strtotime($order->date) < strtotime($order->created_at)
+        ? $order->created_at
         : $order->date;
 
         
@@ -135,7 +135,7 @@ class OrderHelper {
                 "memberAlternativeTaxRate" => $order->texClasses->name,
                 "costCenter" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced' ? 'Online Sales' : Null,
                 "alternativeTaxRate" => $order->texClasses->name,
-                "estimatedDeliveryDate" => $date,
+                "estimatedDeliveryDate" => $delivery_date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
                 "paymentTerms" => $order->paymentTerms,
