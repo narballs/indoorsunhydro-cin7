@@ -859,8 +859,11 @@ $cart_price = 0;
                                         {{-- @if (strtolower($user_address->paymentTerms) !== 'pay in advanced') --}}
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
+                                                @php
+                                                    $defaultDate = Carbon::now('America/Los_Angeles')->format('Y-m-d\TH:i');  
+                                                @endphp
                                                 <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
-                                                <input type="datetime-local" name="date" class="checkout_product_heading form-control datetime_" min="" id="date">
+                                                <input type="datetime-local" name="date" class="checkout_product_heading form-control datetime_" min="" id="date" value="{{ $defaultDate }}">
                                             </div>
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
