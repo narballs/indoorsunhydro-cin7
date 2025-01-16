@@ -526,6 +526,12 @@ class SettingSeeder extends Seeder
                 'option_value' => 'Inventory will arrive shortly, or internal teams will secure item for you to complete order in full.',
             ],
 
+            [
+                'option_name' => 'enable_wholesale_stripe_checkout',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
             
 
 

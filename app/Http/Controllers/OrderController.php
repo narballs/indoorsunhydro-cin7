@@ -2608,6 +2608,13 @@ class OrderController extends Controller
     //cin 7 wholesale payments
     public function cin7_payments($order_reference) {
 
+        $wholesale_stripe_settings = SettingHelper::getSetting('enable_wholesale_stripe_checkout');
+
+        if (empty($wholesale_stripe_settings) || strtolower($wholesale_stripe_settings) != 'yes') {
+            return abort(404)->with('error', 'Please contact the administrator');
+        }
+
+
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
         $calculate_tax = 0;

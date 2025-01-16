@@ -57,8 +57,8 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
-        $schedule->command('create:label')->dailyAt('17:00'); // Runs at 5:00 PM
-        $schedule->command('create:label')->dailyAt('20:30'); // Runs at 8:30 PM
+        $schedule->command('create:label')->dailyAt('6:00'); // Runs at 5:00 PM
+        $schedule->command('create:label')->dailyAt('9:30'); // Runs at 8:30 PM
 
 
         // Internal endpoints ends here

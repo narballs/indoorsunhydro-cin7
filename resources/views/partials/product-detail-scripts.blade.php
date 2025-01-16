@@ -1522,7 +1522,7 @@ p {
             let buttonHtml = '';
 
             if (add_to_cart) {
-                if (lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced") { 
+                if ((lowerCaseTerms === "" || lowerCaseTerms !== "pay in advanced") && ((auth_value == '' || auth_value == null || auth_value == false))) { 
                     buttonHtml = addToCartButton;
                 } else {
                     buttonHtml = option?.stockAvailable > 0 ? addToCartButton : notifyButton;
