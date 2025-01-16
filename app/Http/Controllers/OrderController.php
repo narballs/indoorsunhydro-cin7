@@ -777,7 +777,7 @@ class OrderController extends Controller
                         'subject' => 'New order received',
                         'reference' => $reference,
                         'order_items' => $order_items,
-                        'dateCreated' => $dateCreated,
+                        'dateCreated' => $currentOrder->created_at,
                         'addresses' => $addresses,
                         'best_product' => $best_products,
                         'user_email' => $email,
