@@ -860,6 +860,7 @@ $cart_price = 0;
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
                                                 @php
+                                                    use Carbon\Carbon;
                                                     $defaultDate = Carbon::now('America/Los_Angeles')->format('Y-m-d\TH:i');  
                                                 @endphp
                                                 <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
