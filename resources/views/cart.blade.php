@@ -254,11 +254,19 @@
                                                                                     </span>
                                                                                 </div>
                                                                             @else
-                                                                                <div class="d-flex">
-                                                                                    <span class="badge badge-danger">
-                                                                                        {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
-                                                                                    </span>
-                                                                                </div>
+                                                                                @if (intval($stock_per_product) < 1) 
+                                                                                    <div class="d-flex">
+                                                                                        <span class="badge badge-danger">
+                                                                                            {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="d-flex">
+                                                                                        <span class="badge badge-danger">
+                                                                                            Stock Limit Exceeded
+                                                                                        </span>
+                                                                                    </div>
+                                                                                @endif
                                                                             @endif
 
                                                                         @endif
