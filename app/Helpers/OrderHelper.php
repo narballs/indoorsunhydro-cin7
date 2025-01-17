@@ -88,9 +88,14 @@ class OrderHelper {
         
         $dateCreated = $order->createdDate;
 
-        $delivery_date = (!empty($order->date) && Carbon::parse($order->date)->lt($dateCreated))
-            ? $dateCreated
-        : Carbon::parse($order->date);
+        if (!empty($order->date)) {
+        
+            $delivery_date = (!empty($order->date) && Carbon::parse($order->date)->lt($dateCreated))
+                ? $dateCreated
+            : Carbon::parse($order->date);
+        } else {
+            $delivery_date = null;
+        }
 
 
         
