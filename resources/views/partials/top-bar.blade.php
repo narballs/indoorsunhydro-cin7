@@ -112,6 +112,48 @@
         $congrats_div_dnone = 'd-none';
     }
 
+
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+        // Get wholesale_contact
+        if (!empty($user_id)) {
+            $wholesale_contact =  App\Models\Contact::where('user_id', auth()->user()->id)
+            ->where('contact_id', $session_contact)
+            ->orWhere('secondary_id', $session_contact)
+            ->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child =  App\Models\Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+                    
+                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                }
+            }
+        } else {
+            $wholesale_contact = null;
+            $get_wholesale_terms = null;
+        }
+
+
+        // if (!empty($get_wholesale_terms) && strtolower($get_wholesale_terms) !== 'pay in advanced') {
+        //     $congrats_div_dnone = 'd-none';
+        //     $d_none = '';
+        // } else {
+        //     $congrats_div_dnone = '';
+        //     $d_none = 'd-none';
+        // }
+
 @endphp
 @if (!empty($checkout_issue_banner) && strtolower($checkout_issue_banner->option_value) == 'yes')
 <div class="row bg-dark">
@@ -120,7 +162,7 @@
     </h6>
 </div>
 @endif
-@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes' && Floatval($cart_total) > 0))
+@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes' && Floatval($cart_total) > 0) && (!empty($get_wholesale_terms) && strtolower($get_wholesale_terms) == 'pay in advanced'))
     <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
         <p class="text-center promotional_banner_text mb-0">
             {{-- <i class="fas fa-shipping-fast"></i>  --}}
