@@ -125,8 +125,14 @@ class OrderManagementController extends Controller
         ->orderBy('id' , 'Desc')->get();
         $get_order_ids = [];
         if (count($pending_orders) > 0) {
+            
             foreach ($pending_orders as $order) {
-                $get_order_ids[] = $order->id;
+                $contact = Contact::where('contact_id', $order->memberId)->first();
+                if (!empty($contact) && $contact->is_test_user == 0) {
+                    $get_order_ids[] = $order->id;
+                } else{
+                    continue;
+                }
             }
             $show_alert = true;
         }
