@@ -245,6 +245,7 @@ class OrderController extends Controller
                     }
                     $dateCreated = Carbon::now();
                     $createdDate = Carbon::now();
+                    
                     $order->createdDate = $createdDate;
                     $order->modifiedDate = $createdDate;
                     $order->createdBy = 79914;
@@ -312,9 +313,15 @@ class OrderController extends Controller
                     $random_string = Str::random(10);
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
                     
-                    $delivery_date = !empty($currentOrder->date) && strtotime($currentOrder->date) < strtotime($currentOrder->created_at)
-                    ? $currentOrder->created_at
-                    : $currentOrder->date;
+                    
+                    if (!empty($currentOrder->date)) {
+                    
+                        $delivery_date = (!empty($currentOrder->date) && Carbon::parse($currentOrder->date)->lt($currentOrder->createdDate))
+                            ? $dateCreated
+                        : Carbon::parse($currentOrder->date);
+                    } else {
+                        $delivery_date = null;
+                    }
 
                     $currentOrder->date = $delivery_date;
                     $currentOrder->save();
@@ -535,9 +542,14 @@ class OrderController extends Controller
                     
                     $currentOrder->reference = 'Stripe-Paid-CC-' .$random_string . '-' .$order_id;
 
-                    $delivery_date = !empty($currentOrder->date) && strtotime($currentOrder->date) < strtotime($currentOrder->created_at)
-                    ? $currentOrder->created_at
-                    : $currentOrder->date;
+                    if (!empty($currentOrder->date)) {
+                    
+                        $delivery_date = (!empty($currentOrder->date) && Carbon::parse($currentOrder->date)->lt($currentOrder->createdDate))
+                            ? $dateCreated
+                        : Carbon::parse($currentOrder->date);
+                    } else {
+                        $delivery_date = null;
+                    }
 
                     $currentOrder->date = $delivery_date;
 
@@ -681,9 +693,14 @@ class OrderController extends Controller
                     $random_string = Str::random(10);
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
-                    $delivery_date = !empty($currentOrder->date) && strtotime($currentOrder->date) < strtotime($currentOrder->created_at)
-                    ? $currentOrder->created_at
-                    : $currentOrder->date;
+                    if (!empty($currentOrder->date)) {
+                    
+                        $delivery_date = (!empty($currentOrder->date) && Carbon::parse($currentOrder->date)->lt($currentOrder->createdDate))
+                            ? $dateCreated
+                        : Carbon::parse($currentOrder->date);
+                    } else {
+                        $delivery_date = null;
+                    }
 
                     $currentOrder->date = $delivery_date;
                     $currentOrder->save();
