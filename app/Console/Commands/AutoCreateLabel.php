@@ -58,6 +58,9 @@ class AutoCreateLabel extends Command
         }
 
 
+        Log::info('Auto create label is enabled');
+
+
 
         $autoLabelSetting = AutoLabelSetting::first();
 
@@ -126,7 +129,7 @@ class AutoCreateLabel extends Command
     }
 
     private function processOrder($order, $client , $currentDate , $data) {
-        $order_id = $order->id;
+            $order_id = $order->id;
             $order = ApiOrder::where('id', $order->id)->first();
             $shipstation_order_id = $order->shipstation_orderId;
             $order_items_array = [];
