@@ -432,6 +432,10 @@ return [
             'text'    => 'Ai Questions',
             'url'  => 'admin/ai/questions',
         ],
+        [
+            'text'    => 'Label Settings',
+            'url'  => 'admin/label-settings',
+        ],
 
         [
             'text'       => 'Logout',

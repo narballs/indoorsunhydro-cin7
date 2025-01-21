@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
 use App\Models\AiQuestion;
+use App\Models\AutoLabelSetting;
+use App\Models\AutoLabelTimeRange;
 use App\Models\Contact;
 use App\Models\ContactLogs;
 use App\Models\ProductStockNotification;
@@ -18,8 +20,11 @@ use App\Models\SpecificAdminNotification;
 use App\Models\SurchargeSetting;
 use App\Models\User;
 use App\Models\UserLog;
+use Carbon\Carbon;
+use Facade\FlareClient\Time\Time;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminSettingsController extends Controller
 {
@@ -498,6 +503,186 @@ class AdminSettingsController extends Controller
         $ai_question->delete();
         return redirect()->route('ai_questions')->with('success', 'Ai Question deleted successfully.');
     }
+
+
+
+    // auto label settings
+
+    // public function show_label_settings()
+    // {
+    //     $auto_label_settings = AutoLabelSetting::first();
+    //     $timezone = Carbon::now('America/Los_Angeles');
+                
+    //                     // Convert to 24-hour format for input[type="time"]
+    //     $start_time = isset($auto_label_settings->start_time) 
+    //         ? $timezone->format('H:i') // 24-hour format
+    //         : '';
+    //     $end_time = isset($auto_label_settings->end_time) 
+    //         ? $timezone->format('H:i') // 24-hour format
+    //         : '';
+    //     $selectedDays = isset($auto_label_settings) ? explode(',', $auto_label_settings->days_of_week) : [];
+    //     return view('admin.auto_label_settings.index', compact('auto_label_settings', 'start_time', 'end_time', 'selectedDays'));
+        
+    // }
+
+    // public function update_label_settings(Request $request)
+    // {
+    //     $request->validate([
+    //         'days_of_week' => 'required|string',
+    //         'delay_processing' => 'boolean',
+    //         'delay_duration' => 'nullable|integer',
+    //         'delay_unit' => 'nullable|string'
+    //     ]);
+
+    //     AutoLabelSetting::updateOrCreate(
+    //         ['id' => 1],  // Assume single-row config
+    //         $request->all()
+    //     );
+
+    //     return response()->json(['message' => 'Label Settings saved successfully']);
+    // }
+
+    // public function show_label_settings()
+    // {
+    //     $auto_label_settings = AutoLabelSetting::first();
+    //     $timezone = Carbon::now('America/Los_Angeles');
+
+    //     // Handle multiple time ranges
+    //     $timeRanges = $auto_label_settings ? $auto_label_settings->timeRanges : [];
+
+    //     // Convert time ranges to 24-hour format (H:i) for input[type="time"]
+    //     $start_times = [];
+    //     $end_times = [];
+        
+    //     foreach ($timeRanges as $timeRange) {
+    //         $start_times[] = Carbon::parse($timeRange->start_time)->format('H:i');
+    //         $end_times[] = Carbon::parse($timeRange->end_time)->format('H:i');
+    //     }
+
+    //     // Handle selected days of the week (if any)
+    //     $selectedDays = isset($auto_label_settings) ? explode(',', $auto_label_settings->days_of_week) : [];
+
+    //     return view('admin.auto_label_settings.index', compact('auto_label_settings', 'start_times', 'end_times', 'selectedDays'));
+    // }
+
+    // public function update_label_settings(Request $request)
+    // {
+    //     // Validate input data
+    //     $request->validate([
+    //         'days_of_week' => 'required|string',
+    //         'delay_processing' => 'boolean',
+    //         'delay_duration' => 'nullable|integer',
+    //         'delay_unit' => 'nullable|string',
+    //         'start_times' => 'required|array',
+    //         'end_times' => 'required|array',
+    //         'start_times.*' => 'required|date_format:H:i',
+    //         'end_times.*' => 'required|date_format:H:i',
+    //     ]);
+
+    //     // Update or create the AutoLabelSetting (Assuming single-row config)
+    //     $autoLabelSetting = AutoLabelSetting::updateOrCreate(
+    //         ['id' => 1],
+    //         $request->all()
+    //     );
+
+    //     // Handle time ranges (delete existing ones, add new ones)
+    //     // First, delete any existing time ranges
+    //     $autoLabelSetting->timeRanges()->delete();
+
+    //     // Then insert the new time ranges
+    //     foreach ($request->start_times as $index => $start_time) {
+    //         $autoLabelSetting->timeRanges()->create([
+    //             'start_time' => $start_time,
+    //             'end_time' => $request->end_times[$index],
+    //         ]);
+    //     }
+
+    //     // Return success response
+    //     return response()->json(['message' => 'Label Settings saved successfully']);
+    // }
+
+    public function show_label_settings()
+    {
+        $auto_label_settings = AutoLabelSetting::with('timeRanges')->first();
+        $timeRanges = $auto_label_settings ? $auto_label_settings->timeRanges : [];
+
+        // Convert time ranges to 24-hour format (H:i) for input[type="time"]
+        $start_times = [];
+        $end_times = [];
+        
+        foreach ($timeRanges as $timeRange) {
+            // Convert stored time to America/Los_Angeles timezone for display
+            $start_times[] = Carbon::parse($timeRange->start_time)->timezone('America/Los_Angeles')->format('H:i');
+            $end_times[] = Carbon::parse($timeRange->end_time)->timezone('America/Los_Angeles')->format('H:i');
+        }
+
+        // Handle selected days of the week (if any), ensuring it's always an array
+        $selectedDays = isset($auto_label_settings) && !empty($auto_label_settings->days_of_week)
+                        ? json_decode($auto_label_settings->days_of_week, true)
+                        : [];
+
+        return view('admin.auto_label_settings.index', compact('auto_label_settings', 'start_times', 'end_times', 'selectedDays', 'timeRanges'));
+    }
+        
+    public function update_label_settings(Request $request)
+    {
+        // Validate the request input
+        $request->validate([
+            'time_ranges' => 'required|array',
+        ]);
+
+        // Retrieve the first auto label setting or create a new one
+        $autoLabelSetting = AutoLabelSetting::first();
+
+        if ($autoLabelSetting) {
+            // Update existing auto label settings
+            $autoLabelSetting->days_of_week = json_encode($request->days_of_week);
+            $autoLabelSetting->delay_processing = $request->delay_processing;
+            $autoLabelSetting->delay_duration = $request->delay_duration;
+            $autoLabelSetting->delay_unit = $request->delay_unit;
+            $autoLabelSetting->save();
+        } else {
+            // Create new auto label setting
+            $autoLabelSetting = new AutoLabelSetting();
+            $autoLabelSetting->days_of_week = json_encode($request->days_of_week);
+            $autoLabelSetting->delay_processing = $request->delay_processing;
+            $autoLabelSetting->delay_duration = $request->delay_duration;
+            $autoLabelSetting->delay_unit = $request->delay_unit;
+            $autoLabelSetting->save();
+        }
+
+        // Delete any existing time ranges for the current auto label setting
+        $autoLabelSetting->timeRanges()->delete();
+
+        // Insert new time ranges with timezone conversion to 'America/Los_Angeles'
+        foreach ($request->time_ranges as $index => $timeRange) {
+            // Split the time range string into start and end times
+            list($start_minutes, $end_minutes) = explode(';', $timeRange);
+
+            // Convert the minutes into hours and minutes format (H:i)
+            $start_time = Carbon::createFromFormat('H', floor($start_minutes / 60))
+                                ->minute($start_minutes % 60)
+                                ->timezone('America/Los_Angeles')
+                                ->format('H:i');
+
+            $end_time = Carbon::createFromFormat('H', floor($end_minutes / 60))
+                            ->minute($end_minutes % 60)
+                            ->timezone('America/Los_Angeles')
+                            ->format('H:i');
+
+            // Save the time range
+            $autoLabelSetting->timeRanges()->create([
+                'start_time' => $start_time,
+                'end_time' => $end_time,
+            ]);
+        }
+
+        // Redirect or return a response
+        return redirect()->back()->with('success', 'Auto label settings updated successfully.');
+    }
+
+    
+    
 
 
     

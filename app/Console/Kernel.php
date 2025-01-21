@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Models\AutoLabelSetting;
+use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -57,8 +59,48 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
-        $schedule->command('create:label')->weekdays()->dailyAt('6:00'); // Runs at 5:00 PM
-        $schedule->command('create:label')->weekdays()->dailyAt('9:30'); // Runs at 8:30 PM
+        // $schedule->command('create:label')->weekdays()->dailyAt('6:00'); // Runs at 5:00 PM
+        // $schedule->command('create:label')->weekdays()->dailyAt('9:30'); // Runs at 8:30 PM
+
+
+        // Fetch the auto label settings
+        $autoLabelSetting = AutoLabelSetting::first();
+
+        if ($autoLabelSetting) {
+            // Decode the stored days of the week from the database
+            $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
+        
+            // Loop through the time ranges
+            foreach ($autoLabelSetting->timeRanges as $timeRange) {
+                $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
+                $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
+        
+                // Loop through the days of the week and schedule for each day
+                foreach ($daysOfWeek as $day) {
+                    $schedule->command('create:label')
+                        ->when(function () use ($day, $startTime, $endTime) {
+                            $currentDay = now()->format('D'); 
+                            $dayMap = [
+                                'Mon' => 'M',
+                                'Tue' => 'T',
+                                'Wed' => 'W',
+                                'Thu' => 'TH',
+                                'Fri' => 'F',
+                                'Sat' => 'S',
+                                'Sun' => 'S'
+                            ];
+                            if (strtoupper($dayMap[$currentDay]) == $day) {
+                                $currentTime = now()->format('H:i');
+                                return $currentTime >= $startTime && $currentTime <= $endTime;
+                            }
+        
+                            return false;
+                        })
+                        ->everyMinute();
+                }
+            }
+        }
+        
 
 
         // Internal endpoints ends here
