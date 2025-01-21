@@ -7,10 +7,12 @@ use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
 use App\Models\AdminSetting;
 use App\Models\ApiOrder;
+use App\Models\AutoLabelSetting;
 use App\Models\Contact;
 use App\Models\ShipstationApiLogs;
 use App\Models\SpecificAdminNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Google\Service\Calendar\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -54,6 +56,13 @@ class AutoCreateLabel extends Command
             $this->info('Auto create label is disabled');
             return;
         }
+
+
+
+        $autoLabelSetting = AutoLabelSetting::first();
+
+        $delay_duration = !empty($autoLabelSetting->delay_duration) ? $autoLabelSetting->delay_duration : 0;
+
         
         $currentDate = date('Y-m-d');
         $data = [];
@@ -71,17 +80,48 @@ class AutoCreateLabel extends Command
         ->get();
 
 
-        if (count($all_orders) == 0) {
-            $this->info('No orders found to create label');
-            return;
-        }
+        if ($autoLabelSetting) {
+            $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
+    
+            foreach ($autoLabelSetting->timeRanges as $timeRange) {
+                if (!empty($autoLabelSetting->timeRanges)) {
+                    $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
+                    $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
 
-
-        foreach ($all_orders as $order) {
-            $this->processOrder($order, $client , $currentDate , $data);
-            // sleep(5);        
-        }    
+                    $currentDay = now()->format('D');
         
+                    $dayMap = [
+                        'Mon' => 'M',
+                        'Tue' => 'T',
+                        'Wed' => 'W',
+                        'Thu' => 'TH',
+                        'Fri' => 'F',
+                        'Sat' => 'S',
+                        'Sun' => 'S'
+                    ];
+        
+                    if (in_array($dayMap[$currentDay], $daysOfWeek)) {
+                        $currentTime = now()->format('H:i');
+                        if ($currentTime >= $startTime && $currentTime <= $endTime) {
+                            if ($all_orders->isEmpty()) {
+                                $this->info('No orders found to create label');
+                                return;
+                            }
+
+                            Log::info('Auto create label is enabled');
+        
+                            foreach ($all_orders as $order) {
+                                $this->processOrder($order, $client, $currentDate, $data);
+                                sleep($delay_duration * 60);        
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            $this->info('Auto create label is disabled');
+        }
+         
     }
 
     private function processOrder($order, $client , $currentDate , $data) {
