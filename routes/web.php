@@ -47,6 +47,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use Google\Service\Dfareporting\OrderContact;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -418,6 +419,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/shipping-quotes/settings/edit/{id}', [ShippingQuoteSettingController::class, 'edit'])->name('shipping_quotes.settings.edit');
         Route::post('/shipping-quotes/settings/update/{id}', [ShippingQuoteSettingController::class, 'update'])->name('shipping_quotes.settings.update');
         Route::post('/shipping-quotes/settings/delete/{id}', [ShippingQuoteSettingController::class, 'delete'])->name('shipping_quotes.settings.delete');
+
+        // auto label setting 
+
+        Route::get('/label-settings', [AdminSettingsController::class, 'show_label_settings'])->name('show_label_settings');
+        Route::post('/update-label-settings', [AdminSettingsController::class, 'update_label_settings'])->name('update_label_settings');
     });
 
     Route::get('admin/logout', function () {
@@ -597,3 +603,6 @@ Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('Pac
 
 // Route::get('/filter-products', [ProductController::class, 'filter_products'])->name('filter_products');
 // Route::post('/send-data-flask', [ProductController::class, 'sendDataToFlask']);
+
+
+
