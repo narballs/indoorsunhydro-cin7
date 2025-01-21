@@ -48,85 +48,166 @@ class AutoCreateLabel extends Command
      *
      * @return int
      */
+    // public function handle()
+    // {
+    //     $check_label_settinga = AdminSetting::where('option_name', 'auto_create_label')->first();
+
+    //     if (!empty($check_label_settinga) && strtolower($check_label_settinga->option_value) == 'no') {
+    //         $this->info('Auto create label is disabled');
+    //         return;
+    //     }
+
+
+    //     Log::info('Auto create label is enabled');
+
+
+
+    //     $autoLabelSetting = AutoLabelSetting::first();
+
+    //     $delay_duration = !empty($autoLabelSetting->delay_duration) ? $autoLabelSetting->delay_duration : 0;
+
+        
+    //     $currentDate = date('Y-m-d');
+    //     $data = [];
+    //     $client = new \GuzzleHttp\Client();
+
+    //     $all_orders = ApiOrder::where('is_shipped', 0)
+    //     ->where('label_created', 0)
+    //     ->where('is_stripe', 1)
+    //     ->where('shipment_price', '>', 0)
+    //     ->whereNotNull('shipstation_orderId') // Correct way to check for NOT NULL
+    //     ->where('payment_status', 'paid')
+    //     ->where('isApproved', 1)
+    //     ->where('created_at', '>=', '2025-01-09 12:23:51') // Added date condition
+    //     ->where('shipping_carrier_code',  'ups_walleted')
+    //     ->get();
+
+
+    //     if ($autoLabelSetting) {
+    //         $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
+    
+    //         foreach ($autoLabelSetting->timeRanges as $timeRange) {
+    //             if (!empty($autoLabelSetting->timeRanges)) {
+    //                 $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
+    //                 $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
+
+    //                 $currentDay = now()->format('D');
+        
+    //                 $dayMap = [
+    //                     'Mon' => 'M',
+    //                     'Tue' => 'T',
+    //                     'Wed' => 'W',
+    //                     'Thu' => 'TH',
+    //                     'Fri' => 'F',
+    //                     'Sat' => 'S',
+    //                     'Sun' => 'S'
+    //                 ];
+        
+    //                 if (in_array($dayMap[$currentDay], $daysOfWeek)) {
+    //                     $currentTime = now()->format('H:i');
+    //                     if ($currentTime >= $startTime && $currentTime <= $endTime) {
+    //                         if ($all_orders->isEmpty()) {
+    //                             $this->info('No orders found to create label');
+    //                             return;
+    //                         }
+
+    //                         Log::info('Auto create label is enabled');
+        
+    //                         foreach ($all_orders as $order) {
+    //                             $this->processOrder($order, $client, $currentDate, $data);
+    //                             sleep($delay_duration * 60);  
+    //                             Log::info('Label created for order: ' . $order->id);      
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } else {
+    //         $this->info('Auto create label is disabled');
+    //     }
+         
+    // }
+
     public function handle()
     {
-        $check_label_settinga = AdminSetting::where('option_name', 'auto_create_label')->first();
+        try {
+            $check_label_settinga = AdminSetting::where('option_name', 'auto_create_label')->first();
 
-        if (!empty($check_label_settinga) && strtolower($check_label_settinga->option_value) == 'no') {
-            $this->info('Auto create label is disabled');
-            return;
-        }
+            if (!empty($check_label_settinga) && strtolower($check_label_settinga->option_value) == 'no') {
+                $this->info('Auto create label is disabled');
+                return;
+            }
 
+            Log::info('Auto create label is enabled');
 
-        Log::info('Auto create label is enabled');
+            $autoLabelSetting = AutoLabelSetting::first();
 
+            $delay_duration = !empty($autoLabelSetting->delay_duration) ? $autoLabelSetting->delay_duration : 0;
 
+            $currentDate = date('Y-m-d');
+            $data = [];
+            $client = new \GuzzleHttp\Client();
 
-        $autoLabelSetting = AutoLabelSetting::first();
+            $all_orders = ApiOrder::where('is_shipped', 0)
+                ->where('label_created', 0)
+                ->where('is_stripe', 1)
+                ->where('shipment_price', '>', 0)
+                ->whereNotNull('shipstation_orderId')
+                ->where('payment_status', 'paid')
+                ->where('isApproved', 1)
+                ->where('created_at', '>=', '2025-01-09 12:23:51')
+                ->where('shipping_carrier_code', 'ups_walleted')
+                ->get();
 
-        $delay_duration = !empty($autoLabelSetting->delay_duration) ? $autoLabelSetting->delay_duration : 0;
+            if ($autoLabelSetting) {
+                $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
 
-        
-        $currentDate = date('Y-m-d');
-        $data = [];
-        $client = new \GuzzleHttp\Client();
+                foreach ($autoLabelSetting->timeRanges as $timeRange) {
+                    if (!empty($autoLabelSetting->timeRanges)) {
+                        $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
+                        $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
 
-        $all_orders = ApiOrder::where('is_shipped', 0)
-        ->where('label_created', 0)
-        ->where('is_stripe', 1)
-        ->where('shipment_price', '>', 0)
-        ->whereNotNull('shipstation_orderId') // Correct way to check for NOT NULL
-        ->where('payment_status', 'paid')
-        ->where('isApproved', 1)
-        ->where('created_at', '>=', '2025-01-09 12:23:51') // Added date condition
-        ->where('shipping_carrier_code',  'ups_walleted')
-        ->get();
+                        $currentDay = now()->format('D');
 
+                        $dayMap = [
+                            'Mon' => 'M',
+                            'Tue' => 'T',
+                            'Wed' => 'W',
+                            'Thu' => 'TH',
+                            'Fri' => 'F',
+                            'Sat' => 'S',
+                            'Sun' => 'S'
+                        ];
 
-        if ($autoLabelSetting) {
-            $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
-    
-            foreach ($autoLabelSetting->timeRanges as $timeRange) {
-                if (!empty($autoLabelSetting->timeRanges)) {
-                    $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
-                    $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
+                        if (in_array($dayMap[$currentDay], $daysOfWeek)) {
+                            $currentTime = now()->format('H:i');
+                            if ($currentTime >= $startTime && $currentTime <= $endTime) {
+                                if ($all_orders->isEmpty()) {
+                                    $this->info('No orders found to create label');
+                                    return;
+                                }
 
-                    $currentDay = now()->format('D');
-        
-                    $dayMap = [
-                        'Mon' => 'M',
-                        'Tue' => 'T',
-                        'Wed' => 'W',
-                        'Thu' => 'TH',
-                        'Fri' => 'F',
-                        'Sat' => 'S',
-                        'Sun' => 'S'
-                    ];
-        
-                    if (in_array($dayMap[$currentDay], $daysOfWeek)) {
-                        $currentTime = now()->format('H:i');
-                        if ($currentTime >= $startTime && $currentTime <= $endTime) {
-                            if ($all_orders->isEmpty()) {
-                                $this->info('No orders found to create label');
-                                return;
-                            }
+                                Log::info('Auto create label is enabled');
 
-                            Log::info('Auto create label is enabled');
-        
-                            foreach ($all_orders as $order) {
-                                $this->processOrder($order, $client, $currentDate, $data);
-                                sleep($delay_duration * 60);  
-                                Log::info('Label created for order: ' . $order->id);      
+                                foreach ($all_orders as $order) {
+                                    $this->processOrder($order, $client, $currentDate, $data);
+                                    sleep($delay_duration * 60);
+                                    Log::info('Label created for order: ' . $order->id);
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                $this->info('Auto create label is disabled');
             }
-        } else {
-            $this->info('Auto create label is disabled');
+
+        } catch (\Exception $e) {
+            Log::error('Error occurred during auto label creation: ' . $e->getMessage());
+            $this->info('An error occurred while processing orders for label creation. Please check the logs for more details.');
         }
-         
     }
+
 
     private function processOrder($order, $client , $currentDate , $data) {
             $order_id = $order->id;
