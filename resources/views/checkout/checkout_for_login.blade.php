@@ -860,7 +860,7 @@ $cart_price = 0;
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12 mt-1">
                                                 <p class="checkout_product_heading mb-1 ml-0">Please Select Date (Optional)</p>
-                                                <input type="datetime-local" name="date" class="checkout_product_heading form-control datetime_" min="" id="date">
+                                                <input type="datetime-local" name="date" class="checkout_product_heading form-control datetime_" min="" id="date_checkout">
                                             </div>
                                         </div>
                                         <div class="row justify-content-center border-bottom py-3">
@@ -3960,14 +3960,14 @@ $cart_price = 0;
                             }
                         }); 
                     }
-                    const currentDate = new Date();
-                    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
-                    $('.datetime_').val(formattedDate);
-                    $('.datetime_').attr('min', formattedDate);
-                    $('.datetimeipad_').val(formattedDate);
-                    $('.datetimeipad_').attr('min', formattedDate);
-                    $('.datetimembl_').val(formattedDate);
-                    $('.datetimembl_').attr('min', formattedDate);
+                    // const currentDate = new Date();
+                    // const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}T${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
+                    // $('.datetime_').val(formattedDate);
+                    // $('.datetime_').attr('min', formattedDate);
+                    // $('.datetimeipad_').val(formattedDate);
+                    // $('.datetimeipad_').attr('min', formattedDate);
+                    // $('.datetimembl_').val(formattedDate);
+                    // $('.datetimembl_').attr('min', formattedDate);
                     var current_fs, next_fs, previous_fs; //fieldsets
                     var opacity;
 
@@ -4044,7 +4044,79 @@ $cart_price = 0;
                     })
 
                 });
+                // function setCaliforniaTime() {
+                //     // Get the current UTC time
+                //     let now = new Date();
+
+                //     // Convert to California (Los Angeles) timezone using `Intl.DateTimeFormat`
+                //     let options = {
+                //         timeZone: 'America/Los_Angeles',
+                //         year: 'numeric',
+                //         month: '2-digit',
+                //         day: '2-digit',
+                //         hour: '2-digit',
+                //         minute: '2-digit',
+                //         second: '2-digit',
+                //         hour12: false
+                //     };
+
+                //     let formatter = new Intl.DateTimeFormat('en-US', options);
+                //     let parts = formatter.formatToParts(now);
+
+                //     // Extract date components
+                //     let year = parts.find(p => p.type === 'year').value;
+                //     let month = parts.find(p => p.type === 'month').value;
+                //     let day = parts.find(p => p.type === 'day').value;
+                //     let hour = parts.find(p => p.type === 'hour').value.padStart(2, '0');
+                //     let minute = parts.find(p => p.type === 'minute').value.padStart(2, '0');
+
+                //     // Format to match datetime-local input (YYYY-MM-DDTHH:MM)
+                //     let californiaDateTime = `${year}-${month}-${day}T${hour}:${minute}`;
+
+                //     // Set the default and min value in the input field
+                //     let dateInput = document.getElementById('date_checkout');
+                //     dateInput.value = californiaDateTime;  // Set default value
+                //     dateInput.min = californiaDateTime;    // Set min value to prevent past selection
+                // }
+
+                // Set California time when the page loads
+                // window.onload = setCaliforniaTime;
             </script>
+
+
+            <script>
+                function setMinLocalTime() {
+                    // Get the current local date and time
+                    const now = new Date();
+
+                    // Format date and time to match input type datetime-local (YYYY-MM-DDTHH:MM)
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+                    // Construct the datetime-local compatible string
+                    const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+                    // Set the min attribute of the input field to the current local date and time
+                    document.getElementById('date_checkout').min = localDateTime;
+                }
+
+                // Execute the function when the page loads
+                window.onload = setMinLocalTime;
+            </script>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
