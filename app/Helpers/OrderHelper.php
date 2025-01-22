@@ -86,7 +86,9 @@ class OrderHelper {
         unset($order['primaryId']);
         unset($order['memberId']);
         
-        $dateCreated = $order->createdDate;
+        // $dateCreated = $order->createdDate;
+
+        $dateCreated = Carbon::now();
 
         if (!empty($order->date)) {
         
