@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
 use App\Models\AiQuestion;
+use App\Models\ApiKeys;
 use App\Models\AutoLabelSetting;
 use App\Models\AutoLabelTimeRange;
 use App\Models\Contact;
@@ -679,6 +680,14 @@ class AdminSettingsController extends Controller
 
         // Redirect or return a response
         return redirect()->back()->with('success', 'Auto label settings updated successfully.');
+    }
+
+
+    // cin7 api keys settings
+
+    public function cin7_api_keys_settings() {
+        $cin7_api_keys = ApiKeys::with('api_endpoint_requests' , 'api_event_logs')->orderBy('id', 'asc')->get();
+        return view('admin.cin7_api_keys_settings.index', compact('cin7_api_keys'));
     }
 
     

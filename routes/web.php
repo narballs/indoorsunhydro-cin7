@@ -424,6 +424,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/label-settings', [AdminSettingsController::class, 'show_label_settings'])->name('show_label_settings');
         Route::post('/update-label-settings', [AdminSettingsController::class, 'update_label_settings'])->name('update_label_settings');
+        //cin7 keys settings
+        Route::get('/cin7-api-keys-settings', [AdminSettingsController::class, 'cin7_api_keys_settings'])->name('cin7_api_keys_settings');
     });
 
     Route::get('admin/logout', function () {
