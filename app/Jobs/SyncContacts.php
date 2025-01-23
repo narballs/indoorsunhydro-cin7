@@ -18,6 +18,7 @@ use App\Models\SecondaryContact;
 use App\Helpers\SettingHelper;
 use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
+use App\Models\ApiKeys;
 
 class SyncContacts implements ShouldQueue
 {
@@ -109,20 +110,42 @@ class SyncContacts implements ShouldQueue
         }
 
         if ($this->_method == 'update_contact') {
+            
+            $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+            $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+            $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+            ->where('is_active', 1)
+            ->first();
+            
+            if (!empty($cin7api_key_for_other_jobs)) {
+                $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+                $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+                $thresold = $cin7api_key_for_other_jobs->threshold;
+                $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+                $api_key_id = $cin7api_key_for_other_jobs->id;
+            } else {
+                Log::info('No active api key found');
+                return false;
+            }
+
+            $url = "https://api.cin7.com/api/v1/Contacts/";
             $client = new \GuzzleHttp\Client();
+            
             try {
                 $res = $client->request(
                     'GET', 
-                    'https://api.cin7.com/api/v1/Contacts/'. $contact_id, 
+                    $url . $contact_id, 
                     [
                         'auth' => [
-                            SettingHelper::getSetting('cin7_auth_username'),
-                            SettingHelper::getSetting('cin7_auth_password')
-                            
+                            $cin7_auth_username,
+                            $cin7_auth_password 
                         ]
                     
                     ]
                 );
+
+                UtilHelper::saveEndpointRequestLog('Sync Contacts',$url, $api_key_id);
 
                 //dd($res->getBody()->getContents());
                 $secondary_contacts = $res->getBody()->getContents();

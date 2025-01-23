@@ -4,79 +4,107 @@
 @stop
 @section('content')
     <div class="container mt-4 mx-0">
-        <form>
-            <div class="card p-4">
-                <div class="mb-3">
+        <div class="card p-4">
+            <div class="mb-3">
+                
+                <div class="row align-items-center">
+                    <label class="form-label ">
+                        <strong>Select Date</strong>
+                    </label>
                     
-                    <div class="row align-items-center">
-                        <label class="form-label ">
-                            <strong>Select Date</strong>
-                        </label>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-12 p-0">
+                </div>
+                <div class="row">
+                    <div class="col-12 p-0">
+                        <form method="GET" action="{{ url('/admin/cin7-api-keys-settings') }}" id="dateForm">
                             <div class="row align-items-center">
                                 <div class="col-4">
                                     <div class="form-group mb-0">
-                                        <input type="date" id="dateInputApi" class="form-control" value="">
+                                        <input 
+                                            type="date" 
+                                            id="dateInputApi" 
+                                            name="current_date" 
+                                            class="form-control" 
+                                            value="{{ request('current_date', \Carbon\Carbon::today()->toDateString()) }}" 
+                                            onchange="this.form.submit();"
+                                        >
                                     </div>
                                 </div>
                                 <div class="col-1">
-                                    <button id="todayBtn" class="btn btn-sm btn-primary mx-2 active">Today</button>
+                                    <button type="submit" id="todayBtn" 
+                                        class="btn btn-sm mx-2 text-white {{ request('current_date', \Carbon\Carbon::today()->toDateString()) == \Carbon\Carbon::today()->toDateString() ? 'btn-primary active' : 'btn-secondary' }}">
+                                        Today
+                                    </button>
                                 </div>
                                 <div class="col-2">
-                                    <button id="yesterdayBtn" class="btn btn-sm btn-secondary mx-2">Yesterday</button>
+                                    <button type="submit" id="yesterdayBtn" 
+                                        class="btn btn-sm mx-2 text-white {{ request('current_date', \Carbon\Carbon::today()->toDateString()) == \Carbon\Carbon::yesterday()->toDateString() ? 'btn-primary active' : 'btn-secondary' }}">
+                                        Yesterday
+                                    </button>
+                                </div>
+                            </div>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+
+            <!-- First Key Block -->
+            @if (count($cin7_api_keys) > 0)
+                @foreach ($cin7_api_keys as $cin7_api_key)
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    
+            
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <div class="row justify-content-center">
+                                                <h5 class="card-title text-center">
+                                                    <strong>{{$cin7_api_key->name}}</strong>
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="row justify-content-center">
+                                                <span class="">
+                                                    Threshold: <input type="number" name="{{$cin7_api_key->id}}" class="form-control d-inline-block w-auto" value="{{$cin7_api_key->threshold}}">
+                                                    <button 
+                                                        type="button" 
+                                                        onclick="stop_api('{{ $cin7_api_key->id }}')" 
+                                                        class="btn {{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'btn-danger' : 'btn-success' }} btn-sm">
+                                                        {{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'Stop' : 'Resume' }}
+                                                    </button>
+                                                    <a href="{{url('/admin/cin7-api-keys-settings')}}" class="btn btn-primary btn-sm text-white">Update</a>
+                                                    <span id="key_badge_{{$cin7_api_key->id}}" class="badge {{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'bg-success' : 'bg-danger' }}">{{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'Active' : 'Inactive' }}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    @if (count($cin7_api_key->api_endpoint_requests) > 0)
+                                    <ul class="list-group mt-3">
+                                        @foreach ($cin7_api_key->api_endpoint_requests as $api_endpoint_request)
+                                            <li class="list-group-item d-flex justify-content-between">{{$api_endpoint_request->title}}<span>{{$api_endpoint_request->request_count}} requests</span></li>
+                                        @endforeach
+                                    </ul>
+                                    <ul class="list-group mt-3">
+                                        <li class="list-group-item d-flex justify-content-between"><strong>TOTAL REQUESTS</strong> <span>{{$cin7_api_key->request_count}} requests</span></li>
+                                    </ul>
+                                    @else
+                                        <ul class="list-group mt-3">
+                                            <li class="list-group-item d-flex justify-content-between"><strong>TOTAL REQUESTS</strong> <span>{{$cin7_api_key->request_count}} requests</span></li>
+                                        </ul>
+                                        <ul class="list-group">
+                                            <li class="list-group-item">No Endpoint requests found</li>
+                                        </ul>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- First Key Block -->
-                @if (count($cin7_api_keys) > 0)
-                    @foreach ($cin7_api_keys as $cin7_api_key)
-                        <div class="row">
-                            <div class="col-md-12 p-0">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        
-                
-                                        <div class="row">
-                                            <div class="col-md-12 mb-3">
-                                                <div class="row justify-content-center">
-                                                    <h5 class="card-title text-center">
-                                                        <strong>{{$cin7_api_key->name}}</strong>
-                                                    </h5>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-12">
-                                                <div class="row justify-content-center">
-                                                    <span class="">
-                                                        Threshold: <input type="number" class="form-control d-inline-block w-auto" value="{{$cin7_api_key->threshold}}">
-                                                        <button class="btn btn-danger btn-sm">Stop</button>
-                                                        <button class="btn btn-primary btn-sm">Refresh</button>
-                                                        <span class="badge bg-success">Active</span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                    
-                                        <ul class="list-group mt-3">
-                                            <li class="list-group-item d-flex justify-content-between">SYNC PRODUCTS <span>1 requests</span></li>
-                                            <li class="list-group-item d-flex justify-content-between">SYNC CONTACTS <span>2 requests</span></li>
-                                            <li class="list-group-item d-flex justify-content-between">PRODUCT DETAIL UPDATE STOCK <span>1 requests</span></li>
-                                            <li class="list-group-item d-flex justify-content-between">STOCK NOTIFICATION TO USERS FROM INDOORSUN <span>3 requests</span></li>
-                                            <li class="list-group-item d-flex justify-content-between">CREATE ORDER <span>3 requests</span></li>
-                                            <li class="list-group-item d-flex justify-content-between"><strong>TOTAL REQUESTS</strong> <span>10 requests</span></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Event Log -->
+                    <!-- Event Log -->
+                    @if (count($cin7_api_key->api_event_logs) > 0)
                         <div class="row">
                             <div class="col-md-12 p-0">
                                 <div class="card">
@@ -87,8 +115,9 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <ul class="list-group">
-                                                    <li class="list-group-item">2025-01-14 00:15:23 - key1_ABC stopped: Threshold reached</li>
-                                                    <li class="list-group-item">2025-01-14 10:30:45 - key2_XYZ stopped manually</li>
+                                                    @foreach ($cin7_api_key->api_event_logs as $api_event_logs)
+                                                        <li class="list-group-item">{{$api_event_logs->created_at}} - {{$api_event_logs->description}}</li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
@@ -96,29 +125,26 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                    <div class="row">
-                        <button class="btn btn-primary">Update</button>
-                    </div>
-                @else
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h5 class="card-title text-center">
-                                                <strong>No API keys found</strong>
-                                            </h5>
-                                        </div>
+                    @endif
+                @endforeach
+            @else
+                <div class="row">
+                    <div class="col-md-12 p-0">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5 class="card-title text-center">
+                                            <strong>No API keys found</strong>
+                                        </h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endif
-            </div>
-        </form>
+                </div>
+            @endif
+        </div>
     </div>
 @stop
 
@@ -241,35 +267,120 @@
 @stop
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Set default date to today
         document.addEventListener("DOMContentLoaded", function () {
+            let dateForm = document.getElementById('dateForm');
             let dateInputApi = document.getElementById('dateInputApi');
+            let todayBtn = document.getElementById('todayBtn');
+            let yesterdayBtn = document.getElementById('yesterdayBtn');
+
+            if (!dateForm || !dateInputApi || !todayBtn || !yesterdayBtn) {
+                console.error("One or more elements not found in the DOM!");
+                return;
+            }
+
             let today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-            dateInputApi.value = today;
+            let yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            let yesterdayFormatted = yesterday.toISOString().split('T')[0];
+
+            // Set default date if empty
+            dateInputApi.value = dateInputApi.value || today;
 
             // Button click events
-            document.getElementById('todayBtn').addEventListener('click', function (e) {
+            todayBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 dateInputApi.value = today;
-                toggleButtonClass(this, document.getElementById('yesterdayBtn'));
+                toggleButtonClass(todayBtn, yesterdayBtn);
+                submitForm();
             });
 
-            document.getElementById('yesterdayBtn').addEventListener('click', function (e) {
+            yesterdayBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                let yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                dateInputApi.value = yesterday.toISOString().split('T')[0];
-                toggleButtonClass(this, document.getElementById('todayBtn'));
+                dateInputApi.value = yesterdayFormatted;
+                toggleButtonClass(yesterdayBtn, todayBtn);
+                submitForm();
             });
 
             function toggleButtonClass(activeBtn, inactiveBtn) {
                 activeBtn.classList.remove('btn-secondary');
-                activeBtn.classList.add('btn-primary');
+                activeBtn.classList.add('btn-primary', 'active');
 
-                inactiveBtn.classList.remove('btn-primary');
+                inactiveBtn.classList.remove('btn-primary', 'active');
                 inactiveBtn.classList.add('btn-secondary');
             }
+
+            function submitForm() {
+                if (dateForm) {
+                    dateForm.submit();
+                } else {
+                    console.error("Form with ID 'dateForm' not found!");
+                }
+            }
         });
+
+
+
+        function stop_api(id) {
+            $.ajax({
+                url: "{{ url('/admin/cin7-api-keys-settings/stop-api') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        var is_active  = response.is_active;
+
+                        if (is_active == 1) {
+                            $('#key_badge_' + id).removeClass('bg-danger');
+                            $('#key_badge_' + id).addClass('bg-success');
+                            $('#key_badge_' + id).text('Active');
+                        } else {
+                            $('#key_badge_' + id).removeClass('bg-success');
+                            $('#key_badge_' + id).addClass('bg-danger');
+                            $('#key_badge_' + id).text('Inactive');
+                        }
+
+                        Swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Something went wrong. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        }
+
     </script>
 @stop

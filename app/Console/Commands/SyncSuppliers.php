@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 use App\Helpers\UtilHelper;
 use App\Helpers\SettingHelper;
-
+use App\Models\ApiKeys;
 
 class SyncSuppliers extends Command
 {
@@ -81,6 +81,28 @@ class SyncSuppliers extends Command
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $thresold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            $this->error('Cin7 API Key not found or inactive');
+            return false;
+        }
+
+
+        $contacts_api_url = "https://api.cin7.com/api/v1/Contacts/";
+        
         
         for ($i = 1; $i <= $total_contact_pages; $i++) {
 
@@ -99,6 +121,7 @@ class SyncSuppliers extends Command
                     ]
                 );
 
+                UtilHelper::saveEndpointRequestLog('Sync Contacts' , $contacts_api_url , $api_key_id);
                 UtilHelper::saveDailyApiLog('sync_contacts');
 
                 $api_contacts = $res->getBody()->getContents();

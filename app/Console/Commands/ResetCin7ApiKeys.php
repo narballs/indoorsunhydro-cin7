@@ -1,24 +1,56 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Console\Commands;
 
 use App\Models\AdminSetting;
 use App\Models\ApiKeys;
-use Illuminate\Database\Seeder;
+use Illuminate\Console\Command;
 
-class ApikeysSeeder extends Seeder
+class ResetCin7ApiKeys extends Command
 {
     /**
-     * Run the database seeds.
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'reset:cin7_api_keys';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
      *
      * @return void
      */
-    public function run()
+    public function __construct()
     {
-        
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
         $cin7_api_key1  = AdminSetting::where('option_name' , 'cin7_auth_password')->first();
         $cin7_api_key2  = AdminSetting::where('option_name' , 'cin7_auth_password_2')->first();
         $cin7_api_username  = AdminSetting::where('option_name' , 'cin7_auth_username')->first();
+
+
+        $ApiKeys = ApiKeys::all();
+        if (count($ApiKeys) > 0) {
+            foreach($ApiKeys as $apiKey) {
+                $apiKey->is_active = 0;
+                $apiKey->save();
+            }
+        }
         
         $cin7_api_keys =  
             [
