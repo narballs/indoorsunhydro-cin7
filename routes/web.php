@@ -431,6 +431,7 @@ Route::group(['middleware' => ['auth']], function () {
         
         // udpate key thresold
         Route::post('/cin7-api-keys-settings/update-threshold', [AdminSettingsController::class, 'update_cin7_api_threshold'])->name('update_cin7_api_threshold');
+        Route::post('/reset-cin7-api-keys', [AdminCommandsController::class, 'reset_cin7_api_keys'])->name('reset_cin7_api_keys');
         
     });
 
