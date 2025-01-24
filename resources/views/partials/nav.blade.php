@@ -100,12 +100,12 @@
                                 About
                             </a>
                         </li>
-                        <li class="nav-item me-4 mx-4">
+                        {{-- <li class="nav-item me-4 mx-4">
                             <a class="nav-link text-uppercase nav-item-links font_style_menu"
                                 href="{{url('page/blogs')}}">
                                 Blogs
                             </a>
-                        </li>
+                        </li> --}}
                         {{-- <li class="nav-item me-4 mx-4">
                             <a class="nav-link text-uppercase nav-item-links font_style_menu"
                                 href="{{url('page/faqs')}}">
@@ -465,9 +465,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('page/about') }}">About</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ url('page/blogs') }}">Blogs</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('contact-us') }}">Contact</a>
                             </li>
