@@ -42,7 +42,9 @@ use App\Models\UserLog;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 use PSpell\Config;
 use App\Helpers\DistanceCalculator;
+use App\Helpers\UtilHelper;
 use App\Models\ApiErrorLog;
+use App\Models\ApiKeys;
 use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
 use App\Models\ShippingQuoteSetting;
@@ -2567,17 +2569,48 @@ class CheckoutController extends Controller
                     if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
                         $api_contact = $contact->toArray();
                         $client = new \GuzzleHttp\Client();
+
+                        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+                        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+
+                        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+                        ->where('is_active', 1)
+                        ->where('is_stop', 0)
+                        ->first();
+
+                        $api_key_id = null;
+                        
+                        if (!empty($cin7api_key_for_other_jobs)) {
+                            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+                            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+                            $threshold = $cin7api_key_for_other_jobs->threshold;
+                            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+                            $api_key_id = $cin7api_key_for_other_jobs->id;
+                        } else {
+                            Log::info('Cin7 API Key not found or inactive');
+                            return false;
+                        }
+
+
+                        if ($request_count >= $threshold) {
+                            $message = 'Cin7 API Key threshold reached. Please contact support.';
+                            $registration_status = false;
+                        }
+
                         $url = "https://api.cin7.com/api/v1/Contacts/";
                         $response = $client->post($url, [
                             'headers' => ['Content-type' => 'application/json'],
                             'auth' => [
-                                SettingHelper::getSetting('cin7_auth_username'),
-                                SettingHelper::getSetting('cin7_auth_password_2')
+                                $cin7_auth_username,
+                                $cin7_auth_password
                             ],
                             'json' => [
                                 $api_contact
                             ],
                         ]);
+
+                        UtilHelper::saveEndpointRequestLog('Sync Contacts',$url , $api_key_id);
+
                         $response = json_decode($response->getBody()->getContents());
                         if ($response[0]->success == false) {
                             $message = 'User already exists in Cin7 . Please contact support.';
