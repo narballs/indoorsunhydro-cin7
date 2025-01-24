@@ -156,9 +156,9 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-0 col-sm-0 col-xs-0 mb-4  mb-md-0 main-page-footer-section footer-section-product">
                     <h5 class="text-uppercase mb-4 contact-us-footer ">Company</h5>
-                    <p class="card-text  sm-4-footer  mb-2">
+                    {{-- <p class="card-text  sm-4-footer  mb-2">
                         <a href="{{url('/page/blogs')}}" class="text-white">Blogs</a>
-                    </p>
+                    </p> --}}
                     <p class="card-text  sm-4-footer  mb-2">
                         <a href="{{url('/page/terms')}}" class="text-white">Terms & Conditions</a>
                     </p>
@@ -225,7 +225,7 @@
                     
 
                     <h5 class="foooter-main-head-mbl contact-us-footer mt-5 mb-4 text-uppercase">Company</h5>
-                    <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/blogs')}}" class="text-white">Blogs</a></p>
+                    {{-- <p class="p-footer-mbl ms-4-footer mx-1"><a href="{{url('/page/blogs')}}" class="text-white">Blogs</a></p> --}}
                     <p class="p-footer-mbl ms-4-footer mx-1">
                         <a href="{{url('/page/terms')}}" class="text-white">Terms & Conditions</a>
                     </p>
@@ -301,7 +301,7 @@
                             <p class="card-text justify-content-end sm-4-footer"><a href="{{route('my_account')}}" class="text-white">My Orders</a></p>
 
                             <h5 class="text-uppercase  contact-us-footer mt-4">COMPANY</h5>
-                            <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/blogs')}}" class="text-white">Blogs</a></p>
+                            {{-- <p class="card-text justify-content-end sm-4-footer"><a href="{{url('/page/blogs')}}" class="text-white">Blogs</a></p> --}}
                             <p class="card-text justify-content-end sm-4-footer">
                                 <a href="{{url('/page/terms')}}" class="text-white">Terms & Conditions</a>
                             </p>
