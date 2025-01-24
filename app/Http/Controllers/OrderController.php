@@ -316,12 +316,11 @@ class OrderController extends Controller
                     
                     
                     if (!empty($currentOrder->date)) {
-                    
                         $delivery_date = (!empty($currentOrder->date) && Carbon::parse($currentOrder->date)->lt($currentOrder->createdDate))
-                            ? $dateCreated
-                        : Carbon::parse($currentOrder->date);
+                            ? Carbon::parse($currentOrder->createdDate)->addHours(24)
+                            : Carbon::parse($currentOrder->date);
                     } else {
-                        $delivery_date = null;
+                        $delivery_date = Carbon::parse($currentOrder->createdDate)->addHours(24);
                     }
 
                     $currentOrder->date = $delivery_date;
@@ -544,12 +543,11 @@ class OrderController extends Controller
                     $currentOrder->reference = 'Stripe-Paid-CC-' .$random_string . '-' .$order_id;
 
                     if (!empty($currentOrder->date)) {
-                    
                         $delivery_date = (!empty($currentOrder->date) && Carbon::parse($currentOrder->date)->lt($currentOrder->createdDate))
-                            ? $dateCreated
-                        : Carbon::parse($currentOrder->date);
+                            ? Carbon::parse($currentOrder->createdDate)->addHours(24)
+                            : Carbon::parse($currentOrder->date);
                     } else {
-                        $delivery_date = null;
+                        $delivery_date = Carbon::parse($currentOrder->createdDate)->addHours(24);
                     }
 
                     $currentOrder->date = $delivery_date;
@@ -695,12 +693,11 @@ class OrderController extends Controller
                     $currentOrder->reference = 'DEV4' . '-QCOM-' .$random_string . '-' .$order_id;
 
                     if (!empty($currentOrder->date)) {
-                    
                         $delivery_date = (!empty($currentOrder->date) && Carbon::parse($currentOrder->date)->lt($currentOrder->createdDate))
-                            ? $dateCreated
-                        : Carbon::parse($currentOrder->date);
+                            ? Carbon::parse($currentOrder->createdDate)->addHours(24)
+                            : Carbon::parse($currentOrder->date);
                     } else {
-                        $delivery_date = null;
+                        $delivery_date = Carbon::parse($currentOrder->createdDate)->addHours(24);
                     }
 
                     $currentOrder->date = $delivery_date;
