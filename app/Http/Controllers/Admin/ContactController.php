@@ -225,6 +225,7 @@ class ContactController extends Controller
 
         $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
         ->where('is_active', 1)
+        ->where('is_stop', 0)
         ->first();
 
         $api_key_id = null;
@@ -232,11 +233,16 @@ class ContactController extends Controller
         if (!empty($cin7api_key_for_other_jobs)) {
             $cin7_auth_username = $cin7api_key_for_other_jobs->username;
             $cin7_auth_password = $cin7api_key_for_other_jobs->password;
-            $thresold = $cin7api_key_for_other_jobs->threshold;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
             $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
             $api_key_id = $cin7api_key_for_other_jobs->id;
         } else {
-            Log::error('Cin7 API Key not found or inactive');
+            Log::info('No active api key found');
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
             return false;
         }
 
@@ -690,6 +696,7 @@ class ContactController extends Controller
 
         $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
         ->where('is_active', 1)
+        ->where('is_stop', 0)
         ->first();
 
         $api_key_id = null;
@@ -697,11 +704,16 @@ class ContactController extends Controller
         if (!empty($cin7api_key_for_other_jobs)) {
             $cin7_auth_username = $cin7api_key_for_other_jobs->username;
             $cin7_auth_password = $cin7api_key_for_other_jobs->password;
-            $thresold = $cin7api_key_for_other_jobs->threshold;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
             $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
             $api_key_id = $cin7api_key_for_other_jobs->id;
         } else {
-            Log::error('Cin7 API Key not found or inactive');
+            Log::info('No active api key found');
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
             return false;
         }
 

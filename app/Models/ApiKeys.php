@@ -16,6 +16,7 @@ class ApiKeys extends Model
         'threshold',
         'request_count',
         'is_active',
+        'is_stop'
     ];
 
     public function api_endpoint_requests()

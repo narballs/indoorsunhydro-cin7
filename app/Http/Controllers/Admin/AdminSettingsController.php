@@ -613,12 +613,6 @@ class AdminSettingsController extends Controller
         // Check if API keys exist and log if threshold is exceeded
         if (!$cin7_api_keys->isEmpty()) {
             foreach ($cin7_api_keys as $cin7_api_key) {
-
-                // if ($cin7_api_key->id  =  $request->input($cin7_api_key->id)) {
-                //     $cin7_api_key->threshold = $request->input($cin7_api_key->id);
-                //     $cin7_api_key->save();
-                // }
-
                 // Check if the request count exceeds the threshold
                 if ($cin7_api_key->request_count >= $cin7_api_key->threshold) {
                     try {
@@ -647,10 +641,18 @@ class AdminSettingsController extends Controller
         try {
             $cin7_id = $request->id;
             $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
-            $cin7_api_key->is_active = !empty($cin7_api_key) && $cin7_api_key->is_active == 1 ? 0 : 1;
+            $is_stop = 0;
+
+            if (!empty($cin7_api_key) && $cin7_api_key->is_stop == 1) {
+                $is_stop = 0;
+            } elseif (!empty($cin7_api_key) && $cin7_api_key->is_stop == 0) {
+                $is_stop = 1;
+            }
+
+            $cin7_api_key->is_stop = $is_stop;
             $cin7_api_key->save();
 
-            $toggle = $cin7_api_key->is_active == 1 ? 'activated' : 'stopped';
+            $toggle = $cin7_api_key->is_stop == 1 ? 'stopped' : 'activated';
 
 
             $cin7_api_key_event_log = new ApiEventLog();
@@ -661,8 +663,45 @@ class AdminSettingsController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Cin7 API Key '. $toggle .' successfully.',
-                'is_active' => $cin7_api_key->is_active
+                'is_stop' => $cin7_api_key->is_stop
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cin7 API Key not found.'
+            ]);
+        }
+    }
+
+
+    // update cin7 api key threshold
+
+    public function update_cin7_api_threshold(Request $request) {
+        try {
+            $cin7_id = $request->id;
+            $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
+            $threshold = $request->threshold;
+
+            if (!empty($cin7_api_key)) {
+                $cin7_api_key->threshold = $threshold;
+                $cin7_api_key->save();
+
+                $cin7_api_key_event_log = new ApiEventLog();
+                $cin7_api_key_event_log->api_key_id = $cin7_api_key->id;
+                $cin7_api_key_event_log->description = $cin7_api_key->name . ' '. 'threshold updated to ' . $threshold . ' by ' . auth()->user()->email;
+                $cin7_api_key_event_log->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Cin7 API Key threshold updated successfully.',
+                    'threshold' => $cin7_api_key->threshold
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Cin7 API Key not found.'
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',

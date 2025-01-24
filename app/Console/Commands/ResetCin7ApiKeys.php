@@ -61,6 +61,7 @@ class ResetCin7ApiKeys extends Command
                     'threshold' => 5000,
                     'request_count' => 0,
                     'is_active' => true,
+                    'is_stop' => false,
                 ],
 
                 [
@@ -70,6 +71,7 @@ class ResetCin7ApiKeys extends Command
                     'threshold' => 5000,
                     'request_count' => 0,
                     'is_active' => true,
+                    'is_stop' => false,
                 ],
        
             ];

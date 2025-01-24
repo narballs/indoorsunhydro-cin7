@@ -68,15 +68,15 @@
                                         <div class="col-md-12">
                                             <div class="row justify-content-center">
                                                 <span class="">
-                                                    Threshold: <input type="number" name="{{$cin7_api_key->id}}" class="form-control d-inline-block w-auto" value="{{$cin7_api_key->threshold}}">
+                                                    Threshold: <input type="number" id="key_thrshold_{{$cin7_api_key->id}}"  max="5000" name="total_thresold" class="form-control d-inline-block w-auto" value="{{$cin7_api_key->threshold}}">
                                                     <button 
                                                         type="button" 
                                                         onclick="stop_api('{{ $cin7_api_key->id }}')" 
-                                                        class="btn {{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'btn-danger' : 'btn-success' }} btn-sm">
-                                                        {{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'Stop' : 'Resume' }}
+                                                        class="btn {{ $cin7_api_key && $cin7_api_key->is_stop == 1 ? 'btn-success' : 'btn-danger' }} btn-sm">
+                                                        {{ $cin7_api_key && $cin7_api_key->is_stop == 1 ? 'Resume' : 'Stop' }}
                                                     </button>
-                                                    <a href="{{url('/admin/cin7-api-keys-settings')}}" class="btn btn-primary btn-sm text-white">Update</a>
-                                                    <span id="key_badge_{{$cin7_api_key->id}}" class="badge {{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'bg-success' : 'bg-danger' }}">{{ $cin7_api_key && $cin7_api_key->is_active == 1 ? 'Active' : 'Inactive' }}</span>
+                                                    <button type="button" id="update_total_threshold" onclick="update_key_threshold('{{$cin7_api_key->id}}')" class="btn btn-primary btn-sm text-white">Refresh/Update</button>
+                                                    <span id="key_badge_{{$cin7_api_key->id}}" class="badge {{ $cin7_api_key && $cin7_api_key->is_stop == 0 ? 'bg-success' : 'bg-danger' }}">{{ $cin7_api_key && $cin7_api_key->is_stop == 0 ? 'Active' : 'Inactive' }}</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -332,18 +332,89 @@
                 },
                 success: function (response) {
                     if (response.status === 'success') {
-                        var is_active  = response.is_active;
+                        var is_stop  = response.is_stop;
 
-                        if (is_active == 1) {
-                            $('#key_badge_' + id).removeClass('bg-danger');
-                            $('#key_badge_' + id).addClass('bg-success');
-                            $('#key_badge_' + id).text('Active');
-                        } else {
+                        if (is_stop == 1) {
                             $('#key_badge_' + id).removeClass('bg-success');
                             $('#key_badge_' + id).addClass('bg-danger');
                             $('#key_badge_' + id).text('Inactive');
+                        } else {
+                            $('#key_badge_' + id).removeClass('bg-danger');
+                            $('#key_badge_' + id).addClass('bg-success');
+                            $('#key_badge_' + id).text('Active');
                         }
 
+                        Swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Something went wrong. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function update_key_threshold(id) {
+            var threshold = $('#key_thrshold_' + id).val();
+            if (threshold == '') {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please enter threshold value',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            if (threshold == 0 ) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Threshold value should be greater than 0',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            $.ajax({
+                url: "{{ url('/admin/cin7-api-keys-settings/update-threshold') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    threshold: threshold,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
                         Swal.fire({
                             title: 'Success',
                             text: response.message,

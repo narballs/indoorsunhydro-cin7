@@ -29,6 +29,7 @@ class ApikeysSeeder extends Seeder
                     'threshold' => 5000,
                     'request_count' => 0,
                     'is_active' => true,
+                    'is_stop' => false,
                 ],
 
                 [
@@ -38,6 +39,7 @@ class ApikeysSeeder extends Seeder
                     'threshold' => 5000,
                     'request_count' => 0,
                     'is_active' => true,
+                    'is_stop' => false,
                 ],
        
             ];

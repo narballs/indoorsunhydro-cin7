@@ -428,6 +428,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/cin7-api-keys-settings', [AdminSettingsController::class, 'cin7_api_keys_settings'])->name('cin7_api_keys_settings');
 
         Route::post('/cin7-api-keys-settings/stop-api', [AdminSettingsController::class, 'stop_cin7_api'])->name('stop_cin7_api');
+        
+        // udpate key thresold
+        Route::post('/cin7-api-keys-settings/update-threshold', [AdminSettingsController::class, 'update_cin7_api_threshold'])->name('update_cin7_api_threshold');
+        
     });
 
     Route::get('admin/logout', function () {
