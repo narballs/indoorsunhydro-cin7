@@ -89,15 +89,26 @@ class OrderHelper {
         
         // $dateCreated = $order->createdDate;
 
+        // $dateCreated = Carbon::now();
+
+        // if (!empty($order->date)) {
+        
+        //     $delivery_date = (!empty($order->date) && Carbon::parse($order->date)->lt($dateCreated))
+        //         ? $dateCreated
+        //     : Carbon::parse($order->date);
+        // } else {
+        //     $delivery_date = null;
+        // }
+
+
         $dateCreated = Carbon::now();
 
         if (!empty($order->date)) {
-        
             $delivery_date = (!empty($order->date) && Carbon::parse($order->date)->lt($dateCreated))
-                ? $dateCreated
-            : Carbon::parse($order->date);
+                ? Carbon::parse($dateCreated)->addHours(24)
+                : Carbon::parse($order->date);
         } else {
-            $delivery_date = null;
+            $delivery_date = Carbon::parse($dateCreated)->addHours(24);
         }
 
 
