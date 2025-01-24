@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5 create_bnt d-flex justify-content-end mobile_fulfill_div">
+                        <div class="col-md-6 create_bnt d-flex justify-content-end mobile_fulfill_div">
                             <div class="d-flex justify-content-between">
                                 <span class="create_new_btn_mbl mr-2">
                                     <button type="button" class="btn create_new_product_btn btn-import-contacts">
