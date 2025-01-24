@@ -18,8 +18,9 @@ use Carbon\Carbon;
 
 use App\Helpers\UtilHelper;
 use App\Helpers\SettingHelper;
-
-
+use App\Models\ApiEndpointRequest;
+use App\Models\ApiKeys;
+use Illuminate\Support\Facades\Log;
 
 class SyncAPiData extends Command
 {
@@ -103,9 +104,41 @@ class SyncAPiData extends Command
         $total_record_count = 0;
 
         $client = new \GuzzleHttp\Client();
+        $categories_record_count = 0;
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('Cin7 API Key not found or inactive');
+            return false;
+        }
+
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
+
+
+        $product_api_url = null;
+        $categories_url = 'https://api.cin7.com/api/v1/ProductCategories';
+
+
+
 
         // Find total category pages
         $total_category_pages = 9;
@@ -115,7 +148,7 @@ class SyncAPiData extends Command
             
             $res = $client->request(
                 'GET', 
-                'https://api.cin7.com/api/v1/ProductCategories?rows=250&page=' . $i,
+                $categories_url . '?rows=250&page=' . $i,
                 [
                     'auth' => [
                         $cin7_auth_username,
@@ -124,12 +157,15 @@ class SyncAPiData extends Command
                 ]
             );
 
+            UtilHelper::saveEndpointRequestLog('Sync Categories' , $categories_url , $api_key_id);
+
             $api_categories = $res->getBody()->getContents();
             $api_categories = json_decode($api_categories);
 
             $record_count = count($api_categories);
+            $categories_record_count += $record_count;
             $this->info('Categories: Record Count per page #--------------------------' . $record_count);
-            
+
             if ($record_count < 1 || empty($record_count)) {
                 $this->info('----------------break-----------------');
                 break;
@@ -163,115 +199,117 @@ class SyncAPiData extends Command
             }
         }
 
+
         $retail_price_column = SettingHelper::getSetting('retail_price_column');
 
 
-            $client2 = new \GuzzleHttp\Client();
+        $client2 = new \GuzzleHttp\Client();
 
-            // Find total category pages
-            $total_products_pages = 200;
+        // Find total category pages
+        $total_products_pages = 200;
 
-            if (!empty($update_all_products) && $update_all_products == 'yes') {
-                $product_api_url = 'https://api.cin7.com/api/v1/Products?rows=250';
-            }
-            else {
-                $product_api_url = 'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&rows=250';
-            }
+        if (!empty($update_all_products) && $update_all_products == 'yes') {
+            $product_api_url = 'https://api.cin7.com/api/v1/Products?rows=250';
+        }
+        else {
+            $product_api_url = 'https://api.cin7.com/api/v1/Products?where=modifieddate>='. $api_formatted_product_sync_date . '&rows=250';
+        }
 
-            for ($i = 1; $i <= $total_products_pages; $i++) {
-                $this->info('Processing page#' . $i);
-                try {
+        for ($i = 1; $i <= $total_products_pages; $i++) {
+            $this->info('Processing page#' . $i);
+            try {
 
-                    $res = $client2->request(
-                        'GET', 
-                        $product_api_url . '&page=' . $i, 
-                        [
-                            'auth' => [
-                                $cin7_auth_username,
-                                $cin7_auth_password
-                            ]
-                         
+                $res = $client2->request(
+                    'GET', 
+                    $product_api_url . '&page=' . $i, 
+                    [
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password
                         ]
-                    );
+                        
+                    ]
+                );
 
-                    UtilHelper::saveDailyApiLog('sync_products');
-
-
-                    $api_products = $res->getBody()->getContents();
-              
-                    $api_products = json_decode($api_products);
-                    $record_count = count($api_products);
-                    $total_record_count += $record_count; 
-                    $this->info('Record Count per page #--------------------------' .$record_count);
+                UtilHelper::saveEndpointRequestLog('Sync Products' , $product_api_url , $api_key_id);
+                UtilHelper::saveDailyApiLog('sync_products');
 
 
-                    $this->info('Record Count => ' . $record_count);
-                    
-                    if ($record_count < 1 || empty($record_count)) {
-                        $this->info('----------------break-----------------');
-                        break;
+                $api_products = $res->getBody()->getContents();
+            
+                $api_products = json_decode($api_products);
+                $record_count = count($api_products);
+                $total_record_count += $record_count; 
+                $this->info('Record Count per page #--------------------------' .$record_count);
+
+
+                $this->info('Record Count => ' . $record_count);
+                
+                if ($record_count < 1 || empty($record_count)) {
+                    $this->info('----------------break-----------------');
+                    break;
+                }
+            }
+            catch (\Exception $e) {
+                $msg = $e->getMessage();
+                $errorlog = new ApiErrorLog();
+                $errorlog->payload = $e->getMessage();
+                $errorlog->exception = $e->getCode();
+                $errorlog->save();
+            }
+
+        
+            $brands = [];
+            foreach ($api_products as $api_product) {
+                $this->info($api_product->id);
+
+                $brands[] = $api_product->brand;
+                $this->info('---------------------------------------');
+                $this->info('Processing Products ' . $api_product->name . ' => ' . $api_product->modifiedDate);
+                $this->info('---------------------------------------');
+                $product = Product::where('product_id', $api_product->id)->with('options.price')->first();
+
+                if ($product) {
+                    if ($api_product->categoryIdArray) {
+                        $category_id = $api_product->categoryIdArray[0];    
                     }
-                }
-                catch (\Exception $e) {
-                    $msg = $e->getMessage();
-                    $errorlog = new ApiErrorLog();
-                    $errorlog->payload = $e->getMessage();
-                    $errorlog->exception = $e->getCode();
-                    $errorlog->save();
-                }
+                    else {
+                        $category_id = 0;
+                    }
 
-          
-                $brands = [];
-                foreach ($api_products as $api_product) {
-                    $this->info($api_product->id);
+                    
+                    $retail_price = isset($api_product->productOptions[0]->priceColumns->$retail_price_column) ? $api_product->productOptions[0]->priceColumns->$retail_price_column : 0;
 
-                    $brands[] = $api_product->brand;
-                    $this->info('---------------------------------------');
-                    $this->info('Processing Products ' . $api_product->name . ' => ' . $api_product->modifiedDate);
-                    $this->info('---------------------------------------');
-                    $product = Product::where('product_id', $api_product->id)->with('options.price')->first();
-    
-                    if ($product) {
-                        if ($api_product->categoryIdArray) {
-                            $category_id = $api_product->categoryIdArray[0];    
+                    $product->name =  $api_product->name;
+                    $product->slug = Str::slug($api_product->name);
+                    $product->status =  $api_product->status;
+                    $product->description =  $api_product->description;
+                    $product->width =  $api_product->width;
+                    $product->height =  $api_product->height;
+                    $product->length =  $api_product->length;
+                    $product->volume =  $api_product->volume;
+                    $product->category_id =  $category_id;
+                    $product->images =  !empty($api_product->images[0]) ? $api_product->images[0]->link: '';
+                    $product->code =  $api_product->productOptions[0]->code;
+                    $product->barcode =  $api_product->productOptions[0]->barcode;
+                    $product->retail_price = $retail_price;
+                    $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
+                    
+                    if (isset($api_product->brand)) {
+                        $brand = Brand::where('name', $api_product->brand)->first();
+                        if (empty($brand)) {
+                            $brand = new Brand([
+                                'name' => $api_product->brand
+                            ]);
+                            $brand->save();
+                            $product->brand_id = $brand->id;
                         }
                         else {
-                            $category_id = 0;
+                            $product->brand_id = $brand->id;
                         }
-
-                        
-                        $retail_price = isset($api_product->productOptions[0]->priceColumns->$retail_price_column) ? $api_product->productOptions[0]->priceColumns->$retail_price_column : 0;
-
-                        $product->name =  $api_product->name;
-                        $product->slug = Str::slug($api_product->name);
-                        $product->status =  $api_product->status;
-                        $product->description =  $api_product->description;
-                        $product->width =  $api_product->width;
-                        $product->height =  $api_product->height;
-                        $product->length =  $api_product->length;
-                        $product->volume =  $api_product->volume;
-                        $product->category_id =  $category_id;
-                        $product->images =  !empty($api_product->images[0]) ? $api_product->images[0]->link: '';
-                        $product->code =  $api_product->productOptions[0]->code;
-                        $product->barcode =  $api_product->productOptions[0]->barcode;
-                        $product->retail_price = $retail_price;
-                        $product->stockAvailable =  $api_product->productOptions[0]->stockAvailable;
-                        
-                        if (isset($api_product->brand)) {
-                            $brand = Brand::where('name', $api_product->brand)->first();
-                            if (empty($brand)) {
-                                $brand = new Brand([
-                                    'name' => $api_product->brand
-                                ]);
-                                $brand->save();
-                                $product->brand_id = $brand->id;
-                            }
-                            else {
-                                $product->brand_id = $brand->id;
-                            }
-                        }
-                        
-                        $product->save();
+                    }
+                    
+                    $product->save();
                     if ($api_product->productOptions) {
 
                         foreach ($api_product->productOptions as $api_productOption) {
@@ -453,7 +491,7 @@ class SyncAPiData extends Command
                     }
                 }
             }
-            
+        
         }
 
         $product_sync_log->last_synced = $current_date;

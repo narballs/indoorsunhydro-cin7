@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
 use App\Models\AiQuestion;
+use App\Models\ApiEventLog;
+use App\Models\ApiKeys;
 use App\Models\AutoLabelSetting;
 use App\Models\AutoLabelTimeRange;
 use App\Models\Contact;
@@ -506,100 +508,7 @@ class AdminSettingsController extends Controller
 
 
 
-    // auto label settings
-
-    // public function show_label_settings()
-    // {
-    //     $auto_label_settings = AutoLabelSetting::first();
-    //     $timezone = Carbon::now('America/Los_Angeles');
-                
-    //                     // Convert to 24-hour format for input[type="time"]
-    //     $start_time = isset($auto_label_settings->start_time) 
-    //         ? $timezone->format('H:i') // 24-hour format
-    //         : '';
-    //     $end_time = isset($auto_label_settings->end_time) 
-    //         ? $timezone->format('H:i') // 24-hour format
-    //         : '';
-    //     $selectedDays = isset($auto_label_settings) ? explode(',', $auto_label_settings->days_of_week) : [];
-    //     return view('admin.auto_label_settings.index', compact('auto_label_settings', 'start_time', 'end_time', 'selectedDays'));
-        
-    // }
-
-    // public function update_label_settings(Request $request)
-    // {
-    //     $request->validate([
-    //         'days_of_week' => 'required|string',
-    //         'delay_processing' => 'boolean',
-    //         'delay_duration' => 'nullable|integer',
-    //         'delay_unit' => 'nullable|string'
-    //     ]);
-
-    //     AutoLabelSetting::updateOrCreate(
-    //         ['id' => 1],  // Assume single-row config
-    //         $request->all()
-    //     );
-
-    //     return response()->json(['message' => 'Label Settings saved successfully']);
-    // }
-
-    // public function show_label_settings()
-    // {
-    //     $auto_label_settings = AutoLabelSetting::first();
-    //     $timezone = Carbon::now('America/Los_Angeles');
-
-    //     // Handle multiple time ranges
-    //     $timeRanges = $auto_label_settings ? $auto_label_settings->timeRanges : [];
-
-    //     // Convert time ranges to 24-hour format (H:i) for input[type="time"]
-    //     $start_times = [];
-    //     $end_times = [];
-        
-    //     foreach ($timeRanges as $timeRange) {
-    //         $start_times[] = Carbon::parse($timeRange->start_time)->format('H:i');
-    //         $end_times[] = Carbon::parse($timeRange->end_time)->format('H:i');
-    //     }
-
-    //     // Handle selected days of the week (if any)
-    //     $selectedDays = isset($auto_label_settings) ? explode(',', $auto_label_settings->days_of_week) : [];
-
-    //     return view('admin.auto_label_settings.index', compact('auto_label_settings', 'start_times', 'end_times', 'selectedDays'));
-    // }
-
-    // public function update_label_settings(Request $request)
-    // {
-    //     // Validate input data
-    //     $request->validate([
-    //         'days_of_week' => 'required|string',
-    //         'delay_processing' => 'boolean',
-    //         'delay_duration' => 'nullable|integer',
-    //         'delay_unit' => 'nullable|string',
-    //         'start_times' => 'required|array',
-    //         'end_times' => 'required|array',
-    //         'start_times.*' => 'required|date_format:H:i',
-    //         'end_times.*' => 'required|date_format:H:i',
-    //     ]);
-
-    //     // Update or create the AutoLabelSetting (Assuming single-row config)
-    //     $autoLabelSetting = AutoLabelSetting::updateOrCreate(
-    //         ['id' => 1],
-    //         $request->all()
-    //     );
-
-    //     // Handle time ranges (delete existing ones, add new ones)
-    //     // First, delete any existing time ranges
-    //     $autoLabelSetting->timeRanges()->delete();
-
-    //     // Then insert the new time ranges
-    //     foreach ($request->start_times as $index => $start_time) {
-    //         $autoLabelSetting->timeRanges()->create([
-    //             'start_time' => $start_time,
-    //             'end_time' => $request->end_times[$index],
-    //         ]);
-    //     }
-
-    //     // Return success response
-    //     return response()->json(['message' => 'Label Settings saved successfully']);
-    // }
+    
 
     public function show_label_settings()
     {
@@ -679,6 +588,126 @@ class AdminSettingsController extends Controller
 
         // Redirect or return a response
         return redirect()->back()->with('success', 'Auto label settings updated successfully.');
+    }
+
+
+    // cin7 api keys settings
+
+    public function cin7_api_keys_settings(Request $request) {
+        // Get the current date from the request or default to today
+        $current_date = $request->current_date ? Carbon::parse($request->current_date) : Carbon::today();
+    
+        // Fetch API keys with related requests and event logs for the specified date
+        $cin7_api_keys = ApiKeys::with([
+            'api_event_logs' => function ($query) use ($current_date) {
+                $query->whereDate('created_at', $current_date);
+            },
+            'api_endpoint_requests' => function ($query) use ($current_date) {
+                $query->whereDate('created_at', $current_date);
+            }
+        ])
+        ->where('is_active', 1)
+        ->orderBy('id', 'asc')
+        ->get();
+    
+        // Check if API keys exist and log if threshold is exceeded
+        if (!$cin7_api_keys->isEmpty()) {
+            foreach ($cin7_api_keys as $cin7_api_key) {
+                // Check if the request count exceeds the threshold
+                if ($cin7_api_key->request_count >= $cin7_api_key->threshold) {
+                    try {
+                        // Log threshold exceeded event
+                        $cin7_api_key_event_log = new ApiEventLog();
+                        $cin7_api_key_event_log->api_key_id = $cin7_api_key->id;
+                        $cin7_api_key_event_log->description = 'Threshold Exceeded';
+                        $cin7_api_key_event_log->save();
+                    } catch (\Exception $e) {
+                        // Handle potential errors (e.g., failed to save log)
+                        Log::error('Error saving API key event log: ' . $e->getMessage());
+                    }
+                }
+            }
+        }
+    
+        // Return the view with API keys and the selected date
+        return view('admin.cin7_api_keys_settings.index', compact('cin7_api_keys', 'current_date'));
+    }
+
+    
+
+    // stop cin7 api key
+
+    public function stop_cin7_api(Request $request) {
+        try {
+            $cin7_id = $request->id;
+            $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
+            $is_stop = 0;
+
+            if (!empty($cin7_api_key) && $cin7_api_key->is_stop == 1) {
+                $is_stop = 0;
+            } elseif (!empty($cin7_api_key) && $cin7_api_key->is_stop == 0) {
+                $is_stop = 1;
+            }
+
+            $cin7_api_key->is_stop = $is_stop;
+            $cin7_api_key->save();
+
+            $toggle = $cin7_api_key->is_stop == 1 ? 'stopped' : 'activated';
+
+
+            $cin7_api_key_event_log = new ApiEventLog();
+            $cin7_api_key_event_log->api_key_id = $cin7_api_key->id;
+            $cin7_api_key_event_log->description = $cin7_api_key->name . ' '. $toggle .' manually by ' . auth()->user()->email;
+            $cin7_api_key_event_log->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cin7 API Key '. $toggle .' successfully.',
+                'is_stop' => $cin7_api_key->is_stop
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cin7 API Key not found.'
+            ]);
+        }
+    }
+
+
+    // update cin7 api key threshold
+
+    public function update_cin7_api_threshold(Request $request) {
+        try {
+            $cin7_id = $request->id;
+            $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
+            $threshold = $request->threshold;
+
+            if (!empty($cin7_api_key)) {
+                $cin7_api_key->threshold = $threshold;
+                $cin7_api_key->save();
+
+                $cin7_api_key_event_log = new ApiEventLog();
+                $cin7_api_key_event_log->api_key_id = $cin7_api_key->id;
+                $cin7_api_key_event_log->description = $cin7_api_key->name . ' '. 'threshold updated to ' . $threshold . ' by ' . auth()->user()->email;
+                $cin7_api_key_event_log->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Cin7 API Key threshold updated successfully.',
+                    'threshold' => $cin7_api_key->threshold
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Cin7 API Key not found.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cin7 API Key not found.'
+            ]);
+        }
     }
 
     

@@ -436,6 +436,10 @@ return [
             'text'    => 'Label Settings',
             'url'  => 'admin/label-settings',
         ],
+        [
+            'text'    => 'Api Keys Settings',
+            'url'  => 'admin/cin7-api-keys-settings',
+        ],
 
         [
             'text'       => 'Logout',

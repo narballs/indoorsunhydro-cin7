@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Helpers\SettingHelper;
 use App\Helpers\UtilHelper;
+use App\Models\ApiKeys;
 use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
@@ -1978,6 +1979,32 @@ class OrderController extends Controller
 
 
     public function cancel_order($order , $current_order_status ,$order_status_id, $cin7_auth_username , $cin7_auth_password) {
+        
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('No active api key found');
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
+
+        
+        
         try {
             $client = new \GuzzleHttp\Client();
             
@@ -1991,6 +2018,8 @@ class OrderController extends Controller
                     ]                    
                 ]
             );
+
+            UtilHelper::saveEndpointRequestLog('Get Sales Order','https://api.cin7.com/api/v1/SalesOrders', $api_key_id);
     
             $cin7_order = $res->getBody()->getContents();
             $get_order = json_decode($cin7_order);
@@ -2021,6 +2050,8 @@ class OrderController extends Controller
                             $cin7_auth_password,
                         ],
                     ];
+
+                    UtilHelper::saveEndpointRequestLog('Update Sales Order','https://api.cin7.com/api/v1/SalesOrders', $api_key_id);
 
                     $update_array = [
                         [
@@ -2650,6 +2681,27 @@ class OrderController extends Controller
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop' , 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $thresold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            $this->error('Cin7 API Key not found or inactive');
+            return false;
+        }
+
+
         $calculate_tax = 0;
         $delivery_cost = 0;
         $client = new \GuzzleHttp\Client();
@@ -2664,6 +2716,8 @@ class OrderController extends Controller
                 ]                    
             ]
         );
+
+        UtilHelper::saveEndpointRequestLog('Get Sales Order','https://api.cin7.com/api/v1/SalesOrders', $api_key_id);
         
         $order = $res->getBody()->getContents();
         $order = json_decode($order);

@@ -424,6 +424,15 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/label-settings', [AdminSettingsController::class, 'show_label_settings'])->name('show_label_settings');
         Route::post('/update-label-settings', [AdminSettingsController::class, 'update_label_settings'])->name('update_label_settings');
+        //cin7 keys settings
+        Route::get('/cin7-api-keys-settings', [AdminSettingsController::class, 'cin7_api_keys_settings'])->name('cin7_api_keys_settings');
+
+        Route::post('/cin7-api-keys-settings/stop-api', [AdminSettingsController::class, 'stop_cin7_api'])->name('stop_cin7_api');
+        
+        // udpate key thresold
+        Route::post('/cin7-api-keys-settings/update-threshold', [AdminSettingsController::class, 'update_cin7_api_threshold'])->name('update_cin7_api_threshold');
+        Route::post('/reset-cin7-api-keys', [AdminCommandsController::class, 'reset_cin7_api_keys'])->name('reset_cin7_api_keys');
+        
     });
 
     Route::get('admin/logout', function () {

@@ -59,6 +59,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
+        $schedule->command('reset:cin7_api_keys')->dailyAt('00:00');
         // $schedule->command('create:label')->weekdays()->dailyAt('6:00'); // Runs at 5:00 PM
         // $schedule->command('create:label')->weekdays()->dailyAt('9:30'); // Runs at 8:30 PM
 

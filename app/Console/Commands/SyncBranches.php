@@ -47,6 +47,8 @@ class SyncBranches extends Command
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
+        
+
         $total_record_count = 0;
 
         for ($i = 1; $i <= $total_branch_pages; $i++) {
