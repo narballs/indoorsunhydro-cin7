@@ -593,11 +593,54 @@ class AdminSettingsController extends Controller
 
     // cin7 api keys settings
 
+    // public function cin7_api_keys_settings(Request $request) {
+    //     // Get the current date from the request or default to today
+    //     $current_date = $request->current_date ? Carbon::parse($request->current_date) : Carbon::today();
+    
+    //     // Fetch API keys with related requests and event logs for the specified date
+    //     $cin7_api_keys = ApiKeys::with([
+    //         'api_event_logs' => function ($query) use ($current_date) {
+    //             $query->whereDate('created_at', $current_date);
+    //         },
+    //         'api_endpoint_requests' => function ($query) use ($current_date) {
+    //             $query->whereDate('created_at', $current_date);
+    //         }
+    //     ])
+    //     ->where('is_active', 1)
+    //     ->orderBy('id', 'asc')
+    //     ->get();
+    
+    //     // Check if API keys exist and log if threshold is exceeded
+    //     if (!$cin7_api_keys->isEmpty()) {
+    //         foreach ($cin7_api_keys as $cin7_api_key) {
+    //             // Check if the request count exceeds the threshold
+    //             if ($cin7_api_key->request_count >= $cin7_api_key->threshold) {
+    //                 try {
+    //                     // Log threshold exceeded event
+    //                     $cin7_api_key_event_log = new ApiEventLog();
+    //                     $cin7_api_key_event_log->api_key_id = $cin7_api_key->id;
+    //                     $cin7_api_key_event_log->description = 'Threshold Exceeded';
+    //                     $cin7_api_key_event_log->save();
+    //                 } catch (\Exception $e) {
+    //                     // Handle potential errors (e.g., failed to save log)
+    //                     Log::error('Error saving API key event log: ' . $e->getMessage());
+    //                 }
+    //             }
+    //         }
+    //     }
+    
+    //     // Return the view with API keys and the selected date
+    //     return view('admin.cin7_api_keys_settings.index', compact('cin7_api_keys', 'current_date'));
+    // }
+
     public function cin7_api_keys_settings(Request $request) {
         // Get the current date from the request or default to today
         $current_date = $request->current_date ? Carbon::parse($request->current_date) : Carbon::today();
     
-        // Fetch API keys with related requests and event logs for the specified date
+        // Determine if the selected date is in the past
+        $is_past_date = $current_date->lt(Carbon::today());
+    
+        // Fetch API keys based on the selected date condition
         $cin7_api_keys = ApiKeys::with([
             'api_event_logs' => function ($query) use ($current_date) {
                 $query->whereDate('created_at', $current_date);
@@ -606,7 +649,11 @@ class AdminSettingsController extends Controller
                 $query->whereDate('created_at', $current_date);
             }
         ])
-        ->where('is_active', 1)
+        ->when($is_past_date, function ($query) {
+            return $query->where('is_active', 0); // If past date, get inactive keys
+        }, function ($query) {
+            return $query->where('is_active', 1); // If today, get active keys
+        })
         ->orderBy('id', 'asc')
         ->get();
     
@@ -632,6 +679,7 @@ class AdminSettingsController extends Controller
         // Return the view with API keys and the selected date
         return view('admin.cin7_api_keys_settings.index', compact('cin7_api_keys', 'current_date'));
     }
+    
 
     
 
