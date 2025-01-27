@@ -497,6 +497,12 @@ class SettingSeeder extends Seeder
             ],
 
             [
+                'option_name' => 'engrdanish_shipstation_email',
+                'type' => 'text',
+                'option_value' => 'engrdanishsabir00@gmail.com',
+            ],
+            
+            [
                 'option_name' => 'wholesale_invoice_email_1',
                 'type' => 'text',
                 'option_value' => 'Vanessa@indoorsunhydro.com',
