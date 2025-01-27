@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label class="font-weight-bold">Days of Week:</label><br>
                         <div class="btn-group-toggle" data-toggle="buttons">
-                            @foreach(['M', 'T', 'W', 'TH', 'F', 'ST', 'S'] as $day)
+                            @foreach(['M', 'T', 'W', 'TH', 'F', 'ST', 'SU'] as $day)
                                 <label class="btn btn-outline-primary {{ in_array($day, $selectedDays) ? 'active' : '' }}">
                                     <input type="checkbox" name="days_of_week[]" class="day d-none" value="{{ $day }}" {{ in_array($day, $selectedDays) ? 'checked' : '' }}> {{ $day }}
                                 </label>

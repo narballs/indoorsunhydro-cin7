@@ -48,5 +48,15 @@ class AdminCommandsController extends Controller
             ]);
         }
     }
+
+    public function reset_cin7_api_keys () {
+        try {
+            Artisan::call('reset:cin7_api_keys');
+            return redirect()->back()->with('success', 'Cin7 API keys reset successfully.');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
     
 }

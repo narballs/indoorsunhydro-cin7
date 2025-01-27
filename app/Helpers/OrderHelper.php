@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
+use App\Models\ApiKeys;
 use App\Models\ApiOrderItem;
 use Illuminate\Support\Facades\Log;
 
@@ -88,15 +89,26 @@ class OrderHelper {
         
         // $dateCreated = $order->createdDate;
 
+        // $dateCreated = Carbon::now();
+
+        // if (!empty($order->date)) {
+        
+        //     $delivery_date = (!empty($order->date) && Carbon::parse($order->date)->lt($dateCreated))
+        //         ? $dateCreated
+        //     : Carbon::parse($order->date);
+        // } else {
+        //     $delivery_date = null;
+        // }
+
+
         $dateCreated = Carbon::now();
 
         if (!empty($order->date)) {
-        
             $delivery_date = (!empty($order->date) && Carbon::parse($order->date)->lt($dateCreated))
-                ? $dateCreated
-            : Carbon::parse($order->date);
+                ? Carbon::parse($dateCreated)->addHours(24)
+                : Carbon::parse($order->date);
         } else {
-            $delivery_date = null;
+            $delivery_date = Carbon::parse($dateCreated)->addHours(24);
         }
 
 
@@ -189,7 +201,32 @@ class OrderHelper {
     public static function update_order_payment_in_cin7($order_id) {
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_3');
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('No active api key found');
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
+
         try {
+            $url = 'https://api.cin7.com/api/v1/Payments';
             $client = new \GuzzleHttp\Client();
             $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments?where=orderId=' . $order_id;
             $get_response = $client->request(
@@ -202,6 +239,9 @@ class OrderHelper {
                     ]                    
                 ]
             );
+
+
+            UtilHelper::saveEndpointRequestLog('Sync Payments' , $url , $api_key_id);
 
             $get_api_order = $get_response->getBody()->getContents();
             $get_order = json_decode($get_api_order);
@@ -233,6 +273,8 @@ class OrderHelper {
                 $authHeaders['json'] = $update_array;
 
                 $Payment_response = $client->post($url, $authHeaders);
+
+                UtilHelper::saveEndpointRequestLog('Sync Payments' , $url , $api_key_id);
 
                 $response = json_decode($Payment_response->getBody()->getContents());
             }

@@ -29,7 +29,7 @@
                                 Dashboard
                             </p>
                         </div>
-                        <div class="col-md-3 mobile-screen-flash-message">
+                        <div class="col-md-2 mobile-screen-flash-message">
                             <div class="row">
                                 <div class="col-md-11 my-2" id="div_message"></div>
                                 <div class="col-md-1">
@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
+                        <div class="col-md-6 create_bnt d-flex justify-content-end mobile_fulfill_div">
                             <div class="d-flex justify-content-between">
                                 <span class="create_new_btn_mbl mr-2">
                                     <button type="button" class="btn create_new_product_btn btn-import-contacts">
@@ -54,10 +54,18 @@
                                         Update Product Prices
                                     </button>
                                 </span>
-                                <span class="create_new_btn_mbl">
+                                <span class="create_new_btn_mbl mr-2">
                                     <button type="button" class="btn create_new_product_btn btn-empty-failed-jobs">
                                         Empty Failed Jobs
                                     </button>
+                                </span>
+
+                                <span class="create_new_btn_mbl">
+                                    <form action="{{ route('reset_cin7_api_keys') }}" method="post">
+                                        <button type="submit" class="btn create_new_product_btn">
+                                            Reset Cin7Api Keys
+                                        </button>
+                                    </form>
                                 </span>
 
                             </div>

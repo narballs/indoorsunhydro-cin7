@@ -18,6 +18,8 @@ use Carbon\Carbon;
 
 use App\Helpers\UtilHelper;
 use App\Helpers\SettingHelper;
+use App\Models\ApiKeys;
+use Illuminate\Support\Facades\Log;
 
 class SyncProductOptions extends Command
 {
@@ -354,6 +356,31 @@ class SyncProductOptions extends Command
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('Cin7 API Key not found or inactive');
+            return false;
+        }
+
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
+
         $retail_price_column = SettingHelper::getSetting('retail_price_column');
 
 
@@ -361,6 +388,8 @@ class SyncProductOptions extends Command
 
         // Find total category pages
         $total_products_pages = 200;
+
+        $product_options_api_url_main = 'https://api.cin7.com/api/v1/ProductOptions';
 
         $product_options_api_url = 'https://api.cin7.com/api/v1/ProductOptions?where=ModifiedDate>='. $api_formatted_product_options_sync_date . '&rows=250';
 
@@ -380,6 +409,7 @@ class SyncProductOptions extends Command
                     ]
                 );
 
+                UtilHelper::saveEndpointRequestLog('Sync Products Options' , $product_options_api_url_main , $api_key_id);
                 UtilHelper::saveDailyApiLog('sync_product_options');
                 $api_product_options = $res->getBody()->getContents();
                 $api_product_options = json_decode($api_product_options);

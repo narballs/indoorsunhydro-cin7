@@ -6,6 +6,7 @@ use App\Helpers\SettingHelper;
 use App\Helpers\UtilHelper;
 use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
+use App\Models\ApiKeys;
 use App\Models\ApiSyncLog;
 use App\Models\InventoryLocation;
 use App\Models\Product;
@@ -13,6 +14,7 @@ use App\Models\ProductOption;
 use App\Models\ProductStock;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class StockChecking extends Command
 {
@@ -74,6 +76,33 @@ class StockChecking extends Command
         $product_stock_sync_date = $product_stock_sync_raw_date->format('Y-m-d');
         $product_stock_sync_time = $product_stock_sync_raw_date->format('H:i:s');
         $api_formatted_product_stock_sync_date = $product_stock_sync_date . 'T' . $product_stock_sync_time . 'Z';
+
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('No active api key found');
+            return false;
+        }
+
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
+
+        
         $client = new \GuzzleHttp\Client();
 
         // Find total stock pages
@@ -98,6 +127,7 @@ class StockChecking extends Command
                 );
 
                 UtilHelper::saveDailyApiLog('auto_update_stock');
+                UtilHelper::saveEndpointRequestLog('Sync Stock','https://api.cin7.com/api/v1/Stock', $api_key_id);
 
 
                 $api_product_stock = $res->getBody()->getContents();

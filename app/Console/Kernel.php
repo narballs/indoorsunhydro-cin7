@@ -3,9 +3,11 @@
 namespace App\Console;
 
 use App\Models\AutoLabelSetting;
+use App\Models\LabelLog;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -59,23 +61,58 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
+        $schedule->command('reset:cin7_api_keys')->dailyAt('00:00');
         // $schedule->command('create:label')->weekdays()->dailyAt('6:00'); // Runs at 5:00 PM
         // $schedule->command('create:label')->weekdays()->dailyAt('9:30'); // Runs at 8:30 PM
 
 
         // Fetch the auto label settings
+        // $autoLabelSetting = AutoLabelSetting::first();
+
+        // if ($autoLabelSetting) {
+        //     // Decode the stored days of the week from the database
+        //     $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
+        
+        //     // Loop through the time ranges
+        //     foreach ($autoLabelSetting->timeRanges as $timeRange) {
+        //         $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
+        //         $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
+        
+        //         // Loop through the days of the week and schedule for each day
+        //         foreach ($daysOfWeek as $day) {
+        //             $schedule->command('create:label')
+        //                 ->when(function () use ($day, $startTime, $endTime) {
+        //                     $currentDay = now()->format('D'); 
+        //                     $dayMap = [
+        //                         'Mon' => 'M',
+        //                         'Tue' => 'T',
+        //                         'Wed' => 'W',
+        //                         'Thu' => 'TH',
+        //                         'Fri' => 'F',
+        //                         'Sat' => 'S',
+        //                         'Sun' => 'S'
+        //                     ];
+        //                     if (strtoupper($dayMap[$currentDay]) == $day) {
+        //                         $currentTime = now()->format('H:i');
+        //                         return $currentTime >= $startTime && $currentTime <= $endTime;
+        //                     }
+        
+        //                     return false;
+        //                 })
+        //                 ->everyMinute();
+        //         }
+        //     }
+        // }
+
         $autoLabelSetting = AutoLabelSetting::first();
 
         if ($autoLabelSetting) {
-            // Decode the stored days of the week from the database
             $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
-        
-            // Loop through the time ranges
+
             foreach ($autoLabelSetting->timeRanges as $timeRange) {
                 $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
                 $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
-        
-                // Loop through the days of the week and schedule for each day
+
                 foreach ($daysOfWeek as $day) {
                     $schedule->command('create:label')
                         ->when(function () use ($day, $startTime, $endTime) {
@@ -86,21 +123,29 @@ class Kernel extends ConsoleKernel
                                 'Wed' => 'W',
                                 'Thu' => 'TH',
                                 'Fri' => 'F',
-                                'Sat' => 'S',
-                                'Sun' => 'S'
+                                'Sat' => 'ST',
+                                'Sun' => 'SU'
                             ];
-                            if (strtoupper($dayMap[$currentDay]) == $day) {
-                                $currentTime = now()->format('H:i');
-                                return $currentTime >= $startTime && $currentTime <= $endTime;
-                            }
-        
-                            return false;
+
+                            $currentTime = now()->format('H:i');
+                            $mappedDay = strtoupper($dayMap[$currentDay]);
+                            $expectedDay = strtoupper(trim($day));
+
+                            Log::info("Checking for {$expectedDay}: {$startTime} - {$endTime}");
+                            Log::info("Current Day: {$currentDay} ({$mappedDay}) | Expected: {$expectedDay}");
+                            Log::info("Current Time: {$currentTime} | Scheduled: {$startTime} - {$endTime}");
+
+                            LabelLog::create([
+                                'description' => "Checking for {$expectedDay}: {$startTime} - {$endTime}"
+                            ]);
+
+                            return $mappedDay == $expectedDay && ($currentTime >= $startTime && $currentTime < $endTime);
                         })
                         ->everyMinute();
                 }
             }
         }
-        
+                        
 
 
         // Internal endpoints ends here

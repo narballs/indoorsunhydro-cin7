@@ -11,8 +11,12 @@ use App\Models\ProductOption;
 use App\Models\InventoryLocation;
 
 use App\Helpers\SettingHelper;
+use App\Models\ApiEndpointRequest;
 use App\Models\ApiErrorLog;
+use App\Models\ApiKeys;
 use App\Models\Cart;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class UtilHelper
@@ -30,6 +34,30 @@ class UtilHelper
         
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
+
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('No active api key found');
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
 
         $authHeaders = [
             'headers' => ['Content-type' => 'application/json'],
@@ -65,6 +93,7 @@ class UtilHelper
 
         if (!empty($extra['api_end_point'])) {
             self::saveDailyApiLog($extra['api_end_point']);
+            self::saveEndpointRequestLog('Sync Order',$extra['api_end_point'], $api_key_id);
         }
 
         $api_response = $res->getBody()->getContents();
@@ -176,142 +205,74 @@ class UtilHelper
     }
 
 
-    // swap keys
-    // public static function updateProductStock($product, $option_id) {
-    //     $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
-    //     $total_stock = 0;
-    //     $stock_updated = false;
-    //     $branch_with_stocks = [];
+    // public static function saveEndpointRequestLog($title, $url, $api_key_id) {
+    //     $todayStart = Carbon::today()->startOfDay();
+    //     $todayEnd = Carbon::today()->endOfDay();
 
-    //     if (empty($setting) || ($setting->option_value !=  'Yes')) {
-    //         return $stock_updated;
+    //     // Check if there is an entry for today
+    //     $daily_endpoint_request_count = ApiEndpointRequest::where('api_key_id', $api_key_id)
+    //     ->where('title', $title)
+    //     ->whereBetween('created_at', [$todayStart, $todayEnd])
+    //     ->first();
+        
+    //     if ($daily_endpoint_request_count) {
+    //         $daily_endpoint_request_count->increment('request_count');
+    //     } else {
+    //         ApiEndpointRequest::create([
+    //             'api_key_id' => $api_key_id,
+    //             'url' => $url,
+    //             'title' => $title,
+    //             'request_count' => 1,
+    //             'created_at' => Carbon::now(),
+    //         ]);
     //     }
 
-    //     $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-    //     $cin7_auth_password1 = SettingHelper::getSetting('cin7_auth_password');
-    //     $cin7_auth_password2 = SettingHelper::getSetting('cin7_auth_password_2');
+    //     $total_requests_today = ApiEndpointRequest::where('api_key_id', $api_key_id)
+    //         ->where('created_at', '>=', $todayStart)
+    //         ->sum('request_count');
 
-    //     $useFirstCredentials = true;
-    //     while (true) {
-    //         try {
-    //             $api_password = $useFirstCredentials ? $cin7_auth_password1 : $cin7_auth_password2;
-    //             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-    //             $client2 = new \GuzzleHttp\Client();
-    //             $res = $client2->request(
-    //                 'GET',
-    //                 $url,
-    //                 [
-    //                     'auth' => [
-    //                         $cin7_auth_username,
-    //                         $api_password
-    //                     ]
-    //                 ]
-    //             );
-
-    //             $inventory = $res->getBody()->getContents();
-    //             $location_inventories = json_decode($inventory);
-    //             if (empty($location_inventories)) {
-    //                 return [
-    //                     'stock_updated' => $stock_updated,
-    //                     'branch_with_stocks' => null,
-
-    //                 ];
-    //             }
-    //             $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
-                
-    //             // $skip_branches = [172, 173, 174];
-    //             $skip_branches = $inactive_inventory_locations;
-    //             $branch_ids = [];
-    //             foreach ($location_inventories as $location_inventory) {
-    //                 if (in_array($location_inventory->branchId, $skip_branches)) {
-    //                     continue;
-    //                 }
-    //                 $branch_with_stocks[] = [
-    //                     'branch_id' => $location_inventory->branchId,
-    //                     'branch_name' => $location_inventory->branchName,
-    //                     'available' => $location_inventory->available
-    //                 ];
-
-                    
-    //                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
-    //                     ->where('product_id' ,  $product->product_id)
-    //                     ->where('option_id' , $option_id)
-    //                     ->first();
-
-                    
-                    
-    //                 if (!empty($product_stock)) {
-    //                     $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
-    //                     $product_stock->save();
-                        
-    //                     $branch_ids[] = $location_inventory->branchId;
-    //                     if (!in_array($location_inventory->branchId, $skip_branches)) {
-    //                         $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
-    //                     }
-    //                 }
-    //                 else {
-    //                     $product_stock = ProductStock::create([
-    //                         'available_stock' => $location_inventory->available >=0 ? $location_inventory->available : 0,
-    //                         'branch_id' => $location_inventory->branchId,
-    //                         'product_id' => $product->product_id,
-    //                         'branch_name' => $location_inventory->branchName,
-    //                         'option_id' => $option_id
-    //                     ]);
-    //                     if (!in_array($location_inventory->branchId, $skip_branches)) {
-    //                         $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
-    //                     }
-    //                     // $total_stock += $product_stock->available_stock;
-    //                 }
-
-                    
-
-    //                 $stock_updated = true;
-    //             }
-    //             $update_product_option = ProductOption::where('option_id' , $option_id)->first();
-    //             if (!empty($update_product_option)) {
-    //                 $update_product_option->stockAvailable = $total_stock;
-    //                 $update_product_option->save();
-    //             } 
-                
-    //             if (!empty($branch_ids)) {
-    //                 ProductStock::where('product_id' ,  $product->product_id)
-    //                     ->where('option_id' , $option_id)
-    //                     ->whereNotIn('branch_id', $branch_ids)
-    //                     ->delete();
-    //             }
-                    
-    //             self::saveDailyApiLog('product_detail_update_stock');
-
-    //             $update_master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-    //             if ($update_master_key_attempt) {
-    //                 $update_master_key_attempt->option_value = 1;
-    //                 $update_master_key_attempt->save();
-    //             }
-
-    //             break;
-    //         }
-    //         catch (\Exception $e) {
-    //             // Update master_key_attempt to 0 on failure
-    //             $master_key_attempt = AdminSetting::where('option_name', 'master_key_attempt')->first();
-    //             if ($master_key_attempt) {
-    //                 $master_key_attempt->option_value = 0;
-    //                 $master_key_attempt->save();
-    //             }
-    //             // Swap credentials
-    //             $useFirstCredentials = !$useFirstCredentials;
-    //             self::saveDailyApiLog('product_detail_update_stock');
-    //             return $stock_updated;
-    //         }
+    //     // Update the request count in the `ApiKeys` model
+    //     $apiKey = ApiKeys::where('id', $api_key_id)->where('is_active', 1)->first();
+    //     if ($apiKey) {
+    //         $apiKey->update([
+    //             'request_count' => $total_requests_today
+    //         ]);
     //     }
-
-    //     return [
-    //         'stock_updated' => $stock_updated,
-    //         'branch_with_stocks' => $branch_with_stocks,
-    //         'total_stock' => $total_stock
-    //     ];
+    
+    //     return true;
     // }
 
+    public static function saveEndpointRequestLog($title, $url, $api_key_id) {
+        $todayStart = Carbon::today()->startOfDay();
+        $todayEnd = Carbon::today()->endOfDay();
+    
+        // Find today's request log for the given API key and title
+        $dailyRequest = ApiEndpointRequest::firstOrNew([
+            'api_key_id' => $api_key_id,
+            'title' => $title,
+        ], [
+            'url' => $url,
+            'request_count' => 0, 
+            'created_at' => Carbon::now()
+        ]);
+    
+        // Increment request count or initialize it
+        $dailyRequest->request_count += 1;
+        $dailyRequest->save();
+    
+        // Calculate today's total requests for the API key
+        $totalRequestsToday = ApiEndpointRequest::where('api_key_id', $api_key_id)
+            ->whereBetween('created_at', [$todayStart, $todayEnd])
+            ->sum('request_count');
+    
+        // Update the request count in the `ApiKeys` table if key is active
+        ApiKeys::where('id', $api_key_id)->where('is_active', 1)
+            ->update(['request_count' => $totalRequestsToday]);
+    
+        return true;
+    }
 
+   
     public static function updateProductStock($product, $option_id) {
         $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
         $total_stock = 0;
@@ -324,6 +285,29 @@ class UtilHelper
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+
+        $cin7api_key_for_other_jobs =  ApiKeys::where('password', $cin7_auth_password)
+        ->where('is_active', 1)
+        ->where('is_stop', 0)
+        ->first();
+
+        $api_key_id = null;
+        
+        if (!empty($cin7api_key_for_other_jobs)) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            Log::info('No active api key found');
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            Log::info('Request count exceeded');
+            return false;
+        }
 
         try {
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
@@ -338,6 +322,9 @@ class UtilHelper
                     ]
                 ]
             );
+
+
+            self::saveEndpointRequestLog('Sync Stock Detail','https://api.cin7.com/api/v1/Stock', $api_key_id);
 
             $inventory = $res->getBody()->getContents();
             $location_inventories = json_decode($inventory);
