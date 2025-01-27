@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AdminSetting;
 use App\Models\ApiKeys;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class ApikeysSeeder extends Seeder
 {
@@ -15,13 +16,12 @@ class ApikeysSeeder extends Seeder
      */
     public function run()
     {
-        
-        $cin7_api_key1  = AdminSetting::where('option_name' , 'cin7_auth_password')->first();
-        $cin7_api_key2  = AdminSetting::where('option_name' , 'cin7_auth_password_2')->first();
-        $cin7_api_username  = AdminSetting::where('option_name' , 'cin7_auth_username')->first();
-        
-        $cin7_api_keys =  
-            [
+        try {
+            $cin7_api_key1  = AdminSetting::where('option_name', 'cin7_auth_password')->first();
+            $cin7_api_key2  = AdminSetting::where('option_name', 'cin7_auth_password_2')->first();
+            $cin7_api_username  = AdminSetting::where('option_name', 'cin7_auth_username')->first();
+            
+            $cin7_api_keys = [
                 [
                     'name' => 'Cin7 Key 1', 
                     'username' => !empty($cin7_api_username) ? $cin7_api_username->option_value : '', 
@@ -31,7 +31,6 @@ class ApikeysSeeder extends Seeder
                     'is_active' => true,
                     'is_stop' => false,
                 ],
-
                 [
                     'name' => 'Cin7 Key 2', 
                     'username' => !empty($cin7_api_username) ? $cin7_api_username->option_value : '', 
@@ -41,10 +40,13 @@ class ApikeysSeeder extends Seeder
                     'is_active' => true,
                     'is_stop' => false,
                 ],
-       
             ];
-        foreach($cin7_api_keys as $cin7_api_key) {
-            ApiKeys::create($cin7_api_key);
+
+            foreach ($cin7_api_keys as $cin7_api_key) {
+                ApiKeys::create($cin7_api_key);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error while running Cin7 API key seeder: ' . $e->getMessage());
         }
     }
 }

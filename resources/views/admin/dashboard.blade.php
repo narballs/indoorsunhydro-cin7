@@ -61,11 +61,9 @@
                                 </span>
 
                                 <span class="create_new_btn_mbl">
-                                    <form action="{{ route('reset_cin7_api_keys') }}" method="post">
-                                        <button type="submit" class="btn create_new_product_btn">
-                                            Reset Cin7Api Keys
-                                        </button>
-                                    </form>
+                                    <a href="{{route('reset_cin7_api_keys')}}" class="btn create_new_product_btn">
+                                        Reset Cin7Api Keys
+                                    </a>
                                 </span>
 
                             </div>
