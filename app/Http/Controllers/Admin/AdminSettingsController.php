@@ -687,8 +687,26 @@ class AdminSettingsController extends Controller
 
     public function stop_cin7_api(Request $request) {
         try {
+           
             $cin7_id = $request->id;
+            $old_date = $request->current_date ? Carbon::parse($request->current_date) : null;
             $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
+            if (!$cin7_api_key) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Cin7 API Key not found.'
+                ]);
+            }
+        
+            
+            if ($old_date && $old_date->lt(Carbon::today())) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'API keys with old dates cannot be stopped or started.'
+                ]);
+            }
+        
+
             $is_stop = 0;
 
             if (!empty($cin7_api_key) && $cin7_api_key->is_stop == 1) {
@@ -726,11 +744,27 @@ class AdminSettingsController extends Controller
 
     public function update_cin7_api_threshold(Request $request) {
         try {
+            $old_date = $request->current_date ? Carbon::parse($request->current_date) : null;
             $cin7_id = $request->id;
             $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
             $threshold = $request->threshold;
 
-            if (!empty($cin7_api_key) && !empty($threshold) && intval($threshold) <=5000) {
+            if (!$cin7_api_key) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Cin7 API Key not found.'
+                ]);
+            }
+        
+            if ($old_date && $old_date->lt(Carbon::today())) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'API keys with old dates cannot updated.'
+                ]);
+            }
+
+            if (!empty($cin7_api_key) && !empty($threshold) && intval($threshold) <= 5000) {
+                
                 $cin7_api_key->threshold = $threshold;
                 $cin7_api_key->save();
 

@@ -323,11 +323,14 @@
 
 
         function stop_api(id) {
+            var dateInputApi = document.getElementById('dateInputApi');
+        
             $.ajax({
                 url: "{{ url('/admin/cin7-api-keys-settings/stop-api') }}",
                 type: 'POST',
                 data: {
                     id: id,
+                    current_date: dateInputApi.value,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function (response) {
@@ -384,6 +387,7 @@
 
 
         function update_key_threshold(id) {
+            var dateInputApi = document.getElementById('dateInputApi');
             var threshold = $('#key_thrshold_' + id).val();
             if (threshold == '') {
                 Swal.fire({
@@ -411,6 +415,7 @@
                 data: {
                     id: id,
                     threshold: threshold,
+                    current_date: dateInputApi.value,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function (response) {
