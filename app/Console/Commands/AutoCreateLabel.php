@@ -159,94 +159,7 @@ class AutoCreateLabel extends Command
                 ->where('shipping_carrier_code', 'ups_walleted')
                 ->get();
 
-            // if ($autoLabelSetting) {
-            //     $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
-
-            //     foreach ($autoLabelSetting->timeRanges as $timeRange) {
-            //         if (!empty($autoLabelSetting->timeRanges)) {
-            //             $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
-            //             $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
-
-            //             $currentDay = now()->format('D');
-
-            //             $dayMap = [
-            //                 'Mon' => 'M',
-            //                 'Tue' => 'T',
-            //                 'Wed' => 'W',
-            //                 'Thu' => 'TH',
-            //                 'Fri' => 'F',
-            //                 'Sat' => 'ST',
-            //                 'Sun' => 'SU'
-            //             ];
-
-            //             if (in_array($dayMap[$currentDay], $daysOfWeek)) {
-            //                 $currentTime = now()->format('H:i');
-            //                 if ($currentTime >= $startTime && $currentTime <= $endTime) {
-            //                     if ($all_orders->isEmpty()) {
-            //                         $this->info('No orders found to create label');
-            //                         return;
-            //                     }
-
-            //                     Log::info('Auto create label is enabled');
-
-            //                     foreach ($all_orders as $order) {
-            //                         $this->processOrder($order, $client, $currentDate, $data);
-            //                         sleep($delay_duration * 60);
-            //                         Log::info('Label created for order: ' . $order->id);
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     $this->info('Auto create label is disabled');
-            // }
-            // if ($autoLabelSetting) {
-            //     $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
-
-            //     foreach ($autoLabelSetting->timeRanges as $timeRange) {
-            //         if (!empty($timeRange) && isset($timeRange->start_time, $timeRange->end_time)) {
-            //             $startTime = Carbon::parse($timeRange->start_time)->format('H:i');
-            //             $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
-                        
-            //             $currentDay = now()->format('D');
-                        
-            //             $dayMap = [
-            //                 'Mon' => 'M',
-            //                 'Tue' => 'T',
-            //                 'Wed' => 'W',
-            //                 'Thu' => 'TH',
-            //                 'Fri' => 'F',
-            //                 'Sat' => 'ST',
-            //                 'Sun' => 'SU'
-            //             ];
-                        
-            //             Log::info("Checking schedule for day: " . $dayMap[$currentDay] . 
-            //                     " | Start: {$startTime} | End: {$endTime} | Current: " . now()->format('H:i'));
-
-            //             if (in_array(strtoupper($dayMap[$currentDay]), array_map('strtoupper', $daysOfWeek))) {
-            //                 $currentTime = now()->format('H:i');
-
-            //                 if ($currentTime >= $startTime && $currentTime < $endTime) {
-            //                     if ($all_orders->isEmpty()) {
-            //                         $this->info('No orders found to create label');
-            //                         return;
-            //                     }
-
-            //                     Log::info('Auto create label is enabled');
-
-            //                     foreach ($all_orders as $order) {
-            //                         $this->processOrder($order, $client, $currentDate, $data);
-            //                         sleep($delay_duration * 60);
-            //                         Log::info('Label created for order: ' . $order->id);
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     $this->info('Auto create label is disabled');
-            // }
+            
 
             if ($autoLabelSetting) {
                 $daysOfWeek = json_decode($autoLabelSetting->days_of_week, true);
@@ -290,6 +203,10 @@ class AutoCreateLabel extends Command
                             foreach ($all_orders as $order) {
                                 $this->processOrder($order, $client, $currentDate, $data);
                                 sleep($delay_duration * 60);
+                                if ($order->label_created) {
+                                    Log::info('Label already created for order: ' . $order->id);
+                                    continue;
+                                }
                                 Log::info('Label created for order: ' . $order->id);
                             }
                         }
