@@ -682,7 +682,7 @@ class AdminSettingsController extends Controller
             $cin7_api_key = ApiKeys::where('id', $cin7_id)->first();
             $threshold = $request->threshold;
 
-            if (!empty($cin7_api_key)) {
+            if (!empty($cin7_api_key) && !empty($threshold) && intval($threshold) <=5000) {
                 $cin7_api_key->threshold = $threshold;
                 $cin7_api_key->save();
 
@@ -699,7 +699,7 @@ class AdminSettingsController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Cin7 API Key not found.'
+                    'message' => 'Cin7 API Key not found or threshold must be less than or equal to 5000.'
                 ]);
             }
         } catch (\Exception $e) {
