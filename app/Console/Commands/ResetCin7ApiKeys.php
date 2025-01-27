@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AdminSetting;
 use App\Models\ApiKeys;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ResetCin7ApiKeys extends Command
 {
@@ -39,21 +40,20 @@ class ResetCin7ApiKeys extends Command
      */
     public function handle()
     {
-        $cin7_api_key1  = AdminSetting::where('option_name' , 'cin7_auth_password')->first();
-        $cin7_api_key2  = AdminSetting::where('option_name' , 'cin7_auth_password_2')->first();
-        $cin7_api_username  = AdminSetting::where('option_name' , 'cin7_auth_username')->first();
+        try {
+            $cin7_api_key1  = AdminSetting::where('option_name', 'cin7_auth_password')->first();
+            $cin7_api_key2  = AdminSetting::where('option_name', 'cin7_auth_password_2')->first();
+            $cin7_api_username  = AdminSetting::where('option_name', 'cin7_auth_username')->first();
 
-
-        $ApiKeys = ApiKeys::all();
-        if (count($ApiKeys) > 0) {
-            foreach($ApiKeys as $apiKey) {
-                $apiKey->is_active = 0;
-                $apiKey->save();
+            $ApiKeys = ApiKeys::all();
+            if ($ApiKeys->count() > 0) {
+                foreach ($ApiKeys as $apiKey) {
+                    $apiKey->is_active = 0;
+                    $apiKey->save();
+                }
             }
-        }
-        
-        $cin7_api_keys =  
-            [
+            
+            $cin7_api_keys = [
                 [
                     'name' => 'Cin7 Key 1', 
                     'username' => !empty($cin7_api_username) ? $cin7_api_username->option_value : '', 
@@ -63,7 +63,6 @@ class ResetCin7ApiKeys extends Command
                     'is_active' => true,
                     'is_stop' => false,
                 ],
-
                 [
                     'name' => 'Cin7 Key 2', 
                     'username' => !empty($cin7_api_username) ? $cin7_api_username->option_value : '', 
@@ -73,10 +72,14 @@ class ResetCin7ApiKeys extends Command
                     'is_active' => true,
                     'is_stop' => false,
                 ],
-       
             ];
-        foreach($cin7_api_keys as $cin7_api_key) {
-            ApiKeys::create($cin7_api_key);
+
+            foreach ($cin7_api_keys as $cin7_api_key) {
+                ApiKeys::create($cin7_api_key);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in Cin7 API key processing: ' . $e->getMessage());
         }
     }
+
 }
