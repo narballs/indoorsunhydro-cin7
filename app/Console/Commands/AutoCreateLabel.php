@@ -203,7 +203,7 @@ class AutoCreateLabel extends Command
                             foreach ($all_orders as $order) {
                                 $this->processOrder($order, $client, $currentDate, $data);
                                 sleep($delay_duration * 60);
-                                if ($order->label_created) {
+                                if ($order->label_created || $order->label_created) {
                                     Log::info('Label already created for order: ' . $order->id);
                                     continue;
                                 }
