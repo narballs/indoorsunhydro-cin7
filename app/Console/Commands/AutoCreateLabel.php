@@ -50,9 +50,9 @@ class AutoCreateLabel extends Command
      */
     // public function handle()
     // {
-    //     $check_label_settinga = AdminSetting::where('option_name', 'auto_create_label')->first();
+    //     $check_label_settings = AdminSetting::where('option_name', 'auto_create_label')->first();
 
-    //     if (!empty($check_label_settinga) && strtolower($check_label_settinga->option_value) == 'no') {
+    //     if (!empty($check_label_settings) && strtolower($check_label_settings->option_value) == 'no') {
     //         $this->info('Auto create label is disabled');
     //         return;
     //     }
@@ -131,9 +131,9 @@ class AutoCreateLabel extends Command
     public function handle()
     {
         try {
-            $check_label_settinga = AdminSetting::where('option_name', 'auto_create_label')->first();
+            $check_label_settings = AdminSetting::where('option_name', 'auto_create_label')->first();
 
-            if (!empty($check_label_settinga) && strtolower($check_label_settinga->option_value) == 'no') {
+            if (!empty($check_label_settings) && strtolower($check_label_settings->option_value) == 'no') {
                 $this->info('Auto create label is disabled');
                 return;
             }
@@ -203,7 +203,7 @@ class AutoCreateLabel extends Command
                             foreach ($all_orders as $order) {
                                 $this->processOrder($order, $client, $currentDate, $data);
                                 sleep($delay_duration * 60);
-                                if ($order->label_created || $order->label_created) {
+                                if ($order->label_created || $order->label_created == 1) {
                                     Log::info('Label already created for order: ' . $order->id);
                                     continue;
                                 }
@@ -283,7 +283,7 @@ class AutoCreateLabel extends Command
                 }
 
                 $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
-                if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
+                if  (strtolower($check_mode->option_value) == 'sandbox') {
                     
                     $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
                         'order_id' => $orderData['orderNumber'],
