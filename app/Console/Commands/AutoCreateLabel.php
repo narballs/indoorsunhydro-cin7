@@ -240,7 +240,6 @@ class AutoCreateLabel extends Command
         $file_name = 'label-' . $order_id . '-' . now()->format('YmdHis') . '.pdf';
         file_put_contents(public_path('labels/' . $file_name), $label_data);
     
-        $label_email_data = $this->prepareLabelEmailData($order_id, $orderData['customerEmail'], $orderData, $order_items_array, $packingSlipFileName, $file_name);
         ShipstationApiLogs::create([
             'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
             'action' => 'create_label ' . $order_id,
@@ -248,8 +247,35 @@ class AutoCreateLabel extends Command
             'response' => $is_sandbox ? 'label created from sandbox' : $label_api_response,
             'status' => 200,
         ]);
+
+        $label_email_data = $this->prepareLabelEmailData($order_id, $orderData['customerEmail'], $prepare_data_for_creating_label, $packingSlipFileName, $file_name, $order_items_array);
     
         $this->sendLabelEmail($label_email_data, $order, $file_name);
+    }
+
+
+    private function prepareLabelEmailData($order_id, $user_email, $prepare_data_for_creating_label, $packingSlipFileName, $file_name , $order_items_array) {
+        
+        return [
+            'email' => $user_email,
+            'subject' => 'Ship Web Order ' . $order_id,
+            'content' => [
+                'order_id' => $order_id,
+                'company' => $prepare_data_for_creating_label['shipTo']['company'],
+                'name' => $prepare_data_for_creating_label['shipTo']['name'],
+                'street1' => $prepare_data_for_creating_label['shipTo']['street1'],
+                'street2' => $prepare_data_for_creating_label['shipTo']['street2'],
+                'city' => $prepare_data_for_creating_label['shipTo']['city'],
+                'state' => $prepare_data_for_creating_label['shipTo']['state'],
+                'postalCode' => $prepare_data_for_creating_label['shipTo']['postalCode'],
+                'country' => $prepare_data_for_creating_label['shipTo']['country'],
+                'phone' => $prepare_data_for_creating_label['shipTo']['phone'],
+            ],
+            'order_items' => $order_items_array,
+            'from' => SettingHelper::getSetting('noreply_email_address'),
+            'packingSlipFileName' => $packingSlipFileName,  // Packing slip file name
+            'labelFileName' => $file_name,   
+        ];
     }
     
     private function sendLabelEmail($label_email_data, $order, $file_name) {
@@ -261,7 +287,7 @@ class AutoCreateLabel extends Command
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
                 'action' => 'create_label',
                 'request' => json_encode($label_email_data),
-                'response' => 'label updated in database',
+                'response' => 'label updated in database and email sent to user',
                 'status' => 200,
             ]);
             $this->info('Shipment label created and email sent successfully.');
@@ -290,7 +316,7 @@ class AutoCreateLabel extends Command
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
                 'action' => 'send_email_to_admin',
                 'request' => json_encode($label_email_data),
-                'response' => $mail_send ? 'email sent' : 'error sending email',
+                'response' => $mail_send ? 'email sent to admins' : 'error sending email',
                 'status' => $mail_send ? 200 : 500,
             ]);
         } else {
