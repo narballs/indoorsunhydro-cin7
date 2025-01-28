@@ -279,10 +279,36 @@ class AutoCreateLabel extends Command
     }
     
     private function sendLabelEmail($label_email_data, $order, $file_name) {
+        $order_update = $order->update(
+            [
+                'is_shipped' => 1,
+                'label_created' => 1, 
+                'label_link' => $file_name
+            ]
+        );
+
+        if (!$order_update) {
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
+                'action' => 'update_order',
+                'request' => json_encode($label_email_data),
+                'response' => 'error updating order',
+                'status' => 500,
+            ]);
+        } else {
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
+                'action' => 'update_order',
+                'request' => json_encode($label_email_data),
+                'response' => 'order updated successfully',
+                'status' => 200,
+            ]);
+        }
+
         $mail_send = MailHelper::sendShipstationLabelMail('emails.shipment_label', $label_email_data);
+        
         if ($mail_send) {
             $this->sendAdminEmails($label_email_data, $order, $file_name, $mail_send);
-            $order->update(['is_shipped' => 1, 'label_created' => 1, 'label_link' => $file_name]);
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
                 'action' => 'create_label',
