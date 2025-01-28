@@ -657,7 +657,7 @@ class AdminSettingsController extends Controller
         // ->orderBy('id', 'asc')
         // ->get();
 
-        $cin7_api_keys = ApiKeys::whereHas([
+        $cin7_api_keys = ApiKeys::with([
             'api_event_logs' => function ($query) use ($current_date) {
                 $query->whereDate('created_at', $current_date);
             },
