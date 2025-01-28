@@ -13,6 +13,7 @@ class ShipstationApiLogs extends Model
         'api_url',
         'request',
         'response',
-        'status'
+        'status',
+        'action'
     ];
 }
