@@ -124,12 +124,14 @@ class AutoCreateLabel extends Command
                             Log::info('Auto create label is enabled');
             
                             foreach ($all_orders as $order) {
-                                $this->processOrder($order, $client, $currentDate, $data);
-                                sleep($delay_duration * 60);
+                                
                                 if ($order->label_created || $order->label_created == 1) {
                                     Log::info('Label already created for order: ' . $order->id);
                                     continue;
                                 }
+
+                                $this->processOrder($order, $client, $currentDate, $data);
+                                sleep($delay_duration * 60);
                                 Log::info('Label created for order: ' . $order->id);
                             }
                         }
