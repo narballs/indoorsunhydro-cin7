@@ -657,29 +657,14 @@ class AdminSettingsController extends Controller
         // ->orderBy('id', 'asc')
         // ->get();
 
-        // $cin7_api_keys = ApiKeys::whereHas([
-        //     'api_event_logs' => function ($query) use ($current_date) {
-        //         $query->whereDate('created_at', $current_date);
-        //     },
-        //     'api_endpoint_requests' => function ($query) use ($current_date) {
-        //         $query->whereDate('created_at', $current_date);
-        //     }
-        // ])
-        // ->when($is_past_date, function ($query) use ($current_date) {
-        //     return $query->where('is_active', 0)
-        //                  ->whereDate('created_at', $current_date); // If past date, get inactive keys for that date
-        // }, function ($query) {
-        //     return $query->where('is_active', 1); // If today, get active keys
-        // })
-        // ->orderBy('id', 'asc')
-        // ->get();
-
-        $cin7_api_keys = ApiKeys::with('api_event_logs' , 'api_endpoint_requests')->whereHas('api_event_logs', function ($query) use ($current_date) {
-            $query->whereDate('created_at', $current_date);
-        })
-        ->whereHas('api_endpoint_requests', function ($query) use ($current_date) {
-            $query->whereDate('created_at', $current_date);
-        })
+        $cin7_api_keys = ApiKeys::whereHas([
+            'api_event_logs' => function ($query) use ($current_date) {
+                $query->whereDate('created_at', $current_date);
+            },
+            'api_endpoint_requests' => function ($query) use ($current_date) {
+                $query->whereDate('created_at', $current_date);
+            }
+        ])
         ->when($is_past_date, function ($query) use ($current_date) {
             return $query->where('is_active', 0)
                          ->whereDate('created_at', $current_date); // If past date, get inactive keys for that date
