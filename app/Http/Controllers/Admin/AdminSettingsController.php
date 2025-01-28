@@ -640,23 +640,7 @@ class AdminSettingsController extends Controller
         // // Determine if the selected date is in the past
         $is_past_date = $current_date->lt(Carbon::today());
     
-        // // Fetch API keys based on the selected date condition
-        // $cin7_api_keys = ApiKeys::with([
-        //     'api_event_logs' => function ($query) use ($current_date) {
-        //         $query->whereDate('created_at', $current_date);
-        //     },
-        //     'api_endpoint_requests' => function ($query) use ($current_date) {
-        //         $query->whereDate('created_at', $current_date);
-        //     }
-        // ])
-        // ->when($is_past_date, function ($query) {
-        //     return $query->where('is_active', 0); // If past date, get inactive keys
-        // }, function ($query) {
-        //     return $query->where('is_active', 1); // If today, get active keys
-        // })
-        // ->orderBy('id', 'asc')
-        // ->get();
-
+        
         $cin7_api_keys = ApiKeys::with([
             'api_event_logs' => function ($query) use ($current_date) {
                 $query->whereDate('created_at', $current_date);
