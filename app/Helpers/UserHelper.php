@@ -18,6 +18,7 @@ use Google\Service\Calendar\Setting;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserHelper
 {
@@ -885,65 +886,7 @@ class UserHelper
         return $data;
     }
 
-    // public static function switch_price_tier(Request $request) {
-    //     $user_id = auth()->id();
-    //     $company = session()->get('company');
-    //     $contact_id = session()->get('contact_id');
-    //     if (!$user_id) {
-    //         $cart_items = $request->session()->get('cart');
-            
-    //     }
-    //     elseif (empty($company) || (!$company) && (!empty($user_id))) {
-    //         $cart_items = Cart::where('user_id' , $user_id)->get();
-    //         // $cart_items = $request->session()->get('cart');
-    //     } else {
-    //         // $getSelectedContact = Contact::where('company' , $company)
-    //         // ->where('user_id' , $user_id)
-    //         // ->first();
-    //         $getSelectedContact = Contact::where('contact_id' , $contact_id)
-    //         ->orWhere('secondary_id' , $contact_id)
-    //         ->where('user_id' , $user_id)
-    //         ->first();
-    //         $productPrice = 0;
-    //         $cart_items = [];
-    //         $cartItems = Cart::where('user_id' , $getSelectedContact->user_id)
-    //         ->where('contact_id' , $contact_id)
-    //         ->get();
-    //         $getPriceColumn = UserHelper::getUserPriceColumn(false , $getSelectedContact->user_id);
-    //         if (count($cartItems) > 0) {
-    //             foreach ($cartItems as $cartItem) {
-    //                 $productPricing = Pricingnew::where('option_id' , $cartItem['option_id'])->first();
-    //                 $productPrice = $productPricing->$getPriceColumn ? $productPricing->$getPriceColumn : 0;
-    //                 if ($productPrice == 0) { 
-    //                     $productPrice = $productPricing['sacramentoUSD'];
-    //                 }
-                    
-    //                 if ($productPrice == 0) { 
-    //                     $productPrice = $productPricing['retailUSD'];
-    //                 }
-    //                 $cart = Cart::where('user_id' , $user_id)->where('product_id' , $cartItem['product_id'])->first();
-    //                 if (!empty($cart)) {
-    //                     $cart->price = $productPrice;
-    //                     $cart->save();
-    //                 }
-    //                 $cart_items[$cartItem['qoute_id']] = [
-    //                     "product_id" => $cartItem['product_id'],
-    //                     "name" => $cartItem['name'],
-    //                     "quantity" => $cartItem['quantity'],
-    //                     "price" => $cart['price'],
-    //                     "code" => $cartItem['code'],
-    //                     "image" => $cartItem['image'],
-    //                     'option_id' => $cartItem['option_id'],
-    //                     "slug" => $cartItem['slug'],
-    //                 ];
-    //             }
-    //             session()->forget('cart');
-    //             Session::put('cart', $cart_items);
-    //         }
-    //     }
-    //     return $cart_items;
-    // }
-
+    
     public static function switch_price_tier(Request $request) {
         $user_id = auth()->id();
         $company = session()->get('company');
@@ -1051,5 +994,8 @@ class UserHelper
     
         return trim($cleanedDescription); // Trim any leading or trailing spaces
     }
+
+
+    
     
 }
