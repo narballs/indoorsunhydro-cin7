@@ -1277,7 +1277,7 @@ class OrderController extends Controller
             }
 
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
-            if  (strtolower($check_mode->option_value) == strtolower('sandbox')) {
+            if  (strtolower($check_mode->option_value) == 'sandbox') {
                 
                 $packingSlipPdf = Pdf::loadView('partials.packing_slip', [
                     'order_id' => $orderData['orderNumber'],
