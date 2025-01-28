@@ -250,7 +250,7 @@ class AutoCreateLabel extends Command
 
         $label_email_data = $this->prepareLabelEmailData($order_id, $orderData['customerEmail'], $prepare_data_for_creating_label, $packingSlipFileName, $file_name, $order_items_array);
     
-        $this->sendLabelEmail($label_email_data, $order, $file_name);
+        $this->update_and_sendLabelEmail($label_email_data, $order, $file_name);
     }
 
 
@@ -278,23 +278,51 @@ class AutoCreateLabel extends Command
         ];
     }
     
-    private function sendLabelEmail($label_email_data, $order, $file_name) {
-        $mail_send = MailHelper::sendShipstationLabelMail('emails.shipment_label', $label_email_data);
-        if ($mail_send) {
-            $this->sendAdminEmails($label_email_data, $order, $file_name, $mail_send);
-            $order->update(['is_shipped' => 1, 'label_created' => 1, 'label_link' => $file_name]);
+    private function update_and_sendLabelEmail($label_email_data, $order, $file_name) {
+        
+        $order_update = $order->update(
+            [
+                'is_shipped' => 1,
+                'label_created' => 1, 
+                'label_link' => $file_name
+            ]
+        );
+
+        if (!$order_update) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'create_label',
+                'action' => 'update_label ' . $order->id,
                 'request' => json_encode($label_email_data),
-                'response' => 'label updated in database and email sent to user',
+                'response' => 'error updating order',
+                'status' => 500,
+            ]);
+        } else {
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
+                'action' => 'update_label ' . $order->id,
+                'request' => json_encode($label_email_data),
+                'response' => 'order updated successfully',
                 'status' => 200,
             ]);
+        }
+
+        $mail_send = MailHelper::sendShipstationLabelMail('emails.shipment_label', $label_email_data);
+        
+        if ($mail_send) {
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
+                'action' => 'send_email_to_user' . $order->id,
+                'request' => json_encode($label_email_data),
+                'response' => 'email sent to user',
+                'status' => 200,
+            ]);
+
+            $this->sendAdminEmails($label_email_data, $order, $file_name, $mail_send);
             $this->info('Shipment label created and email sent successfully.');
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'send_email_to_user',
+                'action' => 'error_sending_email_to_user' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'error sending email',
                 'status' => 500,
@@ -314,7 +342,7 @@ class AutoCreateLabel extends Command
             $mail_send = MailHelper::sendShipstationLabelMail('emails.shipment_label', $label_email_data);
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'send_email_to_admin',
+                'action' => 'send_email_to_admin ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => $mail_send ? 'email sent to admins' : 'error sending email',
                 'status' => $mail_send ? 200 : 500,
@@ -322,12 +350,13 @@ class AutoCreateLabel extends Command
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'send_email_to_admin',
+                'action' => 'error_sending_email_to_admin ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'no valid emails found',
                 'status' => 500,
             ]);
         }
+        
     }
     
     private function creating_packing_slip_for_label($orderData , $prepare_data_for_creating_label , $order_items , $user_email) {
