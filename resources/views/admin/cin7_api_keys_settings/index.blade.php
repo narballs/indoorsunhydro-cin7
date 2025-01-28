@@ -69,14 +69,16 @@
                                             <div class="row justify-content-center">
                                                 <span class="">
                                                     Threshold: <input type="number" id="key_thrshold_{{$cin7_api_key->id}}"  max="5000" name="total_thresold" class="form-control d-inline-block w-auto" value="{{$cin7_api_key->threshold}}">
-                                                    <button 
-                                                        type="button" 
-                                                        onclick="stop_api('{{ $cin7_api_key->id }}')" 
-                                                        class="btn {{ $cin7_api_key && $cin7_api_key->is_stop == 1 ? 'btn-success' : 'btn-danger' }} btn-sm">
-                                                        {{ $cin7_api_key && $cin7_api_key->is_stop == 1 ? 'Resume' : 'Stop' }}
-                                                    </button>
-                                                    <button type="button" id="update_total_threshold" onclick="update_key_threshold('{{$cin7_api_key->id}}')" class="btn btn-primary btn-sm text-white">Refresh/Update</button>
-                                                    <span id="key_badge_{{$cin7_api_key->id}}" class="badge {{ $cin7_api_key && $cin7_api_key->is_stop == 0 ? 'bg-success' : 'bg-danger' }}">{{ $cin7_api_key && $cin7_api_key->is_stop == 0 ? 'Active' : 'Inactive' }}</span>
+                                                    @if (request('current_date', \Carbon\Carbon::today()->toDateString()) >= \Carbon\Carbon::today()->toDateString())
+                                                        <button 
+                                                            type="button" 
+                                                            onclick="stop_api('{{ $cin7_api_key->id }}')" 
+                                                            class="btn {{ $cin7_api_key && $cin7_api_key->is_stop == 1 ? 'btn-success' : 'btn-danger' }} btn-sm">
+                                                            {{ $cin7_api_key && $cin7_api_key->is_stop == 1 ? 'Resume' : 'Stop' }}
+                                                        </button>
+                                                        <button type="button" id="update_total_threshold" onclick="update_key_threshold('{{$cin7_api_key->id}}')" class="btn btn-primary btn-sm text-white">Refresh/Update</button>
+                                                        <span id="key_badge_{{$cin7_api_key->id}}" class="badge {{ $cin7_api_key && $cin7_api_key->is_stop == 0 ? 'bg-success' : 'bg-danger' }}">{{ $cin7_api_key && $cin7_api_key->is_stop == 0 ? 'Active' : 'Inactive' }}</span>
+                                                    @endif
                                                 </span>
                                             </div>
                                         </div>
