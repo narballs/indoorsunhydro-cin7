@@ -558,7 +558,7 @@ class OrderManagementController extends Controller
             UtilHelper::update_product_stock_on_cancellation($get_order);
         }
 
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+        $order_items = ApiOrderItem::with('order.texClasses','product', 'product.options')
             ->where('order_id', $get_order->id)
             ->get();
 

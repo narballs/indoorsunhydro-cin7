@@ -344,11 +344,14 @@ class UtilHelper
                 if (in_array($location_inventory->branchId, $skip_branches)) {
                     continue;
                 }
-                $branch_with_stocks[] = [
-                    'branch_id' => $location_inventory->branchId,
-                    'branch_name' => $location_inventory->branchName,
-                    'available' => $location_inventory->available
-                ];
+                
+                if (!in_array($location_inventory->branchId, $skip_branches)) {
+                    $branch_with_stocks[] = [
+                        'branch_id' => $location_inventory->branchId,
+                        'branch_name' => $location_inventory->branchName,
+                        'available' => $location_inventory->available
+                    ];
+                }
 
                 
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
