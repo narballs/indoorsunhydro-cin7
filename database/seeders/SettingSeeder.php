@@ -525,6 +525,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'auto_mark_order_shipped',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
             [
                 'option_name' => 'stock_tooltip_message',

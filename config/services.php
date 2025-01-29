@@ -41,6 +41,7 @@ return [
         'shipment_order_url' => env('SHIPMENT_ORDER_URL'),
         'shipment_label_url' => env('SHIPMENT_LABEL_URL'),
         'shipstation_warehouse_url' => env('SHIPMENT_WAREHOUSE_URL'),
+        'shipstation_mark_order_shipped_url' => env('SHIPMENT_MARKSHIPPED_URL'),
     ],
     'ai' => [
         'ai_key' => env('OPEN_AI_KEY'),
