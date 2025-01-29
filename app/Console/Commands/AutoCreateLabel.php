@@ -132,8 +132,9 @@ class AutoCreateLabel extends Command
                                 }
 
                                 LabelHelper::processOrder($order, $client, $currentDate, $data);
-                                sleep($delay_duration * 60);
                                 Log::info('Label created for order: ' . $order->id);
+                                $this->info('Label created for order: ' . $order->id);
+                                sleep($delay_duration * 60);
                             }
                         }
                     }
