@@ -121,7 +121,7 @@ class LabelHelper {
     }
     
     public static function handleSandboxMode($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array) {
-        self::createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, true);
+        self::createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, true , $label_sanbox_response = null);
     }
     
     public static function handleProductionMode($client, $prepare_data_for_creating_label, $order, $order_id, $orderData, $order_items_array) {
@@ -134,7 +134,7 @@ class LabelHelper {
         self::createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, false, $responseBody);
     }
     
-    public static function createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $is_sandbox = false, $label_api_response = null) {
+    public static function createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $is_sandbox = false, $label_api_response) {
         $packingSlipPdf = self::creating_packing_slip_for_label($orderData, $prepare_data_for_creating_label, $orderData['items'], $orderData['customerEmail']);
         $packingSlipFileName = 'packing-slip-' . $order_id . '-' . now()->format('YmdHis') . '.pdf';
         file_put_contents(public_path('packing_slips/' . $packingSlipFileName), $packingSlipPdf->output());
