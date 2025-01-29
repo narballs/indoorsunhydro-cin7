@@ -2936,5 +2936,20 @@ class OrderController extends Controller
     }
 
 
+    public function mark_order_shipped(Request $request) {
+        $order_id = $request->order_id;
+        $order = ApiOrder::where('id', $order_id)->first();
+        if (empty($order)) {
+            return redirect()->back()->with('error', 'Order not found');
+        }
+
+        $order->is_shipped = 1;
+        $order->label_created = 1;
+        $order->save();
+
+        return redirect()->back()->with('success', 'Order marked as shipped');
+    }
+
+
 }
 
