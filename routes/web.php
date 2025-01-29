@@ -432,6 +432,8 @@ Route::group(['middleware' => ['auth']], function () {
         // udpate key thresold
         Route::post('/cin7-api-keys-settings/update-threshold', [AdminSettingsController::class, 'update_cin7_api_threshold'])->name('update_cin7_api_threshold');
         Route::get('/reset-cin7-api-keys', [AdminCommandsController::class, 'reset_cin7_api_keys'])->name('reset_cin7_api_keys');
+
+        Route::get('/mark/order/shipped', [OrderController::class, 'mark_order_shipped'])->name('mark_order_shipped');
         
     });
 
@@ -606,6 +608,7 @@ Route::post('/notifyOutOfStock', [ProductController::class, 'notifyOutOfStock'])
 Route::post('/updateItemQuantitytoOriginal', [ProductController::class, 'updateItemQuantitytoOriginal'])->name('updateItemQuantitytoOriginal');
 Route::post('/removeOutOfStock', [ProductController::class, 'removeOutOfStock'])->name('removeOutOfStock');
 Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('PackingSlip');
+
 
 
 // get filter products from pythone api
