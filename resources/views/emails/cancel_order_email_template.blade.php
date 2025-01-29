@@ -332,22 +332,18 @@
                 <td>
                     <table width="100%" align="left" border="0">
                         @foreach ($order_items as $item)
-                            @foreach ($item['product'] as $product)
+                            @foreach ($item['product']->options as $option)
                                 <tr>
                                     <td width="20%">
-                                        @if (!empty($product->images))
-                                            <img src="{{ $product->images }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
-                                        @else
-                                            <img src=" {{ asset('/theme/img/image_not_available.png') }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
-                                        @endif
+                                        <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
                                     </td>
                                     <td style="vertical-align:top;">
                                         <table width="100%" align="left" border="0">
                                             <tr>
-                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $product->name }}</td>
+                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $item['product']->name }}</td>
                                             </tr>
                                             <tr>
-                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">SKU: {{ $product->code }}</span></td>
+                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">SKU: {{ $item['product']->code }}</span></td>
                                             </tr>
                                         </table>
                                     </td>

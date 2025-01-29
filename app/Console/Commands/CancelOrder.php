@@ -169,9 +169,9 @@ class CancelOrder extends Command
                     $pending_order->isApproved = 2;
                     $pending_order->save();
 
-                    $order_items = ApiOrderItem::with('order.texClasses','product', 'product.options')
-                    ->where('order_id', $pending_order->id)
-                    ->get();
+                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                        ->where('order_id', $pending_order->id)
+                        ->get();
 
                     $count = $order_items->count();
 
