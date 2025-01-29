@@ -41,7 +41,7 @@ class MarkShipped extends Command
      */
     public function handle()
     {
-        $auto_mark_order_shipped = AdminSetting::where('option_name', 'auto_create_label')->first();
+        $auto_mark_order_shipped = AdminSetting::where('option_name', 'auto_mark_order_shipped')->first();
 
         // Exit early if auto_mark_order_shipped is set to 'no'
         if ($auto_mark_order_shipped && strtolower($auto_mark_order_shipped->option_value) === 'no') {
