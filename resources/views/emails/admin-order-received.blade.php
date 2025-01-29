@@ -349,7 +349,7 @@
                 <td>
                     <table width="100%" align="left" border="0">
                         @foreach ($order_items as $item)
-                            {{-- @foreach ($item['product']->options as $option)
+                            @foreach ($item['product']->options as $option)
                                 <tr>
                                     <td width="20%">
                                         <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
@@ -366,31 +366,6 @@
                                     </td>
                                     <td width="20%" style="color:#000000;font-color:#000000;font-size: 12px;vertical-align:top; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
                                     <td width="20%" style="text-align: right;vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
-                                </tr>
-                                
-                            @endforeach --}}
-
-                            @foreach ($item['product'] as $product)
-                                <tr>
-                                    <td width="20%">
-                                        @if (!empty($product->images))
-                                            <img src="{{ $product->images }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
-                                        @else
-                                            <img src=" {{ asset('/theme/img/image_not_available.png') }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
-                                        @endif
-                                    </td>
-                                    <td style="vertical-align:top;">
-                                        <table width="100%" align="left" border="0">
-                                            <tr>
-                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">{{ $product->name }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">SKU: {{ $product->code }}</span></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                    <td width="20%" style="text-align: center;color:#000000;font-color:#000000;font-size: 12px;vertical-align:top; font-weight:400;">{{ $item->quantity . 'x' }}</span></td>
-                                    <td width="20%" style="vertical-align:top;color:#000000;font-color:#000000;font-size: 12px; font-weight:400; ">{{ '$'. number_format($item->price, 2) }}</td>
                                 </tr>
                                 
                             @endforeach
