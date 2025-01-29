@@ -384,8 +384,8 @@
                                                                 Manual Label
                                                             </button>
                                                         @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1 || $order->isApproved == 0))
-                                                            <div class="d-flex justify-content-between">
-                                                                <form action="{{url('admin/orders/create/label')}}" method="post">
+                                                            <div class="d-flex justify-content-between mx-3">
+                                                                <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
                                                                     @csrf
                                                                     <input type="hidden" name="order_id" id="order_id"
                                                                         value="{{ $order->id }}">
