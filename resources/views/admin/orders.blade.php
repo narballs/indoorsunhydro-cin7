@@ -384,16 +384,31 @@
                                                                 Manual Label
                                                             </button>
                                                         @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1 || $order->isApproved == 0))
-                                                            <form action="{{url('admin/orders/create/label')}}" method="post">
-                                                                @csrf
-                                                                <input type="hidden" name="order_id" id="order_id"
-                                                                    value="{{ $order->id }}">
-                                                                <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
-                                                                    value="{{ $order->shipstation_orderId }}">
-                                                                <button type="submit" class="badge badge-primary p-2 border-0">
-                                                                    Create Label
-                                                                </button>
-                                                            </form>
+                                                            <div class="d-flex justify-content-between mx-3">
+                                                                <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
+                                                                    @csrf
+                                                                    <input type="hidden" name="order_id" id="order_id"
+                                                                        value="{{ $order->id }}">
+                                                                    <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
+                                                                        value="{{ $order->shipstation_orderId }}">
+                                                                    <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                        Create Label
+                                                                    </button>
+                                                                </form>
+    
+                                                                <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                                    @csrf
+                                                                    <input type="hidden" name="order_id" id="order_id"
+                                                                        value="{{ $order->id }}">
+                                                                    <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
+                                                                        value="{{ $order->shipstation_orderId }}">
+                                                                    <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                        Mark Shipped
+                                                                    </button>
+                                                                </form>
+    
+                                                            </div>
+
                                                         @else
                                                             <div class="d-flex justify-content-between">
                                                                 @if ($order->label_link != '')
