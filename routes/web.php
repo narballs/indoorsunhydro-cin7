@@ -433,7 +433,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/cin7-api-keys-settings/update-threshold', [AdminSettingsController::class, 'update_cin7_api_threshold'])->name('update_cin7_api_threshold');
         Route::get('/reset-cin7-api-keys', [AdminCommandsController::class, 'reset_cin7_api_keys'])->name('reset_cin7_api_keys');
 
-        Route::get('/mark/order/shipped', [OrderController::class, 'mark_order_shipped'])->name('mark_order_shipped');
+        Route::post('/mark/order/shipped', [OrderController::class, 'mark_order_shipped'])->name('mark_order_shipped');
         
     });
 
