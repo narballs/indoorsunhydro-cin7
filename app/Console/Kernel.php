@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
         $schedule->command('reset:cin7_api_keys')->dailyAt('00:00');
-
+        
         $autoLabelSetting = AutoLabelSetting::first();
 
         if ($autoLabelSetting) {
@@ -96,6 +96,9 @@ class Kernel extends ConsoleKernel
                 }
             }
         }
+
+
+        $schedule->command('mark:order_shipped')->everyThirtyMinutes();
                         
 
 
