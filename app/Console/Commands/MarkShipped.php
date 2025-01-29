@@ -46,6 +46,7 @@ class MarkShipped extends Command
         // Exit early if auto_mark_order_shipped is set to 'no'
         if ($auto_mark_order_shipped && strtolower($auto_mark_order_shipped->option_value) === 'no') {
             Log::info('Auto Mark Order Shipped is disabled');
+            $this->info('Auto Mark Order Shipped is disabled');
             return;
         }
 
@@ -63,6 +64,7 @@ class MarkShipped extends Command
 
         if ($all_orders->isEmpty()) {
             Log::info('No orders found to mark as shipped');
+            $this->info('No orders found to mark as shipped');
             return;
         }
 
@@ -71,11 +73,13 @@ class MarkShipped extends Command
 
                 if (empty($order->shipstation_orderId)) {
                     Log::info('Order ' . $order->id . ' does not have a Shipstation order ID');
+                    $this->info('Order ' . $order->id . ' does not have a Shipstation order ID');
                     continue;
                 }
                 // Skip if order is already marked as shipped
                 if ($order->is_shipped) {
                     Log::info('Order ' . $order->id . ' is already marked as shipped');
+                    $this->info('Order ' . $order->id . ' is already marked as shipped');
                     continue;
                 }
 
@@ -88,7 +92,9 @@ class MarkShipped extends Command
                     ],
                 ]);
 
+                
                 $response_data = json_decode($response->getBody()->getContents());
+                $this->info('Request successful for order ' . $order->id);
 
                 ShipstationApiLogs::create([
                     'api_url' => $url,
