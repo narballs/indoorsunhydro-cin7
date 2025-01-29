@@ -395,11 +395,19 @@
                                                                 </button>
                                                             </form>
                                                         @else
-                                                            @if ($order->label_link != '')
-                                                                <a href="{{route('download_label' , $order->label_link)}}" class="badge badge-success p-2 border-0">
-                                                                    Download
-                                                                </a>
-                                                            @endif
+                                                            <div class="d-flex justify-content-between">
+                                                                @if ($order->label_link != '')
+                                                                    <a href="{{route('download_label' , $order->label_link)}}" class="badge badge-success p-2 border-0 mr-2">
+                                                                        Download
+                                                                    </a>
+                                                                @endif
+
+                                                                @if ($order->is_shipped == 1)
+                                                                    <button type="button" class="badge badge-success p-2 border-0">
+                                                                        Shipped
+                                                                    </button>
+                                                                @endif
+                                                            </div>
                                                         @endif
                                                     @endif
                                                 @endif
