@@ -1039,7 +1039,7 @@ class CheckoutController extends Controller
                     }
     
                   
-                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    $order_items = ApiOrderItem::with('order.texClasses','product','product.options')
                     ->where('order_id', $order_id)
                     ->get();
                     
@@ -3211,11 +3211,12 @@ class CheckoutController extends Controller
                 } catch (\Exception $e) {
                     // Handle error, log it
                     Log::error('Shipping API Error: ' . $e->getMessage());
-                    return [
-                        'shipment_prices' => null,
-                        'shipment_price' => 0,
-                        'shipping_carrier_code' => $carrier_code_2->option_value,    
-                    ];
+                    // return [
+                    //     'shipment_prices' => null,
+                    //     'shipment_price' => 0,
+                    //     'shipping_carrier_code' => $carrier_code_2->option_value,    
+                    // ];
+                    continue; // Skip this quote and proceed with the next one
                 }
             }
         }
