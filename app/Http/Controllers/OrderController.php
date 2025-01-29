@@ -730,7 +730,7 @@ class OrderController extends Controller
                         return redirect('/');
                     }
 
-                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    $order_items = ApiOrderItem::with('order.texClasses','product' ,'product.options')
                         ->where('order_id', $order_id)
                         ->get();
                     $user = User::where('id', $currentOrder->user_id)->first();
