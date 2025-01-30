@@ -1387,8 +1387,12 @@ p {
                 } 
 
                 const text_class = option.stockAvailable > 0 ? 'text-success' : 'text-danger';
-                const retail_price = (option?.default_price?.[column]) ?? (option?.default_price?.retailUSD) ?? 0;
-
+                // const retail_price = (option?.default_price?.[column]) ?? (option?.default_price?.retailUSD) ?? 0;
+                const retail_price = 
+                (option?.default_price?.[column] != null && option?.default_price?.[column] > 0) ? option.default_price[column] :
+                (option?.default_price?.sacramentoUSD != null && option?.default_price?.sacramentoUSD > 0) ? option.default_price.sacramentoUSD :
+                (option?.default_price?.retailUSD != null && option?.default_price?.retailUSD > 0) ? option.default_price.retailUSD :
+                0;
 
 
                 // Additional condition for add_to_cart based on product hiding and authorization/payment terms
