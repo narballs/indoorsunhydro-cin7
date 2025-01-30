@@ -15,44 +15,13 @@ use Illuminate\Support\Facades\Log;
 
 class LabelHelper {
 
-    public static function processOrder($order, $client, $currentDate, $data) {
-        try {
-            $order_id = $order->id;
-            $order = ApiOrder::find($order_id);
-            $shipstation_order_id = $order->shipstation_orderId;
-            $default_ship_from_address = self::getDefaultShipFromAddress();
-            
-            if (!$default_ship_from_address) {
-                return Log::info('Default Ship From Address not found.');
-            }
     
-            $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders());
-            if (!$orderData) {
-                return Log::info('Order not found in ShipStation.');
-            }
-    
-            $order_items_array = self::processOrderItems($orderData['items']);
-            if (empty($order_items_array)) {
-                return Log::info('Order items not found in ShipStation.');
-            }
-    
-            $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
-            $currentDate = self::adjustShipDate($orderData, $currentDate);
-            
-            $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
-            $is_sandbox = strtolower($check_mode->option_value) == 'sandbox';
-
-            self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
-        } catch (\Exception $e) {
-            Log::error("Error processing ShipStation order: {$e->getMessage()}");
-        }
-    }
 
 
     public static function processControllerOrder($order, $client, $currentDate, $shipstation_order_id) {
         try {
             $order_id = $order->id;
-            $order = ApiOrder::find($order_id);
+            $order = ApiOrder::where('id', $order_id)->first();
             $shipstation_order_id = $shipstation_order_id;
             $default_ship_from_address = self::getDefaultShipFromAddress();
             
@@ -64,6 +33,15 @@ class LabelHelper {
             if (!$orderData) {
                 return Log::info('Order not found in ShipStation.');
             }
+
+
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'create_label ' . $order_id,
+                'request' => 'get order data from shipstation',
+                'response' => json_encode($orderData),
+                'status' => 200,
+            ]);
     
             $order_items_array = self::processOrderItems($orderData['items']);
             if (empty($order_items_array)) {
@@ -82,6 +60,47 @@ class LabelHelper {
         } catch (\Exception $e) {
             Log::error("Error processing ShipStation order: {$e->getMessage()}");
             return false;
+        }
+    }
+
+    public static function processOrder($order, $client, $currentDate, $data) {
+        try {
+            $order_id = $order->id;
+            $order = ApiOrder::where('id', $order_id)->first();
+            $shipstation_order_id = $order->shipstation_orderId;
+            $default_ship_from_address = self::getDefaultShipFromAddress();
+            
+            if (!$default_ship_from_address) {
+                return Log::info('Default Ship From Address not found.');
+            }
+    
+            $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders());
+            if (!$orderData) {
+                return Log::info('Order not found in ShipStation.');
+            }
+
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'create_label ' . $order_id,
+                'request' => 'get order data from shipstation',
+                'response' => json_encode($orderData),
+                'status' => 200,
+            ]);
+    
+            $order_items_array = self::processOrderItems($orderData['items']);
+            if (empty($order_items_array)) {
+                return Log::info('Order items not found in ShipStation.');
+            }
+    
+            $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
+            $currentDate = self::adjustShipDate($orderData, $currentDate);
+            
+            $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
+            $is_sandbox = strtolower($check_mode->option_value) == 'sandbox';
+
+            self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
+        } catch (\Exception $e) {
+            Log::error("Error processing ShipStation order: {$e->getMessage()}");
         }
     }
     
@@ -147,7 +166,7 @@ class LabelHelper {
             'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
             'action' => 'create_label ' . $order_id,
             'request' => json_encode($prepare_data_for_creating_label),
-            'response' => $is_sandbox ? 'label created from sandbox' : $label_api_response,
+            'response' => $is_sandbox ? 'label created from sandbox' : json_encode($label_api_response),
             'status' => 200,
         ]);
 
