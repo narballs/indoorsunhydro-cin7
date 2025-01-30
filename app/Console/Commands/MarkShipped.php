@@ -138,7 +138,7 @@ class MarkShipped extends Command
                 Log::error('Request failed for order ' . $order->id . ': ' . $e->getMessage());
                 ShipstationApiLogs::create([
                     'api_url' => $url,
-                    'action' => 'error_getting_order_for' . $order->id,
+                    'action' => 'error_getting_order_for ' . $order->id,
                     'request' => 'order not marked as shipped in Shipstation',
                     'response' => $e->getMessage(),
                     'order_id' => $order->id,
@@ -149,7 +149,7 @@ class MarkShipped extends Command
                 Log::error('Unexpected error for order ' . $order->id . ': ' . $e->getMessage());
                 ShipstationApiLogs::create([
                     'api_url' => $url,
-                    'action' => 'error_getting_order_for' . $order->id,
+                    'action' => 'error_getting_order_for ' . $order->id,
                     'request' => 'order not marked as shipped in Shipstation',
                     'response' => $e->getMessage(),
                     'order_id' => $order->id,
