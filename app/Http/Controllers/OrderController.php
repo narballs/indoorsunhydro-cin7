@@ -1080,7 +1080,7 @@ class OrderController extends Controller
         }
     }
 
-    public function create_label_old(Request $request) {
+    public function create_label(Request $request) {
         $currentDate = date('Y-m-d');
         $client = new \GuzzleHttp\Client();
         $order_id = $request->order_id;
@@ -1105,7 +1105,7 @@ class OrderController extends Controller
         }
     }
 
-    public function create_label(Request $request) {
+    public function create_label_old(Request $request) {
         
         $currentDate = date('Y-m-d');
         $data = [];
