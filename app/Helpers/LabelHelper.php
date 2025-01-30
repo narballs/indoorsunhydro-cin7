@@ -37,9 +37,10 @@ class LabelHelper {
 
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-                'action' => 'create_label ' . $order_id,
+                'action' => 'get order ' . $order_id,
                 'request' => 'get order data from shipstation',
                 'response' => json_encode($orderData),
+                'order_id' => $order_id,
                 'status' => 200,
             ]);
     
@@ -81,9 +82,10 @@ class LabelHelper {
 
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-                'action' => 'create_label ' . $order_id,
+                'action' => 'get_order  ' . $order_id,
                 'request' => 'get order data from shipstation',
                 'response' => json_encode($orderData),
+                'order_id' => $order_id,
                 'status' => 200,
             ]);
     
@@ -167,6 +169,7 @@ class LabelHelper {
             'action' => 'create_label ' . $order_id,
             'request' => json_encode($prepare_data_for_creating_label),
             'response' => $is_sandbox ? 'label created from sandbox' : json_encode($label_api_response),
+            'order_id' => $order_id,
             'status' => 200,
         ]);
 
@@ -216,6 +219,7 @@ class LabelHelper {
                 'action' => 'update_label ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'error updating order',
+                'order_id' => $order->id,
                 'status' => 500,
             ]);
         } else {
@@ -224,6 +228,7 @@ class LabelHelper {
                 'action' => 'update_label ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'order updated successfully',
+                'order_id' => $order->id,
                 'status' => 200,
             ]);
         }
@@ -233,9 +238,10 @@ class LabelHelper {
         if ($mail_send) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'send_email_to_user' . $order->id,
+                'action' => 'send_email_to_user  ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'email sent to user',
+                'order_id' => $order->id,
                 'status' => 200,
             ]);
 
@@ -244,9 +250,10 @@ class LabelHelper {
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'error_sending_email_to_user' . $order->id,
+                'action' => 'error_sending_email_to_user ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'error sending email',
+                'order_id' => $order->id,
                 'status' => 500,
             ]);
         }
@@ -267,6 +274,7 @@ class LabelHelper {
                 'action' => 'send_email_to_admin ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => $mail_send ? 'email sent to admins' : 'error sending email',
+                'order_id' => $order->id,
                 'status' => $mail_send ? 200 : 500,
             ]);
         } else {
@@ -275,6 +283,7 @@ class LabelHelper {
                 'action' => 'error_sending_email_to_admin ' . $order->id,
                 'request' => json_encode($label_email_data),
                 'response' => 'no valid emails found',
+                'order_id' => $order->id,
                 'status' => 500,
             ]);
         }

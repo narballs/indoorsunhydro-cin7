@@ -98,7 +98,7 @@ class Kernel extends ConsoleKernel
         }
 
 
-        $schedule->command('mark:order_shipped')->everyThirtyMinutes();
+        // $schedule->command('mark:order_shipped')->everyThirtyMinutes();
                         
 
 

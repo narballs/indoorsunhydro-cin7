@@ -1253,6 +1253,7 @@ class OrderController extends Controller
                 $ship_station_api_logs->request = json_encode($prepare_data_for_creating_label);
                 $ship_station_api_logs->response = 'label created from sandbox';
                 $ship_station_api_logs->status = 200;
+                $ship_station_api_logs->order_id = $order_id;
                 $ship_station_api_logs->save();
 
                 $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
@@ -1418,6 +1419,7 @@ class OrderController extends Controller
                     $ship_station_api_logs->request = json_encode($data);
                     $ship_station_api_logs->response = $responseBody;
                     $ship_station_api_logs->status = $statusCode;
+                    $ship_station_api_logs->order_id = $order_id;
                     $ship_station_api_logs->save();
 
                     $mail_send = MailHelper::sendShipstationLabelMail($template ,$label_email_data);
@@ -1481,6 +1483,7 @@ class OrderController extends Controller
                     $ship_station_api_logs->request = json_encode($data);
                     $ship_station_api_logs->response = $e->getMessage();
                     $ship_station_api_logs->status = $response->getStatusCode();
+                    $ship_station_api_logs->order_id = $order_id;
                     $ship_station_api_logs->save();
         
                     return redirect('admin/orders')->with('error', $e->getMessage());
