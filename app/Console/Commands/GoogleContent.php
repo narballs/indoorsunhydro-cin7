@@ -64,7 +64,7 @@ class GoogleContent extends Command
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
             // $responseDeleted = $this->delete_inactive_products($client, $token);
-            $this->removeDisapprovedProducts($client, $token);
+            // $this->removeDisapprovedProducts($client, $token);
             // $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
             $result = $this->insertProducts($client, $token);
             $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
@@ -124,7 +124,7 @@ class GoogleContent extends Command
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
         // ->where('barcode' , '!=' , '')
-        ->take(5)
+        // ->take(5)
         ->get();
         // dd($products->count());
         if (count($products) > 0) {
@@ -273,6 +273,8 @@ class GoogleContent extends Command
                 $price->setValue($add_product['price']);
                 $price->setCurrency('USD');
                 $product->setPrice($price);
+
+                $product->setOfferId(null);
     
                 $merchant_id = config('services.google.merchant_center_id');
                 // Update the product
@@ -281,6 +283,8 @@ class GoogleContent extends Command
                 try {
                     // Update product if it exists
                     $result = $service->products->update($merchant_id, $add_product['code'], $product);
+
+                    $this->info('Product with MPN ' . $add_product['code'] . ' updated successfully.');
                 } catch (\Exception $e) {
                     // If an error occurs during update (e.g., product does not exist), insert as new product
                     Log::info("Error updating product, inserting new: " . $e->getMessage());
