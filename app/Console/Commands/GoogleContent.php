@@ -283,6 +283,8 @@ class GoogleContent extends Command
                 try {
                     // Update product if it exists
                     $result = $service->products->update($merchant_id, $add_product['code'], $product);
+
+                    $this->info('Product with MPN ' . $add_product['code'] . ' updated successfully.');
                 } catch (\Exception $e) {
                     // If an error occurs during update (e.g., product does not exist), insert as new product
                     Log::info("Error updating product, inserting new: " . $e->getMessage());
