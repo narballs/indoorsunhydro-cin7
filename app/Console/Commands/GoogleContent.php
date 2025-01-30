@@ -65,6 +65,7 @@ class GoogleContent extends Command
             // $responseDeleted = $this->delete_inactive_products($client, $token);
             // $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             // $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
+            $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
             $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
