@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as ImageFacade;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 
 class DownloadAndSaveImage extends Command
 {
@@ -105,53 +106,56 @@ class DownloadAndSaveImage extends Command
                                     $product_images->save();
                                 } catch (RequestException $e) {
                                     // Handle the case when a request exception occurs
-                                    if ($e->hasResponse()) {
-                                        $sourcePath = public_path('theme/img/image_not_available.png');
-                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                        $destinationPath = public_path('theme/products/images/');
-                                        // Copy the file to the new location
+                                    // if ($e->hasResponse()) {
+                                    //     $sourcePath = public_path('theme/img/image_not_available.png');
+                                    //     $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                    //     $destinationPath = public_path('theme/products/images/');
+                                    //     // Copy the file to the new location
                                         
-                                        // Ensure the destination directory exists
-                                        if (!file_exists($destinationPath)) {
-                                            mkdir($destinationPath, 0777, true);
-                                        }
+                                    //     // Ensure the destination directory exists
+                                    //     if (!file_exists($destinationPath)) {
+                                    //         mkdir($destinationPath, 0777, true);
+                                    //     }
 
-                                        // Copy the file to the new location
-                                        copy($sourcePath, $destinationPath . $imageName);
-                                        $product_images->image = $imageName;
-                                        $product_images->save();
-                                    } else {
-                                        $sourcePath = public_path('theme/img/image_not_available.png');
-                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                        $destinationPath = public_path('theme/products/images/');
-                                        // Copy the file to the new location
+                                    //     // Copy the file to the new location
+                                    //     copy($sourcePath, $destinationPath . $imageName);
+                                    //     $product_images->image = $imageName;
+                                    //     $product_images->save();
+                                    // } else {
+                                    //     $sourcePath = public_path('theme/img/image_not_available.png');
+                                    //     $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                    //     $destinationPath = public_path('theme/products/images/');
+                                    //     // Copy the file to the new location
                                        
-                                        // Ensure the destination directory exists
-                                        if (!file_exists($destinationPath)) {
-                                            mkdir($destinationPath, 0777, true);
-                                        }
+                                    //     // Ensure the destination directory exists
+                                    //     if (!file_exists($destinationPath)) {
+                                    //         mkdir($destinationPath, 0777, true);
+                                    //     }
 
-                                        // Copy the file to the new location
-                                        copy($sourcePath, $destinationPath . $imageName);
-                                        $product_images->image = $imageName;
-                                        $product_images->save();
-                                    }
+                                    //     // Copy the file to the new location
+                                    //     copy($sourcePath, $destinationPath . $imageName);
+                                    //     $product_images->image = $imageName;
+                                    //     $product_images->save();
+                                    // }
+
+                                    Log::info('no image found for product id: ' . $product->id);
                                 }
-                            } else {
-                                $sourcePath = public_path('theme/img/image_not_available.png');
-                                $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                $destinationPath = public_path('theme/products/images/');
+                            } 
+                            // else {
+                            //     $sourcePath = public_path('theme/img/image_not_available.png');
+                            //     $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                            //     $destinationPath = public_path('theme/products/images/');
                                 
-                                // Ensure the destination directory exists
-                                if (!file_exists($destinationPath)) {
-                                    mkdir($destinationPath, 0777, true);
-                                }
+                            //     // Ensure the destination directory exists
+                            //     if (!file_exists($destinationPath)) {
+                            //         mkdir($destinationPath, 0777, true);
+                            //     }
 
-                                // Copy the file to the new location
-                                copy($sourcePath, $destinationPath . $imageName);
-                                $product_images->image = $imageName;
-                                $product_images->save();
-                            }
+                            //     // Copy the file to the new location
+                            //     copy($sourcePath, $destinationPath . $imageName);
+                            //     $product_images->image = $imageName;
+                            //     $product_images->save();
+                            // }
                         } else {
                             if (!empty($product->images)) {
                                 try {
@@ -193,58 +197,62 @@ class DownloadAndSaveImage extends Command
                                     $productImages->save();
                                 } catch (RequestException $e) {
                                     // Handle the case when a request exception occurs
-                                    if ($e->hasResponse()) {
-                                        $sourcePath = public_path('theme/img/image_not_available.png');
-                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                        $destinationPath = public_path('theme/products/images/');
+                                    // if ($e->hasResponse()) {
+                                    //     $sourcePath = public_path('theme/img/image_not_available.png');
+                                    //     $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                    //     $destinationPath = public_path('theme/products/images/');
                                         
-                                        // Ensure the destination directory exists
-                                        if (!file_exists($destinationPath)) {
-                                            mkdir($destinationPath, 0777, true);
-                                        }
+                                    //     // Ensure the destination directory exists
+                                    //     if (!file_exists($destinationPath)) {
+                                    //         mkdir($destinationPath, 0777, true);
+                                    //     }
 
-                                        // Copy the file to the new location
-                                        copy($sourcePath, $destinationPath . $imageName);
-                                        $productImages = new ProductImage();
-                                        $productImages->product_id = $product->id;
-                                        $productImages->image = $imageName;
-                                        $productImages->save();
-                                    } else {
-                                        $sourcePath = public_path('theme/img/image_not_available.png');
-                                        $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                        $destinationPath = public_path('theme/products/images/');
+                                    //     // Copy the file to the new location
+                                    //     copy($sourcePath, $destinationPath . $imageName);
+                                    //     $productImages = new ProductImage();
+                                    //     $productImages->product_id = $product->id;
+                                    //     $productImages->image = $imageName;
+                                    //     $productImages->save();
+                                    // } 
+                                    // else {
+                                    //     $sourcePath = public_path('theme/img/image_not_available.png');
+                                    //     $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                                    //     $destinationPath = public_path('theme/products/images/');
                                         
-                                        // Ensure the destination directory exists
-                                        if (!file_exists($destinationPath)) {
-                                            mkdir($destinationPath, 0777, true);
-                                        }
+                                    //     // Ensure the destination directory exists
+                                    //     if (!file_exists($destinationPath)) {
+                                    //         mkdir($destinationPath, 0777, true);
+                                    //     }
 
-                                        // Copy the file to the new location
-                                        copy($sourcePath, $destinationPath . $imageName);
-                                        $productImages = new ProductImage();
-                                        $productImages->product_id = $product->id;
-                                        $productImages->image = $imageName;
-                                        $productImages->save();
-                                    }
+                                    //     // Copy the file to the new location
+                                    //     copy($sourcePath, $destinationPath . $imageName);
+                                    //     $productImages = new ProductImage();
+                                    //     $productImages->product_id = $product->id;
+                                    //     $productImages->image = $imageName;
+                                    //     $productImages->save();
+                                    // }
+
+                                    Log::info('no image found for product id: ' . $product->id);
                                 }
                                
-                            } else {
-                                $sourcePath = public_path('theme/img/image_not_available.png');
-                                $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
-                                $destinationPath = public_path('theme/products/images/');
+                            } 
+                            // else {
+                            //     $sourcePath = public_path('theme/img/image_not_available.png');
+                            //     $imageName = time() . '_' . uniqid() . '.' . pathinfo($sourcePath, PATHINFO_EXTENSION);
+                            //     $destinationPath = public_path('theme/products/images/');
                                 
-                                // Ensure the destination directory exists
-                                if (!file_exists($destinationPath)) {
-                                    mkdir($destinationPath, 0777, true);
-                                }
+                            //     // Ensure the destination directory exists
+                            //     if (!file_exists($destinationPath)) {
+                            //         mkdir($destinationPath, 0777, true);
+                            //     }
 
-                                // Copy the file to the new location
-                                copy($sourcePath, $destinationPath . $imageName);
-                                $product_images = new ProductImage();
-                                $product_images->product_id = $product->id;
-                                $product_images->image = $imageName;
-                                $product_images->save();
-                            }
+                            //     // Copy the file to the new location
+                            //     copy($sourcePath, $destinationPath . $imageName);
+                            //     $product_images = new ProductImage();
+                            //     $product_images->product_id = $product->id;
+                            //     $product_images->image = $imageName;
+                            //     $product_images->save();
+                            // }
                         }
                     }
                 }
