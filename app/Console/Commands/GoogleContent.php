@@ -13,6 +13,7 @@ use Google\Client as GoogleClient;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
 use Google\Service\ShoppingContent\Price;
+use Illuminate\Support\Facades\Log;
 
 class GoogleContent extends Command
 {
@@ -123,6 +124,7 @@ class GoogleContent extends Command
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
         // ->where('barcode' , '!=' , '')
+        ->take(5)
         ->get();
         // dd($products->count());
         if (count($products) > 0) {
@@ -164,7 +166,8 @@ class GoogleContent extends Command
                                         'code' => $product->code,
                                         'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                                         'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
-                                        'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
+                                        // 'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
+                                        'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
                                         'price' => !empty($product_price) && $product_price > 0  ? $product_price : 0,
                                         'condition' => 'new',
                                         'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
@@ -181,6 +184,9 @@ class GoogleContent extends Command
                 }
             }
         }
+
+
+        $this->info('Products fetched successfully.' . count($product_array));
         
         // $chunks = array_chunk($product_array, 100);
         $client->setAccessToken($token['access_token']); // Use the stored access token
@@ -192,44 +198,94 @@ class GoogleContent extends Command
         $feedIds = [];
         $pageToken = null;
         if (!empty($product_array)) {
+            // foreach ($product_array as $index => $add_product) {
+            //     $product = new ServiceProduct();
+            //     $product->setOfferId(substr($add_product['code'], 0, 50));
+            //     $product->setTitle($add_product['title']);
+            //     $product->setDescription($add_product['description']);
+            //     $product->setLink($add_product['link']);
+            //     $product->setImageLink($add_product['image_link']);
+            //     $product->setContentLanguage('en');
+            //     $product->setTargetCountry('US');
+            //     $product->setChannel('online');
+            //     $product->setAvailability($add_product['availability']);
+            //     $product->setCondition($add_product['condition']);
+            //     $product->setBrand($add_product['brand']);
+            //     // $product->setGoogleProductCategory($add_product['google_product_category']);
+            //     $product->setGtin($add_product['barcode']);
+            //     // $product->setmultipack('5000');
+            //     // $product->setIdentifierExists(false);
+            //     $product->setMpn($add_product['code']);
+            //     $product->setAgeGroup('adult');
+            //     // $product->setColor('universal');
+            //     $product->setGender('unisex');
+            //     // $product->setSizes(['Large']);
+
+            //     $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
+            //     $shippingWeight->setValue($add_product['product_weight']);
+            //     $shippingWeight->setUnit('lb');
+            //     $product->setShippingWeight($shippingWeight);
+
+            //     $price = new Price();
+            //     $price->setValue($add_product['price']);
+            //     $price->setCurrency('USD');
+        
+            //     $product->setPrice($price);
+            //     $merchant_id = config('services.google.merchant_center_id');
+            //     $result = $service->products->insert($merchant_id, $product);
+            // }
+
             foreach ($product_array as $index => $add_product) {
-                
+                // Check if the product already exists
+                try {
+                    $existingProduct = $service->products->get(config('services.google.merchant_center_id'), $add_product['code']);
+                    // Product exists, so we update it
+                    $product = $existingProduct;
+                } catch (\Exception $e) {
+
+                    Log::info($e->getMessage());
+                    // If product doesn't exist, create a new one
                     $product = new ServiceProduct();
                     $product->setOfferId(substr($add_product['code'], 0, 50));
-                    $product->setTitle($add_product['title']);
-                    $product->setDescription($add_product['description']);
-                    $product->setLink($add_product['link']);
-                    $product->setImageLink($add_product['image_link']);
-                    $product->setContentLanguage('en');
-                    $product->setTargetCountry('US');
-                    $product->setChannel('online');
-                    $product->setAvailability($add_product['availability']);
-                    $product->setCondition($add_product['condition']);
-                    $product->setBrand($add_product['brand']);
-                    // $product->setGoogleProductCategory($add_product['google_product_category']);
-                    $product->setGtin($add_product['barcode']);
-                    // $product->setmultipack('5000');
-                    // $product->setIdentifierExists(false);
-                    $product->setMpn($add_product['code']);
-                    $product->setAgeGroup('adult');
-                    // $product->setColor('universal');
-                    $product->setGender('unisex');
-                    // $product->setSizes(['Large']);
+                }
+    
+                $product->setTitle($add_product['title']);
+                $product->setDescription($add_product['description']);
+                $product->setLink($add_product['link']);
+                $product->setImageLink($add_product['image_link']);
+                $product->setContentLanguage('en');
+                $product->setTargetCountry('US');
+                $product->setChannel('online');
+                $product->setAvailability($add_product['availability']);
+                $product->setCondition($add_product['condition']);
+                $product->setBrand($add_product['brand']);
+                $product->setGtin($add_product['barcode']);
+                $product->setMpn($add_product['code']);
+                $product->setAgeGroup('adult');
+                $product->setGender('unisex');
+    
+                $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
+                $shippingWeight->setValue($add_product['product_weight']);
+                $shippingWeight->setUnit('lb');
+                $product->setShippingWeight($shippingWeight);
+    
+                $price = new Price();
+                $price->setValue($add_product['price']);
+                $price->setCurrency('USD');
+                $product->setPrice($price);
+    
+                $merchant_id = config('services.google.merchant_center_id');
+                // Update the product
+                // $result = $service->products->update(config('services.google.merchant_center_id'), $add_product['code'], $product);
 
-                    $shippingWeight = new \Google\Service\ShoppingContent\ProductShippingWeight();
-                    $shippingWeight->setValue($add_product['product_weight']);
-                    $shippingWeight->setUnit('lb');
-                    $product->setShippingWeight($shippingWeight);
-
-                    $price = new Price();
-                    $price->setValue($add_product['price']);
-                    $price->setCurrency('USD');
-            
-                    $product->setPrice($price);
-                    $merchant_id = config('services.google.merchant_center_id');
+                try {
+                    // Update product if it exists
+                    $result = $service->products->update($merchant_id, $add_product['code'], $product);
+                } catch (\Exception $e) {
+                    // If an error occurs during update (e.g., product does not exist), insert as new product
+                    Log::info("Error updating product, inserting new: " . $e->getMessage());
                     $result = $service->products->insert($merchant_id, $product);
-                // }
-
+                }
             }
             $this->info('Products inserted successfully.');
             return $result;              
@@ -238,6 +294,7 @@ class GoogleContent extends Command
             return false;
         }
     }
+    
 
     private function delete_inactive_products($client, $token) {
         $client->setAccessToken($token['access_token']); // Use the stored access token
