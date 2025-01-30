@@ -14,6 +14,7 @@ class ShipstationApiLogs extends Model
         'request',
         'response',
         'status',
-        'action'
+        'action',
+        'order_id',
     ];
 }

@@ -98,9 +98,10 @@ class MarkShipped extends Command
 
                 ShipstationApiLogs::create([
                     'api_url' => $url,
-                    'action' => 'get_order_for' . $order->id,
+                    'action' => 'get_order_for ' . $order->id,
                     'request' => 'get order details',
                     'response' => json_encode($response_data),
+                    'order_id' => $order->id,
                     'status' => 200,
                 ]);
 
@@ -112,9 +113,10 @@ class MarkShipped extends Command
 
                     ShipstationApiLogs::create([
                         'api_url' => $url,
-                        'action' => 'update_order_for' . $order->id,
+                        'action' => 'update_order_for ' . $order->id,
                         'request' => 'mark order as shipped in db',
                         'response' => json_encode($response_data),
+                        'order_id' => $order->id,
                         'status' => 200,
                     ]);
 
@@ -124,9 +126,10 @@ class MarkShipped extends Command
 
                     ShipstationApiLogs::create([
                         'api_url' => $url,
-                        'action' => 'error_update_order_for' . $order->id,
+                        'action' => 'error_update_order_for ' . $order->id,
                         'request' => 'order not marked as shipped in Shipstation',
                         'response' => json_encode($response_data),
+                        'order_id' => $order->id,
                         'status' => 200,
                     ]);
                 }
@@ -138,6 +141,7 @@ class MarkShipped extends Command
                     'action' => 'error_getting_order_for' . $order->id,
                     'request' => 'order not marked as shipped in Shipstation',
                     'response' => $e->getMessage(),
+                    'order_id' => $order->id,
                     'status' => $e->getCode(),
                 ]);
             } catch (\Exception $e) {
@@ -148,6 +152,7 @@ class MarkShipped extends Command
                     'action' => 'error_getting_order_for' . $order->id,
                     'request' => 'order not marked as shipped in Shipstation',
                     'response' => $e->getMessage(),
+                    'order_id' => $order->id,
                     'status' => $e->getCode(),
                 ]);
             }
