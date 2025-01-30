@@ -65,6 +65,7 @@ class GoogleContent extends Command
             // $responseDeleted = $this->delete_inactive_products($client, $token);
             // $responseRemoved = $this->removeDisapprovedProducts($client, $token);
             // $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
+            $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
             $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
             if (!empty($gmcLog)) {
@@ -155,6 +156,16 @@ class GoogleContent extends Command
                                     else {
                                         $category = 'General > General';
                                     }
+
+                                    $product_image = url(asset('theme/img/image_not_available.png'));
+
+                                    if (!empty($product->product_image) && !empty($product->product_image->image)) {
+                                        $product_image = $product->product_image->image;
+                                    } else if (!empty($product->images)) {
+                                        $product_image = $product->images;
+                                    } else {
+                                        $product_image = url(asset('theme/img/image_not_available.png'));
+                                    }
                                     
                                     $product_array[] = [
                                         'id' => $product->id,
@@ -163,7 +174,7 @@ class GoogleContent extends Command
                                         'description' => !empty($product->description) ? strip_tags($product->description) : 'No description available',
                                         'link' => url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug),
                                         // 'image_link' => !empty($product->product_image->image) ? url(asset('theme/products/images/' . $product->product_image->image)) : url(asset('theme/img/image_not_available.png')),
-                                        'image_link' => !empty($product->images) ? $product->images : url(asset('theme/img/image_not_available.png')),
+                                        'image_link' => $product_image,
                                         'price' => !empty($product_price) && $product_price > 0  ? $product_price : 0,
                                         'condition' => 'new',
                                         'availability' => !empty($option) && $option->stockAvailable > 0 ? 'In stock' : 'Out of stock',
