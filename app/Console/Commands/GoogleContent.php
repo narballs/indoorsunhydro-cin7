@@ -121,7 +121,7 @@ class GoogleContent extends Command
         ->pluck('product_id')->toArray();
         $products = Product::with('options','options.defaultPrice','product_brand','product_image','categories')->whereIn('product_id' , $products_ids)
         ->where('status' , '!=' , 'Inactive')
-        // ->where('barcode' , '!=' , '')
+        ->where('barcode' , '!=' , '')
         ->get();
         // dd($products->count());
         if (count($products) > 0) {
@@ -160,9 +160,7 @@ class GoogleContent extends Command
                                     $product_image = url(asset('theme/img/image_not_available.png'));
 
                                     if (!empty($product->product_image) && !empty($product->product_image->image)) {
-                                        $product_image = $product->product_image->image;
-                                    } else if (!empty($product->images)) {
-                                        $product_image = $product->images;
+                                        $product_image = url(asset('theme/products/images/' . $product->product_image->image));
                                     } else {
                                         $product_image = url(asset('theme/img/image_not_available.png'));
                                     }
