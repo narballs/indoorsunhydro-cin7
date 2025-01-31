@@ -145,8 +145,14 @@ class AutoCreateLabel extends Command
             }
 
         } catch (\Exception $e) {
-            Log::error('Error occurred during auto label creation: ' . $e->getMessage());
-            $this->info('An error occurred while processing orders for label creation. Please check the logs for more details.');
+            ShipstationApiLogs::create([
+                'api_url' => 'auto_create_label',
+                'action' => 'auto_create_label_error',
+                'request' =>'create label',
+                'response' => $e->getMessage(),
+                'order_id' => null,
+                'status' => 500,
+            ]);
         }
     }
 }

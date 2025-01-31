@@ -1089,19 +1089,19 @@ class OrderController extends Controller
         $order_items_array = [];
 
         if ($order->label_created == 1 ) {
-            return redirect('admin/orders')->with('error', 'Label already created for this order.');
+            return redirect()->route('admin.orders')->with('error', 'Label already created for this order.');
         }
 
         if (empty($shipstation_order_id)) {
-            return redirect('admin/orders')->with('error', 'shipstation_order_id not found.');
+            return redirect()->route('admin.orders')->with('error', 'shipstation_order_id not found.');
         }
         
         $label_created = LabelHelper::processControllerOrder($order, $client, $currentDate, $shipstation_order_id);
 
         if ($label_created) {
-            return redirect('admin/orders')->with('success', 'Label created successfully.');
+            return redirect()->route('admin.orders')->with('success', 'Label created successfully.');
         } else {
-            return redirect('admin/orders')->with('error', 'Error creating label.');
+            return redirect()->route('admin.orders')->with('error', 'Error creating label.');
         }
     }
 

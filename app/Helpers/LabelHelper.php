@@ -29,7 +29,7 @@ class LabelHelper {
                 return Log::info('Default Ship From Address not found.');
             }
     
-            $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders());
+            $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders(), $order_id);
             if (!$orderData) {
                 return Log::info('Order not found in ShipStation.');
             }
@@ -58,8 +58,17 @@ class LabelHelper {
             self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
 
             return true;
+
         } catch (\Exception $e) {
-            Log::error("Error processing ShipStation order: {$e->getMessage()}");
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'error_processing_order ' . $order_id,
+                'request' => 'error processing order',
+                'response' => $e->getMessage(),
+                'order_id' => $order_id,
+                'status' => 500,
+            ]);
+
             return false;
         }
     }
@@ -75,7 +84,7 @@ class LabelHelper {
                 return Log::info('Default Ship From Address not found.');
             }
     
-            $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders());
+            $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders(), $order_id);
             if (!$orderData) {
                 return Log::info('Order not found in ShipStation.');
             }
@@ -102,7 +111,15 @@ class LabelHelper {
 
             self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
         } catch (\Exception $e) {
-            Log::error("Error processing ShipStation order: {$e->getMessage()}");
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'error_processing_order through command ' . $order_id,
+                'request' => 'error processing order',
+                'response' => $e->getMessage(),
+                'order_id' => $order_id,
+                'status' => 500,
+            ]);
+
         }
     }
     
@@ -117,9 +134,25 @@ class LabelHelper {
         ];
     }
     
-    public static function getOrderDataFromShipstation($client, $url, $headers) {
-        $response = $client->request('GET', $url, ['headers' => $headers]);
-        return json_decode($response->getBody()->getContents(), true);
+    public static function getOrderDataFromShipstation($client, $url, $headers, $order_id) {
+        try {
+            $response = $client->request('GET', $url, ['headers' => $headers]);
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+
+            ShipstationApiLogs::create([
+                'api_url' => $url,
+                'action' => 'get order data',
+                'request' => 'get order data from shipstation',
+                'response' => $e->getMessage(),
+                'order_id' => $order_id,
+                'status' => 500,
+            ]);
+
+            return null;
+        }
+
+
     }
     
     public static function processOrderItems($order_items) {
@@ -146,13 +179,25 @@ class LabelHelper {
     }
     
     public static function handleProductionMode($client, $prepare_data_for_creating_label, $order, $order_id, $orderData, $order_items_array) {
-        $response = $client->post(config('services.shipstation.shipment_label_url'), [
-            'headers' => self::getShipstationHeaders(),
-            'json' => $prepare_data_for_creating_label,
-        ]);
-    
-        $responseBody = json_decode($response->getBody()->getContents());
-        self::createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, false, $responseBody);
+        try {
+            $response = $client->post(config('services.shipstation.shipment_label_url'), [
+                'headers' => self::getShipstationHeaders(),
+                'json' => $prepare_data_for_creating_label,
+            ]);
+        
+            $responseBody = json_decode($response->getBody()->getContents());
+            self::createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, false, $responseBody);
+        } catch (\Exception $e) {
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'error_creating_label_from_production ' . $order_id,
+                'request' => json_encode($prepare_data_for_creating_label),
+                'response' => $e->getMessage(),
+                'order_id' => $order_id,
+                'status' => 500,
+            ]);
+        }
+
     }
     
     public static function createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $is_sandbox = false, $label_api_response) {
