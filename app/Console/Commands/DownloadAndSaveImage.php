@@ -23,13 +23,15 @@ class DownloadAndSaveImage extends Command
 
     public function handle()
     {
+        
+        $all_product_images = ProductImage::pluck('product_id')->toArray();
         $price_column = null;
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
         }
         else {
-            $price_column = 'retailUSD';
+            $price_column = 'sacramentoUSD';
         }
 
         $product_categories = Category::where('is_active', 1)->pluck('category_id')->toArray();
@@ -44,21 +46,12 @@ class DownloadAndSaveImage extends Command
         ->where('status', '!=', 'Disabled')
         ->pluck('product_id')->toArray();
         $all_products_query = Product::with('options','options.defaultPrice')->whereIn('product_id' , $products_ids)
-        ->where('status' , '!=' , 'Inactive');
-        // ->where('barcode' , '!=' , '');
-        // ->with(['product_views','apiorderItem' , 'options' => function ($q) {
-        //     $q->where('status', '!=', 'Disabled');
-        // }])
-        // ->whereHas('options.defaultPrice', function ($q) use ($price_column) {
-        //     $q->where($price_column, '>', 0);
-        // })
-        // ->whereHas('categories' , function ($q) {
-        //     $q->where('is_active', 1);
-        // })
-        // ->where('status' , '!=' , 'Inactive')
-        // ->where('barcode' , '!=' , '')
-        // ->get();
+        ->where('status' , '!=' , 'Inactive')
+        ->whereNotIn('id', $all_product_images);
         $all_products = $all_products_query->get();
+
+        $this->info('Downloading and saving images...'  . count($all_products));
+
         $productImages = [];
         if (count($all_products) > 0) {
             foreach ($all_products as $product) {
