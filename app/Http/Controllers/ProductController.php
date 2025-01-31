@@ -1049,6 +1049,9 @@ class ProductController extends Controller
                 ->whereHas('categories', function ($query) {
                     $query->where('is_active', 1);
                 })
+                ->whereHas('options', function ($query) {
+                    $query->where('status', '!=', 'Disabled');
+                })
                 ->where('status', '!=', 'Inactive')
                 ->take(16) // Limit results to 16 at most
                 ->skip($offset)
