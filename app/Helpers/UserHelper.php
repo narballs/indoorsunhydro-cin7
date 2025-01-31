@@ -14,6 +14,7 @@ use App\Models\ApiOrderItem;
 use App\Models\ProductOption;
 use App\Models\AdminSetting;
 use App\Models\GoogleReview;
+use App\Models\ShipstationApiLogs;
 use Google\Service\Calendar\Setting;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -778,6 +779,16 @@ class UserHelper
         } catch (\Exception $e) {
             $statusCode = $e->getCode();
             $responseBody = $e->getMessage();
+
+            ShipstationApiLogs::create([
+                'api_url' => $shipstation_warehouse_url,
+                'request' => 'get_default_shipstation_warehouse',
+                'response' => $responseBody,
+                'action' => 'get_default_shipstation_warehouse',
+                'order_id' => null,
+                'status' => $statusCode,
+            ]);
+
         }
 
         $default_ship_from_address = null;
