@@ -1490,7 +1490,7 @@ class OrderController extends Controller
                 }
             }
 
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+        } catch (\Exception $e) {
             return redirect('admin/orders')->with('error', 'Error fetching order from ShipStation: ' . $e->getMessage());
         }
        

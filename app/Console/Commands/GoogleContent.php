@@ -273,8 +273,8 @@ class GoogleContent extends Command
                     try {
                         $service->products->delete(config('services.google.merchant_center_id'), $productIdGMC);
                         $this->info('Product with MPN ' . $mpnGMC . ' deleted from Google Merchant Center.');
-                    } catch (\Google\Service\Exception $e) {
-                        report($e);
+                    } catch (\Exception $e) {
+                        // report($e);
                         // $this->error('inactive'.' '. $e);
                         $this->error('Failed to delete product with MPN ' . $mpnGMC . ' from Google Merchant Center.');
                     }
@@ -309,8 +309,8 @@ class GoogleContent extends Command
                                 try {
                                     $service->products->delete(config('services.google.merchant_center_id'), $productId);
                                     $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-                                } catch (\Google\Service\Exception $e) {
-                                    report($e);
+                                } catch (\Exception $e) {
+                                    // report($e);
                                     // $this->error('disapproved'.' '. $e);
                                     $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
                                 }
@@ -320,8 +320,8 @@ class GoogleContent extends Command
                 }
 
                 $pageToken = $productStatuses->getNextPageToken();
-            } catch (\Google\Service\Exception $e) {
-                report($e);
+            } catch (\Exception $e) {
+                // report($e);
                 return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
             }
         } while (!empty($pageToken));
@@ -352,8 +352,8 @@ class GoogleContent extends Command
                             try {
                                 $service->products->delete(config('services.google.merchant_center_id'), $productId);
                                 $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
-                            } catch (\Google\Service\Exception $e) {
-                                report($e);
+                            } catch (\Exception $e) {
+                                // report($e);
                                 // $this->error('disapproved'.' '. $e);
                                 $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
                             }
@@ -362,8 +362,8 @@ class GoogleContent extends Command
                 }
 
                 $pageToken = $productPrices->getNextPageToken();
-            } catch (\Google\Service\Exception $e) {
-                report($e);
+            } catch (\Exception $e) {
+                // report($e);
                 return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
             }
         } while (!empty($pageToken));
