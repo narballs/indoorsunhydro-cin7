@@ -104,7 +104,7 @@ class DownloadAndSaveImage extends Command
 
                                     $product_images->image = $imageName;
                                     $product_images->save();
-                                } catch (RequestException $e) {
+                                } catch (\Exception $e) {
                                     // Handle the case when a request exception occurs
                                     // if ($e->hasResponse()) {
                                     //     $sourcePath = public_path('theme/img/image_not_available.png');
@@ -195,7 +195,7 @@ class DownloadAndSaveImage extends Command
                                     $productImages->product_id = $product->id;
                                     $productImages->image = $imageName;
                                     $productImages->save();
-                                } catch (RequestException $e) {
+                                } catch (\Exception $e) {
                                     // Handle the case when a request exception occurs
                                     // if ($e->hasResponse()) {
                                     //     $sourcePath = public_path('theme/img/image_not_available.png');
