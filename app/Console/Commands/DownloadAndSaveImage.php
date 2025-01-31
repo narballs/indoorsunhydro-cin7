@@ -95,8 +95,10 @@ class DownloadAndSaveImage extends Command
                                         file_put_contents($imagePath, $imageData);
                                     }
 
-                                    $product_images->image = $imageName;
-                                    $product_images->save();
+                                    $productImage = new ProductImage();
+                                    $productImage->product_id = $product->id;
+                                    $productImage->image = $imageName;
+                                    $productImage->save();
                                 } catch (\Exception $e) {
                                     
                                     Log::info('no image found for product id: ' . $product->id);
