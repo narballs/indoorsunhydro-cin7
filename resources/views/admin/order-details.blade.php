@@ -464,10 +464,12 @@
 
                                         <span class="shipping_service_code"> 
                                             @if (!empty($order->shipping_service_code ))
-                                                @if (strtolower($order->shipping_service_code) == 'standard')
-                                                    <span class="badge badge-primary p-1">Seko LTL (Standard)</span>
-                                                @else
-                                                    <span class="badge badge-primary p-1">{{ strtoupper(str_replace('_', ' ', $order->shipping_service_code)) }}</span>
+                                                @if (strtolower($order->logisticsCarrier) !== 'pickup order')
+                                                    @if (strtolower($order->shipping_service_code) == 'standard')
+                                                        <span class="badge badge-primary p-1">Seko LTL (Standard)</span>
+                                                    @else
+                                                        <span class="badge badge-primary p-1">{{ strtoupper(str_replace('_', ' ', $order->shipping_service_code)) }}</span>
+                                                    @endif
                                                 @endif
                                             @endif
                                         </span>
