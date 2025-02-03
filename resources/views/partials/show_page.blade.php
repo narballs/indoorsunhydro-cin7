@@ -124,7 +124,7 @@ $blogs = NavHelper::getBlogs();
                                     </div>
                                 @endif
                             </div>
-                            @if(strtolower($page->name) == 'about')
+                            {{-- @if(strtolower($page->name) == 'about')
                             <div class="col-md-12 mt-5">
                                 <h2 class="text-center">
                                     <div class="banner-title">
@@ -132,14 +132,14 @@ $blogs = NavHelper::getBlogs();
                                     </div>
                                 </h2>
                             </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         @if (strtolower($page->name) == 'about')
-        @if(count($blogs) > 0)
+        {{-- @if(count($blogs) > 0)
         <div class="pb-5 pt-5" style="background:#F8FCF6;">
             <div class="container-fluid px-0 overflow-hidden">
                 <div class="row">
@@ -165,7 +165,7 @@ $blogs = NavHelper::getBlogs();
         </div>
         @else
             <h5 class="text-center font-weight-bold"> No Blogs Found !!</h5>
-        @endif
+        @endif --}}
         <div class="col-md-12 mt-5">
             <h2 class="text-center">
                 <div class="banner-title">
