@@ -461,6 +461,16 @@
                                                 {{ $order->logisticsCarrier }}
                                             @endif
                                         </span>
+
+                                        <span class="shipping_service_code"> 
+                                            @if (!empty($order->shipping_service_code ))
+                                                @if (strtolower($order->shipping_service_code) == 'standard')
+                                                    <span class="badge badge-primary p-1">Seko LTL (Standard)</span>
+                                                @else
+                                                    <span class="badge badge-primary p-1">{{ strtoupper(str_replace('_', ' ', $order->shipping_service_code)) }}</span>
+                                                @endif
+                                            @endif
+                                        </span>
                                     </div>
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>
