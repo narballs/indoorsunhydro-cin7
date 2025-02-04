@@ -66,28 +66,32 @@
                                             {{$shipstation_api_log->action}}
                                         </td>
                                         <td class="">
-                                            @if (gettype(json_decode($shipstation_api_log->request)) == null)
-                                                <div>
-                                                    {{$shipstation_api_log->request}}
-                                                </div>
-                                            @else
+
+                                            @if (gettype(json_decode($shipstation_api_log->request)) == 'object')
+
                                                 <div>
                                                     <pre style="font-size:14px;" id="shortText-{{ $shipstation_api_log->id }}">{{ Str::limit(json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT), 50) }}</pre>
                                                     <a href="#" data-toggle="collapse" data-target="#fullText-{{ $shipstation_api_log->id }}">See more</a>
                                                     <pre id="fullText-{{ $shipstation_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">{{ json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT) }}</pre>
+                                                </div>  
+                                                
+                                            @else
+                                                <div>
+                                                    {{$shipstation_api_log->request}}
                                                 </div>
                                             @endif
                                         </td>
                                         <td class="">
-                                            @if (gettype(json_decode($shipstation_api_log->response)) == null)
-                                                <div>
-                                                    {{$shipstation_api_log->response}}
-                                                </div>
-                                            @else
+                                            @if (gettype(json_decode($shipstation_api_log->response)) == 'object')
+                                                
                                                 <div>
                                                     <pre style="font-size:14px;" id="shortTextRes-{{ $shipstation_api_log->id }}">{{ Str::limit(json_encode(json_decode($shipstation_api_log->response, true), JSON_PRETTY_PRINT), 50) }}</pre>
                                                     <a href="#" data-toggle="collapse" data-target="#fullTextRes-{{ $shipstation_api_log->id }}">See more</a>
                                                     <pre id="fullTextRes-{{ $shipstation_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">{{ json_encode(json_decode($shipstation_api_log->response, true), JSON_PRETTY_PRINT) }}</pre>
+                                                </div>
+                                            @else
+                                                <div>
+                                                    {{$shipstation_api_log->response}}
                                                 </div>
                                             @endif
                                         </td>
