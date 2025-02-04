@@ -272,7 +272,7 @@ class LabelHelper {
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
                 'action' => 'update_label ' . $order->id,
                 'request' => json_encode($label_email_data),
-                'response' => 'order updated successfully',
+                'response' => json_encode($order),
                 'order_id' => $order->id,
                 'status' => 200,
             ]);
