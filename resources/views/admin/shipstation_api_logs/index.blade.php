@@ -63,7 +63,7 @@
                                             {{$shipstation_api_log->order_id}}
                                         </td>
                                         <td class="">
-                                            {{$shipstation_api_log->action}}
+                                            {{str_replace('_',' ', $shipstation_api_log->action)}}
                                         </td>
                                         <td class="">
 
