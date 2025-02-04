@@ -18,6 +18,7 @@ use App\Models\ContactLogs;
 use App\Models\ProductStockNotification;
 use App\Models\SelectedShippingQuote;
 use App\Models\ShippingQuote;
+use App\Models\ShipstationApiLogs;
 use App\Models\SpecificAdminNotification;
 use App\Models\SurchargeSetting;
 use App\Models\User;
@@ -791,6 +792,23 @@ class AdminSettingsController extends Controller
                 'message' => 'Cin7 API Key not found.'
             ]);
         }
+    }
+
+
+    // get shipstation api logs 
+
+    public function get_shipstation_api_logs(Request $request) {
+        $search = $request->search;
+
+        if (!empty($search)) {
+            $shipstation_api_logs = ShipstationApiLogs::where('order_id', $search)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        } else {
+            $shipstation_api_logs = ShipstationApiLogs::orderBy('id', 'desc')->paginate(10);
+        }
+
+        return view('admin.shipstation_api_logs.index', compact('shipstation_api_logs' , 'search'));
     }
 
     

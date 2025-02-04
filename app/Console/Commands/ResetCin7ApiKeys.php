@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\AdminSetting;
+use App\Models\ApiEndpointRequest;
 use App\Models\ApiKeys;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -44,10 +45,14 @@ class ResetCin7ApiKeys extends Command
 
 
             $ApiKeys = ApiKeys::all();
+            $total_request_count = 0;
             if ($ApiKeys->isNotEmpty()) {
                 foreach ($ApiKeys as $apiKey) {
 
-                    $total_request_count = $apiKey->request_count + $apiKey->api_endpoint_requests()->sum('request_count');
+                    $api_endpoint_requests = ApiEndpointRequest::where('api_key_id', $apiKey->id)->get();
+                    foreach ($api_endpoint_requests as $api_endpoint_request) {
+                        $total_request_count += $api_endpoint_request->request_count;
+                    }
 
                     $apiKey->update([
                         'is_active' => 0,
