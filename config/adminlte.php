@@ -440,6 +440,10 @@ return [
             'text'    => 'Api Keys Settings',
             'url'  => 'admin/cin7-api-keys-settings',
         ],
+        [
+            'text'    => 'Shipstation Logs',
+            'url'  => '/admin/get-shipstation-api-logs',
+        ],
 
         [
             'text'       => 'Logout',
