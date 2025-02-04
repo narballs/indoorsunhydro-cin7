@@ -37,7 +37,7 @@ class LabelHelper {
 
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-                'action' => 'get order',
+                'action' => 'get_order',
                 'request' => 'get order data from shipstation',
                 'response' => json_encode($orderData),
                 'order_id' => $order_id,
@@ -117,14 +117,6 @@ class LabelHelper {
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             $is_sandbox = strtolower($check_mode->option_value) == 'sandbox';
 
-            $ship_station_log = ShipstationApiLogs::where('order_id', $order_id)
-            ->where('action', 'create_label')
-            ->first();
-            
-            if ($ship_station_log) {
-                return Log::info('Label already created for order: ' . $order_id);
-            }
-            
             self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
         
         } catch (\Exception $e) {
@@ -197,6 +189,14 @@ class LabelHelper {
     
     public static function handleProductionMode($client, $prepare_data_for_creating_label, $order, $order_id, $orderData, $order_items_array) {
         try {
+
+            $ship_station_log = ShipstationApiLogs::where('order_id', $order_id)
+            ->where('action', 'create_label')
+            ->first();
+            
+            if ($ship_station_log) {
+                return Log::info('Label already created for order: ' . $order_id);
+            }
 
             $response = $client->post(config('services.shipstation.shipment_label_url'), [
                 'headers' => self::getShipstationHeaders(),
@@ -298,7 +298,7 @@ class LabelHelper {
 
 
         $email_sent_to_user = ShipstationApiLogs::where('order_id', $order->id)
-            ->where('action', 'send_email_to_admin')
+            ->where('action', 'send_email_to_user')
             ->first();
             
         if ($email_sent_to_user) {
