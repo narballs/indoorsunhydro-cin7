@@ -66,7 +66,7 @@
                                             {{$shipstation_api_log->action}}
                                         </td>
                                         <td class="">
-                                            @if (gettype(json_decode($shipstation_api_log->request)) == null)
+                                            @if (gettype(json_decode($shipstation_api_log->request)) == 'string')
                                                 <div>
                                                     {{$shipstation_api_log->request}}
                                                 </div>
@@ -79,7 +79,7 @@
                                             @endif
                                         </td>
                                         <td class="">
-                                            @if (gettype(json_decode($shipstation_api_log->response)) == null)
+                                            @if (gettype(json_decode($shipstation_api_log->response)) == 'string')
                                                 <div>
                                                     {{$shipstation_api_log->response}}
                                                 </div>
