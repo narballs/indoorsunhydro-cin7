@@ -37,7 +37,7 @@ class LabelHelper {
 
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-                'action' => 'get order ' . $order_id,
+                'action' => 'get order',
                 'request' => 'get order data from shipstation',
                 'response' => json_encode($orderData),
                 'order_id' => $order_id,
@@ -54,6 +54,14 @@ class LabelHelper {
             
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             $is_sandbox = strtolower($check_mode->option_value) == 'sandbox';
+
+            $ship_station_log = ShipstationApiLogs::where('order_id', $order_id)
+            ->where('action', 'create_label')
+            ->first();
+
+            if ($ship_station_log) {
+                return false;
+            }
 
             self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
 
@@ -91,7 +99,7 @@ class LabelHelper {
 
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-                'action' => 'get_order  ' . $order_id,
+                'action' => 'get_order',
                 'request' => 'get order data from shipstation',
                 'response' => json_encode($orderData),
                 'order_id' => $order_id,
@@ -109,7 +117,16 @@ class LabelHelper {
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             $is_sandbox = strtolower($check_mode->option_value) == 'sandbox';
 
+            $ship_station_log = ShipstationApiLogs::where('order_id', $order_id)
+            ->where('action', 'create_label')
+            ->first();
+            
+            if ($ship_station_log) {
+                return Log::info('Label already created for order: ' . $order_id);
+            }
+            
             self::handleLabelCreation($client, $is_sandbox, $order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, $currentDate);
+        
         } catch (\Exception $e) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
@@ -142,7 +159,7 @@ class LabelHelper {
 
             ShipstationApiLogs::create([
                 'api_url' => $url,
-                'action' => 'get order data',
+                'action' => 'get_order',
                 'request' => 'get order data from shipstation',
                 'response' => $e->getMessage(),
                 'order_id' => $order_id,
@@ -180,6 +197,7 @@ class LabelHelper {
     
     public static function handleProductionMode($client, $prepare_data_for_creating_label, $order, $order_id, $orderData, $order_items_array) {
         try {
+
             $response = $client->post(config('services.shipstation.shipment_label_url'), [
                 'headers' => self::getShipstationHeaders(),
                 'json' => $prepare_data_for_creating_label,
@@ -190,7 +208,7 @@ class LabelHelper {
         } catch (\Exception $e) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-                'action' => 'error_creating_label_from_production ' . $order_id,
+                'action' => 'create_label',
                 'request' => json_encode($prepare_data_for_creating_label),
                 'response' => $e->getMessage(),
                 'order_id' => $order_id,
@@ -211,7 +229,7 @@ class LabelHelper {
     
         ShipstationApiLogs::create([
             'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
-            'action' => 'create_label ' . $order_id,
+            'action' => 'create_label',
             'request' => json_encode($prepare_data_for_creating_label),
             'response' => $is_sandbox ? 'label created from sandbox' : json_encode($label_api_response),
             'order_id' => $order_id,
@@ -261,7 +279,7 @@ class LabelHelper {
         if (!$order_update) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'update_label ' . $order->id,
+                'action' => 'update_label',
                 'request' => json_encode($label_email_data),
                 'response' => 'error updating order',
                 'order_id' => $order->id,
@@ -270,7 +288,7 @@ class LabelHelper {
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'update_label ' . $order->id,
+                'action' => 'update_label',
                 'request' => json_encode($label_email_data),
                 'response' => json_encode($order),
                 'order_id' => $order->id,
@@ -278,12 +296,21 @@ class LabelHelper {
             ]);
         }
 
+
+        $email_sent_to_user = ShipstationApiLogs::where('order_id', $order->id)
+            ->where('action', 'send_email_to_admin')
+            ->first();
+            
+        if ($email_sent_to_user) {
+            return Log::info('Email Sent to User: ' . $order->id);
+        }
+
         $mail_send = MailHelper::sendShipstationLabelMail('emails.shipment_label', $label_email_data);
         
         if ($mail_send) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'send_email_to_user  ' . $order->id,
+                'action' => 'send_email_to_user',
                 'request' => json_encode($label_email_data),
                 'response' => 'email sent to user',
                 'order_id' => $order->id,
@@ -295,7 +322,7 @@ class LabelHelper {
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'error_sending_email_to_user ' . $order->id,
+                'action' => 'send_email_to_user',
                 'request' => json_encode($label_email_data),
                 'response' => 'error sending email',
                 'order_id' => $order->id,
@@ -310,13 +337,22 @@ class LabelHelper {
             SettingHelper::getSetting('wally_shipstation_email'),
             SettingHelper::getSetting('engrdanish_shipstation_email')
         ]);
+
+        $email_sent_to_admin = ShipstationApiLogs::where('order_id', $order->id)
+            ->where('action', 'send_email_to_admin')
+            ->first();
+            
+        if ($email_sent_to_admin) {
+            return Log::info('Email Sent to User: ' . $order->id);
+        }
+
     
         if ($email_addresses) {
             $label_email_data['email'] = $email_addresses;
             $mail_send = MailHelper::sendShipstationLabelMail('emails.shipment_label', $label_email_data);
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'send_email_to_admin ' . $order->id,
+                'action' => 'send_email_to_admin',
                 'request' => json_encode($label_email_data),
                 'response' => $mail_send ? 'email sent to admins' : 'error sending email',
                 'order_id' => $order->id,
@@ -325,7 +361,7 @@ class LabelHelper {
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
-                'action' => 'error_sending_email_to_admin ' . $order->id,
+                'action' => 'send_email_to_admin',
                 'request' => json_encode($label_email_data),
                 'response' => 'no valid emails found',
                 'order_id' => $order->id,
