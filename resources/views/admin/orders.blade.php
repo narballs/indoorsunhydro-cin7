@@ -379,11 +379,11 @@
                                                             Manual Label
                                                         </button>
                                                     @else
-                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1 || $order->isApproved == 0))
+                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1))
                                                             <button type="button" class="badge badge-warning p-2 border-0">
                                                                 Manual Label
                                                             </button>
-                                                        @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1 || $order->isApproved == 0))
+                                                        @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1))
                                                             <div class="d-flex justify-content-between mx-3">
                                                                 <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
                                                                     @csrf
