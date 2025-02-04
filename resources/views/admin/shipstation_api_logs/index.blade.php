@@ -66,20 +66,20 @@
                                             {{$shipstation_api_log->action}}
                                         </td>
                                         <td class="">
-                                            @if (gettype($shipstation_api_log->request) == 'string')
+                                            @if (gettype(json_decode($shipstation_api_log->request)) == null)
                                                 <div>
                                                     {{$shipstation_api_log->request}}
                                                 </div>
                                             @else
-                                            <div>
-                                                <pre style="font-size:14px;" id="shortText-{{ $shipstation_api_log->id }}">{{ Str::limit(json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT), 50) }}</pre>
-                                                <a href="#" data-toggle="collapse" data-target="#fullText-{{ $shipstation_api_log->id }}">See more</a>
-                                                <pre id="fullText-{{ $shipstation_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">{{ json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT) }}</pre>
-                                            </div>
+                                                <div>
+                                                    <pre style="font-size:14px;" id="shortText-{{ $shipstation_api_log->id }}">{{ Str::limit(json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT), 50) }}</pre>
+                                                    <a href="#" data-toggle="collapse" data-target="#fullText-{{ $shipstation_api_log->id }}">See more</a>
+                                                    <pre id="fullText-{{ $shipstation_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">{{ json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT) }}</pre>
+                                                </div>
                                             @endif
                                         </td>
                                         <td class="">
-                                            @if (gettype($shipstation_api_log->response) == 'string')
+                                            @if (gettype(json_decode($shipstation_api_log->response)) == null)
                                                 <div>
                                                     {{$shipstation_api_log->response}}
                                                 </div>
