@@ -126,7 +126,7 @@ class AutoCreateLabel extends Command
             
                             foreach ($all_orders as $order) {
                                 
-                                if ($order->label_created || $order->label_created == 1) {
+                                if ($order->label_created === 1) {
                                     Log::info('Label already created for order: ' . $order->id);
                                     continue;
                                 }
