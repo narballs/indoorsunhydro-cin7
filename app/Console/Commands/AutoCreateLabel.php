@@ -125,6 +125,15 @@ class AutoCreateLabel extends Command
                             Log::info('Auto create label is enabled');
             
                             foreach ($all_orders as $order) {
+
+                                $ship_station_log = ShipstationApiLogs::where('order_id', $order->id)
+                                    ->where('action', 'create_label')
+                                    ->first();
+
+                                if (!empty($ship_station_log)) {
+                                    Log::info('Label already created for order: ' . $order->id);
+                                    continue;
+                                }    
                                 
                                 if ($order->label_created === 1) {
                                     Log::info('Label already created for order: ' . $order->id);
@@ -134,7 +143,6 @@ class AutoCreateLabel extends Command
                                 LabelHelper::processOrder($order, $client, $currentDate, $data);
                                 Log::info('Label created for order: ' . $order->id);
                                 $this->info('Label created for order: ' . $order->id);
-                                sleep($delay_duration * 60);
                             }
                         }
                     }
