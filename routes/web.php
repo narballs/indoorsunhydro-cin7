@@ -432,8 +432,11 @@ Route::group(['middleware' => ['auth']], function () {
         // udpate key thresold
         Route::post('/cin7-api-keys-settings/update-threshold', [AdminSettingsController::class, 'update_cin7_api_threshold'])->name('update_cin7_api_threshold');
         Route::get('/reset-cin7-api-keys', [AdminCommandsController::class, 'reset_cin7_api_keys'])->name('reset_cin7_api_keys');
-
+        
         Route::post('/mark/order/shipped', [OrderController::class, 'mark_order_shipped'])->name('mark_order_shipped');
+        
+        Route::get('/get-shipstation-api-logs', [AdminSettingsController::class, 'get_shipstation_api_logs'])->name('get_shipstation_api_logs');
+
         
     });
 
