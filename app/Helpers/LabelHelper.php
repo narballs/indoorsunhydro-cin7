@@ -238,7 +238,7 @@ class LabelHelper {
 
         $label_email_data = self::prepareLabelEmailData($order_id, $orderData['customerEmail'], $prepare_data_for_creating_label, $packingSlipFileName, $file_name, $order_items_array);
     
-        self::update_and_sendLabelEmail($label_email_data, $order, $file_name);
+        self::update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response);
     }
 
 
@@ -266,12 +266,15 @@ class LabelHelper {
         ];
     }
     
-    public static function update_and_sendLabelEmail($label_email_data, $order, $file_name) {
+    public static function update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response) {
+
+        $tracking_number = $label_api_response ? $label_api_response->trackingNumber : null;
         
         $order_update = $order->update(
             [
                 'is_shipped' => 1,
-                'label_created' => 1, 
+                'label_created' => 1,
+                'tracking_number' => $tracking_number, 
                 'label_link' => $file_name
             ]
         );
