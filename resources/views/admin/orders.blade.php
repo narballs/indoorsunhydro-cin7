@@ -376,14 +376,14 @@
 
                                                     @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
                                                         <div class="d-flex">
-                                                            <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                            <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
                                                                 @csrf
                                                                 <input type="hidden" name="order_id" id="order_id"
                                                                     value="{{ $order->id }}">
                                                                 <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
                                                                     value="{{ $order->shipstation_orderId }}">
                                                                 <button type="submit" class="badge badge-primary p-2 border-0">
-                                                                    Mark Shipped
+                                                                    Create Label
                                                                 </button>
                                                             </form>
     
@@ -446,6 +446,12 @@
                                                                 @if ($order->is_shipped == 1 && $order->label_created == 1)
                                                                     <button type="button" class="badge badge-success p-2 border-0">
                                                                         Shipped
+                                                                    </button>
+                                                                @endif
+
+                                                                @if ($order->is_shipped == 1 && $order->label_created == 1 && $order->shipment_price == 0)
+                                                                    <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                        Manual Label
                                                                     </button>
                                                                 @endif
                                                             </div>
