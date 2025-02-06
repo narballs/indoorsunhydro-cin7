@@ -78,6 +78,7 @@ class ApiOrder extends Model
         'BillingPhone',
         'tracking_number',
         'shipstation_orderKey',
+        'shipstation_orderNumber',
         
     ];
     public function contact()

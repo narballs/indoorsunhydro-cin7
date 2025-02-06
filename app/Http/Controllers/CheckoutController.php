@@ -1053,6 +1053,7 @@ class CheckoutController extends Controller
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                     'shipstation_orderId' => $shiping_order['responseBody']->orderId,
                                     'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                    'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
                                 ]);
                             }
                         }
@@ -1222,6 +1223,7 @@ class CheckoutController extends Controller
                                 $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                     'shipstation_orderId' => $shiping_order['responseBody']->orderId,
                                     'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                    'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
                                 ]);
                             }
                         }
