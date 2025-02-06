@@ -374,7 +374,7 @@
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1) 
 
-                                                    @if ($order->shipment_price == 0)
+                                                    @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
                                                         <div class="d-flex">
                                                             <form action="{{url('admin/mark/order/shipped')}}" method="post">
                                                                 @csrf
