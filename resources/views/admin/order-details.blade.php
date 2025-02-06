@@ -474,17 +474,10 @@
                                             @endif
                                         </span> <br/>
 
-                                        {{-- view shipped order --}}
-
-                                        {{-- @if (!empty($order->shipstation_orderId) && $order->label_created == 1 && $order->is_shipped == 1)
-                                            <a href="https://ship13.shipstation.com/orders/shipped/order/58696dfe-7f47-5d2c-b363-10fc10a13bbc/active/{{ $order->shipstation_orderId }}" target="_blank" class="text-primary">View Order in Shipstation</a>
-                                        @endif
-                                        <br/> --}}
-
                                         {{-- add tracking url --}}
 
                                         @if (!empty($order->tracking_number) && $order->is_shipped == 1 && $order->label_created == 1 && $order->shipstation_orderId != null && $order->shipping_carrier_code == 'ups_walleted')
-                                            <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" target="_blank" class="text-primary">View Tracking</a>
+                                            <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" target="_blank" class="text-primary">Track Order</a>
                                         @endif
 
 

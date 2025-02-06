@@ -811,6 +811,8 @@ class OrderManagementController extends Controller
                         if ($shiping_order['statusCode'] == 200) {
                             $orderUpdate = ApiOrder::where('id', $order_id)->update([
                                 'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
                             ]);
 
                             return redirect()->back()->with('success', 'Order send to shipstation successfully !');
