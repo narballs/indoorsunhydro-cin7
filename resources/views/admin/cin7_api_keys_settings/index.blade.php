@@ -85,14 +85,29 @@
                                         
                                     </div>
                                     @if (count($cin7_api_key->api_endpoint_requests) > 0)
-                                    <ul class="list-group mt-3">
-                                        @foreach ($cin7_api_key->api_endpoint_requests as $api_endpoint_request)
-                                            <li class="list-group-item d-flex justify-content-between">{{$api_endpoint_request->title}}<span>{{$api_endpoint_request->request_count}} requests</span></li>
-                                        @endforeach
-                                    </ul>
-                                    <ul class="list-group mt-3">
-                                        <li class="list-group-item d-flex justify-content-between"><strong>TOTAL REQUESTS</strong> <span>{{$cin7_api_key->request_count}} requests</span></li>
-                                    </ul>
+                                        @php
+                                            $total_api_requests = 0;
+                                        @endphp
+
+                                        <ul class="list-group mt-3">
+                                            @foreach ($cin7_api_key->api_endpoint_requests as $api_endpoint_request)
+                                                @php
+                                                    $total_api_requests += $api_endpoint_request->request_count;
+                                                @endphp
+
+                                                <li class="list-group-item d-flex justify-content-between">
+                                                    {{ $api_endpoint_request->title }}
+                                                    <span>{{ $api_endpoint_request->request_count }} requests</span>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+
+                                        <ul class="list-group mt-3">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <strong>TOTAL REQUESTS ({{ $cin7_api_key->name }})</strong>
+                                                <span>{{ $total_api_requests }} requests</span>
+                                            </li>
+                                        </ul>
                                     @else
                                         <ul class="list-group mt-3">
                                             <li class="list-group-item d-flex justify-content-between"><strong>TOTAL REQUESTS</strong> <span>{{$cin7_api_key->request_count}} requests</span></li>
