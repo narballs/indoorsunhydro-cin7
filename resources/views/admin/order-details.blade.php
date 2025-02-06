@@ -476,10 +476,10 @@
 
                                         {{-- view shipped order --}}
 
-                                        @if (!empty($order->shipstation_orderId) && $order->label_created == 1 && $order->is_shipped == 1)
+                                        {{-- @if (!empty($order->shipstation_orderId) && $order->label_created == 1 && $order->is_shipped == 1)
                                             <a href="https://ship13.shipstation.com/orders/shipped/order/58696dfe-7f47-5d2c-b363-10fc10a13bbc/active/{{ $order->shipstation_orderId }}" target="_blank" class="text-primary">View Order in Shipstation</a>
                                         @endif
-                                        <br/>
+                                        <br/> --}}
 
                                         {{-- add tracking url --}}
 
