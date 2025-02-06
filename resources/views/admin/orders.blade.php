@@ -410,7 +410,7 @@
                                                                 </button>
                                                             </div>
                                                         @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1))
-                                                            <div class="d-flex justify-content-between mx-3">
+                                                            <div class="d-flex justify-content-center mx-3">
                                                                 <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
                                                                     @csrf
                                                                     <input type="hidden" name="order_id" id="order_id"
@@ -436,7 +436,7 @@
                                                             </div>
 
                                                         @else
-                                                            <div class="d-flex justify-content-between">
+                                                            <div class="d-flex justify-content-center">
                                                                 @if ($order->label_link != '')
                                                                     <a href="{{route('download_label' , $order->label_link)}}" class="badge badge-success p-2 border-0 mr-2">
                                                                         Download
