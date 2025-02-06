@@ -347,7 +347,7 @@
                                             <td data-label="Payment Gateway :" class="td_padding_row">
                                                 <span class="badge badge-primary p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
                                             </td>
-                                            <td data-label="Payment Term :" class="td_padding_row">
+                                            <td data-label="Payment Term :" class="td_padding_row" style="width: 5%;">
                                                 @if (!empty($order->logisticsCarrier ))
                                                     @if (strtolower($order->logisticsCarrier) === 'delivery')
                                                         @if ($order->shipment_price == 0 && $order->is_stripe == 1)
