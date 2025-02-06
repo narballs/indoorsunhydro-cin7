@@ -448,6 +448,12 @@
                                                                         Shipped
                                                                     </button>
                                                                 @endif
+
+                                                                @if ($order->is_shipped == 1 && $order->label_created == 1 && $order->shipment_price == 0)
+                                                                    <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                        Manual Label
+                                                                    </button>
+                                                                @endif
                                                             </div>
                                                         @endif
                                                     @endif
