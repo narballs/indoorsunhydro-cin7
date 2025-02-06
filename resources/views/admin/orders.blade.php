@@ -376,14 +376,14 @@
 
                                                     @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
                                                         <div class="d-flex">
-                                                            <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                            <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
                                                                 @csrf
                                                                 <input type="hidden" name="order_id" id="order_id"
                                                                     value="{{ $order->id }}">
                                                                 <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
                                                                     value="{{ $order->shipstation_orderId }}">
                                                                 <button type="submit" class="badge badge-primary p-2 border-0">
-                                                                    Mark Shipped
+                                                                    Create Label
                                                                 </button>
                                                             </form>
     
