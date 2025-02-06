@@ -637,10 +637,9 @@ class AdminSettingsController extends Controller
     public function cin7_api_keys_settings(Request $request) {
         // Get the current date from the request or default to today
         $current_date = $request->current_date ? Carbon::parse($request->current_date) : Carbon::today();
-    
-        // // Determine if the selected date is in the past
+
+        // Determine if the selected date is in the past
         $is_past_date = $current_date->lt(Carbon::today());
-    
         
         $cin7_api_keys = ApiKeys::with([
             'api_event_logs' => function ($query) use ($current_date) {
@@ -651,10 +650,9 @@ class AdminSettingsController extends Controller
             }
         ])
         ->when($is_past_date, function ($query) use ($current_date) {
-            return $query->where('is_active', 0)
-                         ->whereDate('created_at', $current_date); // If past date, get inactive keys for that date
+            return  $query->whereDate('created_at', $current_date);
         }, function ($query) {
-            return $query->where('is_active', 1); // If today, get active keys
+            return $query->where('is_active', 1);
         })
         ->orderBy('id', 'asc')
         ->get();
