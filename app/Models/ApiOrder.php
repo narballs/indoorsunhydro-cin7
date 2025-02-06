@@ -76,6 +76,7 @@ class ApiOrder extends Model
         'BillingZip',
         'BillingCountry',
         'BillingPhone',
+        'tracking_number',
         
     ];
     public function contact()
