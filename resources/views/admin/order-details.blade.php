@@ -472,7 +472,23 @@
                                                     @endif
                                                 @endif
                                             @endif
-                                        </span>
+                                        </span> <br/>
+
+                                        {{-- view shipped order --}}
+
+                                        @if (!empty($order->shipstation_orderId))
+                                            <a href="https://ss.shipstation.com/orders/{{ $order->shipstation_orderId }}" target="_blank" class="text-primary">View Order in Shipstation</a>
+                                        @endif
+                                        <br/>
+
+                                        {{-- add tracking url --}}
+
+                                        @if (!empty($order->tracking_number))
+                                            <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" target="_blank" class="text-primary">View Tracking</a>
+                                        @endif
+
+
+
                                     </div>
                                     <div class="col-lg-6">
                                         <h3 class="h6 summary-head">Billing address</h3>
