@@ -44,28 +44,17 @@ class ResetCin7ApiKeys extends Command
         try {
 
 
-            $ApiKeys = ApiKeys::all();
-            $total_request_count = 0;
-            if ($ApiKeys->isNotEmpty()) {
-                foreach ($ApiKeys as $apiKey) {
-
-                    $api_endpoint_requests = ApiEndpointRequest::where('api_key_id', $apiKey->id)->get();
-                    foreach ($api_endpoint_requests as $api_endpoint_request) {
-                        $total_request_count += $api_endpoint_request->request_count;
-                    }
-
-                    $apiKey->update([
-                        'is_active' => 0,
-                        'request_count' => $total_request_count
-                    ]);
-                }
-            }
-
             $cin7_api_key1  = AdminSetting::where('option_name', 'cin7_auth_password')->first();
             $cin7_api_key2  = AdminSetting::where('option_name', 'cin7_auth_password_2')->first();
             $cin7_api_username  = AdminSetting::where('option_name', 'cin7_auth_username')->first();
 
-           
+            $ApiKeys = ApiKeys::all();
+            if ($ApiKeys->count() > 0) {
+                foreach ($ApiKeys as $apiKey) {
+                    $apiKey->is_active = 0;
+                    $apiKey->save();
+                }
+            }
             
             $cin7_api_keys = [
                 [
