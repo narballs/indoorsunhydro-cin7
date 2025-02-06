@@ -372,17 +372,43 @@
                                                 
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
-                                                @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid')
+                                                @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1) 
 
                                                     @if ($order->shipment_price == 0)
-                                                        <button type="button" class="badge badge-warning p-2 border-0">
-                                                            Manual Label
-                                                        </button>
-                                                    @else
-                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1))
-                                                            <button type="button" class="badge badge-warning p-2 border-0">
+                                                        <div class="d-flex">
+                                                            <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                                @csrf
+                                                                <input type="hidden" name="order_id" id="order_id"
+                                                                    value="{{ $order->id }}">
+                                                                <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
+                                                                    value="{{ $order->shipstation_orderId }}">
+                                                                <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                    Mark Shipped
+                                                                </button>
+                                                            </form>
+    
+                                                            <button type="button" class="badge badge-warning p-2 border-0 ml-2">
                                                                 Manual Label
                                                             </button>
+                                                        </div>
+                                                    @else
+                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1))
+                                                            <div class="d-flex">
+                                                                <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                                    @csrf
+                                                                    <input type="hidden" name="order_id" id="order_id"
+                                                                        value="{{ $order->id }}">
+                                                                    <input type="hidden" name="shipstation_orderId" id="shipstation_orderId"
+                                                                        value="{{ $order->shipstation_orderId }}">
+                                                                    <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                        Mark Shipped
+                                                                    </button>
+                                                                </form>
+        
+                                                                <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                    Manual Label
+                                                                </button>
+                                                            </div>
                                                         @elseif ($order->label_created == 0 && $order->is_shipped == 0 && ($order->isApproved == 1))
                                                             <div class="d-flex justify-content-between mx-3">
                                                                 <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
@@ -417,7 +443,7 @@
                                                                     </a>
                                                                 @endif
 
-                                                                @if ($order->is_shipped == 1)
+                                                                @if ($order->is_shipped == 1 && $order->label_created == 1)
                                                                     <button type="button" class="badge badge-success p-2 border-0">
                                                                         Shipped
                                                                     </button>
