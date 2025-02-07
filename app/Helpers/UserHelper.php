@@ -465,7 +465,7 @@ class UserHelper
         $confirmation_value = 'delivery';
 
         if (floatval($currentOrder->productTotal) > floatval(499)) {
-            $confirmation_value = 'signature';
+            $confirmation_value = 'adult_signature';
         }
 
 

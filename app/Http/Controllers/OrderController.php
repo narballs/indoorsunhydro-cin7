@@ -104,9 +104,16 @@ class OrderController extends Controller
                     $shipstation_shipment_value = $actual_shipping_price;
                 }
             } else {
+
+                if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                    $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
+                    $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
+                } else {
+                    $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
+                    $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
+                }
+
                 $actual_shipping_price = $request->shipment_price;
-                $shipping_service_code = $request->shipping_service_code;
-                $shipping_carrier_code = $request->shipping_carrier_code;
                 $shipstation_shipment_value = $actual_shipping_price;
             }
         } else{
@@ -119,7 +126,6 @@ class OrderController extends Controller
         $parcel_guard = 0;
         if (floatval($actual_shipping_price) > 0) {
             $parcel_guard = (ceil($actual_shipping_price / 100) * 0.99);
-            // $parcel_guard = floatval($actual_shipping_price) - $parcel_guard_price;
         }
 
         
