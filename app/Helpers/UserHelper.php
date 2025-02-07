@@ -471,7 +471,6 @@ class UserHelper
         }
 
 
-
         $data = [
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
@@ -539,6 +538,7 @@ class UserHelper
         ]);
         $statusCode = $response->getStatusCode();
         $responseBody = $response->getBody()->getContents();
+        
         return [
             'statusCode' => $statusCode,
             'responseBody' => json_decode($responseBody)
