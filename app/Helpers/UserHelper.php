@@ -462,10 +462,12 @@ class UserHelper
         $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
         $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
 
-        $confirmation_value = 'delivery';
+        $confirmation_value = null;
 
         if (floatval($currentOrder->productTotal) > floatval(499)) {
             $confirmation_value = 'adult_signature';
+        } else {
+            $confirmation_value = 'delivery';
         }
 
 
