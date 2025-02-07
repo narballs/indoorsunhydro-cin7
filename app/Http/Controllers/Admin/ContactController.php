@@ -311,9 +311,10 @@ class ContactController extends Controller
             ->pluck('contact_id')
             ->toArray();
         // dd($customer->contact_id);
-        $customer_orders = ApiOrder::where('memberId', $customer->contact_id)->orWhere('memberId' , $customer->parent_id)
+        $customer_orders = ApiOrder::where('memberId', $customer->contact_id)
+            ->orWhere('memberId' , $customer->parent_id)
             ->with('contact')
-            ->with('apiOrderItem')
+            ->with('apiOrderItem' , 'secondary_contact' , 'primary_contact')
             ->orderBy('id', 'desc')
             ->get();
 
