@@ -450,6 +450,7 @@
                                             <th>Date Created</th>
                                             <th>Total</th>
                                             <th>Ref#</th>
+                                            <th>Created By</th>
                                             <th>Order Status</th>
                                         </tr>
                                         @foreach ($customer_orders as $customer_order)
@@ -468,6 +469,17 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ url('admin/order-detail/' . $customer_order->id) }}">{{ $customer_order->reference }}
+                                                </td>
+                                                <td>
+                                                    @if (!empty($customer_order->primaryId) && !empty($customer_order->primary_contact))
+                                                        <span
+                                                            title="Secondary Contact">{{ $customer_order->primary_contact->email }}</span>
+                                                    @elseif (!empty($customer_order->secondaryId) && !empty($customer_order->secondary_contact))
+                                                        <span
+                                                            title="Secondary Contact">{{ $customer_order->secondary_contact->email }}</span>
+                                                    @elseif (!empty($customer_order->contact))
+                                                        <span title="Secondary Contact">{{ $customer_order->contact->email }}</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <select name="order_status_id" class="form-control" id="order_status_id" onchange="update_order_status('{{$customer_order->id}}')">
