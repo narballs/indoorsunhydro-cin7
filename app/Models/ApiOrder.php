@@ -79,6 +79,8 @@ class ApiOrder extends Model
         'tracking_number',
         'shipstation_orderKey',
         'shipstation_orderNumber',
+        'shipmentId',
+        'void_label',
         
     ];
     public function contact()
