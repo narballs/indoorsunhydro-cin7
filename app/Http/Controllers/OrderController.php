@@ -1187,7 +1187,7 @@ class OrderController extends Controller
         $previous_order_status = OrderStatus::where('id', $order->order_status_id)->first();
         $current_order_status = OrderStatus::where('id', $order_status_id)->first();
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
-        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_2');
         $refund_value = floatval($request->refund_value);
         $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
         if ($order->is_stripe === 1) {
