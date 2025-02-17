@@ -42,6 +42,7 @@ use App\Models\UserLog;
 use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 use PSpell\Config;
 use App\Helpers\DistanceCalculator;
+use App\Helpers\LabelHelper;
 use App\Helpers\UtilHelper;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
@@ -3100,8 +3101,25 @@ class CheckoutController extends Controller
                     $order_comment->save();
 
 
+                    
+                    
+                    if (!empty($main_order) && $main_order->is_shipped == 1 && $main_order->label_created == 1) {
+                        $void_shipment = LabelHelper::void_label($main_order);
+
+                        $order_comment = new OrderComment;
+                        $order_comment->order_id = $order_id;
+                        $order_comment->comment = 'Shipment label voided in ShipStation. (void_shipment)';
+                        $order_comment->save();
+                    }
+
+
                     $shipstation_order_status = 'update_order';
                     $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
+
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order status cancelled in ShipStation. (cancel_order)';
+                    $order_comment->save();
 
                     // Log refund information or perform any other necessary actions
                     Log::info('Refund processed for order ID: ' . $order_id . ', Amount: $' . $refundAmount);
