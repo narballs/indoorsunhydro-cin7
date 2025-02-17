@@ -269,12 +269,14 @@ class LabelHelper {
     public static function update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response) {
 
         $tracking_number = $label_api_response ? $label_api_response->trackingNumber : null;
+        $shipmentId = $label_api_response ? $label_api_response->shipmentId : null;
         
         $order_update = $order->update(
             [
                 'is_shipped' => 1,
                 'label_created' => 1,
                 'tracking_number' => $tracking_number, 
+                'shipmentId' => $shipmentId, 
                 'label_link' => $file_name
             ]
         );
@@ -395,6 +397,53 @@ class LabelHelper {
             'taxAmount' => $orderData['taxAmount'],
             'shippingAmount' => $orderData['shippingAmount'],
         ]);
+    }
+
+
+    public static function void_label($order) {
+        $order = ApiOrder::where('id', $order->id)->first();
+
+        if (empty($order) && !$order->shipmentId) {
+
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipstation_void_label'),
+                'action' => 'void_label',
+                'request' => 'order not found or shipmentId not found',
+                'response' => 'order not found or shipmentId not found',
+                'order_id' => $order->id,
+                'status' => 500,
+            ]);
+            return false;
+        }
+
+        $client = new Client();
+        $headers = self::getShipstationHeaders();
+        $url = config('services.shipstation.shipstation_void_label');
+
+        $response = $client->post($url, [
+            'headers' => $headers,
+            'json' => ['shipmentId' => $order->shipmentId],
+        ]);
+
+        $responseBody = json_decode($response->getBody()->getContents());
+
+        // update order
+
+        $order->update([
+            'void_label' => 1,
+        ]);
+
+        ShipstationApiLogs::create([
+            'api_url' => $url,
+            'action' => 'void_label',
+            'request' => json_encode(['shipmentId' => $order->shipmentId]),
+            'response' => json_encode($responseBody),
+            'order_id' => $order->id,
+            'status' => 200,
+        ]);
+
+        return true;
+
     }
     
 }
