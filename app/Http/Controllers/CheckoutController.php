@@ -1175,6 +1175,8 @@ class CheckoutController extends Controller
                 if ($active_contact_id) {
                     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 }
+
+                
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
