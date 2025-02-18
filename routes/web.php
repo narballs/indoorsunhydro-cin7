@@ -437,6 +437,9 @@ Route::group(['middleware' => ['auth']], function () {
         
         Route::get('/get-shipstation-api-logs', [AdminSettingsController::class, 'get_shipstation_api_logs'])->name('get_shipstation_api_logs');
 
+        Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
+        Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
+
         
     });
 
@@ -611,6 +614,7 @@ Route::post('/notifyOutOfStock', [ProductController::class, 'notifyOutOfStock'])
 Route::post('/updateItemQuantitytoOriginal', [ProductController::class, 'updateItemQuantitytoOriginal'])->name('updateItemQuantitytoOriginal');
 Route::post('/removeOutOfStock', [ProductController::class, 'removeOutOfStock'])->name('removeOutOfStock');
 Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('PackingSlip');
+
 
 
 
