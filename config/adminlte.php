@@ -441,6 +441,10 @@ return [
             'url'  => 'admin/cin7-api-keys-settings',
         ],
         [
+            'text'    => 'Payouts',
+            'url'  => 'admin/payouts',
+        ],
+        [
             'text'    => 'Shipstation Logs',
             'url'  => '/admin/get-shipstation-api-logs',
         ],

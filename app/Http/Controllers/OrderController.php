@@ -2551,5 +2551,138 @@ class OrderController extends Controller
     }
 
 
-}
+    public function payouts (Request $request) {
+        return view('admin.payouts.index');
+    }
 
+
+
+    public function payout_details(Request $request)
+    {
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+        $amount = $request->amount;
+
+        if (empty($amount)) {
+            return redirect()->back()->with('error', 'Amount is required');
+        }
+
+        try {
+            // Convert amount to cents for the query
+            $amountInCents = $amount * 100;
+
+            // Fetch all payouts (filter by amount if required)
+            $allPayouts = $stripe->payouts->all([
+                'amount' => $amountInCents, // Convert to cents
+            ]);
+
+            // Prepare an array to hold the payout and transaction details
+            $csvData = [];
+
+            // Header row
+            $csvData[] = [
+                'Type', 'ID', 'Created', 'Description', 'Amount', 'Currency',
+                'Converted Amount', 'Fees', 'Net', 'Converted Currency', 'Details',
+                'Customer ID', 'Customer Email', 'Customer Name', 'order_id',
+            ];
+
+            // Loop through all the payouts to find the one that matches the amount
+            foreach ($allPayouts as $payout) {
+                // If the payout amount doesn't match, skip it
+                if (abs($payout->amount / 100 - $amount) > 0.01) {
+                    continue;
+                }
+
+                // Retrieve the payout details
+                $payout = $stripe->payouts->retrieve($payout->id);
+
+                $allBalanceTransactions = $stripe->balanceTransactions->all([
+                    'payout' => $payout->id,
+                ]);
+
+                foreach ($allBalanceTransactions->autoPagingIterator() as $bt) {
+                    // Skip if type is 'payout'
+                    if ($bt->type === 'payout') {
+                        continue;
+                    }
+
+                    // Retrieve transaction details related to the payout
+                    $type        = $bt->type;
+                    $id          = $bt->id;
+                    $created     = date('m/d/Y H:i', $bt->created);
+                    $description = $bt->description ?? '';
+                    $amount      = $bt->amount / 100; // Convert from cents
+                    $currency    = $bt->currency;
+                    $fees        = $bt->fee / 100;   // Total fees
+                    $net         = $bt->net / 100;   // Net amount
+                    $convertedAmount   = $amount;   // If you need conversion logic, add it
+                    $convertedCurrency = $currency;
+
+                    // Initialize variables for customer and order details
+                    $customerId    = '';
+                    $customerEmail = '';
+                    $customerName  = '';
+                    $orderId       = '';
+
+                    if ($bt->source) {
+                        // Switch based on $type
+                        switch ($type) {
+                            case 'charge':
+                                $charge = $stripe->charges->retrieve($bt->source);
+                                if ($charge->customer) {
+                                    $customerId = $charge->customer;
+                                    $customer = $stripe->customers->retrieve($charge->customer);
+                                    $customerEmail = $customer->email ?? '';
+                                    $customerName = $customer->name ?? '';
+                                }
+                                $orderId = $charge->metadata->order_id ?? '';
+                                break;
+                        }
+                    }
+
+                    // Build each CSV row for the payout
+                    $csvData[] = [
+                        'Type' => ucfirst($type),
+                        'ID' => $id,
+                        'Created' => $created,
+                        'Description' => $description,
+                        'Amount' => $amount,
+                        'Currency' => strtoupper($currency),
+                        'Converted Amount' => $convertedAmount,
+                        'Fees' => $fees,
+                        'Net' => $net,
+                        'Converted Currency' => strtoupper($convertedCurrency),
+                        'Details' => $customerEmail,
+                        'Customer ID' => $customerId,
+                        'Customer Email' => $customerEmail,
+                        'Customer Name' => $customerName,
+                        'order_id (metadata)' => $orderId,
+                    ];
+                }
+            }
+
+            // Convert $csvData to CSV format
+            $filename = 'stripe_payout_'.$amount.'_'.date('Y-m-d').'.csv';
+            $handle = fopen($filename, 'w');
+
+            // Put each row into the CSV
+            foreach ($csvData as $row) {
+                fputcsv($handle, $row);
+            }
+            fclose($handle);
+
+            // Store the file and return as download
+            Storage::disk('local')->put($filename, file_get_contents($filename));
+
+            return response()->download($filename)->deleteFileAfterSend(true);
+
+        } catch (\Exception $e) {
+            // Handle error if payout ID is not found
+            return response()->json(['error' => 'Payout not found or invalid: '.$e->getMessage()], 400);
+        }
+    }
+
+
+
+
+    
+}
