@@ -990,8 +990,6 @@ class CheckoutController extends Controller
                 );
                 $charge = $event->data->object;
                 $chargeId = $charge->id;
-                $amount = $charge->amount;
-                $currency = $charge->currency ?? 'usd';
                 $dateCreated = Carbon::now();
                 $createdDate = Carbon::now();
                 $session_contact_id = Session::get('contact_id');
@@ -1010,22 +1008,6 @@ class CheckoutController extends Controller
                     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 }
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
-                $amount = $payment_succeeded->data->object->amount;
-                $balance = $stripe->balance->retrieve();
-                $availableBalance = collect($balance->available)->firstWhere('currency', $currency)->amount ?? 0;
-
-                if ($availableBalance < $amount) {
-                    Log::warning("Payout failed: Insufficient funds for amount {$amount} {$currency}.");
-                }
-
-                // Create payout
-                $payout = $stripe->payouts->create([
-                    'amount'   => $amount,
-                    'currency' => $currency,
-                    'metadata' => ['order_id' => $order_id],
-                ]);
-
-                Log::info("Payout successful. Charge ID: {$chargeId}, Order ID: {$order_id}");
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
                         'apiOrderItem.product.options',
@@ -1196,7 +1178,7 @@ class CheckoutController extends Controller
 
                 
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
-
+                $payout_id = $payment_succeeded->data->object->id;
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
                         'apiOrderItem.product.options',
