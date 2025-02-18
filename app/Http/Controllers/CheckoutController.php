@@ -1178,7 +1178,6 @@ class CheckoutController extends Controller
 
                 
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
-                $payout_id = $payment_succeeded->data->object->id;
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
                         'apiOrderItem.product.options',
