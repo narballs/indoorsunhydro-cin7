@@ -1008,6 +1008,16 @@ class CheckoutController extends Controller
                     $is_primary = Contact::where('contact_id', $session_contact_id)->first();
                 }
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
+                $amount = $payment_succeeded->data->object->amount;
+                $stripe->payouts->create(
+                    [
+                        'amount' => $amount,
+                        'currency' => 'usd',
+                        'metadata' => [
+                            'order_id' => $order_id,
+                        ],
+                    ]
+                );
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
                         'apiOrderItem.product.options',
@@ -1178,12 +1188,6 @@ class CheckoutController extends Controller
 
                 
                 $order_id = $payment_succeeded->data->object->metadata->order_id;
-                $payout_id = $payment_succeeded->data->object->id;
-
-                $stripe->payouts->update(
-                    $payout_id,
-                    ['metadata' => ['order_id' => $order_id]]
-                );
 
                 $currentOrder = ApiOrder::where('id', $order_id)->with(
                         'user.contact',
