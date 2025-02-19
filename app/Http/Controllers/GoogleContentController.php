@@ -432,23 +432,64 @@ class GoogleContentController extends Controller
     //     // dd($product_array);
     // }
 
-    public function retriveProducts($token , $client) {
+    // public function retriveProducts($token , $client) {
+    //     $merchantId = config('services.google.merchant_center_id');
+    //     $client->setAccessToken($token['access_token']);
+    //     $service = new ShoppingContent($client);
+    //     $parameters = [];
+    //     $product_array = [];
+    
+    //     do {
+    //         $products = $service->products->listProducts($merchantId, $parameters);
+    
+    //         // dd($products->getResources());
+    
+    //         if (!empty($products->getResources())) {
+    //             foreach ($products->getResources() as $product) {
+    //                 $suggestedPrice = $product->getSalePrice();
+    
+    //                 // Only add product if suggested sale price is available
+    //                 if ($suggestedPrice) {
+    //                     $product_array[] = [
+    //                         'id' => $product->getId(),
+    //                         'title' => $product->getTitle(),
+    //                         'price' => $product->getPrice(),
+    //                         'suggested_price' => $suggestedPrice,
+    //                         'availability' => $product->getAvailability(),
+    //                         'condition' => $product->getCondition(),
+    //                         'brand' => $product->getBrand(),
+    //                         'gtin' => $product->getGtin(),
+    //                         'mpn' => $product->getMpn(),
+    //                         'link' => $product->getLink(),
+    //                         'image_link' => $product->getImageLink(),
+    //                         'description' => $product->getDescription(),
+    //                         'category' => $product->getGoogleProductCategory(),
+    //                         'product_weight' => $product->getShippingWeight(),
+    //                     ];
+    //                 }
+    //             }
+    //         }
+    //     } while (!empty($products->getNextPageToken()));
+    
+    //     // dd($product_array);
+    
+    //     dd($product_array);
+    // }
+
+    public function retriveProducts($token, $client) {
         $merchantId = config('services.google.merchant_center_id');
         $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
-        $parameters = [];
+        $parameters = ['maxResults' => 100]; // Set max results to 100
         $product_array = [];
     
         do {
             $products = $service->products->listProducts($merchantId, $parameters);
     
-            // dd($products->getResources());
-    
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
                     $suggestedPrice = $product->getSalePrice();
     
-                    // Only add product if suggested sale price is available
                     if ($suggestedPrice) {
                         $product_array[] = [
                             'id' => $product->getId(),
@@ -469,12 +510,14 @@ class GoogleContentController extends Controller
                     }
                 }
             }
-        } while (!empty($products->getNextPageToken()));
     
-        // dd($product_array);
+            // Check for pagination and update parameters
+            $parameters['pageToken'] = $products->getNextPageToken();
+        } while (!empty($parameters['pageToken']));
     
         dd($product_array);
     }
+    
     
     
 }
