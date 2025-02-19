@@ -64,6 +64,7 @@ Route::get('/list_products', [GoogleContentController::class, 'list_products'])-
 Route::get('/insertProductsbatch', [GoogleContentController::class, 'insertProductsbatch'])->name('insertProductsbatch');
 Route::get('/google/authorize', [GoogleContentController::class, 'authorizeGoogle'])->name('google.authorize');
 Route::get('/auth/google/callback', [GoogleContentController::class, 'handleCallback'])->name('google.callback');
+Route::get('/handleCallbackRetrieve', [GoogleContentController::class, 'handleCallbackRetrieve'])->name('handleCallbackRetrieve');
 Route::get('/google/insert-products', [GoogleContentController::class, 'insertProducts'])->name('google.insertProducts');
 Route::resource('landing-page', LandingPageController::class);
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -614,6 +615,7 @@ Route::post('/notifyOutOfStock', [ProductController::class, 'notifyOutOfStock'])
 Route::post('/updateItemQuantitytoOriginal', [ProductController::class, 'updateItemQuantitytoOriginal'])->name('updateItemQuantitytoOriginal');
 Route::post('/removeOutOfStock', [ProductController::class, 'removeOutOfStock'])->name('removeOutOfStock');
 Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('PackingSlip');
+Route::get('/retriveProducts', [ProductController::class, 'retriveProducts'])->name('retriveProducts');
 
 
 

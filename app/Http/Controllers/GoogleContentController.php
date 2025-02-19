@@ -363,4 +363,70 @@ class GoogleContentController extends Controller
             }
         }
     }
+
+
+
+    public function handleCallbackRetrieve(Request $request)
+    {
+        $client = new Google_Client();
+        $client->setClientId(config('services.google.client_id'));
+        $client->setClientSecret(config('services.google.client_secret'));
+        $client->setRedirectUri(config('services.google.redirect'));
+        $client->setScopes([
+            'openid',
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+        ]);
+        $code = $request->input('code');
+        $token = $client->fetchAccessTokenWithAuthCode($code);
+        $result  = $this->retriveProducts($token , $client);
+        
+    }
+
+    public function retriveProducts($token , $client) {
+        $merchantId =config('services.google.merchant_center_id');
+        $client->setAccessToken($token['access_token']);
+        $service = new ShoppingContent($client);
+        $parameters = [];
+        do {
+            $products = $service->products->listProducts($merchantId, $parameters);
+
+            dd($products);
+            
+            if (!empty($products->getResources())) {
+                foreach ($products->getResources() as $product) {
+                    $productId = $product->getId();
+                    $title = $product->getTitle();
+                    $price = $product->getPrice();
+                    $availability = $product->getAvailability();
+                    $condition = $product->getCondition();
+                    $brand = $product->getBrand();
+                    $gtin = $product->getGtin();
+                    $mpn = $product->getMpn();
+                    $link = $product->getLink();
+                    $image_link = $product->getImageLink();
+                    $description = $product->getDescription();
+                    $category = $product->getGoogleProductCategory();
+                    $product_weight = $product->getShippingWeight();
+                    $product_array[] = [
+                        'id' => $productId,
+                        'title' => $title,
+                        'price' => $price,
+                        'availability' => $availability,
+                        'condition' => $condition,
+                        'brand' => $brand,
+                        'gtin' => $gtin,
+                        'mpn' => $mpn,
+                        'link' => $link,
+                        'image_link' => $image_link,
+                        'description' => $description,
+                        'category' => $category,
+                        'product_weight' => $product_weight,
+                    ];
+                }
+            }
+        } while (!empty($products->getNextPageToken()));
+        // dd($product_array);
+    }
 }
