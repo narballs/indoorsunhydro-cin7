@@ -480,7 +480,7 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
-        $parameters = ['maxResults' => 20]; // Set max results to 100
+        $parameters = ['maxResults' => 13]; // Set max results to 100
         $product_array = [];
     
         do {
@@ -493,7 +493,7 @@ class GoogleContentController extends Controller
             ]);
 
 
-            dd($products);
+            dd($products , 'sd');
 
 
     
