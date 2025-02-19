@@ -50,8 +50,8 @@ class GoogleContentController extends Controller
         ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        // $result  = $this->insertProducts($token , $client);
-        $result  = $this->retriveProducts($token , $client);
+        $result  = $this->insertProducts($token , $client);
+        // $result  = $this->retriveProducts($token , $client);
         if ($result->getStatusCode() == 200) {
             return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
         } else {
