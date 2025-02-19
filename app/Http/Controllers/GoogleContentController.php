@@ -485,6 +485,7 @@ class GoogleContentController extends Controller
     
         do {
             $products = $service->products->listProducts($merchantId, $parameters);
+            dd($products);
     
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
