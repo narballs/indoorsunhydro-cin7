@@ -432,7 +432,7 @@ class GoogleContentController extends Controller
     // }
 
     public function retriveProducts($token , $client) {
-        $merchantId = config('services.google.merchant_center_id');
+        $merchantId =config('services.google.merchant_center_id');
         $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
         $parameters = [];
