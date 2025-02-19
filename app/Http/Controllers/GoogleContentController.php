@@ -480,12 +480,22 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
-        $parameters = ['maxResults' => 10]; // Set max results to 100
+        $parameters = ['maxResults' => 20]; // Set max results to 100
         $product_array = [];
     
         do {
-            $products = $service->products->listProducts($merchantId, $parameters);
+            // $products = $service->products->listProducts($merchantId, $parameters);
+            // dd($products);
+
+
+            $products = $service->products->listProducts($merchantId,$parameters, [
+                'fields' => 'items(id,title,price,salePrice)'
+            ]);
+
+
             dd($products);
+
+
     
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
