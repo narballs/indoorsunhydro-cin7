@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductOption;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
+use Google\Service\ShoppingContent\PriceInsights;
 use Google\Service\ShoppingContent\Price;
 use Google_Client;
 use GuzzleHttp\Client;
@@ -445,7 +446,7 @@ class GoogleContentController extends Controller
     
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
-                    dd($product);
+                    dd($product->getSalePrice());
                     // Get suggested sale price
                     $suggestedPrice = $product->getSalePrice();
     
