@@ -432,76 +432,49 @@ class GoogleContentController extends Controller
     // }
 
     public function retriveProducts($token , $client) {
-        $merchantId =config('services.google.merchant_center_id');
+        $merchantId = config('services.google.merchant_center_id');
         $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
         $parameters = [];
         $product_array = [];
-        
+    
         do {
             $products = $service->products->listProducts($merchantId, $parameters);
-            
-
+    
             // dd($products->getResources());
-           
-            
+    
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
-                    $product_array[] = [
-                        'id' => $product->getId(),
-                        'title' => $product->getTitle(),
-                        'price' => $product->getPrice(),
-                        'suggested_price' => $product->getSalePrice(),
-                        'availability' => $product->getAvailability(),
-                        'condition' => $product->getCondition(),
-                        'brand' => $product->getBrand(),
-                        'gtin' => $product->getGtin(),
-                        'mpn' => $product->getMpn(),
-                        'link' => $product->getLink(),
-                        'image_link' => $product->getImageLink(),
-                        'description' => $product->getDescription(),
-                        'category' => $product->getGoogleProductCategory(),
-                        'product_weight' => $product->getShippingWeight(),
-                    ];
-
-                    // $productId = $product->getId();
-                    // $title = $product->getTitle();
-                    // $price = $product->getPrice();  // This retrieves the price
-                    // $suggestedPrice = $product->getSuggestedPrice();  // Assuming this is the correct field for suggested price
-                    // $availability = $product->getAvailability();
-                    // $condition = $product->getCondition();
-                    // $brand = $product->getBrand();
-                    // $gtin = $product->getGtin();
-                    // $mpn = $product->getMpn();
-                    // $link = $product->getLink();
-                    // $image_link = $product->getImageLink();
-                    // $description = $product->getDescription();
-                    // $category = $product->getGoogleProductCategory();
-                    // $product_weight = $product->getShippingWeight();
-                    
-                    // $product_array[] = [
-                    //     'id' => $productId,
-                    //     'title' => $title,
-                    //     'price' => $price,
-                    //     'suggested_price' => $suggestedPrice,  // Include suggested price
-                    //     'availability' => $availability,
-                    //     'condition' => $condition,
-                    //     'brand' => $brand,
-                    //     'gtin' => $gtin,
-                    //     'mpn' => $mpn,
-                    //     'link' => $link,
-                    //     'image_link' => $image_link,
-                    //     'description' => $description,
-                    //     'category' => $category,
-                    //     'product_weight' => $product_weight,
-                    // ];
+                    // Get suggested sale price
+                    $suggestedPrice = $product->getSalePrice();
+    
+                    // Only add product if suggested sale price is available
+                    if ($suggestedPrice) {
+                        $product_array[] = [
+                            'id' => $product->getId(),
+                            'title' => $product->getTitle(),
+                            'price' => $product->getPrice(),
+                            'suggested_price' => $suggestedPrice,
+                            'availability' => $product->getAvailability(),
+                            'condition' => $product->getCondition(),
+                            'brand' => $product->getBrand(),
+                            'gtin' => $product->getGtin(),
+                            'mpn' => $product->getMpn(),
+                            'link' => $product->getLink(),
+                            'image_link' => $product->getImageLink(),
+                            'description' => $product->getDescription(),
+                            'category' => $product->getGoogleProductCategory(),
+                            'product_weight' => $product->getShippingWeight(),
+                        ];
+                    }
                 }
             }
         } while (!empty($products->getNextPageToken()));
     
         // dd($product_array);
-
+    
         dd($product_array);
     }
+    
     
 }
