@@ -480,7 +480,7 @@ class GoogleContentController extends Controller
         $merchantId = config('services.google.merchant_center_id');
         $client->setAccessToken($token['access_token']);
         $service = new ShoppingContent($client);
-        $parameters = ['maxResults' => 100]; // Set max results to 100
+        $parameters = ['maxResults' => 10]; // Set max results to 100
         $product_array = [];
     
         do {
@@ -489,7 +489,7 @@ class GoogleContentController extends Controller
     
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
-                    $suggestedPrice = $product->getSalePrice();
+                    $suggestedPrice = $product->getPrice();
     
                     if ($suggestedPrice) {
                         $product_array[] = [
