@@ -446,8 +446,6 @@ class GoogleContentController extends Controller
     
             if (!empty($products->getResources())) {
                 foreach ($products->getResources() as $product) {
-                    dd($product->getSalePrice());
-                    // Get suggested sale price
                     $suggestedPrice = $product->getSalePrice();
     
                     // Only add product if suggested sale price is available
