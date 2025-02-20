@@ -415,19 +415,19 @@ class GoogleContentController extends Controller
 
             // Make the API request
             $response = $service->reports->search($merchantId, $searchRequest);
-            dd($response);
-
-            // Prepare final custom array output
             $finalResults = [];
 
-            if (!empty($response->getResults())) {
-                foreach ($response->getResults() as $product) {
+            if (!empty($response->results)) {
+                foreach ($response->results as $product) {
+                    // Extract necessary data safely
+                    $productView = $product->productView ?? null;
+                    $priceInsights = $product->priceInsights ?? null;
+
                     $finalResults[] = [
-                        'id' => $product['product_view.id'] ?? 'N/A',
-                        'title' => $product['product_view.title'] ?? 'N/A',
-                        'brand' => $product['product_view.brand'] ?? 'N/A',
-                        'price' => isset($product['product_view.price_micros']) ? number_format($product['product_view.price_micros'] / 1000000, 2) : '0.00',
-                        'suggested_price' => isset($product['price_insights.suggested_price_micros']) ? number_format($product['price_insights.suggested_price_micros'] / 1000000, 2) : '0.00'
+                        'title' => $productView->title ?? 'N/A',
+                        'brand' => $productView->brand ?? 'N/A',
+                        'price' => isset($productView->priceMicros) ? number_format($productView->priceMicros / 1000000, 2) : '0.00',
+                        'suggested_price' => isset($priceInsights->suggestedPriceMicros) ? number_format($priceInsights->suggestedPriceMicros / 1000000, 2) : '0.00'
                     ];
                 }
             }
