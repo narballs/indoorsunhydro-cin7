@@ -501,45 +501,44 @@ class GoogleContentController extends Controller
     //     dd($response);
     // }
 
-
     public function retrieveProducts($token, $client)
     {
         try {
             $merchantId = config('services.google.merchant_center_id');
-            
+
             // Set the access token on the client
             $client->setAccessToken($token['access_token']);
 
+            // Initialize the Shopping Content API
             $service = new ShoppingContent($client);
 
-            
-            // $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
-            // "product_view.currency_code, price_insights.suggested_price_micros, " .
-            // "price_insights.suggested_price_currency_code " .
-            // "FROM PriceInsightsProductView";
+            // Define the query for Price Insights
+            $query = "SELECT 
+                        product_view.id, product_view.title, product_view.brand, 
+                        product_view.price_micros, product_view.currency_code, 
+                        price_insights.suggested_price_micros, price_insights.suggested_price_currency_code, 
+                        price_insights.predicted_impressions_change_fraction, 
+                        price_insights.predicted_clicks_change_fraction, 
+                        price_insights.predicted_conversions_change_fraction 
+                    FROM PriceInsightsProductView";
 
-            $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
-                 "product_view.currency_code, product_view.availability, " .
-                 "price_insights.suggested_price_micros, price_insights.suggested_price_currency_code " .
-                 "FROM ProductView";
-
-            // Create a SearchRequest object
+            // Create a SearchRequest object properly
             $searchRequest = new SearchRequest();
             $searchRequest->setQuery($query);
 
-            // Execute the search query
+            // Make the API request
             $response = $service->reports->search($merchantId, $searchRequest);
 
-            // Debugging: Dump the response (optional, comment out in production)
             dd($response);
 
-            // Return the response (remove dd() in production and return data)
-            return $response;
-
+            // Return the response
+            return response()->json($response);
+            
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
     
     
     
