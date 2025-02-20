@@ -514,8 +514,8 @@ class GoogleContentController extends Controller
 
             // Define the query with a limit of 10 results, including original price
             $query = "SELECT
-                    product_view.id, product_view.title, product_view.brand,
-                    product_view.price_micros, 
+                    product_view.id, product_view.title,product_view.mpn, product_view.brand,
+                    product_view.price_micros,product_view.price 
                     product_view.currency_code, price_insights.suggested_price_micros,
                     price_insights.suggested_price_currency_code,
                     price_insights.predicted_impressions_change_fraction,
