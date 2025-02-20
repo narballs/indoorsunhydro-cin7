@@ -529,6 +529,7 @@ class GoogleContentController extends Controller
 
             // Make the API request
             $response = $service->reports->search($merchantId, $searchRequest);
+            dd($response);
 
             // Extract only 10 results (redundant safety measure)
             $results = array_slice($response->getResults(), 0, 10);
@@ -539,6 +540,7 @@ class GoogleContentController extends Controller
             return response()->json($results);
             
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
