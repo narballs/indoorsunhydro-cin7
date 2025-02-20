@@ -415,6 +415,7 @@ class GoogleContentController extends Controller
 
             // Make the API request
             $response = $service->reports->search($merchantId, $searchRequest);
+            dd($response);
 
             // Prepare final custom array output
             $finalResults = [];
