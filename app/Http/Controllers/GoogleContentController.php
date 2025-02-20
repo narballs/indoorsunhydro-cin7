@@ -15,6 +15,7 @@ use Google_Client;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Intervention\Image\Facades\Image;
 
@@ -51,8 +52,8 @@ class GoogleContentController extends Controller
         ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        $result  = $this->insertProducts($token , $client);
-        // $result  = $this->retriveProducts($token , $client);
+        // $result  = $this->insertProducts($token , $client);
+        $result  = $this->retriveProducts($token , $client);
         if ($result->getStatusCode() == 200) {
             return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
         } else {
@@ -477,27 +478,65 @@ class GoogleContentController extends Controller
     //     dd($product_array);
     // }
 
-    public function retriveProducts($token, $client) {
-        $merchantId = config('services.google.merchant_center_id');
-        $client->setAccessToken($token['access_token']);
-        $service = new ShoppingContent($client);
+    // public function retriveProducts($token, $client) {
+    //     $merchantId = config('services.google.merchant_center_id');
+    //     $client->setAccessToken($token['access_token']);
+    //     $service = new ShoppingContent($client);
     
-        // Define the query for retrieving price insights
-        $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
+    //     // Define the query for retrieving price insights
+    //     $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
+    //                 "product_view.currency_code, price_insights.suggested_price_micros, " .
+    //                 "price_insights.suggested_price_currency_code, product_view.availability " .
+    //                 "FROM PriceInsightsProductView";
+
+    //     // Create a SearchRequest object
+    //     $searchRequest = new SearchRequest();
+    //     $searchRequest->setQuery($query);
+
+    //     dd($searchRequest);
+
+    //     // Execute the search query
+    //     $response = $service->reports->search($merchantId, $searchRequest);
+
+    //     dd($response);
+    // }
+
+
+    public function retrieveProducts($token, $client)
+    {
+        try {
+            $merchantId = config('services.google.merchant_center_id');
+            
+            // Set the access token on the client
+            $client->setAccessToken($token['access_token']);
+
+            $service = new ShoppingContent($client);
+
+            // Define the query for retrieving price insights
+            $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
                     "product_view.currency_code, price_insights.suggested_price_micros, " .
                     "price_insights.suggested_price_currency_code, product_view.availability " .
                     "FROM PriceInsightsProductView";
 
-        // Create a SearchRequest object
-        $searchRequest = new SearchRequest();
-        $searchRequest->setQuery($query);
+            // Create a SearchRequest object
+            $searchRequest = new SearchRequest();
+            $searchRequest->setQuery($query);
 
-        dd($searchRequest);
+            // Debugging: Dump the search request (optional, comment out in production)
+            dd($searchRequest);
 
-        // Execute the search query
-        $response = $service->reports->search($merchantId, $searchRequest);
+            // Execute the search query
+            $response = $service->reports->search($merchantId, $searchRequest);
 
-        dd($response);
+            // Debugging: Dump the response (optional, comment out in production)
+            dd($response);
+
+            // Return the response (remove dd() in production and return data)
+            return $response;
+
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
     }
     
     
