@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
 use Google\Client as GoogleClient;
 use Google\Service\ShoppingContent;
