@@ -10,6 +10,7 @@ use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
 use Google\Service\ShoppingContent\PriceInsights;
 use Google\Service\ShoppingContent\Price;
+use Google\Service\ShoppingContent\SearchRequest;
 use Google_Client;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -50,8 +51,8 @@ class GoogleContentController extends Controller
         ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        $result  = $this->insertProducts($token , $client);
-        // $result  = $this->retriveProducts($token , $client);
+        // $result  = $this->insertProducts($token , $client);
+        $result  = $this->retrieveProducts($token , $client);
         if ($result->getStatusCode() == 200) {
             return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
         } else {
@@ -368,166 +369,45 @@ class GoogleContentController extends Controller
 
 
 
-    public function handleCallbackRetrieve(Request $request)
-    {
-        $client = new Google_Client();
-        $client->setClientId(config('services.google.client_id'));
-        $client->setClientSecret(config('services.google.client_secret'));
-        $client->setRedirectUri(config('services.google.redirect'));
-        $client->setScopes([
-            'openid',
-            'profile',
-            'email',
-            'https://www.googleapis.com/auth/content', // Add other necessary scopes
-        ]);
-        $code = $request->input('code');
-        $token = $client->fetchAccessTokenWithAuthCode($code);
-        $result  = $this->retriveProducts($token , $client);
-        
-    }
-
-    // public function retriveProducts($token , $client) {
-    //     $merchantId =config('services.google.merchant_center_id');
-    //     $client->setAccessToken($token['access_token']);
-    //     $service = new ShoppingContent($client);
-    //     $parameters = [];
-    //     do {
-    //         $products = $service->products->listProducts($merchantId, $parameters);
-
-    //         dd($products);
-            
-    //         if (!empty($products->getResources())) {
-    //             foreach ($products->getResources() as $product) {
-    //                 $productId = $product->getId();
-    //                 $title = $product->getTitle();
-    //                 $price = $product->getPrice();
-    //                 $availability = $product->getAvailability();
-    //                 $condition = $product->getCondition();
-    //                 $brand = $product->getBrand();
-    //                 $gtin = $product->getGtin();
-    //                 $mpn = $product->getMpn();
-    //                 $link = $product->getLink();
-    //                 $image_link = $product->getImageLink();
-    //                 $description = $product->getDescription();
-    //                 $category = $product->getGoogleProductCategory();
-    //                 $product_weight = $product->getShippingWeight();
-    //                 $product_array[] = [
-    //                     'id' => $productId,
-    //                     'title' => $title,
-    //                     'price' => $price,
-    //                     'availability' => $availability,
-    //                     'condition' => $condition,
-    //                     'brand' => $brand,
-    //                     'gtin' => $gtin,
-    //                     'mpn' => $mpn,
-    //                     'link' => $link,
-    //                     'image_link' => $image_link,
-    //                     'description' => $description,
-    //                     'category' => $category,
-    //                     'product_weight' => $product_weight,
-    //                 ];
-    //             }
-    //         }
-    //     } while (!empty($products->getNextPageToken()));
-    //     // dd($product_array);
-    // }
-
-    // public function retriveProducts($token , $client) {
-    //     $merchantId = config('services.google.merchant_center_id');
-    //     $client->setAccessToken($token['access_token']);
-    //     $service = new ShoppingContent($client);
-    //     $parameters = [];
-    //     $product_array = [];
     
-    //     do {
-    //         $products = $service->products->listProducts($merchantId, $parameters);
+    public function retrieveProducts($token, $client) {
+        try {
+            // Get Merchant ID from config
+            $merchantId = config('services.google.merchant_center_id');
     
-    //         // dd($products->getResources());
+            // Set the access token for the client
+            $client->setAccessToken($token['access_token']);
     
-    //         if (!empty($products->getResources())) {
-    //             foreach ($products->getResources() as $product) {
-    //                 $suggestedPrice = $product->getSalePrice();
+            // Initialize the Shopping Content API
+            $service = new ShoppingContent($client);
     
-    //                 // Only add product if suggested sale price is available
-    //                 if ($suggestedPrice) {
-    //                     $product_array[] = [
-    //                         'id' => $product->getId(),
-    //                         'title' => $product->getTitle(),
-    //                         'price' => $product->getPrice(),
-    //                         'suggested_price' => $suggestedPrice,
-    //                         'availability' => $product->getAvailability(),
-    //                         'condition' => $product->getCondition(),
-    //                         'brand' => $product->getBrand(),
-    //                         'gtin' => $product->getGtin(),
-    //                         'mpn' => $product->getMpn(),
-    //                         'link' => $product->getLink(),
-    //                         'image_link' => $product->getImageLink(),
-    //                         'description' => $product->getDescription(),
-    //                         'category' => $product->getGoogleProductCategory(),
-    //                         'product_weight' => $product->getShippingWeight(),
-    //                     ];
-    //                 }
-    //             }
-    //         }
-    //     } while (!empty($products->getNextPageToken()));
+            // Define the query for retrieving price insights
+            $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
+                     "product_view.currency_code, price_insights.suggested_price_micros, " .
+                     "price_insights.suggested_price_currency_code, product_view.availability " .
+                     "FROM PriceInsightsProductView";
     
-    //     // dd($product_array);
+            // Create a SearchRequest object
+            $searchRequest = new SearchRequest();
+            $searchRequest->setQuery($query);
     
-    //     dd($product_array);
-    // }
+            // Execute the search query
+            $response = $service->reports->search($merchantId, $searchRequest);
 
-    public function retriveProducts($token, $client) {
-        $merchantId = config('services.google.merchant_center_id');
-        $client->setAccessToken($token['access_token']);
-        $service = new ShoppingContent($client);
-        $parameters = ['maxResults' => 13]; // Set max results to 100
-        $product_array = [];
+            dd($response);
     
-        do {
-            // $products = $service->products->listProducts($merchantId, $parameters);
-            // dd($products);
-
-
-            $products = $service->products->listProducts($merchantId,$parameters, [
-                'fields' => 'items(id,title,price,salePrice)'
-            ]);
-
-
-            dd($products , 'sd');
-
-
-    
-            if (!empty($products->getResources())) {
-                foreach ($products->getResources() as $product) {
-                    $suggestedPrice = $product->getPrice();
-    
-                    if ($suggestedPrice) {
-                        $product_array[] = [
-                            'id' => $product->getId(),
-                            'title' => $product->getTitle(),
-                            'price' => $product->getPrice(),
-                            'suggested_price' => $suggestedPrice,
-                            'availability' => $product->getAvailability(),
-                            'condition' => $product->getCondition(),
-                            'brand' => $product->getBrand(),
-                            'gtin' => $product->getGtin(),
-                            'mpn' => $product->getMpn(),
-                            'link' => $product->getLink(),
-                            'image_link' => $product->getImageLink(),
-                            'description' => $product->getDescription(),
-                            'category' => $product->getGoogleProductCategory(),
-                            'product_weight' => $product->getShippingWeight(),
-                        ];
-                    }
-                }
+            // Check if response contains data
+            if (isset($response['results']) && !empty($response['results'])) {
+                return response()->json($response['results']);
+            } else {
+                return response()->json(['message' => 'No data found'], 404);
             }
-    
-            // Check for pagination and update parameters
-            $parameters['pageToken'] = $products->getNextPageToken();
-        } while (!empty($parameters['pageToken']));
-    
-        dd($product_array);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+    
+    
     
     
     
