@@ -512,11 +512,16 @@ class GoogleContentController extends Controller
 
             $service = new ShoppingContent($client);
 
-            // Define the query for retrieving price insights
+            
+            // $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
+            // "product_view.currency_code, price_insights.suggested_price_micros, " .
+            // "price_insights.suggested_price_currency_code " .
+            // "FROM PriceInsightsProductView";
+
             $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
-                    "product_view.currency_code, price_insights.suggested_price_micros, " .
-                    "price_insights.suggested_price_currency_code, product_view.availability " .
-                    "FROM PriceInsightsProductView";
+                 "product_view.currency_code, product_view.availability, " .
+                 "price_insights.suggested_price_micros, price_insights.suggested_price_currency_code " .
+                 "FROM ProductView";
 
             // Create a SearchRequest object
             $searchRequest = new SearchRequest();
