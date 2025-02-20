@@ -52,8 +52,7 @@ class GoogleContentController extends Controller
         ]);
         $code = $request->input('code');
         $token = $client->fetchAccessTokenWithAuthCode($code);
-        // $result  = $this->insertProducts($token , $client);
-        $result  = $this->retrieveProducts($token , $client);
+        $result  = $this->insertProducts($token , $client);
         if ($result->getStatusCode() == 200) {
             return redirect()->route('admin.view')->with('success', 'Products inserted successfully');
         } else {
@@ -388,66 +387,7 @@ class GoogleContentController extends Controller
         
     }
 
-    public function retrieveProducts($token, $client)
-    {
-        try {
-            $merchantId = config('services.google.merchant_center_id');
-
-            // Set the access token on the client
-            $client->setAccessToken($token['access_token']);
-
-            // Initialize the Shopping Content API
-            $service = new ShoppingContent($client);
-
-            // ✅ Corrected query (removed invalid 'product_view.price', fixed missing comma)
-            $query = "SELECT
-                        product_view.id, 
-                        product_view.title, 
-                        product_view.brand,
-                        product_view.price_micros,
-                        price_insights.suggested_price_micros
-                    FROM PriceInsightsProductView
-                    LIMIT 10";
-
-            // Create a SearchRequest object
-            $searchRequest = new SearchRequest();
-            $searchRequest->setQuery($query);
-
-            // Make the API request
-            $response = $service->reports->search($merchantId, $searchRequest);
-            $finalResults = [];
-
-            if (!empty($response->results)) {
-                foreach ($response->results as $product) {
-                    // Extract necessary data safely
-                    $productView = $product->productView ?? null;
-                    $priceInsights = $product->priceInsights ?? null;
-
-                    $finalResults[] = [
-                        'title' => $productView->title ?? 'N/A',
-                        'brand' => $productView->brand ?? 'N/A',
-                        'price' => isset($productView->priceMicros) ? number_format($productView->priceMicros / 1000000, 2) : '0.00',
-                        'suggested_price' => isset($priceInsights->suggestedPriceMicros) ? number_format($priceInsights->suggestedPriceMicros / 1000000, 2) : '0.00'
-                    ];
-                }
-            }
-
-            dd($finalResults);
-
-            // ✅ Return structured JSON response
-            return response()->json([
-                'success' => true,
-                'count' => count($finalResults),
-                'products' => $finalResults
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+    
 
     
     
