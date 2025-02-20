@@ -512,27 +512,31 @@ class GoogleContentController extends Controller
             // Initialize the Shopping Content API
             $service = new ShoppingContent($client);
 
-            // Define the query for Price Insights
+            // Define the query with a limit of 10 results, including original price
             $query = "SELECT 
                         product_view.id, product_view.title, product_view.brand, 
-                        product_view.price_micros, product_view.currency_code, 
+                        product_view.original_price_micros, product_view.price_micros, product_view.currency_code, 
                         price_insights.suggested_price_micros, price_insights.suggested_price_currency_code, 
                         price_insights.predicted_impressions_change_fraction, 
                         price_insights.predicted_clicks_change_fraction, 
                         price_insights.predicted_conversions_change_fraction 
-                    FROM PriceInsightsProductView";
+                    FROM PriceInsightsProductView 
+                    LIMIT 10";  // <-- Added LIMIT clause
 
-            // Create a SearchRequest object properly
+            // Create a SearchRequest object
             $searchRequest = new SearchRequest();
             $searchRequest->setQuery($query);
 
             // Make the API request
             $response = $service->reports->search($merchantId, $searchRequest);
 
-            dd($response);
+            // Extract only 10 results (redundant safety measure)
+            $results = array_slice($response->getResults(), 0, 10);
+
+            dd($results);
 
             // Return the response
-            return response()->json($response);
+            return response()->json($results);
             
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
