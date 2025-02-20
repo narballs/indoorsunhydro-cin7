@@ -23,6 +23,8 @@ class Pricingnew extends Model
         'specialPrice',
         'webPriceUSD',
         'sacramentoUSD',
+        'aiPriceUSD',
+        'enable_ai_price',
     ];
     public function option()
     {

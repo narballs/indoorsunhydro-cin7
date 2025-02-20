@@ -1,18 +1,12 @@
 <?php
-
-namespace App\Console\Commands;
-
 use Illuminate\Console\Command;
-use App\Models\AdminSetting;
-use App\Models\Category;
-use App\Models\GmcLog;
-use App\Models\Pricingnew;
-use App\Models\Product;
-use App\Models\ProductOption;
 use Google\Client as GoogleClient;
 use Google\Service\ShoppingContent;
-use Google\Service\ShoppingContent\Product as ServiceProduct;
-use Google\Service\ShoppingContent\Price;
+use Google\Service\ShoppingContent\SearchRequest;
+use App\Models\GmcLog;
+use App\Models\Product;
+use App\Models\ProductOption;
+use App\Models\Pricingnew;
 
 class GmcSuggestedPrice extends Command
 {
@@ -21,14 +15,14 @@ class GmcSuggestedPrice extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'sync:ai_suggested_prices';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sync AI suggested prices with Google Merchant Center';
 
     /**
      * Create a new command instance.
@@ -40,11 +34,6 @@ class GmcSuggestedPrice extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         // Initialize Google Client
@@ -54,21 +43,31 @@ class GmcSuggestedPrice extends Command
             'openid',
             'profile',
             'email',
-            'https://www.googleapis.com/auth/content', // Add other necessary scopes
+            'https://www.googleapis.com/auth/content',
         ]);
 
-
+        // Fetch access token
         $token = $client->fetchAccessTokenWithAssertion();
+
         if (isset($token['access_token'])) {
-            $result = $this->retriveProducts($client, $token);
-            $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
-            if (!empty($gmcLog)) {
+            // ✅ Fetch products
+            $result = $this->retrieveProducts($client, $token);
+
+            if (!is_array($result)) {
+                $this->error('Failed to retrieve products: ' . $result);
+                return;
+            }
+
+            // ✅ Add suggested prices
+            $this->addSuggestedPrices($result);
+
+            // ✅ Update or create a GMC log entry
+            $gmcLog = GmcLog::latest()->first();
+            if ($gmcLog) {
                 $gmcLog->last_updated_at = now();
                 $gmcLog->save();
             } else {
-                $create_gmc_log = new GmcLog();
-                $create_gmc_log->last_updated_at = now();
-                $create_gmc_log->save();
+                GmcLog::create(['last_updated_at' => now()]);
             }
 
             return $this->info('Products prices inserted successfully.'); 
@@ -77,28 +76,76 @@ class GmcSuggestedPrice extends Command
         }
     }
 
-    public function retriveProducts($client, $token) {
-        $merchantId =config('services.google.merchant_center_id');
-        $service = new ShoppingContent($client);
-        $parameters = [];
-        do {
-            $products = $service->products->listProducts($merchantId, $parameters);
-            
-            if (!empty($products->getResources())) {
-                // foreach ($products->getResources() as $product) {
-                //     $productId = $product->getId();
-                //     $title = $product->getTitle();
-                //     $suggestedPrice = $product->getPrice()->getValue();
-                    
-                //     printf("%s %s - Suggested Price: %s\n", $productId, $title, $suggestedPrice);
-                    
-                //     // Update suggested price in database
-                //     $stmt = $dbConnection->prepare("UPDATE products SET suggested_price = ? WHERE product_id = ?");
-                //     $stmt->execute([$suggestedPrice, $productId]);
-                // }
+    private function retrieveProducts($client, $token)
+    {
+        try {
+            $merchantId = config('services.google.merchant_center_id');
+
+            // Set the access token
+            $client->setAccessToken($token['access_token']);
+
+            // Initialize Google Shopping Content API
+            $service = new ShoppingContent($client);
+
+            // ✅ Corrected SQL query
+            $query = "SELECT
+                        product_view.id, 
+                        product_view.title, 
+                        product_view.brand,
+                        product_view.price_micros,
+                        price_insights.suggested_price_micros
+                    FROM PriceInsightsProductView";
+
+            // Create SearchRequest object
+            $searchRequest = new SearchRequest();
+            $searchRequest->setQuery($query);
+
+            // Make API request
+            $response = $service->reports->search($merchantId, $searchRequest);
+            $finalResults = [];
+
+            if (!empty($response->results)) {
+                foreach ($response->results as $product) {
+                    // Extract product details safely
+                    $productView = $product->productView ?? null;
+                    $priceInsights = $product->priceInsights ?? null;
+
+                    $finalResults[] = [
+                        'title' => $productView->title ?? 'N/A',
+                        'brand' => $productView->brand ?? 'N/A',
+                        'price' => isset($productView->priceMicros) ? number_format($productView->priceMicros / 1000000, 2) : '0.00',
+                        'suggested_price' => isset($priceInsights->suggestedPriceMicros) ? number_format($priceInsights->suggestedPriceMicros / 1000000, 2) : '0.00'
+                    ];
+                }
             }
+
+            return $finalResults;
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    private function addSuggestedPrices($products)
+    {
+        foreach ($products as $productData) {
+            $product = Product::where('name', $productData['title'])->first();
             
-            $parameters['pageToken'] = $products->getNextPageToken();
-        } while (!empty($parameters['pageToken']));
+            if (!$product) {
+                continue; // ✅ Skip if product not found
+            }
+
+            $productOption = ProductOption::where('product_id', $product->product_id)->first();
+            if (!$productOption) {
+                continue; // ✅ Skip if no product option found
+            }
+
+            $pricing = Pricingnew::where('option_id', $productOption->option_id)->first();
+            if ($pricing) {
+                $pricing->aiPriceUSD = $productData['suggested_price'];
+                $pricing->enable_ai_price = 1;
+                $pricing->save();
+            }
+        }
     }
 }
