@@ -522,9 +522,6 @@ class GoogleContentController extends Controller
             $searchRequest = new SearchRequest();
             $searchRequest->setQuery($query);
 
-            // Debugging: Dump the search request (optional, comment out in production)
-            dd($searchRequest);
-
             // Execute the search query
             $response = $service->reports->search($merchantId, $searchRequest);
 
