@@ -388,119 +388,6 @@ class GoogleContentController extends Controller
         
     }
 
-    // public function retriveProducts($token , $client) {
-    //     $merchantId =config('services.google.merchant_center_id');
-    //     $client->setAccessToken($token['access_token']);
-    //     $service = new ShoppingContent($client);
-    //     $parameters = [];
-    //     do {
-    //         $products = $service->products->listProducts($merchantId, $parameters);
-
-    //         dd($products);
-            
-    //         if (!empty($products->getResources())) {
-    //             foreach ($products->getResources() as $product) {
-    //                 $productId = $product->getId();
-    //                 $title = $product->getTitle();
-    //                 $price = $product->getPrice();
-    //                 $availability = $product->getAvailability();
-    //                 $condition = $product->getCondition();
-    //                 $brand = $product->getBrand();
-    //                 $gtin = $product->getGtin();
-    //                 $mpn = $product->getMpn();
-    //                 $link = $product->getLink();
-    //                 $image_link = $product->getImageLink();
-    //                 $description = $product->getDescription();
-    //                 $category = $product->getGoogleProductCategory();
-    //                 $product_weight = $product->getShippingWeight();
-    //                 $product_array[] = [
-    //                     'id' => $productId,
-    //                     'title' => $title,
-    //                     'price' => $price,
-    //                     'availability' => $availability,
-    //                     'condition' => $condition,
-    //                     'brand' => $brand,
-    //                     'gtin' => $gtin,
-    //                     'mpn' => $mpn,
-    //                     'link' => $link,
-    //                     'image_link' => $image_link,
-    //                     'description' => $description,
-    //                     'category' => $category,
-    //                     'product_weight' => $product_weight,
-    //                 ];
-    //             }
-    //         }
-    //     } while (!empty($products->getNextPageToken()));
-    //     // dd($product_array);
-    // }
-
-    // public function retriveProducts($token , $client) {
-    //     $merchantId = config('services.google.merchant_center_id');
-    //     $client->setAccessToken($token['access_token']);
-    //     $service = new ShoppingContent($client);
-    //     $parameters = [];
-    //     $product_array = [];
-    
-    //     do {
-    //         $products = $service->products->listProducts($merchantId, $parameters);
-    
-    //         // dd($products->getResources());
-    
-    //         if (!empty($products->getResources())) {
-    //             foreach ($products->getResources() as $product) {
-    //                 $suggestedPrice = $product->getSalePrice();
-    
-    //                 // Only add product if suggested sale price is available
-    //                 if ($suggestedPrice) {
-    //                     $product_array[] = [
-    //                         'id' => $product->getId(),
-    //                         'title' => $product->getTitle(),
-    //                         'price' => $product->getPrice(),
-    //                         'suggested_price' => $suggestedPrice,
-    //                         'availability' => $product->getAvailability(),
-    //                         'condition' => $product->getCondition(),
-    //                         'brand' => $product->getBrand(),
-    //                         'gtin' => $product->getGtin(),
-    //                         'mpn' => $product->getMpn(),
-    //                         'link' => $product->getLink(),
-    //                         'image_link' => $product->getImageLink(),
-    //                         'description' => $product->getDescription(),
-    //                         'category' => $product->getGoogleProductCategory(),
-    //                         'product_weight' => $product->getShippingWeight(),
-    //                     ];
-    //                 }
-    //             }
-    //         }
-    //     } while (!empty($products->getNextPageToken()));
-    
-    //     // dd($product_array);
-    
-    //     dd($product_array);
-    // }
-
-    // public function retriveProducts($token, $client) {
-    //     $merchantId = config('services.google.merchant_center_id');
-    //     $client->setAccessToken($token['access_token']);
-    //     $service = new ShoppingContent($client);
-    
-    //     // Define the query for retrieving price insights
-    //     $query = "SELECT product_view.id, product_view.title, product_view.price_micros, " .
-    //                 "product_view.currency_code, price_insights.suggested_price_micros, " .
-    //                 "price_insights.suggested_price_currency_code, product_view.availability " .
-    //                 "FROM PriceInsightsProductView";
-
-    //     // Create a SearchRequest object
-    //     $searchRequest = new SearchRequest();
-    //     $searchRequest->setQuery($query);
-
-    //     dd($searchRequest);
-
-    //     // Execute the search query
-    //     $response = $service->reports->search($merchantId, $searchRequest);
-
-    //     dd($response);
-    // }
-
     public function retrieveProducts($token, $client)
     {
         try {
@@ -512,18 +399,20 @@ class GoogleContentController extends Controller
             // Initialize the Shopping Content API
             $service = new ShoppingContent($client);
 
-            // Define the query with a limit of 10 results, including original price
+            // ✅ Fixed query: Removed 'product_view.price' (invalid) and extra semicolon
             $query = "SELECT
-                    product_view.id, product_view.title, product_view.brand,
-                    product_view.price_micros, 
-                    product_view.currency_code, price_insights.suggested_price_micros,
-                    price_insights.suggested_price_currency_code,
-                    price_insights.predicted_impressions_change_fraction,
-                    price_insights.predicted_clicks_change_fraction,
-                    price_insights.predicted_conversions_change_fraction
+                        product_view.id, 
+                        product_view.title,
+                        product_view.mpn, 
+                        product_view.brand,
+                        product_view.price_micros,  
+                        price_insights.suggested_price_micros,
+                        price_insights.suggested_price_currency_code,
+                        price_insights.predicted_impressions_change_fraction,
+                        price_insights.predicted_clicks_change_fraction,
+                        price_insights.predicted_conversions_change_fraction
                     FROM PriceInsightsProductView
-                    LIMIT 10
-                ";  // <-- Added LIMIT clause
+                    LIMIT 10";
 
             // Create a SearchRequest object
             $searchRequest = new SearchRequest();
@@ -533,16 +422,27 @@ class GoogleContentController extends Controller
             $response = $service->reports->search($merchantId, $searchRequest);
             dd($response);
 
-            // Extract only 10 results (redundant safety measure)
-            $results = array_slice($response->getResults(), 0, 10);
+            // Check if results exist
+            if (!empty($response->getResults())) {
+                $results = array_slice($response->getResults(), 0, 10);
 
-            dd($results);
+                // ✅ Convert 'price_micros' to readable USD format
+                foreach ($results as &$product) {
+                    if (isset($product['product_view.price_micros'])) {
+                        $product['price_in_usd'] = number_format($product['product_view.price_micros'] / 1000000, 2);
+                    }
 
-            // Return the response
-            return response()->json($results);
-            
+                    if (isset($product['price_insights.suggested_price_micros'])) {
+                        $product['suggested_price_in_usd'] = number_format($product['price_insights.suggested_price_micros'] / 1000000, 2);
+                    }
+                }
+
+                return response()->json($results);
+            } else {
+                return response()->json(['message' => 'No products found'], 404);
+            }
+
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
