@@ -387,7 +387,7 @@ class GoogleContentController extends Controller
         $result  = $this->retriveProducts($token , $client);
         
     }
-    
+
     public function retrieveProducts($token, $client)
     {
         try {
@@ -399,77 +399,34 @@ class GoogleContentController extends Controller
             // Initialize the Shopping Content API
             $service = new ShoppingContent($client);
 
-            // ✅ Query to get product details (including MPN) from ProductView
-            $queryProductView = "SELECT
-                                    product_view.id, 
-                                    product_view.title, 
-                                    product_view.mpn,  
-                                    product_view.brand,
-                                    product_view.price_micros
-                                FROM ProductView
-                                LIMIT 10";
+            // ✅ Corrected query (removed invalid 'product_view.price', fixed missing comma)
+            $query = "SELECT
+                        product_view.id, 
+                        product_view.title, 
+                        product_view.brand,
+                        product_view.price_micros,
+                        price_insights.suggested_price_micros
+                    FROM PriceInsightsProductView
+                    LIMIT 10";
 
-            // ✅ Query to get pricing insights from PriceInsightsProductView
-            $queryPriceInsights = "SELECT
-                                    product_view.id, 
-                                    price_insights.suggested_price_micros
-                                FROM PriceInsightsProductView
-                                LIMIT 10";
+            // Create a SearchRequest object
+            $searchRequest = new SearchRequest();
+            $searchRequest->setQuery($query);
 
-            // Execute first query (Product Details)
-            $searchRequest1 = new SearchRequest();
-            $searchRequest1->setQuery($queryProductView);
-            $response1 = $service->reports->search($merchantId, $searchRequest1);
-            dd($response1);
-            
-            // Store product details in an associative array for fast merging
-            $productDetails = [];
-            if (!empty($response1->getResults())) {
-                foreach ($response1->getResults() as $product) {
-                    $productDetails[$product['product_view.id']] = [
-                        'id' => $product['product_view.id'],
-                        'title' => $product['product_view.title'] ?? 'N/A',
-                        'mpn' => $product['product_view.mpn'] ?? 'N/A',
-                        'price_micros' => $product['product_view.price_micros'] ?? 0
-                    ];
-                }
-            }
-
-            // Execute second query (Price Insights)
-            $searchRequest2 = new SearchRequest();
-            $searchRequest2->setQuery($queryPriceInsights);
-            $response2 = $service->reports->search($merchantId, $searchRequest2);
-
-            dd($response2);
+            // Make the API request
+            $response = $service->reports->search($merchantId, $searchRequest);
 
             // Prepare final custom array output
             $finalResults = [];
 
-            if (!empty($response2->getResults())) {
-                foreach ($response2->getResults() as $insight) {
-                    $productId = $insight['product_view.id'];
-
-                    // Merge product details if available
-                    $product = $productDetails[$productId] ?? [
-                        'id' => $productId,
-                        'title' => 'N/A',
-                        'mpn' => 'N/A',
-                        'price_micros' => 0
-                    ];
-
-                    // Add suggested price
-                    $product['suggested_price_micros'] = $insight['price_insights.suggested_price_micros'] ?? 0;
-
-                    // ✅ Convert prices to readable USD format
-                    $product['price_in_usd'] = number_format($product['price_micros'] / 1000000, 2);
-                    $product['suggested_price_in_usd'] = number_format($product['suggested_price_micros'] / 1000000, 2);
-
-                    // ✅ Store in custom output array
+            if (!empty($response->getResults())) {
+                foreach ($response->getResults() as $product) {
                     $finalResults[] = [
-                        'title' => $product['title'],
-                        'mpn' => $product['mpn'],
-                        'price' => $product['price_in_usd'],
-                        'suggested_price' => $product['suggested_price_in_usd']
+                        'id' => $product['product_view.id'] ?? 'N/A',
+                        'title' => $product['product_view.title'] ?? 'N/A',
+                        'brand' => $product['product_view.brand'] ?? 'N/A',
+                        'price' => isset($product['product_view.price_micros']) ? number_format($product['product_view.price_micros'] / 1000000, 2) : '0.00',
+                        'suggested_price' => isset($product['price_insights.suggested_price_micros']) ? number_format($product['price_insights.suggested_price_micros'] / 1000000, 2) : '0.00'
                     ];
                 }
             }
@@ -491,8 +448,6 @@ class GoogleContentController extends Controller
         }
     }
 
-
-    
     
     
 }
