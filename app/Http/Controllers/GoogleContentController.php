@@ -420,6 +420,7 @@ class GoogleContentController extends Controller
             $searchRequest1 = new SearchRequest();
             $searchRequest1->setQuery($queryProductView);
             $response1 = $service->reports->search($merchantId, $searchRequest1);
+            dd($response1);
             
             // Store product details in an associative array for fast merging
             $productDetails = [];
@@ -438,6 +439,8 @@ class GoogleContentController extends Controller
             $searchRequest2 = new SearchRequest();
             $searchRequest2->setQuery($queryPriceInsights);
             $response2 = $service->reports->search($merchantId, $searchRequest2);
+
+            dd($response2);
 
             // Prepare final custom array output
             $finalResults = [];
