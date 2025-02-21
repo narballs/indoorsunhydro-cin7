@@ -659,14 +659,42 @@ class ProductController extends Controller
     public function showProductDetail(Request $request ,$id, $option_id)
     {
         $similar_products = null;
+        
        
         $product = Product::with('categories' , 'brand')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
-        $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
         if (empty($product)) {
             session()->flash('error', 'This product is not available! Please search another product.');
             return redirect('/products');
+        }
+
+
+        $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+        
+        if (!empty($stock_updation_by_visiting_detail)) {
+           $api_status = $stock_updation_by_visiting_detail['api_status'];
+
+           $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
+
+            if ($api_status == false) {
+                if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'Yes') {
+                    $admin_check_product_stock->option_value = 'No';
+                    $admin_check_product_stock->save();
+                } else {
+                    $admin_check_product_stock->option_value = 'No';
+                    $admin_check_product_stock->save();
+                }
+            } else {
+                if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'No') {
+                    $admin_check_product_stock->option_value = 'Yes';
+                    $admin_check_product_stock->save();
+                } else {
+                    $admin_check_product_stock->option_value = 'Yes';
+                    $admin_check_product_stock->save();
+                }
+            }
+           
         }
         if (!empty($product->category_id) && !empty($product)) {
             $similar_products = $this->getSimilarProducts($request , $id, $option_id);

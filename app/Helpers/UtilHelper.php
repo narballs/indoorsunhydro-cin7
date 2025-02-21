@@ -309,42 +309,167 @@ class UtilHelper
             return false;
         }
 
+        // try {
+        //     $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
+        //     $client2 = new \GuzzleHttp\Client();
+        //     $res = $client2->request(
+        //         'GET',
+        //         $url,
+        //         [
+        //             'auth' => [
+        //                 $cin7_auth_username,
+        //                 $cin7_auth_password
+        //             ]
+        //         ]
+        //     );
+
+
+        //     self::saveEndpointRequestLog('Sync Stock Detail','https://api.cin7.com/api/v1/Stock', $api_key_id);
+
+        //     $inventory = $res->getBody()->getContents();
+        //     $location_inventories = json_decode($inventory);
+        //     if (empty($location_inventories)) {
+        //         return [
+        //             'stock_updated' => $stock_updated,
+        //             'branch_with_stocks' => null,
+
+        //         ];
+        //     }
+        //     $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
+            
+        //     // $skip_branches = [172, 173, 174];
+        //     $skip_branches = $inactive_inventory_locations;
+        //     $branch_ids = [];
+        //     foreach ($location_inventories as $location_inventory) {
+        //         if (in_array($location_inventory->branchId, $skip_branches)) {
+        //             continue;
+        //         }
+                
+        //         if (!in_array($location_inventory->branchId, $skip_branches)) {
+        //             $branch_with_stocks[] = [
+        //                 'branch_id' => $location_inventory->branchId,
+        //                 'branch_name' => $location_inventory->branchName,
+        //                 'available' => $location_inventory->available
+        //             ];
+        //         }
+
+                
+        //         $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
+        //             ->where('product_id' ,  $product->product_id)
+        //             ->where('option_id' , $option_id)
+        //             ->first();
+
+                   
+                
+        //         if (!empty($product_stock)) {
+        //             $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
+        //             $product_stock->save();
+                    
+        //             $branch_ids[] = $location_inventory->branchId;
+        //             if (!in_array($location_inventory->branchId, $skip_branches)) {
+        //                 $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
+        //             }
+        //         }
+        //         else {
+        //             $product_stock = ProductStock::create([
+        //                 'available_stock' => $location_inventory->available >=0 ? $location_inventory->available : 0,
+        //                 'branch_id' => $location_inventory->branchId,
+        //                 'product_id' => $product->product_id,
+        //                 'branch_name' => $location_inventory->branchName,
+        //                 'option_id' => $option_id
+        //             ]);
+        //             if (!in_array($location_inventory->branchId, $skip_branches)) {
+        //                 $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
+        //             }
+        //             // $total_stock += $product_stock->available_stock;
+        //         }
+
+                
+
+        //         $stock_updated = true;
+        //     }
+        //     $update_product_option = ProductOption::where('option_id' , $option_id)->first();
+        //     if (!empty($update_product_option)) {
+        //         $update_product_option->stockAvailable = $total_stock;
+        //         $update_product_option->save();
+        //     } 
+            
+        //     if (!empty($branch_ids)) {
+        //         ProductStock::where('product_id' ,  $product->product_id)
+        //             ->where('option_id' , $option_id)
+        //             ->whereNotIn('branch_id', $branch_ids)
+        //             ->delete();
+        //     }
+                
+        //     self::saveDailyApiLog('product_detail_update_stock');
+        // }
+        // catch (\Exception $e) {
+        //     self::saveDailyApiLog('product_detail_update_stock');
+        //     return $stock_updated;
+        // }
+
+        // return [
+        //     'stock_updated' => $stock_updated,
+        //     'branch_with_stocks' => $branch_with_stocks,
+        //     'total_stock' => $total_stock
+        // ];
+
+
         try {
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
+            $api_status = true;
+            $timeout_limit = 10; // Set timeout limit to 20 seconds
+        
+            // Start tracking execution time
+            $start_time = microtime(true);
+        
             $res = $client2->request(
                 'GET',
                 $url,
                 [
-                    'auth' => [
-                        $cin7_auth_username,
-                        $cin7_auth_password
-                    ]
+                    'auth' => [$cin7_auth_username, $cin7_auth_password],
+                    'timeout' => $timeout_limit // Enforce timeout
                 ]
             );
 
 
-            self::saveEndpointRequestLog('Sync Stock Detail','https://api.cin7.com/api/v1/Stock', $api_key_id);
-
+            self::saveEndpointRequestLog('Sync Stock Detail', 'https://api.cin7.com/api/v1/Stock', $api_key_id);
+        
+            // Calculate elapsed time
+            $elapsed_time = microtime(true) - $start_time;
+        
+            // Check if API response exceeded time limit
+            if ($elapsed_time > $timeout_limit) {
+                $api_status = false;
+            }
+        
+           
+        
             $inventory = $res->getBody()->getContents();
             $location_inventories = json_decode($inventory);
+        
             if (empty($location_inventories)) {
                 return [
-                    'stock_updated' => $stock_updated,
+                    'stock_updated' => false,
                     'branch_with_stocks' => null,
-
+                    'total_stock' => 0,
+                    'api_status' => $api_status
                 ];
             }
+        
             $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
-            
-            // $skip_branches = [172, 173, 174];
             $skip_branches = $inactive_inventory_locations;
             $branch_ids = [];
+            $branch_with_stocks = [];
+            $total_stock = 0;
+            $stock_updated = false;
+        
             foreach ($location_inventories as $location_inventory) {
                 if (in_array($location_inventory->branchId, $skip_branches)) {
                     continue;
                 }
-                
+
                 if (!in_array($location_inventory->branchId, $skip_branches)) {
                     $branch_with_stocks[] = [
                         'branch_id' => $location_inventory->branchId,
@@ -352,15 +477,18 @@ class UtilHelper
                         'available' => $location_inventory->available
                     ];
                 }
+        
+                $available_stock = max(0, $location_inventory->available);
+                $branch_with_stocks[] = [
+                    'branch_id' => $location_inventory->branchId,
+                    'branch_name' => $location_inventory->branchName,
+                    'available' => $available_stock
+                ];
 
-                
                 $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
-                    ->where('product_id' ,  $product->product_id)
-                    ->where('option_id' , $option_id)
-                    ->first();
-
-                   
-                
+                ->where('product_id' ,  $product->product_id)
+                ->where('option_id' , $option_id)
+                ->first();
                 if (!empty($product_stock)) {
                     $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
                     $product_stock->save();
@@ -381,13 +509,12 @@ class UtilHelper
                     if (!in_array($location_inventory->branchId, $skip_branches)) {
                         $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
                     }
-                    // $total_stock += $product_stock->available_stock;
                 }
-
-                
 
                 $stock_updated = true;
             }
+
+
             $update_product_option = ProductOption::where('option_id' , $option_id)->first();
             if (!empty($update_product_option)) {
                 $update_product_option->stockAvailable = $total_stock;
@@ -402,17 +529,24 @@ class UtilHelper
             }
                 
             self::saveDailyApiLog('product_detail_update_stock');
-        }
-        catch (\Exception $e) {
+        
+            
+        
+        } catch (\Exception $e) {
             self::saveDailyApiLog('product_detail_update_stock');
-            return $stock_updated;
+            $api_status = false;
+            $stock_updated = false;
+            
         }
-
+        
         return [
             'stock_updated' => $stock_updated,
             'branch_with_stocks' => $branch_with_stocks,
-            'total_stock' => $total_stock
+            'total_stock' => $total_stock,
+            'api_status' => $api_status
         ];
+        
+        
     }
 
 
