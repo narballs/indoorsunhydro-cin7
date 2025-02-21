@@ -932,7 +932,22 @@ class UserHelper
             foreach ($cartItems as $cartItem) {
                 // Fetch product pricing
                 $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
-                $productPrice = $productPricing->$getPriceColumn ?? 0;
+
+                $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+                ->where('option_value', 'Yes')
+                ->first();
+
+                if (!empty($enable_selling_through_ai)) {
+                    if (($productPricing->enable_ai_price == 1) && ($productPricing['aiPriceUSD'] != '0') && ($productPricing['aiPriceUSD'] > 0)) {
+                        $productPrice  = $productPricing['aiPriceUSD'];
+                    } else {
+                        $productPrice = $productPricing->$getPriceColumn ?? 0;
+                    }
+                }
+
+                else {
+                    $productPrice = $productPricing->$getPriceColumn ?? 0;
+                }
     
                 // Fallback pricing logic
                 if ($productPrice == 0) {

@@ -670,6 +670,18 @@ class ProductController extends Controller
         }
 
 
+        $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+                                        ->where('option_value', 'Yes')
+                                        ->first();
+        $ai_quantity_threshold_percentage = AdminSetting::where('option_name', 'ai_quantity_threshold_percentage')->first();
+        $ai_quantity_threshold_percentage = 0;
+
+        if (!empty($enable_selling_through_ai)) {
+            $product_option = ProductOption::where('option_id', $option_id)->first();
+            
+        }
+
+
         $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
         
         if (!empty($stock_updation_by_visiting_detail)) {
@@ -1585,6 +1597,18 @@ class ProductController extends Controller
     {
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
+
+
+                $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+                ->where('option_value', 'Yes')
+                ->first();
+
+                if (!empty($enable_selling_through_ai)) {
+                    if (($price_get->enable_ai_price == 1) && ($price_get['aiPriceUSD'] != '0') && ($price_get['aiPriceUSD'] > 0)) {
+                        return $price_get['aiPriceUSD'];
+                    }
+                }
+
                 if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
                     return $price_get[$user_price_column];
                 }
