@@ -161,6 +161,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                             <?php
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
                                 $retail_price = 0;
+                                $ai_price = 0;
                                 foreach($productOption->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {
@@ -169,6 +170,8 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                     if ($retail_price == 0) {
                                         $retail_price = $price->retailUSD;
                                     }
+
+                                    $ai_price = $price->enable_ai_price == 1 ? $price->aiPriceUSD : 0;
                                 }
                             ?>
                             <div class="product-detail-heading col-xl-12 col-lg-12 col-md-12 col-xs-12 mb-2"
@@ -201,10 +204,36 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                             <div class="col-md-12">
                                 <div class="row align-items-center">
                                     @if ($show_price == true)
+                                    @php
+                                        $allowAIPrice = App\Helpers\UserHelper::allowAiPricing($productOption);
+
+                                        // Calculate discount percentage (avoiding division by zero)
+                                        $getItemDiscountPercentage = ($retail_price > 0) ? (($retail_price - $ai_price) / $retail_price * 100) : 0;
+
+                                        // Choose the final price based on AI pricing allowance: if allowed and a valid AI price exists, use it; otherwise, revert to retail.
+                                        $finalPrice = ($allowAIPrice && $ai_price > 0) ? $ai_price : $retail_price;
+                                    @endphp
+                
+
+
+
                                     <div class="col-md-12">
-                                        <span class="text-danger product-detail-price" id="product_price">
-                                            ${{number_format($retail_price, 2)}}
-                                        </span>
+                                        @if ($ai_price > 0 && $allowAIPrice == true)
+                                            <div class="deal-container my-2">
+                                                <p class="deal-text">Limited time deal</p>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="discount-badge">{{'- ' . number_format($getItemDiscountPercentage, 2)}}%</span>
+                                                    <span class="text-danger product-detail-price mx-2" id="product_price">
+                                                        ${{number_format($ai_price, 2)}}
+                                                    </span>
+                                                </div>
+                                                <span class="original-price">Original Price: ${{number_format($retail_price, 2)}}</span>
+                                            </div>
+                                        @else
+                                            <span class="text-danger product-detail-price" id="product_price">
+                                                ${{number_format($retail_price, 2)}}
+                                            </span>
+                                        @endif
                                     </div>
                                     @endif
                                     <div class="col-md-12 ">
