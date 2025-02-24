@@ -1857,6 +1857,50 @@ class ProductController extends Controller
 
 
 
+    public function emptyCart(Request $request)
+    {
+        $user_id = auth()->id();
+        $contact_id = session()->get('contact_id');
+        $cart = session()->get('cart', []); // Default to an empty array if no cart exists
+
+        $query = Cart::orderBy('created_at', 'DESC');
+
+        if (!auth()->check()) {
+            $query->where('user_id', 0);
+        } else {
+            $query->where('user_id', $user_id);
+            if (!empty($contact_id)) {
+                $query->where('contact_id', $contact_id);
+            } else {
+                $query->whereNull('contact_id');
+            }
+        }
+
+        $cartItems = $query->get();
+
+        if ($cartItems->isNotEmpty()) {
+            // Collect the quote IDs from the retrieved cart items.
+            // Note: Verify if 'qoute_id' is intended or should be 'quote_id'.
+            $quoteIds = $cartItems->pluck('qoute_id')->toArray();
+
+            // Perform a bulk deletion
+            Cart::whereIn('qoute_id', $quoteIds)->delete();
+
+            // Remove these items from the session cart
+            foreach ($quoteIds as $id) {
+                unset($cart[$id]);
+            }
+
+            // Update the session once after processing all items
+            $request->session()->put('cart', $cart);
+        }
+
+        return redirect()->back()->with('success', 'Cart emptied successfully!');
+    }
+
+
+
+
 
     public function cart(Request $request)
     {

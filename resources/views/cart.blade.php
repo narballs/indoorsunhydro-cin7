@@ -324,29 +324,11 @@
                                                     <td colspan="5">
                                                         <div class="w-100 d-flex mt-3">
                                                             
-                                                            <div class="col-md-8 coupon-code ps-0">
+                                                            <div class="col-md-8 ps-0">
                                                                 <div class=" align-items-center d-flex">
-                                                                    
-                                                                    {{-- <div>
-                                                                        <span class="coupon-code-label"><img class="img-fluid"
-                                                                                src="/theme/img/Vector.png"
-                                                                                class="img-fluid">&nbsp;&nbsp;Coupon
-                                                                            code</span>
-                                                                    </div>
-                                                                    <div class="col-4 ps-3">
-                                                                        <div class="form-signupp">
-                                                                            <input type="text" name="code" id="code"
-                                                                                class="fontAwesome form-control"
-                                                                                placeholder="Your code" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-5 p-0">
-                                                                        <span>
-                                                                            <button class="apply-coupon-code-button">
-                                                                                Apply Coupon
-                                                                            </button>
-                                                                        </span>
-                                                                    </div> --}}
+                                                                    <a href="{{route('emptyCart')}}" class="clear_cart btn btn-info btn-sm">
+                                                                        Empty Cart
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4 p-0 text-right">
@@ -728,6 +710,11 @@
                                                 <div class="card-header bg-white p-0 border-0 d-flex align-items-center justify-content-between">
                                                     <p class="your-cart-title ps-1 mb-0"> Your Cart</p>
                                                     <p class="cart-page-items text-danger text-right mb-0"> Price Subject to Change</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <a href="{{route('emptyCart')}}" class="clear_cart btn btn-info btn-sm">
+                                                        Empty Cart
+                                                    </a>
                                                 </div>
                                                 {{-- <div class="col-md-12 p-0 pt-3" style="border-top: 1.5px solid #EBEBEB;"> --}}
                                                 <div class="col-md-12 p-0">

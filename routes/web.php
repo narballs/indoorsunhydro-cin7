@@ -147,6 +147,7 @@ Route::post('/recover-password', [UserController::class, 'recover_password'])->n
 Route::get('/product-brand/{name}', [ProductController::class, 'showProductByBrands']);
 Route::post('add-to-cart/', [ProductController::class, 'addToCart'])->name('add.to.cart');
 Route::get('/remove/{id}', [ProductController::class, 'removeProductByCategory']);
+Route::get('/emptyCart', [ProductController::class, 'emptyCart'])->name('emptyCart');
 Route::get('/cart', [ProductController::class, 'cart'])->name('cart');
 Route::post('update-cart', [ProductController::class, 'updateCart'])->name('update.cart');
 Route::post('update-product-cart', [ProductController::class, 'update_product_cart'])->name('update_product_cart');
