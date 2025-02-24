@@ -204,52 +204,25 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                             <div class="col-md-12">
                                 <div class="row align-items-center">
                                     @if ($show_price == true)
-
                                     @php
-                                        $enable_selling_through_ai = App\Models\AdminSetting::where('option_name', 'enable_selling_through_ai')
-                                        ->where('option_value', 'Yes')
-                                        ->first();
+                                        $allowAIPrice = App\Helpers\UserHelper::allowAiPricing($productOption);
 
+                                        // Calculate discount percentage (avoiding division by zero)
+                                        $getItemDiscountPercentage = ($retail_price > 0) ? (($retail_price - $ai_price) / $retail_price * 100) : 0;
 
-                                        $minimum_stock_threshold = App\Models\AdminSetting::where('option_name', 'minimum_stock_threshold')
-                                        ->first();
-
-                                        $min_stock_threshold = 0;
-                                        if (!empty($minimum_stock_threshold)) {
-                                            $min_stock_threshold = intval($minimum_stock_threshold->option_value);
-                                        }
-                                        
-                                        $enable_selling_through_ai = $enable_selling_through_ai ? true : false;
-
-
-                                        $product_actual_stock = 0;
-
-                                        if ($stock_updated == true) {
-                                            $product_actual_stock = $total_stock;
-                                        } else {
-                                            $product_actual_stock = $productOption->stockAvailable;
-                                        }
-
-
-                                        $allow_ai_price = false;
-                                        if (intval($product_actual_stock) >= intval($min_stock_threshold)) {
-                                            $allow_ai_price = true;
-                                        } else {
-                                            $allow_ai_price = false;
-                                        }
-
-
-                                        $get_discount_percentage = ($retail_price - $ai_price) / $retail_price * 100;
-
+                                        // Choose the final price based on AI pricing allowance: if allowed and a valid AI price exists, use it; otherwise, revert to retail.
+                                        $finalPrice = ($allowAIPrice && $ai_price > 0) ? $ai_price : $retail_price;
                                     @endphp
+                
+
 
 
                                     <div class="col-md-12">
-                                        @if ($enable_selling_through_ai && $ai_price > 0 && $allow_ai_price == true)
+                                        @if ($ai_price > 0 && $allowAIPrice == true)
                                             <div class="deal-container my-2">
                                                 <p class="deal-text">Limited time deal</p>
                                                 <div class="d-flex align-items-center">
-                                                    <span class="discount-badge">{{'- ' . number_format($get_discount_percentage, 2)}}%</span>
+                                                    <span class="discount-badge">{{'- ' . number_format($getItemDiscountPercentage, 2)}}%</span>
                                                     <span class="text-danger product-detail-price mx-2" id="product_price">
                                                         ${{number_format($ai_price, 2)}}
                                                     </span>
