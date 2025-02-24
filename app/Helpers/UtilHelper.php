@@ -279,9 +279,9 @@ class UtilHelper
         $stock_updated = false;
         $branch_with_stocks = [];
 
-        if (empty($setting) || ($setting->option_value !=  'Yes')) {
-            return $stock_updated;
-        }
+        // if (empty($setting) || ($setting->option_value !=  'Yes')) {
+        //     return $stock_updated;
+        // }
 
         $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
