@@ -899,6 +899,55 @@ class UserHelper
         return $data;
     }
 
+
+    public static function allowAiPricing($productOption)
+    {
+        // Retrieve the current cart entry for the product option (stock threshold limit)
+        $cartEntry = Cart::where('product_id', $productOption->product_id)
+                        ->where('option_id', $productOption->option_id)
+                        ->first();
+
+        // Fetch admin settings
+        $enableSellingSetting      = AdminSetting::where('option_name', 'enable_selling_through_ai')
+                                            ->where('option_value', 'Yes')
+                                            ->first();
+        $minStockThresholdSetting  = AdminSetting::where('option_name', 'minimum_stock_threshold')->first();
+        $aiQuantityThresholdSetting = AdminSetting::where('option_name', 'ai_quantity_threshold_percentage')->first();
+
+        // Convert settings to proper values
+        $enableSellingThroughAI = !empty($enableSellingSetting);
+        $minStockThreshold      = !empty($minStockThresholdSetting) ? intval($minStockThresholdSetting->option_value) : 0;
+        $aiStockThresholdPerc   = !empty($aiQuantityThresholdSetting) ? intval($aiQuantityThresholdSetting->option_value) : 0;
+
+        // Determine the actual stock value (using stockAvailable)
+        $productActualStock = $productOption->stockAvailable;
+
+        // Initialize threshold variables
+        $thresholdPercentage   = 0;
+        $aiStockThresholdValue = 0;
+
+        // Calculate thresholds only if the actual stock meets the minimum threshold and is positive
+        if ($productActualStock >= $minStockThreshold && $productActualStock > 0) {
+            $thresholdPercentage   = round(($aiStockThresholdPerc / $productActualStock) * 100);
+            $aiStockThresholdValue = round(($thresholdPercentage / 100) * $productActualStock);
+        }
+
+        // If cart is empty, treat its quantity as 0
+        $cartQuantity = !empty($cartEntry) ? intval($cartEntry->quantity) : 0;
+
+        // Determine if AI pricing is allowed by combining all conditions
+        $allowAIPrice = $enableSellingThroughAI 
+            && $productActualStock > 0 
+            && $aiStockThresholdValue > 0 
+            && (intval($productOption->sold_by_ai) < $aiStockThresholdValue)
+            && ($cartQuantity < $aiStockThresholdValue);
+
+
+        // dd($allowAIPrice);
+
+        return $allowAIPrice;
+    }
+
     
     public static function switch_price_tier(Request $request) {
         $user_id = auth()->id();
@@ -932,7 +981,22 @@ class UserHelper
             foreach ($cartItems as $cartItem) {
                 // Fetch product pricing
                 $productPricing = Pricingnew::where('option_id', $cartItem['option_id'])->first();
-                $productPrice = $productPricing->$getPriceColumn ?? 0;
+                $productOption = ProductOption::where('option_id', $cartItem['option_id'])
+                ->where('product_id', $cartItem['product_id'])
+                ->first();
+                $allowAiPricing = UserHelper::allowAiPricing($productOption);
+
+                if ($allowAiPricing) {
+                    if (($productPricing->enable_ai_price == 1) && ($productPricing['aiPriceUSD'] != '0') && ($productPricing['aiPriceUSD'] > 0)) {
+                        $productPrice  = $productPricing['aiPriceUSD'];
+                    } else {
+                        $productPrice = $productPricing->$getPriceColumn ?? 0;
+                    }
+                }
+
+                else {
+                    $productPrice = $productPricing->$getPriceColumn ?? 0;
+                }
     
                 // Fallback pricing logic
                 if ($productPrice == 0) {

@@ -670,6 +670,18 @@ class ProductController extends Controller
         }
 
 
+        $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+                                        ->where('option_value', 'Yes')
+                                        ->first();
+        $ai_quantity_threshold_percentage = AdminSetting::where('option_name', 'ai_quantity_threshold_percentage')->first();
+        $ai_quantity_threshold_percentage = 0;
+
+        if (!empty($enable_selling_through_ai)) {
+            $product_option = ProductOption::where('option_id', $option_id)->first();
+            
+        }
+
+
         $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
         
         if (!empty($stock_updation_by_visiting_detail)) {
@@ -1581,10 +1593,49 @@ class ProductController extends Controller
     }
     
     // Helper function to retrieve user-specific price
+    // private function getUserPrice($productOption, $user_price_column)
+    // {
+    //     foreach ($productOption->products->options as $option) {
+    //         foreach ($option->price as $price_get) {
+
+
+    //             $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+    //             ->where('option_value', 'Yes')
+    //             ->first();
+
+    //             if (!empty($enable_selling_through_ai)) {
+    //                 if (($price_get->enable_ai_price == 1) && ($price_get['aiPriceUSD'] != '0') && ($price_get['aiPriceUSD'] > 0)) {
+    //                     return $price_get['aiPriceUSD'];
+    //                 }
+    //             }
+
+    //             if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
+    //                 return $price_get[$user_price_column];
+    //             }
+    //             if (!empty($price_get['sacramentoUSD']) && $price_get['sacramentoUSD'] != '0') {
+    //                 return $price_get['sacramentoUSD'];
+    //             }
+    //             if (!empty($price_get['retailUSD']) && $price_get['retailUSD'] != '0') {
+    //                 return $price_get['retailUSD'];
+    //             }
+    //         }
+    //     }
+    //     return 0; // Return 0 if no price found
+    // }
+
+
     private function getUserPrice($productOption, $user_price_column)
     {
+        $allowAIPrice = UserHelper::allowAiPricing($productOption);
+
+        // Iterate through the product options’ price records to decide which price to return.
         foreach ($productOption->products->options as $option) {
             foreach ($option->price as $price_get) {
+                
+                if ($allowAIPrice == true && $price_get->enable_ai_price == 1 && $price_get['aiPriceUSD'] > 0) {
+                    return $price_get['aiPriceUSD'];
+                } 
+                // Fallback to other price fields if AI pricing is not applicable
                 if (!empty($price_get[$user_price_column]) && $price_get[$user_price_column] != '0') {
                     return $price_get[$user_price_column];
                 }
@@ -1596,8 +1647,9 @@ class ProductController extends Controller
                 }
             }
         }
-        return 0; // Return 0 if no price found
+        return 0; // Return 0 if no valid price is found.
     }
+
     
     // Helper function to update existing cart item
     private function updateCartItem($product, $requested_quantity, $actual_stock, &$cart, $main_contact_id, $free_postal_state)

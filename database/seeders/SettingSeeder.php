@@ -543,6 +543,25 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+
+            [
+                'option_name' => 'enable_selling_through_ai',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
+            [
+                'option_name' => 'minimum_stock_threshold',
+                'type' => 'text',
+                'option_value' => '50',
+            ],
+
+            [
+                'option_name' => 'ai_quantity_threshold_percentage',
+                'type' => 'text',
+                'option_value' => '3',
+            ],
+
             
 
 

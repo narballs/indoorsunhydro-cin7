@@ -2018,6 +2018,23 @@ class OrderController extends Controller
             $OrderItem->option_id = $cart_item['option_id'];
             $OrderItem->save();
 
+
+
+            $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+                ->where('option_value', 'Yes')
+                ->first();
+
+            if (!empty($enable_selling_through_ai) && strtolower($enable_selling_through_ai->option_value) == 'yes') {
+                $product_option = ProductOption::where('option_id', $cart_item['option_id'])->first();
+                $pricing_new = Pricingnew::where('option_id', $cart_item['option_id'])->first();
+
+                if (!empty($pricing_new) && $pricing_new->enable_ai_price == 1) {
+                    $product_option->update([
+                        'sold_by_ai' => $cart_item['quantity']
+                    ]);
+                }
+            }
+
             
             $products = $stripe->products->create([
                 'name' => $cart_item['name'],

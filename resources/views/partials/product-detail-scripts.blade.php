@@ -14,6 +14,34 @@
 }
 
 
+.discount-badge {
+    background-color: #d9534f;
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Poppins';
+}
+.final-price {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Poppins';
+}
+.original-price {
+    color: gray;
+    text-decoration: line-through;
+    font-size: 16px;
+    font-family: 'Poppins';
+}
+.deal-text {
+    color: #d9534f;
+    font-weight: bold;
+    font-size: 14px;
+    font-family: 'Poppins';
+}
+
+
 .ai-section-heading-title {
     font-size: 24px;
     font-weight: 600;
