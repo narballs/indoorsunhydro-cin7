@@ -3013,7 +3013,7 @@ class ProductController extends Controller
             if (!empty($errors)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Some products are not available in the cart',
+                    'message' => 'Product(s) is out of stock or not available.',
                     'free_postal_state' => $free_postal_state,
                     'main_contact_id' => $main_contact_id,
                     'cart_items' => $cart,
@@ -3125,11 +3125,11 @@ class ProductController extends Controller
         // Check stock availability
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+        $user_id = Auth::id();
 
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
-
+            $wholesale_contact = Contact::where('user_id',$user_id)->first();
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
                     $get_wholesale_contact_id = $wholesale_contact->contact_id;
@@ -3151,8 +3151,11 @@ class ProductController extends Controller
 
         $current_quantity = $product->quantity;
 
-        // Check stock availability
-        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        $total_quantity = 0;
+
+        $total_quantity = intval($current_quantity) + intval($requested_quantity);
+
+        if ($total_quantity > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
@@ -3205,7 +3208,7 @@ class ProductController extends Controller
         }
 
         $actual_stock = $productOption->stockAvailable;
-        if ($requested_quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        if (intval($requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
