@@ -1423,7 +1423,7 @@
                         });
                     } else {
                         Swal.fire({
-                            icon: "error",
+                            // icon: "error",
                             title: "No Items Available",
                             text: "None of the selected items are in stock.",
                             confirmButtonText: "OK",
@@ -1440,7 +1440,7 @@
                     }
                 } else {
                     Swal.fire({
-                        icon: 'error',
+                        // icon: 'error',
                         title: 'Something went wrong',
                         text: 'Unable to fetch order details.',
                         confirmButtonText: "OK",
