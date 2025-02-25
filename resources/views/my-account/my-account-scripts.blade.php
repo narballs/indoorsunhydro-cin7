@@ -1223,12 +1223,125 @@
     //     });
     // }
 
+    // function add_products_to_cart(order_id) {
+    //     $.ajax({
+    //         url: '/order/items/' + order_id,
+    //         method: 'get',
+    //         success: function(response) {
+    //             let lowerCaseTerms = (response.get_wholesale_terms?.trim() || "").toLowerCase();
+    //             if (response.status == 'success' && response.order_items) {
+    //                 let ordered_products = [];
+    //                 let out_of_stock_items = [];
+    //                 let in_stock_items = [];
+
+    //                 response.order_items.api_order_item.forEach(function(item) {
+    //                     item.product.options.forEach(element => {
+    //                         if (lowerCaseTerms !== 'pay in advanced') {
+    //                             if (item.product.status !== 'Inactive') {
+    //                                 in_stock_items.push(`<li> <i class="fa fa-check text-success"></i> ${item.product.name} (Qty: ${item.quantity})</li>`);
+    //                                 ordered_products.push({
+    //                                     product_id: item.product.id,
+    //                                     option_id: item.option_id,
+    //                                     quantity: item.quantity
+    //                                 });
+    //                             } else {
+    //                                 out_of_stock_items.push(`<li> <i class="fa fa-close text-danger"></i>  ${item.product.name} (Inactive)</li>`);
+    //                             }
+    //                         } else {
+    //                             if (element.stockAvailable > 0 && item.product.status !== 'Inactive') {
+    //                                 in_stock_items.push(`<li> <i class="fa fa-check text-success"></i> ${item.product.name} (Qty: ${item.quantity})</li>`);
+    //                                 ordered_products.push({
+    //                                     product_id: item.product.id,
+    //                                     option_id: item.option_id,
+    //                                     quantity: item.quantity
+    //                                 });
+    //                             } else {
+    //                                 out_of_stock_items.push(`<li> <i class="fa fa-close text-danger"></i>  ${item.product.name} (Out of Stock)</li>`);
+    //                             }
+    //                         }
+    //                     });
+    //                 });
+
+    //                 // Construct the confirmation message
+    //                 let message = `
+    //                     <p class="add_all_items_cart_from_order_heading text-success">The following items will be added to your cart:</p>
+    //                     <ul class="add_all_items_cart_from_order" style="list-style:none;">${in_stock_items.join('')}</ul>
+    //                     ${out_of_stock_items.length > 0 ? `<p class="add_all_items_cart_from_order_heading text-danger">These items are out of stock:</p><ul class="add_all_items_cart_from_order" style="list-style:none;">${out_of_stock_items.join('')}</ul>` : ''}
+    //                 `;
+
+    //                 // Show confirmation popup
+    //                 Swal.fire({
+    //                     title: "Confirm Your Selection",
+    //                     html: message,
+    //                     icon: "info",
+    //                     showCancelButton: true,
+    //                     confirmButtonText: "Proceed with Available Items",
+    //                     cancelButtonText: "Cancel",
+    //                     allowOutsideClick: false,
+    //                     allowEscapeKey: false,
+    //                     customClass: {
+    //                         title: 'swal-title-black',
+    //                         icon: 'swal-icon-class',
+    //                         content: 'swal-content-class',
+    //                         confirmButton: 'my-confirm-button',
+    //                         cancelButton: 'my-cancel-button',
+    //                         popup: 'swal2-popup-class',
+    //                         actions: 'my-actions-class'
+    //                     }
+    //                 }).then((result) => {
+    //                     if (result.isConfirmed) {
+    //                         if (ordered_products.length > 0) {
+    //                             buy_items_again(ordered_products);
+    //                             Swal.fire({
+    //                                 icon: "success",
+    //                                 title: "Items Added",
+    //                                 text: "Available items have been added to your cart.",
+    //                                 confirmButtonText: "OK",
+    //                                 icon: "info",
+    //                                 confirmButtonText: "Proceed with Available Items",
+    //                                 allowOutsideClick: false,
+    //                                 allowEscapeKey: false,
+    //                                 customClass: {
+    //                                     title: 'swal-title-black',
+    //                                     icon: 'swal-icon-class',
+    //                                     content: 'swal-content-class',
+    //                                     confirmButton: 'my-confirm-button',
+    //                                     cancelButton: 'my-cancel-button',
+    //                                     popup: 'swal2-popup-class',
+    //                                     actions: 'my-actions-class'
+    //                                 }
+    //                             });
+    //                         } else {
+    //                             Swal.fire({
+    //                                 icon: "error",
+    //                                 title: "No Items Available",
+    //                                 text: "None of the selected items are in stock.",
+    //                                 confirmButtonText: "OK"
+    //                             });
+    //                         }
+    //                     }
+    //                 });
+
+    //             } else {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Something went wrong',
+    //                     text: 'Unable to fetch order details.',
+    //                     confirmButtonText: 'OK',
+    //                     allowOutsideClick: false
+    //                 });
+    //             }
+    //         }
+    //     });
+    // }
+
     function add_products_to_cart(order_id) {
         $.ajax({
             url: '/order/items/' + order_id,
             method: 'get',
             success: function(response) {
                 let lowerCaseTerms = (response.get_wholesale_terms?.trim() || "").toLowerCase();
+
                 if (response.status == 'success' && response.order_items) {
                     let ordered_products = [];
                     let out_of_stock_items = [];
@@ -1264,41 +1377,38 @@
 
                     // Construct the confirmation message
                     let message = `
-                        <p class="add_all_items_cart_from_order_heading text-success">The following items will be added to your cart:</p>
-                        <ul class="add_all_items_cart_from_order" style="list-style:none;">${in_stock_items.join('')}</ul>
+                        ${in_stock_items.length > 0 ? `<p class="add_all_items_cart_from_order_heading text-success">The following items will be added to your cart:</p><ul class="add_all_items_cart_from_order" style="list-style:none;">${in_stock_items.join('')}</ul>` : ''}
                         ${out_of_stock_items.length > 0 ? `<p class="add_all_items_cart_from_order_heading text-danger">These items are out of stock:</p><ul class="add_all_items_cart_from_order" style="list-style:none;">${out_of_stock_items.join('')}</ul>` : ''}
                     `;
 
-                    // Show confirmation popup
-                    Swal.fire({
-                        title: "Confirm Your Selection",
-                        html: message,
-                        icon: "info",
-                        showCancelButton: true,
-                        confirmButtonText: "Proceed with Available Items",
-                        cancelButtonText: "Cancel",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        customClass: {
-                            title: 'swal-title-black',
-                            icon: 'swal-icon-class',
-                            content: 'swal-content-class',
-                            confirmButton: 'my-confirm-button',
-                            cancelButton: 'my-cancel-button',
-                            popup: 'swal2-popup-class',
-                            actions: 'my-actions-class'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            if (ordered_products.length > 0) {
+                    // Show confirmation popup only if there are in-stock items
+                    if (in_stock_items.length > 0) {
+                        Swal.fire({
+                            title: "Confirm Your Selection",
+                            html: message,
+                            icon: "info",
+                            showCancelButton: true,
+                            confirmButtonText: "Proceed with Available Items",
+                            cancelButtonText: "Cancel",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            customClass: {
+                                title: 'swal-title-black',
+                                icon: 'swal-icon-class',
+                                content: 'swal-content-class',
+                                confirmButton: 'my-confirm-button',
+                                cancelButton: 'my-cancel-button',
+                                popup: 'swal2-popup-class',
+                                actions: 'my-actions-class'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
                                 buy_items_again(ordered_products);
                                 Swal.fire({
                                     icon: "success",
                                     title: "Items Added",
                                     text: "Available items have been added to your cart.",
                                     confirmButtonText: "OK",
-                                    icon: "info",
-                                    confirmButtonText: "Proceed with Available Items",
                                     allowOutsideClick: false,
                                     allowEscapeKey: false,
                                     customClass: {
@@ -1306,34 +1416,49 @@
                                         icon: 'swal-icon-class',
                                         content: 'swal-content-class',
                                         confirmButton: 'my-confirm-button',
-                                        cancelButton: 'my-cancel-button',
-                                        popup: 'swal2-popup-class',
-                                        actions: 'my-actions-class'
+                                        popup: 'swal2-popup-class'
                                     }
                                 });
-                            } else {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "No Items Available",
-                                    text: "None of the selected items are in stock.",
-                                    confirmButtonText: "OK"
-                                });
                             }
-                        }
-                    });
-
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "No Items Available",
+                            text: "None of the selected items are in stock.",
+                            confirmButtonText: "OK",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            customClass: {
+                                title: 'swal-title-black',
+                                icon: 'swal-icon-class',
+                                content: 'swal-content-class',
+                                confirmButton: 'my-confirm-button',
+                                popup: 'swal2-popup-class'
+                            }
+                        });
+                    }
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Something went wrong',
                         text: 'Unable to fetch order details.',
-                        confirmButtonText: 'OK',
-                        allowOutsideClick: false
+                        confirmButtonText: "OK",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        customClass: {
+                            title: 'swal-title-black',
+                            icon: 'swal-icon-class',
+                            content: 'swal-content-class',
+                            confirmButton: 'my-confirm-button',
+                            popup: 'swal2-popup-class'
+                        }
                     });
                 }
             }
         });
     }
+
 
 
     function buy_items_again(ordered_products) {
