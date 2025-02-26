@@ -23,99 +23,60 @@
             </div>
             <div class="row product_section_header">
                 <div class="col-md-12">
-                    <h3 class="order_heading">Payouts</h3>
+                    <h3 class="order_heading">Payouts Transactions</h3>
+                </div>
+                <div class="col-md-12 my-2">
+                    <a href="{{ route('transactions_export' , $id) }}" class="btn btn-primary mx-5 text-white">Export</a>
                 </div>
                 
             </div>
-            <div class="row search_row_admin-interface">
-                <!-- Search Input -->
-                <div class="col-md-4">
-                    <div class="has-search">
-                        <form method="get" action="/admin/payouts" class="mb-2">
-                            <div class="input-group">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <input type="text" class="form-control" id="search" name="search" 
-                                    placeholder="Search by Amount" value="{{ request('search') }}" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            
-                <!-- Filter Buttons -->
-                <div class="col-md-2">
-                    <form method="get" action="/admin/payouts" class="mb-2">
-                        <input type="submit" class="btn {{ request()->has('last_14_days') ? 'btn-success' : 'btn-info' }} w-100"
-                            name="last_14_days" value="Last 14 Days">
-                    </form>
-                </div>
-                <div class="col-md-2">
-                    <form method="get" action="/admin/payouts" class="mb-2">
-                        <input type="submit" class="btn {{ request()->has('this_month') ? 'btn-success' : 'btn-info' }} w-100"
-                            name="this_month" value="This Month">
-                    </form>
-                </div>
-                <div class="col-md-2">
-                    <form method="get" action="/admin/payouts" class="mb-2">
-                        <input type="submit" class="btn {{ request()->has('last_month') ? 'btn-success' : 'btn-info' }} w-100"
-                            name="last_month" value="Last Month">
-                    </form>
-                </div>
-                <div class="col-md-2">
-                    <form method="get" action="/admin/payouts" class="mb-2">
-                        <input type="submit" class="btn {{ request()->has('all_time') ? 'btn-success' : 'btn-info' }} w-100"
-                            name="all_time" value="All Time">
-                    </form>
-                </div>
-                
-            </div>
-            
-            
             <div class="card-body product_table_body">
                 <div class="col-md-12 p-0">
                     <div class="col-md-12 shadow-sm border order-table-items-data table-responsive">
                         <table class="table  bg-white  table-customer mb-0 mobile-view">
                             <thead>
                                 <tr class="table-header-background">
-                                    <td><span class="d-flex table-row-item"> Amount</span></td>
-                                    <td><span class="d-flex table-row-item"> Status</span></td>
+                                    <td><span class="d-flex table-row-item"> Order ID</span></td>
+                                    <td><span class="d-flex table-row-item"> Customer Name</span></td>
+                                    <td><span class="d-flex table-row-item"> Customer Email</span></td>
+                                    <td><span class="d-flex table-row-item"> Currency</span></td>
                                     <td><span class="d-flex table-row-item"> Type</span></td>
-                                    <td><span class="d-flex table-row-item"> Method</span></td>
-                                    <td><span class="d-flex table-row-item"> Source Type</span></td>
-                                    <td><span class="d-flex table-row-item"> Payout Created</span></td>
-                                    <td><span class="d-flex table-row-item"> Arrive Date</span></td>
-                                    <td><span class="d-flex table-row-item"> Action</span></td>
+                                    <td><span class="d-flex table-row-item"> Description</span></td>
+                                    <td><span class="d-flex table-row-item">Amount</span></td>
+                                    <td><span class="d-flex table-row-item"> Converted Amount</span></td>
+                                    <td><span class="d-flex table-row-item"> Fees</span></td>
+                                    <td><span class="d-flex table-row-item"> Net</span></td>
+                                    <td><span class="d-flex table-row-item"> Charge Created</span></td>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                @if (count($payouts) == 0)
+                                @if (count($payout_balances) == 0)
                                     <tr>
-                                        <td colspan="10" class="text-center">No Payouts Found</td>
+                                        <td colspan="10" class="text-center">No Transactions Found</td>
                                     </tr>
                                 @endif
 
-                                @foreach ($payouts as $payout)
+                                @foreach ($payout_balances as $payout_balance)
                                     <tr>
-                                        <td>
-                                            <a href="{{ route('payouts.details', $payout->id) }}" class="text-dark" style="font-weight: 600;">{{'US$'. number_format($payout->amount , 2) }}</a>
-                                        </td>
-                                        <td>{{ $payout->status }}</td>
-                                        <td>{{ $payout->type }}</td>
-                                        <td>{{ $payout->method }}</td>
-                                        <td>{{ $payout->source_type }}</td>
-                                        <td>{{ $payout->payout_created }}</td>
-                                        <td>{{ $payout->arrive_date }}</td>
-            
-                                        <td>
-                                            <a href="{{ route('payouts.details', $payout->id) }}" class="btn btn-primary btn-sm text-white">Transactions</a>
-                                        </td>
+                                        <td>{{ $payout_balance->order_id != 0 ?  $payout_balance->order_id : '-'}}</td>
+                                        <td>{{ $payout_balance->customer_name }}</td>
+                                        <td>{{ $payout_balance->customer_email }}</td>
+                                        <td>{{ $payout_balance->currency }}</td>
+                                        <td>{{ $payout_balance->type }}</td>
+                                        <td>{{ $payout_balance->description }}</td>
+                                        <td>{{ $payout_balance->amount }}</td>
+                                        <td>{{ $payout_balance->converted_amount }}</td>
+                                        <td>{{ $payout_balance->fees }}</td>
+                                        <td>{{ $payout_balance->net }}</td>
+                                        <td>{{ $payout_balance->charge_created }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="10">
-                                        {{ $payouts->links('pagination.custom_pagination') }}
+                                        {{ $payout_balances->links('pagination.custom_pagination') }}
                                     </td>
                                 </tr>
                             </tfoot>
@@ -216,8 +177,12 @@
                 line-height: 24px !important;
                 letter-spacing: 0.252px !important;
                 margin-left: 17px !important;
-                margin-left: 17px !important;
                 margin-top: 29px !important;
+            }
+
+            .export_transaction {
+                margin-left: 35px !important;
+
             }
 
             .mobile_screen_Previous_btn {
