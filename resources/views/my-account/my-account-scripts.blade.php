@@ -1404,21 +1404,21 @@
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 buy_items_again(ordered_products);
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Items Added",
-                                    text: "Available items have been added to your cart.",
-                                    confirmButtonText: "OK",
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    customClass: {
-                                        title: 'swal-title-black',
-                                        icon: 'swal-icon-class',
-                                        content: 'swal-content-class',
-                                        confirmButton: 'my-confirm-button',
-                                        popup: 'swal2-popup-class'
-                                    }
-                                });
+                                // Swal.fire({
+                                //     icon: "success",
+                                //     title: "Items Added",
+                                //     text: "Available items have been added to your cart.",
+                                //     confirmButtonText: "OK",
+                                //     allowOutsideClick: false,
+                                //     allowEscapeKey: false,
+                                //     customClass: {
+                                //         title: 'swal-title-black',
+                                //         icon: 'swal-icon-class',
+                                //         content: 'swal-content-class',
+                                //         confirmButton: 'my-confirm-button',
+                                //         popup: 'swal2-popup-class'
+                                //     }
+                                // });
                             }
                         });
                     } else {

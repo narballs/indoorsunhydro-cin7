@@ -313,8 +313,15 @@ class ContactController extends Controller
         // dd($customer->contact_id);
         $customer_orders = ApiOrder::where('memberId', $customer->contact_id)
             ->orWhere('memberId' , $customer->parent_id)
-            ->with('contact')
-            ->with('apiOrderItem' , 'secondary_contact' , 'primary_contact')
+            ->with('contact' , 'apiOrderItem')
+            ->with([
+                'secondary_contact' => function ($query) {
+                    $query->withTrashed();
+                },
+                'primary_contact' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])
             ->orderBy('id', 'desc')
             ->get();
 
