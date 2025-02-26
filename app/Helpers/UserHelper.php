@@ -34,7 +34,7 @@ class UserHelper
     public static function getAllMemberIds($user) {
         $user_ids = $parent_ids = $contact_ids = [];
 
-        $contacts_by_email = Contact::where('email', $user->email)->get();
+        $contacts_by_email = Contact::withTrashed()->where('email', $user->email)->get();
 
         if (!empty($contacts_by_email)) {
             foreach ($contacts_by_email as $email_contact) {
@@ -55,15 +55,15 @@ class UserHelper
         $ids_array_1 = $ids_array_2 = $ids_array_3 = [];
 
         if (!empty($user_ids)) {
-            $ids_array_1 = Contact::whereIn('user_id', $user_ids)->pluck('id')->toArray();
+            $ids_array_1 = Contact::withTrashed()->whereIn('user_id', $user_ids)->pluck('id')->toArray();
         }
 
         if (!empty($contact_ids)) {
-            $ids_array_2 = Contact::whereIn('parent_id', $contact_ids)->pluck('id')->toArray();
+            $ids_array_2 = Contact::withTrashed()->whereIn('parent_id', $contact_ids)->pluck('id')->toArray();
         }
 
         if (!empty($parent_ids)) {
-            $ids_array_3 = Contact::whereIn('contact_id', $parent_ids)->pluck('id')->toArray();
+            $ids_array_3 = Contact::withTrashed()->whereIn('contact_id', $parent_ids)->pluck('id')->toArray();
         }
 
         $member_ids = array_merge($ids_array_1, $ids_array_2, $ids_array_3);
