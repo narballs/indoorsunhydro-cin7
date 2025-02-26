@@ -440,7 +440,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get-shipstation-api-logs', [AdminSettingsController::class, 'get_shipstation_api_logs'])->name('get_shipstation_api_logs');
 
         Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
-        Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
+        Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('payouts.details');
+        Route::get('/transactions_export/{id}', [OrderController::class, 'transactions_export'])->name('transactions_export');
+        // Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
 
         
     });

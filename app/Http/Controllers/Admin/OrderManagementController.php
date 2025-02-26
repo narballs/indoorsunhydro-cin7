@@ -158,7 +158,16 @@ class OrderManagementController extends Controller
             $auto_fullfill = false;
         }
         $statuses = OrderStatus::all();
-        $order = ApiOrder::where('id', $id)->with('texClasses')->first();
+        $order = ApiOrder::where('id', $id)->with('texClasses')
+        ->with([
+            'secondary_contact' => function ($query) {
+                $query->withTrashed();
+            },
+            'primary_contact' => function ($query) {
+                $query->withTrashed();
+            }
+        ])
+        ->first();
         // $tax_class = TaxClass::where('is_default', 1)->first();
         $createdDate = $order->created_at;
         $formatedDate = $createdDate->format('jS \of F Y h:i:s A');
@@ -180,6 +189,14 @@ class OrderManagementController extends Controller
         ->with('contact' , function($query) {
             $query->orderBy('company');
         })
+        ->with([
+            'secondary_contact' => function ($query) {
+                $query->withTrashed();
+            },
+            'primary_contact' => function ($query) {
+                $query->withTrashed();
+            }
+        ])
         ->with('apiOrderItem.product')
         ->where('id' , $id)
         ->first();
