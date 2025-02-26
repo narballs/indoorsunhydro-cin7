@@ -180,7 +180,7 @@ class OrderManagementController extends Controller
         $time_difference_seconds = date('s');
 
 
-        $user = User::where('id', $order->user_id)->first();
+        $user = User::withTrashed()->where('id', $order->user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
             $contact_ids = Contact::whereIn('id', $all_ids)
                 ->pluck('contact_id')
