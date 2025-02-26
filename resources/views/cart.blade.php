@@ -9,6 +9,50 @@
     .cart-behaviour-table > tr , td {
         font-family: 'poppins';
     }
+
+    /* Custom Title Styling */
+    .swal-title-black {
+        color: black !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        font-family: 'poppins' !important;
+    }
+
+    /* Custom Popup Styling */
+    .swal-popup-custom {
+        padding: 25px !important;
+        width: 450px !important;
+        border-radius: 10px !important;
+    }
+
+    
+
+    .swal-confirm-button , .swal-cancel-button {
+        background-color: #7BC533 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        line-height: 27px   !important;
+        font-style: normal !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        line-height: 24px !important;
+        letter-spacing: 0.05em  !important;
+        padding: 5px 25px !important;
+        border-radius: 20px !important;
+    }
+
+    .swal-confirm-button:focus , .swal-cancel-button:focus {
+        box-shadow: 0 0 0 0px rgba(112,102,224,.5) !important;
+    }
+
+    .swal-text-black {
+        color: 000 !important;
+        font-size: 16px !important;
+        font-weight: 400 !important;
+        font-family: 'poppins' !important;
+    }
+    
+
 </style>
 
 {{-- <input type="hidden" name="" id="initial_free_shipping_value" class="initial_free_shipping_value" value="{{$free_shipping}}"> --}}
@@ -324,29 +368,11 @@
                                                     <td colspan="5">
                                                         <div class="w-100 d-flex mt-3">
                                                             
-                                                            <div class="col-md-8 coupon-code ps-0">
+                                                            <div class="col-md-8 ps-0">
                                                                 <div class=" align-items-center d-flex">
-                                                                    
-                                                                    {{-- <div>
-                                                                        <span class="coupon-code-label"><img class="img-fluid"
-                                                                                src="/theme/img/Vector.png"
-                                                                                class="img-fluid">&nbsp;&nbsp;Coupon
-                                                                            code</span>
-                                                                    </div>
-                                                                    <div class="col-4 ps-3">
-                                                                        <div class="form-signupp">
-                                                                            <input type="text" name="code" id="code"
-                                                                                class="fontAwesome form-control"
-                                                                                placeholder="Your code" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-5 p-0">
-                                                                        <span>
-                                                                            <button class="apply-coupon-code-button">
-                                                                                Apply Coupon
-                                                                            </button>
-                                                                        </span>
-                                                                    </div> --}}
+                                                                    <a href="{{ route('emptyCart') }}" class="clear_cart btn btn-info btn-sm" onclick="confirmEmptyCart(event)">
+                                                                        Empty Cart
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4 p-0 text-right">
@@ -728,6 +754,11 @@
                                                 <div class="card-header bg-white p-0 border-0 d-flex align-items-center justify-content-between">
                                                     <p class="your-cart-title ps-1 mb-0"> Your Cart</p>
                                                     <p class="cart-page-items text-danger text-right mb-0"> Price Subject to Change</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <a href="{{ route('emptyCart') }}" class="clear_cart btn btn-info btn-sm" onclick="confirmEmptyCart(event)">
+                                                        Empty Cart
+                                                    </a>
                                                 </div>
                                                 {{-- <div class="col-md-12 p-0 pt-3" style="border-top: 1.5px solid #EBEBEB;"> --}}
                                                 <div class="col-md-12 p-0">
@@ -1796,4 +1827,32 @@
             }
         );
     });
+
+
+    function confirmEmptyCart(event) {
+        event.preventDefault(); // Prevent the default navigation
+
+        Swal.fire({
+            title: "Are you sure?",
+            html: '<p class="swal-custom-text">This will remove all items from your cart!</p>',
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Empty Cart",
+            cancelButtonText: "Cancel",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            customClass: {
+                title: 'swal-title-black',
+                popup: 'swal-popup-custom',
+                confirmButton: 'swal-confirm-button',
+                cancelButton: 'swal-cancel-button',
+                text: 'swal-text-black'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = event.target.href; // Redirect to empty cart route
+            }
+        });
+    }
+
 </script>

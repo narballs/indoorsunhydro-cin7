@@ -69,7 +69,15 @@ class OrderManagementController extends Controller
         $sort_by_created_at = $request->get('sort_by_date');
 
         $search = $request->get('search');
-        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact']);
+        $orders_query = ApiOrder::with(['createdby', 'processedby', 'contact'])
+        ->with([
+            'secondary_contact' => function ($query) {
+                $query->withTrashed();
+            },
+            'primary_contact' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
         $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
         $auto_fulfill = $option->option_value;
 

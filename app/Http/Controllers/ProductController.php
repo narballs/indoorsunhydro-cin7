@@ -1857,6 +1857,50 @@ class ProductController extends Controller
 
 
 
+    public function emptyCart(Request $request)
+    {
+        $user_id = auth()->id();
+        $contact_id = session()->get('contact_id');
+        $cart = session()->get('cart', []); // Default to an empty array if no cart exists
+
+        $query = Cart::orderBy('created_at', 'DESC');
+
+        if (!auth()->check()) {
+            $query->where('user_id', 0);
+        } else {
+            $query->where('user_id', $user_id);
+            if (!empty($contact_id)) {
+                $query->where('contact_id', $contact_id);
+            } else {
+                $query->whereNull('contact_id');
+            }
+        }
+
+        $cartItems = $query->get();
+
+        if ($cartItems->isNotEmpty()) {
+            // Collect the quote IDs from the retrieved cart items.
+            // Note: Verify if 'qoute_id' is intended or should be 'quote_id'.
+            $quoteIds = $cartItems->pluck('qoute_id')->toArray();
+
+            // Perform a bulk deletion
+            Cart::whereIn('qoute_id', $quoteIds)->delete();
+
+            // Remove these items from the session cart
+            foreach ($quoteIds as $id) {
+                unset($cart[$id]);
+            }
+
+            // Update the session once after processing all items
+            $request->session()->put('cart', $cart);
+        }
+
+        return redirect()->back()->with('success', 'Cart emptied successfully!');
+    }
+
+
+
+
 
     public function cart(Request $request)
     {
@@ -2969,7 +3013,7 @@ class ProductController extends Controller
             if (!empty($errors)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Some products are not available in the cart',
+                    'message' => 'Product(s) is out of stock or not available.',
                     'free_postal_state' => $free_postal_state,
                     'main_contact_id' => $main_contact_id,
                     'cart_items' => $cart,
@@ -3081,11 +3125,11 @@ class ProductController extends Controller
         // Check stock availability
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+        $user_id = Auth::id();
 
         // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)->first();
-
+            $wholesale_contact = Contact::where('user_id',$user_id)->first();
             if (!empty($wholesale_contact)) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
                     $get_wholesale_contact_id = $wholesale_contact->contact_id;
@@ -3107,8 +3151,11 @@ class ProductController extends Controller
 
         $current_quantity = $product->quantity;
 
-        // Check stock availability
-        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        $total_quantity = 0;
+
+        $total_quantity = intval($current_quantity) + intval($requested_quantity);
+
+        if ($total_quantity > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
@@ -3161,7 +3208,7 @@ class ProductController extends Controller
         }
 
         $actual_stock = $productOption->stockAvailable;
-        if ($requested_quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        if (intval($requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
