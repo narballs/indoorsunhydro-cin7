@@ -1690,7 +1690,9 @@ class ProductController extends Controller
         $current_quantity = $product->quantity;
         // dd($actual_stock);
     
-        if (($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
+        // if (intval($current_quantity + $requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
+        if ((int) $current_quantity + (int) $requested_quantity > (int) $actual_stock && strtolower($get_wholesale_terms) === 'pay in advanced') {
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Stock limit exceeded',
@@ -1758,7 +1760,9 @@ class ProductController extends Controller
         }
         
         $actual_stock = $productOption->stockAvailable ?? 0; // Ensure stock availability
-        if ((intval($request->quantity)) > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        // if ((intval($request->quantity) > intval($actual_stock)) && strtolower($get_wholesale_terms === 'pay in advanced')) {
+        if ((intval($request->quantity) > intval($actual_stock)) && strtolower($get_wholesale_terms) === 'pay in advanced') {
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Stock limit exceeded',
