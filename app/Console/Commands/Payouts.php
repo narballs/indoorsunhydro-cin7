@@ -110,24 +110,24 @@ class Payouts extends Command
                                      $convertedCurrency = $currency;
      
                                      // Initialize customer and order details
-                                     $customerId = '';
-                                     $customerEmail = '';
-                                     $customerName = '';
-                                     $orderId = '';
+                                    $customerId = '';
+                                    $customerEmail = '';
+                                    $customerName = '';
+                                    $orderId = '';
      
-                                     if ($bt->source && $type === 'charge') {
-                                         try {
-                                             $charge = $stripe->charges->retrieve($bt->source);
-                                             if (!empty($charge->customer)) {
+                                    if ($bt->source) {
+                                        try {
+                                            $charge = $stripe->charges->retrieve($bt->source);
+                                            if (!empty($charge->customer)) {
                                                  $customer = $stripe->customers->retrieve($charge->customer);
                                                  $customerEmail = $customer->email ?? '';
                                                  $customerName = $customer->name ?? '';
-                                             }
-                                             $orderId = $charge->metadata->order_id ?? '';
-                                         } catch (\Exception $e) {
-                                             Log::error("Error retrieving charge details for transaction {$bt->id}: " . $e->getMessage());
-                                         }
-                                     }
+                                            }
+                                            $orderId = $charge->metadata->order_id ?? '';
+                                        } catch (\Exception $e) {
+                                            Log::error("Error retrieving charge details for transaction {$bt->id}: " . $e->getMessage());
+                                        }
+                                    }
      
                                      // Check if the balance transaction already exists
                                      PayoutBalance::firstOrCreate(
