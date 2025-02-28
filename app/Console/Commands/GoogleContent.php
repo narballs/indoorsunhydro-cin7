@@ -13,6 +13,7 @@ use Google\Client as GoogleClient;
 use Google\Service\ShoppingContent;
 use Google\Service\ShoppingContent\Product as ServiceProduct;
 use Google\Service\ShoppingContent\Price;
+use Illuminate\Support\Facades\Log;
 
 class GoogleContent extends Command
 {
@@ -62,9 +63,6 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
-            // $responseDeleted = $this->delete_inactive_products($client, $token);
-            // $responseRemoved = $this->removeDisapprovedProducts($client, $token);
-            // $deletePriceZeroProducts = $this->removeZeroPriceProducts($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
@@ -99,6 +97,8 @@ class GoogleContent extends Command
         
         $price_column = null;
         $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
+        $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
+        $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
@@ -128,7 +128,12 @@ class GoogleContent extends Command
         // dd($products->count());
         if (count($products) > 0) {
             foreach ($products as $product) {
-                if (in_array($product->id, $disapprovedProducts)) {
+
+                if (in_array($product->id, $disapprovedProducts) || in_array($product->id, $inactiveProducts) || in_array($product->id, $zeroPriceProducts)) {
+                    Log::info('Disapproved: ' . in_array($product->id, $disapprovedProducts));
+                    Log::info('Inactive: ' . in_array($product->id, $inactiveProducts));
+                    Log::info('Zero price: ' . in_array($product->id, $zeroPriceProducts));
+
                     continue;
                 }
                 
@@ -408,6 +413,83 @@ class GoogleContent extends Command
 
         return $disapprovedProductIds;
     }
+
+
+    private function getInactiveProductIdsFromGMC($client, $token)
+    {
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+        $service = new ShoppingContent($client);
+
+        $inactiveProductIds = [];
+        $pageToken = null;
+
+        do {
+            try {
+                // Fetch products from Google Merchant Center with pagination
+                $productsGMC = $service->products->listProducts(config('services.google.merchant_center_id'), [
+                    'maxResults' => 250,
+                    'pageToken' => $pageToken,
+                ]);
+
+                foreach ($productsGMC->getResources() as $productGMC) {
+                    $productIdGMC = $productGMC['id'];
+                    $mpnGMC = $productGMC['mpn'];
+
+                    // Check if this product exists in the local database and is inactive
+                    $inactiveProduct = Product::where('code', $mpnGMC)->where('status', 'Inactive')->exists();
+
+                    if ($inactiveProduct) {
+                        $inactiveProductIds[] = $productIdGMC; // Store the inactive product ID
+                    }
+                }
+
+                // Get the next page token for pagination
+                $pageToken = $productsGMC->getNextPageToken();
+            } catch (\Exception $e) {
+                $this->error('Failed to retrieve inactive products from Google Merchant Center. Error: ' . $e->getMessage());
+                return [];
+            }
+        } while (!empty($pageToken));
+
+        return $inactiveProductIds;
+    }
+
+    private function getZeroPriceProductIdsFromGMC($client, $token)
+    {
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+        $service = new ShoppingContent($client);
+
+        $zeroPriceProductIds = [];
+        $pageToken = null;
+
+        do {
+            try {
+                // Fetch products from Google Merchant Center with pagination
+                $productPrices = $service->products->listProducts(config('services.google.merchant_center_id'), [
+                    'maxResults' => 250,
+                    'pageToken' => $pageToken
+                ]);
+
+                foreach ($productPrices->getResources() as $productPrice) {
+                    if (!empty($productPrice) && (!empty($productPrice->getPrice()))) {
+                        $price_value = floatval($productPrice->getPrice()->getValue());
+                        if ($price_value == 0) {
+                            $zeroPriceProductIds[] = $productPrice['id']; // Store zero-price product ID
+                        }
+                    }
+                }
+
+                $pageToken = $productPrices->getNextPageToken();
+            } catch (\Exception $e) {
+                $this->error('Failed to retrieve zero-price products from Google Merchant Center. Error: ' . $e->getMessage());
+                return [];
+            }
+        } while (!empty($pageToken));
+
+        return $zeroPriceProductIds;
+    }
+
+
 
 
 }
