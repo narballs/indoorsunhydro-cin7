@@ -2596,7 +2596,7 @@ class OrderController extends Controller
         }
 
         // Paginate results
-        $payouts = $payouts_query->paginate(10);
+        $payouts = $payouts_query->get();
 
         return view('admin.payouts.index', compact('payouts'));
     }
@@ -2604,20 +2604,24 @@ class OrderController extends Controller
 
 
     public function payouts_details($id) {
-        $payout_balances = PayoutBalance::where('payout_id', $id)->paginate(15); 
+        $payout_balances = PayoutBalance::where('payout_id', $id)->get(); 
 
         return view('admin.payouts.details', compact('payout_balances' , 'id'));
     }
 
 
-    public function transactions_export($id) {
+    public function transactions_export(Request $request,  $id) {
         $payout = Payout::findOrFail($id);
+
+        $hide_radar = $request->boolean('hide_radar', false);
+        $hide_chargebacks = $request->boolean('hide_Chargeback', false);
 
         // Set file name dynamically
         $fileName = "Payout_Transactions_{$id}.xlsx";
 
         // Return the Excel file
-        return Excel::download(new PayoutBalanceExport($id), $fileName);
+        return Excel::download(new PayoutBalanceExport($id, $hide_radar, $hide_chargebacks), $fileName);
+
 
     }
 

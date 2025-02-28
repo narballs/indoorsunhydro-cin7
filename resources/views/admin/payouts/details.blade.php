@@ -25,8 +25,18 @@
                 <div class="col-md-12">
                     <h3 class="order_heading">Payouts Transactions</h3>
                 </div>
-                <div class="col-md-12 my-2">
+                <div class="col-md-12 my-2 d-flex align-items-center">
                     <a href="{{ route('transactions_export' , $id) }}" class="btn btn-primary mx-5 text-white">Export</a>
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <input type="checkbox" name="hide_radar" id="hide_radar" onclick="hideRadar()">
+                            <label for="hide_radar" class=" mb-0">Hide Radar</label>
+                        </div>
+                        <div class="ml-3">
+                            <input type="checkbox" name="hide_Chargeback" id="hide_Chargeback" onclick="hideChargeback()">
+                            <label for="hide_Chargeback" class=" mb-0">Hide Chargeback</label>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
@@ -49,7 +59,7 @@
                                     <td><span class="d-flex table-row-item"> Charge Created</span></td>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="payout_transactions">
 
                                 @if (count($payout_balances) == 0)
                                     <tr>
@@ -73,13 +83,13 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
+                            {{-- <tfoot>
                                 <tr>
                                     <td colspan="10">
                                         {{ $payout_balances->links('pagination.custom_pagination') }}
                                     </td>
                                 </tr>
-                            </tfoot>
+                            </tfoot> --}}
                         </table>
                     </div>
                 </div>
@@ -380,6 +390,34 @@
 @stop
 
 @section('js')
+<script>
+    function hideRadar() {
+        var checkBox = document.getElementById("hide_radar");
+        var radarRows = document.querySelectorAll("#payout_transactions tr"); // Select all rows inside tbody
+
+        radarRows.forEach(row => {
+            var descriptionCell = row.querySelector("td:nth-child(6)"); // Get the description column (6th column)
+            if (descriptionCell && descriptionCell.textContent.includes("Radar")) {
+                row.style.display = checkBox.checked ? "none" : "table-row";
+            }
+        });
+    }
+
+    function hideChargeback() {
+        var checkBox = document.getElementById("hide_Chargeback");
+        var chargebackRows = document.querySelectorAll("#payout_transactions tr"); // Select all rows inside tbody
+
+        chargebackRows.forEach(row => {
+            var descriptionCell = row.querySelector("td:nth-child(6)"); // Get the description column (6th column)
+            if (descriptionCell && descriptionCell.textContent.includes("Chargeback")) {
+                row.style.display = checkBox.checked ? "none" : "table-row";
+            }
+        });
+    }
+
+
+
+</script> 
 @stop
 @section('plugins.Sweetalert2', true)
 

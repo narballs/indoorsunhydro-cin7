@@ -112,13 +112,13 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
+                            {{-- <tfoot>
                                 <tr>
                                     <td colspan="10">
                                         {{ $payouts->links('pagination.custom_pagination') }}
                                     </td>
                                 </tr>
-                            </tfoot>
+                            </tfoot> --}}
                         </table>
                     </div>
                 </div>

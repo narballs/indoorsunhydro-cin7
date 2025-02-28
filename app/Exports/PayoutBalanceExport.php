@@ -8,18 +8,21 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PayoutBalanceExport implements FromCollection, WithHeadings
 {
-    protected $payoutId;
+    protected $id;
+    protected $hide_radar;
+    protected $hide_chargebacks;
 
-    public function __construct($payoutId)
+    public function __construct($id, $hide_radar = false, $hide_chargebacks = false)
     {
-        $this->payoutId = $payoutId;
+        $this->id = $id;
+        $this->hide_radar = $hide_radar;
+        $this->hide_chargebacks = $hide_chargebacks;
     }
 
     public function collection()
     {
-        return PayoutBalance::where('payout_id', $this->payoutId)
+        return PayoutBalance::where('payout_id', $this->id)
             ->select(
-                // 'payout_balance_id',
                 'order_id',
                 'customer_name',
                 'customer_email',
@@ -31,8 +34,13 @@ class PayoutBalanceExport implements FromCollection, WithHeadings
                 'fees',
                 'net',
                 'charge_created'
-            )->get();
+            )
+            ->whereRaw("description NOT LIKE ?", ['%Radar%'])
+            ->whereRaw("description NOT LIKE ?", ['%Chargeback%']) // Exclude both terms
+            ->get();
     }
+
+
 
     public function headings(): array
     {
