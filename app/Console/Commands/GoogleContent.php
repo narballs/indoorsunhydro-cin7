@@ -98,6 +98,7 @@ class GoogleContent extends Command
     {
         
         $price_column = null;
+        $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
@@ -127,6 +128,9 @@ class GoogleContent extends Command
         // dd($products->count());
         if (count($products) > 0) {
             foreach ($products as $product) {
+                if (in_array($product->id, $disapprovedProducts)) {
+                    continue;
+                }
                 
                 if (count($product->options) > 0) {
                     foreach ($product->options as $option) {
@@ -367,6 +371,42 @@ class GoogleContent extends Command
                 return $this->error('Failed to retrieve product statuses from Google Merchant Center.');
             }
         } while (!empty($pageToken));
+    }
+
+    private function getDisapprovedProductIds($client, $token)
+    {
+        $client->setAccessToken($token['access_token']); // Use the stored access token
+        $service = new ShoppingContent($client);
+
+        $disapprovedProductIds = [];
+        $pageToken = null;
+
+        do {
+            try {
+                $productStatuses = $service->productstatuses->listProductstatuses(config('services.google.merchant_center_id'), [
+                    'maxResults' => 250,
+                    'pageToken' => $pageToken
+                ]);
+
+                foreach ($productStatuses->getResources() as $productStatus) {
+                    if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
+                        foreach ($productStatus->getItemLevelIssues() as $issue) {
+                            if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
+                                $disapprovedProductIds[] = $productStatus->getProductId();
+                                break; // No need to check further for this product
+                            }
+                        }
+                    }
+                }
+
+                $pageToken = $productStatuses->getNextPageToken();
+            } catch (\Exception $e) {
+                $this->error('Failed to retrieve disapproved products from Google Merchant Center. Error: ' . $e->getMessage());
+                return [];
+            }
+        } while (!empty($pageToken));
+
+        return $disapprovedProductIds;
     }
 
 
