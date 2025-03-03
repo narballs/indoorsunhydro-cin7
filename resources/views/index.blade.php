@@ -17,32 +17,33 @@
                                         <div class="row pl-4 pr-4">
                                             <div class="col thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-responsive img-fluid" src="theme/img/nutrients.png"
-                                                        width="102px" height="86px">
+                                                    <img class="img-responsive img-fluid" src="/theme/img/nutrients.png"
+                                                        width="102px" height="86px" alt="nutrients">
                                                 </a>
                                             </div>
                                             <div class="col p-0 my-4 thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-fluid" src="theme/img/mills.png"
+                                                    <img class="img-fluid" src="/theme/img/mills.png"
                                                         class="img-responsive img-fluid" width="142px"
-                                                        height="59px"></a>
+                                                        height="59px" alt="mills">
+                                                </a>
                                             </div>
                                             <div class="col thumb my-5">
                                                 <a class="thumbnail">
-                                                    <img src="theme/img/troll.png" width="165px" height="24px"
-                                                        class="img-responsive img-fluid">
+                                                    <img src="/theme/img/troll.png" width="165px" height="24px"
+                                                        class="img-responsive img-fluid" alt="troll">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0">
                                                 <a class="thumbnail">
-                                                    <img src="theme/img/elite.png" width="79px" height="88px"
-                                                        class="img-responsive img-fluid">
+                                                    <img src="/theme/img/elite.png" width="79px" height="88px"
+                                                        class="img-responsive img-fluid" alt="elite">
                                                 </a>
                                             </div>
                                             <div class="col thumb my-5 p-0">
                                                 <a class="thumbnail">
-                                                    <img src="theme/img/lux.png" width="107px" height="33px"
-                                                        class="img-responsive img-fluid">
+                                                    <img src="/theme/img/lux.png" width="107px" height="33px"
+                                                        class="img-responsive img-fluid" alt="lux">
                                                 </a>
                                             </div>
                                         </div>
@@ -53,26 +54,27 @@
                                         <div class="row  pl-4 pr-4">
                                             <div class="col thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-responsive img-fluid" src="theme/img/titan.png"
-                                                        width="130px" height="65px">
+                                                    <img class="img-responsive img-fluid" src="/theme/img/titan.png"
+                                                        width="130px" height="65px" alt="titan">
                                                 </a>
                                             </div>
                                             <div class="col p-0 thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-fluid" src="theme/img/quest_small.png"
+                                                    <img class="img-fluid" src="/theme/img/quest_small.png"
                                                         width="143px" height="44px"
-                                                        class="img-responsive img-fluid"></a>
+                                                        class="img-responsive img-fluid" alt="quest">
+                                                </a>
                                             </div>
                                             <div class="col thumb">
                                                 <a class="thumbnail">
-                                                    <img class="img-fluid" src="theme/img/hydroponics.png"
-                                                        width="167px" height="72px" class="img-responsive img-fluid">
+                                                    <img class="img-fluid" src="/theme/img/hydroponics.png"
+                                                        width="167px" height="72px" class="img-responsive img-fluid" alt="hydroponics">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0">
                                                 <a class="thumbnail">
-                                                    <img class="img-fluid" src="theme/img/botanicare.png" width="200px"
-                                                        height="64px" class="img-responsive img-fluid">
+                                                    <img class="img-fluid" src="/theme/img/botanicare.png" width="200px"
+                                                        height="64px" class="img-responsive img-fluid" alt="botanicare">
                                                 </a>
                                             </div>
                                         </div>
@@ -84,30 +86,30 @@
                                             <div class="col thumb p-0">
                                                 <a class="thumbnail" href="#">
                                                     <img class="img-fluid" class="img-responsive img-fluid"
-                                                        src="theme/img/godan.png" width="201px" height="84px">
+                                                        src="/theme/img/godan.png" alt="godan" width="201px" height="84px">
                                                 </a>
                                             </div>
                                             <div class="col p-0 thumb">
                                                 <a class="thumbnail" href="#">
-                                                    <img class="img-fluid" src="theme/img/gavita.png" width="117px"
-                                                        height="63px" class="img-responsive img-fluid"></a>
+                                                    <img class="img-fluid" src="/theme/img/gavita.png" width="117px"
+                                                        height="63px" class="img-responsive img-fluid" alt="gavita"></a>
                                             </div>
                                             <div class="col thumb">
                                                 <a class="thumbnail" href="#">
-                                                    <img class="img-fluid" src="theme/img/can-filter.png" width="125px"
-                                                        height="57px" class="img-responsive img-fluid">
+                                                    <img class="img-fluid" src="/theme/img/can-filter.png" width="125px"
+                                                        height="57px" class="img-responsive img-fluid" alt="can-filter">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0 my-3">
                                                 <a class="thumbnail" href="#">
-                                                    <img class="img-fluid" src="theme/img/clonex.png" width="156px"
-                                                        height="28px" class="img-responsive img-fluid">
+                                                    <img class="img-fluid" src="/theme/img/clonex.png" width="156px"
+                                                        height="28px" class="img-responsive img-fluid" alt="clonex">
                                                 </a>
                                             </div>
                                             <div class="col thumb p-0 mr-4">
                                                 <a class="thumbnail" href="#">
-                                                    <img class="img-fluid" src="theme/img/hand.png" width="59px"
-                                                        height="67px" class="img-responsive img-fluid">
+                                                    <img class="img-fluid" src="/theme/img/hand.png" width="59px"
+                                                        height="67px" class="img-responsive img-fluid" alt="hand">
                                                 </a>
                                             </div>
                                         </div>
@@ -119,7 +121,7 @@
                     <div class="col-md-4 home-page-product-section">
                         <div class="mt-5">
                             <a class="link-dark text-decoration-none text-white" href="{{ url('products') }}">
-                                <img class="img-fluid home-page-product-img" src="theme/img/all_products.png">
+                                <img class="img-fluid home-page-product-img" src="/theme/img/all_products.png" alt="home-page-product-img">
                             </a>
                         </div>
                     </div>
@@ -128,19 +130,19 @@
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Trolmaster') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/troll_master.png">
+                                    <img class="img-fluid home-page-product-img" src="/theme/img/troll_master.png" alt="home-page-product-img">
                                 </a>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/253/ac-dehumidification-humidification') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/quest.png">
+                                    <img class="img-fluid home-page-product-img" src="/theme/img/quest.png" alt="home-page-product-img">
                                 </a>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Advanced Nutrients') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/nutrients_box.png">
+                                    <img class="img-fluid home-page-product-img" src="/theme/img/nutrients_box.png" alt="home-page-product-img">
                                 </a>
                             </div>
                         </div>
@@ -150,19 +152,19 @@
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/7/lighting') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/lightening.png">
+                                    <img class="img-fluid home-page-product-img" src="/theme/img/lightening.png" alt="home-page-product-img">
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('product-brand/Mills Nutrients') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/can.png">
+                                    <img class="img-fluid home-page-product-img" src="/theme/img/can.png" alt="home-page-product-img">
                                 </a>
                             </div>
                             <div class="col-md-4">
                                 <a class="link-dark text-decoration-none text-white"
                                     href="{{ url('products/7/lighting') }}">
-                                    <img class="img-fluid home-page-product-img" src="theme/img/lux_lightening.png">
+                                    <img class="img-fluid home-page-product-img" src="/theme/img/lux_lightening.png" alt="home-page-product-img">
                                 </a>
                             </div>
                         </div>
@@ -188,7 +190,7 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <img src="/theme/img/National shipping.png" class="img-fluid" alt="">
+                                    <img src="/theme/img/National shipping.png" class="img-fluid" alt="National shipping">
                                 </div>
 
                                 <h4 class="thumbnail-items text-center mt-5">Nationwide Shipping</h4>
@@ -198,14 +200,14 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <img src="/theme/img/Icon_lowest_prices.png" class="img-fluid" alt="">
+                                    <img src="/theme/img/Icon_lowest_prices.png" class="img-fluid" alt="icon">
                                 </div>
                                 <h4 class="thumbnail-items text-center mt-5">Lowest Prices</h4>
                                 <p class="thumbnail-pra mt-3 nation_wide_para">we purchase in bulk so you don’t have to</p>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-5 p-0">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <img src="/theme/img/Icon_quality.png" class="img-fluid" alt="">
+                                    <img src="/theme/img/Icon_quality.png" class="img-fluid" alt="icon quality">
                                 </div>
                                 <h4 class="thumbnail-items text-center mt-5">Quality Products</h4>
                                 <p class="thumbnail-pra mt-3 nation_wide_para">we only carry products that we stand by, we honor all
