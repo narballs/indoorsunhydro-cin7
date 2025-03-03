@@ -63,6 +63,7 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
+            $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
@@ -392,7 +393,9 @@ class GoogleContent extends Command
                     'maxResults' => 250,
                     'pageToken' => $pageToken
                 ]);
-                dd($productStatuses->getResources());
+
+                dd($productStatuses);
+
                 foreach ($productStatuses->getResources() as $productStatus) {
                     if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
