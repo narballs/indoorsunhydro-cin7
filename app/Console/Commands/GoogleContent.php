@@ -392,7 +392,7 @@ class GoogleContent extends Command
                     'maxResults' => 250,
                     'pageToken' => $pageToken
                 ]);
-
+                dd($productStatuses->getResources());
                 foreach ($productStatuses->getResources() as $productStatus) {
                     if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
