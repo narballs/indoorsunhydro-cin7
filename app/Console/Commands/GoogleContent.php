@@ -63,7 +63,6 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
-            $this->getDisapprovedProductIds($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
@@ -396,12 +395,13 @@ class GoogleContent extends Command
                     if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
                             if ($issue->getServability() === 'disapproved') {
-                                dd($productStatus->getItemLevelIssues() , '41' , $issue , '51');
-                            }
-                            if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
                                 $disapprovedProductIds[] = $productStatus->getProductId();
                                 break; // No need to check further for this product
                             }
+                            // if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
+                            //     $disapprovedProductIds[] = $productStatus->getProductId();
+                            //     break; // No need to check further for this product
+                            // }
                         }
                     }
                 }
