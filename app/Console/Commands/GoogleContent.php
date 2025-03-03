@@ -129,7 +129,7 @@ class GoogleContent extends Command
         if (count($products) > 0) {
             foreach ($products as $product) {
 
-                if (in_array($product->id, $disapprovedProducts) || in_array($product->id, $inactiveProducts) || in_array($product->id, $zeroPriceProducts)) {
+                if (in_array($product->code, $disapprovedProducts) || in_array($product->code, $inactiveProducts) || in_array($product->code, $zeroPriceProducts)) {
                     Log::info('Disapproved: ' . in_array($product->id, $disapprovedProducts));
                     Log::info('Inactive: ' . in_array($product->id, $inactiveProducts));
                     Log::info('Zero price: ' . in_array($product->id, $zeroPriceProducts));
