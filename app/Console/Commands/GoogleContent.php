@@ -397,6 +397,9 @@ class GoogleContent extends Command
                 foreach ($productStatuses->getResources() as $productStatus) {
                     if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
+                            if ($issue->getServability() === 'disapproved') {
+                                dd($productStatus->getItemLevelIssues() , '41' , $issue , '51');
+                            }
                             dd($productStatus->getItemLevelIssues() , '4' , $issue , '5');
                             if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
                                 $disapprovedProductIds[] = $productStatus->getProductId();
