@@ -390,14 +390,13 @@ class GoogleContent extends Command
         do {
             try {
                 $productStatuses = $service->productstatuses->listProductstatuses(config('services.google.merchant_center_id'), [
-                    'maxResults' => 250,
+                    'maxResults' => 2,
                     'pageToken' => $pageToken
                 ]);
 
-                dd($productStatuses);
-
                 foreach ($productStatuses->getResources() as $productStatus) {
                     if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
+                        dd($productStatus->getItemLevelIssues());
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
                             if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
                                 $disapprovedProductIds[] = $productStatus->getProductId();
