@@ -2753,7 +2753,7 @@ class ProductController extends Controller
         $valid_product_ids = ProductOption::whereIn('option_id', $valid_option_ids)->pluck('product_id');
 
         // Final product filtering
-        $products = $products->whereIn('product_id', $valid_product_ids)->paginate($per_page);
+        $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
