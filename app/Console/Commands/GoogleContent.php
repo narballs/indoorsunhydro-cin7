@@ -63,7 +63,7 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
-            $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
+            $this->getDisapprovedProductIds($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
@@ -320,8 +320,6 @@ class GoogleContent extends Command
                                     $service->products->delete(config('services.google.merchant_center_id'), $productId);
                                     $this->info('Product with ID ' . $productId . ' deleted from Google Merchant Center.');
                                 } catch (\Exception $e) {
-                                    // report($e);
-                                    // $this->error('disapproved'.' '. $e);
                                     $this->error('Failed to delete product with ID ' . $productId . ' from Google Merchant Center.');
                                 }
                             }
@@ -390,7 +388,7 @@ class GoogleContent extends Command
         do {
             try {
                 $productStatuses = $service->productstatuses->listProductstatuses(config('services.google.merchant_center_id'), [
-                    'maxResults' => 5,
+                    'maxResults' => 250,
                     'pageToken' => $pageToken
                 ]);
 
@@ -400,7 +398,6 @@ class GoogleContent extends Command
                             if ($issue->getServability() === 'disapproved') {
                                 dd($productStatus->getItemLevelIssues() , '41' , $issue , '51');
                             }
-                            dd($productStatus->getItemLevelIssues() , '4' , $issue , '5');
                             if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
                                 $disapprovedProductIds[] = $productStatus->getProductId();
                                 break; // No need to check further for this product
