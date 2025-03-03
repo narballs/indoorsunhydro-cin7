@@ -63,6 +63,7 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
+            $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
             $result = $this->insertProducts($client, $token);
@@ -389,13 +390,14 @@ class GoogleContent extends Command
         do {
             try {
                 $productStatuses = $service->productstatuses->listProductstatuses(config('services.google.merchant_center_id'), [
-                    'maxResults' => 250,
+                    'maxResults' => 5,
                     'pageToken' => $pageToken
                 ]);
 
                 foreach ($productStatuses->getResources() as $productStatus) {
                     if (!empty($productStatus) && !empty($productStatus->getItemLevelIssues())) {
                         foreach ($productStatus->getItemLevelIssues() as $issue) {
+                            dd($productStatus->getItemLevelIssues() , '4' , $issue , '5');
                             if (isset($issue['severity']) && strtolower($issue['severity']) === 'disapproved') {
                                 $disapprovedProductIds[] = $productStatus->getProductId();
                                 break; // No need to check further for this product
