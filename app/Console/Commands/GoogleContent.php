@@ -63,9 +63,12 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
+            $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
+            $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
+            $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
-            $result = $this->insertProducts($client, $token);
+            $result = $this->insertProducts($client, $token  , $disapprovedProducts , $inactiveProducts , $zeroPriceProducts);
             $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
             if (!empty($gmcLog)) {
                 $gmcLog->last_updated_at = now();
@@ -92,13 +95,13 @@ class GoogleContent extends Command
      * @param array $token
      * @return mixed
      */
-    private function insertProducts($client , $token)
+    private function insertProducts($client , $token , $disapprovedProducts , $inactiveProducts , $zeroPriceProducts)
     {
         
         $price_column = null;
-        $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
-        $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
-        $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
+        // $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
+        // $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
+        // $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
