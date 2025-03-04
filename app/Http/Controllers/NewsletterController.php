@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Exports\PayoutBalanceExport;
 use App\Mail\NewsletterMail;
 use App\Models\NewsletterSubscriberTemplate;
 use Illuminate\Http\Request;
@@ -8,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\NewsletterSubscription;
 use App\Models\NewsletterTemplate;
+use App\Models\Payout;
+use App\Models\PayoutBalance;
 use App\Models\SubscriberEmailList;
 use App\Models\SubscriberList;
 use App\Models\User;
@@ -23,7 +26,7 @@ class NewsletterController extends Controller
 {
     function __construct()
     {
-        $this->middleware('role:Newsletter|Sale Payments');
+        $this->middleware('role:Newsletter|Sale Payments|Payouts');
     }
     public function newsletter_dashboard (Request $request)
     {
@@ -32,15 +35,33 @@ class NewsletterController extends Controller
         $role_id = $model_has_roles->role_id;
         $role = DB::table('roles')->where('id', $role_id)->first();
         $role_name = $role->name;
-        // if ($user->hasRole(['Newsletter'])) {
-        //     return view('newsletter_layout.dashboard');
-        // } else {
-        //     return redirect()->route('home');
-        // }
-
-        if (($role_name == 'Newsletter' ) || ($role_name == 'Sale Payments')) {
+        if (($role_name == 'Newsletter' ) || ($role_name == 'Sale Payments') || ($role_name == 'Payouts')) {
             $templates = NewsletterTemplate::all();
-            return view('newsletter_layout.newsletter_dashboard' , compact('templates'));
+            $payouts_query = Payout::with('payoutBalances')->orderBy('arrive_date', 'desc');
+
+            // Search by payout ID or destination name
+            if ($request->has('search') && !empty($request->search)) {
+                $payouts_query->where(function ($query) use ($request) {
+                    $query->where('amount', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            // Date filtering
+            if ($request->has('last_14_days')) {
+                $payouts_query->where('arrive_date', '>=', now()->subDays(14));
+            } elseif ($request->has('this_month')) {
+                $payouts_query->whereYear('arrive_date', now()->year)
+                            ->whereMonth('arrive_date', now()->month);
+            } elseif ($request->has('last_month')) {
+                $payouts_query->whereYear('arrive_date', now()->subMonth()->year)
+                            ->whereMonth('arrive_date', now()->subMonth()->month);
+            } elseif ($request->has('all_time')) {
+                // No filter needed, show all records
+            }
+
+            // Paginate results
+            $payouts = $payouts_query->get();
+            return view('newsletter_layout.newsletter_dashboard' , compact('templates' , 'payouts'));
         } else {
             return redirect()->route('home');
         }

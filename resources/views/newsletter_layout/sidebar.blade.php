@@ -2,9 +2,11 @@
 
 	<i class="brand-image mx-4 fa fa-user fw-4 fs-2 my-3"></i>
 	<br/>
+	@if (!empty(auth()->user()->first_name) || !empty(auth()->user()->last_name))
 	<span class="brand-text font-weight-light fw-6 mx-3 px-2"><b>{{strtoupper(auth()->user()->first_name . ' ' .auth()->user()->last_name)}}</b></span>
+	@endif
 	<!-- Sidebar -->
-	<div class="sidebar">
+	<div class="sidebar mt-2">
 
 		<!-- Sidebar Menu -->
 		<nav class="mt-2">
@@ -33,6 +35,16 @@
 						<i class="nav-icon fas fa-list"></i>
 						<p>
 							Sale Payments
+						</p>
+					</a>
+				</li>
+				@endif
+				@if (auth()->user()->hasRole(['Payouts']))
+				<li class="nav-item  ">
+					<a href="{{url('/admin/payouts')}}" class="nav-link ">
+						<i class="nav-icon fas fa-list"></i>
+						<p>
+							Payouts
 						</p>
 					</a>
 				</li>
