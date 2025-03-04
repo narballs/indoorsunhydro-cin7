@@ -2296,7 +2296,7 @@ class CheckoutController extends Controller
             } 
             else {
                 $user_id = auth()->user()->id;
-                if ($user->hasRole(['Newsletter'])) {
+                if ($user->hasRole(['Newsletter']) || $user->hasRole(['Sale Payments']) || $user->hasRole(['Payouts'])) {
                     session()->flash('message', 'Successfully Logged in');
                     return redirect()->route('newsletter_dashboard');
                 }

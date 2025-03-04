@@ -37,6 +37,7 @@ use App\Http\Controllers\ProductStockNotificationController;
 use App\Http\Controllers\GetProductDimensionController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NewsletterTemplateController;
+use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\ShippingQuoteSettingController;
 use App\Http\Controllers\SmsController;
@@ -67,7 +68,9 @@ Route::get('/auth/google/callback', [GoogleContentController::class, 'handleCall
 Route::get('/handleCallbackRetrieve', [GoogleContentController::class, 'handleCallbackRetrieve'])->name('handleCallbackRetrieve');
 Route::get('/google/insert-products', [GoogleContentController::class, 'insertProducts'])->name('google.insertProducts');
 Route::resource('landing-page', LandingPageController::class);
-Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::group(['middleware' => ['isRestricted']], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
+});
 Route::get('/wholesale/account/create', [UserController::class, 'create_wholesale_account'])->name('create_wholesale_account');
 Route::get('/wholesale/account/thankyou/{id}', [UserController::class, 'wholesaleuser_thankyou'])->name('wholesaleuser_thankyou');
 Route::get('/wholesale/account/edit/{id}', [UserController::class, 'edit_wholesale_account'])->name('edit_wholesale_account');
@@ -439,9 +442,9 @@ Route::group(['middleware' => ['auth']], function () {
         
         Route::get('/get-shipstation-api-logs', [AdminSettingsController::class, 'get_shipstation_api_logs'])->name('get_shipstation_api_logs');
 
-        Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
-        Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('payouts.details');
-        Route::get('/transactions_export/{id}', [OrderController::class, 'transactions_export'])->name('transactions_export');
+        // Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
+        // Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('payouts.details');
+        // Route::get('/transactions_export/{id}', [OrderController::class, 'transactions_export'])->name('transactions_export');
         // Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
 
         
@@ -527,6 +530,14 @@ Route::post('/newsletter-templates/upload/image', [NewsletterTemplateController:
 //sales payments
 Route::get('/sale/payments', [SalePaymentsController::class, 'sale_payments'])->name('sale_payments');
 Route::get('/sale/payments/show/{Id}', [SalePaymentsController::class, 'sale_payments_show'])->name('sale-payments.show');
+
+
+
+// payouts 
+
+Route::get('/payouts', [PayoutController::class, 'payouts'])->name('payouts');
+Route::get('/payout/details/{id}', [PayoutController::class, 'payouts_details'])->name('payouts.details');
+Route::get('/transactions_export/{id}', [PayoutController::class, 'transactions_export'])->name('transactions_export');
 
 
 // Assign templates to users
