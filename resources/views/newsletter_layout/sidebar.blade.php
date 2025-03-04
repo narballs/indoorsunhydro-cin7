@@ -41,7 +41,7 @@
 				@endif
 				@if (auth()->user()->hasRole(['Payouts']))
 				<li class="nav-item  ">
-					<a href="{{url('/admin/payouts')}}" class="nav-link ">
+					<a href="{{url('/payouts')}}" class="nav-link ">
 						<i class="nav-icon fas fa-list"></i>
 						<p>
 							Payouts

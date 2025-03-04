@@ -79,7 +79,7 @@
     @if (auth()->user()->hasRole(['Payouts']))
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card mt-2">
                     <div class="card-header">
                         <h3 class="card-title">
                             Payouts
@@ -104,7 +104,7 @@
                             <!-- Search Input -->
                             <div class="col-md-4">
                                 <div class="has-search">
-                                    <form method="get" action="/admin/payouts" class="mb-2">
+                                    <form method="get" action="/payouts" class="mb-2">
                                         <div class="input-group">
                                             {{-- <span class="fa fa-search form-control-feedback"></span> --}}
                                             <input type="text" class="form-control" id="search" name="search" 
@@ -116,25 +116,25 @@
                         
                             <!-- Filter Buttons -->
                             <div class="col-md-2">
-                                <form method="get" action="/admin/payouts" class="mb-2">
+                                <form method="get" action="/payouts" class="mb-2">
                                     <input type="submit" class="btn {{ request()->has('last_14_days') ? 'btn-success' : 'btn-info' }} w-100"
                                         name="last_14_days" value="Last 14 Days">
                                 </form>
                             </div>
                             <div class="col-md-2">
-                                <form method="get" action="/admin/payouts" class="mb-2">
+                                <form method="get" action="/payouts" class="mb-2">
                                     <input type="submit" class="btn {{ request()->has('this_month') ? 'btn-success' : 'btn-info' }} w-100"
                                         name="this_month" value="This Month">
                                 </form>
                             </div>
                             <div class="col-md-2">
-                                <form method="get" action="/admin/payouts" class="mb-2">
+                                <form method="get" action="/payouts" class="mb-2">
                                     <input type="submit" class="btn {{ request()->has('last_month') ? 'btn-success' : 'btn-info' }} w-100"
                                         name="last_month" value="Last Month">
                                 </form>
                             </div>
                             <div class="col-md-2">
-                                <form method="get" action="/admin/payouts" class="mb-2">
+                                <form method="get" action="/payouts" class="mb-2">
                                     <input type="submit" class="btn {{ request()->has('all_time') ? 'btn-success' : 'btn-info' }} w-100"
                                         name="all_time" value="All Time">
                                 </form>
