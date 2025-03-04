@@ -2571,64 +2571,6 @@ class OrderController extends Controller
     }
 
 
-    public function payouts(Request $request)
-    {
-        $payouts_query = Payout::with('payoutBalances')->orderBy('arrive_date', 'desc');
-
-        // Search by payout ID or destination name
-        if ($request->has('search') && !empty($request->search)) {
-            $payouts_query->where(function ($query) use ($request) {
-                $query->where('amount', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        // Date filtering
-        if ($request->has('last_14_days')) {
-            $payouts_query->where('arrive_date', '>=', now()->subDays(14));
-        } elseif ($request->has('this_month')) {
-            $payouts_query->whereYear('arrive_date', now()->year)
-                        ->whereMonth('arrive_date', now()->month);
-        } elseif ($request->has('last_month')) {
-            $payouts_query->whereYear('arrive_date', now()->subMonth()->year)
-                        ->whereMonth('arrive_date', now()->subMonth()->month);
-        } elseif ($request->has('all_time')) {
-            // No filter needed, show all records
-        }
-
-        // Paginate results
-        $payouts = $payouts_query->get();
-
-        return view('admin.payouts.index', compact('payouts'));
-    }
-
-
-
-    public function payouts_details($id) {
-        $payout_balances = PayoutBalance::where('payout_id', $id)->get(); 
-
-        return view('admin.payouts.details', compact('payout_balances' , 'id'));
-    }
-
-
-    public function transactions_export(Request $request,  $id) {
-        $payout = Payout::findOrFail($id);
-
-        $hide_radar = $request->boolean('hide_radar', false);
-        $hide_chargebacks = $request->boolean('hide_Chargeback', false);
-
-        // Set file name dynamically
-        $fileName = "Payout_Transactions_{$id}.xlsx";
-
-        // Return the Excel file
-        return Excel::download(new PayoutBalanceExport($id, $hide_radar, $hide_chargebacks), $fileName);
-
-
-    }
-
-
-
-
-
 
     // public function payout_details(Request $request)
     // {
