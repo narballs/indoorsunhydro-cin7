@@ -11,7 +11,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "geocoder-php/google-maps-provider": "^4.6",
         "google/apiclient": "^2.7",
-        "googleads/google-ads-php": "^20.0",
+        "googleads/google-ads-php": "^10.0",
         "guzzlehttp/guzzle": "^7.4",
         "intervention/image": "^2.7",
         "jenssegers/agent": "^2.6",
