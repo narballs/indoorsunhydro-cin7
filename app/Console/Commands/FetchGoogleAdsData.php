@@ -8,9 +8,8 @@ use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\ApiCore\ApiException;
 use App\Models\GoogleAdsData;
 use Carbon\Carbon;
-use Google\Ads\GoogleAds\Lib\V17\GoogleAdsClientBuilder as V17GoogleAdsClientBuilder;
-use Google\Ads\GoogleAds\V17\Services\GoogleAdsServiceClient;
-use Google\Ads\GoogleAds\V17\Services\SearchGoogleAdsRequest;
+use Google\Ads\GoogleAds\V8\Services\SearchGoogleAdsRequest;
+use Google\Ads\GoogleAds\Lib\V8\GoogleAdsClientBuilder as V8GoogleAdsClientBuilder;
 
 class FetchGoogleAdsData extends Command {
     protected $signature = 'googleads:fetch';
@@ -36,8 +35,8 @@ class FetchGoogleAdsData extends Command {
                 json_decode(file_get_contents($keyFilePath), true)
             );
 
-            // Initialize Google Ads API Client
-            $client = (new V17GoogleAdsClientBuilder())
+            // ✅ Correctly Initialize Google Ads API Client
+            $client = (new V8GoogleAdsClientBuilder())
                 ->withDeveloperToken($developer_token)
                 ->withOAuth2Credential($credentials)
                 ->withLoginCustomerId($manager_id) // Use MCC ID if managing multiple accounts
@@ -45,33 +44,28 @@ class FetchGoogleAdsData extends Command {
 
             $googleAdsServiceClient = $client->getGoogleAdsServiceClient();
 
-            // Define Google Ads Query
+            // ✅ Define Google Ads Query
             $query = "
                 SELECT 
                     segments.date, 
                     metrics.clicks, 
                     metrics.impressions, 
-                    metrics.cost_micros
+                    metrics.cost_micros,
+                    campaign.id
                 FROM campaign
             ";
 
-            // ✅ Fix: Use `SearchGoogleAdsRequest` instead of passing query as a string
-            $request = new SearchGoogleAdsRequest([
-                'customer_id' => $customer_id,
-                'query' => $query
-            ]);
-
-            // Send request to Google Ads API
-            $response = $googleAdsServiceClient->search($request);
+            // ✅ Fix: Use `search()` correctly (pass customer_id and query string)
+            $response = $googleAdsServiceClient->search($customer_id, $query);
 
             foreach ($response->iterateAllElements() as $googleAdsRow) {
                 $date = Carbon::parse($googleAdsRow->getSegments()->getDate());
                 $clicks = $googleAdsRow->getMetrics()->getClicks();
                 $impressions = $googleAdsRow->getMetrics()->getImpressions();
                 $spend = $googleAdsRow->getMetrics()->getCostMicros() / 1000000; // Convert micros to actual currency
-                $id = $googleAdsRow->getCampaign()->getId();
+                $id = $googleAdsRow->getCampaign()->getId(); // Get Campaign ID
 
-                // Store data in database
+                // ✅ Store data in the database correctly
                 GoogleAdsData::updateOrCreate(
                     ['google_ads_id' => $id],
                     ['clicks' => $clicks, 'impressions' => $impressions, 'spend' => $spend, 'date' => $date]
