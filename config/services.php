@@ -62,6 +62,9 @@ return [
         'client_secret' => env('GOOGLE_OAUTH_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_OAUTH_REDIRECT_URI'),
         'merchant_center_id' => env('GOOGLE_MERCHANT_CENTER_ID'),
+        'customer_id' => env('Google_Ads_Customer_Id'),
+        'developer_token' => env('Developer_Token'),
+        'manager_id' => env('Google_Ads_Manager_Id'),
         'scopes' => [
             'https://www.googleapis.com/auth/content', // Add other necessary scopes
         ],
