@@ -88,7 +88,10 @@
                     <p>{{$address2}}</p>
                 </td>
                 <td style="width: 30%;vertical-align:top;">
-                    <img src="{{ url('/theme/img/' . \App\Helpers\SettingHelper::getSetting('logo_name')) }}" style="width: 100%;">
+                    @php
+                        $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); 
+                    @endphp
+                    <img src="{{ url('/theme/img/' . $logo_name) }}" alt="logo" style="width: 100%;">
                 </td>
             </tr>
         </table>
