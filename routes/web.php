@@ -536,7 +536,7 @@ Route::get('/sale/payments/show/{Id}', [SalePaymentsController::class, 'sale_pay
 // payouts 
 
 Route::get('/payouts', [PayoutController::class, 'payouts'])->name('payouts');
-Route::get('/payout/details/{id}', [PayoutController::class, 'payouts_details'])->name('admin.payouts.details');
+Route::get('/payout/details/{id}', [PayoutController::class, 'payouts_details'])->name('payouts.details');
 Route::get('/transactions_export/{id}', [PayoutController::class, 'transactions_export'])->name('transactions_export');
 
 
