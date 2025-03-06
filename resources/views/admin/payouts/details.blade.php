@@ -26,7 +26,7 @@
                     <h3 class="order_heading">Payouts Transactions</h3>
                 </div>
                 <div class="col-md-12 my-2 d-flex align-items-center">
-                    <a href="{{ route('transactions_export' , $id) }}" class="btn btn-primary mx-5 text-white">Export</a>
+                    <a href="{{ route('admin.transactions_export' , $id) }}" class="btn btn-primary mx-5 text-white">Export</a>
                     <div class="d-flex align-items-center">
                         <div>
                             <input type="checkbox" name="hide_radar" id="hide_radar" onclick="hideRadar()">
