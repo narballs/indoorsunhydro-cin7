@@ -1017,6 +1017,7 @@ class CheckoutController extends Controller
                 if(!empty($currentOrder)) {
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
+                        $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;
                         $currentOrder->charge_id = $chargeId;
                         $currentOrder->save();
     
@@ -1187,6 +1188,7 @@ class CheckoutController extends Controller
                 if(!empty($currentOrder)) {
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
+                        $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;
                         $currentOrder->charge_id = $chargeId;
                         $currentOrder->save();
     
