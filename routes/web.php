@@ -443,8 +443,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get-shipstation-api-logs', [AdminSettingsController::class, 'get_shipstation_api_logs'])->name('get_shipstation_api_logs');
 
         Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
-        Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('payouts.details');
-        Route::get('/transactions_export/{id}', [OrderController::class, 'transactions_export'])->name('transactions_export');
+        Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('admin.payouts.details');
+        Route::get('/transactions_export/{id}', [OrderController::class, 'transactions_export'])->name('admin.transactions_export');
         // Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
 
         
@@ -536,7 +536,7 @@ Route::get('/sale/payments/show/{Id}', [SalePaymentsController::class, 'sale_pay
 // payouts 
 
 Route::get('/payouts', [PayoutController::class, 'payouts'])->name('payouts');
-Route::get('/payout/details/{id}', [PayoutController::class, 'payouts_details'])->name('payouts.details');
+Route::get('/payout/details/{id}', [PayoutController::class, 'payouts_details'])->name('admin.payouts.details');
 Route::get('/transactions_export/{id}', [PayoutController::class, 'transactions_export'])->name('transactions_export');
 
 

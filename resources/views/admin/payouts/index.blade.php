@@ -97,7 +97,7 @@
                                 @foreach ($payouts as $payout)
                                     <tr>
                                         <td>
-                                            <a href="{{ route('payouts.details', $payout->id) }}" class="text-dark" style="font-weight: 600;">{{'US$'. number_format($payout->amount , 2) }}</a>
+                                            <a href="{{ route('admin.payouts.details', $payout->id) }}" class="text-dark" style="font-weight: 600;">{{'US$'. number_format($payout->amount , 2) }}</a>
                                         </td>
                                         <td>{{ $payout->status }}</td>
                                         <td>{{ $payout->type }}</td>
@@ -107,7 +107,7 @@
                                         <td>{{ $payout->arrive_date }}</td>
             
                                         <td>
-                                            <a href="{{ route('payouts.details', $payout->id) }}" class="btn btn-primary btn-sm text-white">Transactions</a>
+                                            <a href="{{ route('admin.payouts.details', $payout->id) }}" class="btn btn-primary btn-sm text-white">Transactions</a>
                                         </td>
                                     </tr>
                                 @endforeach
