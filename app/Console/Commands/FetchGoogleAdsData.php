@@ -120,7 +120,6 @@ class FetchGoogleAdsData extends Command {
         try {
             $client_id = config('services.google.client_id');
             $client_secret = config('services.google.client_secret');
-            $refresh_token = config('services.google.refresh_token'); // Stored in .env or the config
 
             $url = "https://oauth2.googleapis.com/token";
 
