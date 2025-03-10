@@ -34,11 +34,17 @@ class FetchGoogleAdsData extends Command
             $token = $client->fetchAccessTokenWithAssertion();
 
             if (isset($token['error'])) {
-                Log::error("Error in FetchGoogleAdsData: " . json_encode($token));
+                Log::error("Error in FetchGoogleAdsData: " . $token['error']);
             }
 
-            // Use the refresh token obtained from $token to get an access token for API requests
-            $access_token = $this->getAccessToken($token['access_token'], $token['refresh_token']);
+            // Check if the token contains an access_token
+            if (!isset($token['access_token'])) {
+                Log::error("Error in FetchGoogleAdsData: Access token not found.");
+            }
+
+            // If no refresh token, use the access token only (service accounts may not have refresh tokens)
+            $access_token = $token['access_token'];
+            $refresh_token = isset($token['refresh_token']) ? $token['refresh_token'] : null;
 
             // Fetch Google Ads data
             $data = $this->fetchGoogleAdsData($access_token);
@@ -101,7 +107,7 @@ class FetchGoogleAdsData extends Command
             // Initialize cURL session
             $ch = curl_init();
             if ($ch === false) {
-                Log::error("Failed to initialize cURL session.");
+                throw new Exception("Failed to initialize cURL session.");
             }
 
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -121,7 +127,7 @@ class FetchGoogleAdsData extends Command
             if (curl_errno($ch)) {
                 $error_message = curl_error($ch);
                 curl_close($ch);
-                Log::error("cURL Error: $error_message");
+                Log::error("cURL Error: " . $error_message);
             }
 
             // Close cURL handle
@@ -137,84 +143,6 @@ class FetchGoogleAdsData extends Command
             // Optionally log the error details
             Log::error("Error in fetchGoogleAdsData: " . $e->getMessage());
             return [];
-        }
-    }
-
-    public function getAccessToken($access_token, $refresh_token)
-    {
-        try {
-            // If the access token is expired, refresh it using the refresh token
-            if ($this->isAccessTokenExpired($access_token)) {
-                return $this->refreshAccessToken($refresh_token);
-            }
-
-            return $access_token;
-
-        } catch (Exception $e) {
-            $this->error("Error: " . $e->getMessage());
-            // Optionally log the error details
-            Log::error("Error in getAccessToken: " . $e->getMessage());
-            return null;
-        }
-    }
-
-    public function isAccessTokenExpired($access_token)
-    {
-        // Logic to check if the access token is expired based on the response or timestamp
-        // This is a simplified check; in a production environment, check for token expiration properly
-        return false; // Placeholder, replace with actual logic
-    }
-
-    public function refreshAccessToken($refresh_token)
-    {
-        try {
-            $url = "https://oauth2.googleapis.com/token";
-
-            $data = [
-                'client_id' => config('services.google.client_id'),
-                'client_secret' => config('services.google.client_secret'),
-                'refresh_token' => $refresh_token,
-                'grant_type' => 'refresh_token'
-            ];
-
-            // Initialize cURL session
-            $ch = curl_init();
-            if ($ch === false) {
-                Log::error("Failed to initialize cURL session.");
-            }
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            // Execute cURL request for access token
-            $response = curl_exec($ch);
-
-            // Check for cURL errors
-            if (curl_errno($ch)) {
-                $error_message = curl_error($ch);
-                curl_close($ch);
-                Log::error("cURL Error: $error_message");
-            }
-
-            // Close cURL handle
-            curl_close($ch);
-
-            $result = json_decode($response, true);
-
-            if (isset($result['access_token'])) {
-                return $result['access_token'];
-            } else {
-                Log::error("Error in refreshAccessToken: " . json_encode($result));
-            }
-
-        } catch (Exception $e) {
-            // Catch any exceptions during access token retrieval
-            $this->error("Error: " . $e->getMessage());
-            // Optionally log the error details
-            Log::error("Error in refreshAccessToken: " . $e->getMessage());
-            return null;
         }
     }
 }
