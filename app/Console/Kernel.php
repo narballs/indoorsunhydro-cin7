@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('auto:notify')->everyThreeMinutes();
         $schedule->command('admin:stockrequest')->weekly();
         $schedule->command('sync:payouts')->daily();
-        // $schedule->command('sync:gmc')->hourly();
+        $schedule->command('sync:gmc')->hourly();
         $schedule->command('sync:ai_suggested_prices')->hourly();
         // $schedule->command('update:lags-products')->hourly();
         $schedule->command('ContactsTo:Users')->hourly();
