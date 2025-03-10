@@ -2,80 +2,152 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Google\Ads\GoogleAds\GoogleAdsClient;
-use Google\Ads\GoogleAds\GoogleAdsClientBuilder;
-use Google\Auth\Credentials\ServiceAccountCredentials;
-use Google\ApiCore\ApiException;
 use App\Models\GoogleAdsData;
 use Carbon\Carbon;
-use Google\Ads\GoogleAds\V8\Services\SearchGoogleAdsRequest;
-use Google\Ads\GoogleAds\Lib\V8\GoogleAdsClientBuilder as V8GoogleAdsClientBuilder;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class FetchGoogleAdsData extends Command {
     protected $signature = 'googleads:fetch';
     protected $description = 'Fetch daily Google Ads data and store it in the database';
 
-    public function handle() {
+    public function handle()
+    {
         try {
-            // Load environment variables
-            $customer_id = config('services.google.customer_id');
-            $developer_token = config('services.google.developer_token');
-            $manager_id = config('services.google.manager_id');
-            $keyFilePath = base_path('master_credentials.json'); // Ensure file exists
+            // Fetch Google Ads data
+            $data = $this->fetchGoogleAdsData();
 
-            // Validate credentials file
-            if (!file_exists($keyFilePath)) {
-                $this->error("Service account JSON file not found: {$keyFilePath}");
+            if (!isset($data['results'])) {
+                $this->error("No data returned from Google Ads API.");
                 return;
             }
 
-            // Load Google Ads Service Account Credentials
-            $credentials = new ServiceAccountCredentials(
-                ['https://www.googleapis.com/auth/adwords'],
-                json_decode(file_get_contents($keyFilePath), true)
-            );
+            foreach ($data['results'] as $row) {
+                $id = $row['campaign']['id'];
+                $clicks = $row['metrics']['clicks'];
+                $impressions = $row['metrics']['impressions'];
+                $spend = $row['metrics']['costMicros'] / 1e6; // Convert micros to currency
+                $date = $row['segments']['date'];
 
-            // ✅ Correctly Initialize Google Ads API Client
-            $client = (new V8GoogleAdsClientBuilder())
-                ->withDeveloperToken($developer_token)
-                ->withOAuth2Credential($credentials)
-                ->withLoginCustomerId($manager_id) // Use MCC ID if managing multiple accounts
-                ->build();
-
-            $googleAdsServiceClient = $client->getGoogleAdsServiceClient();
-
-            // ✅ Define Google Ads Query
-            $query = "
-                SELECT 
-                    segments.date, 
-                    metrics.clicks, 
-                    metrics.impressions, 
-                    metrics.cost_micros,
-                    campaign.id
-                FROM campaign
-            ";
-
-            // ✅ Fix: Use `search()` correctly (pass customer_id and query string)
-            $response = $googleAdsServiceClient->search($customer_id, $query);
-
-            foreach ($response->iterateAllElements() as $googleAdsRow) {
-                $date = Carbon::parse($googleAdsRow->getSegments()->getDate());
-                $clicks = $googleAdsRow->getMetrics()->getClicks();
-                $impressions = $googleAdsRow->getMetrics()->getImpressions();
-                $spend = $googleAdsRow->getMetrics()->getCostMicros() / 1000000; // Convert micros to actual currency
-                $id = $googleAdsRow->getCampaign()->getId(); // Get Campaign ID
-
-                // ✅ Store data in the database correctly
+                // Store or update data in the database
                 GoogleAdsData::updateOrCreate(
                     ['google_ads_id' => $id],
                     ['clicks' => $clicks, 'impressions' => $impressions, 'spend' => $spend, 'date' => $date]
                 );
             }
 
-            $this->info('Google Ads data updated successfully.');
+            $this->info("Google Ads data successfully fetched and stored.");
 
-        } catch (ApiException $e) {
-            $this->error('Google Ads API Error: ' . $e->getMessage());
+        } catch (Exception $e) {
+            // Catch any exceptions and log the error
+            $this->error("Error: " . $e->getMessage());
+            // Optionally log the error details
+            Log::error("Error in FetchGoogleAdsData: " . $e->getMessage());
+        }
+    }
+
+    public function fetchGoogleAdsData()
+    {
+        try {
+            $customer_id = config('services.google.customer_id');
+            $developer_token = config('services.google.developer_token');
+            $access_token = $this->getAccessToken();
+
+            if (!$access_token) {
+                throw new Exception("Failed to get access token.");
+            }
+
+            $url = "https://googleads.googleapis.com/v12/customers/{$customer_id}/googleAds:search";
+
+            $query = [
+                'query' => "
+                    SELECT
+                        campaign.id,
+                        campaign.name,
+                        metrics.clicks,
+                        metrics.impressions,
+                        metrics.cost_micros,
+                        segments.date
+                    FROM campaign
+                    WHERE segments.date DURING LAST_30_DAYS
+                "
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Authorization: Bearer $access_token",
+                "developer-token: $developer_token",
+                "Content-Type: application/json"
+            ]);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($query));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            if (curl_errno($ch)) {
+                Log::error("Curl Error: " . curl_error($ch));
+            }
+
+            $result = json_decode($response, true);
+
+            return $result;
+
+        } catch (Exception $e) {
+            // Catch any exceptions during API call
+            $this->error("Error: " . $e->getMessage());
+            // Optionally log the error details
+            Log::error("Error in fetchGoogleAdsData: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getAccessToken()
+    {
+        try {
+            $client_id = config('services.google.client_id');
+            $client_secret = config('services.google.client_secret');
+            $refresh_token = config('services.google.refresh_token'); // Stored in .env or the config
+
+            $url = "https://oauth2.googleapis.com/token";
+
+            $data = [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'refresh_token' => $refresh_token,
+                'grant_type' => 'refresh_token'
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            if (curl_errno($ch)) {
+                throw new Exception("Curl Error: " . curl_error($ch));
+            }
+
+            $result = json_decode($response, true);
+
+            if (isset($result['access_token'])) {
+                return $result['access_token'];
+            } else {
+                Log::error("Error in getAccessToken: " . json_encode($result));
+                return null;
+            }
+
+        } catch (Exception $e) {
+            // Catch any exceptions during access token retrieval
+            $this->error("Error: " . $e->getMessage());
+            // Optionally log the error details
+            Log::error("Error in getAccessToken: " . $e->getMessage());
+            return null;
         }
     }
 }
