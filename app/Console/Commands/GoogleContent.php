@@ -63,9 +63,12 @@ class GoogleContent extends Command
         $token = $client->fetchAccessTokenWithAssertion();
         // Check if access token is retrieved successfully
         if (isset($token['access_token'])) {
+            $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
+            $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
+            $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
             $this->removeDisapprovedProducts($client, $token);
             $this->delete_inactive_products($client, $token);
-            $result = $this->insertProducts($client, $token);
+            $result = $this->insertProducts($client, $token , $disapprovedProducts , $inactiveProducts , $zeroPriceProducts);
             $gmcLog = GmcLog::orderBy('created_at', 'desc')->first();
             if (!empty($gmcLog)) {
                 $gmcLog->last_updated_at = now();
@@ -92,13 +95,15 @@ class GoogleContent extends Command
      * @param array $token
      * @return mixed
      */
-    private function insertProducts($client , $token)
+    private function insertProducts($client , $token, $disapprovedProducts, $inactiveProducts, $zeroPriceProducts)
     {
         
         $price_column = null;
-        $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
-        $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
-        $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
+        // $disapprovedProducts = $this->getDisapprovedProductIds($client, $token);
+        // $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
+        // $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
+        $disapprovedProducts = array_merge($disapprovedProducts, $inactiveProducts, $zeroPriceProducts);
+        Log::info('Disapproved Products: ' . json_encode($disapprovedProducts));
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
@@ -128,15 +133,11 @@ class GoogleContent extends Command
         // dd($products->count());
         if (count($products) > 0) {
             foreach ($products as $product) {
-
-                if (in_array($product->code, $disapprovedProducts) || in_array($product->code, $inactiveProducts) || in_array($product->code, $zeroPriceProducts)) {
-                    Log::info('Disapproved: ' . in_array($product->id, $disapprovedProducts));
-                    Log::info('Inactive: ' . in_array($product->id, $inactiveProducts));
-                    Log::info('Zero price: ' . in_array($product->id, $zeroPriceProducts));
-
+                
+                if (in_array($product->code, $disapprovedProducts)) {
                     continue;
                 }
-                
+
                 if (count($product->options) > 0) {
                     foreach ($product->options as $option) {
                         if ((count($option->price) > 0)  ) {
