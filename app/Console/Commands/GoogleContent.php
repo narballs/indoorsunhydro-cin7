@@ -118,6 +118,7 @@ class GoogleContent extends Command
         $product_options_ids = ProductOption::whereIn('product_id' , $all_products_ids)
         ->where('status', '!=', 'Disabled')
         ->where('optionWeight', '>', 0)
+        ->where('stockAvailable', '>', 0)
         ->pluck('option_id')->toArray();
         $product_pricing_option_ids = Pricingnew::whereIn('option_id' , $product_options_ids)
         // ->where($price_column , '!=', null)
