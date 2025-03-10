@@ -84,9 +84,9 @@ class Kernel extends ConsoleKernel
                             $mappedDay = strtoupper($dayMap[$currentDay]);
                             $expectedDay = strtoupper(trim($day));
 
-                            Log::info("Checking for {$expectedDay}: {$startTime} - {$endTime}");
-                            Log::info("Current Day: {$currentDay} ({$mappedDay}) | Expected: {$expectedDay}");
-                            Log::info("Current Time: {$currentTime} | Scheduled: {$startTime} - {$endTime}");
+                            // Log::info("Checking for {$expectedDay}: {$startTime} - {$endTime}");
+                            // Log::info("Current Day: {$currentDay} ({$mappedDay}) | Expected: {$expectedDay}");
+                            // Log::info("Current Time: {$currentTime} | Scheduled: {$startTime} - {$endTime}");
 
                             LabelLog::create([
                                 'description' => "Checking for {$expectedDay}: {$startTime} - {$endTime}"
