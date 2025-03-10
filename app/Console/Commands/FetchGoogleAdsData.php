@@ -73,7 +73,12 @@ class FetchGoogleAdsData extends Command {
                 "
             ];
 
+            // Initialize cURL session
             $ch = curl_init();
+            if ($ch === false) {
+                throw new Exception("Failed to initialize cURL session.");
+            }
+
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 "Authorization: Bearer $access_token",
@@ -84,12 +89,18 @@ class FetchGoogleAdsData extends Command {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($query));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+            // Execute cURL request
             $response = curl_exec($ch);
-            curl_close($ch);
 
+            // Check for cURL errors
             if (curl_errno($ch)) {
-                Log::error("Curl Error: " . curl_error($ch));
+                $error_message = curl_error($ch);
+                curl_close($ch);
+                throw new Exception("cURL Error: $error_message");
             }
+
+            // Close cURL handle
+            curl_close($ch);
 
             $result = json_decode($response, true);
 
@@ -120,18 +131,29 @@ class FetchGoogleAdsData extends Command {
                 'grant_type' => 'refresh_token'
             ];
 
+            // Initialize cURL session
             $ch = curl_init();
+            if ($ch === false) {
+                throw new Exception("Failed to initialize cURL session for access token.");
+            }
+
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+            // Execute cURL request for access token
             $response = curl_exec($ch);
-            curl_close($ch);
 
+            // Check for cURL errors
             if (curl_errno($ch)) {
-                throw new Exception("Curl Error: " . curl_error($ch));
+                $error_message = curl_error($ch);
+                curl_close($ch);
+                Log::error("cURL Error: $error_message");
             }
+
+            // Close cURL handle
+            curl_close($ch);
 
             $result = json_decode($response, true);
 
@@ -139,7 +161,6 @@ class FetchGoogleAdsData extends Command {
                 return $result['access_token'];
             } else {
                 Log::error("Error in getAccessToken: " . json_encode($result));
-                return null;
             }
 
         } catch (Exception $e) {
