@@ -1,21 +1,47 @@
 <?php
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\GoogleAdsData;
 use Carbon\Carbon;
 use Exception;
+use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Log;
 
-class FetchGoogleAdsData extends Command {
+class FetchGoogleAdsData extends Command
+{
     protected $signature = 'googleads:fetch';
     protected $description = 'Fetch daily Google Ads data and store it in the database';
 
     public function handle()
     {
         try {
+            $client = new GoogleClient();
+
+            // Set authentication credentials
+            $client->setAuthConfig('master_credentials.json');
+
+            // Set the required scopes
+            $client->setScopes([
+                'openid',
+                'profile',
+                'email',
+                'https://www.googleapis.com/auth/adwords', // Use Google Ads API scope
+            ]);
+
+            // Fetch the access token with the service account's credentials
+            $token = $client->fetchAccessTokenWithAssertion();
+
+            if (isset($token['error'])) {
+                Log::error("Error in FetchGoogleAdsData: " . json_encode($token));
+            }
+
+            // Use the refresh token obtained from $token to get an access token for API requests
+            $access_token = $this->getAccessToken($token['access_token'], $token['refresh_token']);
+
             // Fetch Google Ads data
-            $data = $this->fetchGoogleAdsData();
+            $data = $this->fetchGoogleAdsData($access_token);
 
             if (!isset($data['results'])) {
                 $this->error("No data returned from Google Ads API.");
@@ -46,12 +72,11 @@ class FetchGoogleAdsData extends Command {
         }
     }
 
-    public function fetchGoogleAdsData()
+    public function fetchGoogleAdsData($access_token)
     {
         try {
             $customer_id = config('services.google.customer_id');
             $developer_token = config('services.google.developer_token');
-            $access_token = $this->getAccessToken();
 
             if (!$access_token) {
                 throw new Exception("Failed to get access token.");
@@ -76,7 +101,7 @@ class FetchGoogleAdsData extends Command {
             // Initialize cURL session
             $ch = curl_init();
             if ($ch === false) {
-                throw new Exception("Failed to initialize cURL session.");
+                Log::error("Failed to initialize cURL session.");
             }
 
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -96,7 +121,7 @@ class FetchGoogleAdsData extends Command {
             if (curl_errno($ch)) {
                 $error_message = curl_error($ch);
                 curl_close($ch);
-                throw new Exception("cURL Error: $error_message");
+                Log::error("cURL Error: $error_message");
             }
 
             // Close cURL handle
@@ -115,17 +140,39 @@ class FetchGoogleAdsData extends Command {
         }
     }
 
-    public function getAccessToken()
+    public function getAccessToken($access_token, $refresh_token)
     {
         try {
-            $client_id = config('services.google.client_id');
-            $client_secret = config('services.google.client_secret');
+            // If the access token is expired, refresh it using the refresh token
+            if ($this->isAccessTokenExpired($access_token)) {
+                return $this->refreshAccessToken($refresh_token);
+            }
 
+            return $access_token;
+
+        } catch (Exception $e) {
+            $this->error("Error: " . $e->getMessage());
+            // Optionally log the error details
+            Log::error("Error in getAccessToken: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function isAccessTokenExpired($access_token)
+    {
+        // Logic to check if the access token is expired based on the response or timestamp
+        // This is a simplified check; in a production environment, check for token expiration properly
+        return false; // Placeholder, replace with actual logic
+    }
+
+    public function refreshAccessToken($refresh_token)
+    {
+        try {
             $url = "https://oauth2.googleapis.com/token";
 
             $data = [
-                'client_id' => $client_id,
-                'client_secret' => $client_secret,
+                'client_id' => config('services.google.client_id'),
+                'client_secret' => config('services.google.client_secret'),
                 'refresh_token' => $refresh_token,
                 'grant_type' => 'refresh_token'
             ];
@@ -133,7 +180,7 @@ class FetchGoogleAdsData extends Command {
             // Initialize cURL session
             $ch = curl_init();
             if ($ch === false) {
-                throw new Exception("Failed to initialize cURL session for access token.");
+                Log::error("Failed to initialize cURL session.");
             }
 
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -159,14 +206,14 @@ class FetchGoogleAdsData extends Command {
             if (isset($result['access_token'])) {
                 return $result['access_token'];
             } else {
-                Log::error("Error in getAccessToken: " . json_encode($result));
+                Log::error("Error in refreshAccessToken: " . json_encode($result));
             }
 
         } catch (Exception $e) {
             // Catch any exceptions during access token retrieval
             $this->error("Error: " . $e->getMessage());
             // Optionally log the error details
-            Log::error("Error in getAccessToken: " . $e->getMessage());
+            Log::error("Error in refreshAccessToken: " . $e->getMessage());
             return null;
         }
     }
