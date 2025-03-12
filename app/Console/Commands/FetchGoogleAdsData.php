@@ -18,7 +18,7 @@ class FetchGoogleAdsData extends Command
         try {
             // Initialize Google API Client
             $client = new GoogleClient();
-            $client->setAuthConfig(storage_path('app/google/master_credentials.json'));
+            $client->setAuthConfig(base_path('master_credentials.json'));
             $client->setScopes([
                 'https://www.googleapis.com/auth/adwords',
             ]);
