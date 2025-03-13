@@ -541,7 +541,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                     </span>
                                 </div>
                             </div>
-                            @if (!empty($productOption->products->width) && !empty($productOption->products->height) && !empty($productOption->products->length))
+                            @if (!empty($productOption->products->width) || (!empty($productOption->products->height)) || (!empty($productOption->products->length)))
                                 <div class="mb-2 mb-md-1">
                                     <div class="p-1">
                                         <span class="product-dimension-heading p-2">
