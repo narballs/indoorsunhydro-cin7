@@ -580,6 +580,7 @@ Route::post('/import/users/list', [NewsletterController::class, 'importUsersToLi
 // submit bulk products request 
 
 Route::post('/bulk/products/request', [ProductController::class, 'bulk_products_request'])->name('bulk_products_request');
+Route::get('/scrape/product/image/{id}', [ProductController::class, 'scrape_product_image'])->name('scrape_product_image');
 
 
 // create sms list

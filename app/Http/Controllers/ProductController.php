@@ -37,6 +37,8 @@ use App\Models\BulkQuantityDiscount;
 use App\Models\ProductStock;
 use App\Models\ProductStockNotification;
 use App\Models\SpecificAdminNotification;
+use App\Services\AIImageGenerationService;
+use App\Services\ScraperService;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -50,6 +52,13 @@ use Zendesk\API\HttpClient as ZendeskClient;
 
 class ProductController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(AIImageGenerationService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function showProductByCategory(Request $request, $category_id)
     {
 
@@ -3556,6 +3565,82 @@ class ProductController extends Controller
             return response()->json(['message' => 'Error submitting bulk product request'], 500);
         }
     }
+
+    // public function bulk_products_request(Request $request) {
+    //     try {
+    //         // Validate the request
+    //         $validatedData = $request->validate([
+    //             'items_list' => 'required',
+    //             'quantity' => 'required|numeric',
+    //             'phone_number' => 'required',
+    //             'email' => 'required|email',
+    //             'name' => 'required',
+    //             // 'delievery' => 'required|string',
+    //         ]);
+    
+    //         // If validation passes, proceed with the logic
+    //         $bulkQuantity = new BulkQuantityDiscount();
+    //         $bulkQuantity->items_list = $validatedData['items_list'];
+    //         $bulkQuantity->quantity = $validatedData['quantity'];
+    //         $bulkQuantity->phone_number = $validatedData['phone_number'];
+    //         $bulkQuantity->email = $validatedData['email'];
+    //         $bulkQuantity->name = $validatedData['name'];
+    //         $bulkQuantity->delievery = $validatedData['delievery'] ?? null; // Avoid undefined index
+    //         $bulkQuantity->save();
+    
+    //         $subdomain = env('ZENDESK_SUBDOMAIN'); 
+    //         $username = env('ZENDESK_USERNAME'); 
+    //         $token = env('ZENDESK_TOKEN'); 
+    //         $auth = ['token' => $token];
+    
+    //         $client = new ZendeskClient($subdomain);
+    //         $client->setAuth('basic', ['username' => $username, 'token' => $token]);
+    
+    //         $subject = 'New Bulk Products Request Received';
+    //         $description = "Item: " . $request->items_list . "\nQuantity: " . $request->quantity . "\nPhone Number: " . $request->phone_number . "\nDelivery: " . $request->delievery;
+    //         $requesterName = $request->name;
+    //         $requesterEmail = $request->email;
+    
+    //         $ticketData = [
+    //             'subject' => $subject,
+    //             'description' => $description,
+    //             'requester' => [
+    //                 'email' => $requesterEmail,
+    //                 'name' => $requesterName,
+    //             ],
+    //         ];
+    
+    //         $response = $client->tickets()->create($ticketData);
+    //         return response()->json(['message' => 'Your request has been received, We will get back to you soon!'], 200);
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // Handle validation error
+    //         return response()->json(['message' => 'Validation error', 'errors' => $e->errors()], 422);
+    //     } catch (\Exception $e) {
+    //         // Handle other exceptions
+    //         Log::error('Error submitting bulk product request: ' . $e->getMessage());
+    //         return response()->json(['message' => 'Error submitting bulk product request'], 500);
+    //     }
+    // }
+
+    public function scrape_product_image($id)
+    {
+        $product = Product::find($id);
+        if ($product) {
+            // Use the service to get the image URL
+            $imageUrl = $this->imageService->generateAndSaveImage($product);
+
+            if ($imageUrl) {
+                $product->images = $imageUrl;
+                $product->save();
+                return redirect()->back()->with('success', 'Image scraped successfully');
+            }
+
+            return redirect()->back()->with('error', 'Failed to generate image');
+        } else {
+            return redirect()->back()->with('error', 'Product not found');
+        }
+    }
+    
 
     // ai answer 
     public function ai_answer(Request $request)
