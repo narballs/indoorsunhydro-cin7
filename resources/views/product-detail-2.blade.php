@@ -541,7 +541,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                     </span>
                                 </div>
                             </div>
-                            @if (!empty($productOption->products->width) || (!empty($productOption->products->height)) || (!empty($productOption->products->length)))
+                            {{-- @if (!empty($productOption->products->width) && !empty($productOption->products->height) && !empty($productOption->products->length))
                                 <div class="mb-2 mb-md-1">
                                     <div class="p-1">
                                         <span class="product-dimension-heading p-2">
@@ -557,7 +557,22 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                         </span>
                                     </div>
                                 </div>
+                            @endif --}}
+                            @if (isset($productOption->products->width) || isset($productOption->products->height) || isset($productOption->products->length))
+                                <div class="mb-2 mb-md-1">
+                                    <div class="p-1">
+                                        <span class="product-dimension-heading p-2">
+                                            Dimensions:
+                                            <span class="product-dimension-data">
+                                                {{ isset($productOption->products->length) ? $productOption->products->length . ' x ' : '' }}
+                                                {{ isset($productOption->products->width) ? $productOption->products->width . ' x ' : '' }}
+                                                {{ isset($productOption->products->height) ? $productOption->products->height : '' }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
                             @endif
+
                             <div class="">
                                 <div class="p-1">
                                     <div class="category-description category-description px-2 py-0">
