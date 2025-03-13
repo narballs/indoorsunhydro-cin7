@@ -88,7 +88,7 @@ class FetchGoogleAdsData extends Command
                 throw new Exception("Google Ads Customer ID or Developer Token is missing.");
             }
 
-            $url = "https://googleads.googleapis.com/v15/customers/{$customer_id}/googleAds:search";
+            $url = "https://googleads.googleapis.com/v18/customers/{$customer_id}/googleAds:search";
 
             $query = [
                 'query' => "

@@ -520,6 +520,9 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                 </div>
                             @endif
                         </div>
+                        {{-- <div class="row my-2">
+                            <p>Is this image accurate if not please <a href="{{ route('scrape_product_image' , $productOption->products->id) }}"> click here</a> to serch latest image</p>
+                        </div> --}}
                         <div class="row mt-3">
                             <div class="mb-2 mb-md-1">
                                 <div class="p-1 bg-custom-mobile-background">
