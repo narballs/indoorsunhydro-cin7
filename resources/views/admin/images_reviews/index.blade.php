@@ -35,7 +35,7 @@
                             <div class="input-group">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <input type="text" class="form-control" id="search" name="search" 
-                                    placeholder="Search by Amount" value="{{ request('search') }}" />
+                                    placeholder="Search" value="{{ request('search') }}" />
                             </div>
                         </form>
                     </div>
@@ -70,9 +70,13 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $ai_image_generation->product->name }}</td>
-                                        <td>{{ $ai_image_generation->product->sku }}</td>
+                                        <td>{{ $ai_image_generation->product->code }}</td>
                                         <td>
-                                            <img src="{{ $ai_image_generation->image }}" alt="Product Image" style="width: 100px; height: 100px;">
+                                            <div class="d-flex">
+                                                <img src="{{ $ai_image_generation->image_url }}" alt="Image"
+                                                    style="width: 50px; height: 60px;" class="img-thumbnail">
+
+                                            </div>
                                         </td>
                                         <td>
                                             @if ($ai_image_generation->status == 0)
