@@ -35,6 +35,11 @@ class Product extends Model
         return $this->hasMany('App\Models\OrderItem', 'product_id', 'id');
     }
 
+    public function ai_image_generation()
+    {
+        return $this->hasMany('App\Models\AIImageGeneration', 'product_id', 'id');
+    }
+
     public function apiorderItem()
     {
         return $this->hasMany('App\Models\ApiOrderItem', 'product_id', 'product_id');

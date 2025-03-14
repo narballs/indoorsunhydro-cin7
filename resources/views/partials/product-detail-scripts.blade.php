@@ -889,6 +889,24 @@ p {
         });
     }
 
+    $(document).ready(function(){
+        $(".ai-image-slider").owlCarousel({
+            items: 5, // Number of images shown at once
+            loop: false,
+            margin: 10,
+            nav: false,
+            dots: false,
+            autoplay: false,
+            // autoplayTimeout: 3000,
+            responsive: {
+                0: { items: 1 },
+                600: { items: 2 },
+                1000: { items: 3 }
+            }
+        });
+    });
+
+
 
     // mark border green on focus
     function mark_arrow_border_green() {

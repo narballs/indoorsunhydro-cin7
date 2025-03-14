@@ -148,8 +148,24 @@
                                             class="img-fluid" />
                                         @endif
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="row mt-2">
+                                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                                                @if (count($productOption->products->ai_image_generation) > 0)
+                                                <div class="mx-2 d-flex justify-content-between align-items-end">
+                                                    @foreach($productOption->products->ai_image_generation as $ai_image)
+                                                        <div class="item">
+                                                            <img src="{{ $ai_image->image_url }}" class="img-thumb"  style="width:50;height:60px"/>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            
                         </div>
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 col-12 product-detail-content">
                             <?php
@@ -514,11 +530,13 @@
                                 </div>
                             @endif
                         </div>
+                    </div>
+                    <div class="row">
 
                         
                         
                         <div class="row mt-2">
-                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes' && (count($productOption->products->ai_image_generation) == 0))
                                 <div class="col-md-12 my-3 d-inline-flex align-items-center">
                                     <button type="button" class="scrape_product_image mr-2" onclick="scrape_product_image('{{ $productOption->products->id}}')">
                                         Look for more images with AI

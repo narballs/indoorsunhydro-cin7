@@ -671,7 +671,7 @@ class ProductController extends Controller
         $similar_products = null;
         
        
-        $product = Product::with('categories' , 'brand')
+        $product = Product::with('categories' , 'brand' , 'ai_image_generation')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
         if (empty($product)) {
