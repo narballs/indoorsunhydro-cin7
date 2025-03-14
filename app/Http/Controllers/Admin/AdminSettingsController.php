@@ -8,6 +8,7 @@ use \App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Middleware\IsAdmin;
 use App\Models\AdminSetting;
+use App\Models\AIImageGeneration;
 use App\Models\AiQuestion;
 use App\Models\ApiEventLog;
 use App\Models\ApiKeys;
@@ -807,6 +808,35 @@ class AdminSettingsController extends Controller
         }
 
         return view('admin.shipstation_api_logs.index', compact('shipstation_api_logs' , 'search'));
+    }
+
+
+    public function images_requests(Request $request) {
+        $search = $request->search;
+        if (!empty($search)) {
+            $ai_image_generations = AIImageGeneration::with('product')
+            ->whereHas('product', function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('code', 'LIKE', "%{$search}%");
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        } else {
+            $ai_image_generations = AIImageGeneration::with('product')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        }
+
+        return view('admin.images_reviews.index', compact('ai_image_generations' , 'search'));
+    }
+
+
+    public function images_requests_approve(Request $request , $id) {
+        $product_id = $id;
+        $ai_image_generation = AIImageGeneration::where('product_id', $product_id)->first();
+        $ai_image_generation->status = 1;
+        $ai_image_generation->save();
+        redirect()->back()->with('success', 'Image request approved successfully.');
     }
 
     

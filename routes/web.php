@@ -445,6 +445,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
         Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('admin.payouts.details');
         Route::get('/transactions_export/{id}', [OrderController::class, 'transactions_export'])->name('admin.transactions_export');
+        Route::get('/images-requests', [AdminSettingsController::class, 'images_requests'])->name('admin.images_requests');
+        Route::post('/images/requests/approve/{id}', [AdminSettingsController::class, 'images_requests_approve'])->name('images_requests_approve');
         // Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
 
         
@@ -581,6 +583,7 @@ Route::post('/import/users/list', [NewsletterController::class, 'importUsersToLi
 
 Route::post('/bulk/products/request', [ProductController::class, 'bulk_products_request'])->name('bulk_products_request');
 Route::get('/scrape/product/image/{id}', [ProductController::class, 'scrape_product_image'])->name('scrape_product_image');
+Route::post('/add-to-catalog', [ProductController::class, 'addToCatalog'])->name('addToCatalog');
 
 
 // create sms list

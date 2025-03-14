@@ -562,6 +562,12 @@ class SettingSeeder extends Seeder
                 'option_value' => '3',
             ],
 
+            [
+                'option_name' => 'enable_image_scrapping',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
             
 
 
