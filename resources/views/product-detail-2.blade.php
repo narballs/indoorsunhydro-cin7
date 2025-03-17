@@ -148,7 +148,7 @@
                                             class="img-fluid" />
                                         @endif
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-11">
                                         <div class="row mt-2">
                                             @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
                                                 @if (count($productOption->products->ai_image_generation) > 0)
