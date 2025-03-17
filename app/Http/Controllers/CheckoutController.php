@@ -990,6 +990,10 @@ class CheckoutController extends Controller
                 );
                 $charge = $event->data->object;
                 $chargeId = $charge->id;
+                $last4 = isset($charge->payment_method_details->card) ? $charge->payment_method_details->card->last4 : null;
+                $card_brand = isset($charge->payment_method_details->card) ? $charge->payment_method_details->card->brand : null;
+
+                $brand = $charge->payment_method_details->card->brand ?? null;
                 $dateCreated = Carbon::now();
                 $createdDate = Carbon::now();
                 $session_contact_id = Session::get('contact_id');
@@ -1019,6 +1023,7 @@ class CheckoutController extends Controller
                         $currentOrder->payment_status = 'paid';
                         $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;
                         $currentOrder->charge_id = $chargeId;
+                        $currentOrder->card_number = $card_brand . ' '. $last4;
                         $currentOrder->save();
     
                         $order_comment = new OrderComment;
@@ -1159,6 +1164,8 @@ class CheckoutController extends Controller
                 );
                 $charge = $event->data->object;
                 $chargeId = $charge->id;
+                $last4 = isset($charge->payment_method_details->card) ? $charge->payment_method_details->card->last4 : null;
+                $card_brand = isset($charge->payment_method_details->card) ? $charge->payment_method_details->card->brand : null;
                 $dateCreated = Carbon::now();
                 $createdDate = Carbon::now();
                 $session_contact_id = Session::get('contact_id');
@@ -1190,6 +1197,7 @@ class CheckoutController extends Controller
                         $currentOrder->payment_status = 'paid';
                         $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;
                         $currentOrder->charge_id = $chargeId;
+                        $currentOrder->card_number = $card_brand . ' '. $last4;
                         $currentOrder->save();
     
                         $order_comment = new OrderComment;
