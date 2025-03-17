@@ -590,7 +590,7 @@
                                     As an extra layer of fraud prevention, call the customer to see if they actually placed an order for the item being picked up, just to see how they respond to the inquiry or even if they pick up the call.';
                                 @endphp
                                 <span class="delivery">
-                                    {{ !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' 
+                                    {{ !empty($order->logisticsCarrier) && $order->is_stripe == 1 &&  strtolower($order->logisticsCarrier) === 'pickup order' 
                                         ? $order->internal_comments . ' ' . $pick_disclaimer 
                                         : $order->internal_comments }}
                                 </span>

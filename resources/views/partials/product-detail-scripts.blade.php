@@ -845,12 +845,21 @@ p {
                     });
 
                 } else {
+                    $('#scrape_product_image_loader').addClass('d-none');
                     Swal.fire({
                         icon: 'error',
                         title: response.message,
                         showConfirmButton: true
                     });
                 }
+            },
+            error: function(response) {
+                $('#scrape_product_image_loader').addClass('d-none');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to scrape image',
+                    text: response.responseJSON.message
+                });
             }
         });
     }
