@@ -88,8 +88,8 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($ai_image_generation->status == 1)
-                                                <a href="{{ route('images_requests_approve', $ai_image_generation->id) }}" class="btn btn-primary btn-sm">Approved</a>
+                                            @if ($ai_image_generation->status == 0)
+                                                <a href="{{ route('images_requests_approve', $ai_image_generation->product_id) }}" class="btn btn-primary btn-sm text-white">Approved</a>
                                             @endif
                                         </td>
                                     </tr>

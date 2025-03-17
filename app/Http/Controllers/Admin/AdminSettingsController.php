@@ -831,13 +831,24 @@ class AdminSettingsController extends Controller
     }
 
 
-    public function images_requests_approve(Request $request , $id) {
-        $product_id = $id;
-        $ai_image_generation = AIImageGeneration::where('product_id', $product_id)->first();
+    public function images_requests_approve(Request $request, $id) {
+    $product_id = $id;
+
+    // Find the first AI image request with status 0
+    $ai_image_generation = AIImageGeneration::where('product_id', $product_id)
+        ->where('status', 0)
+        ->first();
+
+    // Check if an image request exists before updating
+    if ($ai_image_generation) {
         $ai_image_generation->status = 1;
         $ai_image_generation->save();
-        redirect()->back()->with('success', 'Image request approved successfully.');
+        return redirect()->back()->with('success', 'Image request approved successfully.');
     }
+
+    return redirect()->back()->with('error', 'No pending image request found.');
+}
+
 
     
     

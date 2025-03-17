@@ -151,21 +151,25 @@
                                     <div class="col-md-11">
                                         <div class="row mt-2">
                                             @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
-                                                @if (count($productOption->products->ai_image_generation) > 0)
-                                                <div class="mx-2 d-flex justify-content-between align-items-end">
-                                                    @foreach($productOption->products->ai_image_generation as $ai_image)
-                                                        <div class="item">
-                                                            <img src="{{ $ai_image->image_url }}" class="img-thumb"  style="width:50;height:60px"/>
+                                                @php
+                                                    $ai_images = isset($productOption->products->ai_image_generation) ? $productOption->products->ai_image_generation->where('status', '!=', 0) : [];
+                                                @endphp
+                                                @if ($ai_images->isNotEmpty())
+                                                    <div class="row mt-2">
+                                                        <div class="mx-2 d-flex justify-content-between align-items-end">
+                                                            @foreach($ai_images as $ai_image)
+                                                                <div class="item">
+                                                                    <img src="{{ $ai_image->image_url }}" class="img-thumb" style="width:50px; height:60px;"/>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
-                                                </div>
+                                                    </div>
                                                 @endif
                                             @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 col-12 product-detail-content">
                             <?php
