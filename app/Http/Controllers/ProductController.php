@@ -31,6 +31,7 @@ use App\Models\User;
 use App\Helpers\UtilHelper;
 use App\Mail\AdminBulkRequestNotification;
 use App\Mail\UserBulkRequestConfirmation;
+use App\Models\AIImageGeneration;
 use App\Models\AiQuestion;
 use App\Models\ApiOrderItem;
 use App\Models\BulkQuantityDiscount;
@@ -670,7 +671,7 @@ class ProductController extends Controller
         $similar_products = null;
         
        
-        $product = Product::with('categories' , 'brand')
+        $product = Product::with('categories' , 'brand' , 'ai_image_generation')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
         if (empty($product)) {
@@ -1005,6 +1006,14 @@ class ProductController extends Controller
             $wholesale_contact = null;
         }
 
+
+        $enable_see_similar_products = AdminSetting::where('option_name', 'enable_see_similar_products')
+        ->where('option_value', 'Yes')
+        ->first();
+        $enable_image_scrapping = AdminSetting::where('option_name', 'enable_image_scrapping')
+        ->where('option_value', 'Yes')
+        ->first();
+
         return view('product-detail-2', compact(
             'productOption',
             'pname',
@@ -1028,7 +1037,9 @@ class ProductController extends Controller
             'ai_setting',
             'active_contact',
             'get_wholesale_contact_id',
-            'get_wholesale_terms'
+            'get_wholesale_terms',
+            'enable_see_similar_products',
+            'enable_image_scrapping'
         ));
 
         
@@ -3626,21 +3637,102 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product) {
-            // Use the service to get the image URL
-            $imageUrl = $this->imageService->generateAndSaveImage($product);
+            $imageLinks = $this->imageService->generateAndSaveImage($product);
 
-            if ($imageUrl) {
-                $product->images = $imageUrl;
-                $product->save();
-                return redirect()->back()->with('success', 'Image scraped successfully');
+            if (!empty($imageLinks)) {
+                // foreach ($imageLinks as $imageLink) {
+                //     $ai_scrap_image = new AIImageGeneration();
+                //     $ai_scrap_image->product_id = $product->id;
+                //     $ai_scrap_image->image_url = $imageLink;
+                //     $ai_scrap_image->save();
+                // }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Images retrieved successfully',
+                    'image_links' => $imageLinks,
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No images found',
+                ], 404);
             }
 
-            return redirect()->back()->with('error', 'Failed to generate image');
         } else {
-            return redirect()->back()->with('error', 'Product not found');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found',
+            ], 404);
+        }
+
+        
+    }
+
+    public function addToCatalog(Request $request)
+    {
+        // Validate input data
+        $request->validate([
+            'images' => 'required|string',
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        $scrap_images = array_map('trim', explode(',', $request->images)); // Convert CSV to array
+        $product_id = $request->product_id;
+
+        // Check if images already exist for the product
+        if (AIImageGeneration::where('product_id', $product_id)->exists()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Images already exist for this product',
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Insert images one by one
+            foreach ($scrap_images as $image) {
+                AIImageGeneration::create([
+                    'product_id' => $product_id,
+                    'image_url' => $image,
+                ]);
+            }
+
+            // $specific_admin_notifications = SpecificAdminNotification::all();
+            // if (count($specific_admin_notifications) > 0) {
+            //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+            //         $data = ['subject' => 'New Product Images Request Received'];
+            //         $data['email'] = $specific_admin_notification->email;
+            //         MailHelper::sendMailNotification('emails.admin-product-images-request', $data);
+
+            //         $data = [
+            //             'subject' => 'New Product Images Request Received',
+            //             'email'   => $specific_admin_notification->email,
+            //             'from' => SettingHelper::getSetting('noreply_email_address'),
+            //         ];
+            //         MailHelper::sendMailNotification('emails.admin-product-images-request', $data);
+            //     }
+            // }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Images added successfully!',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error in addToCatalog: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong while adding images. Please try again later.',
+            ], 500);
         }
     }
-    
+
+
 
     // ai answer 
     public function ai_answer(Request $request)
