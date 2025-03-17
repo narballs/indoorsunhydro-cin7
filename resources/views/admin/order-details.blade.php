@@ -585,7 +585,7 @@
                                 <h3 class="h6 summary-head"><strong>Internal Comments</strong></h3>
                                 @php
                                     $pick_disclaimer = 'Customer must present the exact physical credit card used during purchase ' . 
-                                    (!empty($card_number) ? $card_number : '') . 
+                                    (!empty($order->card_number) ? $order->card_number : '') . 
                                     ' and must show a physical ID card of the owner of the credit card to pick up the order. No exceptions.
                                     As an extra layer of fraud prevention, call the customer to see if they actually placed an order for the item being picked up, just to see how they respond to the inquiry or even if they pick up the call.';
                                 @endphp
