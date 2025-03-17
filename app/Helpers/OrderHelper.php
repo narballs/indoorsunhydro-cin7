@@ -136,7 +136,7 @@ class OrderHelper {
                 "trackingCode" => "",
                 // "internalComments" => $orderSubmiterDetail,
                 // "internalComments" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? $order->internal_comments . ' '. $pick_disclaimer : $order->internal_comments,
-                "internalComments" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' 
+                "internalComments" => !empty($order->logisticsCarrier) && $order->is_stripe == 1  && strtolower($order->logisticsCarrier) === 'pickup order' 
                 ? $order->internal_comments . ' ' . $pick_disclaimer 
                 : $order->internal_comments,
 
