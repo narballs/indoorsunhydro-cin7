@@ -861,7 +861,7 @@ $cart_price = 0;
                                                         @endforeach
                                                     @endforeach
                                                 </div>
-                                                <div class="row">
+                                                <div class="row pickup_disclaimer d-none">
                                                     <div class="col-md-12">
                                                         @php
                                                         $setting_disclaimer = App\Models\AdminSetting::where('option_name', 'setting_disclaimer')->first();
@@ -3743,6 +3743,7 @@ $cart_price = 0;
                             $('.shipping_main_div').removeClass('d-none');
                             $('.remove_shipping_price').addClass('d-none');
                             $('#pick_up_modal').modal('hide');
+                            $('.pickup_disclaimer').addClass('d-none');
 
                             $('.page-spinner').addClass('loading');
 
@@ -3768,6 +3769,7 @@ $cart_price = 0;
                 }
 
                 function accept_pickUp() {
+                    $('.pickup_disclaimer').removeClass('d-none');
                     var old_total = $('#old_incl_tax').val();
                     var newTotal = $('#incl_tax').val();
                     var product_weight = $('.product_weight').val() != null ? parseFloat($('.product_weight').val()) : 0;
