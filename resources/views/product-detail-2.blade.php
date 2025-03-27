@@ -135,7 +135,7 @@
 
                 <div class="card py-3 no-border">
                     <div class="row">
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
+                        {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
                             <div
                                 class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
                                 <div class="row justify-content-center align-items-center">
@@ -170,7 +170,95 @@
                                     </div>
                                 </div>
                             </div>
+                        </div> --}}
+                        {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
+                            <div class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
+                                <div class="row justify-content-center align-items-center">
+                                    <div class="col-md-8">
+                                        @if ($productOption->products->images)
+                                            <img id="main-image" src="{{ $productOption->products->images }}" class="img-fluid" />
+                                        @else
+                                            <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid" />
+                                        @endif
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="row mt-2 d-flex justify-content-center">
+                                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                                                @php
+                                                    $ai_images = isset($productOption->products->ai_image_generation) 
+                                                                 ? $productOption->products->ai_image_generation->where('status', '!=', 0) 
+                                                                 : [];
+                                                @endphp
+                                                @if ($ai_images->isNotEmpty())
+                                                    <div class="thumbnails d-flex justify-content-center">
+                                                        @foreach($ai_images->take(5) as $ai_image)
+                                                            <img src="{{ $ai_image->image_url }}" class="img-thumb"
+                                                                style="width: 50px; height: 60px; cursor: pointer; margin: 5px; border: 2px solid transparent;"
+                                                                onclick="changeMainImage(this)" />
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                         --}}
+
+                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                            <div class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
+                                <div class="row justify-content-center align-items-center w-100">
+                                    <!-- Main Image -->
+                                    <div class="col-md-10 col-sm-12 text-center">
+                                        @if ($productOption->products->images)
+                                            <img id="main-image" src="{{ $productOption->products->images }}" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;" />
+                                        @else
+                                            <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;"/>
+                                        @endif
+                                    </div>
+                        
+                                    <!-- Thumbnails -->
+                                    <div class="col-md-11 col-sm-12 mt-3">
+                                        <div class="row d-flex justify-content-center flex-wrap">
+                                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                                                @php
+                                                    $ai_images = isset($productOption->products->ai_image_generation) 
+                                                                 ? $productOption->products->ai_image_generation->where('status', '!=', 0) 
+                                                                 : [];
+                                                @endphp
+                                                @if ($ai_images->isNotEmpty())
+                                                    <div class="thumbnails d-flex justify-content-center flex-wrap">
+                                                        @foreach($ai_images->take(5) as $ai_image)
+                                                            <img src="{{ $ai_image->image_url }}" class="img-thumb"
+                                                                style="width: 50px; height: 60px; cursor: pointer; margin: 5px; border-radius: 5px; border: 2px solid transparent; transition: 0.3s;"
+                                                                onclick="changeMainImage(this)"
+                                                                onmouseover="this.style.borderColor='#007bff'"
+                                                                onmouseout="this.style.borderColor='transparent'" />
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            function changeMainImage(element) {
+                                document.getElementById('main-image').src = element.src;
+                        
+                                // Remove active class from all thumbnails
+                                let thumbnails = document.querySelectorAll('.img-thumb');
+                                thumbnails.forEach(img => img.style.border = "2px solid transparent");
+                        
+                                // Add border to active image
+                                element.style.border = "2px solid black";
+                            }
+                        </script>
+                        
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 col-12 product-detail-content">
                             <?php
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
