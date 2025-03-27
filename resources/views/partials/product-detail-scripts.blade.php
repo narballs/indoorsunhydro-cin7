@@ -878,22 +878,30 @@ p {
                     Swal.fire({
                         icon: 'success',
                         title: 'Images added to catalog!',
-                        showConfirmButton: true
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
                     });
+                    $('#scrapeImageModal').modal('hide');
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Failed to add image',
-                        text: response.message
+                        text: response.message,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
                     });
+                    $('#scrapeImageModal').modal('hide');
                 }
             }, 
             error: function(response) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Failed to add image',
-                    text: response.responseJSON.message
+                    text: response.responseJSON.message,
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK'
                 });
+                $('#scrapeImageModal').modal('hide');
             }
         });
     }
