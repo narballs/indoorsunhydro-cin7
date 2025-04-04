@@ -72,7 +72,7 @@
                                 {{ !empty($cart_detail) && !empty($cart_detail['total_quantity']) ? $cart_detail['total_quantity'] : $total_quantity}}
                             </span>
                         </div>
-                        <div class="d-flex ml-1" style="flex-direction: column;">
+                        <div class="d-flex ml-2" style="flex-direction: column;">
                             <span class="shopping_cart_text" style="margin-bottom:-7px;color:#212121 !important;">Shopping Cart</span>
                             {{-- <a style="" class="p-0 cart-price btn btn-secondary mt-0" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="add <strong class='text-success'>$2500.00</strong> more to your cart and get <span class='text-danger'>5% off </span>"> --}}
                                 

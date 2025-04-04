@@ -413,6 +413,11 @@ return [
             // 'classes' => 'd-none',
         ],
         [
+            'text'    => 'Images Requests',
+            'url'  => 'admin/images-requests',
+            // 'classes' => 'd-none',
+        ],
+        [
             'text'    => 'Recycle Bin',
             'url'  => 'admin/recycle-bin',
         ],

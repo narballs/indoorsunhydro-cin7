@@ -580,12 +580,23 @@
                             </form>
                         </div> --}}
 
-                        <div class="card  mb-3">
+                        <div class="card mb-3">
                             <div class="card-body">
                                 <h3 class="h6 summary-head"><strong>Internal Comments</strong></h3>
-                                <span class="delivery">{{ $order->internal_comments }}</span></p>
+                                @php
+                                    $pick_disclaimer = 'Customer must present the exact physical credit card used during purchase ' . 
+                                    (!empty($order->card_number) ? $order->card_number : '') . 
+                                    ' and must show a physical ID card of the owner of the credit card to pick up the order. No exceptions.
+                                    As an extra layer of fraud prevention, call the customer to see if they actually placed an order for the item being picked up, just to see how they respond to the inquiry or even if they pick up the call.';
+                                @endphp
+                                <span class="delivery">
+                                    {{ !empty($order->logisticsCarrier) && $order->is_stripe == 1 &&  strtolower($order->logisticsCarrier) === 'pickup order' 
+                                        ? $order->internal_comments . ' ' . $pick_disclaimer 
+                                        : $order->internal_comments }}
+                                </span>
                             </div>
                         </div>
+                        
                         <div class="card  mb-3">
                             <div class="card-body">
                                 <h3 class="h6 summary-head"><strong>Delivery Instructions</strong></h3>

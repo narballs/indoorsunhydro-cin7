@@ -111,6 +111,13 @@ class OrderHelper {
             $delivery_date = Carbon::parse($dateCreated)->addHours(24);
         }
 
+        $card_number = $order->card_number; 
+
+
+        $pick_disclaimer = 'Customer Must present exact physical credit card used during purchase ' . (!empty($card_number) ? $card_number : '') . ' must show a physical ID card of the owner of the credit card to pick up the order. No exceptions.
+        As an extra layer of fraud prevention, call the customer to see if they actually placed an order for the item being picked up just to see how they respond to the inquiry or even if they pick up the call.';
+
+
 
         
         $order_data = [
@@ -128,7 +135,11 @@ class OrderHelper {
                 "projectName" => "",
                 "trackingCode" => "",
                 // "internalComments" => $orderSubmiterDetail,
-                "internalComments" => $order->internal_comments,
+                // "internalComments" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? $order->internal_comments . ' '. $pick_disclaimer : $order->internal_comments,
+                "internalComments" => !empty($order->logisticsCarrier) && $order->is_stripe == 1  && strtolower($order->logisticsCarrier) === 'pickup order' 
+                ? $order->internal_comments . ' ' . $pick_disclaimer 
+                : $order->internal_comments,
+
                 "productTotal" => 100,
                 "freightTotal" => !empty($order->shipment_price) ? $order->shipment_price : 0.00,
                 "freightDescription" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? 'Pickup Order' : null,

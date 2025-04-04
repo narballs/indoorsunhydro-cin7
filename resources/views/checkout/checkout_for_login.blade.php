@@ -507,6 +507,12 @@
         cursor: pointer;
     }
 
+    .setting_disclaimer {
+        font-size: 14px;
+        font-family: 'poppins';
+        font-weight: 500;
+    }
+
     .accept_pickup_order {
         text-align: center;
         font-family: 'Poppins';
@@ -851,10 +857,24 @@ $cart_price = 0;
                                                                     @endif
                                                                 {{-- @endif --}}
                                                             </div>
+                                                            
                                                         @endforeach
                                                     @endforeach
                                                 </div>
+                                                <div class="row pickup_disclaimer d-none">
+                                                    <div class="col-md-12">
+                                                        @php
+                                                        $setting_disclaimer = App\Models\AdminSetting::where('option_name', 'setting_disclaimer')->first();
+                                                        @endphp
+                                                        @if (!empty($setting_disclaimer))
+                                                            <p class="setting_disclaimer my-2">
+                                                                {{ $setting_disclaimer->option_value }}
+                                                            </p>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </div>
+
                                         </div>
                                         {{-- @if (strtolower($user_address->paymentTerms) !== 'pay in advanced') --}}
                                         <div class="row justify-content-center border-bottom py-3">
@@ -1496,12 +1516,19 @@ $cart_price = 0;
         <div class="modal-body">
             @php
                 $pick_up_text = App\Models\AdminSetting::where('option_name', 'pickup_info')->first();
+                $setting_disclaimer = App\Models\AdminSetting::where('option_name', 'setting_disclaimer')->first();
             @endphp
             <p class="mb-0 pick_up_text">
-                @if(!empty($pick_up_text))
+                @if(!empty($pick_up_text) && !empty($pick_up_text->option_value))
                     {!! $pick_up_text->option_value !!}
                 @endif
             </p>
+            <p class="mb-0 setting_disclaimer">
+                @if(!empty($setting_disclaimer) && !empty($setting_disclaimer->option_value))
+                    {!! $setting_disclaimer->option_value !!}
+                @endif
+
+            <p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger reject_pickup_order" data-dismiss="modal" onclick="reject_pickUp()">Reject</button>
@@ -3716,6 +3743,7 @@ $cart_price = 0;
                             $('.shipping_main_div').removeClass('d-none');
                             $('.remove_shipping_price').addClass('d-none');
                             $('#pick_up_modal').modal('hide');
+                            $('.pickup_disclaimer').addClass('d-none');
 
                             $('.page-spinner').addClass('loading');
 
@@ -3741,6 +3769,7 @@ $cart_price = 0;
                 }
 
                 function accept_pickUp() {
+                    $('.pickup_disclaimer').removeClass('d-none');
                     var old_total = $('#old_incl_tax').val();
                     var newTotal = $('#incl_tax').val();
                     var product_weight = $('.product_weight').val() != null ? parseFloat($('.product_weight').val()) : 0;

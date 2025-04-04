@@ -562,6 +562,18 @@ class SettingSeeder extends Seeder
                 'option_value' => '3',
             ],
 
+            [
+                'option_name' => 'enable_image_scrapping',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
+            [
+                'option_name' => 'setting_disclaimer',
+                'type' => 'text',
+                'option_value' => 'Must present exact physical credit card used during purchase and must show a physical ID card of the owner of credit card to pick up order. No exceptions.',
+            ],
+
             
 
 

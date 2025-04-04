@@ -14,6 +14,47 @@
 }
 
 
+.scrape_product_image {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    background: #fff; /* Keep background white or transparent */
+    border: 4px solid;
+    border-image: linear-gradient(to right, #2AE3D6, #7B1FA2);
+    border-image-slice: 1;
+    border-radius: 20px;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    transition: 0.3s;
+    position: relative;
+}
+
+.scrape_product_image:hover {
+    opacity: 0.8;
+}
+
+.scrape_product_image_icon {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 2px;
+    margin-left: 8px;
+    font-size: 10px;
+    position: relative;
+    top: -2px;
+}
+
+#scrape_product_image_loader {
+    border: 5px solid;
+    border-image: linear-gradient(to right, #2AE3D6, #7B1FA2);
+}
+
+
+
 .discount-badge {
     background-color: #d9534f;
     color: white;
@@ -696,6 +737,194 @@ p {
 }
 </style>
 <script>
+    // function scrape_product_image(product_id) {
+    //     var url = $('#scrape_product_image').val();
+    //     if (url == '') {
+    //         Swal.fire({
+    //             toast: false,
+    //             icon: 'error',
+    //             title: 'Please enter a valid URL',
+    //             position: 'center',
+    //             showConfirmButton: true,  // Show the confirm (OK) button
+    //             confirmButtonText: 'Confirm',
+    //             timerProgressBar: false,
+    //             allowOutsideClick: false, // Disable clicking outside to close the modal
+    //             allowEscapeKey: false, // Disable Esc key to close the modal
+    //             customClass: {
+    //                 confirmButton: 'my-confirm-button',  // Class for the confirm button
+    //                 popup: 'swal2-popup-class',  // Class for the actions container
+    //                 actions: 'my-actions-class'  // Class for the actions container
+    //             }
+    //         });
+    //         return false;
+    //     }
+    //     $('#scrape_product_image_loader').removeClass('d-none');
+    //     $.ajax({
+    //         url: '/scrape/product/image/' + product_id,
+    //         method: 'get',
+    //         data: {
+    //             "_token": "{{ csrf_token() }}",
+    //             url: url
+    //         },
+    //         success: function(response) {
+    //             $('#scrape_product_image_loader').addClass('d-none');
+    //             if (response.status == 'success') {
+    //                 // create a popup which will images and have button name as add to catalog 
+
+    //             } else {
+    //                 Swal.fire({
+    //                     toast: false,
+    //                     icon: 'error',
+    //                     title: response.message,
+    //                     position: 'center',
+    //                     showConfirmButton: true,  // Show the confirm (OK) button
+    //                     confirmButtonText: 'Confirm',
+    //                     timerProgressBar: false,
+    //                     allowOutsideClick: false, // Disable clicking outside to close the modal
+    //                     allowEscapeKey: false, // Disable Esc key to close the modal
+    //                     customClass: {
+    //                         confirmButton: 'my-confirm-button',  // Class for the confirm button
+    //                         popup: 'swal2-popup-class',  // Class for the actions container
+    //                         actions: 'my-actions-class'  // Class for the actions container
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     });
+    // }
+    function scrape_product_image(product_id) {
+        var url = $('#scrape_product_image').val();
+        if (url == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Please enter a valid URL',
+                showConfirmButton: true
+            });
+            return false;
+        }
+
+        $('#scrape_product_image_loader').removeClass('d-none');
+
+        $.ajax({
+            url: '/scrape/product/image/' + product_id,
+            method: 'GET',
+            data: {
+                "_token": $('meta[name="csrf-token"]').attr('content'),
+                url: url
+            },
+            success: function(response) {
+                $('#scrape_product_image_loader').addClass('d-none');
+
+                if (response.status === 'success') {
+                    let imagesHtml = `<div class="row">`;
+                    response.image_links.forEach(image => {
+                        imagesHtml += `
+                            <div class="col-md-2 text-center mb-2">
+                                <img src="${image}" class="img-thumbnail scrape-image" data-image="${image}" style="width: 100%; height: auto;">
+                            </div>`;
+                    });
+                    imagesHtml += `</div>`;
+
+                    imagesHtml += `
+                        <div class="col-md-12 text-center my-2">
+                            <button class="btn btn-primary add-to-catalog" 
+                                    data-product-id="${product_id}" 
+                                    data-images='${JSON.stringify(response.image_links)}'>
+                                Add to Catalog
+                            </button>
+                        </div>`;
+
+                    $('#scrapedImagesContainer').html(imagesHtml);
+                    $('#scrapeImageModal').modal('show');
+
+                    // Handle Add to Catalog button click
+                    $('.add-to-catalog').on('click', function() {
+                        let selectedImages = JSON.parse($(this).attr('data-images'));
+                        let product_id = $(this).attr('data-product-id');
+                        addToCatalog(selectedImages, product_id);
+                    });
+
+                } else {
+                    $('#scrape_product_image_loader').addClass('d-none');
+                    Swal.fire({
+                        icon: 'error',
+                        title: response.message,
+                        showConfirmButton: true
+                    });
+                }
+            },
+            error: function(response) {
+                $('#scrape_product_image_loader').addClass('d-none');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to scrape image',
+                    text: response.responseJSON.message
+                });
+            }
+        });
+    }
+
+    function addToCatalog(images, product_id) {
+        $.ajax({
+            url: '/add-to-catalog',
+            method: 'POST',
+            data: {
+                "_token": $('meta[name="csrf-token"]').attr('content'),
+                product_id: product_id,
+                images: images.join(',')
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Images added to catalog!',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    });
+                    $('#scrapeImageModal').modal('hide');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to add image',
+                        text: response.message,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    });
+                    $('#scrapeImageModal').modal('hide');
+                }
+            }, 
+            error: function(response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to add image',
+                    text: response.responseJSON.message,
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK'
+                });
+                $('#scrapeImageModal').modal('hide');
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        $(".ai-image-slider").owlCarousel({
+            items: 5, // Number of images shown at once
+            loop: false,
+            margin: 10,
+            nav: false,
+            dots: false,
+            autoplay: false,
+            // autoplayTimeout: 3000,
+            responsive: {
+                0: { items: 1 },
+                600: { items: 2 },
+                1000: { items: 3 }
+            }
+        });
+    });
+
+
+
     // mark border green on focus
     function mark_arrow_border_green() {
         $('.input-group-text').css('border-color', '#7cc63e');

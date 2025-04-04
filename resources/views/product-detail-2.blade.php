@@ -2,12 +2,6 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 
-@php
-// $enable_see_similar_products = App\Helpers\SettingHelper::getSetting('enable_see_similar_products', 'Yes');
-$enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'enable_see_similar_products')
-->where('option_value', 'Yes')
-->first();
-@endphp
 <div class="w-100 mb-2">
     <div class="alert alert-success alert-dismissible d-none mb-0 text-center notify_user_div_detail">
         <a href="#" onclick="hide_notify_user_div()" class="close" aria-label="close">&times;</a>
@@ -141,7 +135,7 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
 
                 <div class="card py-3 no-border">
                     <div class="row">
-                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
+                        {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
                             <div
                                 class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
                                 <div class="row justify-content-center align-items-center">
@@ -154,9 +148,117 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                             class="img-fluid" />
                                         @endif
                                     </div>
+                                    <div class="col-md-11">
+                                        <div class="row mt-2">
+                                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                                                @php
+                                                    $ai_images = isset($productOption->products->ai_image_generation) ? $productOption->products->ai_image_generation->where('status', '!=', 0) : [];
+                                                @endphp
+                                                @if ($ai_images->isNotEmpty())
+                                                    <div class="row mt-2">
+                                                        <div class="mx-2 d-flex justify-content-between align-items-end">
+                                                            @foreach($ai_images as $ai_image)
+                                                                <div class="item">
+                                                                    <img src="{{ $ai_image->image_url }}" class="img-thumb" style="width:50px; height:60px;"/>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
+                        {{-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 col-12">
+                            <div class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
+                                <div class="row justify-content-center align-items-center">
+                                    <div class="col-md-8">
+                                        @if ($productOption->products->images)
+                                            <img id="main-image" src="{{ $productOption->products->images }}" class="img-fluid" />
+                                        @else
+                                            <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid" />
+                                        @endif
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="row mt-2 d-flex justify-content-center">
+                                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                                                @php
+                                                    $ai_images = isset($productOption->products->ai_image_generation) 
+                                                                 ? $productOption->products->ai_image_generation->where('status', '!=', 0) 
+                                                                 : [];
+                                                @endphp
+                                                @if ($ai_images->isNotEmpty())
+                                                    <div class="thumbnails d-flex justify-content-center">
+                                                        @foreach($ai_images->take(5) as $ai_image)
+                                                            <img src="{{ $ai_image->image_url }}" class="img-thumb"
+                                                                style="width: 50px; height: 60px; cursor: pointer; margin: 5px; border: 2px solid transparent;"
+                                                                onclick="changeMainImage(this)" />
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                         --}}
+
+                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+                            <div class="product-detail-new-image-div text-center d-flex justify-content-center align-items-center">
+                                <div class="row justify-content-center align-items-center w-100">
+                                    <!-- Main Image -->
+                                    <div class="col-md-10 col-sm-12 text-center">
+                                        @if ($productOption->products->images)
+                                            <img id="main-image" src="{{ $productOption->products->images }}" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;" />
+                                        @else
+                                            <img id="main-image" src="/theme/img/image_not_available.png" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;"/>
+                                        @endif
+                                    </div>
+                        
+                                    <!-- Thumbnails -->
+                                    <div class="col-md-11 col-sm-12 mt-3">
+                                        <div class="row d-flex justify-content-center flex-wrap">
+                                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes')
+                                                @php
+                                                    $ai_images = isset($productOption->products->ai_image_generation) 
+                                                                 ? $productOption->products->ai_image_generation->where('status', '!=', 0) 
+                                                                 : [];
+                                                @endphp
+                                                @if ($ai_images->isNotEmpty())
+                                                    <div class="thumbnails d-flex justify-content-center flex-wrap">
+                                                        @foreach($ai_images->take(5) as $ai_image)
+                                                            <img src="{{ $ai_image->image_url }}" class="img-thumb"
+                                                                style="width: 50px; height: 60px; cursor: pointer; margin: 5px; border-radius: 5px; border: 2px solid transparent; transition: 0.3s;"
+                                                                onclick="changeMainImage(this)"
+                                                                onmouseover="this.style.borderColor='#007bff'"
+                                                                onmouseout="this.style.borderColor='transparent'" />
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <script>
+                            function changeMainImage(element) {
+                                document.getElementById('main-image').src = element.src;
+                        
+                                // Remove active class from all thumbnails
+                                let thumbnails = document.querySelectorAll('.img-thumb');
+                                thumbnails.forEach(img => img.style.border = "2px solid transparent");
+                        
+                                // Add border to active image
+                                element.style.border = "2px solid black";
+                            }
+                        </script>
+                        
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-xs-12 col-12 product-detail-content">
                             <?php
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
@@ -520,10 +622,26 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                 </div>
                             @endif
                         </div>
-                        {{-- <div class="row my-2">
-                            <p>Is this image accurate if not please <a href="{{ route('scrape_product_image' , $productOption->products->id) }}"> click here</a> to serch latest image</p>
-                        </div> --}}
-                        <div class="row mt-3">
+                    </div>
+                    <div class="row">
+
+                        
+                        
+                        <div class="row mt-2">
+                            @if (!empty($enable_image_scrapping) && strtolower($enable_image_scrapping->option_value) === 'yes' && (count($productOption->products->ai_image_generation) == 0))
+                                <div class="col-md-12 my-3 d-inline-flex align-items-center">
+                                    <button type="button" class="scrape_product_image mr-2" onclick="scrape_product_image('{{ $productOption->products->id}}')">
+                                        Look for more images with AI
+                                        <span class="scrape_product_image_icon">
+                                            ✦ ✦
+                                            ✦ ✦
+                                        </span>
+                                    </button>
+                                    <div class="spinner-border text-success d-none" id="scrape_product_image_loader" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            @endif
                             <div class="mb-2 mb-md-1">
                                 <div class="p-1 bg-custom-mobile-background">
                                     <span class="category-title-heading  bg-custom-background p-2">Category :
@@ -541,23 +659,6 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
                                     </span>
                                 </div>
                             </div>
-                            {{-- @if (!empty($productOption->products->width) && !empty($productOption->products->height) && !empty($productOption->products->length))
-                                <div class="mb-2 mb-md-1">
-                                    <div class="p-1">
-                                        <span class="product-dimension-heading p-2">
-                                            Dimensions :
-                                            <span class="product-dimension-data">
-                                                {{!empty($productOption->products->length) ?
-                                                $productOption->products->length . ' ' . "x" : ''}}
-                                                {{!empty($productOption->products->width) ? $productOption->products->width
-                                                . ' ' . "x" : ''}}
-                                                {{!empty($productOption->products->height) ?
-                                                $productOption->products->height : ''}}
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            @endif --}}
                             @if (isset($productOption->products->width) || isset($productOption->products->height) || isset($productOption->products->length))
                                 <div class="mb-2 mb-md-1">
                                     <div class="p-1">
@@ -915,6 +1016,23 @@ $enable_see_similar_products = App\Models\AdminSetting::where('option_name', 'en
         </div>
     </div>
 </div>
+<!-- Scrape Image Modal -->
+<div class="modal fade" id="scrapeImageModal" tabindex="-1" role="dialog" aria-labelledby="scrapeImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Images</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="scrapedImagesContainer" class="row"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Scrape Image Modal End --}}
 @include('partials.product-footer')
 @include('partials.footer')
 @include('partials.product-detail-scripts')

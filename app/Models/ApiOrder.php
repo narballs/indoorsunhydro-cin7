@@ -81,6 +81,7 @@ class ApiOrder extends Model
         'shipstation_orderNumber',
         'shipmentId',
         'void_label',
+        'card_number'
         
     ];
     public function contact()
