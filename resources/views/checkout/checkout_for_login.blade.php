@@ -807,6 +807,9 @@ $cart_price = 0;
                                             <div class="col-md-12">
                                                 <p class="checkout_product_heading ml-0 mb-2">Delivery Options</p>
                                             </div>
+                                            @php
+                                                $enable_pickup  = App\Models\AdminSetting::where('option_name', 'enable_pickup')->first();
+                                            @endphp
                                             <div class="col-md-12">
                                                 <div class="row justify-content-between">
                                                     <input type="hidden" name="distance_calculator" id="distance_calculator" value="{{!empty($distance) ? $distance : ''}}">
@@ -816,25 +819,58 @@ $cart_price = 0;
                                                         @endphp
                                                         @csrf
                                                         @foreach ($payment_method->options as $payment_option)
-                                                            <div class="col-md-12">
-                                                                {{-- @if ($allow_pickup != 1)
-                                                                    @if (strtolower($payment_option->option_name) != 'pickup order')
+                                                            @if (strtolower($user_address->paymentTerms) == 'pay in advanced')
+                                                                @if ($enable_pickup && strtolower($enable_pickup->option_value) == 'yes')
+                                                                    <div class="col-md-12">
                                                                         <input type="hidden" value="{{ $payment_method->name }}"
                                                                             name="method_name">
-                                                                        <input type="radio" id="local_delivery_{{ $payment_option->id }}"
+                                                                        <input type="radio" class="d_options" id="local_delivery_{{ $payment_option->id }}"
                                                                             name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
-                                                                            value="{{ $payment_option->option_name }}" style="background: #008BD3;">
+                                                                            value="{{ $payment_option->option_name }}" style="background: #008BD3;" onclick="pickup_order(this)">
                                                                         <label for="local_delivery payment-option-label"
                                                                             class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
-                                                                        
+                                                                            @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                            {{':'}}
+                                                                            @endif
                                                                         </label>
                                                                         @if (strtolower($payment_option->option_name) == 'pickup order')
                                                                             <span class="mx-2">
-                                                                                (Monday - Friday 9:00 AM - 5:00 PM only)
+                                                                                @php
+                                                                                    $timings_part1 = App\Models\AdminSetting::where('option_name', 'timings_part1')->first();
+                                                                                    $timings_part2 = App\Models\AdminSetting::where('option_name', 'timings_part2')->first();
+                                                                                @endphp
+                                                                                {{!empty($timings_part1) ? $timings_part1->option_value : ''}} {{!empty($timings_part2) ? $timings_part2->option_value   : ''}}
                                                                             </span>
                                                                         @endif
+                                                                    </div>
+                                                                @else
+                                                                    @if (strtolower($payment_option->option_name) != 'pickup order')
+                                                                        <div class="col-md-12">
+                                                                            <input type="hidden" value="{{ $payment_method->name }}"
+                                                                                name="method_name">
+                                                                            <input type="radio" class="d_options" id="local_delivery_{{ $payment_option->id }}"
+                                                                                name="method_option"{{ $payment_option->option_name == 'Delivery' ? 'checked' : '' }}
+                                                                                value="{{ $payment_option->option_name }}" style="background: #008BD3;" onclick="pickup_order(this)">
+                                                                            <label for="local_delivery payment-option-label"
+                                                                                class="checkout_product_heading ml-2 mb-0">{{ $payment_option->option_name }}
+                                                                                @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                                {{':'}}
+                                                                                @endif
+                                                                            </label>
+                                                                            @if (strtolower($payment_option->option_name) == 'pickup order')
+                                                                                <span class="mx-2">
+                                                                                    @php
+                                                                                        $timings_part1 = App\Models\AdminSetting::where('option_name', 'timings_part1')->first();
+                                                                                        $timings_part2 = App\Models\AdminSetting::where('option_name', 'timings_part2')->first();
+                                                                                    @endphp
+                                                                                    {{!empty($timings_part1) ? $timings_part1->option_value : ''}} {{!empty($timings_part2) ? $timings_part2->option_value   : ''}}
+                                                                                </span>
+                                                                            @endif
+                                                                        </div>
                                                                     @endif
-                                                                @else --}}
+                                                                @endif
+                                                            @else
+                                                                <div class="col-md-12">
                                                                     <input type="hidden" value="{{ $payment_method->name }}"
                                                                         name="method_name">
                                                                     <input type="radio" class="d_options" id="local_delivery_{{ $payment_option->id }}"
@@ -855,8 +891,8 @@ $cart_price = 0;
                                                                             {{!empty($timings_part1) ? $timings_part1->option_value : ''}} {{!empty($timings_part2) ? $timings_part2->option_value   : ''}}
                                                                         </span>
                                                                     @endif
-                                                                {{-- @endif --}}
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                             
                                                         @endforeach
                                                     @endforeach
