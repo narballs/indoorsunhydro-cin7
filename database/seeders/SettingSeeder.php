@@ -574,6 +574,13 @@ class SettingSeeder extends Seeder
                 'option_value' => 'Must present exact physical credit card used during purchase and must show a physical ID card of the owner of credit card to pick up order. No exceptions.',
             ],
 
+            [
+                'option_name' => 'enable_pickup',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
+
             
 
 
