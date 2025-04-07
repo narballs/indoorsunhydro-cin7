@@ -521,7 +521,7 @@ $cart_price = 0;
                                             Note: PO Boxes are not allowed at the start of address.
                                         </small>
                                         <input type="text" name="postalStreetAddress" id="postalStreetAddress" class="form-control update_checkout_input mb-1 postalStreetAddress" placeholder="Street Address">
-                                        <div class=" postal_address_errors checkout_validation_errors"></div>
+                                        <div class="postal_address_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
