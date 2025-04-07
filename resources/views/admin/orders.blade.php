@@ -383,7 +383,7 @@
                                                 @if ($enable_label_wholesale && strtolower($enable_label_wholesale->option_value) == 'yes')
                                                     <div class="d-flex">
                                                         @if ($order->is_stripe == 0)
-                                                            <button type="button" class="btn btn-primary badge_wholesale btn-sm" data-bs-toggle="modal" data-bs-target="#send_wholesale_order_to_shipstation" id="send_wholesale_order_shipstation" data-id="{{ $order->id }}">
+                                                            <button type="button" class="btn btn-primary badge_wholesale btn-sm" data-toggle="modal" data-target="#send_wholesale_order_to_shipstation" id="send_wholesale_order_shipstation" data-id="{{ $order->id }}">
                                                                 Send Order to Shipstation
                                                             </button>
                                                         @endif
@@ -523,12 +523,12 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="send_wholesale_order_shipstation" tabindex="-1" role="dialog" aria-labelledby="send_wholesale_order_to_shipstation" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog" role="document">
+    
+    <div class="modal fade" id="send_wholesale_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_wholesale_order_to_shipstation" aria-hidden="true">
+        <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Send Wholesale Order to Shipstation</h5>
+              <h5 class="modal-title" id="send_wholesale_order_to_shipstation">Modal title</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -538,13 +538,15 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary">Understood</button>
             </div>
           </div>
         </div>
-    </div>
-
+      </div>
 @stop
+
+
+
 
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css?v3">
@@ -1328,3 +1330,5 @@
     </script>
 @stop
 @section('plugins.Sweetalert2', true)
+
+
