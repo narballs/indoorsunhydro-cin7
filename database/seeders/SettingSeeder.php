@@ -580,6 +580,12 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+            [
+                'option_name' => 'enable_label_wholesale',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
 
             
 
