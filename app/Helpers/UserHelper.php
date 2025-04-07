@@ -388,6 +388,15 @@ class UserHelper
         }
 
 
+        if ($product_height > 108) {
+            $internalNotes = 'Dimensions exceeds ' . $product_height . ' inches';
+            $product_height = 1;
+        } else {
+            $internalNotes = null;
+            $product_height = $product_height;
+        }
+
+
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -485,6 +494,7 @@ class UserHelper
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
+            'internalNotes' => $internalNotes,
             'shipTo' => [
                 "name" => $DeliveryfirstName .' '. $DeliverylastName,
                 "company" => $Deliverycompany,
@@ -592,6 +602,15 @@ class UserHelper
         }
 
 
+        if ($product_height > 108) {
+            $internalNotes = 'Dimensions exceeds ' . $product_height . ' inches';
+            $product_height = 1;
+        } else {
+            $internalNotes = null;
+            $product_height = $product_height;
+        }
+
+
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -679,6 +698,7 @@ class UserHelper
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
+            'internalNotes' => $internalNotes,
             'shipTo' => [
                 "name" => $DeliveryfirstName .' '. $DeliverylastName,
                 "company" => $Deliverycompany,
