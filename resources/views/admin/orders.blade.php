@@ -345,7 +345,11 @@
                                                 @endif
                                             </td>
                                             <td data-label="Payment Gateway :" class="td_padding_row">
-                                                <span class="badge badge-primary p-1"> {{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'Stripe' : 'None' }}</span>
+                                                @if (!empty($order->is_stripe) && $order->is_stripe == 1)
+                                                    <span class="badge badge-primary p-1">Stripe</span>
+                                                @else
+                                                    <span class="badge badge-success p-1 badge_wholesale">Wholesale</span>
+                                                @endif
                                             </td>
                                             <td data-label="Payment Term :" class="td_padding_row" style="width: 5%;">
                                                 @if (!empty($order->logisticsCarrier ))
@@ -372,6 +376,19 @@
                                                 
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
+                                                @php
+                                                    $enable_label_wholesale = App\Models\AdminSetting::where('option_name', 'enable_label_wholesale')->first();  
+                                                @endphp
+                                                
+                                                @if ($enable_label_wholesale && strtolower($enable_label_wholesale->option_value) == 'yes')
+                                                    <div class="d-flex">
+                                                        @if ($order->is_stripe == 0)
+                                                            <button type="button" class="btn btn-primary badge_wholesale btn-sm" data-bs-toggle="modal" data-bs-target="#send_wholesale_order_to_shipstation" id="send_wholesale_order_shipstation" data-id="{{ $order->id }}">
+                                                                Send Order to Shipstation
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1) 
 
                                                     @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
@@ -506,6 +523,27 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="send_wholesale_order_shipstation" tabindex="-1" role="dialog" aria-labelledby="send_wholesale_order_to_shipstation" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Send Wholesale Order to Shipstation</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
 @stop
 
 @section('css')
@@ -766,6 +804,12 @@
         .unprocess_alert .close {
             padding: 2px !important;
             right: 10px !important;
+        }
+
+        .badge_wholesale {
+            background: purple !important;
+            color: #fff !important;
+            border: purple !important;
         }
 
         /* @media only screen and (max-width: 425px) {
