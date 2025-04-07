@@ -685,8 +685,12 @@ class UserController extends Controller
         $validatedData = $request->validate(
             [
                 'street_address' => [
-                    'required'
-                    // 'regex:/^[a-zA-Z0-9\s-]+$/'
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                            $fail('Invalid address: PO Boxes are not allowed at the start.');
+                        }
+                    },
                 ],
                 'state_id' => 'required',
                 // 'city_id' => 'required',
@@ -1991,7 +1995,15 @@ class UserController extends Controller
             'first_name' => 'required',
             // 'last_name' => 'required',
             // 'company_name' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
+            'address' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                        $fail('Invalid address: PO Boxes are not allowed at the start.');
+                    }
+                },
+            ],
             'state' => 'required',
             'phone' => 'required',
             'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
@@ -2202,13 +2214,18 @@ class UserController extends Controller
         $request->validate([
                 'contact_id' => 'required',
                 'first_name' => 'required',
-                // 'company_name' => 'required',
                 'phone' => 'required',
                 'zip' => 'required',
-                'address' => 'required',
-                // 'city' => 'required',
+                // 'address' => 'required',
                 'state' => 'required',
-                // 'country' => 'required',
+                'address' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                            $fail('Invalid address: PO Boxes are not allowed at the start.');
+                        }
+                    },
+                ],
                 
             ],
             [
