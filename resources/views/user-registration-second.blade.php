@@ -430,9 +430,14 @@
                             <div class="col-md-10">
                                 <div class="row">
                                     <div class="input-placeholder col-md-12 mt-3">
+                                        <div class="d-flex justify-content-left mb-1">
+                                            <small class="text-info">
+                                                PO Boxes are not allowed at the start
+                                            </small>
+                                        </div>
                                         <input type="text" name="street_address" id="street_address" required="" class="sign-up-fields p-3 pl-0 w-100">
                                         <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
-                                            <i class="fa fa-road  ml-2 mr-2"></i>Street Address, House no, Street Name
+                                            <i class="fa fa-road  ml-2 mr-2"></i>Street Address 
                                         </div>
                                         <div class="text-danger" id="street_address_errors"></div>
                                     </div>

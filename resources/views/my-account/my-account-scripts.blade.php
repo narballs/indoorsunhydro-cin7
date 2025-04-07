@@ -1952,7 +1952,12 @@
 
 
                         <div class="mb-3">
-                            <label for="address">Street Address</label>
+                            <label class="mb-1" for="address">Street Address</label>
+                            <p class="mb-1">
+                                <small class="text-info">
+                                    Note: PO Boxes are not allowed at the start of address.
+                                </small>
+                            </p>
                             <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
                             value="{{ !empty($address_user->postalAddress1) ?  $address_user->postalAddress1 : '' }}" placeholder="House number and street name"
                             required>
@@ -2155,7 +2160,13 @@
 
 
                         <div class="mb-3">
-                            <label for="address">Street Address</label>
+                            
+                            <label class="mb-1" for="address">Street Address</label>
+                            <p class="mb-1">
+                                <small class="text-info">
+                                    Note: PO Boxes are not allowed at the start of address.
+                                </small>
+                            </p>
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
                             value="{{ !empty($address_user->address1) ? $address_user->address1 : '' }}" placeholder="House number and street name"
                             required>

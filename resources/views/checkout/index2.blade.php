@@ -225,6 +225,9 @@ $cart_price = 0;
                             </div>
                             <div class="col-md-6">
                                 <p class="user-address-thank-you-page-title">Address line 1</p>
+                                <small class="text-danger">
+                                    PO Boxes are not allowed at the start.
+                                </small>
                                 <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 : ''}}</p>
                                 <div class="row">
                                     <div class="col-md-4">
@@ -713,6 +716,9 @@ $cart_price = 0;
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p class="user-address-thank-you-page-title mb-1">Address line 1</p>
+                                                    <small class="text-danger">
+                                                        PO Boxes are not allowed at the start.
+                                                    </small>
                                                     <p class="user-address-thank-you-page-item">{{ $user_address->address1 ? $user_address->address1 :  $user_address->postalAddress1}}</p>
                                                     <p class="user-address-thank-you-page-title mb-1">Address line 2</p>
                                                     <p class="user-address-thank-you-page-item">{{ $user_address->address2 ? $user_address->address2 : $user_address->postalAddress2 }}</p>
@@ -1600,6 +1606,11 @@ $cart_price = 0;
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
+                            <p class="mb-0">
+                                <small class="text-info">
+                                    Note: PO Boxes are not allowed at the start of address.
+                                </small>
+                            </p>
                             <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
                             value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}" placeholder="House number and street name"
                             required>
@@ -1783,6 +1794,11 @@ $cart_price = 0;
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
+                            <p class="mb-0">
+                                <small class="text-info">
+                                    Note: PO Boxes are not allowed at the start of address.
+                                </small>
+                            </p>
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
                             value="{{ !empty($user_address->address1) ? $user_address->address1 : '' }}" placeholder="House number and street name"
                             required>
