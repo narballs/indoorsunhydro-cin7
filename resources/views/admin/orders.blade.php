@@ -59,9 +59,9 @@
                                     role="progressbar" aria-valuenow="100" aria-valuemin="" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <div class="col-md-4 create_bnt d-flex justify-content-end mobile_fulfill_div">
-                            <div class="d-flex">
-                                <span class="fullfill_btn_mbl">
+                        <div class="col-md-4 create_bnt d-flex justify-content-lg-end justify-content-center mobile_fulfill_div">
+                            <div class="d-flex" id="auto_create_label_div">
+                                <span class="" id="autoLabelbtn">
                                     @if (strtolower($auto_createlabel) == 'yes')
                                         <span class="d-flex">
                                             <a class=" btn  btn-sm fulfill-row-items-order-page w-auto">
@@ -87,7 +87,7 @@
                                         </span>
                                     @endif
                                 </span>
-                                <span class="fullfill_btn_mbl">
+                                <span class="" id="autoFullfillbtn">
                                     @if ($auto_fulfill == 1)
                                         <span class="d-flex">
                                             <a class=" btn  btn-sm fulfill-row-items-order-page">
@@ -113,7 +113,7 @@
                                         </span>
                                     @endif
                                 </span>
-                                <span class="create_new_btn_mbl">
+                                <span class="create_new_btn_mbl" id="createOrderbtn">
                                     <button type="button" class="btn create-new-order-btn">
                                         Create New Order +
                                     </button>
@@ -377,18 +377,111 @@
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @php
-                                                    $enable_label_wholesale = App\Models\AdminSetting::where('option_name', 'enable_label_wholesale')->first();  
+                                                    $enable_label_wholesale = App\Models\AdminSetting::where('option_name', 'enable_label_wholesale')->first();
+                                                    $wholesaleEnabled = $enable_label_wholesale && strtolower($enable_label_wholesale->option_value) === 'yes';
+
+                                                    $canSendToShipStation = $order->is_stripe == 0 && $order->isApproved == 1;
+                                                    $isInShipStation = !empty($order->shipstation_orderId);
+                                                    $needsLabel = $order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0;
+                                                    $isSekoWalleted = $order->shipping_carrier_code == 'seko_ltl_walleted';
+                                                    $labelCreated = $order->label_created == 1;
+                                                    $isShipped = $order->is_shipped == 1;
                                                 @endphp
-                                                
-                                                @if ($enable_label_wholesale && strtolower($enable_label_wholesale->option_value) == 'yes')
+
+                                                @if ($wholesaleEnabled && $canSendToShipStation && strtolower($order->logisticsCarrier) != 'pickup order')
                                                     <div class="d-flex">
-                                                        @if ($order->is_stripe == 0)
-                                                            <button type="button" class="btn btn-primary badge_wholesale btn-sm" data-toggle="modal" data-target="#send_wholesale_order_to_shipstation" id="send_wholesale_order_shipstation" data-id="{{ $order->id }}">
+
+                                                        {{-- Send to ShipStation --}}
+                                                        @unless($isInShipStation)
+                                                            <button type="button" 
+                                                                    class="btn btn-primary badge_wholesale btn-sm" 
+                                                                    data-toggle="modal" 
+                                                                    data-target="#send_wholesale_order_to_shipstation" 
+                                                                    id="send_wholesale_order_shipstation" 
+                                                                    data-id="{{ $order->id }}">
                                                                 Send Order to Shipstation
                                                             </button>
-                                                        @endif
+                                                        @else
+                                                            {{-- Case: Needs Label and Not Yet Shipped --}}
+                                                            @if ($needsLabel)
+                                                                <div class="d-flex">
+                                                                    <form action="{{ url('admin/orders/create/label') }}" method="post" class="mr-2">
+                                                                        @csrf
+                                                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                                                        <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
+                                                                        <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                            Create Label
+                                                                        </button>
+                                                                    </form>
+                                                                    <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                        Manual Label
+                                                                    </button>
+                                                                </div>
+
+                                                            {{-- Case: SEKO carrier, label not created, not shipped --}}
+                                                            @elseif (!$labelCreated && !$isShipped && $isSekoWalleted)
+                                                                <div class="d-flex">
+                                                                    <form action="{{ url('admin/mark/order/shipped') }}" method="post">
+                                                                        @csrf
+                                                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                                                        <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
+                                                                        <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                            Mark Shipped
+                                                                        </button>
+                                                                    </form>
+                                                                    <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                        Manual Label
+                                                                    </button>
+                                                                </div>
+
+                                                            {{-- Case: Not yet labeled or shipped --}}
+                                                            @elseif (!$labelCreated && !$isShipped)
+                                                                <div class="d-flex justify-content-center mx-3">
+                                                                    <form action="{{ url('admin/orders/create/label') }}" method="post" class="mr-2">
+                                                                        @csrf
+                                                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                                                        <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
+                                                                        <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                            Create Label
+                                                                        </button>
+                                                                    </form>
+                                                                    <form action="{{ url('admin/mark/order/shipped') }}" method="post">
+                                                                        @csrf
+                                                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                                                        <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
+                                                                        <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                            Mark Shipped
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+
+                                                            {{-- Case: Label created or shipped --}}
+                                                            @else
+                                                                <div class="d-flex justify-content-center">
+                                                                    @if (!empty($order->label_link))
+                                                                        <a href="{{ route('download_label', $order->label_link) }}" class="badge badge-success p-2 border-0 mr-2">
+                                                                            Download
+                                                                        </a>
+                                                                    @endif
+
+                                                                    @if ($isShipped && $labelCreated)
+                                                                        <button type="button" class="badge badge-success p-2 border-0">
+                                                                            Shipped
+                                                                        </button>
+                                                                    @endif
+
+                                                                    @if ($isShipped && $labelCreated && $order->shipment_price == 0)
+                                                                        <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                            Manual Label
+                                                                        </button>
+                                                                    @endif
+                                                                </div>
+                                                            @endif
+                                                        @endunless
+
                                                     </div>
                                                 @endif
+
                                                 @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1) 
 
                                                     @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
@@ -526,23 +619,50 @@
     
     <div class="modal fade" id="send_wholesale_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_wholesale_order_to_shipstation" aria-hidden="true">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="send_wholesale_order_to_shipstation">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+          <form method="POST" action="{{ route('send_wholesale_order_to_shipstation') }}">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Send Wholesale Order To Shipstation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="wholesale_order_id" name="order_id" value="">
+                <input type="hidden" name="carrier_code" id="carrier_code" value="">
+                <input type="hidden" name="service_code" id="service_code" value="">
+                <div class="form-group">
+                  <label for="shipping_method">Select Shipping Method</label>
+                  <select class="form-control" name="shipping_method" required>
+                    @if(count($shipping_quotes) > 0)
+                        <option value="">Select Shipping Method</option>
+                        @foreach($shipping_quotes as $quote)
+                            <option value="{{ $quote->service_code . ' _and_ ' . $quote->carrier_code}}">{{ $quote->service_name }}</option>
+                        @endforeach
+                        <option value="{{ 'seko_ltl_walleted' . ' _and_ ' . 'standard'}}">Seko ltl Walleted</option>
+                    @else
+                        <option value="">No Shipping Method Available</option>
+                    @endif
+                    <!-- Add more options if needed -->
+                  </select>
+                </div>
+                <div id="shipstation_loader" class="text-center mt-3" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Sending...</span>
+                    </div>
+                    <div>Sending to ShipStation...</div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
             </div>
-            <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Understood</button>
-            </div>
-          </div>
+          </form>
         </div>
-      </div>
+    </div>
+      
 @stop
 
 
@@ -838,6 +958,26 @@
                 padding: 0.50rem !important;
             }
         } */
+
+        @media only screen and (max-width: 800px) {
+            #auto_create_label_div {
+                flex-direction: column !important;
+            }
+
+            #autoLabelbtn {
+                margin-bottom: 5px;
+            }
+
+            #autoFullfillbtn {
+                margin-bottom: 5px;
+            }
+        }
+
+
+        #send_wholesale_order_shipstation {
+            font-size: 12px;
+        }
+
     </style>
 @stop
 
@@ -958,6 +1098,34 @@
         }
     </script>
     <script>
+        $(document).ready(function () {
+            $(document).on('click', '.badge_wholesale', function () {
+                const orderId = $(this).data('id');
+                $('#wholesale_order_id').val(orderId);
+            });
+
+            // Before submitting the form, split the selected shipping method
+            $('form[action="{{ route('send_wholesale_order_to_shipstation') }}"]').on('submit', function (e) {
+                const shippingValue = $('select[name="shipping_method"]').val();
+                const parts = shippingValue.split(' _and_ ');
+
+                if (parts.length !== 2) {
+                    alert('Invalid shipping method selected.');
+                    e.preventDefault(); // prevent submission
+                    return false;
+                }
+
+                $('#carrier_code').val(parts[1]); // carrier_code
+                $('#service_code').val(parts[0]); // service_code
+
+                // Show loader
+                $('#shipstation_loader').show();
+
+                // Optional: disable the submit button to prevent multiple clicks
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+        });
+
         // delete employee ajax request
         $(document).on('click', '.deleteIcon', function(e) {
             e.preventDefault();
