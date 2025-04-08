@@ -388,6 +388,15 @@ class UserHelper
         }
 
 
+        if ($product_height > 108) {
+            $internalNotes = 'Dimensions exceeds ' . $product_height . ' inches';
+            $product_height = 1;
+        } else {
+            $internalNotes = null;
+            $product_height = $product_height;
+        }
+
+
         $client = new \GuzzleHttp\Client();
         $shipstation_order_url = config('services.shipstation.shipment_order_url');
         $ship_station_api_key = config('services.shipstation.key');
@@ -485,6 +494,211 @@ class UserHelper
             'shippingAmount' => number_format($currentOrder->shipment_price , 2),
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
+            'internalNotes' => $internalNotes,
+            'shipTo' => [
+                "name" => $DeliveryfirstName .' '. $DeliverylastName,
+                "company" => $Deliverycompany,
+                "street1" => $Deliveryaddress1,
+                "street2" => $Deliveryaddress2,
+                "city" => $Deliverycity,
+                "state" => $Deliverystate,
+                "postalCode" => $Deliveryzip,
+                "country"=>"US",
+                "phone" => $Deliveryphone,
+                // "residential"=>true
+            ],
+            'billTo' => [
+                "name" => $firstName .' '. $lastName,
+                "company" => $order_contact->company,
+                "street1" => $address1,
+                "street2" => $address2,
+                "city" => $city,
+                "state" => $state,
+                "postalCode" => $zip,
+                "country"=>"US",
+                "phone" => $phone,
+                // "residential"=>true
+            ],
+            'weight' => [
+                'value' => $products_weight,
+                'units' => 'pounds'
+            ],
+            'dimensions' => [
+                'units' => 'inches',
+                'length' => $product_length,
+                'width' => $product_width,
+                'height' => $product_height,
+            ],
+            'insuranceOptions' => [
+                'provider' => 'parcelguard', 
+                'insureShipment' => true,
+                'insuredValue' => floatval($currentOrder->productTotal),
+            ],
+            'items'=> $items
+        ];
+
+        $headers = [
+            "Content-Type: application/json",
+            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        ];
+        $responseBody = null;
+        $response = $client->post($shipstation_order_url, [
+            'headers' => $headers,
+            'json' => $data,
+        ]);
+        $statusCode = $response->getStatusCode();
+        $responseBody = $response->getBody()->getContents();
+        
+        return [
+            'statusCode' => $statusCode,
+            'responseBody' => json_decode($responseBody)
+        ];
+        
+    }
+
+
+    public static function wholesale_shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status , $carrier_code , $service_code) {
+        $api_order = ApiOrder::where('id', $order_id)->first();
+        $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+
+        $products_weight = 0;
+        $product_width = 0;
+        $product_height = 0;
+        $product_length = 0;
+        $products_lengths = [];
+        $products_widths = [];
+        $sum_of_length = 0;
+        $sum_of_width = 0;
+        foreach ($order_items as $order_item) {
+            $items[] = [
+                'name' => $order_item->product->name,
+                'sku' => $order_item->product->code,
+                'quantity' => $order_item->quantity,
+                'unitPrice' => $order_item->price,
+            ];
+            $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+            foreach ($product_options as $product_option) {
+                $products_weight += $product_option->optionWeight * $order_item['quantity'];
+                if (!empty($product_option->products)) {
+
+                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+
+
+                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+                    $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
+                    $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+                }
+            }
+        }
+
+        $product_length = max($products_lengths);
+        $product_width = max($products_widths);
+
+        $girth = 2 * ($product_width + $product_height); 
+        if ($girth > 165  && $products_weight < 100) {
+            $products_weight = 100;
+        }
+
+
+        if ($product_height > 108) {
+            $internalNotes = 'Dimensions exceeds ' . $product_height . ' inches';
+            $product_height = 1;
+        } else {
+            $internalNotes = null;
+            $product_height = $product_height;
+        }
+
+
+        $client = new \GuzzleHttp\Client();
+        $shipstation_order_url = config('services.shipstation.shipment_order_url');
+        $ship_station_api_key = config('services.shipstation.key');
+        $ship_station_api_secret = config('services.shipstation.secret');
+        
+
+        $created_date = \Carbon\Carbon::parse($currentOrder->created_at)->setTimezone('America/Los_Angeles');
+
+        // Format order created date as ISO-8601 string
+        $order_created_date = $created_date->format('Y-m-d\TH:i:s');
+
+        // Check if the created date is Sunday
+        if ($created_date->isSunday()) {
+            $shipDate = $created_date->copy()->addDays(2);
+        } else {
+            // Add 48 hours to the created date
+            $shipDate = $created_date->copy()->addHours(48);
+
+            // Adjust for weekends
+            if ($shipDate->isSaturday()) {
+                $shipDate = $shipDate->addDays(2); // Move to Monday
+            } elseif ($shipDate->isSunday()) {
+                $shipDate = $shipDate->addDay(); // Move to Monday
+            }
+        }
+
+        // Format the shipping date as 'Y-m-d'
+        $ship_by_date = $shipDate->format('Y-m-d');
+
+        $calculate_tax = $currentOrder->total_including_tax - $currentOrder->productTotal;
+        $tax = $calculate_tax - $currentOrder->shipment_price;
+        $orderStatus = null;
+        if (!empty($shipstation_order_status) && ($shipstation_order_status == 'update_order')) {
+            $orderStatus = 'cancelled';
+        } else {
+            if ($api_order->shipstation_orderId == null) {
+                $orderStatus = 'awaiting_shipment';
+            } else {
+                $orderStatus = 'awaiting_shipment';
+            }
+        }
+
+        // Billing Address
+        $firstName = self::get_AddressValue($currentOrder->BillingFirstName, $order_contact->firstName);
+        $lastName = self::get_AddressValue($currentOrder->BillingLastName, $order_contact->lastName);
+        $address1 = self::get_AddressValue($currentOrder->BillingAddress1, $order_contact->postalAddress1, $order_contact->address1);
+        $address2 = self::get_AddressValue($currentOrder->BillingAddress2, $order_contact->postalAddress2, $order_contact->address2);
+        $city = self::get_AddressValue($currentOrder->BillingCity, $order_contact->postalCity, $order_contact->city);
+        $state = self::get_AddressValue($currentOrder->BillingState, $order_contact->postalState, $order_contact->state);
+        $zip = self::get_AddressValue($currentOrder->BillingZip, $order_contact->postalPostCode, $order_contact->postCode);
+        $phone = self::get_AddressValue($currentOrder->BillingPhone, $order_contact->phone, $order_contact->mobile);
+
+        // Shipping Address
+        $DeliveryfirstName = self::get_AddressValue($currentOrder->DeliveryFirstName, $order_contact->firstName);
+        $DeliverylastName = self::get_AddressValue($currentOrder->DeliveryLastName, $order_contact->lastName);
+        $Deliverycompany = self::get_AddressValue($currentOrder->DeliveryCompany, $order_contact->company);
+        $Deliveryaddress1 = self::get_AddressValue($currentOrder->DeliveryAddress1, $order_contact->address1, $order_contact->postalAddress1);
+        $Deliveryaddress2 = self::get_AddressValue($currentOrder->DeliveryAddress2, $order_contact->address2);
+        $Deliverycity = self::get_AddressValue($currentOrder->DeliveryCity, $order_contact->city, $order_contact->postalCity);
+        $Deliverystate = self::get_AddressValue($currentOrder->DeliveryState, $order_contact->state, $order_contact->postalState);
+        $Deliveryzip = self::get_AddressValue($currentOrder->DeliveryZip, $order_contact->postCode, $order_contact->postalPostCode);
+        $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
+        $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
+
+        $confirmation_value = null;
+
+        if (floatval($currentOrder->productTotal) > floatval(499)) {
+            $confirmation_value = 'adult_signature';
+        } else {
+            $confirmation_value = 'delivery';
+        }
+
+
+        $data = [
+            'orderNumber' => $order_id,
+            'orderKey' => $currentOrder->reference,
+            'orderDate' => $order_created_date,
+            'shipDate' => $ship_by_date,
+            'carrierCode' => $carrier_code,
+            'serviceCode' => $service_code,
+            'orderStatus' => $orderStatus,
+            'customerEmail'=> $order_contact->email,
+            'packageCode' => !empty($products_weight) && $products_weight > 99 ? 'container' : 'package',
+            'confirmation' => $confirmation_value,
+            'shippingAmount' => number_format($currentOrder->shipment_price , 2),
+            "amountPaid" => number_format($currentOrder->total_including_tax , 2),
+            "taxAmount" => number_format($currentOrder->tax_rate, 2),
+            'internalNotes' => $internalNotes,
             'shipTo' => [
                 "name" => $DeliveryfirstName .' '. $DeliverylastName,
                 "company" => $Deliverycompany,
