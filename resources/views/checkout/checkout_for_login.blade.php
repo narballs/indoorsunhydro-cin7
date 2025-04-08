@@ -671,6 +671,7 @@
 
 <?php
 $cart_total = 0;
+$upgrade_cart_total = 0;
 $cart_price = 0;
 ?>
 @if (Session::get('cart'))
@@ -679,6 +680,7 @@ $cart_price = 0;
         $total_quatity = $cart['quantity'];
         $total_price = $cart['price'] * $total_quatity;
         $cart_total = $cart_total + $total_price;
+        $upgrade_cart_total = $upgrade_cart_total + $total_price;
         ?>
     @endforeach
 @endif
@@ -702,6 +704,7 @@ $cart_price = 0;
                                 <div class="mobile_view_checkout_products d-none">
                                     <?php
                                         $cart_total = 0;
+                                        $upgrade_cart_total = 0;
                                         $cart_price = 0;
                                         $item_quantity = 0;
                                     ?>
@@ -711,6 +714,7 @@ $cart_price = 0;
                                             $total_price = $cart['price'] * $total_quatity;
                                             $item_quantity = $item_quantity + $total_quatity;
                                             $cart_total = $cart_total + $total_price;
+                                            $upgrade_cart_total = $upgrade_cart_total + $total_price;
                                         ?>
                                     @endforeach
                                     <div class="row text-center">
@@ -732,6 +736,7 @@ $cart_price = 0;
                                     <div class="mobile_view_checkout_products d-none">
                                         <?php
                                             $cart_total = 0;
+                                            $upgrade_cart_total = 0;
                                             $cart_price = 0;
                                             $item_quantity = 0;
                                         ?>
@@ -741,6 +746,7 @@ $cart_price = 0;
                                                 $total_price = $cart['price'] * $total_quatity;
                                                 $item_quantity = $item_quantity + $total_quatity;
                                                 $cart_total = $cart_total + $total_price;
+                                                $upgrade_cart_total = $upgrade_cart_total + $total_price;
                                             ?>
                                         @endforeach
                                         <div class="accordion" id="accordionExample">
@@ -761,6 +767,7 @@ $cart_price = 0;
                                                                         $total_price = $cart['price'] * $total_quatity;
                                                                         $item_quantity = $item_quantity + $total_quatity;
                                                                         $cart_total = $cart_total + $total_price;
+                                                                        $upgrade_cart_total = $upgrade_cart_total + $total_price;
                                                                     ?>
                                                                     <div class="row border-bottom custom-padding">
                                                                         <div class="col-xl-8 col-md-8 col-7"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
@@ -783,6 +790,7 @@ $cart_price = 0;
                                         </div>
                                         <?php
                                             $cart_total = 0;
+                                            $upgrade_cart_total = 0;
                                             $cart_price = 0;
                                             $item_quantity = 0;
                                         ?>
@@ -793,6 +801,7 @@ $cart_price = 0;
                                                     $total_price = $cart['price'] * $total_quatity;
                                                     $item_quantity = $item_quantity + $total_quatity;
                                                     $cart_total = $cart_total + $total_price;
+                                                    $upgrade_cart_total = $upgrade_cart_total + $total_price;
                                                 ?>
                                                 <div class="row border-bottom custom-padding">
                                                     <div class="col-xl-8 col-md-8 col-7"><span class="checkout_product_title">{{ $cart['name'] }}</span></div>
@@ -1085,8 +1094,11 @@ $cart_price = 0;
                                         <input type="hidden" value="{{$products_weight}}" name="product_weight" class="product_weight">
                                         @php
                                             $surcharge_value = 0;
+                                            $upgrade_extra_shipping_value = 0;
+                                            $upgrade_extra_charges_for_total_over_499 = 0;
                                             if ($shipping_free_over_1000 == 1) {
                                                 $extra_shipping_value = 0;
+                                                
                                             } else {
                                                 $extra_shipping_value = $extra_shipping_value;
                                             }
@@ -1288,6 +1300,23 @@ $cart_price = 0;
                                                                                         </span>
                                                                                     </div>
                                                                                 </div>
+
+                                                                                @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes'))
+                                                                                    <div class="row align-items-center my-3">
+                                                                                        <div class="col-md-2 col-3">
+                                                                                            <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
+                                                                                        </div>
+                                                                                        <div class="col-md-10 col-9">
+                                                                                            <span>
+                                                                                                Upgrade Shipping
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        
+                                                                                    </div>
+                                                                                    {{-- up ship --}}
+                                                                                        @include('checkout.upgrade_shipping_partial')
+                                                                                    {{-- up ship end --}}
+                                                                                @endif
                                                                             @endif
                                                                         @endif
                                                                     </div>
@@ -1317,6 +1346,21 @@ $cart_price = 0;
                                                                             </span>
                                                                         </div>
                                                                     </div>
+                                                                    @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes'))
+                                                                        <div class="row align-items-center my-3">
+                                                                            <div class="col-md-2 col-3">
+                                                                                <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
+                                                                            </div>
+                                                                            <div class="col-md-10 col-9">
+                                                                                <span>
+                                                                                    Upgrade Shipping
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        {{-- up ship --}}
+                                                                        @include('checkout.upgrade_shipping_partial')
+                                                                        {{-- up ship end --}}
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         </div>
@@ -1342,6 +1386,21 @@ $cart_price = 0;
                                                                         </span>
                                                                     </div>
                                                                 </div>
+                                                                @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes'))
+                                                                    <div class="row align-items-center my-3">
+                                                                        <div class="col-md-2 col-3">
+                                                                            <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
+                                                                        </div>
+                                                                        <div class="col-md-10 col-9">
+                                                                            <span>
+                                                                                Upgrade Shipping
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    {{-- up ship --}}
+                                                                    @include('checkout.upgrade_shipping_partial')
+                                                                    {{-- up ship end --}}
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     </div>
@@ -3711,6 +3770,88 @@ $cart_price = 0;
                         
                 }
 
+
+                /// upgrade shipment
+                function upgrade_shipping_price(element) {
+                    var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
+                    var var_pro_total = p_total.replace(/\$/g, '');
+                    var p_total_new = var_pro_total.split(',').join('');
+                    var product_total = p_total_new != null ? parseFloat(p_total_new) : 0;
+
+                    if ($(element).is(':checked')) {
+                        $('#upgrade_shipping_box').removeClass('d-none');
+
+                        // Reset both radio groups
+                        $('input[name="upgrade_shipping_service_code"], input[name="upgrade_shipping_multi_price"]').each(function () {
+                            this.checked = false;
+                        });
+                    } else {
+                        $('#upgrade_shipping_box').addClass('d-none');
+
+                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                        var parcel_guard = 0;
+                        var total_including_shipping = product_total + tax + parseFloat(parcel_guard);
+
+                        $('#incl_tax').val(total_including_shipping.toFixed(2));
+                        $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+
+                        let ship_cost = $(element).attr('shipping_cost_with_surcharge');
+                        $('#original_shipment_price').val(parseFloat(ship_cost).toFixed(2));
+
+                        // Reset both radio groups
+                        $('input[name="upgrade_shipping_service_code"], input[name="upgrade_shipping_multi_price"]').each(function () {
+                            this.checked = false;
+                        });
+                    }
+                }
+
+
+                function upgrade_assign_service_code(element) {
+                    var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
+                    var var_pro_total = p_total.replace(/\$/g, '');
+                    var p_total_new = var_pro_total.split(',').join('');
+                    var product_total = p_total_new != null ? parseFloat(p_total_new) : 0;
+                    if ($('#upgrade_shipping').is(':checked')) {
+                        $('#upgrade_shipping_box').removeClass('d-none');
+                        
+                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                        var parcel_guard = 0;
+                        var total_including_shipping = 0;
+                        $('.upgrade_shipping_service_code').each(function() {
+                            $(this).removeAttr('checked');
+                        });
+                        $('.upgrade_shipping_service_code').each(function() {
+                            $(this).prop('checked', false); // Uncheck all options
+                        });
+                        if ($(element).is(':checked')) {
+                            $(element).parent().find('.upgrade_shipping_service_code').removeClass('d-none').attr('checked', 'checked');
+                            $(element).parent().find('.upgrade_shipping_service_code').addClass('d-none');
+                            total_including_shipping =  product_total + tax + parseFloat($(element).val())  +  parseFloat(parcel_guard);
+                            $('#incl_tax').val(total_including_shipping.toFixed(2));
+                            $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                            let ship_cost = $(element).attr('upgrade_shipping_cost_with_surcharge');
+                            $('#original_shipment_price').val(parseFloat(ship_cost).toFixed(2));
+                        }
+                    } else {
+                        $('#upgrade_shipping_box').addClass('d-none');
+                        var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                        var parcel_guard = 0;
+                        var total_including_shipping = 0;
+                        var total_including_shipping =  product_total + tax +  parseFloat(parcel_guard);
+                        $('#incl_tax').val(total_including_shipping.toFixed(2));
+                        $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                        let ship_cost = $(element).attr('shipping_cost_with_surcharge');
+                        $('#original_shipment_price').val(parseFloat(ship_cost).toFixed(2));
+                        $('.upgrade_shipping_service_code').each(function() {
+                            $(this).removeAttr('checked');
+                        });
+                        $('.upgrade_shipping_service_code').each(function() {
+                            $(this).prop('checked', false); // Uncheck all options
+                        });
+                    }
+                }
+                /// upgrade shipment end
+
                 function assign_service_code(element) {
                     var p_total = $('.checkout_subtotal_price').html(); // Get the HTML content
                     var var_pro_total = p_total.replace(/\$/g, '');
@@ -4010,6 +4151,7 @@ $cart_price = 0;
             @include('partials.footer')
             <script>
                 $(document).ready(function() {
+                    
                     update_total_with_shipping_selected();
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;

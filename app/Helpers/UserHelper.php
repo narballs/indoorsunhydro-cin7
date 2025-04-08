@@ -495,7 +495,8 @@ class UserHelper
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
             'internalNotes' => $internalNotes,
-            'shipTo' => [
+            'customField1' => !empty($currentOrder->upgrade_shipping)  && $currentOrder->upgrade_shipping == 1 ? 'Upgraded Shipping from free shipping' : null,
+            'shipTo' => [ 
                 "name" => $DeliveryfirstName .' '. $DeliverylastName,
                 "company" => $Deliverycompany,
                 "street1" => $Deliveryaddress1,
@@ -699,6 +700,7 @@ class UserHelper
             "amountPaid" => number_format($currentOrder->total_including_tax , 2),
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
             'internalNotes' => $internalNotes,
+            'customField1' => !empty($currentOrder->upgrade_shipping)  && $currentOrder->upgrade_shipping == 1 ? 'Upgraded Shipping from free shipping' : null,
             'shipTo' => [
                 "name" => $DeliveryfirstName .' '. $DeliverylastName,
                 "company" => $Deliverycompany,

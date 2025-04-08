@@ -648,10 +648,15 @@ class CheckoutController extends Controller
                 }
             }
             $admin_selected_shipping_quote = [];
+            $upgrade_admin_selected_shipping_quote = [];
             $shipstation_shipment_prices = [];
             $surcharge_value = 0;
+            $allow_upgrade = false;
+            $upgrade_shipment_price = 0;
             $shipping_carrier_code = null;
             $shipping_service_code = null;
+            $upgrade_shipping_carrier_code = null;
+            $upgrade_shipping_service_code  = null;
             $carrier_code = AdminSetting::where('option_name', 'shipping_carrier_code')->first();
             $service_code = AdminSetting::where('option_name', 'shipping_service_code')->first();
             $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
@@ -660,6 +665,40 @@ class CheckoutController extends Controller
             if ($charge_shipment_fee == true) {
                 if ($shipping_free_over_1000 == 1) {
                     $shipment_price = 0;
+                    $allow_upgrade = true;
+
+
+                    if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes' && $allow_upgrade = true) {
+                        if ($products_weight > 99) {
+                            $upgrade_shipping_carrier_code = $carrier_code_2->option_value;
+                            $upgrade_shipping_service_code = $service_code_2->option_value;
+                            $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
+                            
+                            if (($get_shipping_rates_greater['shipment_prices'] == null) && $get_shipping_rates_greater['shipment_price'] == 0) {
+                                $shipment_error = 1;
+                                $upgrade_shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
+                                
+                            } else {
+                                $upgrade_shipment_price = 0;
+                                $upgrade_shipping_carrier_code = $get_shipping_rates_greater['shipping_carrier_code'];
+                                $upgrade_shipstation_shipment_prices = $get_shipping_rates_greater['shipment_prices'];
+                            }
+                            
+                        } else {
+                            $upgrade_shipping_methods = $this->upgrade_shipment_prices($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $upgrade_shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
+                            if (($upgrade_shipping_methods['shipment_prices'] === null)) {
+                                $shipment_error = 1;
+                            }
+                            else {
+                                $upgrade_shipment_price = $upgrade_shipping_methods['shipment_price'];
+                                $upgrade_shipping_carrier_code = $upgrade_shipping_methods['shipping_carrier_code'];
+                                $upgrade_shipstation_shipment_prices = $upgrade_shipping_methods['shipment_prices'];
+                                $upgrade_admin_selected_shipping_quote = $upgrade_shipstation_shipment_prices;
+                            }
+                        }
+                    }
+                    
+                    
                 } 
                 else {
                     if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
@@ -684,6 +723,7 @@ class CheckoutController extends Controller
                             $shipping_service_code = null;
                             $get_shipping_rates_new = $this->get_shipping_rate_new($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
                             
+                            
                             if (($get_shipping_rates_new['shipment_prices'] === null)) {
                                 $shipment_error = 1;
                             }
@@ -693,7 +733,6 @@ class CheckoutController extends Controller
                                 $shipstation_shipment_prices = $get_shipping_rates_new['shipment_prices'];
                                 $admin_selected_shipping_quote = $shipstation_shipment_prices;
                             }
-                            
                         }
                         
                     }
@@ -822,6 +861,7 @@ class CheckoutController extends Controller
             //     $parcel_guard = 0.00;
             // }
             // dd($allow_discount_for_new_user, $allow_discount_for_specific_customers, $allow_discount_for_all_customers);
+            $upgrade_shipping = AdminSetting::where('option_name', 'enable_upgrade_shipping')->first();
             return view('checkout/checkout_for_login', compact(
                 'user_address',
                 'states',
@@ -857,7 +897,13 @@ class CheckoutController extends Controller
                 'get_user_default_billing_address',
                 'get_user_default_shipping_address',
                 'get_all_user_addresses',
-                'surcharge_type_settings_for_weight_greater_then_150'
+                'surcharge_type_settings_for_weight_greater_then_150',
+                'upgrade_shipping',
+                'upgrade_admin_selected_shipping_quote',
+                'upgrade_shipping_carrier_code',
+                'upgrade_shipment_price',
+                'upgrade_shipping_service_code'
+
                 // 'toggle_shipment_insurance'
             ));
         } else {
@@ -3216,6 +3262,144 @@ class CheckoutController extends Controller
 
 
     public function get_shipping_rate_new($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address ,$productTotal) {
+        
+        $shipment_prices = [];
+        $client = new \GuzzleHttp\Client();
+        $ship_station_host_url = config('services.shipstation.host_url');
+        $ship_station_api_key = config('services.shipstation.key');
+        $ship_station_api_secret = config('services.shipstation.secret');
+        $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
+        $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
+        $shipping_carrier_code = null;
+        $error = false;
+        $selected_shipping_methods = [];
+        $get_shipping_api_response = [];
+        $shipping_quotes_settings = ShippingQuoteSetting::where('status', 1)->get();
+        if (count($shipping_quotes_settings) == 0) {
+            return [
+                'shipment_prices' => null,
+                'shipment_price' => 0,
+                'shipping_carrier_code' => $carrier_code_2->option_value,    
+            ];
+        }
+
+        foreach ($shipping_quotes_settings as $quote) {
+            if (!empty($quote->service_code)) {
+                // Prepare data for ShipStation request
+                $shipping_carrier_code = $quote->carrier_code;
+                $data = [
+                    'carrierCode' => $products_weight > 99 ? $carrier_code_2->option_value : $quote->carrier_code,
+                    'serviceCode' => $products_weight > 99 ? $service_code_2->option_value : $quote->service_code,
+                    'fromPostalCode' => '95826', // Default sender postal code
+                    'toCountry' => 'US',
+                    'toPostalCode' => $get_user_default_shipping_address->DeliveryZip ?? $get_user_default_billing_address->BillingZip,
+                    'toState' => $get_user_default_shipping_address->DeliveryState ?? $get_user_default_billing_address->BillingState,
+                    'weight' => [
+                        'value' => $products_weight,
+                        'units' => 'pounds',
+                    ],
+                    'dimensions' => [
+                        'units' => 'inches',
+                        'length' => $product_length,
+                        'width' => $product_width,
+                        'height' => $product_height,
+                    ],
+                    // 'confirmation' => floatval($productTotal) > floatval(499) ? 'signature' : 'delivery',
+                ];
+    
+                $headers = [
+                    'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+                    'Content-Type' => 'application/json',
+                ];
+    
+                try {
+                    // Send the request to ShipStation API
+                    $response = $client->post($ship_station_host_url, [
+                        'headers' => $headers,
+                        'json' => $data,
+                    ]);
+    
+                    $statusCode = $response->getStatusCode();
+                    $responseBody = $response->getBody()->getContents();
+                    $shipping_response = json_decode($responseBody);
+    
+                    // Store the response if it's valid
+                    if (!empty($shipping_response)) {
+                        $get_shipping_api_response[] = $shipping_response;
+                        $shipment_price = !empty($shipment_prices) ? $shipment_prices[0]->shipmentCost + $shipment_prices[0]->otherCost : 0;
+                    }
+                } catch (\Exception $e) {
+                    // Handle error, log it
+                    Log::error('Shipping API Error: ' . $e->getMessage());
+                    // return [
+                    //     'shipment_prices' => null,
+                    //     'shipment_price' => 0,
+                    //     'shipping_carrier_code' => $carrier_code_2->option_value,    
+                    // ];
+                    continue; // Skip this quote and proceed with the next one
+                }
+            }
+        }
+
+
+        if (!empty($get_shipping_api_response)) {
+            // dd($get_shipping_api_response);
+            // Merge the shipping responses from ShipStation
+            // $mergedArray = count($get_shipping_api_response) > 1 ?  array_merge($get_shipping_api_response[0], $get_shipping_api_response[1] , $get_shipping_api_response[2]) : $get_shipping_api_response[0];
+            if (count($get_shipping_api_response) > 1) {
+                $mergedArray = array_merge(...array_slice($get_shipping_api_response, 0, 3));
+            } else {
+                $mergedArray = $get_shipping_api_response[0] ?? [];
+            }
+            $selected_shipping_methods = []; // Initialize the selected shipping methods array
+            
+            // Populate selected shipping methods based on the settings
+            if (count($shipping_quotes_settings) > 0) {
+                foreach ($shipping_quotes_settings as $quote) {
+                    if (!empty($quote->service_code)) {
+                        $selected_shipping_methods[] = [
+                            'carrier_code' => $quote->carrier_code,
+                            'service_code' => $quote->service_code,
+                            'surcharge_type' => $quote->surcharge_type,
+                            'surcharge_amount' => $quote->surcharge_value,
+                        ];
+                    }
+                }
+            }
+        
+            // Add surcharge values to the merged array based on carrier code
+            foreach ($mergedArray as $key => $shipping_info) {
+                foreach ($selected_shipping_methods as $method) {
+                    if ($shipping_info->serviceCode === $method['service_code']) {
+                        // Add surcharge information
+                        $mergedArray[$key]->surcharge_type = $method['surcharge_type'];
+                        $mergedArray[$key]->surcharge_amount = $method['surcharge_amount'];
+
+                        break; // No need to check other methods once a match is found
+                    }
+                }
+            }
+            return [
+                'shipment_prices' => $mergedArray,
+                'shipment_price' => $shipment_price,
+                'shipping_carrier_code' => $products_weight > 99 ? $carrier_code_2->option_value : $shipping_carrier_code,    
+                'selected_shipping_methods' => $selected_shipping_methods,
+            ];
+        }
+        
+        else {
+            return [
+                'shipment_prices' => null,
+                'shipment_price' => 0,
+                'shipping_carrier_code' => null,    
+            ];
+        }
+
+        
+    }
+
+
+    public function upgrade_shipment_prices($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address ,$productTotal) {
         
         $shipment_prices = [];
         $client = new \GuzzleHttp\Client();
