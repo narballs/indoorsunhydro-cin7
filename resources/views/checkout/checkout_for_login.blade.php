@@ -185,7 +185,35 @@
         text-transform: uppercase;
         line-height: 36px; /* 150% */
     }
+    .checkout_upgrade_shipping_heading {
+        color: #555;
+        font-family: 'Poppins';
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-transform: uppercase;
+        line-height: 36px; /* 150% */
+    }
+    .checkout_shipping_methods {
+        color: #555;
+        font-family: 'Poppins';
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-transform: uppercase;
+        line-height: 36px; /* 150% */
+    }
     .checkout_shipping_price{
+        color: #111;
+        font-family: 'Poppins';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 36px; /* 150% */
+    }
+    .upgrade_checkout_shipping_price {
         color: #111;
         font-family: 'Poppins';
         font-size: 16px;
@@ -1300,27 +1328,26 @@ $cart_price = 0;
                                                                                         </span>
                                                                                     </div>
                                                                                 </div>
-
-                                                                                @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes'))
-                                                                                    <div class="row align-items-center my-3">
-                                                                                        <div class="col-md-2 col-3">
-                                                                                            <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
-                                                                                        </div>
-                                                                                        <div class="col-md-10 col-9">
-                                                                                            <span>
-                                                                                                Upgrade Shipping
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        
-                                                                                    </div>
-                                                                                    {{-- up ship --}}
-                                                                                        @include('checkout.upgrade_shipping_partial')
-                                                                                    {{-- up ship end --}}
-                                                                                @endif
                                                                             @endif
                                                                         @endif
                                                                     </div>
                                                                     <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                                    @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes') && $shipping_free_over_1000 == 1)
+                                                                        <div class="row align-items-center my-3">
+                                                                            <div class="col-md-2 col-3">
+                                                                                <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
+                                                                            </div>
+                                                                            <div class="col-md-10 col-9">
+                                                                                <span class="checkout_shipping_methods">
+                                                                                    Upgrade Shipping
+                                                                                </span>
+                                                                            </div>
+                                                                            
+                                                                        </div>
+                                                                        {{-- up ship --}}
+                                                                            @include('checkout.upgrade_shipping_partial')
+                                                                        {{-- up ship end --}}
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         </div>
@@ -1346,25 +1373,26 @@ $cart_price = 0;
                                                                             </span>
                                                                         </div>
                                                                     </div>
-                                                                    @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes'))
-                                                                        <div class="row align-items-center my-3">
-                                                                            <div class="col-md-2 col-3">
-                                                                                <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
-                                                                            </div>
-                                                                            <div class="col-md-10 col-9">
-                                                                                <span>
-                                                                                    Upgrade Shipping
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                        {{-- up ship --}}
-                                                                        @include('checkout.upgrade_shipping_partial')
-                                                                        {{-- up ship end --}}
-                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         </div>
                                                         <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
+                                                        @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes') && $shipping_free_over_1000 == 1)
+                                                            <div class="row align-items-center my-3">
+                                                                <div class="col-md-2 col-3">
+                                                                    <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
+                                                                </div>
+                                                                <div class="col-md-10 col-9">
+                                                                    <span class="checkout_shipping_methods">
+                                                                        Upgrade Shipping
+                                                                    </span>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            {{-- up ship --}}
+                                                                @include('checkout.upgrade_shipping_partial')
+                                                            {{-- up ship end --}}
+                                                        @endif
                                                     </div>
                                                 @endif
                                             </div>
@@ -1386,25 +1414,26 @@ $cart_price = 0;
                                                                         </span>
                                                                     </div>
                                                                 </div>
-                                                                @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes'))
-                                                                    <div class="row align-items-center my-3">
-                                                                        <div class="col-md-2 col-3">
-                                                                            <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
-                                                                        </div>
-                                                                        <div class="col-md-10 col-9">
-                                                                            <span>
-                                                                                Upgrade Shipping
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                    {{-- up ship --}}
-                                                                    @include('checkout.upgrade_shipping_partial')
-                                                                    {{-- up ship end --}}
-                                                                @endif
                                                             @endif
                                                         @endif
                                                     </div>
                                                     <div class="col-md-3 col-4 text-right"><span class="checkout_shipping_price">${{number_format(0), 2}}</span></div>
+                                                    @if (!empty($upgrade_shipping) && (strtolower($upgrade_shipping->option_value) == 'yes') && $shipping_free_over_1000 == 1)
+                                                        <div class="row align-items-center my-3">
+                                                            <div class="col-md-2 col-3">
+                                                                <input type="checkbox" name="upgrade_shipping" id="upgrade_shipping" class="upgrade_shipping" value="1" onclick="upgrade_shipping_price(this)">
+                                                            </div>
+                                                            <div class="col-md-10 col-9">
+                                                                <span class="checkout_shipping_methods">
+                                                                    Upgrade Shipping
+                                                                </span>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        {{-- up ship --}}
+                                                            @include('checkout.upgrade_shipping_partial')
+                                                        {{-- up ship end --}}
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endif
@@ -3823,12 +3852,30 @@ $cart_price = 0;
                         $('.upgrade_shipping_service_code').each(function() {
                             $(this).prop('checked', false); // Uncheck all options
                         });
+                        // if ($(element).is(':checked')) {
+                        //     $(element).parent().find('.upgrade_shipping_service_code').removeClass('d-none').attr('checked', 'checked');
+                        //     $(element).parent().find('.upgrade_shipping_service_code').addClass('d-none');
+                        //     total_including_shipping =  product_total + tax + parseFloat($(element).val())  +  parseFloat(parcel_guard);
+                        //     $('#incl_tax').val(total_including_shipping.toFixed(2));
+                        //     $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+                        //     let ship_cost = $(element).attr('upgrade_shipping_cost_with_surcharge');
+                        //     $('#original_shipment_price').val(parseFloat(ship_cost).toFixed(2));
+                        // }
                         if ($(element).is(':checked')) {
-                            $(element).parent().find('.upgrade_shipping_service_code').removeClass('d-none').attr('checked', 'checked');
-                            $(element).parent().find('.upgrade_shipping_service_code').addClass('d-none');
-                            total_including_shipping =  product_total + tax + parseFloat($(element).val())  +  parseFloat(parcel_guard);
+                            // Uncheck all service code radios first
+                            $('.upgrade_shipping_service_code').prop('checked', false);
+
+                            // Check the corresponding hidden radio button
+                            let hiddenRadio = $(element).parent().find('.upgrade_shipping_service_code');
+                            hiddenRadio.prop('checked', true); // this is the key fix
+
+                            // Update totals
+                            let tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
+                            let parcel_guard = 0;
+                            let total_including_shipping = product_total + tax + parseFloat($(element).val()) + parseFloat(parcel_guard);
                             $('#incl_tax').val(total_including_shipping.toFixed(2));
                             $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
+
                             let ship_cost = $(element).attr('upgrade_shipping_cost_with_surcharge');
                             $('#original_shipment_price').val(parseFloat(ship_cost).toFixed(2));
                         }

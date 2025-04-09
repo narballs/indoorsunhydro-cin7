@@ -65,7 +65,7 @@
                         $upgrade_surcharge_for_lighter_weight = 0;
                         @endphp
                         <div class="col-md-12">
-                            <p class="upgrade_checkout_product_heading ml-0 mb-2">Shipping Methods</p>
+                            <p class="checkout_shipping_methods ml-0 mb-2">Shipping Methods</p>
                         </div>
                         @if (count($upgrade_admin_selected_shipping_quote) == 1)
                             @foreach ($upgrade_admin_selected_shipping_quote as $shipping_quote)
@@ -102,7 +102,7 @@
                                     <input type="radio" name="upgrade_shipping_multi_price" class="upgrade_shipping_multi_price" id="upgrade_single_shipping_quote"
                                         value="{{!empty($upgrade_shipment_cost_with_surcharge) ? number_format($upgrade_shipment_cost_with_surcharge , 2, '.', '') : number_format($upgrade_shipment_cost_without_surcharge , 2, '.', '')}}"
                                         checked>
-                                    <span class="upgrade_checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                    <span class="checkout_upgrade_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                 </div>
                                 <div class="col-md-3 col-4 text-right">
                                     <span class="upgrade_checkout_shipping_price">${{!empty($upgrade_shipment_cost_with_surcharge) ?
@@ -171,7 +171,7 @@
                                     number_format($upgrade_shipment_cost_with_surcharge , 2, '.', '') : number_format($upgrade_shipment_cost_without_surcharge , 2,
                                     '.', '')}}" value="{{!empty($upgrade_shipment_cost_with_surcharge) ? number_format($upgrade_shipment_cost_with_surcharge , 2,
                                     '.', '') : number_format($upgrade_shipment_cost_without_surcharge , 2, '.', '')}}" onclick="upgrade_assign_service_code(this)">
-                                    <span class="upgrade_checkout_shipping_heading">{{$shipping_quote->serviceName}}</span>
+                                    <span class="checkout_upgrade_shipping_heading">{{$shipping_quote->serviceName}}</span>
                                 </div>
                                 <div class="col-md-3 col-4 text-right">
                                     <span class="upgrade_checkout_shipping_price">${{!empty($upgrade_shipment_cost_with_surcharge) ?
@@ -183,13 +183,6 @@
                                     value="{{!empty($upgrade_shipment_cost_with_surcharge) ? number_format($upgrade_shipment_cost_with_surcharge , 2, '.', '') : number_format($upgrade_shipment_cost_without_surcharge , 2, '.', '')}}">
                             @endforeach
                         @endif
-                    @else
-                        <div class="col-md-9 col-8">
-                            <span class="upgrade_checkout_shipping_heading">Shipment Price</span>
-                        </div>
-                        <div class="col-md-3 col-4 text-right">
-                            <span class="upgrade_checkout_shipping_price">${{number_format($upgrade_shipment_price ,2)}}</span>
-                        </div>
                     @endif
                 @endif
             </div>
