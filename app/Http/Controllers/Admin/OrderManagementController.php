@@ -846,6 +846,9 @@ class OrderManagementController extends Controller
 
                             return redirect()->back()->with('success', 'Order send to shipstation successfully !');
                         }
+                        else {
+                            return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                        }
                     } else {
                         return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
                     }
