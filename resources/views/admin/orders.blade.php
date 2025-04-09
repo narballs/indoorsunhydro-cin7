@@ -354,11 +354,15 @@
                                             <td data-label="Payment Term :" class="td_padding_row" style="width: 5%;">
                                                 @if (!empty($order->logisticsCarrier ))
                                                     @if (strtolower($order->logisticsCarrier) === 'delivery')
-                                                        @if ($order->shipment_price == 0 && $order->is_stripe == 1)
+                                                        @if ($order->upgrade_shipping == 1 && $order->shipment_price > 0)
+                                                            <div class="row">
+                                                                <span class="badge badge-success p-1">Shipping Upgraded</span>
+                                                            </div> 
+                                                        @elseif ($order->shipment_price == 0)
                                                             <div class="row">
                                                                 <img src="{{asset('/theme/bootstrap5/images/free_shipping_icon.png')}}" class="" style="max-width:50%;min-width:50%;" alt="">
                                                             </div>
-                                                        @elseif($order->shipping_carrier_code == 'seko_ltl_walleted' && $order->is_stripe == 1)
+                                                        @elseif($order->shipping_carrier_code == 'seko_ltl_walleted')
                                                             <div class="row">
                                                                 <img src="{{asset('/theme/bootstrap5/images/seko_ltl.png')}}" class="" style="max-width:50%;min-width:50%;" alt="">
                                                             </div>
