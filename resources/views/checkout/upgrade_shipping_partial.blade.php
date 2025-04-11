@@ -139,10 +139,13 @@
                                     }
 
 
+
+                                    $ups_ground_value = 0;
+
+
                                     if ($shipping_quote->serviceCode === 'ups_ground') {
                                         $ups_ground_value = !empty($upgrade_shipment_cost_with_surcharge) ? $upgrade_shipment_cost_with_surcharge : $upgrade_shipment_cost_without_surcharge;                                    
                                     }
-
 
                                     if ($shipping_quote->serviceCode !== 'ups_ground') {
                                         $upgrade_shipment_cost_with_surcharge = $upgrade_shipment_cost_with_surcharge - $ups_ground_value;
