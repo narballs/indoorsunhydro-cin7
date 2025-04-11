@@ -62,6 +62,19 @@
 
                     @foreach($list->list_products as $list_product)
                         @foreach($list_product->product->options as $key=>$option)
+                        @php
+                            $retail_price = 0;
+                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                            foreach ($option->price as $price) {
+                                $retail_price = $price->$user_price_column;
+                                if ($retail_price == 0) {
+                                    $retail_price = $price->sacramentoUSD;
+                                }
+                                if ($retail_price == 0) {
+                                    $retail_price = $price->retailUSD;
+                                }
+                            }
+                        @endphp
                         <?php 
                        
                         $bgcolor = 'background-color:#edf1f7';
@@ -78,7 +91,7 @@
                                 <td class="has-bordered" style =<?php echo $bgcolor;?>>
                                     {{$list_product->product->name}}
                                 </td>
-                                <td class="has-bordered">${{$list_product->product->retail_price}}</td>
+                                <td class="has-bordered">${{$retail_price}}</td>
                                 <td class="has-bordered">
                                   <!--   <small class="text-success mr-1">
                                         <i class="fas fa-arrow-up"></i>
@@ -92,6 +105,8 @@
                             </tr>
                         @endforeach
                     @endforeach
+                    <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Tax</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>Charged On Site</h3></span></td></tr>
+                    <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Shipping</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>Charged On Site</h3></span></td></tr>
                     <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Grand Total</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>${{$list_product->grand_total}}</h3></span></td></tr>
                     <tr><td colspan="4" style="padding-bottom:20px;"><a href="{{$link}}"><center><button style="background:#7CC633;border: none;width: 138px;color:white;height:44px;font-size:18px;margin:auto;text-align:center;" type="button" value="Buy Now">Buy Now</button></center></a></td></tr>
                 </tbody>
