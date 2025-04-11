@@ -121,6 +121,19 @@
                         ?>
                         @foreach ($list->list_products as $list_product)
                             @foreach ($list_product->product->options as $option)
+                            @php
+                                $retail_price = 0;
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                foreach ($option->price as $price) {
+                                    $retail_price = $price->$user_price_column;
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->sacramentoUSD;
+                                    }
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->retailUSD;
+                                    }
+                                }
+                            @endphp
                                 <!-- <tr id="product_row_{{ $list_product->product_id }}"> -->
                                 <tr id="product_row_{{ $list_product->product_id }}"
                                     class="product-row-{{ $list_product->product_id }} admin-buy-list">
@@ -135,7 +148,7 @@
                                     </td>
                                     <td>
                                         $<span id="retail_price_{{ $list_product->product_id }}">
-                                            {{ $list_product->product->retail_price }} </span></td>
+                                            {{ $retail_price }} </span></td>
                                     <td>
                                         <input type="number" min="1"
                                             id="quantity_{{ $list_product->product_id }}"
@@ -144,7 +157,7 @@
                                     </td>
                                     <td>
                                         $<span id="subtotal_{{ $list_product->product_id }}">
-                                            {{ number_format($list_product->product->retail_price * $list_product->quantity, 2) }}
+                                            {{ number_format($retail_price * $list_product->quantity, 2) }}
                                         </span>
                                     </td>
                                     <td>
