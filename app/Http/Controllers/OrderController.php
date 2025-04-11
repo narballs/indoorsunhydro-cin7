@@ -722,6 +722,8 @@ class OrderController extends Controller
                     $order->discount_amount = $discount_amount;
                     $order->tax_rate = $total_tax_rate;
                     $order->parcel_guard = $parcel_guard;
+                    $order->shipping_carrier_code = $shipping_carrier_code;
+                    $order->shipping_service_code = $shipping_service_code;
                     
                     //saving shipping details
                     $order->DeliveryFirstName = $first_name_shipping;
