@@ -858,7 +858,7 @@
                                                                                     </td> 
                                                                                     <td class="p-0 pt-3" style="width:20%;vertical-align:bottom;" align="right">
                                                                                         <div class="d-flex justify-content-end">
-                                                                                            <input type="hidden" name="user_id" id="user_id" value="{{$cart['user_id']}}">
+                                                                                            <input type="hidden" name="user_id" id="user_id" value="{{!empty($cart['user_id']) ? $cart['user_id'] : null}}">
                                                                                             <input type="hidden" name="contact_id" id="contact_id" value="{{!empty($cart['contact_id']) ? $cart['contact_id'] : null}}"> 
                                                                                             <a href="{{ url('remove/' . $pk_product_id) }}" id="remove" class="remove_p_mbl">
                                                                                                 <span>
