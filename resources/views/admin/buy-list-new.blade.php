@@ -79,16 +79,16 @@
                     </div>
                 @endif
                 @if (!empty($list->id))
-                    <div class="text-center ms-5"
-                        style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;width: 358px !important;">
-                        <button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
+                    <div class="d-flex justify-content-center my-2 col-12"
+                        style="">
+                        <button type="button" class="ms-2 btn btn-primary" onclick="createList()">
                             Update List
                         </button>
                     </div>
                 @else
-                    <div class="text-center ms-5"
-                        style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;width: 358px !important;">
-                        <button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
+                    <div class="d-flex justify-content-center my-2 col-12"
+                        style="">
+                        <button type="button" class="ms-2 btn btn-primary" onclick="createList()">
                             Create List
                         </button>
                     </div>
@@ -172,13 +172,13 @@
                         @endforeach
 
                     </table>
-                    <div class="row">
-                        <div class="col-md-10 border-top">Grand Total</div>
-                        <div class="col-md-2 border-top">amount : <span
+                    <div class="row align-items-center border-top">
+                        <div class="col-md-10 my-2"><strong>Grand Total</strong></div>
+                        <div class="col-md-2 ">Amount : <span
                                 id="grand_total">{{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</span></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary"
+                    <div class="row align-items-center  border-top">
+                        <div class="col-md-10 my-2"><button type="button" class="ms-2 btn btn-primary"
                                 onclick="generatList()">Update List</button>
                         </div>
                     </div>
