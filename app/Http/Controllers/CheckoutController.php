@@ -2668,7 +2668,7 @@ class CheckoutController extends Controller
                         'accountsLastName' => $user->last_name,
                         'billingEmail' => SettingHelper::getSetting('noreply_email_address'),                                
                     ]);
-                    
+
                     if (!empty($toggle_registration) && strtolower($toggle_registration->option_value) == 'yes') {
                         $api_contact = $contact->toArray();
                         $client = new \GuzzleHttp\Client();
