@@ -403,7 +403,7 @@
                                                                     data-target="#send_wholesale_order_to_shipstation" 
                                                                     id="send_wholesale_order_shipstation" 
                                                                     data-id="{{ $order->id }}">
-                                                                Send Order to Shipstation
+                                                                Send to Shipstation
                                                             </button>
                                                         @else
                                                             {{-- Case: Needs Label and Not Yet Shipped --}}
