@@ -11,6 +11,7 @@ use App\Models\ProductBuyList;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Helpers\MailHelper;
+use App\Models\Cart;
 use Session;
 use Illuminate\Support\Str;
 
@@ -51,8 +52,10 @@ class CreateCartController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
+            Cart::create($cart[$list_product->id]); // Store the cart entry in the database
             session()->put('cart', $cart);
         }
+
         return redirect()->route('cart');
     }
 }
