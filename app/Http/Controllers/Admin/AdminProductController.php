@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Pricing;
 use App\Models\Pricingnew;
+use App\Models\ProductOption;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -406,6 +407,7 @@ class AdminProductController extends Controller
         $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password');
 
         $url = 'https://api.cin7.com/api/v1/ProductOptions/' . $option_id;
+        $product_url = 'https://api.cin7.com/api/v1/Products/';
 
         try {
             $client = new \GuzzleHttp\Client();
@@ -422,6 +424,49 @@ class AdminProductController extends Controller
     
             $product_option_prices = $res->getBody()->getContents();
             $get_product_prices = json_decode($product_option_prices);
+
+            if (!empty($get_product_prices) &&  !empty($option_id)) {
+                $update_product_option = ProductOption::where('option_id', $option_id)->first();
+                $update_product_option->optionWeight = $get_product_prices->optionWeight;
+                $update_product_option->status = $get_product_prices->status;
+                $update_product_option->save();
+
+
+                $productId = $update_product_option->product_id;
+
+
+                $client = new \GuzzleHttp\Client();
+                $product_response = $client->request(
+                    'GET', 
+                    $product_url . $productId,
+                    [
+                        'auth' => [
+                            $cin7_auth_username,
+                            $cin7_auth_password
+                        ]                    
+                    ]
+                );
+
+                $cin7_product = $product_response->getBody()->getContents();
+                $get_product = json_decode($cin7_product);
+
+                if (!empty($get_product)) {
+                    $update_product = Product::where('product_id', $productId)->first();
+                    $update_product->status = $get_product->status;
+                    $update_product->name = $get_product->name;
+                    $update_product->description = $get_product->description;
+                    $update_product->width = $get_product->width;
+                    $update_product->height = $get_product->height;
+                    $update_product->length = $get_product->length;
+                    $update_product->volume = $get_product->volume;
+                    $update_product->code = $get_product->productOptions[0]->code;
+                    $update_product->barcode = $get_product->productOptions[0]->barcode;
+                    $update_product->images = !empty($get_product->images[0]) ? $get_product->images[0]->link: '';
+                    $update_product->save();
+                }
+                    
+            }
+
             if (!empty($get_product_prices->priceColumns)) {
                 $product_pricing = Pricingnew::where('option_id', $option_id)->first();
                 if (!empty($product_pricing)) {
