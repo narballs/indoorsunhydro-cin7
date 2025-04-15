@@ -403,7 +403,7 @@
                                                                     data-target="#send_wholesale_order_to_shipstation" 
                                                                     id="send_wholesale_order_shipstation" 
                                                                     data-id="{{ $order->id }}">
-                                                                Send Order to Shipstation
+                                                                Send to Shipstation
                                                             </button>
                                                         @else
                                                             {{-- Case: Needs Label and Not Yet Shipped --}}
@@ -644,7 +644,7 @@
                         @foreach($shipping_quotes as $quote)
                             <option value="{{ $quote->service_code . ' _and_ ' . $quote->carrier_code}}">{{ $quote->service_name }}</option>
                         @endforeach
-                        <option value="{{ 'seko_ltl_walleted' . ' _and_ ' . 'standard'}}">Seko ltl Walleted</option>
+                        <option value="{{ 'standard' . ' _and_ ' . 'seko_ltl_walleted'}}">Seko ltl Walleted</option>
                     @else
                         <option value="">No Shipping Method Available</option>
                     @endif
@@ -1114,7 +1114,7 @@
                 const parts = shippingValue.split(' _and_ ');
 
                 if (parts.length !== 2) {
-                    alert('Invalid shipping method selected.');
+                    // alert('Invalid shipping method selected.');
                     e.preventDefault(); // prevent submission
                     return false;
                 }

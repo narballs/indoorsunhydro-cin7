@@ -79,16 +79,16 @@
                     </div>
                 @endif
                 @if (!empty($list->id))
-                    <div class="text-center ms-5"
-                        style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;width: 358px !important;">
-                        <button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
+                    <div class="d-flex justify-content-center my-2 col-12"
+                        style="">
+                        <button type="button" class="ms-2 btn btn-primary" onclick="createList()">
                             Update List
                         </button>
                     </div>
                 @else
-                    <div class="text-center ms-5"
-                        style="margin-bottom: 12px;margin-left: 150px !important;width: 331px;width: 358px !important;">
-                        <button type="button" class="ms-2 btn btn-primary w-100" onclick="createList()">
+                    <div class="d-flex justify-content-center my-2 col-12"
+                        style="">
+                        <button type="button" class="ms-2 btn btn-primary" onclick="createList()">
                             Create List
                         </button>
                     </div>
@@ -121,6 +121,19 @@
                         ?>
                         @foreach ($list->list_products as $list_product)
                             @foreach ($list_product->product->options as $option)
+                            @php
+                                $retail_price = 0;
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                foreach ($option->price as $price) {
+                                    $retail_price = $price->$user_price_column;
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->sacramentoUSD;
+                                    }
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->retailUSD;
+                                    }
+                                }
+                            @endphp
                                 <!-- <tr id="product_row_{{ $list_product->product_id }}"> -->
                                 <tr id="product_row_{{ $list_product->product_id }}"
                                     class="product-row-{{ $list_product->product_id }} admin-buy-list">
@@ -135,7 +148,7 @@
                                     </td>
                                     <td>
                                         $<span id="retail_price_{{ $list_product->product_id }}">
-                                            {{ $list_product->product->retail_price }} </span></td>
+                                            {{ $retail_price }} </span></td>
                                     <td>
                                         <input type="number" min="1"
                                             id="quantity_{{ $list_product->product_id }}"
@@ -144,7 +157,7 @@
                                     </td>
                                     <td>
                                         $<span id="subtotal_{{ $list_product->product_id }}">
-                                            {{ number_format($list_product->product->retail_price * $list_product->quantity, 2) }}
+                                            {{ number_format($retail_price * $list_product->quantity, 2) }}
                                         </span>
                                     </td>
                                     <td>
@@ -159,13 +172,13 @@
                         @endforeach
 
                     </table>
-                    <div class="row">
-                        <div class="col-md-10 border-top">Grand Total</div>
-                        <div class="col-md-2 border-top">amount : <span
+                    <div class="row align-items-center border-top">
+                        <div class="col-md-10 my-2"><strong>Grand Total</strong></div>
+                        <div class="col-md-2 ">Amount : <span
                                 id="grand_total">{{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</span></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary"
+                    <div class="row align-items-center  border-top">
+                        <div class="col-md-10 my-2"><button type="button" class="ms-2 btn btn-primary"
                                 onclick="generatList()">Update List</button>
                         </div>
                     </div>

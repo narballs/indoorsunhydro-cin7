@@ -37,12 +37,25 @@
                     <tbody>
                         @foreach ($list->list_products as $list_product)
                             @foreach ($list_product->product->options as $option)
+                                @php
+                                    $retail_price = 0;
+                                    $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                    foreach ($option->price as $price) {
+                                        $retail_price = $price->$user_price_column;
+                                        if ($retail_price == 0) {
+                                            $retail_price = $price->sacramentoUSD;
+                                        }
+                                        if ($retail_price == 0) {
+                                            $retail_price = $price->retailUSD;
+                                        }
+                                    }
+                                @endphp
                                 <tr id="product_row_{{ $list_product->product_id }}">
                                     <td>
                                         <img src="{{ $option->image }}" alt="Product 1" class="img-circle img-size-32 mr-2">
                                         {{ $list_product->product->name }}
                                     </td>
-                                    <td>${{ $list_product->product->retail_price }}</td>
+                                    <td>${{ number_format($$retail_price , 2) }}</td>
                                     <td class="jsutify-content-middle">
                                         <!--   <small class="text-success mr-1">
                                                                 <i class="fas fa-arrow-up"></i>

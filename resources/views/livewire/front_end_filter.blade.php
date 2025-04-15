@@ -7,19 +7,37 @@
                         <th>Image</th>
                         <th>Name</th>
                         <th>Code</th>
+                        <th>Price</th>
                         <th>Action</th>
                     </tr>
                      @foreach($products as $product)
                         @foreach($product->options as $option)
+                            @php
+                                $retail_price = 0;
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                foreach ($option->price as $price) {
+                                    $retail_price = $price->$user_price_column;
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->sacramentoUSD;
+                                    }
+                                    if ($retail_price == 0) {
+                                        $retail_price = $price->retailUSD;
+                                    }
+                                }
+                            @endphp
                             <tr>
                                 <td class="text-center">
                                     <img src="{{$option->image}}" height="50px" width="50px">
                                 </td>
                                 <td>{{$product->name}}</td>
                                 <td>{{$product->code}}</td>
+                                <td>{{number_format($retail_price)}}</td>
                                 <td>
-                                    <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to quote</button>
-                                   
+                                    @if (!empty($option->stockAvailable) && $option->stockAvailable > 0 )
+                                        <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to quote</button>
+                                    @else
+                                        <span class="btn btn-danger">Out of Stock</span>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
