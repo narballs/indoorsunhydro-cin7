@@ -480,6 +480,9 @@ class UserHelper
         }
 
 
+        dd($carrier_code_2->option_value,  $api_order->shipping_carrier_code , $service_code_2->option_value, $api_order->shipping_service_code);
+
+
         $data = [
             'orderNumber' => $order_id,
             'orderKey' => $currentOrder->reference,
@@ -559,6 +562,7 @@ class UserHelper
 
 
     public static function wholesale_shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status , $carrier_code , $service_code) {
+
         $api_order = ApiOrder::where('id', $order_id)->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
         $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
