@@ -203,12 +203,12 @@
                             <td>Remove</td>
                         </tr>
                     </table>
-                    <div class="row">
-                        <div class="col-md-10 border-top">Grand Total</div>
-                        <div class="col-md-2 border-top">amount : <span id="grand_total">0</span></div>
+                    <div class="row border-top">
+                        <div class="col-md-10 py-3 ">Grand Total</div>
+                        <div class="col-md-2">Amount : <span id="grand_total">0</span></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-10 border-top"><button type="button" class="ms-2 btn btn-primary"
+                    <div class="row border-top">
+                        <div class="col-md-10 py-3"><button type="button" class="ms-2 btn btn-primary"
                                 onclick="generatList()">Create List</button>
                         </div>
                     </div>
@@ -290,12 +290,12 @@
 
 
                     grand_total = grand_total - difference;
-                    $('#grand_total').html(grand_total);
+                    $('#grand_total').html(grand_total.toFixed(2));
 
                     console.log('Grand Total => ' + grand_total);
 
                     $('#quantity_' + product_id).val(quantity);
-                    $('#subtotal_' + product_id).html(subtotal);
+                    $('#subtotal_' + product_id).html(subtotal.toFixed(2));
                     return false;
                 }
 
@@ -321,7 +321,7 @@
 
                         grand_total = grand_total + subtotal;
 
-                        $('#grand_total').html(grand_total);
+                        $('#grand_total').html(grand_total.toFixed(2));
                     }
                 });
             });
@@ -378,7 +378,7 @@
             updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
             $('#subtotal_' + product_id).val();
             $('#product_row_' + product_id).remove();
-            $('#grand_total').html(updated_total);
+            $('#grand_total').html(updated_total.toFixed(2));
         }
 
         function handleQuantity(product_id) {
@@ -404,12 +404,12 @@
 
 
             grand_total = grand_total - difference;
-            $('#grand_total').html(grand_total);
+            $('#grand_total').html(grand_total.toFixed(2));
 
             console.log('Grand Total => ' + grand_total);
 
             $('#quantity_' + product_id).val(quantity);
-            $('#subtotal_' + product_id).html(subtotal);
+            $('#subtotal_' + product_id).html(subtotal.toFixed(2));
         }
 
 
