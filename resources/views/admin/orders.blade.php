@@ -366,6 +366,10 @@
                                                             <div class="row">
                                                                 <img src="{{asset('/theme/bootstrap5/images/seko_ltl.png')}}" class="" style="max-width:50%;min-width:50%;" alt="">
                                                             </div>
+                                                        @elseif($order->shipping_carrier_code == 'stamps_com')
+                                                            <div class="row">
+                                                                <span class="badge badge-warning p-1">USPS</span>
+                                                            </div>
                                                         @else
                                                             <span class="badge badge-success p-1">Delivery</span>
                                                         @endif
@@ -397,14 +401,29 @@
 
                                                         {{-- Send to ShipStation --}}
                                                         @unless($isInShipStation)
-                                                            <button type="button" 
-                                                                    class="btn btn-primary badge_wholesale btn-sm" 
-                                                                    data-toggle="modal" 
-                                                                    data-target="#send_wholesale_order_to_shipstation" 
-                                                                    id="send_wholesale_order_shipstation" 
-                                                                    data-id="{{ $order->id }}">
-                                                                Send to Shipstation
-                                                            </button>
+                                                            @if (
+                                                                    (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
+                                                                    (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
+                                                                    App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
+                                                                )
+                                                                <button type="button" 
+                                                                        class="btn btn-primary badge_wholesale send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                                                        data-toggle="modal" 
+                                                                        data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                                                        id="send_po_box_wholesale_order_shipstation" 
+                                                                        data-id="{{ $order->id }}">
+                                                                    Send to Shipstation
+                                                                </button>
+                                                            @else
+                                                                <button type="button" 
+                                                                        class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
+                                                                        data-toggle="modal" 
+                                                                        data-target="#send_wholesale_order_to_shipstation" 
+                                                                        id="send_wholesale_order_shipstation" 
+                                                                        data-id="{{ $order->id }}">
+                                                                    Send to Shipstation
+                                                                </button>
+                                                            @endif
                                                         @else
                                                             {{-- Case: Needs Label and Not Yet Shipped --}}
                                                             @if ($needsLabel)
@@ -658,6 +677,51 @@
                     <div>Sending to ShipStation...</div>
                 </div>
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="send_po_box_wholesale_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_po_box_wholesale_order_to_shipstation" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="POST" action="{{ route('send_po_box_wholesale_order_to_shipstation') }}">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Send Wholesale Order To Shipstation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <div class="modal-body">
+                    <input type="hidden" id="wholesale_po_box_order_id" name="order_id" value="">
+                    <input type="hidden" name="carrier_code" id="carrier_code_po_box" value="{{ !empty($po_box_carrier_code) && !empty($po_box_carrier_code->option_value)  ? $po_box_carrier_code->option_value : '' }}">
+                    <input type="hidden" name="service_code" id="service_code_po_box" value="{{ !empty($po_box_service_code) && !empty($po_box_service_code->option_value)  ? $po_box_service_code->option_value : '' }}">
+                    
+                    @if (empty($po_box_carrier_code) || empty($po_box_service_code))
+                        <div class="alert alert-danger" role="alert">
+                            PO Box shipping method is not configured in the system. Please contact the administrator.
+                        </div>
+                    @else
+                        <div class="form-group">
+                            <p>
+                                @if (!empty($po_box_order_shipping_text) && !empty($po_box_order_shipping_text->option_value))
+                                    {{ $po_box_order_shipping_text->option_value }}
+                                @endif
+                            </p>
+                        </div>
+                        <div id="shipstation_loader_PO" class="text-center mt-3" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Sending...</span>
+                            </div>
+                            <div>Sending to ShipStation...</div>
+                        </div>
+                    @endif
+                </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Send</button>
@@ -1103,7 +1167,7 @@
     </script>
     <script>
         $(document).ready(function () {
-            $(document).on('click', '.badge_wholesale', function () {
+            $(document).on('click', '.send_wholesale_order_to_shipstation', function () {
                 const orderId = $(this).data('id');
                 $('#wholesale_order_id').val(orderId);
             });
@@ -1124,6 +1188,23 @@
 
                 // Show loader
                 $('#shipstation_loader').show();
+
+                // Optional: disable the submit button to prevent multiple clicks
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+
+            // po box address order
+
+            $(document).on('click', '.send_po_box_wholesale_order_to_shipstation', function () {
+                const orderId = $(this).data('id');
+                $('#wholesale_po_box_order_id').val(orderId);
+            });
+
+            // Before submitting the form, split the selected shipping method
+            $('form[action="{{ route('send_po_box_wholesale_order_to_shipstation') }}"]').on('submit', function (e) {
+                
+                // Show loader
+                $('#shipstation_loader_PO').show();
 
                 // Optional: disable the submit button to prevent multiple clicks
                 $(this).find('button[type="submit"]').prop('disabled', true);

@@ -16,6 +16,10 @@ class SettingHelper
         return $default;
     }
 
+    public static function startsWithPOBox($string) {
+        return preg_match('/^(P\.?O\.?\s*BOX|PO\s*BOX)/i', trim($string)) === 1;
+    }
+
     public static function getFriendlySettingValue($option_name) {
         $value = self::getSetting($option_name);
         $value = strtolower($value);

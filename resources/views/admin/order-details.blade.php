@@ -127,15 +127,32 @@
                                 </div>
                                 @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
                                     <div class="col-md-5 ">
-                                        <form action="{{route('send_order_to_shipstation')}}" class="" method="post" class="mb-0">
-                                            @csrf
-                                            <div class="col-md-12">
-                                                <input type="hidden" name="order_id" id="" value="{{$order->id}}">
-                                                <button type="submit" class="btn btn-primary btn-sm">
+                                        @if (
+                                                (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
+                                                (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
+                                                App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
+                                            )
+                                        
+                                            <button type="button" 
+                                                    class="btn btn-primary send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                                    data-toggle="modal" 
+                                                    data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                                    id="send_po_box_wholesale_order_shipstation" 
+                                                    data-id="{{ $order->id }}">
                                                     Send Order to Shipstation
-                                                </button>
-                                            </div>
-                                        </form>
+                                            </button>
+                                        @else
+                                        
+                                            <form action="{{route('send_order_to_shipstation')}}" class="" method="post" class="mb-0">
+                                                @csrf
+                                                <div class="col-md-12">
+                                                    <input type="hidden" name="order_id" id="" value="{{$order->id}}">
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        Send Order to Shipstation
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        @endif
                                     </div>
                                 @endif
                             </div>
@@ -698,6 +715,51 @@
           </div>
         </div>
     </div>
+
+    <div class="modal fade" id="send_po_box_wholesale_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_po_box_wholesale_order_to_shipstation" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="POST" action="{{ route('send_po_box_wholesale_order_to_shipstation') }}">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Send Order To Shipstation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <div class="modal-body">
+                    <input type="hidden" id="wholesale_po_box_order_id" name="order_id" value="">
+                    <input type="hidden" name="carrier_code" id="carrier_code_po_box" value="{{ !empty($po_box_carrier_code) && !empty($po_box_carrier_code->option_value)  ? $po_box_carrier_code->option_value : '' }}">
+                    <input type="hidden" name="service_code" id="service_code_po_box" value="{{ !empty($po_box_service_code) && !empty($po_box_service_code->option_value)  ? $po_box_service_code->option_value : '' }}">
+                    
+                    @if (empty($po_box_carrier_code) || empty($po_box_service_code))
+                        <div class="alert alert-danger" role="alert">
+                            PO Box shipping method is not configured in the system. Please contact the administrator.
+                        </div>
+                    @else
+                        <div class="form-group">
+                            <p>
+                                @if (!empty($po_box_order_shipping_text) && !empty($po_box_order_shipping_text->option_value))
+                                    {{ $po_box_order_shipping_text->option_value }}
+                                @endif
+                            </p>
+                        </div>
+                        <div id="shipstation_loader_PO" class="text-center mt-3" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Sending...</span>
+                            </div>
+                            <div>Sending to ShipStation...</div>
+                        </div>
+                    @endif
+                </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
 @stop
 
 @section('css')
@@ -974,6 +1036,22 @@
                 }
                 timer2 = minutes + ':' + seconds;
             }, 1000);
+
+
+            $(document).on('click', '.send_po_box_wholesale_order_to_shipstation', function () {
+                const orderId = $(this).data('id');
+                $('#wholesale_po_box_order_id').val(orderId);
+            });
+
+            // Before submitting the form, split the selected shipping method
+            $('form[action="{{ route('send_po_box_wholesale_order_to_shipstation') }}"]').on('submit', function (e) {
+                
+                // Show loader
+                $('#shipstation_loader_PO').show();
+
+                // Optional: disable the submit button to prevent multiple clicks
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
         });
         //on click increase quantity
         function increaseQuantity(item_id) {

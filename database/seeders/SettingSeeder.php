@@ -590,6 +590,22 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'po_box_shipping_service_code',
+                'type' => 'text',
+                'option_value' => 'usps_parcel_select',
+            ],
+            [
+                'option_name' => 'po_box_shipping_carrier_code',
+                'type' => 'text',
+                'option_value' => 'stamps_com',
+            ],
+
+            [
+                'option_name' => 'po_box_order_shipping_text',
+                'type' => 'text',
+                'option_value' => 'This order is shipping to a PO Box. It will use USPS as the carrier.',
+            ],
 
 
             
