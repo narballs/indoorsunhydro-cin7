@@ -1998,11 +1998,11 @@ class UserController extends Controller
             // 'address' => 'required',
             'address' => [
                 'required',
-                function ($attribute, $value, $fail) {
-                    if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                        $fail('Invalid address: PO Boxes are not allowed at the start.');
-                    }
-                },
+                // function ($attribute, $value, $fail) {
+                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                //     }
+                // },
             ],
             'state' => 'required',
             'phone' => 'required',
