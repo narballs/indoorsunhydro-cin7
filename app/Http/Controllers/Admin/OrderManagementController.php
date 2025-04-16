@@ -149,7 +149,10 @@ class OrderManagementController extends Controller
         $order_ids = implode(',', $get_order_ids);
 
         $shipping_quotes = ShippingQuoteSetting::where('status' , 1)->get();
-        return view('admin/orders', compact('orders','order_ids', 'shipping_quotes','search','pending_orders','show_alert', 'auto_createlabel','auto_createLabel','auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
+        $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
+        $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
+        $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
+        return view('admin/orders', compact('orders','order_ids','po_box_carrier_code','po_box_service_code','po_box_order_shipping_text', 'shipping_quotes','search','pending_orders','show_alert', 'auto_createlabel','auto_createLabel','auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
     }
 
     public function show($id)
@@ -256,7 +259,11 @@ class OrderManagementController extends Controller
                 $tax_rate = $tax_class->rate;
                 $tax = $subtotal * ($tax_rate / 100);
             }
-        }  
+        }
+        
+        $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
+        $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
+        $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
         
         return view('admin/order-details', compact(
             'order',
@@ -271,7 +278,11 @@ class OrderManagementController extends Controller
             'auto_fullfill',
             'is_processing',
             'order_statuses',
-            'tax'
+            'tax',
+            'po_box_order_shipping_text',
+            'po_box_carrier_code',
+            'po_box_service_code',
+
         ));
     }
 
@@ -831,29 +842,34 @@ class OrderManagementController extends Controller
         $currentOrder = ApiOrder::where('id', $order_id)->first();
         if (!empty($currentOrder)) {
             if ($currentOrder->is_stripe == 1 && $currentOrder->shipstation_orderId == null && $currentOrder->payment_status == 'paid') {
-                $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
-                if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
-                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
-                    if (!empty($order_contact)) {
-                        $shipstation_order_status = 'create_order';
-                        $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
-                        if ($shiping_order['statusCode'] == 200) {
-                            $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                                'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
-                                'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
-                            ]);
+                if ( (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) && (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) || SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))) {
+                    $this->send_po_box_wholesale_order_to_shipstation($request);
+                } 
+                else {
+                    $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                    if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                        $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+                        if (!empty($order_contact)) {
+                            $shipstation_order_status = 'create_order';
+                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
+                            if ($shiping_order['statusCode'] == 200) {
+                                $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                    'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                    'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                    'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                ]);
 
-                            return redirect()->back()->with('success', 'Order send to shipstation successfully !');
-                        }
-                        else {
+                                return redirect()->back()->with('success', 'Order send to shipstation successfully !');
+                            }
+                            else {
+                                return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                            }
+                        } else {
                             return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
                         }
                     } else {
-                        return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                        return redirect()->back()->with('error', 'Please check your admin settings for create order in shipstation' );
                     }
-                } else {
-                    return redirect()->back()->with('error', 'Please check your admin settings for create order in shipstation' );
                 }
             } else {
                 return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
@@ -888,6 +904,53 @@ class OrderManagementController extends Controller
                             return redirect()->back()->with('success', 'Order send to shipstation successfully !');
                         } else {
                             return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                        }
+                    } else {
+                        return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Please check your admin settings for create order in shipstation' );
+                }
+            } else {
+                return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+            }
+        }
+    }
+
+    public function send_po_box_wholesale_order_to_shipstation(Request $request) {
+
+
+        // dd($request->all());
+
+        $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
+        $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
+        
+        
+        $orderId = $request->order_id;
+        $carrierCode = !empty($po_box_carrier_code) ? $po_box_carrier_code->option_value : $request->carrier_code;
+        $serviceCode = !empty($po_box_service_code) ? $po_box_service_code->option_value : $request->service_code;
+        $currentOrder = ApiOrder::with('apiOrderItem')->where('id', $orderId)->first();
+        if (!empty($currentOrder)) {
+            if ($currentOrder->shipstation_orderId == null) {
+                $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+                    if (!empty($order_contact)) {
+                        $shipstation_order_status = 'create_order';
+                        $shiping_order = UserHelper::wholesale_po_box_shipping_order($orderId , $currentOrder , $order_contact, $shipstation_order_status , $carrierCode, $serviceCode);
+                        if ($shiping_order['statusCode'] == 200) {
+                            $orderUpdate = ApiOrder::where('id', $orderId)->update([
+                                'shipstation_orderId' => $shiping_order['responseBody']['orderId'],
+                                'shipstation_orderKey' => $shiping_order['responseBody']['orderKey'],
+                                'shipstation_orderNumber' => $shiping_order['responseBody']['orderNumber'],
+                                'shipping_carrier_code' => $carrierCode,
+                                'shipping_service_code' => $serviceCode,
+                            ]);
+
+                            return redirect()->back()->with('success', 'Order send to shipstation successfully !');
+                        } else {
+                            $specific_error_message = !empty($shiping_order['responseBody'] ) ? $shiping_order['responseBody'] : 'Invalid Order! Your order is invalid to process';
+                            return redirect()->back()->with('error', $specific_error_message );
                         }
                     } else {
                         return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
