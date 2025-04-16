@@ -1928,11 +1928,11 @@ $cart_price = 0;
 
                         <div class="mb-3">
                             <label class="mb-1" for="address">Street Address</label>
-                            <p class="mb-1">
+                            {{-- <p class="mb-1">
                                 <small class="text-info">
                                     Note: PO Boxes are not allowed at the start of address.
                                 </small>
-                            </p>
+                            </p> --}}
                             <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
                             value="{{!empty($get_user_default_billing_address->BillingAddress1) ? $get_user_default_billing_address->BillingAddress1 : ''}}" placeholder="House number and street name"
                             required>
@@ -2118,11 +2118,11 @@ $cart_price = 0;
 
                         <div class="mb-3">
                             <label class="mb-1" for="address">Street Address</label>
-                            <p class="mb-1">
+                            {{-- <p class="mb-1">
                                 <small class="text-info">
                                     Note: PO Boxes are not allowed at the start of address.
                                 </small>
-                            </p>
+                            </p> --}}
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
                             value="{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ? $get_user_default_shipping_address->DeliveryAddress1 : '' }}" placeholder="House number and street name"
                             required>
@@ -2268,11 +2268,11 @@ $cart_price = 0;
                         
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <p class="mb-0">
+                            {{-- <p class="mb-0">
                                 <small class="text-info">
                                     Note: PO Boxes are not allowed at the start of address.
                                 </small>
-                            </p>
+                            </p> --}}
                             <input type="text" class="form-control bg-light shipping_address1_new" name="shipping_address1_new"  id="shipping_address1_new"
                             value="" placeholder="House number and street name" required>
                             <div id="error_shipping_address1_new" class="text-danger"></div>
