@@ -1606,11 +1606,11 @@ $cart_price = 0;
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <p class="mb-0">
+                            {{-- <p class="mb-0">
                                 <small class="text-info">
                                     Note: PO Boxes are not allowed at the start of address.
                                 </small>
-                            </p>
+                            </p> --}}
                             <input type="text" class="form-control bg-light billing_address_1 " name="address" id="address1"
                             value="{{ !empty($user_address->postalAddress1) ?  $user_address->postalAddress1 : '' }}" placeholder="House number and street name"
                             required>
@@ -1794,11 +1794,11 @@ $cart_price = 0;
 
                         <div class="mb-3">
                             <label for="address">Street Address</label>
-                            <p class="mb-0">
+                            {{-- <p class="mb-0">
                                 <small class="text-info">
                                     Note: PO Boxes are not allowed at the start of address.
                                 </small>
-                            </p>
+                            </p> --}}
                             <input type="text" class="form-control bg-light shipping_address_1" name="address"  id="address1"
                             value="{{ !empty($user_address->address1) ? $user_address->address1 : '' }}" placeholder="House number and street name"
                             required>
