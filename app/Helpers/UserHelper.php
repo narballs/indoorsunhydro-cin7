@@ -938,9 +938,9 @@ class UserHelper
             ],
             'dimensions' => [
                 'units' => 'inches',
-                'length' => 10,
-                'width' => 20,
-                'height' => 5,
+                'length' => $product_length,
+                'width' => $product_width,
+                'height' => $product_height,
             ],
             'insuranceOptions' => [
                 'provider' => 'parcelguard', 
