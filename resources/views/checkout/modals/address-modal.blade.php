@@ -48,11 +48,11 @@
 
                 <div class="mb-3">
                     <label for="address">Street Address</label>
-                    <p class="mb-0">
+                    {{-- <p class="mb-0">
                         <small class="text-info">
                             Note: PO Boxes are not allowed at the start of address.
                         </small>
-                    </p>
+                    </p> --}}
                     <input type="text" class="form-control bg-light" name="address" value="{{$user_address->postalAddress1}}" placeholder="House number and street name" required>
                  
                 </div>
