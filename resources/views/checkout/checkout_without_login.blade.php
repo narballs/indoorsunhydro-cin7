@@ -415,9 +415,9 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <small class="text-info">
+                                        {{-- <small class="text-info">
                                             Note: PO Boxes are not allowed at the start of address.
-                                        </small>
+                                        </small> --}}
                                         <input type="text" name="street_address" id="street_address" class="form-control update_checkout_input mb-1 street_address" placeholder="Street Address">
                                         <div class="street_address_errors checkout_validation_errors"></div>
                                     </div>
@@ -517,9 +517,9 @@ $cart_price = 0;
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <small class="text-info">
+                                        {{-- <small class="text-info">
                                             Note: PO Boxes are not allowed at the start of address.
-                                        </small>
+                                        </small> --}}
                                         <input type="text" name="postalStreetAddress" id="postalStreetAddress" class="form-control update_checkout_input mb-1 postalStreetAddress" placeholder="Street Address">
                                         <div class="postal_address_errors checkout_validation_errors"></div>
                                     </div>
