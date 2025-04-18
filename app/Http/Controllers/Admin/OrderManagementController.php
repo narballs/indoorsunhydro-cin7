@@ -977,7 +977,7 @@ class OrderManagementController extends Controller
             return redirect()->back()->with('error', 'Order not found');
         }
 
-        if ($currentOrder->send_confirmation_email == 1) {
+        if ($currentOrder->confirmation_email_flag == 1) {
             return redirect()->back()->with('error', 'Confirmation email already sent');
         }
 
@@ -1063,7 +1063,7 @@ class OrderManagementController extends Controller
                 $data['subject'] = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
                 $mail_sent = MailHelper::sendConfirmationMailNotification('emails.confirmation-order-received', $data);
                 if ($mail_sent) {
-                    $currentOrder->send_confirmation_email = 1;
+                    $currentOrder->confirmation_email_flag = 1;
                     $currentOrder->save();
                 }
             }
