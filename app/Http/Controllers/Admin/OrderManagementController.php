@@ -987,8 +987,9 @@ class OrderManagementController extends Controller
                 $contact = Contact::where('email', $customer_email->email)->first();
             }
             $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
-            ->where('order_id', $currentOrder->order_id)
+            ->where('order_id', $currentOrder->id)
             ->get();
+
             $user_email = Auth::user();
             $count = $order_items->count();
             $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
