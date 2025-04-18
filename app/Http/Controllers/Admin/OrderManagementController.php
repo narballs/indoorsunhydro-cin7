@@ -965,48 +965,104 @@ class OrderManagementController extends Controller
     }
 
     public function send_confirmation_email(Request $request) {
-        $id = $request->order_id;
-        $api_order = ApiOrder::findOrFail($id);
+        $order_id = $request->order_id;
+        $currentOrder = ApiOrder::where('id', $order_id)->with(
+            'contact',
+            'user.contact',
+            'apiOrderItem.product.options',
+            'texClasses'
+        )->first();
 
-        if (empty($api_order)) {
+        if (empty($currentOrder)) {
             return redirect()->back()->with('error', 'Order not found');
         }
 
-        if ($api_order->send_confirmation_email == 1) {
+        if ($currentOrder->send_confirmation_email == 1) {
             return redirect()->back()->with('error', 'Confirmation email already sent');
         }
 
-
         try {
-            $order_items = ApiOrderItem::with('product.options')->where('order_id', $id)->get();
-            $customer = Contact::where('contact_id', $api_order->memberId)->first();
+            $customer_email = Contact::where('contact_id', $currentOrder->memberId)->first();
+            if (!empty($customer_email)) {
+                $contact = Contact::where('email', $customer_email->email)->first();
+            }
+            $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+            ->where('order_id', $order_id)
+            ->get();
+            $user_email = Auth::user();
+            $count = $order_items->count();
+            $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
+            
+            if (($currentOrder->is_stripe == 1)) {
+                $pay_terms = 'Stripe';
+            } else {
+                $pay_terms = !empty($currentOrder->contact->paymentTerms) ? $currentOrder->contact->paymentTerms : '30 Days from Invoice';
+            }
+            $addresses = [
+                'billing_address' => [
+                    'firstName' => $contact->firstName,
+                    'lastName' => $contact->lastName,
+                    'address1' => $contact->address1,
+                    'address2' => $contact->address2,
+                    'city' => $contact->city,
+                    'state' => $contact->state,
+                    'zip' => $contact->postCode,
+                    'mobile' => $contact->mobile,
+                    'phone' => $contact->phone,
+                ],
+                'shipping_address' => [
+                    'postalAddress1' =>$contact->postalAddress1,
+                    'postalAddress2' =>$contact->postalAddress2,
+                    'postalCity' =>$contact->postalCity,
+                    'postalState' =>$contact->postalState,
+                    'postalPostCode' =>$contact->postalPostCode,
+                ],
+                'payment_terms' =>  $pay_terms,
+                'shipping_fee' => !empty($currentOrder->shipment_price) ? $currentOrder->shipment_price : '',
+                'best_product' => $best_products,
+                'user_email' =>   $user_email,
+                'currentOrder' => $currentOrder,
+                'count' => $count,
+                'order_id' => $order_id,
+                'company' => !empty($currentOrder->user->contact) ?  $currentOrder->user->contact[0]->company : '',
+                'order_status' => '',
+                'delievery_method' => $currentOrder->logisticsCarrier,
+            ];
+            $name = $contact->firstName;
+            $email =  $contact->email;
+            $reference  =  $currentOrder->reference;
             $data = [
-                'name' => $customer->firstName,
-                'email' => $customer->email,
-                'subject' => 'Order Confirmation',
+                'name' =>  $name,
+                'email' => $email,
+                'subject' => 'Resending email in Case You Missed It for order #' . $currentOrder->id,
+                'reference' => $reference,
                 'order_items' => $order_items,
-                'dateCreated' => now(),
-                'from' => SettingHelper::getSetting('noreply_email_address'),
+                'dateCreated' => $currentOrder->created_at,
+                'addresses' => $addresses,
+                'best_product' => $best_products,
+                'currentOrder' => $currentOrder,
+                'user_email' => $user_email,
+                'count' => $count,
+                'from' => SettingHelper::getSetting('noreply_email_address')
             ];
 
-            $mail_sent = MailHelper::sendMailNotification('emails.order_confirmation_email_template', $data);
-
-            if ($mail_sent) {
-                $orderUpdate = ApiOrder::where('id', $id)->update([
-                    'send_confirmation_email' => 1,
-                ]);
-
-                return redirect()->back()->with('success', 'Confirmation email sent successfully!');
-
-
-            } else {
-                return redirect()->back()->with('error', 'Failed to send confirmation email');
+            $specific_admin_notifications = SpecificAdminNotification::all();
+            if (count($specific_admin_notifications) > 0) {
+                foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    $subject = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
+                    $adminTemplate = 'emails.admin-order-received';
+                    $data['email'] = $specific_admin_notification->email;
+                    MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                }
             }
 
-
+            if (!empty($customer_email->email)) {
+                $data['email'] = $customer_email->email;
+                $data['subject'] = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
+                MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+            }
 
             
-
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Failed to send confirmation email: ' . $e->getMessage());

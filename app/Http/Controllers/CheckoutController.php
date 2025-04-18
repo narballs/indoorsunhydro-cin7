@@ -1117,7 +1117,7 @@ class CheckoutController extends Controller
                             }
                         }
                     }
-                    
+
                     $customer_email = Contact::where('contact_id', $currentOrder->memberId)->first();
                     // $customer_email  = $payment_succeeded->data->object->billing_details->email;
                     if (!empty($customer_email)) {
@@ -1301,7 +1301,6 @@ class CheckoutController extends Controller
                         }
                     }
                     $customer_email = Contact::where('contact_id', $currentOrder->memberId)->first();
-                    // $customer_email  = $payment_succeeded->data->object->billing_details->email;
                     if (!empty($customer_email)) {
                         $contact = Contact::where('email', $customer_email->email)->first();
                     }
@@ -1364,15 +1363,6 @@ class CheckoutController extends Controller
                         'count' => $count,
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
-    
-                    // if (!empty($users_with_role_admin)) {
-                    //     foreach ($users_with_role_admin as $role_admin) {
-                    //         $subject = 'New order received';
-                    //         $adminTemplate = 'emails.admin-order-received';
-                    //         $data['email'] = $role_admin->email;
-                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    //     }
-                    // }
 
                     $specific_admin_notifications = SpecificAdminNotification::all();
                     if (count($specific_admin_notifications) > 0) {
