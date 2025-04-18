@@ -594,28 +594,29 @@
 
 
                                                 @if ($order->shipstation_orderId == '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1)
-                                                @if (
-                                                        (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
-                                                        (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
-                                                        App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
-                                                    )
-                                                    <button type="button" 
-                                                            class="btn btn-primary badge_wholesale send_po_box_wholesale_order_to_shipstation btn-sm" 
-                                                            data-toggle="modal" 
-                                                            data-target="#send_po_box_wholesale_order_to_shipstation" 
-                                                            id="send_po_box_wholesale_order_shipstation" 
-                                                            data-id="{{ $order->id }}">
-                                                        Send to Shipstation (PO Box)
-                                                    </button>
-                                                @else
-                                                    <button type="button" 
-                                                            class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
-                                                            data-toggle="modal" 
-                                                            data-target="#send_wholesale_order_to_shipstation" 
-                                                            id="send_wholesale_order_shipstation" 
-                                                            data-id="{{ $order->id }}">
-                                                        Send to Shipstation
-                                                    </button>
+                                                    @if (
+                                                            (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
+                                                            (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
+                                                            App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
+                                                        )
+                                                        <button type="button" 
+                                                                class="btn btn-primary badge_wholesale send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                                                data-toggle="modal" 
+                                                                data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                                                id="send_po_box_wholesale_order_shipstation" 
+                                                                data-id="{{ $order->id }}">
+                                                            Send to Shipstation (PO Box)
+                                                        </button>
+                                                    @else
+                                                        <button type="button" 
+                                                                class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
+                                                                data-toggle="modal" 
+                                                                data-target="#send_wholesale_order_to_shipstation" 
+                                                                id="send_wholesale_order_shipstation" 
+                                                                data-id="{{ $order->id }}">
+                                                            Send to Shipstation
+                                                        </button>
+                                                    @endif
                                                 @endif
 
                                             </td>
