@@ -1053,7 +1053,7 @@ class OrderManagementController extends Controller
                     $subject = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
                     $adminTemplate = 'emails.admin-order-received';
                     $data['email'] = $specific_admin_notification->email;
-                    $mail_sent = MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                    $mail_sent = MailHelper::sendConfirmationMailNotification('emails.confirmation-order-received', $data);
                     
                 }
             }
@@ -1061,7 +1061,7 @@ class OrderManagementController extends Controller
             if (!empty($customer_email->email)) {
                 $data['email'] = $customer_email->email;
                 $data['subject'] = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
-                $mail_sent = MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                $mail_sent = MailHelper::sendConfirmationMailNotification('emails.confirmation-order-received', $data);
                 if ($mail_sent) {
                     $currentOrder->send_confirmation_email = 1;
                     $currentOrder->save();
