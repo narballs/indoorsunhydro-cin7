@@ -50,7 +50,29 @@ class LabelHelper {
             }
     
             $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
+
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'prepare_data_for_creating_label',
+                'request' => json_encode($prepare_data_for_creating_label),
+                'response' => 'prepared data for creating label',
+                'order_id' => $order_id,
+                'status' => 200,
+            ]);
+
+
             $currentDate = self::adjustShipDate($orderData, $currentDate);
+
+
+            ShipstationApiLogs::create([
+                'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
+                'action' => 'adjust_ship_date',
+                'request' => json_encode($currentDate),
+                'response' => 'adjusted ship date',
+                'order_id' => $order_id,
+                'status' => 200,
+            ]);
+
             
             $check_mode = AdminSetting::where('option_name', 'shipment_mode')->first();
             $is_sandbox = strtolower($check_mode->option_value) == 'sandbox';
