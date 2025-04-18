@@ -45,6 +45,21 @@ class MailHelper
         });
        
     }
+    
+    public static function sendConfirmationMailNotification($template, $data) {
+        try {
+            Mail::send($template, $data, function($message) use ($data) {
+                $message->from($data['from']);
+                $message->to($data['email'])->subject($data['subject']);
+            });
+    
+            return true; // Email queued successfully
+        } catch (\Exception $e) {
+            // Log the error or handle it as per your application's requirements
+            return false; // Email sending failed
+        }
+       
+    }
 
     public static function stockMailNotification($template, $data) {
         try {
