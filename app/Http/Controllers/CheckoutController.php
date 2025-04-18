@@ -1101,16 +1101,23 @@ class CheckoutController extends Controller
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
                             $shipstation_order_status = 'create_order';
-                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
-                            if ($shiping_order['statusCode'] == 200) {
-                                $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                                    'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                                    'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
-                                    'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
-                                ]);
+                            if (
+                                (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
+                                (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            ) 
+                            {
+                                $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
+                                if ($shiping_order['statusCode'] == 200) {
+                                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                        'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                        'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                    ]);
+                                }
                             }
                         }
                     }
+                    
                     $customer_email = Contact::where('contact_id', $currentOrder->memberId)->first();
                     // $customer_email  = $payment_succeeded->data->object->billing_details->email;
                     if (!empty($customer_email)) {
@@ -1277,13 +1284,19 @@ class CheckoutController extends Controller
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact) && $pickup == false) {
                             $shipstation_order_status = 'create_order';
-                            $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
-                            if ($shiping_order['statusCode'] == 200) {
-                                $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                                    'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                                    'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
-                                    'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
-                                ]);
+                            if (
+                                (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
+                                (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            ) 
+                            {
+                                $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
+                                if ($shiping_order['statusCode'] == 200) {
+                                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                        'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                        'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                    ]);
+                                }
                             }
                         }
                     }
