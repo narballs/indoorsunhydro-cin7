@@ -155,7 +155,7 @@
                                         @endif
                                     </div>
                                 @endif
-                                @if ($order->confirmation_email_flag == 0)
+                                @if ($order->confirmation_email_flag == 0 && $order->is_stripe == 1)
                                     <form action="{{route('send_confirmation_email')}}" class="" method="post" class="mb-0 d-none">
                                         @csrf
                                         <div class="col-md-12">
