@@ -340,7 +340,8 @@ class LabelHelper {
         $email_addresses = array_filter([
             SettingHelper::getSetting('naris_indoor_email'),
             SettingHelper::getSetting('wally_shipstation_email'),
-            SettingHelper::getSetting('engrdanish_shipstation_email')
+            SettingHelper::getSetting('engrdanish_shipstation_email'),
+            SettingHelper::getSetting('kevin_shipstation_email')
         ]);
 
         $email_sent_to_admin = ShipstationApiLogs::where('order_id', $order->id)
