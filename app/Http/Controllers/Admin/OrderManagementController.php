@@ -987,7 +987,7 @@ class OrderManagementController extends Controller
                 $contact = Contact::where('email', $customer_email->email)->first();
             }
             $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
-            ->where('order_id', $order_id)
+            ->where('order_id', $currentOrder->order_id)
             ->get();
             $user_email = Auth::user();
             $count = $order_items->count();
@@ -998,6 +998,7 @@ class OrderManagementController extends Controller
             } else {
                 $pay_terms = !empty($currentOrder->contact->paymentTerms) ? $currentOrder->contact->paymentTerms : '30 Days from Invoice';
             }
+
             $addresses = [
                 'billing_address' => [
                     'firstName' => $contact->firstName,
@@ -1052,14 +1053,19 @@ class OrderManagementController extends Controller
                     $subject = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
                     $adminTemplate = 'emails.admin-order-received';
                     $data['email'] = $specific_admin_notification->email;
-                    MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                    $mail_sent = MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                    
                 }
             }
 
             if (!empty($customer_email->email)) {
                 $data['email'] = $customer_email->email;
                 $data['subject'] = 'Resending email in Case You Missed It for order #' . $currentOrder->id;
-                MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                $mail_sent = MailHelper::sendMailNotification('emails.confirmation-order-received', $data);
+                if ($mail_sent) {
+                    $currentOrder->send_confirmation_email = 1;
+                    $currentOrder->save();
+                }
             }
 
             
