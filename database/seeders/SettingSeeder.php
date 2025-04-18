@@ -501,6 +501,11 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'engrdanishsabir00@gmail.com',
             ],
+            [
+                'option_name' => 'kevin_shipstation_email',
+                'type' => 'text',
+                'option_value' => 'xiaawan@gmail.com',
+            ],
             
             [
                 'option_name' => 'wholesale_invoice_email_1',
