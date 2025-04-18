@@ -605,7 +605,7 @@
                                                                 data-target="#send_po_box_wholesale_order_to_shipstation" 
                                                                 id="send_po_box_wholesale_order_shipstation" 
                                                                 data-id="{{ $order->id }}">
-                                                            Send to Shipstation (PO Box)
+                                                            Send to Shipstation (usps)
                                                         </button>
                                                     @else
                                                         <button type="button" 
