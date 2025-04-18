@@ -908,6 +908,7 @@ class UserHelper
             "taxAmount" => number_format($currentOrder->tax_rate, 2),
             // 'internalNotes' => $internalNotes,
             // 'customField1' => !empty($currentOrder->upgrade_shipping)  && $currentOrder->upgrade_shipping == 1 ? 'Upgraded Shipping from free shipping' : null,
+            'customField1' => 'This order is a PO Box order',
             'shipTo' => [
                 "name" => $DeliveryfirstName .' '. $DeliverylastName,
                 "company" => $Deliverycompany,
