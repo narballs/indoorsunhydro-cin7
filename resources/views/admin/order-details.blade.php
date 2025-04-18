@@ -155,6 +155,17 @@
                                         @endif
                                     </div>
                                 @endif
+                                @if ($order->confirmation_email_flag == 0)
+                                    <form action="{{route('send_confirmation_email')}}" class="" method="post" class="mb-0 d-none">
+                                        @csrf
+                                        <div class="col-md-12">
+                                            <input type="hidden" name="order_id" id="" value="{{$order->id}}">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Send Order Confirmation Email
+                                            </button>
+                                        </div>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>

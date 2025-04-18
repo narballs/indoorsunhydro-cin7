@@ -964,6 +964,57 @@ class OrderManagementController extends Controller
         }
     }
 
+    public function send_confirmation_email(Request $request) {
+        $id = $request->order_id;
+        $api_order = ApiOrder::findOrFail($id);
+
+        if (empty($api_order)) {
+            return redirect()->back()->with('error', 'Order not found');
+        }
+
+        if ($api_order->send_confirmation_email == 1) {
+            return redirect()->back()->with('error', 'Confirmation email already sent');
+        }
+
+
+        try {
+            $order_items = ApiOrderItem::with('product.options')->where('order_id', $id)->get();
+            $customer = Contact::where('contact_id', $api_order->memberId)->first();
+            $data = [
+                'name' => $customer->firstName,
+                'email' => $customer->email,
+                'subject' => 'Order Confirmation',
+                'order_items' => $order_items,
+                'dateCreated' => now(),
+                'from' => SettingHelper::getSetting('noreply_email_address'),
+            ];
+
+            $mail_sent = MailHelper::sendMailNotification('emails.order_confirmation_email_template', $data);
+
+            if ($mail_sent) {
+                $orderUpdate = ApiOrder::where('id', $id)->update([
+                    'send_confirmation_email' => 1,
+                ]);
+
+                return redirect()->back()->with('success', 'Confirmation email sent successfully!');
+
+
+            } else {
+                return redirect()->back()->with('error', 'Failed to send confirmation email');
+            }
+
+
+
+            
+
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to send confirmation email: ' . $e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Confirmation email sent successfully!');
+    }
+
 
     
 }
