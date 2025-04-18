@@ -481,7 +481,7 @@ class UserHelper
         }
 
 
-        dd($carrier_code_2->option_value,  $api_order->shipping_carrier_code , $service_code_2->option_value, $api_order->shipping_service_code);
+        // dd($carrier_code_2->option_value,  $api_order->shipping_carrier_code , $service_code_2->option_value, $api_order->shipping_service_code);
 
 
         $data = [
