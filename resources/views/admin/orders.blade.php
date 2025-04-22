@@ -505,8 +505,7 @@
                                                     </div>
                                                 @endif
 
-                                                @if ($order->shipstation_orderId != '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1) 
-
+                                                @if ($order->shipstation_orderId != '' && (strtolower($order->payment_status) == 'paid' || strtolower($order->payment_status) == 'partially refunded') &&  ($order->isApproved == 1 || $order->isApproved == 4) && $order->is_stripe == 1) 
                                                     @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
                                                         <div class="d-flex">
                                                             <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
@@ -525,7 +524,7 @@
                                                             </button>
                                                         </div>
                                                     @else
-                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1 || $order->isApproved == 4))
+                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted')
                                                             <div class="d-flex">
                                                                 <form action="{{url('admin/mark/order/shipped')}}" method="post">
                                                                     @csrf
@@ -589,7 +588,7 @@
                                                                 @endif
                                                             </div>
                                                         @endif
-                                                    @endif
+                                                    @endif     
                                                 @endif
 
 
