@@ -524,7 +524,7 @@
                                                             </button>
                                                         </div>
                                                     @else
-                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted'  && ($order->isApproved == 1))
+                                                        @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted')
                                                             <div class="d-flex">
                                                                 <form action="{{url('admin/mark/order/shipped')}}" method="post">
                                                                     @csrf
