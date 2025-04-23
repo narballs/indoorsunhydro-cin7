@@ -345,7 +345,7 @@ class LabelHelper {
             ]);
 
             self::sendAdminEmails($label_email_data, $order, $file_name, $mail_send);
-            Log::info('Shipment label created and email sent successfully.');
+            // Log::info('Shipment label created and email sent successfully.');
         } else {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order->id}",
