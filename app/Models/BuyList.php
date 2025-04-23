@@ -15,7 +15,7 @@ class BuyList extends Model
         'description',
         'user_id',
         'type',
-        'contact_id'
+        'contact_id',
     ];
 
     public function list_products()

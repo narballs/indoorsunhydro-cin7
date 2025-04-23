@@ -34,6 +34,7 @@
                 <thead>
                     <tr>
                         <th>Product</th>
+                        <th>Code</th>
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
@@ -62,6 +63,9 @@
                                     <img src="{{ $option->image }}" alt="Product 1" class="img-circle img-size-32 mr-2">
                                     {{ $list_product->product->name }}
                                 </td>
+                                <td>
+                                    ${{ $list_product->product->code }}
+                                </td>
                                 <td>${{ number_format($retail_price , 2) }}</td>
                                 <td class="jsutify-content-middle">
                                     <!--   <small class="text-success mr-1">
@@ -76,9 +80,9 @@
                             </tr>
                         @endforeach
                     @endforeach
-                    <tr colspan="4">
-                        <th colspan="3">Grand Total</th>
-                        <td class="text-center">
+                    <tr colspan="5">
+                        <th colspan="4">Grand Total</th>
+                        <td class="">
                             <h4>${{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</h4>
                         </td>
                     </tr>

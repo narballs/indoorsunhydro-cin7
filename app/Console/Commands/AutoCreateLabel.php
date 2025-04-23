@@ -62,7 +62,7 @@ class AutoCreateLabel extends Command
                 return;
             }
 
-            Log::info('Auto create label is enabled');
+            // Log::info('Auto create label is enabled');
 
             $autoLabelSetting = AutoLabelSetting::first();
 
@@ -99,7 +99,7 @@ class AutoCreateLabel extends Command
                     'Sun' => 'SU'
                 ];
             
-                Log::info("Configured days: " . implode(',', $daysOfWeek));
+                // Log::info("Configured days: " . implode(',', $daysOfWeek));
             
                 foreach ($autoLabelSetting->timeRanges ?? [] as $timeRange) {
                     if (empty($timeRange) || !isset($timeRange->start_time, $timeRange->end_time)) {
@@ -111,8 +111,8 @@ class AutoCreateLabel extends Command
                     $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
                     $currentTime = now()->format('H:i');
             
-                    Log::info("Checking schedule for day: " . $dayMap[$currentDay] . 
-                            " | Start: {$startTime} | End: {$endTime} | Current: {$currentTime}");
+                    // Log::info("Checking schedule for day: " . $dayMap[$currentDay] . 
+                    //         " | Start: {$startTime} | End: {$endTime} | Current: {$currentTime}");
             
                     if (in_array(strtoupper($dayMap[$currentDay]), array_map('strtoupper', $daysOfWeek))) {
                         if ($currentTime >= $startTime && $currentTime <= $endTime) {
@@ -122,7 +122,7 @@ class AutoCreateLabel extends Command
                                 return;
                             }
             
-                            Log::info('Auto create label is enabled');
+                            // Log::info('Auto create label is enabled');
             
                             foreach ($all_orders as $order) {
 
