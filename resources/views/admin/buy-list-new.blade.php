@@ -60,9 +60,7 @@
                         </div>
                         <div class="form-group col-md-12">
                             <label for="mobile"></label>
-                            <textarea class="form-control" onfocus="this.select()" type="text" rows="10" name="notes" id="description">
-			    				{{ $list->description }}
-			    			</textarea>
+                            <textarea class="form-control" onfocus="this.select()" type="text" rows="10" name="notes" id="description">{{ $list->description }}</textarea>
                             <div id="description_errors" class="text-danger"></div>
                         </div>
                     </div>
@@ -111,6 +109,7 @@
                     <table id="product_list" class="table">
                         <tr>
                             <td style="width:373px !important">Product Title</td>
+                            <td>Sku</td>
                             <td>Image</td>
                             <td>Price</td>
                             <td>Quantity</td>
@@ -139,6 +138,9 @@
                                     class="product-row-{{ $list_product->product_id }} admin-buy-list">
                                     <td>
                                         {{ $list_product->product->name }}
+                                    </td>
+                                    <td>
+                                        {{ $list_product->product->code }}
                                     </td>
                                     <td>
                                         <input type="hidden" id="option_id_{{ $list_product->product_id }}"
@@ -173,9 +175,48 @@
 
                     </table>
                     <div class="row align-items-center border-top">
+                        <div class="col-md-3 my-2"><strong>Shipping</strong></div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <label for="shipping_price">Shipping Price</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="shipping_price_value" name="shipping_price" onchange="add_shipping(this)" class="form-control" value="0.00" step="any">  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center border-top">
+                        <div class="col-md-3 my-2"><strong>Discount</strong></div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="discount_type">Discount Type</label>
+                                    <div class="form-group">
+                                        <select class="form-control" name="discount_type" id="discount_type" onchange="discount_type(this)">
+                                            <option value="percentage">Percentage</option>
+                                            <option value="fixed">Fixed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="discount_value">Discount Value</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="0" step="any">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center border-top">
                         <div class="col-md-10 my-2"><strong>Grand Total</strong></div>
-                        <div class="col-md-2 ">Amount : <span
-                                id="grand_total">{{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</span></div>
+                        <div class="col-md-2 ">Amount : 
+                            <span id="grand_total">
+                                {{ !empty($list_product) ? $list_product->grand_total : 0.00 }}
+                            </span>
+                        </div>
                     </div>
                     <div class="row align-items-center  border-top">
                         <div class="col-md-10 my-2"><button type="button" class="ms-2 btn btn-primary"
@@ -196,6 +237,7 @@
                     <table id="product_list" class="table">
                         <tr>
                             <td style="width:373px !important">Product Title</td>
+                            <td>Sku</td>
                             <td>Image</td>
                             <td>Price</td>
                             <td>Quantity</td>
@@ -203,6 +245,43 @@
                             <td>Remove</td>
                         </tr>
                     </table>
+                    
+                    <div class="row align-items-center border-top">
+                        <div class="col-md-3 my-2"><strong>Shipping</strong></div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <label for="shipping_price">Shipping Price</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="shipping_price_value" name="shipping_price" onchange="add_shipping(this)" class="form-control" value="0.00" step="any">  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center border-top">
+                        <div class="col-md-3 my-2"><strong>Discount</strong></div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="discount_type">Discount Type</label>
+                                    <div class="form-group">
+                                        <select class="form-control" name="discount_type" id="discount_type" onchange="discount_type(this)">
+                                            <option value="percentage">Percentage</option>
+                                            <option value="fixed">Fixed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="discount_value">Discount Value</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="0" step="any">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row border-top">
                         <div class="col-md-10 py-3 ">Grand Total</div>
                         <div class="col-md-2">Amount : <span id="grand_total">0</span></div>
@@ -261,44 +340,89 @@
             } else {
                 $(".btn-add-to-cart").prop('disabled', false);
             }
+            // $('body').on('click', '.btn-add-to-cart', function() {
+            //     var id = $(this).attr('id');
+            //     var product_id = id.replace('btn_', '');
+            //     var row = $('#product_row_' + product_id).length;
+
+            //     if (row > 0) {
+            //         var difference = 0;
+            //         var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+            //         console.log('difference => ' + difference);
+            //         console.log('sub total before update  => ' + subtotal_before_update);
+
+            //         var retail_price = parseFloat($('#retail_price_' + product_id).html());
+            //         var quantity = parseFloat($('#quantity_' + product_id).val());
+            //         var subtotal = parseFloat($('#subtotal_' + product_id).html());
+
+            //         quantity++;
+            //         subtotal = retail_price * quantity;
+
+            //         difference = subtotal_before_update - subtotal;
+
+            //         console.log('difference => ' + difference);
+
+            //         var grand_total = $('#grand_total').html();
+            //         grand_total = parseFloat(grand_total);
+
+            //         console.log('Grand Total => ' + grand_total);
+
+
+            //         grand_total = grand_total - difference;
+            //         $('#grand_total').html(grand_total.toFixed(2));
+
+            //         console.log('Grand Total => ' + grand_total);
+
+            //         $('#quantity_' + product_id).val(quantity);
+            //         $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+            //         return false;
+            //     }
+
+
+            //     jQuery.ajax({
+            //         url: "{{ url('admin/add-to-list') }}",
+            //         method: 'post',
+            //         data: {
+            //             "_token": "{{ csrf_token() }}",
+            //             product_id: product_id,
+            //             //option_id: option_id
+            //         },
+            //         success: function(response) {
+            //             $('#product_list').append(response);
+
+            //             var grand_total = $('#grand_total').html();
+            //             grand_total = parseFloat(grand_total);
+
+            //             var retail_price = $('#btn_' + product_id).attr('data-retail-price');
+            //             console.log(retail_price);
+
+            //             var subtotal = retail_price * 1;
+
+            //             grand_total = grand_total + subtotal;
+
+            //             $('#grand_total').html(grand_total.toFixed(2));
+            //         }
+            //     });
+            // });
+
             $('body').on('click', '.btn-add-to-cart', function() {
                 var id = $(this).attr('id');
                 var product_id = id.replace('btn_', '');
                 var row = $('#product_row_' + product_id).length;
 
                 if (row > 0) {
-                    var difference = 0;
-                    var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-                    console.log('difference => ' + difference);
-                    console.log('sub total before update  => ' + subtotal_before_update);
-
                     var retail_price = parseFloat($('#retail_price_' + product_id).html());
                     var quantity = parseFloat($('#quantity_' + product_id).val());
-                    var subtotal = parseFloat($('#subtotal_' + product_id).html());
-
                     quantity++;
-                    subtotal = retail_price * quantity;
 
-                    difference = subtotal_before_update - subtotal;
-
-                    console.log('difference => ' + difference);
-
-                    var grand_total = $('#grand_total').html();
-                    grand_total = parseFloat(grand_total);
-
-                    console.log('Grand Total => ' + grand_total);
-
-
-                    grand_total = grand_total - difference;
-                    $('#grand_total').html(grand_total.toFixed(2));
-
-                    console.log('Grand Total => ' + grand_total);
+                    var subtotal = retail_price * quantity;
 
                     $('#quantity_' + product_id).val(quantity);
                     $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+                    recalculateGrandTotal();
                     return false;
                 }
-
 
                 jQuery.ajax({
                     url: "{{ url('admin/add-to-list') }}",
@@ -306,22 +430,10 @@
                     data: {
                         "_token": "{{ csrf_token() }}",
                         product_id: product_id,
-                        //option_id: option_id
                     },
                     success: function(response) {
                         $('#product_list').append(response);
-
-                        var grand_total = $('#grand_total').html();
-                        grand_total = parseFloat(grand_total);
-
-                        var retail_price = $('#btn_' + product_id).attr('data-retail-price');
-                        console.log(retail_price);
-
-                        var subtotal = retail_price * 1;
-
-                        grand_total = grand_total + subtotal;
-
-                        $('#grand_total').html(grand_total.toFixed(2));
+                        recalculateGrandTotal();
                     }
                 });
             });
@@ -334,6 +446,9 @@
             var listItems = [];
             var list_id = $('#list_id').val();
             var grand_total = $('#grand_total').html();
+            var shipping_price = $('#shipping_price_value').val() != '' ? $('#shipping_price_value').val() : 0.00;
+            var discount_value = $('#discount_value').val() != '' ? $('#discount_value').val() : 0.00;
+            var discount_type = $('#discount_type').val();
             console.log(grand_total);
             $('.admin-buy-list').each(function() {
                 var product_id = this.id;
@@ -359,7 +474,10 @@
                     "_token": "{{ csrf_token() }}",
                     listItems: listItems,
                     listId: list_id,
-                    is_update: is_update
+                    is_update: is_update,
+                    shipping_price: shipping_price,
+                    discount_value: discount_value,
+                    discount_type: discount_type,
                 },
                 success: function(response) {
                     window.location.href = "{{ route('buy-list.index') }}";
@@ -379,37 +497,6 @@
             $('#subtotal_' + product_id).val();
             $('#product_row_' + product_id).remove();
             $('#grand_total').html(updated_total.toFixed(2));
-        }
-
-        function handleQuantity(product_id) {
-            var difference = 0;
-            var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-            console.log('difference => ' + difference);
-            console.log('sub total before update  => ' + subtotal_before_update);
-
-            var retail_price = parseFloat($('#retail_price_' + product_id).html());
-            var quantity = parseFloat($('#quantity_' + product_id).val());
-            var subtotal = parseFloat($('#subtotal_' + product_id).html());
-
-
-            subtotal = retail_price * quantity;
-            difference = subtotal_before_update - subtotal;
-
-            console.log('difference => ' + difference);
-
-            var grand_total = $('#grand_total').html();
-            grand_total = parseFloat(grand_total);
-
-            console.log('Grand Total => ' + grand_total);
-
-
-            grand_total = grand_total - difference;
-            $('#grand_total').html(grand_total.toFixed(2));
-
-            console.log('Grand Total => ' + grand_total);
-
-            $('#quantity_' + product_id).val(quantity);
-            $('#subtotal_' + product_id).html(subtotal.toFixed(2));
         }
 
 
@@ -462,6 +549,191 @@
                 }
             });
         }
+
+        // function handleQuantity(product_id) {
+        //     var difference = 0;
+        //     var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
+        //     console.log('difference => ' + difference);
+        //     console.log('sub total before update  => ' + subtotal_before_update);
+
+        //     var retail_price = parseFloat($('#retail_price_' + product_id).html());
+        //     var quantity = parseFloat($('#quantity_' + product_id).val());
+        //     var subtotal = parseFloat($('#subtotal_' + product_id).html());
+
+
+        //     subtotal = retail_price * quantity;
+        //     difference = subtotal_before_update - subtotal;
+
+        //     console.log('difference => ' + difference);
+
+        //     var grand_total = $('#grand_total').html();
+        //     grand_total = parseFloat(grand_total);
+
+        //     console.log('Grand Total => ' + grand_total);
+
+
+        //     grand_total = grand_total - difference;
+        //     $('#grand_total').html(grand_total.toFixed(2));
+
+        //     console.log('Grand Total => ' + grand_total);
+
+        //     $('#quantity_' + product_id).val(quantity);
+        //     $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+        //     add_shipping_for_qty(grand_total);
+        //     discount_type_for_qty(grand_total);
+        //     add_discount_for_qty(grand_total);
+
+        // }
+
+        function recalculateGrandTotal() {
+            let subtotalSum = 0;
+            $('[id^=subtotal_]').each(function () {
+                subtotalSum += parseFloat($(this).html());
+            });
+
+            let shipping_price = parseFloat($('#shipping_price_value').val() || 0);
+            let discount_value = parseFloat($('#discount_value').val() || 0);
+            let discount_type = $('#discount_type').val();
+
+            let grand_total = subtotalSum + shipping_price;
+
+            if (discount_type === 'fixed') {
+                grand_total -= discount_value;
+            } else if (discount_type === 'percentage') {
+                grand_total -= (grand_total * discount_value) / 100;
+            }
+
+            $('#grand_total').html(grand_total.toFixed(2));
+        }
+
+
+        function handleQuantity(product_id) {
+            let retail_price = parseFloat($('#retail_price_' + product_id).html());
+            let quantity = parseFloat($('#quantity_' + product_id).val());
+            let subtotal = retail_price * quantity;
+
+            $('#quantity_' + product_id).val(quantity);
+            $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+            recalculateGrandTotal();
+        }
+
+        function add_shipping(el) {
+            recalculateGrandTotal();
+        }
+
+        function add_discount(el) {
+            recalculateGrandTotal();
+        }
+
+        function discount_type(el) {
+            recalculateGrandTotal();
+        }
+
+
+
+       
+
+        // function add_shipping(el) {
+        //     var shipping_price = $(el).val();
+        //     shipping_price = parseFloat(shipping_price);
+        //     var grand_total = $('#grand_total').html();
+        //     grand_total = parseFloat(grand_total);
+        //     console.log('Grand Total shi=> ' + grand_total);
+        //     console.log('Shipping Prices => ' + shipping_price);
+        //     grand_total = parseFloat(grand_total) + parseFloat(shipping_price);
+        //     $('#grand_total').html(grand_total.toFixed(2));
+        // }
+
+        // function discount_type(el) {
+        //     var type = $(el).val();
+        //     var discount_value = $('#discount_value').val();
+        //     var grand_total = $('#grand_total').html();
+        //     grand_total = parseFloat(grand_total);
+        //     if (type == 'fixed') {
+        //         discount_value = parseFloat(discount_value);
+        //         grand_total = grand_total - discount_value;
+        //         console.log('Grand Total dis => ' + grand_total);
+        //         console.log('Discount Value => ' + discount_value);
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     } else if (type == 'percentage') {
+        //         discount_value = (grand_total * discount_value) / 100;
+        //         grand_total = grand_total - discount_value;
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     }
+        // }
+
+        // function add_discount(el) {
+        //     var discount_value = $(el).val();
+        //     discount_value = parseFloat(discount_value);
+        //     var type = $('#discount_type').val();
+        //     var grand_total = $('#grand_total').html();
+        //     grand_total = parseFloat(grand_total);
+        //     if (type == 'fixed') {
+        //         grand_total = grand_total - discount_value;
+        //         console.log('Grand Total type fix => ' + grand_total);
+        //         console.log('Discount Value => ' + discount_value);
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     } else if (type == 'percentage') {
+        //         discount_value = (grand_total * discount_value) / 100;
+        //         console.log('Grand Total type percentage => ' + grand_total);
+        //         console.log('Discount Value => ' + discount_value);
+        //         grand_total = grand_total - discount_value;
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     }
+        // }
+
+
+
+        // for qty INCREASE DESCREASE
+        // function add_shipping_for_qty(grand_total) {
+        //     var shipping_price = document.getElementById('shipping_price_value').value;
+        //     shipping_price = parseFloat(shipping_price);
+        //     grand_total = parseFloat(grand_total);
+        //     console.log('Grand Total shi=> ' + grand_total);
+        //     console.log('Shipping Prices => ' + shipping_price);
+        //     grand_total = parseFloat(grand_total) + parseFloat(shipping_price);
+        //     $('#grand_total').html(grand_total.toFixed(2));
+        // }
+
+        // function discount_type_for_qty(grand_total) {
+        //     var type = document.getElementById('discount_type').value;
+        //     var discount_value = $('#discount_value').val();
+        //     grand_total = parseFloat(grand_total);
+        //     if (type == 'fixed') {
+        //         discount_value = parseFloat(discount_value);
+        //         grand_total = grand_total - discount_value;
+        //         console.log('Grand Total dis => ' + grand_total);
+        //         console.log('Discount Value => ' + discount_value);
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     } else if (type == 'percentage') {
+        //         discount_value = (grand_total * discount_value) / 100;
+        //         grand_total = grand_total - discount_value;
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     }
+        // }
+
+        // function add_discount_for_qty(grand_total) {
+        //     var discount_value = document.getElementById('discount_value').value;
+        //     discount_value = parseFloat(discount_value);
+        //     var type = $('#discount_type').val();
+        //     grand_total = parseFloat(grand_total);
+        //     if (type == 'fixed') {
+        //         grand_total = grand_total - discount_value;
+        //         console.log('Grand Total type fix => ' + grand_total);
+        //         console.log('Discount Value => ' + discount_value);
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     } else if (type == 'percentage') {
+        //         discount_value = (grand_total * discount_value) / 100;
+        //         console.log('Grand Total type percentage => ' + grand_total);
+        //         console.log('Discount Value => ' + discount_value);
+        //         grand_total = grand_total - discount_value;
+        //         $('#grand_total').html(grand_total.toFixed(2));
+        //     }
+        // }
+
+
     </script>
 
 @stop

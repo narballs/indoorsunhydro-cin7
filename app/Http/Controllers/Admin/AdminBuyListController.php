@@ -8,6 +8,7 @@ use App\Http\Middleware\IsAdmin;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\BuyList;
+use App\Models\BuyListShippingAndDiscount;
 use App\Models\ProductBuyList;
 use Redirect;
 use Illuminate\Support\Facades\Auth;
@@ -107,6 +108,17 @@ class AdminBuyListController extends Controller
                 $product_buy_list->grand_total = $list_item['grand_total'];
                 $product_buy_list->save();
             }
+
+            if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
+                $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
+                $BuyListShippingAndDiscount = new BuyListShippingAndDiscount();
+                $BuyListShippingAndDiscount->buylist_id = $list_id;
+                $BuyListShippingAndDiscount->shipping_cost = $request->shipping_price;
+                $BuyListShippingAndDiscount->discount = $request->discount_value;
+                $BuyListShippingAndDiscount->discount_type = $request->discount_type;
+                $BuyListShippingAndDiscount->save();
+            }
+
         } else {
             foreach ($list_items as $list_item) {
                 $product_buy_list = new ProductBuyList();
@@ -118,6 +130,18 @@ class AdminBuyListController extends Controller
                 $product_buy_list->grand_total = $list_item['grand_total'];
                 $product_buy_list->save();
             }
+
+            if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
+                $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
+                $BuyListShippingAndDiscount = new BuyListShippingAndDiscount();
+                $BuyListShippingAndDiscount->buylist_id = $list_id;
+                $BuyListShippingAndDiscount->shipping_cost = $request->shipping_price;
+                $BuyListShippingAndDiscount->discount = $request->discount_value;
+                $BuyListShippingAndDiscount->discount_type = $request->discount_type;
+                $BuyListShippingAndDiscount->save();
+            }
+
+
         }
     }
 }

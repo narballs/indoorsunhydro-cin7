@@ -26,7 +26,7 @@ class BuyListRequest extends FormRequest
             return [
                 'title' => 'required',
                 'status' =>  'required',
-                'description' => 'required|regex:/^[a-zA-Z ]*$/',
+                // 'description' => 'required|regex:/^[a-zA-Z ]*$/',
             ];
       
     }
