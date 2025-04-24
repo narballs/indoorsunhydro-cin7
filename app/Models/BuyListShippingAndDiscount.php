@@ -13,7 +13,8 @@ class BuyListShippingAndDiscount extends Model
         'shipping_cost',
         'discount',
         'buylist_id',
-        'discount_type'
+        'discount_type',
+        'discount_calculated',
     ];
     public function buylist()
     {

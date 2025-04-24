@@ -22,4 +22,9 @@ class BuyList extends Model
     {
         return $this->hasMany(ProductBuyList::class, 'list_id', 'id');
     }
+
+    public function shipping_and_discount()
+    {
+        return $this->hasOne(BuyListShippingAndDiscount::class, 'buylist_id', 'id');
+    }
 }

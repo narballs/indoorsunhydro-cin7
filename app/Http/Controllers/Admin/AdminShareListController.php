@@ -24,7 +24,7 @@ class AdminShareListController extends Controller
     }
     
     public function shareList(Request $request) {
-        $list = BuyList::where('id', $request->list_id)->with('list_products.product.options')->first();
+        $list = BuyList::where('id', $request->list_id)->with('shipping_and_discount','list_products.product.options')->first();
         $base_url = url('/');
         $data = [
             'name' =>  SettingHelper::getSetting('from_email_name'),
