@@ -650,9 +650,10 @@ $cart_price = 0;
 
                                             if (!empty($discount)) {
                                                 if ($discount_type == 'percentage') {
-                                                    $discount_value_buyList = ($total_including_tax * $discount) / 100;                                    
+                                                    $discount_value_buyList = ($total_including_tax * $discount) / 100;
+                                                    $total_including_tax = $total_including_tax - floatval($discount_value_buyList);                                    
                                                 } else {
-                                                    $discount_value_buyList = $discount;
+                                                    $discount_value_buyList = floatval($discount);
                                                     $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
                                                 }
                                             }
