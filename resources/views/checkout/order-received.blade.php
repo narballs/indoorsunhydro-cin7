@@ -788,7 +788,11 @@
 										<p class="order-confirmation-page-order-number-title">Discount</p>
 										<p class="order-confirmation-page-order-number-item">
 											{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }} --}}
-											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+											@if (!empty($order->buylist_id))
+												${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+											@else
+												${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+											@endif
 										</p>
 									</div>
 									{{-- <div class="col-md-3">
@@ -864,7 +868,11 @@
 									<p class="order-confirmation-page-order-number-title">Discount</p>
 									<p class="order-confirmation-page-order-number-item">
 										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }} --}}
-										${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+										@if (!empty($order->buylist_id))
+											${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+										@else
+											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+										@endif
 									</p>
 								</div>
 								{{-- <div class="col-md-6 col-lg-4">
@@ -935,7 +943,11 @@
 									<p class="order-confirmation-page-tax-title">Discount</p>
 									<p class="order-confirmation-page-tax-item">
 										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }} --}}
-										${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+										@if (!empty($order->buylist_id))
+											${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+										@else
+											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+										@endif
 									</p>
 								</div>
 								{{-- <div class="d-flex justify-content-between">
@@ -1319,7 +1331,13 @@
 												<span class="summary_sub_total_head">Discount :</span>
 											</div>
 											<div class="w-50 p-1 text-right">
-												<span class="summary_sub_total_price text-right">${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}</span>
+												<span class="summary_sub_total_price text-right">
+													@if (!empty($order->buylist_id))
+														${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+													@else
+														${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+													@endif
+												</span>
 											</div>
 										</div>
 										<div class="d-flex w-100 mb-2">
