@@ -215,6 +215,23 @@
         line-height: normal;
         text-transform: uppercase;
     }
+    .checkout_buy_list_discount_heading {
+        color: #555;
+        font-family: 'Poppins';
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+    .checkout_buy_list_discount_price {
+        color: #111;
+        font-family: 'Poppins';
+        font-size: 17px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 36px; /* 150% */
+    }
     .checkout_total_heading {
         color: #212529;
         font-family: 'Poppins';
@@ -624,10 +641,21 @@ $cart_price = 0;
                                         @endif
                                         @php
                                             $tax=0;
+                                            $discount_value_buyList = 0;
                                             if (!empty($tax_class)) {
                                                 $tax = $cart_total * ($tax_class->rate / 100);
                                             }
+                                            
                                             $total_including_tax = $tax + $cart_total  + $shipment_price;
+
+                                            if (!empty($discount)) {
+                                                if ($discount_type == 'percentage') {
+                                                    $discount_value_buyList = ($total_including_tax * $discount) / 100;                                    
+                                                } else {
+                                                    $discount_value_buyList = $discount;
+                                                    $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
+                                                }
+                                            }
                                         @endphp
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_subtotal_heading">Subtotal</span></div>
@@ -649,6 +677,20 @@ $cart_price = 0;
                                             <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
                                             <div class="col-md-3  col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                         </div>
+                                        @if (!empty($discount))
+                                            <div class="row justify-content-center border-bottom align-items-center py-2">
+                                                <div class="col-md-9 col-9">
+                                                    <span class="checkout_buy_list_discount_heading">
+                                                        Discount {{!empty($discount_type) && ($discount_type == 'percentage') ? '('.number_format($discount_value_buyList  , 2).'%)' : '('. number_format($discount_value_buyList  , 2) . ')'}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-3 col-3 text-right">
+                                                    <span class="checkout_buy_list_discount_price">
+                                                        ${{ number_format($discount_value_buyList, 2) }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endif
                                         <div class="row justify-content-center  align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_total_heading">Total</span></div>
                                             <div class="col-md-3 col-3 text-right"><span class="checkout_total_price">${{ number_format($total_including_tax, 2) }}</span></div>

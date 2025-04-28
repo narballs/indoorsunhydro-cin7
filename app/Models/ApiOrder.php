@@ -83,7 +83,9 @@ class ApiOrder extends Model
         'void_label',
         'card_number',
         'upgrade_shipping',
-        'confirmation_email_flag'
+        'confirmation_email_flag',
+        'buylist_id',
+        'buylist_discount',
         
     ];
     public function contact()

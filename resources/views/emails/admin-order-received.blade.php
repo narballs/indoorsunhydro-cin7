@@ -430,9 +430,15 @@
                             <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 Discount
                             </td>
+                            @if (!empty($order->buylist_id))
+                            <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
+                                {{ '$'.number_format($currentOrder->buylist_discount, 2) }}
+                            </td>
+                            @else
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 {{ '$'.number_format($currentOrder->discount_amount, 2) }}
                             </td>
+                            @endif
                         </tr>
                     </table>
                 </td>

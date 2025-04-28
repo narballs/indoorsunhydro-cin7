@@ -2053,8 +2053,11 @@ class ProductController extends Controller
         //     }
         // }
 
-        $tax_class = TaxClass::where('name', $contact->tax_class)->first();
-
+        if (!auth()->user()) {
+            $tax_class = TaxClass::where('is_default', 1)->first();
+        } else {
+            $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+        }
         if (!empty($cart_items)) {
             foreach ($cart_items as $cart_item) {
                 $subtotal += $cart_item['price'] * $cart_item['quantity'];
