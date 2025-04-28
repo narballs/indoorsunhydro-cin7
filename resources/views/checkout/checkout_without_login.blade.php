@@ -681,7 +681,7 @@ $cart_price = 0;
                                             <div class="row justify-content-center border-bottom align-items-center py-2">
                                                 <div class="col-md-9 col-9">
                                                     <span class="checkout_buy_list_discount_heading">
-                                                        Discount {{!empty($discount_type) && ($discount_type == 'percentage') ? '('.number_format($discount_value_buyList  , 2).'%)' : '('. number_format($discount_value_buyList  , 2) . ')'}}
+                                                        Discount {{!empty($discount_type) && ($discount_type == 'percentage') ? '('.number_format($discount  , 2).'%)' : '('. number_format($discount  , 2) . ')'}}
                                                     </span>
                                                 </div>
                                                 <div class="col-md-3 col-3 text-right">
