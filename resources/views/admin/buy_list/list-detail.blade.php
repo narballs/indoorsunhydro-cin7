@@ -80,6 +80,30 @@
                             </tr>
                         @endforeach
                     @endforeach
+                    @if (!empty($list->shipping_and_discount))
+                    <tr colspan="5">
+                        <th colspan="4">Shipping</th>
+                        <td class="">
+                            <h4>${{ !empty($list->shipping_and_discount->shipping_cost) ? $list->shipping_and_discount->shipping_cost : 0.00 }}</h4>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount</th>
+                        <td class="">
+                            <h4>
+                                {{ !empty($list->shipping_and_discount->discount_type) && $list->shipping_and_discount->discount_type == 'fixed' ? '$' : '' }}
+                                {{ !empty($list->shipping_and_discount->discount) ? $list->shipping_and_discount->discount : 0.00 }}
+                                {{ !empty($list->shipping_and_discount->discount_type) && $list->shipping_and_discount->discount_type == 'percentage' ? '%' : '' }}                                
+                            </h4>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount Value</th>
+                        <td class="">
+                            <h4>${{ !empty($list->shipping_and_discount->discount_calculated) ? $list->shipping_and_discount->discount_calculated : 0.00 }}</h4>
+                        </td>
+                    </tr>
+                    @endif
                     <tr colspan="5">
                         <th colspan="4">Grand Total</th>
                         <td class="">
@@ -173,7 +197,6 @@
                 },
                 success: function(success) {
                     if (success.success == true) {
-                        console.log('ppp');
                         var msg = success.msg;
                         $('#share-success').html(msg);
                     }

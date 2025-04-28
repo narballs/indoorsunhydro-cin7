@@ -182,7 +182,7 @@
                                 <div class="col-md-6">
                                     <label for="shipping_price">Shipping Price</label>
                                     <div class="form-group">
-                                        <input type="number" min="0" id="shipping_price_value" name="shipping_price" onchange="add_shipping(this)" class="form-control" value="0.00" step="any">  
+                                        <input type="number" min="0" id="shipping_price_value" name="shipping_price" onchange="add_shipping(this)" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->shipping_cost : 0.00 }}" step="any">  
                                     </div>
                                 </div>
                             </div>
@@ -192,19 +192,25 @@
                         <div class="col-md-3 my-2"><strong>Discount</strong></div>
                         <div class="col-md-9">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="discount_type">Discount Type</label>
                                     <div class="form-group">
                                         <select class="form-control" name="discount_type" id="discount_type" onchange="discount_type(this)">
-                                            <option value="percentage">Percentage</option>
-                                            <option value="fixed">Fixed</option>
+                                            <option value="percentage" {{ isset($list->shipping_and_discount) && $list->shipping_and_discount->discount_type == 'percentage' ? 'selected' : ''}}>Percentage</option>
+                                            <option value="fixed" {{ isset($list->shipping_and_discount) && $list->shipping_and_discount->discount_type == 'fixed' ? 'selected' : ''}}>Fixed</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="discount_value">Discount Value</label>
+                                <div class="col-md-4">
+                                    <label for="discount_value">Discount</label>
                                     <div class="form-group">
-                                        <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="0" step="any">
+                                        <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount : 0}}" step="any">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discount_value">Discount Calculated</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="discount_calculated" name="discount_calculated" readonly class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount_calculated : 0}}">
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +218,7 @@
                     </div>
                     <div class="row align-items-center border-top">
                         <div class="col-md-10 my-2"><strong>Grand Total</strong></div>
-                        <div class="col-md-2 ">Amount : 
+                        <div class="col-md-2 ">Amount :$ 
                             <span id="grand_total">
                                 {{ !empty($list_product) ? $list_product->grand_total : 0.00 }}
                             </span>
@@ -274,9 +280,15 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="discount_value">Discount Value</label>
+                                    <label for="discount_value">Discount</label>
                                     <div class="form-group">
                                         <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="0" step="any">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discount_value">Discount Calculated</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="discount_calculated" readonly name="discount_calculated" readonly class="form-control" value="0">
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +296,7 @@
                     </div>
                     <div class="row border-top">
                         <div class="col-md-10 py-3 ">Grand Total</div>
-                        <div class="col-md-2">Amount : <span id="grand_total">0</span></div>
+                        <div class="col-md-2">Amount : $<span id="grand_total">0</span></div>
                     </div>
                     <div class="row border-top">
                         <div class="col-md-10 py-3"><button type="button" class="ms-2 btn btn-primary"
@@ -449,6 +461,7 @@
             var shipping_price = $('#shipping_price_value').val() != '' ? $('#shipping_price_value').val() : 0.00;
             var discount_value = $('#discount_value').val() != '' ? $('#discount_value').val() : 0.00;
             var discount_type = $('#discount_type').val();
+            var discount_calculated = $('#discount_calculated').val() != '' ? parseFloat($('#discount_calculated').val()) : 0.00;
             console.log(grand_total);
             $('.admin-buy-list').each(function() {
                 var product_id = this.id;
@@ -478,6 +491,7 @@
                     shipping_price: shipping_price,
                     discount_value: discount_value,
                     discount_type: discount_type,
+                    discount_calculated: discount_calculated,
                 },
                 success: function(response) {
                     window.location.href = "{{ route('buy-list.index') }}";
@@ -486,17 +500,23 @@
         }
 
         function deleteProduct(product_id) {
-            var row = $('#product_row_' + product_id).length;
-            if (row < 1) {
-                $('#grand_total').html(0.00);
-            }
-            var subtotal_to_remove = parseFloat($('#subtotal_' + product_id).html());
-            var grand_total = parseFloat($('#grand_total').html());
-            var updated_total = 0;
-            updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
-            $('#subtotal_' + product_id).val();
+            // var row = $('#product_row_' + product_id).length;
+            // if (row < 1) {
+            //     $('#grand_total').html(0.00);
+            // }
+            // var subtotal_to_remove = parseFloat($('#subtotal_' + product_id).html());
+            // var grand_total = parseFloat($('#grand_total').html());
+            // var updated_total = 0;
+            // updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+            // $('#subtotal_' + product_id).val();
+            // $('#product_row_' + product_id).remove();
+            // $('#grand_total').html(updated_total.toFixed(2));
+
+            // Remove the row first
             $('#product_row_' + product_id).remove();
-            $('#grand_total').html(updated_total.toFixed(2));
+
+            // Recalculate the total using existing logic
+            recalculateGrandTotal();
         }
 
 
@@ -586,10 +606,13 @@
 
         // }
 
+        
+
         function recalculateGrandTotal() {
             let subtotalSum = 0;
             $('[id^=subtotal_]').each(function () {
-                subtotalSum += parseFloat($(this).html());
+                let cleanValue = $(this).text().replace(/[^0-9.-]+/g, '');
+                subtotalSum += parseFloat(cleanValue);
             });
 
             let shipping_price = parseFloat($('#shipping_price_value').val() || 0);
@@ -600,12 +623,16 @@
 
             if (discount_type === 'fixed') {
                 grand_total -= discount_value;
+                $('#discount_calculated').val(discount_value.toFixed(2));
             } else if (discount_type === 'percentage') {
-                grand_total -= (grand_total * discount_value) / 100;
+                let discount_amount = (grand_total * discount_value) / 100;
+                grand_total -= discount_amount;
+                $('#discount_calculated').val(discount_amount.toFixed(2));
             }
 
             $('#grand_total').html(grand_total.toFixed(2));
         }
+
 
 
         function handleQuantity(product_id) {
@@ -620,6 +647,7 @@
         }
 
         function add_shipping(el) {
+            console.log('Shipping Price => ' + $(el).val());
             recalculateGrandTotal();
         }
 

@@ -106,7 +106,8 @@
                         @endforeach
                     @endforeach
                     <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Tax</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>Charged On Site</h3></span></td></tr>
-                    <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Shipping</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>Charged On Site</h3></span></td></tr>
+                    <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Shipping</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>${{!empty($list->shipping_and_discount) ? $list->shipping_and_discount->shipping_cost : 'Charged On Site'}}</h3></span></td></tr>
+                    <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Discount</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>${{!empty($list->shipping_and_discount) ? $list->shipping_and_discount->discount : 'Charged On Site'}}</h3></span></td></tr>
                     <tr class="has-bordered"><td colspan="4" style="text-align:left;margin-left: 20px"><h3><span style="margin-left:40px">Grand Total</span></h3></td><td><span style="margin-left:75px;text-align:center"><h3>${{$list_product->grand_total}}</h3></span></td></tr>
                     <tr><td colspan="4" style="padding-bottom:20px;"><a href="{{$link}}"><center><button style="background:#7CC633;border: none;width: 138px;color:white;height:44px;font-size:18px;margin:auto;text-align:center;" type="button" value="Buy Now">Buy Now</button></center></a></td></tr>
                 </tbody>

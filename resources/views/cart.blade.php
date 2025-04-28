@@ -456,11 +456,29 @@
                     @endif
                     <div class="table-responsive" style="padding-top:3px !important;">
                         <?php
-                        $tax=0;
+                            $tax=0;
+                            $discounted_value = 0;
                             if (!empty($tax_class)) {
                                 $tax = $cart_total * ($tax_class->rate / 100);
                             }
+
                             $total_including_tax = $tax + $cart_total;
+
+
+                            if (!empty($shipping_cost)) {
+                                $total_including_tax = $total_including_tax + floatval($shipping_cost);
+                            }
+
+
+                            if (!empty($discount)) {
+                                if ($discount_type == 'percentage') {
+                                    $discounted_value = ($total_including_tax * $discount) / 100;                                    
+                                }
+                                $total_including_tax = $total_including_tax - floatval($discounted_value);
+                            }
+
+
+
                         ?>
                         @if(!empty($tax_class->rate))
                         <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
@@ -504,6 +522,52 @@
                                         </div>
                                     </td>
                                 </tr>
+                                {{-- buy list shipping  --}}
+                                @if (!empty($shipping_cost))
+                                    <tr>
+                                        <td class="ps-0" colspan="2">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <span>
+                                                    <i class="fa fa-shipping-fast mx-1" style="font-size: 20x;"></i>
+                                                    <span class="cart-total">Shipping</span>
+                                                </span>
+                                                <span id="shipping_total_value">
+                                                    <strong class=" d-flex justify-content-end cart-page-items ">
+                                                        ${{ number_format($shipping_cost, 2) }}
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
+
+                                {{-- buylist discount  --}}
+                                @if (!empty($discount))
+                                    <tr>
+                                        <td class="ps-0" colspan="2">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <span>
+                                                    <i class="fa fa-percent mx-1" style="font-size: 20px;"></i>
+                                                    <span> <strong class="cart-total" id="discountHead">Discount
+                                                            @if(!empty($discount_type))
+                                                                @if ($discount_type == 'percentage')
+                                                                    {{ number_format($discount, 2) }}%
+                                                                @else
+                                                                    ${{ number_format($discount, 2) }}
+                                                                @endif
+                                                            @endif
+                                                        </strong>
+                                                    </span>
+                                                </span>
+                                                <span id="" class="discountValue">
+                                                    <strong class=" d-flex justify-content-end cart-page-items" id="discountValue">
+                                                        ${{ number_format($discounted_value, 2) }}
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
                                 <tr>
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
@@ -527,12 +591,6 @@
                                         @if(!empty($tax_class->name))
                                             <div class="mx-2"><span><strong class="cart-total mx-3 px-3" >{{'Tax Class:' . $tax_class->name}}</strong></span></div>
                                         @endif
-                                        {{-- <div>
-                                            <span class="tax-calculater">
-                                                (Tax is calculated when order is invoiced, could be 0% based
-                                                on your account setup)
-                                            </span>
-                                        </div> --}}
                                     </td>
                                 </tr>
                                 <tr>

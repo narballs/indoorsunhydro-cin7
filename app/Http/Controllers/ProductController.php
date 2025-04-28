@@ -1943,7 +1943,12 @@ class ProductController extends Controller
         $free_shipping_value  = AdminSetting::where('option_name', 'free_shipping_value')->first();
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
-        $is_child = false; 
+        $is_child = false;
+        $buy_list_id = session()->get('buy_list_id');
+        $buyList = BuyList::with('shipping_and_discount')->where('id', $buy_list_id)->first();
+        $shipping_cost = $buyList->shipping_and_discount->shipping_cost ?? 0;
+        $discount = $buyList->shipping_and_discount->discount ?? 0;
+        $discount_type = $buyList->shipping_and_discount->discount_type ?? null;
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
@@ -2048,8 +2053,11 @@ class ProductController extends Controller
         //     }
         // }
 
-        $tax_class = TaxClass::where('name', $contact->tax_class)->first();
-
+        if (!auth()->user()) {
+            $tax_class = TaxClass::where('is_default', 1)->first();
+        } else {
+            $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+        }
         if (!empty($cart_items)) {
             foreach ($cart_items as $cart_item) {
                 $subtotal += $cart_item['price'] * $cart_item['quantity'];
@@ -2100,7 +2108,10 @@ class ProductController extends Controller
             'out_of_stock_items',
             'original_items_quantity',
             'get_wholesale_contact_id',
-            'get_wholesale_terms'
+            'get_wholesale_terms',
+            'shipping_cost',
+            'discount',
+            'discount_type',
 
         ));
     }
