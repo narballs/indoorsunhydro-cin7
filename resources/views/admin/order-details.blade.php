@@ -125,7 +125,18 @@
                                         @endif
                                     </form>
                                 </div>
-                                @if( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
+                                @if (!empty($order->buylist_id) && ($order->label_created == 0) && ($order->is_shipped == 0) && empty($order->shipstation_orderId) && $order->isApproved == 1)
+                                    <div class="col-md-5 ">
+                                        <button type="button" 
+                                            class="btn btn-primary send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                            data-toggle="modal" 
+                                            data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                            id="send_po_box_wholesale_order_shipstation" 
+                                            data-id="{{ $order->id }}">
+                                            Send Order to Shipstation
+                                        </button>
+                                    </div>
+                                @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
                                     <div class="col-md-5 ">
                                         @if (
                                                 (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
