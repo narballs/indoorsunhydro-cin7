@@ -129,20 +129,30 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Please enter email.</label>
+                            <label for="email">Please enter email.</label>
                             <input type="text" class="form-control" name="email" id="email">
                         </div>
+                    
                         <input type="hidden" id="list_id" name="list_id" value="{{ $list->id }}">
-                        <div class="text-light bg-success text-center " id="share-success">
-
+                        <label for="">
+                            Copy link to share
+                        </label>
+                        <div class="form-group d-flex align-items-center">
+                            <input type="text" id="copy-link" class="form-control form-control-sm" value="{{ url('/create-cart/' . $list->id) }}" readonly>
+                            <button type="button" class="btn btn-sm btn-outline-secondary ml-2" onclick="copyLink()" title="Copy link">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <small id="copy-message" class="text-success ml-2" style="display: none;">Link copied!</small>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="sendEmail();">Share</button>
-                </div>
-
-                </form>
+                        
+                    
+                        <div class="text-light bg-success text-center" id="share-success"></div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="sendEmail();">Share</button>
+                        </div>
+                    </form>
             </div>
 
         </div>
@@ -186,6 +196,7 @@
         function sendEmail() {
             var email = $('#email').val();
             var list_id = $('#list_id').val();
+            
             //alert(list_id);
             jQuery.ajax({
                 url: "{{ url('/admin/share-list/') }}",
@@ -199,6 +210,7 @@
                     if (success.success == true) {
                         var msg = success.msg;
                         $('#share-success').html(msg);
+                        location.reload();
                     }
                     console.log(success);
                     //jQuery('.alert').html(result.success);
@@ -206,5 +218,39 @@
                 }
             });
         }
+        function copyLink() {
+            const input = document.getElementById("copy-link");
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand("copy");
+                document.getElementById("copy-message").style.display = 'inline';
+                setTimeout(() => {
+                    document.getElementById("copy-message").style.display = 'none';
+                }, 2000);
+            } catch (err) {
+                console.error("Copy failed", err);
+            }
+        }
+
+        // function deleteProduct(product_id) {
+        //     console.log(product_id);
+        //     //$('#product_row_'+ product_id).remove();
+        //     $(`#product_row_${product_id}`).remove();
+        //     // var row = $('#product_row_' + product_id);
+        //     // console.log(row);
+        //     //   var row = $('#product_row_' + product_id).length;
+        // 
+        //     //   if (row < 1) {
+        //     //           $('#grand_total').html(0.00);
+        //     //   }
+        //     //   var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
+        //     //   var grand_total = parseFloat($('#grand_total').html());
+        //     //   var updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+        //     //   $('#subtotal_'+ product_id).val();
+        //     //   $('#product_row_'+ product_id).remove();
+        //     //   $('#grand_total').html(updated_total);
+        // }
     </script>
 @stop
