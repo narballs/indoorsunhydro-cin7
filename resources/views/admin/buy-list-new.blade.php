@@ -136,7 +136,6 @@
                                     }
                                 }
                             @endphp
-                                <!-- <tr id="product_row_{{ $list_product->product_id }}"> -->
                                 <tr id="product_row_{{ $list_product->product_id }}"
                                     class="product-row-{{ $list_product->product_id }} admin-buy-list">
                                     <td>
