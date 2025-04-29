@@ -14,7 +14,7 @@
                         @foreach($product->options as $option)
                             @php
                                 $retail_price = 0;
-                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {
@@ -34,7 +34,7 @@
                                 <td>{{number_format($retail_price)}}</td>
                                 <td>
                                     @if (!empty($option->stockAvailable) && $option->stockAvailable > 0 )
-                                        <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $product->retail_price }}" class="btn btn-primary btn-add-to-cart">Add to quote</button>
+                                        <button id="btn_{{ $product->product_id }}" data-retail-price="{{ $retail_price }}" class="btn btn-primary btn-add-to-cart">Add to quote</button>
                                     @else
                                         <span class="btn btn-danger">Out of Stock</span>
                                     @endif

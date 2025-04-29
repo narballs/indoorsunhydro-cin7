@@ -22,8 +22,19 @@ class AdminBuyListController extends Controller
 
     public function index(Request $request)
     {
-        $buylists = BuyList::paginate(10);
-        return view('admin/buy-lists', compact('buylists'));
+        $search = $request->input('search');
+
+        if ($search) {
+            $buylists = BuyList::where('title', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        } else {
+            $buylists = BuyList::orderBy('created_at', 'desc')->paginate(10);
+        }
+        
+        // $buylists = BuyList::paginate(10);
+        return view('admin/buy-lists', compact('buylists' , 'search'));
     }
 
     public function create(Request $request)

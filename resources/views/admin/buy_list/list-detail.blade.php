@@ -47,7 +47,7 @@
                         @foreach ($list_product->product->options as $option)
                             @php
                                 $retail_price = 0;
-                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {
@@ -75,7 +75,7 @@
                                     {{ $list_product->quantity }}
                                 </td>
                                 <td>
-                                    ${{ $list_product->sub_total }}
+                                    ${{ number_format($list_product->sub_total , 2) }}
                                 </td>
                             </tr>
                         @endforeach
@@ -84,7 +84,7 @@
                     <tr colspan="5">
                         <th colspan="4">Shipping</th>
                         <td class="">
-                            <h4>${{ !empty($list->shipping_and_discount->shipping_cost) ? $list->shipping_and_discount->shipping_cost : 0.00 }}</h4>
+                            <h4>${{ !empty($list->shipping_and_discount->shipping_cost) ? number_format($list->shipping_and_discount->shipping_cost , 2) : 0.00 }}</h4>
                         </td>
                     </tr>
                     <tr colspan="5">
@@ -100,14 +100,14 @@
                     <tr colspan="5">
                         <th colspan="4">Discount Value</th>
                         <td class="">
-                            <h4>${{ !empty($list->shipping_and_discount->discount_calculated) ? $list->shipping_and_discount->discount_calculated : 0.00 }}</h4>
+                            <h4>${{ !empty($list->shipping_and_discount->discount_calculated) ? number_format($list->shipping_and_discount->discount_calculated , 2) : 0.00 }}</h4>
                         </td>
                     </tr>
                     @endif
                     <tr colspan="5">
                         <th colspan="4">Grand Total</th>
                         <td class="">
-                            <h4>${{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</h4>
+                            <h4>${{ !empty($list_product) ? number_format($list_product->grand_total , 2) : 0.00 }}</h4>
                         </td>
                     </tr>
                 </tbody>
