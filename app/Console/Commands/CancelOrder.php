@@ -249,15 +249,15 @@ class CancelOrder extends Command
                         'from' => SettingHelper::getSetting('noreply_email_address'),
                     ];
 
-                    if (!empty($email)) {
-                        if ($pending_order->is_stripe == 1 && $pending_order->payment_status == 'unpaid') {
-                            $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' incomplete, payment did not go through';
-                        } else {
-                            $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
-                        }
-                        $data['email'] = $email;
-                        MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
-                    }
+                    // if (!empty($email)) {
+                    //     if ($pending_order->is_stripe == 1 && $pending_order->payment_status == 'unpaid') {
+                    //         $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' incomplete, payment did not go through';
+                    //     } else {
+                    //         $data['subject'] = 'Your Indoorsun Hydro order #' . $currentOrder->id . ' has been Cancelled';
+                    //     }
+                    //     $data['email'] = $email;
+                    //     MailHelper::sendMailNotification('emails.cancel_order_email_template', $data);
+                    // }
                 }
 
                 $this->info('Orders Cancelled');
