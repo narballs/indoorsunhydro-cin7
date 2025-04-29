@@ -39,8 +39,8 @@
 									}
 								}
 							@endphp
-						
                             <tr id="product_row_{{ $list_product->product_id }}" class="product-row-{{ $list_product->product_id }} admin-buy-list">
+								<input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $product->product_id }}" value="{{ $option->stockAvailable }}">
                                 <td>
                                     {{$list_product->product->name}}
                                 </td>
@@ -54,7 +54,7 @@
                                 <td>	
                                 	$<span id="retail_price_{{ $retail_price }}"> ${{number_format($retail_price , 2 )}} </span></td>
                                 <td>
-									<input type="number" min="1"   id="quantity_{{ $list_product->product_id }}" value="{{$list_product->quantity}}" onclick="handleQuantity({{$list_product->product_id}})">
+									<input type="number" min="1"   id="quantity_{{ $list_product->product_id }}" value="{{$list_product->quantity}}" onchange="handleQuantity({{$list_product->product_id}})">
 								</td>
                                 <td>
 									$<span id="subtotal_{{$list_product->product_id}}"> {{ number_format($retail_price * $list_product->quantity, 2) }} </span>

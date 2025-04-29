@@ -51,6 +51,7 @@
                                         }
                                     }
                                 @endphp
+                                <input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $product->product_id }}" value="{{ $option->stockAvailable }}">
                                 <tr id="product_row_{{ $list_product->product_id }}">
                                     <td>
                                         <img src="{{ $option->image }}" alt="Product 1" class="img-circle img-size-32 mr-2">

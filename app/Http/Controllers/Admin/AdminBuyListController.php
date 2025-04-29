@@ -61,7 +61,7 @@ class AdminBuyListController extends Controller
             'user_id' =>  $user_id
         ]);
         return response()->json([
-            'success' => 'List Created Successfully. Please add prodcuts to list.',
+            'success' => 'List Created Successfully. Please add products to list.',
             'list_id' => $list->id
         ]);
     }

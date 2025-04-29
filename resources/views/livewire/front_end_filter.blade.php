@@ -12,6 +12,7 @@
                     </tr>
                      @foreach($products as $product)
                         @foreach($product->options as $option)
+                            <input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $product->product_id }}" value="{{ $option->stockAvailable }}">
                             @php
                                 $retail_price = 0;
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
