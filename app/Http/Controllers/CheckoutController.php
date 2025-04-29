@@ -681,6 +681,10 @@ class CheckoutController extends Controller
                 $buyListData = false;
             }
 
+            $buyLIst_shipping_cost = 0;
+            $buyListdiscount =0;
+            $buyListdiscount_type = null;
+
 
             if ($buyListData == true && !empty($shipping_cost) && floatval($shipping_cost) > 0) {
                 $buyLIst_shipping_cost = $buyList->shipping_and_discount->shipping_cost ?? 0;

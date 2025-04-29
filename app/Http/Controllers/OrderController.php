@@ -1474,7 +1474,8 @@ class OrderController extends Controller
             'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
             'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
         ];
-        $email_template = !empty($current_order_status->status) && ($current_order_status->status === 'Cancelled') ? 'emails.cancel_order_email_template' : 'emails.admin-order-received';
+        // $email_template = !empty($current_order_status->status) && ($current_order_status->status === 'Cancelled') ? 'emails.cancel_order_email_template' : 'emails.admin-order-received';
+        $email_template = 'emails.admin-order-received';
         $name = $customer->contact->firstName;
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
@@ -1495,15 +1496,17 @@ class OrderController extends Controller
             'from' => SettingHelper::getSetting('noreply_email_address')
         ];
 
-        if (!empty($email)) {
-            $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
-            $data['email'] = $email;
-            MailHelper::sendMailNotification($email_template, $data);
-        }
+        
 
 
 
         if ($current_order_status->status !== 'Cancelled') {
+
+            if (!empty($email)) {
+                $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
+                $data['email'] = $email;
+                MailHelper::sendMailNotification($email_template, $data);
+            }
 
             $specific_admin_notifications = SpecificAdminNotification::all();
             if (count($specific_admin_notifications) > 0) {
