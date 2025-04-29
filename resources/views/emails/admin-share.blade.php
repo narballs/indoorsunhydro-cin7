@@ -52,6 +52,7 @@
                     <tr style="padding-right:10px;">
                     	<th class="has-bordered"></th>
                         <th><h3>Products</h3></th>
+                        <th><h3>Sku</h3></th>
                         <th><h3>Price</h3></th>
                         <th><h3>Quantity</h3></th>
                         <th ><h3>Subtotal</h3></th>
@@ -64,7 +65,7 @@
                         @foreach($list_product->product->options as $key=>$option)
                         @php
                             $retail_price = 0;
-                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                            $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                             foreach ($option->price as $price) {
                                 $retail_price = $price->$user_price_column;
                                 if ($retail_price == 0) {
@@ -91,6 +92,7 @@
                                 <td class="has-bordered" style =<?php echo $bgcolor;?>>
                                     {{$list_product->product->name}}
                                 </td>
+                                <td class="has-bordered">{{$list_product->product->code}}</td>
                                 <td class="has-bordered">${{$retail_price}}</td>
                                 <td class="has-bordered">
                                   <!--   <small class="text-success mr-1">

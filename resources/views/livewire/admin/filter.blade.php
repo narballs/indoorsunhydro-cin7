@@ -16,7 +16,7 @@
                         @foreach($product->options as $option)
                             @php
                                 $retail_price = 0;
-                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {

@@ -384,6 +384,50 @@
                                                 
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
+                                                @if (!empty($order->buylist_id) && ($order->label_created == 0) && ($order->is_shipped == 0) && empty($order->shipstation_orderId) && $order->isApproved == 1)
+                                                    <button type="button" 
+                                                            class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
+                                                            data-toggle="modal" 
+                                                            data-target="#send_wholesale_order_to_shipstation" 
+                                                            id="send_wholesale_order_shipstation" 
+                                                            data-id="{{ $order->id }}">
+                                                        Send to Shipstation
+                                                    </button>
+                                                @elseif(!empty($order->buylist_id) && ($order->label_created == 0) && ($order->is_shipped == 0) && !empty($order->shipstation_orderId))
+                                                    <div class="d-flex">
+                                                        <form action="{{ url('admin/orders/create/label') }}" method="post" class="mr-2">
+                                                            @csrf
+                                                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                                            <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
+                                                            <button type="submit" class="badge badge-primary p-2 border-0">
+                                                                Create Label
+                                                            </button>
+                                                        </form>
+                                                        <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                            Manual Label
+                                                        </button>
+                                                    </div>
+                                                @else
+                                                    <div class="d-flex justify-content-center">
+                                                        @if (!empty($order->label_link))
+                                                            <a href="{{ route('download_label', $order->label_link) }}" class="badge badge-success p-2 border-0 mr-2">
+                                                                Download
+                                                            </a>
+                                                        @endif
+
+                                                        @if ($order->label_created == 1 &&  $order->is_shipped == 1)
+                                                            <button type="button" class="badge badge-success p-2 border-0">
+                                                                Shipped
+                                                            </button>
+                                                        @endif
+
+                                                        @if ($order->label_created == 1 &&  $order->is_shipped == 1 && $order->shipment_price == 0)
+                                                            <button type="button" class="badge badge-warning p-2 border-0 ml-2">
+                                                                Manual Label
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                                 @php
                                                     $enable_label_wholesale = App\Models\AdminSetting::where('option_name', 'enable_label_wholesale')->first();
                                                     $wholesaleEnabled = $enable_label_wholesale && strtolower($enable_label_wholesale->option_value) === 'yes';

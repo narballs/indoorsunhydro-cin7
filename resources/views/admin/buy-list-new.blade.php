@@ -122,7 +122,7 @@
                             @foreach ($list_product->product->options as $option)
                             @php
                                 $retail_price = 0;
-                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {
@@ -150,7 +150,7 @@
                                     </td>
                                     <td>
                                         $<span id="retail_price_{{ $list_product->product_id }}">
-                                            {{ $retail_price }} </span></td>
+                                            {{ number_format($retail_price , 2) }} </span></td>
                                     <td>
                                         <input type="number" min="1"
                                             id="quantity_{{ $list_product->product_id }}"
@@ -159,7 +159,7 @@
                                     </td>
                                     <td>
                                         $<span id="subtotal_{{ $list_product->product_id }}">
-                                            {{ number_format($retail_price * $list_product->quantity, 2) }}
+                                            {{ number_format(floatval($retail_price * $list_product->quantity), 2) }}
                                         </span>
                                     </td>
                                     <td>
@@ -345,13 +345,21 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
+        function checkListId() {
             var list_id = $("#list_id").val();
-            if (list_id == '') {
+            if (list_id === '') {
                 $(".btn-add-to-cart").prop('disabled', true);
             } else {
                 $(".btn-add-to-cart").prop('disabled', false);
             }
+        }
+        $(document).ready(function() {
+            // var list_id = $("#list_id").val();
+            // if (list_id == '') {
+            //     $(".btn-add-to-cart").prop('disabled', true);
+            // } else {
+            //     $(".btn-add-to-cart").prop('disabled', false);
+            // }
             // $('body').on('click', '.btn-add-to-cart', function() {
             //     var id = $(this).attr('id');
             //     var product_id = id.replace('btn_', '');
@@ -430,7 +438,7 @@
                     var subtotal = retail_price * quantity;
 
                     $('#quantity_' + product_id).val(quantity);
-                    $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+                    $('#subtotal_' + product_id).html(parsefloat(subtotal).toFixed(2));
 
                     recalculateGrandTotal();
                     return false;
@@ -659,108 +667,13 @@
             recalculateGrandTotal();
         }
 
+        document.addEventListener('livewire:load', function () {
+            checkListId(); // Run on initial load
 
-
-       
-
-        // function add_shipping(el) {
-        //     var shipping_price = $(el).val();
-        //     shipping_price = parseFloat(shipping_price);
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-        //     console.log('Grand Total shi=> ' + grand_total);
-        //     console.log('Shipping Prices => ' + shipping_price);
-        //     grand_total = parseFloat(grand_total) + parseFloat(shipping_price);
-        //     $('#grand_total').html(grand_total.toFixed(2));
-        // }
-
-        // function discount_type(el) {
-        //     var type = $(el).val();
-        //     var discount_value = $('#discount_value').val();
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         discount_value = parseFloat(discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total dis => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
-        // function add_discount(el) {
-        //     var discount_value = $(el).val();
-        //     discount_value = parseFloat(discount_value);
-        //     var type = $('#discount_type').val();
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total type fix => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         console.log('Grand Total type percentage => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
-
-
-        // for qty INCREASE DESCREASE
-        // function add_shipping_for_qty(grand_total) {
-        //     var shipping_price = document.getElementById('shipping_price_value').value;
-        //     shipping_price = parseFloat(shipping_price);
-        //     grand_total = parseFloat(grand_total);
-        //     console.log('Grand Total shi=> ' + grand_total);
-        //     console.log('Shipping Prices => ' + shipping_price);
-        //     grand_total = parseFloat(grand_total) + parseFloat(shipping_price);
-        //     $('#grand_total').html(grand_total.toFixed(2));
-        // }
-
-        // function discount_type_for_qty(grand_total) {
-        //     var type = document.getElementById('discount_type').value;
-        //     var discount_value = $('#discount_value').val();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         discount_value = parseFloat(discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total dis => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
-        // function add_discount_for_qty(grand_total) {
-        //     var discount_value = document.getElementById('discount_value').value;
-        //     discount_value = parseFloat(discount_value);
-        //     var type = $('#discount_type').val();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total type fix => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         console.log('Grand Total type percentage => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
+            Livewire.hook('message.processed', () => {
+                checkListId(); // Run after each DOM update
+            });
+        });
 
     </script>
 

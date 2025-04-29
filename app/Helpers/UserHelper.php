@@ -277,6 +277,25 @@ class UserHelper
         return lcfirst($price_column);
     }
 
+
+
+    public static function getUserPriceColumnForBuyList() {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        elseif (empty($price_column)) {
+            $price_column = 'sacramentoUSD';
+        } else {
+            $price_column = 'retailUSD';
+        }
+
+
+        return $price_column;
+        
+    }
+
     public static function  get_stock_per_product_option($id, $option_id) {
         $stock = 0;
         $product_option = ProductOption::where('option_id', $option_id)->first();

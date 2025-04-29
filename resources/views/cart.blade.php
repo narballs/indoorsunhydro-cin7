@@ -472,9 +472,12 @@
 
                             if (!empty($discount)) {
                                 if ($discount_type == 'percentage') {
-                                    $discounted_value = ($total_including_tax * $discount) / 100;                                    
+                                    $discounted_value = ($total_including_tax * $discount) / 100;
+                                    $total_including_tax = $total_including_tax - floatval($discounted_value);                                    
+                                } else {
+                                    $discounted_value = floatval($discount);
+                                    $total_including_tax = $total_including_tax - floatval($discounted_value);
                                 }
-                                $total_including_tax = $total_including_tax - floatval($discounted_value);
                             }
 
 
