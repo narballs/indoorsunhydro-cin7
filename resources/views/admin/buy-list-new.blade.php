@@ -17,14 +17,14 @@
             <div class="alert alert-success d-none" role="alert" id="success_msg"></div>
             <div class="row mt-5">
                 @if ($list)
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="list_name">Title</label>
                         <input type="text" class="form-control" value={{ $list->title }} id="title"
                             aria-describedby="titleHelp" name="title" placeholder="Buy List Title">
                         <div class="text-danger" id="title_errors"></div>
                     </div>
                 @else
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="list_name">Title</label>
                         <input type="text" class="form-control" id="title" aria-describedby="titleHelp"
                             name="title" placeholder="Buy List Title">
@@ -32,15 +32,16 @@
                     </div>
                 @endif
                 @if (!empty($list->status))
-                    <div class="form-group col-md-6 mb-0">
+                    {{-- <div class="form-group col-md-6 mb-0">
                         <label for="type" name="type">Status</label>
                         <select class="form-control" name="type" id="status">
                             <option value="{{ $list->status }}">{{ $list->status }}</option>
-                        </select>
-                        <div id="status_errors" class="text-danger"></div>
-                    </div>
+                        </select> --}}
+                        <input type="hidden" name="type" id="status" value="{{ $list->status }}">
+                        {{-- <div id="status_errors" class="text-danger"></div> --}}
+                    {{-- </div> --}}
                 @else
-                    <div class="form-group col-md-6 mb-0">
+                    {{-- <div class="form-group col-md-6 mb-0">
                         <label for="type" name="type">Status</label>
 
                         <select class="form-control" name="type" id="status">
@@ -49,7 +50,8 @@
                             <option value="Shareable">Shareable</option>
                         </select>
                         <div id="status_errors" class="text-danger"></div>
-                    </div>
+                    </div> --}}
+                    <input type="hidden" name="type" id="status" value="Public">
                 @endif
                 @if (!empty($list->description))
                     <?php //dd($list);
@@ -120,6 +122,7 @@
                         ?>
                         @foreach ($list->list_products as $list_product)
                             @foreach ($list_product->product->options as $option)
+                            <input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $product->product_id }}" value="{{ $option->stockAvailable }}">
                             @php
                                 $retail_price = 0;
                                 $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
@@ -155,7 +158,7 @@
                                         <input type="number" min="1"
                                             id="quantity_{{ $list_product->product_id }}"
                                             value="{{ $list_product->quantity }}"
-                                            onclick="handleQuantity({{ $list_product->product_id }})">
+                                            onchange="handleQuantity({{ $list_product->product_id }})">
                                     </td>
                                     <td>
                                         $<span id="subtotal_{{ $list_product->product_id }}">
@@ -341,8 +344,9 @@
             padding: 6px !important;
         }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
 @stop
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('js')
     <script>
         function checkListId() {
@@ -354,77 +358,7 @@
             }
         }
         $(document).ready(function() {
-            // var list_id = $("#list_id").val();
-            // if (list_id == '') {
-            //     $(".btn-add-to-cart").prop('disabled', true);
-            // } else {
-            //     $(".btn-add-to-cart").prop('disabled', false);
-            // }
-            // $('body').on('click', '.btn-add-to-cart', function() {
-            //     var id = $(this).attr('id');
-            //     var product_id = id.replace('btn_', '');
-            //     var row = $('#product_row_' + product_id).length;
-
-            //     if (row > 0) {
-            //         var difference = 0;
-            //         var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-            //         console.log('difference => ' + difference);
-            //         console.log('sub total before update  => ' + subtotal_before_update);
-
-            //         var retail_price = parseFloat($('#retail_price_' + product_id).html());
-            //         var quantity = parseFloat($('#quantity_' + product_id).val());
-            //         var subtotal = parseFloat($('#subtotal_' + product_id).html());
-
-            //         quantity++;
-            //         subtotal = retail_price * quantity;
-
-            //         difference = subtotal_before_update - subtotal;
-
-            //         console.log('difference => ' + difference);
-
-            //         var grand_total = $('#grand_total').html();
-            //         grand_total = parseFloat(grand_total);
-
-            //         console.log('Grand Total => ' + grand_total);
-
-
-            //         grand_total = grand_total - difference;
-            //         $('#grand_total').html(grand_total.toFixed(2));
-
-            //         console.log('Grand Total => ' + grand_total);
-
-            //         $('#quantity_' + product_id).val(quantity);
-            //         $('#subtotal_' + product_id).html(subtotal.toFixed(2));
-            //         return false;
-            //     }
-
-
-            //     jQuery.ajax({
-            //         url: "{{ url('admin/add-to-list') }}",
-            //         method: 'post',
-            //         data: {
-            //             "_token": "{{ csrf_token() }}",
-            //             product_id: product_id,
-            //             //option_id: option_id
-            //         },
-            //         success: function(response) {
-            //             $('#product_list').append(response);
-
-            //             var grand_total = $('#grand_total').html();
-            //             grand_total = parseFloat(grand_total);
-
-            //             var retail_price = $('#btn_' + product_id).attr('data-retail-price');
-            //             console.log(retail_price);
-
-            //             var subtotal = retail_price * 1;
-
-            //             grand_total = grand_total + subtotal;
-
-            //             $('#grand_total').html(grand_total.toFixed(2));
-            //         }
-            //     });
-            // });
-
+            
             $('body').on('click', '.btn-add-to-cart', function() {
                 var id = $(this).attr('id');
                 var product_id = id.replace('btn_', '');
@@ -432,13 +366,28 @@
 
                 if (row > 0) {
                     var retail_price = parseFloat($('#retail_price_' + product_id).html());
-                    var quantity = parseFloat($('#quantity_' + product_id).val());
-                    quantity++;
+                    var quantity = parseInt($('#quantity_' + product_id).val());
+
+                    let stockAvailable = parseInt($('#product_buy_list_stock_' + product_id).val());
+                    // alert(stockAvailable);
+                    if (quantity + 1 > stockAvailable) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Stock Limit Exceeded',
+                            icon: 'error',
+                            showConfirmButton: true,
+                            allowEscapeKey: false
+                        });
+                    } else {
+                        quantity++;
+                    }
+
+                    
 
                     var subtotal = retail_price * quantity;
 
                     $('#quantity_' + product_id).val(quantity);
-                    $('#subtotal_' + product_id).html(parsefloat(subtotal).toFixed(2));
+                    $('#subtotal_' + product_id).html(parseFloat(subtotal).toFixed(2));
 
                     recalculateGrandTotal();
                     return false;
@@ -578,42 +527,6 @@
             });
         }
 
-        // function handleQuantity(product_id) {
-        //     var difference = 0;
-        //     var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-        //     console.log('difference => ' + difference);
-        //     console.log('sub total before update  => ' + subtotal_before_update);
-
-        //     var retail_price = parseFloat($('#retail_price_' + product_id).html());
-        //     var quantity = parseFloat($('#quantity_' + product_id).val());
-        //     var subtotal = parseFloat($('#subtotal_' + product_id).html());
-
-
-        //     subtotal = retail_price * quantity;
-        //     difference = subtotal_before_update - subtotal;
-
-        //     console.log('difference => ' + difference);
-
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-
-        //     console.log('Grand Total => ' + grand_total);
-
-
-        //     grand_total = grand_total - difference;
-        //     $('#grand_total').html(grand_total.toFixed(2));
-
-        //     console.log('Grand Total => ' + grand_total);
-
-        //     $('#quantity_' + product_id).val(quantity);
-        //     $('#subtotal_' + product_id).html(subtotal.toFixed(2));
-
-        //     add_shipping_for_qty(grand_total);
-        //     discount_type_for_qty(grand_total);
-        //     add_discount_for_qty(grand_total);
-
-        // }
-
         
 
         function recalculateGrandTotal() {
@@ -643,16 +556,73 @@
 
 
 
+        // function handleQuantity(product_id) {
+        //     let retail_price = parseFloat($('#retail_price_' + product_id).html());
+        //     let quantity = parseInt($('#quantity_' + product_id).val());
+        //     let subtotal = retail_price * quantity;
+
+        //     let stock_available = parseInt($('#product_buy_list_stock_' + product_id).val());
+        //     if (quantity > stock_available) {
+        //         Swal.fire({
+        //             title: 'Error',
+        //             text: 'Stock Limit Exceeded',
+        //             icon: 'error',
+        //             showConfirmButton: true,
+        //             allowEscapeKey: false
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 quantity = 1;
+        //                 $('#quantity_' + product_id).val(1);
+        //                 recalculateTotal(product_id, quantity); // Call your calculation logic here
+        //             }
+        //         });
+        //     }
+        //     else {
+        //         recalculateTotal(product_id, quantity); // Call your calculation logic here
+        //     }
+
+
+        //     $('#quantity_' + product_id).val(quantity);
+        //     $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+        //     recalculateGrandTotal();
+        // }
+
         function handleQuantity(product_id) {
             let retail_price = parseFloat($('#retail_price_' + product_id).html());
-            let quantity = parseFloat($('#quantity_' + product_id).val());
-            let subtotal = retail_price * quantity;
+            let quantity = parseInt($('#quantity_' + product_id).val());
+            let stock_available = parseInt($('#product_buy_list_stock_' + product_id).val());
 
-            $('#quantity_' + product_id).val(quantity);
-            $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+            if (quantity > stock_available) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Stock Limit Exceeded',
+                    icon: 'error',
+                    showConfirmButton: true,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        quantity = 1;
+                        $('#quantity_' + product_id).val(quantity);
 
-            recalculateGrandTotal();
+                        let subtotal = retail_price * quantity;
+                        $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+                        // recalculateTotal(product_id, quantity);
+                        recalculateGrandTotal();
+                    }
+                });
+            } else {
+                $('#quantity_' + product_id).val(quantity);
+
+                let subtotal = retail_price * quantity;
+                $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+                // recalculateTotal(product_id, quantity);
+                recalculateGrandTotal();
+            }
         }
+
 
         function add_shipping(el) {
             console.log('Shipping Price => ' + $(el).val());
