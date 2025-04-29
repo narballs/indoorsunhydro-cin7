@@ -40,7 +40,7 @@
 								}
 							@endphp
                             <tr id="product_row_{{ $list_product->product_id }}" class="product-row-{{ $list_product->product_id }} admin-buy-list">
-								<input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $product->product_id }}" value="{{ $option->stockAvailable }}">
+								<input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $list_product->product_id }}" value="{{ $option->stockAvailable }}">
                                 <td>
                                     {{$list_product->product->name}}
                                 </td>
