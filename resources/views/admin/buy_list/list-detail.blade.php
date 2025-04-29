@@ -64,7 +64,7 @@
                                     {{ $list_product->product->name }}
                                 </td>
                                 <td>
-                                    ${{ $list_product->product->code }}
+                                    {{ $list_product->product->code }}
                                 </td>
                                 <td>${{ number_format($retail_price , 2) }}</td>
                                 <td class="jsutify-content-middle">

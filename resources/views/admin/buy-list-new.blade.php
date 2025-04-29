@@ -477,10 +477,67 @@
         }
 
 
+        // function createList() {
+        //     var title = $('#title').val();
+        //     var description = $('#description').val();
+        //     var status = $('#status').val();
+        //     jQuery.ajax({
+        //         url: "{{ route('buy-list.store') }}",
+        //         method: 'post',
+        //         data: {
+        //             "_token": "{{ csrf_token() }}",
+        //             title: title,
+        //             description: description,
+        //             status: status
+        //         },
+        //         success: function(response) {
+        //             $("#list_title").append("<h4>" + title + "</h4>");
+        //             $("#list_id").val(response.list_id);
+        //             $("#title_errors").html('');
+        //             $("#status_errors").html('');
+        //             $("#description_errors").html('');
+        //             console.log(response);
+        //             $("#success_msg").html(response.success);
+        //             $("#success_msg").removeClass('d-none');
+        //             $(".btn-add-to-cart").prop('disabled', false);
+        //             $("#list").removeClass('d-none');
+
+        //         },
+        //         error: function(response) {
+        //             console.log(response.responseJSON.errors);
+        //             if (response.responseJSON.errors.title) {
+
+        //                 $("#title_errors").html(response.responseJSON.errors.title);
+        //             } else {
+        //                 $("#title_errors").html('');
+        //             }
+
+        //             if (response.responseJSON.errors.status) {
+        //                 $("#status_errors").html(response.responseJSON.errors.status);
+        //             } else {
+        //                 $("#status_errors").html('');
+        //             }
+
+        //             if (response.responseJSON.errors.description) {
+        //                 $("#description_errors").html(response.responseJSON.errors.description);
+        //             } else {
+        //                 $("#description_errors").html('');
+        //             }
+        //         }
+        //     });
+        // }
+
+
         function createList() {
+            // Prevent duplicate list creation
+            if ($("#list_id").val() !== '') {
+                return; // Exit if list already exists
+            }
+
             var title = $('#title').val();
             var description = $('#description').val();
             var status = $('#status').val();
+
             jQuery.ajax({
                 url: "{{ route('buy-list.store') }}",
                 method: 'post',
@@ -491,41 +548,29 @@
                     status: status
                 },
                 success: function(response) {
-                    $("#list_title").append("<h4>" + title + "</h4>");
+                    // Replace title instead of appending
+                    $("#list_title").html("<h4>" + title + "</h4>");
+
                     $("#list_id").val(response.list_id);
                     $("#title_errors").html('');
                     $("#status_errors").html('');
                     $("#description_errors").html('');
+
                     console.log(response);
-                    $("#success_msg").html(response.success);
-                    $("#success_msg").removeClass('d-none');
+                    $("#success_msg").html(response.success).removeClass('d-none');
                     $(".btn-add-to-cart").prop('disabled', false);
                     $("#list").removeClass('d-none');
-
                 },
                 error: function(response) {
-                    console.log(response.responseJSON.errors);
-                    if (response.responseJSON.errors.title) {
+                    const errors = response.responseJSON.errors;
 
-                        $("#title_errors").html(response.responseJSON.errors.title);
-                    } else {
-                        $("#title_errors").html('');
-                    }
-
-                    if (response.responseJSON.errors.status) {
-                        $("#status_errors").html(response.responseJSON.errors.status);
-                    } else {
-                        $("#status_errors").html('');
-                    }
-
-                    if (response.responseJSON.errors.description) {
-                        $("#description_errors").html(response.responseJSON.errors.description);
-                    } else {
-                        $("#description_errors").html('');
-                    }
+                    $("#title_errors").html(errors.title ? errors.title : '');
+                    $("#status_errors").html(errors.status ? errors.status : '');
+                    $("#description_errors").html(errors.description ? errors.description : '');
                 }
             });
         }
+
 
         
 
