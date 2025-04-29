@@ -103,23 +103,22 @@
 }
 
 .product-detail-sku-head-new {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     font-family: 'Poppins';
     line-height: 21px;
 }
 
 .product-detail-sku-new {
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 500;
     font-family: 'Poppins';
     line-height: 21px;
 }
 
 .sku-div {
-    background-color: #7CC633;
-    color: #fff;
-    padding: 5px 10px;
+    color: #000;
+    padding: 5px 0px;
     display: inline-flex;
 }
 
