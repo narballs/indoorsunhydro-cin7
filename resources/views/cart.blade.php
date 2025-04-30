@@ -469,17 +469,30 @@
                                 $total_including_tax = $total_including_tax + floatval($shipping_cost);
                             }
 
+                            // dd($total_including_tax, '1');
 
-                            if (!empty($discount)) {
-                                if ($discount_type == 'percentage') {
-                                    $discounted_value = ($total_including_tax * $discount) / 100;
-                                    $total_including_tax = $total_including_tax - floatval($discounted_value);                                    
-                                } else {
-                                    $discounted_value = floatval($discount);
-                                    $total_including_tax = $total_including_tax - floatval($discounted_value);
-                                }
+
+                            // if (!empty($discount)) {
+                            //     if ($discount_type == 'percentage') {
+                            //         $discounted_value = ($total_including_tax * $discount) / 100;
+                            //         $total_including_tax = $total_including_tax - floatval($discounted_value);                                    
+                            //     } else {
+                            //         $discounted_value = floatval($discount);
+                            //         $total_including_tax = $total_including_tax - floatval($discounted_value);
+                            //     }
+                            // }
+
+
+                            if (!empty($buy_list_discount_calculated)) {
+                                $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                $discounted_value = $buy_list_discount_calculated;
+                            } else {
+                                $discounted_value = 0;
+                                $total_including_tax = $total_including_tax - floatval($discounted_value);
                             }
 
+
+                            // dd($total_including_tax , '2');
 
 
                         ?>
@@ -538,6 +551,7 @@
                                                     <strong class=" d-flex justify-content-end cart-page-items ">
                                                         ${{ number_format($shipping_cost, 2) }}
                                                     </strong>
+                                                    <input type="hidden" id="buy_list_shipping_cost" value="{{ !empty($shipping_cost) ? floatval($shipping_cost) : 0 }}">
                                                 </span>
                                             </div>
                                         </td>
@@ -566,6 +580,7 @@
                                                     <strong class=" d-flex justify-content-end cart-page-items" id="discountValue">
                                                         ${{ number_format($discounted_value, 2) }}
                                                     </strong>
+                                                    <input type="hidden" id="buy_list_discount_cost" value="{{ !empty($discounted_value) ? floatval($discounted_value) : 0 }}">
                                                 </span>
                                             </div>
                                         </td>
@@ -1280,10 +1295,12 @@
                 var tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
-                $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
                 var grand_total_include_tax = 0;
-                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+                $('.grandTotal').children().html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
                 if (response.free_postal_state == true) {
                     if (grand_total <= initial_free_shipping_value) {
                         $('.promotional_banner_div_congrats').addClass('d-none');
@@ -1300,10 +1317,10 @@
                 } 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
             }
         });
     }
@@ -1384,13 +1401,17 @@
                 $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
 
                 var tax = 0;
+                var grand_total_include_tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
-                var grand_total_include_tax = 0;
-                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
+                $('.grandTotal').children().html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
+
+
                 if (response.free_postal_state == true) {
                     if (grand_total <= initial_free_shipping_value) {
                         $('.promotional_banner_div_congrats').addClass('d-none');
@@ -1407,10 +1428,10 @@
                 } 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (grand_total_include_tax).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (grand_total_include_tax).toFixed(2));
             }
         });
     }
@@ -1497,11 +1518,13 @@
                 var tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
-                $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
-
                 var grand_total_include_tax = 0;
-                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (grand_total_include_tax).toFixed(2));
+
                 if (response.free_postal_state == true) {
                     if (grand_total <= initial_free_shipping_value) {
                         $('.promotional_banner_div_congrats').addClass('d-none');
@@ -1519,10 +1542,10 @@
 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (grand_total_include_tax).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (grand_total_include_tax).toFixed(2));
             }
         });
     }
@@ -1609,17 +1632,23 @@
 
 
                 var tax = 0;
+                var grand_total_include_tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
+
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+                $('.grandTotal').children().html('$' + (grand_total_include_tax).toFixed(2));
 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (grand_total_include_tax).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (grand_total_include_tax).toFixed(2));
             }
         });
     }
