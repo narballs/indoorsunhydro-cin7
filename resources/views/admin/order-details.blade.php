@@ -437,7 +437,15 @@
                                         </tr>
                                         <tr class="border-bottom">
                                             <td colspan="4" class="add_colspan"><span class="summary-head mx-2">Discount</span></td>
-                                            <td class="text-center"><span class="order-item-price" id="subtotal_text">${{ number_format($order->discount_amount, 2) }}</span>
+                                            <td class="text-center">
+                                                <span class="order-item-price" id="subtotal_text">
+                                                    {{-- ${{ number_format($order->discount_amount, 2) }} --}}
+                                                    @if (!empty($order->buylist_id))
+														${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+													@else
+														${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+													@endif
+                                                </span>
                                             </td>
                                         </tr>
                                         <tr class="border-bottom">
