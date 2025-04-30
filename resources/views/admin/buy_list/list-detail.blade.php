@@ -84,7 +84,7 @@
                     <tr colspan="5">
                         <th colspan="4">Expiry Date</th>
                         <td class="">
-                            <h6>{{ !empty($list->shipping_and_discount->expiry_date) ? $list->shipping_and_discount->expiry_date : '' }}</h6>
+                            <h6>{{ !empty($list->shipping_and_discount->expiry_date) ? date('Y-m-d', strtotime($list->shipping_and_discount->expiry_date)) : ''}}</h6>
                         </td>
                     </tr>
                     <tr colspan="5">

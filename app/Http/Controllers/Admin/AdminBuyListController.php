@@ -123,8 +123,8 @@ class AdminBuyListController extends Controller
                 $product_buy_list->save();
             }
 
-            if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
-                $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
+            $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
+            // if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
                 $BuyListShippingAndDiscount = new BuyListShippingAndDiscount();
                 $BuyListShippingAndDiscount->buylist_id = $list_id;
                 $BuyListShippingAndDiscount->shipping_cost = $request->shipping_price;
@@ -135,7 +135,7 @@ class AdminBuyListController extends Controller
                 $BuyListShippingAndDiscount->discount_count = $request->discount_count;
                 $BuyListShippingAndDiscount->discount_limit = $request->discount_limit;
                 $BuyListShippingAndDiscount->save();
-            }
+            // }
 
         } else {
             foreach ($list_items as $list_item) {
@@ -152,7 +152,7 @@ class AdminBuyListController extends Controller
                 $product_buy_list->save();
             }
 
-            if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
+            // if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
                 $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
                 $BuyListShippingAndDiscount = new BuyListShippingAndDiscount();
                 $BuyListShippingAndDiscount->buylist_id = $list_id;
@@ -164,7 +164,7 @@ class AdminBuyListController extends Controller
                 $BuyListShippingAndDiscount->discount_count = $request->discount_count;
                 $BuyListShippingAndDiscount->discount_limit = $request->discount_limit;
                 $BuyListShippingAndDiscount->save();
-            }
+            // }
 
 
         }
