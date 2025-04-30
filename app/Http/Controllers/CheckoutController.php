@@ -47,6 +47,7 @@ use App\Helpers\UtilHelper;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\BuyList;
+use App\Models\BuyListShippingAndDiscount;
 use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
 use App\Models\ShippingQuoteSetting;
@@ -1246,6 +1247,18 @@ class CheckoutController extends Controller
                     )->first();
                 
                 if(!empty($currentOrder)) {
+
+                    // update buy list order status for discount count
+
+                    if (!empty($currentOrder->buylist_id) && !empty($currentOrder->buylist_discount)) {
+                        $update_buy_list_shipping_and_discount = BuyListShippingAndDiscount::where('buylist_id', $currentOrder->buylist_id)->first();
+                        if (!empty($update_buy_list_shipping_and_discount)) {
+                            $update_buy_list_shipping_and_discount->discount_count = $update_buy_list_shipping_and_discount->discount_count + 1;
+                            $update_buy_list_shipping_and_discount->save();
+                        }
+                    }
+
+
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
                         $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;

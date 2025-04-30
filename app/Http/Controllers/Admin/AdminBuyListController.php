@@ -131,6 +131,9 @@ class AdminBuyListController extends Controller
                 $BuyListShippingAndDiscount->discount = $request->discount_value;
                 $BuyListShippingAndDiscount->discount_type = $request->discount_type;
                 $BuyListShippingAndDiscount->discount_calculated = $request->discount_calculated;
+                $BuyListShippingAndDiscount->expiry_date = $request->expiry_date;
+                $BuyListShippingAndDiscount->discount_count = $request->discount_count;
+                $BuyListShippingAndDiscount->discount_limit = $request->discount_limit;
                 $BuyListShippingAndDiscount->save();
             }
 
@@ -157,6 +160,9 @@ class AdminBuyListController extends Controller
                 $BuyListShippingAndDiscount->discount = $request->discount_value;
                 $BuyListShippingAndDiscount->discount_type = $request->discount_type;
                 $BuyListShippingAndDiscount->discount_calculated = $request->discount_calculated;
+                $BuyListShippingAndDiscount->expiry_date = $request->expiry_date;
+                $BuyListShippingAndDiscount->discount_count = $request->discount_count;
+                $BuyListShippingAndDiscount->discount_limit = $request->discount_limit;
                 $BuyListShippingAndDiscount->save();
             }
 
