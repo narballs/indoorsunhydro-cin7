@@ -1253,7 +1253,7 @@ class CheckoutController extends Controller
                     if (!empty($currentOrder->buylist_id) && !empty($currentOrder->buylist_discount)) {
                         $update_buy_list_shipping_and_discount = BuyListShippingAndDiscount::where('buylist_id', $currentOrder->buylist_id)->first();
                         if (!empty($update_buy_list_shipping_and_discount)) {
-                            $update_buy_list_shipping_and_discount->discount_count = $update_buy_list_shipping_and_discount->discount_count + 1;
+                            $update_buy_list_shipping_and_discount->discount_count = !empty($update_buy_list_shipping_and_discount->discount_count) ? $update_buy_list_shipping_and_discount->discount_count + 1 : 1;
                             $update_buy_list_shipping_and_discount->save();
                         }
                     }
@@ -1440,6 +1440,15 @@ class CheckoutController extends Controller
                     )->first();
                 
                 if(!empty($currentOrder)) {
+
+                    if (!empty($currentOrder->buylist_id) && !empty($currentOrder->buylist_discount)) {
+                        $update_buy_list_shipping_and_discount = BuyListShippingAndDiscount::where('buylist_id', $currentOrder->buylist_id)->first();
+                        if (!empty($update_buy_list_shipping_and_discount)) {
+                            $update_buy_list_shipping_and_discount->discount_count = !empty($update_buy_list_shipping_and_discount->discount_count) ? $update_buy_list_shipping_and_discount->discount_count + 1 : 1;
+                            $update_buy_list_shipping_and_discount->save();
+                        }
+                    }
+
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
                         $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;

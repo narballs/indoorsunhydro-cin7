@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\SettingHelper;
 use App\Helpers\UtilHelper;
 use App\Models\ApiKeys;
+use App\Models\BuyListShippingAndDiscount;
 use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
@@ -818,6 +819,15 @@ class OrderController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
+
+                    if (!empty($currentOrder->buylist_id) && !empty($currentOrder->buylist_discount)) {
+                        $update_buy_list_shipping_and_discount = BuyListShippingAndDiscount::where('buylist_id', $currentOrder->buylist_id)->first();
+                        if (!empty($update_buy_list_shipping_and_discount)) {
+                            $update_buy_list_shipping_and_discount->discount_count = !empty($update_buy_list_shipping_and_discount->discount_count) ? $update_buy_list_shipping_and_discount->discount_count + 1 : 1;
+                            $update_buy_list_shipping_and_discount->save();
+                        }
+                    }
+
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $reference = $currentOrder->reference;
                     $cart_items = UserHelper::switch_price_tier($request);
