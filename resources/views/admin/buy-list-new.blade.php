@@ -197,13 +197,13 @@
                                 <div class="col-md-4">
                                     <label for="discount_limit">Discount Limit</label>
                                     <div class="form-group">
-                                        <input type="number" min="0" id="discount_limit" name="discount_limit" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount_limit : 0}}">
+                                        <input type="number" min="0" id="buy_list_discount_limit" name="discount_limit" class="form-control" value="{{ isset($list->shipping_and_discount) && !empty($list->shipping_and_discount->discount_limit) ? $list->shipping_and_discount->discount_limit : 0}}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="discount_count">Discount Used</label>
                                     <div class="form-group">
-                                        <input type="number" min="0" id="buy_list_discount_count" name="discount_count" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount : 0}}" readonly>
+                                        <input type="number" min="0" id="buy_list_discount_count" name="discount_count" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount_count : 0}}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -215,7 +215,9 @@
                                             id="buy_list_expiry_date"
                                             name="expiry_date"
                                             class="form-control"
-                                            value="{{ isset($list->shipping_and_discount) && !empty($list->shipping_and_discount->expiry_date) ? $list->shipping_and_discount->expiry_date : \Carbon\Carbon::now()->addDays(14)->format('Y-m-d') }}"
+                                            value="{{ isset($list->shipping_and_discount) && !empty($list->shipping_and_discount->expiry_date) 
+                                                ? \Carbon\Carbon::parse($list->shipping_and_discount->expiry_date)->format('Y-m-d') 
+                                                : \Carbon\Carbon::now()->addDays(14)->format('Y-m-d') }}"
                                             min="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
@@ -483,8 +485,11 @@
             var discount_type = $('#discount_type').val();
             var discount_calculated = $('#discount_calculated').val() != '' ? parseFloat($('#discount_calculated').val()) : 0.00;
             var expiry_date = $('#buy_list_expiry_date').val() !== '' ? $('#buy_list_expiry_date').val() : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-            var discount_limit = $('#buy_list_discount_limit').val() != '' ? $('#buy_list_discount_limit').val() : 1;
-            var discount_count = $('#buy_list_discount_count').val() != '' ? $('#buy_list_discount_count').val() : 0;
+            var discount_limit = $('#buy_list_discount_limit').val() != '' ? parseInt($('#buy_list_discount_limit').val()) : 1;
+            var discount_count = $('#buy_list_discount_count').val() != '' ? parseInt($('#buy_list_discount_count').val()) : 0;
+
+            alert(discount_limit);
+
             console.log(grand_total);
             $('.admin-buy-list').each(function() {
                 var product_id = this.id;
