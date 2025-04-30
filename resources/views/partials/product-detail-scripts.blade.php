@@ -107,6 +107,7 @@
     font-weight: 500;
     font-family: 'Poppins';
     line-height: 21px;
+    color: #7CC633;
 }
 
 .product-detail-sku-new {
