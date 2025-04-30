@@ -488,7 +488,7 @@
             var discount_limit = $('#buy_list_discount_limit').val() != '' ? parseInt($('#buy_list_discount_limit').val()) : 1;
             var discount_count = $('#buy_list_discount_count').val() != '' ? parseInt($('#buy_list_discount_count').val()) : 0;
 
-            alert(discount_limit);
+            // alert(discount_limit);
 
             console.log(grand_total);
             $('.admin-buy-list').each(function() {
