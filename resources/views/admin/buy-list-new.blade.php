@@ -215,7 +215,7 @@
                                             id="buy_list_expiry_date"
                                             name="expiry_date"
                                             class="form-control"
-                                            value="{{ isset($list->shipping_and_discount) && $list->shipping_and_discount->expiry_date ? $list->shipping_and_discount->expiry_date : \Carbon\Carbon::now()->addDays(14)->format('Y-m-d') }}"
+                                            value="{{ isset($list->shipping_and_discount) && !empty($list->shipping_and_discount->expiry_date) ? $list->shipping_and_discount->expiry_date : \Carbon\Carbon::now()->addDays(14)->format('Y-m-d') }}"
                                             min="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
