@@ -82,32 +82,50 @@
                     @endforeach
                     @if (!empty($list->shipping_and_discount))
                     <tr colspan="5">
+                        <th colspan="4">Expiry Date</th>
+                        <td class="">
+                            <h6>{{ !empty($list->shipping_and_discount->expiry_date) ? $list->shipping_and_discount->expiry_date : '' }}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount Limit</th>
+                        <td class="">
+                            <h6>{{ !empty($list->shipping_and_discount->discount_limit) ? $list->shipping_and_discount->discount_limit : 0 }}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount Used</th>
+                        <td class="">
+                            <h6>{{ !empty($list->shipping_and_discount->discount_count) ? $list->shipping_and_discount->discount_count : 0 }}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
                         <th colspan="4">Shipping</th>
                         <td class="">
-                            <h4>${{ !empty($list->shipping_and_discount->shipping_cost) ? number_format($list->shipping_and_discount->shipping_cost , 2) : 0.00 }}</h4>
+                            <h6>${{ !empty($list->shipping_and_discount->shipping_cost) ? number_format($list->shipping_and_discount->shipping_cost , 2) : 0.00 }}</h6>
                         </td>
                     </tr>
                     <tr colspan="5">
                         <th colspan="4">Discount</th>
                         <td class="">
-                            <h4>
+                            <h6>
                                 {{ !empty($list->shipping_and_discount->discount_type) && $list->shipping_and_discount->discount_type == 'fixed' ? '$' : '' }}
                                 {{ !empty($list->shipping_and_discount->discount) ? $list->shipping_and_discount->discount : 0.00 }}
                                 {{ !empty($list->shipping_and_discount->discount_type) && $list->shipping_and_discount->discount_type == 'percentage' ? '%' : '' }}                                
-                            </h4>
+                            </h6>
                         </td>
                     </tr>
                     <tr colspan="5">
                         <th colspan="4">Discount Value</th>
                         <td class="">
-                            <h4>${{ !empty($list->shipping_and_discount->discount_calculated) ? number_format($list->shipping_and_discount->discount_calculated , 2) : 0.00 }}</h4>
+                            <h6>${{ !empty($list->shipping_and_discount->discount_calculated) ? number_format($list->shipping_and_discount->discount_calculated , 2) : 0.00 }}</h6>
                         </td>
                     </tr>
                     @endif
                     <tr colspan="5">
                         <th colspan="4">Grand Total</th>
                         <td class="">
-                            <h4>${{ !empty($list_product) ? number_format($list_product->grand_total , 2) : 0.00 }}</h4>
+                            <h6>${{ !empty($list_product) ? number_format($list_product->grand_total , 2) : 0.00 }}</h6>
                         </td>
                     </tr>
                 </tbody>

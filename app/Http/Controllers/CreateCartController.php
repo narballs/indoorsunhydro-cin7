@@ -26,7 +26,25 @@ class CreateCartController extends Controller
      */
     public function create_cart(Request $request , $id)
     {
-        $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+        // $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+        $list = BuyList::where('id', $id)
+        ->with('list_products.product.options', 'shipping_and_discount')
+        ->whereHas('shipping_and_discount', function ($query) {
+            $query->where(function ($q) {
+                $q->where('expiry_date', '>=', now());
+                // ->orWhereNull('expiry_date');
+            })->where(function ($q) {
+                $q->whereColumn('discount_limit', '>', 'discount_count');
+                // ->orWhereNull('discount_limit');
+            });
+        })
+        ->first();
+
+
+        if (!$list) {
+            return redirect()->back()->with('error', 'Buy list not found or expired.');
+        }
+
 
         $hash_cart = $request->session()->get('cart_hash');
         $cart_hash_exist = session()->has('cart_hash');
