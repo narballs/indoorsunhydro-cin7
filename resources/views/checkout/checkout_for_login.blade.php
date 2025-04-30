@@ -1019,14 +1019,21 @@ $cart_price = 0;
                                             $remove_discount = $cart_total - $discount_amount;   
                                             $total_including_tax = $tax + $remove_discount  + $shipment_price;
                                             $discount_value_buyList = 0;
-                                            if (!empty($buyListdiscount)) {
-                                                if ($buyListdiscount_type == 'percentage') {
-                                                    $discount_value_buyList = ($total_including_tax * floatval($buyListdiscount)) / 100;
-                                                    $total_including_tax = $total_including_tax - floatval($discount_value_buyList);                                    
-                                                } else {
-                                                    $discount_value_buyList = floatval($buyListdiscount);
-                                                    $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
-                                                }
+                                            // if (!empty($buyListdiscount)) {
+                                            //     if ($buyListdiscount_type == 'percentage') {
+                                            //         $discount_value_buyList = ($total_including_tax * floatval($buyListdiscount)) / 100;
+                                            //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);                                    
+                                            //     } else {
+                                            //         $discount_value_buyList = floatval($buyListdiscount);
+                                            //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
+                                            //     }
+                                            // }
+
+                                            if (!empty($buy_list_discount_calculated)) {
+                                                $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                                $discount_value_buyList = $buy_list_discount_calculated;
+                                            } else {
+                                                $discount_value_buyList = 0;
                                             }
                                         @endphp
                                         <input type="hidden" name="paymentTerms" value="{{!empty($user_address->paymentTerms) && strtolower($user_address->paymentTerms) === 'pay in advanced' ? 'Pay in Advanced' : '30 days from invoice'}}">

@@ -381,7 +381,8 @@ class CheckoutController extends Controller
             $shipment_price = $shipping_cost;
             $discount = $buyList->shipping_and_discount->discount ?? 0;
             $discount_type = $buyList->shipping_and_discount->discount_type ?? null;
-            return view ('checkout.checkout_without_login' ,compact('states','cart_total' , 'cart_items' , 'tax_class' , 'shipment_price' , 'shipping_cost' , 'discount' , 'discount_type'));
+            $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
+            return view ('checkout.checkout_without_login' ,compact('states','cart_total' ,'buy_list_discount_calculated', 'cart_items' , 'tax_class' , 'shipment_price' , 'shipping_cost' , 'discount' , 'discount_type'));
         }
         $user_id = auth()->user()->id;
         $selected_company = Session::get('contact_id');
@@ -685,17 +686,20 @@ class CheckoutController extends Controller
             $buyLIst_shipping_cost = 0;
             $buyListdiscount =0;
             $buyListdiscount_type = null;
+            $buy_list_discount_calculated =0;
 
 
             if ($buyListData == true && !empty($shipping_cost) && floatval($shipping_cost) > 0) {
                 $buyLIst_shipping_cost = $buyList->shipping_and_discount->shipping_cost ?? 0;
                 $buyListdiscount = $discount;
                 $buyListdiscount_type = $discount_type;
-                $shipment_price  =  $buyLIst_shipping_cost ;              
+                $shipment_price  =  $buyLIst_shipping_cost ;
+                $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;              
             }
             elseif ($buyListData == true && floatval($shipping_cost) == 0) {
                 $buyListdiscount = $discount;
                 $buyListdiscount_type = $discount_type;
+                $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
                 if ($charge_shipment_fee == true) {
                     $buyListData = false;
                     if ($shipping_free_over_1000 == 1) {
@@ -1084,6 +1088,7 @@ class CheckoutController extends Controller
                 'buyLIst_shipping_cost',
                 'buyListdiscount',
                 'buyListdiscount_type',
+                'buy_list_discount_calculated'
 
 
                 // 'toggle_shipment_insurance'

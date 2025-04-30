@@ -648,15 +648,22 @@ $cart_price = 0;
                                             
                                             $total_including_tax = $tax + $cart_total  + $shipment_price;
 
-                                            if (!empty($discount)) {
-                                                if ($discount_type == 'percentage') {
-                                                    $discount_value_buyList = ($total_including_tax * $discount) / 100;
-                                                    $total_including_tax = $total_including_tax - floatval($discount_value_buyList);                                    
-                                                } else {
-                                                    $discount_value_buyList = floatval($discount);
-                                                    $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
-                                                }
+                                            // if (!empty($discount)) {
+                                            //     if ($discount_type == 'percentage') {
+                                            //         $discount_value_buyList = ($total_including_tax * $discount) / 100;
+                                            //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);                                    
+                                            //     } else {
+                                            //         $discount_value_buyList = floatval($discount);
+                                            //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
+                                            //     }
+                                            // }
+                                            if (!empty($buy_list_discount_calculated)) {
+                                                $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                                $discount_value_buyList = $buy_list_discount_calculated;
+                                            } else {
+                                                $discount_value_buyList = 0;
                                             }
+
                                         @endphp
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_subtotal_heading">Subtotal</span></div>

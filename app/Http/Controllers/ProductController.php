@@ -1949,6 +1949,7 @@ class ProductController extends Controller
         $shipping_cost = $buyList->shipping_and_discount->shipping_cost ?? 0;
         $discount = $buyList->shipping_and_discount->discount ?? 0;
         $discount_type = $buyList->shipping_and_discount->discount_type ?? null;
+        $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
@@ -2112,6 +2113,7 @@ class ProductController extends Controller
             'shipping_cost',
             'discount',
             'discount_type',
+            'buy_list_discount_calculated'
 
         ));
     }
