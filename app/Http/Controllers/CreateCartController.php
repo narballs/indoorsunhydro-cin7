@@ -94,6 +94,87 @@ class CreateCartController extends Controller
     //     return redirect()->route('cart');
     // }
 
+    // public function create_cart(Request $request, $id)
+    // {
+    //     $list = BuyList::with(['list_products.product.options', 'shipping_and_discount'])
+    //         ->where('id', $id)
+    //         ->whereHas('shipping_and_discount', function ($query) {
+    //             $query->where(function ($q) {
+    //                 $q->where('expiry_date', '>=', now());
+    //             })->where(function ($q) {
+    //                 $q->whereColumn('discount_limit', '>', 'discount_count');
+    //             });
+    //         })
+    //         ->first();
+
+    //     if (!$list) {
+    //         return redirect()->back()->with('error', 'Buy list not found or expired.');
+    //     }
+
+    //     // Check if cart_hash already exists
+    //     $cart_hash_exist = session()->has('cart_hash');
+    //     if (!$cart_hash_exist) {
+    //         session()->put('cart_hash', Str::random(10));
+    //     }
+    //     $cartHash = session()->get('cart_hash');
+
+    //     $cart = session()->get('cart', []);
+    //     $userPriceColumn = UserHelper::getUserPriceColumn();
+    //     $userId = auth()->id() ?? 0;
+    //     $contactId = session('contact_id');
+
+    //     foreach ($list->list_products as $listProduct) {
+    //         $product = $listProduct->product;
+    //         $option = $product->options->first();
+    //         $retailPrice = 0;
+
+    //         if ($option && $option->price) {
+    //             foreach ($option->price as $price) {
+    //                 $retailPrice = $price->$userPriceColumn ?? 0;
+    //                 $retailPrice = $retailPrice ?: ($price->sacramentoUSD ?? $price->retailUSD ?? 0);
+    //             }
+    //         }
+
+    //         $existingCartItem = Cart::where('product_id', $listProduct->product_id)
+    //             ->where('qoute_id', $listProduct->id)
+    //             ->where('cart_hash', $cartHash)
+    //             ->first();
+
+    //         if ($existingCartItem) {
+    //             $existingCartItem->quantity += $listProduct->quantity;
+    //             $existingCartItem->updated_at = now();
+    //             $existingCartItem->save();
+
+    //             $cart[$listProduct->id] = $existingCartItem->toArray();
+    //         } else {
+    //             $newCart = Cart::create([
+    //                 'qoute_id'   => $listProduct->id,
+    //                 'product_id' => $listProduct->product_id,
+    //                 'name'       => $product->name,
+    //                 'quantity'   => $listProduct->quantity,
+    //                 'price'      => $retailPrice,
+    //                 'code'       => $product->code,
+    //                 'image'      => $product->images,
+    //                 'option_id'  => $listProduct->option_id,
+    //                 'slug'       => $product->slug,
+    //                 'cart_hash'  => $cartHash,
+    //                 'user_id'    => $userId,
+    //                 'contact_id' => $contactId,
+    //                 'is_active'  => 1,
+    //                 'created_at' => now(),
+    //                 'updated_at' => now(),
+    //             ]);
+
+    //             $cart[$listProduct->id] = $newCart->toArray();
+    //         }
+    //     }
+
+    //     session()->put('cart', $cart);
+    //     session()->put('buy_list_id', $list->id);
+
+    //     return redirect()->route('cart');
+    // }
+
     public function create_cart(Request $request, $id)
     {
         $list = BuyList::with(['list_products.product.options', 'shipping_and_discount'])
@@ -111,13 +192,13 @@ class CreateCartController extends Controller
             return redirect()->back()->with('error', 'Buy list not found or expired.');
         }
 
-        // Check if cart_hash already exists
+        // Ensure cart_hash exists
         $cart_hash_exist = session()->has('cart_hash');
         if (!$cart_hash_exist) {
             session()->put('cart_hash', Str::random(10));
         }
-        $cartHash = session()->get('cart_hash');
 
+        $cartHash = session()->get('cart_hash');
         $cart = session()->get('cart', []);
         $userPriceColumn = UserHelper::getUserPriceColumn();
         $userId = auth()->id() ?? 0;
@@ -135,8 +216,9 @@ class CreateCartController extends Controller
                 }
             }
 
+            // Match by product_id + option_id to avoid duplicates
             $existingCartItem = Cart::where('product_id', $listProduct->product_id)
-                ->where('qoute_id', $listProduct->id)
+                ->where('option_id', $listProduct->option_id)
                 ->where('cart_hash', $cartHash)
                 ->first();
 
@@ -145,7 +227,7 @@ class CreateCartController extends Controller
                 $existingCartItem->updated_at = now();
                 $existingCartItem->save();
 
-                $cart[$listProduct->id] = $existingCartItem->toArray();
+                $cart[$existingCartItem->id] = $existingCartItem->toArray();
             } else {
                 $newCart = Cart::create([
                     'qoute_id'   => $listProduct->id,
@@ -165,7 +247,7 @@ class CreateCartController extends Controller
                     'updated_at' => now(),
                 ]);
 
-                $cart[$listProduct->id] = $newCart->toArray();
+                $cart[$newCart->id] = $newCart->toArray();
             }
         }
 
@@ -174,6 +256,7 @@ class CreateCartController extends Controller
 
         return redirect()->route('cart');
     }
+
 
 
 }
