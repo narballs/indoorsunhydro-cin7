@@ -1887,6 +1887,12 @@ class ProductController extends Controller
         $contact_id = session()->get('contact_id');
         $cart = session()->get('cart', []); // Default to an empty array if no cart exists
 
+        $buy_list_id = session()->get('buy_list_id');
+
+        if (!empty($buy_list_id)) {
+            return redirect()->back()->with('error', 'You cannot remove items. Please contact your account manager for assistance.');
+        }
+
         $query = Cart::orderBy('created_at', 'DESC');
 
         if (!auth()->check()) {
@@ -2113,7 +2119,8 @@ class ProductController extends Controller
             'shipping_cost',
             'discount',
             'discount_type',
-            'buy_list_discount_calculated'
+            'buy_list_discount_calculated',
+            'buy_list_id'
 
         ));
     }
