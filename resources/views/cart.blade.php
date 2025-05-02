@@ -61,6 +61,7 @@
         class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
         <span class="cart-page-cart-title">CART</span>
     </p>
+    <input type="hidden" name="" id="buy_list_id" class="buy_list_id" value="{{ !empty($buy_list_id) ? $buy_list_id : '' }}">
 </div>
 {{-- @if (session('success'))
     <div class="alert alert-success">
@@ -1327,6 +1328,25 @@
 
     /* *****   DECREASE QTY   ****  */
     function decrease_qty(pk_product_id ,get_wholesale_terms) {
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+
+        if (buy_list_id != null) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact your account manager for assistance.',
+                // timer: 3000,
+                position: 'top',
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            });
+        }
+
         var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
@@ -1442,6 +1462,26 @@
         var product_id = pk_product_id;
         var qty_input = 0;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
+        var new_qty_input = $('#row_quantity_' + pk_product_id).val() != '' ? parseInt($('#row_quantity_' + pk_product_id).val()) : '';
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+
+        if ((new_qty_input != '' || new_qty_input < old_qty) && (buy_list_id != '' && buy_list_id != null)) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact your account manager for assistance.',
+                // timer: 3000,
+                position: 'top',
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            });
+        }
+
         if (($('#row_quantity_' + pk_product_id).val() != '') && $('#row_quantity_' + pk_product_id).val()) {
             qty_input = parseInt($('#row_quantity_' + pk_product_id).val());
         } else {
@@ -1558,6 +1598,26 @@
         var old_qty = parseInt($('#itm_qty' + pk_product_id).attr('data-old'));
         var stock_available = parseInt($('#itm_qty' + pk_product_id).attr('max'));
         var qty_input = parseInt($('#itm_qty' + product_id).val());
+        var new_qty_input = $('#itm_qty' + pk_product_id).val() != '' ? parseInt($('#itm_qty' + pk_product_id).val()) : '';
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+
+        if ((new_qty_input != '' || new_qty_input < old_qty) && (buy_list_id != '' && buy_list_id != null)) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact your account manager for assistance.',
+                // timer: 3000,
+                position: 'top',
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            });
+        }
+
         if (($('#itm_qty' + product_id).val() != '') && $('#itm_qty' + product_id).val()) {
             qty_input = parseInt($('#itm_qty' + product_id).val());
         } else {
