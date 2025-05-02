@@ -377,7 +377,11 @@
     
                                                 </td>
                                                 <td class="my_account_all_items">
-                                                    {{!empty($order_detail->discount_amount) ? number_format($order_detail->discount_amount , 2) : number_format(0 , 2)}}
+                                                    @if (!empty($order_detail->buylist_id))
+                                                        {{!empty($order_detail->buylist_discount) ? number_format($order_detail->buylist_discount , 2) : number_format(0 , 2)}}
+                                                    @else
+                                                        {{!empty($order_detail->discount_amount) ? number_format($order_detail->discount_amount , 2) : number_format(0 , 2)}}
+                                                    @endif
                                                 </td>
                                             </tr>
                                             <tr>

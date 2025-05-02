@@ -1089,7 +1089,8 @@ class CheckoutController extends Controller
                 'buyLIst_shipping_cost',
                 'buyListdiscount',
                 'buyListdiscount_type',
-                'buy_list_discount_calculated'
+                'buy_list_discount_calculated',
+                'buy_list_id'
 
 
                 // 'toggle_shipment_insurance'

@@ -857,7 +857,7 @@ $cart_price = 0;
                                                         @csrf
                                                         @foreach ($payment_method->options as $payment_option)
                                                             @if (strtolower($user_address->paymentTerms) == 'pay in advanced')
-                                                                @if ($enable_pickup && strtolower($enable_pickup->option_value) == 'yes')
+                                                                @if ($enable_pickup && strtolower($enable_pickup->option_value) == 'yes' && empty($buy_list_id))
                                                                     <div class="col-md-12">
                                                                         <input type="hidden" value="{{ $payment_method->name }}"
                                                                             name="method_name">
