@@ -16,6 +16,7 @@
     $checkout_issue_banner_text = App\Models\AdminSetting::where('option_name' , 'checkout_issue_banner_text')->first();
     $shipment_for_selected_category  = false;
     $free_shipping_state = false;
+    $buy_list_id = !empty(session()->get('buy_list_id')) ? session()->get('buy_list_id') : null;
     if (!auth()->user()) {
         $free_shipping_state = true;
     }
@@ -168,21 +169,23 @@
     </h6>
 </div>
 @endif
-@if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes' && Floatval($cart_total) > 0) && (!empty($get_wholesale_terms) && strtolower($get_wholesale_terms) == 'pay in advanced'))
-    <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
-        <p class="text-center promotional_banner_text mb-0">
-            {{-- <i class="fas fa-shipping-fast"></i>  --}}
-            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
-            Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{'$' . number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
-        </p>
-    </div>
-    <div class="w-100 promotional_banner_div_congrats {{$congrats_div_dnone}}" id="promotional_banner_div_congrats" style="">
-        <p class="text-center promotional_banner_text_congrats mb-0">
-            {{-- <i class="fas fa-shipping-fast"></i>  --}}
-            <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
-             <span class="promotional_banner_span_congrats">{{!empty($enable_free_shipping_banner_text) ?  $enable_free_shipping_banner_text->option_value : ''}}</span> 
-        </p>
-    </div>
+@if (empty($buy_list_id))
+    @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes' && Floatval($cart_total) > 0) && (!empty($get_wholesale_terms) && strtolower($get_wholesale_terms) == 'pay in advanced'))
+        <div class="w-100 promotional_banner_div {{$d_none}}" id="promotional_banner_div" style="">
+            <p class="text-center promotional_banner_text mb-0">
+                {{-- <i class="fas fa-shipping-fast"></i>  --}}
+                <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
+                Only <span class="promotional_banner_span">@if($calculate_free_shipping <= intval($free_shipping)) {{'$' . number_format($calculate_free_shipping , 2)}} @endif</span> left to get free shipping in California
+            </p>
+        </div>
+        <div class="w-100 promotional_banner_div_congrats {{$congrats_div_dnone}}" id="promotional_banner_div_congrats" style="">
+            <p class="text-center promotional_banner_text_congrats mb-0">
+                {{-- <i class="fas fa-shipping-fast"></i>  --}}
+                <img src="{{asset('theme/bootstrap5/images/shipping_truck_updated.gif')}}" alt="" class="mr-2" style="max-height: 40px;">
+                <span class="promotional_banner_span_congrats">{{!empty($enable_free_shipping_banner_text) ?  $enable_free_shipping_banner_text->option_value : ''}}</span> 
+            </p>
+        </div>
+    @endif
 @endif
 @if (!empty($announcement_banner) && strtolower($announcement_banner->option_value) == 'yes')
 <div class="row bg-dark">
