@@ -283,7 +283,8 @@ class CreateCartController extends Controller
         $cart = session()->get('cart', []);
         $userPriceColumn = UserHelper::getUserPriceColumn();
         $userId = auth()->id() ?? 0;
-        $contactId = session('contact_id');
+        $contactId = session()->get('contact_id') ?? null;
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
 
         foreach ($list->list_products as $listProduct) {
             $product = $listProduct->product;
@@ -297,22 +298,40 @@ class CreateCartController extends Controller
                 }
             }
 
-            // Match by product_id + option_id to avoid duplicates
-            $existingCartItem = Cart::where('cart_hash', $cartHash)
-                ->where('qoute_id', $product->id)
-                ->first();
 
-            if ($existingCartItem) {
-                $existingCartItem->quantity += $listProduct->quantity;
-                $existingCartItem->updated_at = now();
-                $existingCartItem->save();
+            if (auth()->user()) {
+                $product_in_active_cart = Cart::where('qoute_id',$product->id)->where('contact_id', $assigned_contact)->first();
+                if ($product_in_active_cart) {
+                    $product_in_active_cart->quantity += $listProduct->quantity;
+                    $product_in_active_cart->updated_at = now();
+                    $product_in_active_cart->save();
 
-                $cart[$existingCartItem->id]['quantity'] = $existingCartItem->quantity;
-                session()->put('cart', $cart);
+                    $cart[$product_in_active_cart->id]['quantity'] = $product_in_active_cart->quantity;
+                    session()->put('cart', $cart);
+                } else {
+                    $cart[$product->id] = $this->createCartEntry($assigned_contact, $retailPrice, $listProduct, $cartHash, $userId, $product);
+                    Cart::create($cart[$product->id]); // Store the cart entry in the database
+                }
             } else {
-                $cart[$product->id] = $this->createCartEntry($contactId, $retailPrice, $listProduct, $cartHash, $userId, $product);
-                Cart::create($cart[$product->id]); // Store the cart entry in the database
+                // Match by product_id + option_id to avoid duplicates
+                $existingCartItem = Cart::where('cart_hash', $cartHash)
+                    ->where('qoute_id', $product->id)
+                    ->first();
+
+                if ($existingCartItem) {
+                    $existingCartItem->quantity += $listProduct->quantity;
+                    $existingCartItem->updated_at = now();
+                    $existingCartItem->save();
+
+                    $cart[$existingCartItem->id]['quantity'] = $existingCartItem->quantity;
+                    session()->put('cart', $cart);
+                } else {
+                    $cart[$product->id] = $this->createCartEntry($assigned_contact, $retailPrice, $listProduct, $cartHash, $userId, $product);
+                    Cart::create($cart[$product->id]); // Store the cart entry in the database
+                }
             }
+
+            
         }
 
         session()->put('cart', $cart);
