@@ -1346,6 +1346,8 @@
                     actions: 'my-actions-class'  // Class for the actions container
                 }
             });
+
+            return false;
         }
 
         var pass_original_items_quantity = $('#pass_original_items_quantity').val();
@@ -1482,6 +1484,9 @@
                     actions: 'my-actions-class'  // Class for the actions container
                 }
             });
+
+            $('#row_quantity_' + product_id).val(old_qty);
+            return false;
         }
 
         if (($('#row_quantity_' + pk_product_id).val() != '') && $('#row_quantity_' + pk_product_id).val()) {
@@ -1619,6 +1624,11 @@
                     actions: 'my-actions-class'  // Class for the actions container
                 }
             });
+
+
+            $('#itm_qty' + product_id).val(old_qty);
+
+            return false;
         }
 
         if (($('#itm_qty' + product_id).val() != '') && $('#itm_qty' + product_id).val()) {
@@ -1983,29 +1993,37 @@
 
 
     function confirmEmptyCart(event) {
-        event.preventDefault(); // Prevent the default navigation
 
-        Swal.fire({
-            title: "Are you sure?",
-            html: '<p class="swal-custom-text">This will remove all items from your cart!</p>',
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, Empty Cart",
-            cancelButtonText: "Cancel",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            customClass: {
-                title: 'swal-title-black',
-                popup: 'swal-popup-custom',
-                confirmButton: 'swal-confirm-button',
-                cancelButton: 'swal-cancel-button',
-                text: 'swal-text-black'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = event.target.href; // Redirect to empty cart route
-            }
-        });
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+
+        if (buy_list_id == null) {
+           
+            event.preventDefault(); // Prevent the default navigation
+
+            Swal.fire({
+                title: "Are you sure?",
+                html: '<p class="swal-custom-text">This will remove all items from your cart!</p>',
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Empty Cart",
+                cancelButtonText: "Cancel",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    title: 'swal-title-black',
+                    popup: 'swal-popup-custom',
+                    confirmButton: 'swal-confirm-button',
+                    cancelButton: 'swal-cancel-button',
+                    text: 'swal-text-black'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = event.target.href; // Redirect to empty cart route
+                }
+            });
+        } else {
+            window.location.href = event.target.href
+        }
     }
 
 </script>
