@@ -1843,6 +1843,12 @@ class ProductController extends Controller
 
     public function removeProductByCategory(Request $request, $id)
     {
+        $buy_list_id = session()->get('buy_list_id');
+
+        if (!empty($buy_list_id)) {
+            return redirect()->back()->with('error', 'You cannot remove items. Please contact admin.');
+        }
+        
         if (empty($id)) {
             return redirect()->back()->with('error', 'There is an issue with removing the product. Please contact Admin.');
         }
@@ -1890,7 +1896,7 @@ class ProductController extends Controller
         $buy_list_id = session()->get('buy_list_id');
 
         if (!empty($buy_list_id)) {
-            return redirect()->back()->with('error', 'You cannot remove items. Please contact your account manager for assistance.');
+            return redirect()->back()->with('error', 'You cannot remove items. Please contact admin.');
         }
 
         $query = Cart::orderBy('created_at', 'DESC');

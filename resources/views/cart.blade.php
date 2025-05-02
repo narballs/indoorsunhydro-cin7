@@ -1334,7 +1334,7 @@
             Swal.fire({
                 toast: true,
                 icon: 'error',
-                title: 'You cannot decrease the quantity of a product in the buy list. Please contact your account manager for assistance.',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact admin.',
                 // timer: 3000,
                 position: 'top',
                 showConfirmButton: true,  // Show the confirm (OK) button
@@ -1469,7 +1469,7 @@
             Swal.fire({
                 toast: true,
                 icon: 'error',
-                title: 'You cannot decrease the quantity of a product in the buy list. Please contact your account manager for assistance.',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact admin.',
                 // timer: 3000,
                 position: 'top',
                 showConfirmButton: true,  // Show the confirm (OK) button
@@ -1605,7 +1605,7 @@
             Swal.fire({
                 toast: true,
                 icon: 'error',
-                title: 'You cannot decrease the quantity of a product in the buy list. Please contact your account manager for assistance.',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact admin.',
                 // timer: 3000,
                 position: 'top',
                 showConfirmButton: true,  // Show the confirm (OK) button
