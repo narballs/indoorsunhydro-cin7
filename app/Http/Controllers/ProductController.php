@@ -1843,10 +1843,12 @@ class ProductController extends Controller
 
     public function removeProductByCategory(Request $request, $id)
     {
+
         $buy_list_id = session()->get('buy_list_id');
         $contact_us_url = '/contact-us';
+        $stock = !empty($request->stock_per_product) ? intval($request->stock_per_product) : null;
 
-        if (!empty($buy_list_id)) {
+        if (!empty($buy_list_id) && $stock > 0) {
             return redirect()->back()->with('error', 'You cannot remove items. Please contact admin at ' . '<a href="' . $contact_us_url . '">Contact Us</a>');
         }
         
@@ -1901,7 +1903,7 @@ class ProductController extends Controller
         if (!empty($buy_list_id)) {
             return redirect()->back()->with('error', 'You cannot remove items. Please contact admin at ' . '<a href="' . $contact_us_url . '">Contact Us</a>');
         }
-        
+
         $query = Cart::orderBy('created_at', 'DESC');
 
         if (!auth()->check()) {

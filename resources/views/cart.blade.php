@@ -353,10 +353,23 @@
                                                                             id="subtotal_{{ $pk_product_id}}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
                                                                     </span>
                                                                     <p class="text-center remove-item-cart mb-0">
+                                                                        {{-- <input type="hidden" name="stock_per_product" id="user_id" value="{{ $stock_per_product }}">
                                                                         <input type="hidden" name="user_id" id="user_id" value="{{!empty($cart['user_id']) ? $cart['user_id'] : null}}">
                                                                         <input type="hidden" name="contact_id" id="contact_id" value="{{!empty($cart['contact_id']) ? $cart['contact_id'] : null}}"> 
                                                                         <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
-                                                                            class="remove-cart-page-button">Remove</a>
+                                                                            class="remove-cart-page-button">Remove</a> --}}
+                                                                            <!-- Hidden Form -->
+                                                                        <form id="remove-form-{{ $pk_product_id }}" action="{{ url('remove/' . $pk_product_id) }}" method="get" style="display: none;">
+                                                                            @csrf
+                                                                            <input type="hidden" name="stock_per_product" value="{{ $stock_per_product }}">
+                                                                            <input type="hidden" name="user_id" value="{{ !empty($cart['user_id']) ? $cart['user_id'] : null }}">
+                                                                            <input type="hidden" name="contact_id" value="{{ !empty($cart['contact_id']) ? $cart['contact_id'] : null }}">
+                                                                        </form>
+
+                                                                        <!-- Anchor styled as button -->
+                                                                        <a href="#" class="remove-cart-page-button" onclick="event.preventDefault(); document.getElementById('remove-form-{{ $pk_product_id }}').submit();">
+                                                                            Remove
+                                                                        </a>
                                                                     </p>
                                                                 </div>
                                                             </td>
