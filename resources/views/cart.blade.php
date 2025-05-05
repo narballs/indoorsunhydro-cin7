@@ -558,7 +558,7 @@
                                         <td class="ps-0" colspan="2">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span>
-                                                    <i class="fa fa-shipping-fast mx-1" style="font-size: 20x;"></i>
+                                                    {{-- <i class="fa fa-shipping-fast mx-1" style="font-size: 20x;"></i> --}}
                                                     <span class="cart-total">Shipping</span>
                                                 </span>
                                                 <span id="shipping_total_value">
@@ -578,15 +578,15 @@
                                         <td class="ps-0" colspan="2">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span>
-                                                    <i class="fa fa-percent mx-1" style="font-size: 20px;"></i>
+                                                    {{-- <i class="fa fa-percent mx-1" style="font-size: 20px;"></i> --}}
                                                     <span> <strong class="cart-total" id="discountHead">Discount
-                                                            @if(!empty($discount_type))
+                                                            {{-- @if(!empty($discount_type))
                                                                 @if ($discount_type == 'percentage')
                                                                     {{ number_format($discount, 2) }}%
                                                                 @else
                                                                     ${{ number_format($discount, 2) }}
                                                                 @endif
-                                                            @endif
+                                                            @endif --}}
                                                         </strong>
                                                     </span>
                                                 </span>
