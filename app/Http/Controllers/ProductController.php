@@ -1900,9 +1900,9 @@ class ProductController extends Controller
 
         $contact_us_url = '/contact-us';
 
-        if (!empty($buy_list_id)) {
-            return redirect()->back()->with('error', 'You cannot remove items. Please contact admin at ' . '<a href="' . $contact_us_url . '">Contact Us</a>');
-        }
+        // if (!empty($buy_list_id)) {
+        //     return redirect()->back()->with('error', 'You cannot remove items. Please contact admin at ' . '<a href="' . $contact_us_url . '">Contact Us</a>');
+        // }
 
         $query = Cart::orderBy('created_at', 'DESC');
 
