@@ -1898,6 +1898,8 @@ class ProductController extends Controller
 
         $buy_list_id = session()->get('buy_list_id');
 
+        session()->forget('buy_list_id'); // Clear the session cart
+
         $contact_us_url = '/contact-us';
 
         // if (!empty($buy_list_id)) {

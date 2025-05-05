@@ -561,22 +561,59 @@ class UserHelper
             'items'=> $items
         ];
 
-        $headers = [
-            "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-        ];
-        $responseBody = null;
-        $response = $client->post($shipstation_order_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
+        // $headers = [
+        //     "Content-Type: application/json",
+        //     'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        // ];
+        // $responseBody = null;
+        // $response = $client->post($shipstation_order_url, [
+        //     'headers' => $headers,
+        //     'json' => $data,
+        // ]);
+        // $statusCode = $response->getStatusCode();
+        // $responseBody = $response->getBody()->getContents();
         
-        return [
-            'statusCode' => $statusCode,
-            'responseBody' => json_decode($responseBody)
-        ];
+        // return [
+        //     'statusCode' => $statusCode,
+        //     'responseBody' => json_decode($responseBody)
+        // ];
+
+        try {
+            $headers = [
+                "Content-Type: application/json",
+                'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+            ];
+        
+            $responseBody = null;
+            $response = $client->post($shipstation_order_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+        
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        
+            return [
+                'statusCode' => $statusCode,
+                'responseBody' => json_decode($responseBody)
+            ];
+        
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $errorBody = $e->hasResponse()
+                ? $e->getResponse()->getBody()->getContents()
+                : $e->getMessage();
+        
+            return [
+                'statusCode' => $e->getCode(),
+                'error' => $errorBody
+            ];
+        } catch (\Exception $e) {
+            return [
+                'statusCode' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+        
         
     }
 
@@ -767,22 +804,58 @@ class UserHelper
             'items'=> $items
         ];
 
-        $headers = [
-            "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-        ];
-        $responseBody = null;
-        $response = $client->post($shipstation_order_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
+        // $headers = [
+        //     "Content-Type: application/json",
+        //     'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        // ];
+        // $responseBody = null;
+        // $response = $client->post($shipstation_order_url, [
+        //     'headers' => $headers,
+        //     'json' => $data,
+        // ]);
+        // $statusCode = $response->getStatusCode();
+        // $responseBody = $response->getBody()->getContents();
         
-        return [
-            'statusCode' => $statusCode,
-            'responseBody' => json_decode($responseBody)
-        ];
+        // return [
+        //     'statusCode' => $statusCode,
+        //     'responseBody' => json_decode($responseBody)
+        // ];
+
+        try {
+            $headers = [
+                "Content-Type: application/json",
+                'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+            ];
+        
+            $responseBody = null;
+            $response = $client->post($shipstation_order_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+        
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        
+            return [
+                'statusCode' => $statusCode,
+                'responseBody' => json_decode($responseBody)
+            ];
+        
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $errorBody = $e->hasResponse()
+                ? $e->getResponse()->getBody()->getContents()
+                : $e->getMessage();
+        
+            return [
+                'statusCode' => $e->getCode(),
+                'error' => $errorBody
+            ];
+        } catch (\Exception $e) {
+            return [
+                'statusCode' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
         
     }
     public static function wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status , $carrier_code , $service_code) {
