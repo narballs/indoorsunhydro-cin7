@@ -657,10 +657,24 @@ $cart_price = 0;
                                             //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
                                             //     }
                                             // }
-                                            if (!empty($buy_list_discount_calculated)) {
-                                                $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
-                                                $discount_value_buyList = $buy_list_discount_calculated;
+                                            // if (!empty($buy_list_discount_calculated)) {
+                                            //     $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                            //     $discount_value_buyList = $buy_list_discount_calculated;
+                                            // } else {
+                                            //     $discount_value_buyList = 0;
+                                            // }
+
+                                            if (!empty($buyListData) || $buyListData == false || $buyListData == 0) {
+                                                if (!empty($buy_list_discount_calculated)) {
+                                                    $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                                    $discount_value_buyList = $buy_list_discount_calculated;
+                                                } else {
+                                                    $total_including_tax = $total_including_tax;
+                                                    $discount_value_buyList = 0;
+                                                }
+                                                
                                             } else {
+                                                $total_including_tax = $total_including_tax;
                                                 $discount_value_buyList = 0;
                                             }
 
@@ -685,7 +699,7 @@ $cart_price = 0;
                                             <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
                                             <div class="col-md-3  col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>
                                         </div>
-                                        @if (!empty($discount))
+                                        @if (!empty($discount) && !empty($buyListData))
                                             <div class="row justify-content-center border-bottom align-items-center py-2">
                                                 <div class="col-md-9 col-9">
                                                     <span class="checkout_buy_list_discount_heading">
