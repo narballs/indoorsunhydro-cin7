@@ -732,7 +732,7 @@ class CheckoutController extends Controller
                 $buyListdiscount_type = $discount_type;
                 $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
                 if ($charge_shipment_fee == true) {
-                    $buyListData = false;
+                    $buyListData = true;
                     if ($shipping_free_over_1000 == 1) {
                         $shipment_price = 0;
                         $allow_upgrade = true;

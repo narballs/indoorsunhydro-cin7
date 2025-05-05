@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 
 class UserHelper
 {
@@ -647,12 +648,26 @@ class UserHelper
             $errorBody = $e->hasResponse()
                 ? $e->getResponse()->getBody()->getContents()
                 : $e->getMessage();
+
+                Log::error('GuzzleHttp RequestException: ' . $errorBody, [
+                    'request' => $data,
+                    'response' => $errorBody,
+                ]);
         
             return [
                 'statusCode' => $e->getCode(),
                 'error' => $errorBody
             ];
+
+            
+
         } catch (\Exception $e) {
+
+            Log::error('General Exception: ' . $e->getMessage(), [
+                'request' => $data,
+                'response' => $e->getMessage(),
+            ]);
+
             return [
                 'statusCode' => 500,
                 'error' => $e->getMessage()
@@ -935,15 +950,30 @@ class UserHelper
                 ? $e->getResponse()->getBody()->getContents()
                 : $e->getMessage();
         
+            
+
+            Log::error('GuzzleHttp RequestException: ' . $errorBody, [
+                'request' => $e->getRequest()->getBody(),
+                'response' => $e->hasResponse() ? $e->getResponse()->getBody() : null,
+            ]);
+
             return [
                 'statusCode' => $e->getCode(),
                 'error' => $errorBody
             ];
+
         } catch (\Exception $e) {
+            
+            Log::error('General Exception: ' . $e->getMessage(), [
+                'request' => $data,
+                'response' => $e->getMessage(),
+            ]);
+
             return [
                 'statusCode' => 500,
                 'error' => $e->getMessage()
             ];
+
         }
         
     }
