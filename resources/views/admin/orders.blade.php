@@ -407,7 +407,7 @@
                                                             Manual Label
                                                         </button>
                                                     </div>
-                                                @else
+                                                @elseif(!empty($order->buylist_id))
                                                     <div class="d-flex justify-content-center">
                                                         @if (!empty($order->label_link))
                                                             <a href="{{ route('download_label', $order->label_link) }}" class="badge badge-success p-2 border-0 mr-2">
