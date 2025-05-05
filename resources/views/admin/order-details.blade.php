@@ -143,10 +143,10 @@
                                             </button>
                                         @else
                                             <button type="button" 
-                                                    class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
+                                                    class="btn btn-primary badge_wholesale send_buy_list_order_to_shipstation btn-sm" 
                                                     data-toggle="modal" 
-                                                    data-target="#send_wholesale_order_to_shipstation" 
-                                                    id="send_wholesale_order_shipstation" 
+                                                    data-target="#send_buy_list_order_to_shipstation" 
+                                                    id="send_buy_list_order_to_shipstation_btn" 
                                                     data-id="{{ $order->id }}">
                                                 Send to Shipstation
                                             </button>
@@ -854,6 +854,55 @@
           </form>
         </div>
     </div>
+
+    {{-- buy_list --}}
+    <div class="modal fade" id="send_buy_list_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_buy_list_order_to_shipstation" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="POST" action="{{ route('send_buy_list_order_to_shipstation') }}">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Send Order To Shipstation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="buylist_order_id" name="order_id" value="">
+                <input type="hidden" name="carrier_code" id="carrier_code" value="">
+                <input type="hidden" name="service_code" id="service_code" value="">
+                <div class="form-group">
+                  <label for="shipping_method">Select Shipping Method</label>
+                  <select class="form-control" name="shipping_method_buy_list" required>
+                    @if(count($shipping_quotes) > 0)
+                        <option value="">Select Shipping Method</option>
+                        @foreach($shipping_quotes as $quote)
+                            <option value="{{ $quote->service_code . ' _and_ ' . $quote->carrier_code}}">{{ $quote->service_name }}</option>
+                        @endforeach
+                        <option value="{{ 'standard' . ' _and_ ' . 'seko_ltl_walleted'}}">Seko ltl Walleted</option>
+                    @else
+                        <option value="">No Shipping Method Available</option>
+                    @endif
+                    <!-- Add more options if needed -->
+                  </select>
+                </div>
+                <div id="shipstation_loader" class="text-center mt-3" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Sending...</span>
+                    </div>
+                    <div>Sending to ShipStation...</div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    
 @stop
 
 @section('css')
@@ -1132,6 +1181,9 @@
             }, 1000);
 
 
+            // po box order
+
+
             $(document).on('click', '.send_po_box_wholesale_order_to_shipstation', function () {
                 const orderId = $(this).data('id');
                 $('#wholesale_po_box_order_id').val(orderId);
@@ -1146,6 +1198,10 @@
                 // Optional: disable the submit button to prevent multiple clicks
                 $(this).find('button[type="submit"]').prop('disabled', true);
             });
+
+
+
+            // wholesale order
 
 
 
@@ -1174,6 +1230,36 @@
                 // Optional: disable the submit button to prevent multiple clicks
                 $(this).find('button[type="submit"]').prop('disabled', true);
             });
+
+
+            // buylist
+
+            $(document).on('click', '.send_buy_list_order_to_shipstation', function () {
+                const orderId = $(this).data('id');
+                $('#buylist_order_id').val(orderId);
+            });
+
+            // Before submitting the form, split the selected shipping method
+            $('form[action="{{ route('send_buy_list_order_to_shipstation') }}"]').on('submit', function (e) {
+                const shippingValue = $('select[name="shipping_method_buy_list"]').val();
+                const parts = shippingValue.split(' _and_ ');
+
+                if (parts.length !== 2) {
+                    // alert('Invalid shipping method selected.');
+                    e.preventDefault(); // prevent submission
+                    return false;
+                }
+
+                $('#carrier_code').val(parts[1]); // carrier_code
+                $('#service_code').val(parts[0]); // service_code
+
+                // Show loader
+                $('#shipstation_loader').show();
+
+                // Optional: disable the submit button to prevent multiple clicks
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+
         });
         //on click increase quantity
         function increaseQuantity(item_id) {

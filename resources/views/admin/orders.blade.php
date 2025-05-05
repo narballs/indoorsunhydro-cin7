@@ -385,14 +385,29 @@
                                             </td>
                                             <td data-label="Create Labels :" class="td_padding_row p-0">
                                                 @if (!empty($order->buylist_id) && ($order->label_created == 0) && ($order->is_shipped == 0) && empty($order->shipstation_orderId) && $order->isApproved == 1)
-                                                    <button type="button" 
-                                                            class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
-                                                            data-toggle="modal" 
-                                                            data-target="#send_wholesale_order_to_shipstation" 
-                                                            id="send_wholesale_order_shipstation" 
-                                                            data-id="{{ $order->id }}">
-                                                        Send to Shipstation
-                                                    </button>
+                                                @if (
+                                                    (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
+                                                    (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
+                                                    App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
+                                                )
+                                                <button type="button" 
+                                                        class="btn btn-primary badge_wholesale send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                                        data-toggle="modal" 
+                                                        data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                                        id="send_po_box_wholesale_order_shipstation" 
+                                                        data-id="{{ $order->id }}">
+                                                    Send to Shipstation
+                                                </button>
+                                                @else    
+                                                <button type="button" 
+                                                        class="btn btn-primary badge_wholesale send_buy_list_order_to_shipstation btn-sm" 
+                                                        data-toggle="modal" 
+                                                        data-target="#send_buy_list_order_to_shipstation" 
+                                                        id="send_buy_list_order_to_shipstation_btn" 
+                                                        data-id="{{ $order->id }}">
+                                                    Send to Shipstation
+                                                </button>
+                                                @endif
                                                 @elseif(!empty($order->buylist_id) && ($order->label_created == 0) && ($order->is_shipped == 0) && !empty($order->shipstation_orderId))
                                                     <div class="d-flex">
                                                         <form action="{{ url('admin/orders/create/label') }}" method="post" class="mr-2">
@@ -710,7 +725,53 @@
             </div>
         </div>
     </div>
-    
+    {{-- buylist --}}
+    <div class="modal fade" id="send_buy_list_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_buy_list_order_to_shipstation" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="POST" action="{{ route('send_buy_list_order_to_shipstation') }}">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Send Order To Shipstation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="buyLIst_order_id" name="order_id" value="">
+                <input type="hidden" name="carrier_code" id="carrier_code" value="">
+                <input type="hidden" name="service_code" id="service_code" value="">
+                <div class="form-group">
+                  <label for="shipping_method">Select Shipping Method</label>
+                  <select class="form-control" name="shipping_method" required>
+                    @if(count($shipping_quotes) > 0)
+                        <option value="">Select Shipping Method</option>
+                        @foreach($shipping_quotes as $quote)
+                            <option value="{{ $quote->service_code . ' _and_ ' . $quote->carrier_code}}">{{ $quote->service_name }}</option>
+                        @endforeach
+                        <option value="{{ 'standard' . ' _and_ ' . 'seko_ltl_walleted'}}">Seko ltl Walleted</option>
+                    @else
+                        <option value="">No Shipping Method Available</option>
+                    @endif
+                    <!-- Add more options if needed -->
+                  </select>
+                </div>
+                <div id="shipstation_loader" class="text-center mt-3" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="sr-only">Sending...</span>
+                    </div>
+                    <div>Sending to ShipStation...</div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+    {{-- wholesale --}}
     <div class="modal fade" id="send_wholesale_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_wholesale_order_to_shipstation" aria-hidden="true">
         <div class="modal-dialog">
           <form method="POST" action="{{ route('send_wholesale_order_to_shipstation') }}">
@@ -763,7 +824,7 @@
             @csrf
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Send Order To Shipstation</h5>
+                <h5 class="modal-title">Send Order Wholesale To Shipstation</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -1276,6 +1337,36 @@
                 
                 // Show loader
                 $('#shipstation_loader_PO').show();
+
+                // Optional: disable the submit button to prevent multiple clicks
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+
+
+            // buy list 
+
+
+            $(document).on('click', '.send_buy_list_order_to_shipstation', function () {
+                const orderId = $(this).data('id');
+                $('#buyLIst_order_id').val(orderId);
+            });
+
+            // Before submitting the form, split the selected shipping method
+            $('form[action="{{ route('send_buy_list_order_to_shipstation') }}"]').on('submit', function (e) {
+                const shippingValue = $('select[name="shipping_method"]').val();
+                const parts = shippingValue.split(' _and_ ');
+
+                if (parts.length !== 2) {
+                    // alert('Invalid shipping method selected.');
+                    e.preventDefault(); // prevent submission
+                    return false;
+                }
+
+                $('#carrier_code').val(parts[1]); // carrier_code
+                $('#service_code').val(parts[0]); // service_code
+
+                // Show loader
+                $('#shipstation_loader').show();
 
                 // Optional: disable the submit button to prevent multiple clicks
                 $(this).find('button[type="submit"]').prop('disabled', true);

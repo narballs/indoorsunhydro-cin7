@@ -277,6 +277,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('admin/order/update-order-status', [OrderController::class, 'update_order_status_by_admin'])->name('update_order_status_by_admin');
     Route::post('admin/update_user_job', [ContactController::class, 'update_user_job'])->name('update_user_job');
     Route::post('admin/send-wholesale-order-to-shipstation', [OrderManagementController::class, 'send_wholesale_order_to_shipstation'])->name('send_wholesale_order_to_shipstation');
+    Route::post('admin/send-buy-list-order-to-shipstation', [OrderManagementController::class, 'send_buy_list_order_to_shipstation'])->name('send_buy_list_order_to_shipstation');
     Route::post('admin/send-po-box-wholesale-order-to-shipstation', [OrderManagementController::class, 'send_po_box_wholesale_order_to_shipstation'])->name('send_po_box_wholesale_order_to_shipstation');
     Route::post('admin/send-confirmation-email', [OrderManagementController::class, 'send_confirmation_email'])->name('send_confirmation_email');
 

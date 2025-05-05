@@ -919,6 +919,45 @@ class OrderManagementController extends Controller
         }
     }
 
+    public function send_buy_list_order_to_shipstation(Request $request) {
+
+        $orderId = $request->order_id;
+        $carrierCode = $request->carrier_code;
+        $serviceCode = $request->service_code;
+        $currentOrder = ApiOrder::with('apiOrderItem')->where('id', $orderId)->first();
+        if (!empty($currentOrder)) {
+            if ($currentOrder->shipstation_orderId == null) {
+                $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
+                if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes') {
+                    $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
+                    if (!empty($order_contact)) {
+                        $shipstation_order_status = 'create_order';
+                        $shiping_order = UserHelper::wholesale_shipping_order($orderId , $currentOrder , $order_contact, $shipstation_order_status , $carrierCode, $serviceCode);
+                        if ($shiping_order['statusCode'] == 200) {
+                            $orderUpdate = ApiOrder::where('id', $orderId)->update([
+                                'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                'shipping_carrier_code' => $carrierCode,
+                                'shipping_service_code' => $serviceCode,
+                            ]);
+
+                            return redirect()->back()->with('success', 'Order send to shipstation successfully !');
+                        } else {
+                            return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                        }
+                    } else {
+                        return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Please check your admin settings for create order in shipstation' );
+                }
+            } else {
+                return redirect()->back()->with('error', 'Invalid Order! Your order is invalid to process' );
+            }
+        }
+    }
+
     public function send_po_box_wholesale_order_to_shipstation(Request $request) {
 
 
