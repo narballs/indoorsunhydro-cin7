@@ -88,10 +88,12 @@
                     <p>{{$address2}}</p>
                 </td>
                 <td style="width: 30%;vertical-align:top;">
-                    @php
+                    {{-- @php
                         $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); 
-                    @endphp
-                    <img src="{{ url('/theme/img/' . $logo_name) }}" alt="logo" style="width: 100%;">
+                    @endphp --}}
+                    <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
+                    <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" style="width: 100%;" />
+                    {{-- <img src="{{ url('/theme/img/' . $logo_name) }}" alt="logo" style="width: 100%;"> --}}
                 </td>
             </tr>
         </table>
