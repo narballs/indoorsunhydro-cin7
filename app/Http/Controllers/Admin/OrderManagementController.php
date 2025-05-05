@@ -264,6 +264,7 @@ class OrderManagementController extends Controller
         $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
         $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
+        $shipping_quotes = ShippingQuoteSetting::where('status' , 1)->get();
         
         return view('admin/order-details', compact(
             'order',
@@ -282,6 +283,7 @@ class OrderManagementController extends Controller
             'po_box_order_shipping_text',
             'po_box_carrier_code',
             'po_box_service_code',
+            'shipping_quotes'
 
         ));
     }
