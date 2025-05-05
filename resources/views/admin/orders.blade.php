@@ -636,7 +636,7 @@
                                                 @endif
 
 
-                                                @if ($order->shipstation_orderId == '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1)
+                                                @if ($order->shipstation_orderId == '' && strtolower($order->payment_status) == 'paid' &&  $order->isApproved == 1 && $order->is_stripe == 1 && empty($order->buylist_id))
                                                     @if (
                                                             (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
                                                             (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
