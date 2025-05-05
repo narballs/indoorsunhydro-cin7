@@ -382,7 +382,12 @@ class CheckoutController extends Controller
             $discount = $buyList->shipping_and_discount->discount ?? 0;
             $discount_type = $buyList->shipping_and_discount->discount_type ?? null;
             $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
-            return view ('checkout.checkout_without_login' ,compact('states','cart_total' ,'buy_list_discount_calculated', 'cart_items' , 'tax_class' , 'shipment_price' , 'shipping_cost' , 'discount' , 'discount_type'));
+            if (!empty($buy_list_id)) {
+                $buyListData = true;
+            } else {
+                $buyListData = false;
+            }
+            return view ('checkout.checkout_without_login' ,compact('states','cart_total' ,'buy_list_discount_calculated','buyListData', 'cart_items' , 'tax_class' , 'shipment_price' , 'shipping_cost' , 'discount' , 'discount_type'));
         }
         $user_id = auth()->user()->id;
         $selected_company = Session::get('contact_id');

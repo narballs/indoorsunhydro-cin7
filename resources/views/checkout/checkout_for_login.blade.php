@@ -1087,10 +1087,17 @@ $cart_price = 0;
                                             $total_including_tax = $tax + $remove_discount  + $shipment_price;
                                             $discount_value_buyList = 0;
 
-                                            if (!empty($buy_list_discount_calculated) && (!empty($buyListData) || $buyListData == false || $buyListData == 0)) {
-                                                $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
-                                                $discount_value_buyList = $buy_list_discount_calculated;
+                                            if (!empty($buyListData) || $buyListData == false || $buyListData == 0) {
+                                                if (!empty($buy_list_discount_calculated)) {
+                                                    $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                                    $discount_value_buyList = $buy_list_discount_calculated;
+                                                } else {
+                                                    $total_including_tax = $total_including_tax;
+                                                    $discount_value_buyList = 0;
+                                                }
+                                                
                                             } else {
+                                                $total_including_tax = $total_including_tax;
                                                 $discount_value_buyList = 0;
                                             }
                                         @endphp
