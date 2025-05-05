@@ -856,7 +856,7 @@ $cart_price = 0;
                                                         @endphp
                                                         @csrf
                                                         @foreach ($payment_method->options as $payment_option)
-                                                            @if (!empty($buy_list_id) && strtolower($payment_option->option_name) != 'pickup order')
+                                                            {{-- @if (!empty($buy_list_id) && strtolower($payment_option->option_name) != 'pickup order')
                                                                 <div class="col-md-12">
                                                                     <input type="hidden" value="{{ $payment_method->name }}"
                                                                         name="method_name">
@@ -954,7 +954,50 @@ $cart_price = 0;
                                                                         @endif
                                                                     </div>
                                                                 @endif
+                                                            @endif --}}
+                                                            @php
+                                                                $is_pickup = strtolower($payment_option->option_name) == 'pickup order';
+                                                                $is_checked = $payment_option->option_name == 'Delivery';
+
+                                                                // Determine if we should show this option
+                                                                $show_option = true;
+
+                                                                if (!empty($buy_list_id) && $is_pickup) {
+                                                                    $show_option = false; // hide pickup if buylisy id exists
+                                                                } elseif (strtolower($user_address->paymentTerms) == 'pay in advanced') {
+                                                                    if ($is_pickup) {
+                                                                        $show_option = $enable_pickup && strtolower($enable_pickup->option_value) == 'yes';
+                                                                    }
+                                                                }
+                                                            @endphp
+
+                                                            @if ($show_option)
+                                                                <div class="col-md-12">
+                                                                    <input type="hidden" value="{{ $payment_method->name }}" name="method_name">
+                                                                    <input type="radio" class="d_options"
+                                                                        id="local_delivery_{{ $payment_option->id }}"
+                                                                        name="method_option"
+                                                                        value="{{ $payment_option->option_name }}"
+                                                                        style="background: #008BD3;"
+                                                                        onclick="pickup_order(this)"
+                                                                        {{ $is_checked ? 'checked' : '' }}>
+
+                                                                    <label for="local_delivery payment-option-label" class="checkout_product_heading ml-2 mb-0">
+                                                                        {{ $payment_option->option_name }} {{ $is_pickup ? ':' : '' }}
+                                                                    </label>
+
+                                                                    @if ($is_pickup)
+                                                                        <span class="mx-2">
+                                                                            @php
+                                                                                $timings_part1 = App\Models\AdminSetting::where('option_name', 'timings_part1')->first();
+                                                                                $timings_part2 = App\Models\AdminSetting::where('option_name', 'timings_part2')->first();
+                                                                            @endphp
+                                                                            {{ $timings_part1->option_value ?? '' }} {{ $timings_part2->option_value ?? '' }}
+                                                                        </span>
+                                                                    @endif
+                                                                </div>
                                                             @endif
+
                                                         @endforeach
                                                     @endforeach
                                                 </div>
