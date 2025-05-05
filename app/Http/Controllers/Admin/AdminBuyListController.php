@@ -41,10 +41,20 @@ class AdminBuyListController extends Controller
     {
         if ($request->id) {
             $list = BuyList::where('id', $request->id)->with('shipping_and_discount','list_products.product.options')->first();
-            $products = Product::where('status' , '!=' , 'Inactive')->paginate(10);
+            $products = Product::with('options')
+            ->where('status' , '!=' , 'Inactive')
+            ->whereHas('options', function ($query){
+                $query->where('status', '!=', 'Disabled');
+            })
+            ->paginate(10);
             return view('admin/buy-list-new', compact('products', 'list'));
         } else {
-            $products = Product::where('status' , '!=' , 'Inactive')->paginate(10);
+            $products = Product::with('options')
+            ->where('status' , '!=' , 'Inactive')
+            ->whereHas('options', function ($query){
+                $query->where('status', '!=', 'Disabled');
+            })
+            ->paginate(10);
             $list = '';
             return view('admin/buy-list-new', compact('products', 'list'));
         }
