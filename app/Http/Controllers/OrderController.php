@@ -89,13 +89,15 @@ class OrderController extends Controller
         $buyListData = $request->buyListData;
         $buyListShipping = !empty($request->buyLIst_shipping_cost) ? floatval($request->buyLIst_shipping_cost) : null;
         $buy_list_id = !empty(session()->get('buy_list_id')) ? session()->get('buy_list_id') : null;
+        $buyListDiscount = !empty($request->buyListDiscountInput) ? floatval($request->buyListDiscountInput) : null;
+        $buyListDiscountType = !empty($request->buyListdiscount_type) ? $request->buyListdiscount_type : null;
 
 
         if (!empty($buyListData) &&  $buyListData == true) {
             $actual_shipping_price = $buyListShipping;
             $shipstation_shipment_value = floatval($actual_shipping_price);
-            $buyListDiscount = !empty($request->buyListDiscountInput) ? floatval($request->buyListDiscountInput) : null;
-            $buyListDiscountType = $request->buyListdiscount_type;
+            $buyListDiscount = $buyListDiscount;
+            $buyListDiscountType = $buyListDiscountType;
         } 
         else {
             if ($shipment_error == 1) {
@@ -103,8 +105,8 @@ class OrderController extends Controller
             }
 
 
-            $buyListDiscount = null;
-            $buyListDiscountType = null;
+            $buyListDiscount = $buyListDiscount;
+            $buyListDiscountType =$buyListDiscountType;
     
     
             if (!empty($upgrade_shipping) && strtolower($upgrade_shipping->option_value) == 'yes') {
