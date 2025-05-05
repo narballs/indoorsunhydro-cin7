@@ -104,9 +104,13 @@ class OrderController extends Controller
                 return back()->with('error', 'There was an issue getting a freight quote, please try again later');
             }
 
-
-            $buyListDiscount = $buyListDiscount;
-            $buyListDiscountType =$buyListDiscountType;
+            if (!empty($buyListData))  {
+                $buyListDiscount = $buyListDiscount;
+                $buyListDiscountType =$buyListDiscountType;
+            } else {
+                $buyListDiscount = null;
+                $buyListDiscountType = null;
+            }
     
     
             if (!empty($upgrade_shipping) && strtolower($upgrade_shipping->option_value) == 'yes') {

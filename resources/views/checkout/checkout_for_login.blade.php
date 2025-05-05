@@ -1086,17 +1086,8 @@ $cart_price = 0;
                                             $remove_discount = $cart_total - $discount_amount;   
                                             $total_including_tax = $tax + $remove_discount  + $shipment_price;
                                             $discount_value_buyList = 0;
-                                            // if (!empty($buyListdiscount)) {
-                                            //     if ($buyListdiscount_type == 'percentage') {
-                                            //         $discount_value_buyList = ($total_including_tax * floatval($buyListdiscount)) / 100;
-                                            //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);                                    
-                                            //     } else {
-                                            //         $discount_value_buyList = floatval($buyListdiscount);
-                                            //         $total_including_tax = $total_including_tax - floatval($discount_value_buyList);
-                                            //     }
-                                            // }
 
-                                            if (!empty($buy_list_discount_calculated)) {
+                                            if (!empty($buy_list_discount_calculated) && (!empty($buyListData) || $buyListData == false || $buyListData == 0)) {
                                                 $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
                                                 $discount_value_buyList = $buy_list_discount_calculated;
                                             } else {
