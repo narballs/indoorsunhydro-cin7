@@ -432,7 +432,7 @@
                                                     $enable_label_wholesale = App\Models\AdminSetting::where('option_name', 'enable_label_wholesale')->first();
                                                     $wholesaleEnabled = $enable_label_wholesale && strtolower($enable_label_wholesale->option_value) === 'yes';
 
-                                                    $canSendToShipStation = $order->is_stripe == 0 && $order->isApproved == 1;
+                                                    $canSendToShipStation = $order->is_stripe == 0 && $order->isApproved == 1 && empty($order->buylist_id);
                                                     $isInShipStation = !empty($order->shipstation_orderId);
                                                     $needsLabel = $order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0;
                                                     $isSekoWalleted = $order->shipping_carrier_code == 'seko_ltl_walleted';
@@ -549,7 +549,7 @@
                                                     </div>
                                                 @endif
 
-                                                @if ($order->shipstation_orderId != '' && (strtolower($order->payment_status) == 'paid' || strtolower($order->payment_status) == 'partially refunded') &&  ($order->isApproved == 1 || $order->isApproved == 4) && $order->is_stripe == 1) 
+                                                @if ($order->shipstation_orderId != '' && (strtolower($order->payment_status) == 'paid' || strtolower($order->payment_status) == 'partially refunded') &&  ($order->isApproved == 1 || $order->isApproved == 4) && $order->is_stripe == 1 && empty($order->buylist_id)) 
                                                     @if ($order->shipment_price == 0 && $order->label_created == 0 && $order->is_shipped == 0)
                                                         <div class="d-flex">
                                                             <form action="{{url('admin/orders/create/label')}}" method="post" class="mr-2">
