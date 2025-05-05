@@ -1529,7 +1529,7 @@ $cart_price = 0;
                                                 </div>
                                             @endif
                                         @endif
-                                        @if (!empty($buyListdiscount))
+                                        @if (!empty($buyListdiscount) && !empty($buyListData))
                                             <div class="row justify-content-center border-bottom align-items-center py-2">
                                                 <div class="col-md-9 col-9">
                                                     <span class="checkout_buy_list_discount_heading">
