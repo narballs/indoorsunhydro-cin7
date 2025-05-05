@@ -736,8 +736,7 @@ class CheckoutController extends Controller
                     if ($shipping_free_over_1000 == 1) {
                         $shipment_price = 0;
                         $allow_upgrade = true;
-    
-    
+                        $buyListData = true;
                         if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes' && $allow_upgrade = true) {
                             if ($products_weight > 99) {
                                 $upgrade_shipping_carrier_code = $carrier_code_2->option_value;
