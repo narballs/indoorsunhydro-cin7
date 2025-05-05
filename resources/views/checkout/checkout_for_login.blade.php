@@ -1055,29 +1055,9 @@ $cart_price = 0;
                                                 @enderror --}}
                                             </div>
                                         </div>
-                                        {{-- @endif --}}
-                                        {{-- <div class="row justify-content-center border-bottom py-3">
-                                            <div class="col-md-12 mb-3">
-                                                <p class="checkout_product_heading mb-2 ml-0">Payment Terms</p>
-                                                <select name="paymentTerms" id="pay_terms" class="form-control checkout_product_heading">
-                                                    @if( )
-                                                        <option value="Pay in Advanced" selected>Pay in Advanced</option>
-                                                    @else
-                                                        <option value="30 days from invoice" selected>30 days from invoice</option>
-                                                    @endif
-                                                </select>
-                                            </div>
-                                        </div> --}}
                                         @php
                                             $discount_amount = 0;
                                             $remove_discount = 0;
-                                            // if (!empty($discount_code) && strtolower($discount_code->mode) === 'automatic') {
-                                            //     if ($discount_code->discount_variation === 'percentage') {
-                                            //         $discount_amount = $cart_total * ($discount_code->discount_variation_value / 100);
-                                            //     } else {
-                                            //         $discount_amount = $discount_code->discount_variation_value;
-                                            //     }
-                                            // } 
                                             $tax=0;
                                             if (!empty($tax_class)) {
                                                 $tax = $cart_total * ($tax_class->rate / 100);
@@ -3967,15 +3947,7 @@ $cart_price = 0;
                         $('.upgrade_shipping_service_code').each(function() {
                             $(this).prop('checked', false); // Uncheck all options
                         });
-                        // if ($(element).is(':checked')) {
-                        //     $(element).parent().find('.upgrade_shipping_service_code').removeClass('d-none').attr('checked', 'checked');
-                        //     $(element).parent().find('.upgrade_shipping_service_code').addClass('d-none');
-                        //     total_including_shipping =  product_total + tax + parseFloat($(element).val())  +  parseFloat(parcel_guard);
-                        //     $('#incl_tax').val(total_including_shipping.toFixed(2));
-                        //     $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
-                        //     let ship_cost = $(element).attr('upgrade_shipping_cost_with_surcharge');
-                        //     $('#original_shipment_price').val(parseFloat(ship_cost).toFixed(2));
-                        // }
+
                         if ($(element).is(':checked')) {
                             // Uncheck all service code radios first
                             $('.upgrade_shipping_service_code').prop('checked', false);
@@ -4040,12 +4012,13 @@ $cart_price = 0;
                     var single_shipping_quote = $('#single_shipping_quote');
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
                     var parcel_guard = 0;
+                    var buyListDiscountInput  = $('#buyListDiscountInput').val() != null ? parseFloat($('#buyListDiscountInput').val()) : 0;
                     if (admin_area_for_shipping_check === 'true') { 
                         if (single_shipping_quote.attr('checked')) {
                             var product_total = $('.items_total_price').val() != null ? parseFloat($('.items_total_price').val()) : 0;
                             var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
                             var total_including_shipping = 0;
-                            total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val()) +  parseFloat(parcel_guard);
+                            total_including_shipping =  product_total + tax + parseFloat(single_shipping_quote.val()) +  parseFloat(parcel_guard) - buyListDiscountInput;
                             $('#incl_tax').val(total_including_shipping.toFixed(2));
                             $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                         }
@@ -4058,7 +4031,8 @@ $cart_price = 0;
                     var tax = $('.total_tax').val() != null ? parseFloat($('.total_tax').val()) : 0;
                     var parcel_guard = 0;
                     var total_including_shipping = 0;
-                    total_including_shipping =  product_total + tax + order_weight_greater_then_150 +  parseFloat(parcel_guard);
+                    var buyListDiscountInput  = $('#buyListDiscountInput').val() != null ? parseFloat($('#buyListDiscountInput').val()) : 0;
+                    total_including_shipping =  product_total + tax + order_weight_greater_then_150 +  parseFloat(parcel_guard) - buyListDiscountInput;
                     $('#incl_tax').val(total_including_shipping.toFixed(2));
                     $('#checkout_order_total').html('$' + total_including_shipping.toFixed(2));
                 }
