@@ -87,9 +87,9 @@ class OrderController extends Controller
         $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
         $upgrade_shipping = AdminSetting::where('option_name', 'enable_upgrade_shipping')->first();
         $buyListData = $request->buyListData;
-        $buyListShipping = !empty($request->buyLIst_shipping_cost) ? floatval($request->buyLIst_shipping_cost) : null;
+        $buyListShipping = !empty($request->buyLIst_shipping_cost) ? floatval($request->buyLIst_shipping_cost) : 0;
         $buy_list_id = !empty(session()->get('buy_list_id')) ? session()->get('buy_list_id') : null;
-        $buyListDiscount = !empty($request->buyListDiscountInput) ? floatval($request->buyListDiscountInput) : null;
+        $buyListDiscount = !empty($request->buyListDiscountInput) ? floatval($request->buyListDiscountInput) : 0;
         $buyListDiscountType = !empty($request->buyListdiscount_type) ? $request->buyListdiscount_type : null;
 
 
@@ -162,7 +162,7 @@ class OrderController extends Controller
                                 $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
                             }
         
-                            $actual_shipping_price = $request->shipment_price;
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
                             $shipstation_shipment_value = $actual_shipping_price;
                         }
                     }
@@ -193,7 +193,7 @@ class OrderController extends Controller
                                 }
                             }
                         } else {
-                            $actual_shipping_price = $request->shipment_price;
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
                             $shipping_service_code = $request->shipping_service_code;
                             $shipping_carrier_code = $request->shipping_carrier_code;
                             $shipstation_shipment_value = $actual_shipping_price;
@@ -208,11 +208,11 @@ class OrderController extends Controller
                             $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
                         }
     
-                        $actual_shipping_price = $request->shipment_price;
+                        $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
                         $shipstation_shipment_value = $actual_shipping_price;
                     }
                 } else{
-                    $actual_shipping_price = $request->shipment_price;
+                    $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
                     $shipping_service_code = $request->shipping_service_code;
                     $shipping_carrier_code = $request->shipping_carrier_code;
                     $shipstation_shipment_value = $actual_shipping_price;
