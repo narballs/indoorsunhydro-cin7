@@ -92,7 +92,7 @@
                         $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); 
                     @endphp --}}
                     <?php $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); ?>
-                    <img src="{{ url('/theme/bootstrap5/images/' . $logo_name) }}" alt="" />
+                    <img src="{{ url('/theme/bootstrap5/images/' . $logo_name) }}" alt=""  style="width: 100%;"/>
                     {{-- <img src="{{ url('/theme/img/' . $logo_name) }}" alt="logo" style="width: 100%;"> --}}
                 </td>
             </tr>
