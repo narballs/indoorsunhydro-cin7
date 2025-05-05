@@ -412,9 +412,11 @@ class CheckoutController extends Controller
         $sub_total_of_cart = 0;
         $products_lengths = [];
         $products_widths = [];
+        $products_heights = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
         $productTotal = 0;
+        $pot_category_flag = false; 
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
@@ -433,24 +435,46 @@ class CheckoutController extends Controller
             $sub_total_of_cart += $cart_item['quantity'] * $cart_item['price'];
             $productTotal += $cart_item['quantity'] * $cart_item['price'];
             $product_options = ProductOption::with('products')->where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
+            $pots_category = 'pots & containers';
+            
             foreach ($product_options as $product_option) {
-                $products_weight += $product_option->optionWeight * $cart_item['quantity'];
-                if (!empty($product_option->products)) {
-                    
-                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-                    
-                    $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
-                    
+
+                if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
+                    $pot_category_flag = true;
+                    $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $cart_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
+                } 
+                else {
+                    $pot_category_flag = false;
+                    $products_weight += $product_option->optionWeight * $cart_item['quantity'];
+                    if (!empty($product_option->products)) {
+                        
+                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+                        
+                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
+                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
+                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                        
+                    }
                 }
             }            
         }
 
 
-        $product_length = max($products_lengths);
-        $product_width = max($products_widths);
+        if ($pot_category_flag == true) {
+            $product_height = $get_pot_category_dimensions['product_height'];
+            $product_width = $get_pot_category_dimensions['products_widths'];
+            $product_length = $get_pot_category_dimensions['products_lengths'];
+            $products_weight = $get_pot_category_dimensions['products_weight'];
+        } else {
+            $product_length = max($products_lengths);
+            $product_width = max($products_widths);
+            $product_height = $product_height;
+            $products_weight = $products_weight;
+        }
+
+
+        
 
         $girth = 2 * ($product_width + $product_height); 
         if ($girth > 165  && $products_weight < 100) {
