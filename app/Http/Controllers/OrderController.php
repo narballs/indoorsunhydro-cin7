@@ -93,11 +93,129 @@ class OrderController extends Controller
         $buyListDiscountType = !empty($request->buyListdiscount_type) ? $request->buyListdiscount_type : null;
 
 
-        if (!empty($buyListData) &&  $buyListData == true) {
+        if (!empty($buyListData) &&  $buyListData == true && $buyListShipping > 0) {
             $actual_shipping_price = $buyListShipping;
             $shipstation_shipment_value = floatval($actual_shipping_price);
-            $buyListDiscount = $buyListDiscount;
-            $buyListDiscountType = $buyListDiscountType;
+        }
+        elseif (!empty($buyListData) &&  $buyListData == true && $buyListShipping == 0) {
+            if ($shipment_error == 1) {
+                return back()->with('error', 'There was an issue getting a freight quote, please try again later');
+            }
+
+            if (!empty($buyListData))  {
+                $buyListDiscount = $buyListDiscount;
+                $buyListDiscountType =$buyListDiscountType;
+            } else {
+                $buyListDiscount = null;
+                $buyListDiscountType = null;
+            }
+    
+    
+            if (!empty($upgrade_shipping) && strtolower($upgrade_shipping->option_value) == 'yes') {
+    
+                if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+                    if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $actual_shipping_price = $request->shipment_cost_single;
+                                $shipping_service_code = $request->shipping_service_code;
+                                $shipping_carrier_code = $request->shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                            } else {
+                                if (empty($request->shipping_multi_price)) {
+                                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                                } else {
+                                    $actual_shipping_price = $request->shipping_multi_price;
+                                    $shipping_service_code = $request->shipping_service_code;
+                                    $shipping_carrier_code = $request->shipping_carrier_code;
+                                    $shipstation_shipment_value = $actual_shipping_price;
+                                }
+                            }
+                        } else {
+                            $actual_shipping_price = $request->shipment_price;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                            $shipstation_shipment_value = $actual_shipping_price;
+                        }
+                    } else {
+    
+                        if (!empty($request->upgrade_shipping) && $request->upgrade_shipping == 1) {
+                            if (empty($request->upgrade_shipping_multi_price)) {
+                                return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                            } else {
+                                $actual_shipping_price = $request->upgrade_shipping_multi_price;
+                                $shipping_service_code = $request->upgrade_shipping_service_code;
+                                $shipping_carrier_code = $request->upgrade_shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                                $upgrade_shipping = 1;
+                            }
+                        }
+    
+                        else {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
+                                $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
+                            } else {
+                                $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
+                                $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
+                            }
+        
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                            $shipstation_shipment_value = $actual_shipping_price;
+                        }
+                    }
+                } else{
+                    $actual_shipping_price = $request->shipment_price;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
+                    $shipstation_shipment_value = $actual_shipping_price;
+                }
+            } 
+            else {
+                if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+                    if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $actual_shipping_price = $request->shipment_cost_single;
+                                $shipping_service_code = $request->shipping_service_code;
+                                $shipping_carrier_code = $request->shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                            } else {
+                                if (empty($request->shipping_multi_price)) {
+                                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                                } else {
+                                    $actual_shipping_price = $request->shipping_multi_price;
+                                    $shipping_service_code = $request->shipping_service_code;
+                                    $shipping_carrier_code = $request->shipping_carrier_code;
+                                    $shipstation_shipment_value = $actual_shipping_price;
+                                }
+                            }
+                        } else {
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                            $shipstation_shipment_value = $actual_shipping_price;
+                        }
+                    } else {
+    
+                        if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                            $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
+                            $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
+                        } else {
+                            $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
+                            $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
+                        }
+    
+                        $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                        $shipstation_shipment_value = $actual_shipping_price;
+                    }
+                } else{
+                    $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
+                    $shipstation_shipment_value = $actual_shipping_price;
+                }
+            }
         } 
         else {
             if ($shipment_error == 1) {
