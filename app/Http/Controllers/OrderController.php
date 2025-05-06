@@ -1144,6 +1144,8 @@ class OrderController extends Controller
             Session::forget('cart_hash');
         }
 
+        Session::forget('buy_list_id');
+
         return true;
     }
 

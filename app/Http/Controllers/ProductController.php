@@ -1963,12 +1963,13 @@ class ProductController extends Controller
         // $company = session()->get('company');
         $contact_id = session()->get('contact_id');
         $is_child = false;
+        
         $buy_list_id = session()->get('buy_list_id');
         $buyList = BuyList::with('shipping_and_discount')->where('id', $buy_list_id)->first();
-        $shipping_cost = $buyList->shipping_and_discount->shipping_cost ?? 0;
-        $discount = $buyList->shipping_and_discount->discount ?? 0;
-        $discount_type = $buyList->shipping_and_discount->discount_type ?? null;
-        $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
+        $shipping_cost = !empty($buyList) && !empty($buyList->shipping_and_discount) ?  $buyList->shipping_and_discount->shipping_cost : 0;
+        $discount = !empty($buyList) && !empty($buyList->shipping_and_discount) ? $buyList->shipping_and_discount->discount : 0;
+        $discount_type = !empty($buyList) && !empty($buyList->shipping_and_discount) ? $buyList->shipping_and_discount->discount_type : null;
+        $buy_list_discount_calculated = !empty($buyList) && !empty($buyList->shipping_and_discount) ? $buyList->shipping_and_discount->discount_calculated : 0;
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
