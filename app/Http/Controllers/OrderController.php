@@ -673,6 +673,11 @@ class OrderController extends Controller
                     return redirect($checkoutUrl);
                 }
                 elseif ($go_to_stripe_checkout) {
+
+                    if (floatval($order_total)  < floatval(0.50)) {
+                        return back()->with('error', 'Order total must be greater or equal to than $0.50 to proceed with payment.');
+                    }
+
                     $order = new ApiOrder;
                     
                     if ($is_primary == null) {
