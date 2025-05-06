@@ -866,8 +866,16 @@ class CheckoutController extends Controller
                     }
                 } 
                 else {
-                    $buyListData = false;
-                    $shipment_price = 0;
+
+                    if ($buyListData == true) {
+                        $buyListData = true;
+                        $shipment_price = 0;
+                        $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
+                    } else {
+                        $buyListData = false;
+                        $shipment_price = 0;
+                        $buy_list_discount_calculated = 0;
+                    }
                 }
             }
             else {

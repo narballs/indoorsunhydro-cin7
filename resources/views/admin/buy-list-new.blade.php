@@ -19,7 +19,7 @@
                 @if ($list)
                     <div class="form-group col-md-12">
                         <label for="list_name">Title</label>
-                        <input type="text" class="form-control" value={{ $list->title }} id="title"
+                        <input type="text" class="form-control" value="{{ $list->title }}" id="title"
                             aria-describedby="titleHelp" name="title" placeholder="Buy List Title">
                         <div class="text-danger" id="title_errors"></div>
                     </div>
@@ -602,19 +602,65 @@
         // }
 
 
-        function createList() {
-            // Prevent duplicate list creation
-            if ($("#list_id").val() !== '') {
-                return; // Exit if list already exists
-            }
+        // function createList() {
+        //     // Prevent duplicate list creation
+        //     if ($("#list_id").val() !== '') {
+        //         return; // Exit if list already exists
+        //     }
 
+        //     var title = $('#title').val();
+        //     var description = $('#description').val();
+        //     var status = $('#status').val();
+
+        //     jQuery.ajax({
+        //         url: "{{ route('buy-list.store') }}",
+        //         method: 'post',
+        //         data: {
+        //             "_token": "{{ csrf_token() }}",
+        //             title: title,
+        //             description: description,
+        //             status: status
+        //         },
+        //         success: function(response) {
+        //             // Replace title instead of appending
+        //             $("#list_title").html("<h4>" + title + "</h4>");
+
+        //             $("#list_id").val(response.list_id);
+        //             $("#title_errors").html('');
+        //             $("#status_errors").html('');
+        //             $("#description_errors").html('');
+
+        //             console.log(response);
+        //             $("#success_msg").html(response.success).removeClass('d-none');
+        //             $(".btn-add-to-cart").prop('disabled', false);
+        //             $("#list").removeClass('d-none');
+        //         },
+        //         error: function(response) {
+        //             const errors = response.responseJSON.errors;
+
+        //             $("#title_errors").html(errors.title ? errors.title : '');
+        //             $("#status_errors").html(errors.status ? errors.status : '');
+        //             $("#description_errors").html(errors.description ? errors.description : '');
+        //         }
+        //     });
+        // }
+
+
+        function createList() {
+            var listId = $("#list_id").val();
             var title = $('#title').val();
             var description = $('#description').val();
             var status = $('#status').val();
 
-            jQuery.ajax({
-                url: "{{ route('buy-list.store') }}",
-                method: 'post',
+            var url = listId === ''
+                ? "{{ route('buy-list.store') }}" // create
+                : "{{ url('/admin/buy-list/update') }}/" + listId; // update
+
+            var method = 'POST';
+
+            $.ajax({
+                url: url,
+                method: method,
                 data: {
                     "_token": "{{ csrf_token() }}",
                     title: title,
@@ -622,10 +668,8 @@
                     status: status
                 },
                 success: function(response) {
-                    // Replace title instead of appending
                     $("#list_title").html("<h4>" + title + "</h4>");
-
-                    $("#list_id").val(response.list_id);
+                    $("#list_id").val(response.list_id || listId); // retain list_id if already present
                     $("#title_errors").html('');
                     $("#status_errors").html('');
                     $("#description_errors").html('');
@@ -636,14 +680,15 @@
                     $("#list").removeClass('d-none');
                 },
                 error: function(response) {
-                    const errors = response.responseJSON.errors;
+                    const errors = response.responseJSON.errors || {};
 
-                    $("#title_errors").html(errors.title ? errors.title : '');
-                    $("#status_errors").html(errors.status ? errors.status : '');
-                    $("#description_errors").html(errors.description ? errors.description : '');
+                    $("#title_errors").html(errors.title ?? '');
+                    $("#status_errors").html(errors.status ?? '');
+                    $("#description_errors").html(errors.description ?? '');
                 }
             });
         }
+
 
 
         

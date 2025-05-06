@@ -258,6 +258,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('admin/products', AdminProductController::class);
     Route::resource('admin/buy-list', AdminBuyListController::class);
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
+    Route::post('/admin/buy-list/update/{id}', [AdminBuyListController::class, 'update_buy_list']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
     Route::post('admin/share-list', [AdminShareListController::class, 'shareList']);
     Route::get('admin/admin-users', [UserController::class, 'adminUsers']);
