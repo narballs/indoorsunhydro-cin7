@@ -594,12 +594,12 @@
                                                     <strong class=" d-flex justify-content-end cart-page-items" id="discountValue">
                                                         ${{ number_format($discounted_value, 2) }}
                                                     </strong>
-                                                    <input type="hidden" id="buy_list_discount_cost" value="{{ !empty($discounted_value) ? floatval($discounted_value) : 0 }}">
                                                 </span>
                                             </div>
                                         </td>
                                     </tr>
                                 @endif
+                                <input type="hidden" id="buy_list_discount_cost" value="{{ !empty($discounted_value) ? floatval($discounted_value) : 0 }}">
                                 <tr>
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
