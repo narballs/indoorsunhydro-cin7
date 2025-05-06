@@ -79,6 +79,7 @@ class AutoCreateLabel extends Command
                 ->whereNotNull('shipstation_orderId')
                 ->where('payment_status', 'paid')
                 ->where('isApproved', 1)
+                ->whereNull('buylist_id')
                 ->where('created_at', '>=', '2025-01-09 12:23:51')
                 ->where('shipping_carrier_code', 'ups_walleted')
                 ->get();
