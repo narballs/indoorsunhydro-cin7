@@ -565,12 +565,12 @@
                                                     <strong class=" d-flex justify-content-end cart-page-items ">
                                                         ${{ number_format($shipping_cost, 2) }}
                                                     </strong>
-                                                    <input type="hidden" id="buy_list_shipping_cost" value="{{ !empty($shipping_cost) ? floatval($shipping_cost) : 0 }}">
                                                 </span>
                                             </div>
                                         </td>
                                     </tr>
-                                @endif
+                                    @endif
+                                    <input type="hidden" id="buy_list_shipping_cost" value="{{ !empty($shipping_cost) ? floatval($shipping_cost) : 0 }}">
 
                                 {{-- buylist discount  --}}
                                 @if (!empty($discount))
