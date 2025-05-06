@@ -20,8 +20,13 @@ class Filter2 extends Component
         return view(
             'livewire.front_end_filter', [
             'products' =>  Product::with('options')->where(function($sub_query){
-                $sub_query->where('name', 'like', '%' . $this->searchTerm . '%');
-            })->paginate(5),
+                $sub_query->where('name', 'like', '%' . $this->searchTerm . '%')->orWhere('code', 'like', '%'.$this->searchTerm.'%');
+            })
+            ->whereHas('options', function($query) {
+                $query->where('status', '!=', 'Disabled');
+            })
+            ->where('status', '!=', 'Inactive')
+            ->paginate(5),
             'role' => $role
         ]);
     }

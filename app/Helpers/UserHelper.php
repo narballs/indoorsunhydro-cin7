@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Facades\Log;
 
 class UserHelper
 {
@@ -277,6 +278,25 @@ class UserHelper
         return lcfirst($price_column);
     }
 
+
+
+    public static function getUserPriceColumnForBuyList() {
+        $price_column = null;
+        $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
+        if (!empty($default_price_column)) {
+            $price_column = $default_price_column->option_value;
+        }
+        elseif (empty($price_column)) {
+            $price_column = 'sacramentoUSD';
+        } else {
+            $price_column = 'retailUSD';
+        }
+
+
+        return $price_column;
+        
+    }
+
     public static function  get_stock_per_product_option($id, $option_id) {
         $stock = 0;
         $product_option = ProductOption::where('option_id', $option_id)->first();
@@ -357,6 +377,35 @@ class UserHelper
         $products_widths = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
+        // foreach ($order_items as $order_item) {
+        //     $items[] = [
+        //         'name' => $order_item->product->name,
+        //         'sku' => $order_item->product->code,
+        //         'quantity' => $order_item->quantity,
+        //         'unitPrice' => $order_item->price,
+        //     ];
+        //     $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+        //     foreach ($product_options as $product_option) {
+        //         $products_weight += $product_option->optionWeight * $order_item['quantity'];
+        //         if (!empty($product_option->products)) {
+
+        //             array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+        //             array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+
+
+        //             $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+        //             $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
+        //             $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+        //         }
+        //     }
+        // }
+
+        // $product_length = max($products_lengths);
+        // $product_width = max($products_widths);
+
+        $products_heights = [];
+        $pot_category_flag = false;
+        $pots_category = 'pots & containers';
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -366,22 +415,38 @@ class UserHelper
             ];
             $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
-                $products_weight += $product_option->optionWeight * $order_item['quantity'];
-                if (!empty($product_option->products)) {
-
-                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-
-
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-                    $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+                if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
+                    $pot_category_flag = true;
+                    $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $order_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
+                } 
+                else {
+                    $pot_category_flag = false;
+                    $products_weight += $product_option->optionWeight * $order_item['quantity'];
+                    if (!empty($product_option->products)) {
+                        
+                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+                        
+                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $order_item['quantity'] : 0;
+                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $order_item['quantity'] : 0;
+                        
+                    }
                 }
             }
         }
 
-        $product_length = max($products_lengths);
-        $product_width = max($products_widths);
+        if ($pot_category_flag == true) {
+            $product_height = $get_pot_category_dimensions['product_height'];
+            $product_width = $get_pot_category_dimensions['products_widths'];
+            $product_length = $get_pot_category_dimensions['products_lengths'];
+            $products_weight = $get_pot_category_dimensions['products_weight'];
+        } else {
+            $product_length = max($products_lengths);
+            $product_width = max($products_widths);
+            $product_height = $product_height;
+            $products_weight = $products_weight;
+        }
 
         $girth = 2 * ($product_width + $product_height); 
         if ($girth > 165  && $products_weight < 100) {
@@ -542,22 +607,73 @@ class UserHelper
             'items'=> $items
         ];
 
-        $headers = [
-            "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-        ];
-        $responseBody = null;
-        $response = $client->post($shipstation_order_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
+        // $headers = [
+        //     "Content-Type: application/json",
+        //     'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        // ];
+        // $responseBody = null;
+        // $response = $client->post($shipstation_order_url, [
+        //     'headers' => $headers,
+        //     'json' => $data,
+        // ]);
+        // $statusCode = $response->getStatusCode();
+        // $responseBody = $response->getBody()->getContents();
         
-        return [
-            'statusCode' => $statusCode,
-            'responseBody' => json_decode($responseBody)
-        ];
+        // return [
+        //     'statusCode' => $statusCode,
+        //     'responseBody' => json_decode($responseBody)
+        // ];
+
+        try {
+            $headers = [
+                "Content-Type: application/json",
+                'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+            ];
+        
+            $responseBody = null;
+            $response = $client->post($shipstation_order_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+        
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        
+            return [
+                'statusCode' => $statusCode,
+                'responseBody' => json_decode($responseBody)
+            ];
+        
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $errorBody = $e->hasResponse()
+                ? $e->getResponse()->getBody()->getContents()
+                : $e->getMessage();
+
+                Log::error('GuzzleHttp RequestException: ' . $errorBody, [
+                    'request' => $data,
+                    'response' => $errorBody,
+                ]);
+        
+            return [
+                'statusCode' => $e->getCode(),
+                'error' => $errorBody
+            ];
+
+            
+
+        } catch (\Exception $e) {
+
+            Log::error('General Exception: ' . $e->getMessage(), [
+                'request' => $data,
+                'response' => $e->getMessage(),
+            ]);
+
+            return [
+                'statusCode' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+        
         
     }
 
@@ -576,6 +692,34 @@ class UserHelper
         $products_widths = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
+        // foreach ($order_items as $order_item) {
+        //     $items[] = [
+        //         'name' => $order_item->product->name,
+        //         'sku' => $order_item->product->code,
+        //         'quantity' => $order_item->quantity,
+        //         'unitPrice' => $order_item->price,
+        //     ];
+        //     $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
+        //     foreach ($product_options as $product_option) {
+        //         $products_weight += $product_option->optionWeight * $order_item['quantity'];
+        //         if (!empty($product_option->products)) {
+
+        //             array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+        //             array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+
+
+        //             $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+        //             $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
+        //             $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+        //         }
+        //     }
+        // }
+
+        // $product_length = max($products_lengths);
+        // $product_width = max($products_widths);
+        $products_heights = [];
+        $pot_category_flag = false;
+        $pots_category = 'pots & containers';
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -585,22 +729,38 @@ class UserHelper
             ];
             $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
-                $products_weight += $product_option->optionWeight * $order_item['quantity'];
-                if (!empty($product_option->products)) {
-
-                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-
-
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-                    $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+                if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
+                    $pot_category_flag = true;
+                    $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $order_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
+                } 
+                else {
+                    $pot_category_flag = false;
+                    $products_weight += $product_option->optionWeight * $order_item['quantity'];
+                    if (!empty($product_option->products)) {
+                        
+                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+                        
+                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $order_item['quantity'] : 0;
+                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $order_item['quantity'] : 0;
+                        
+                    }
                 }
             }
         }
 
-        $product_length = max($products_lengths);
-        $product_width = max($products_widths);
+        if ($pot_category_flag == true) {
+            $product_height = $get_pot_category_dimensions['product_height'];
+            $product_width = $get_pot_category_dimensions['products_widths'];
+            $product_length = $get_pot_category_dimensions['products_lengths'];
+            $products_weight = $get_pot_category_dimensions['products_weight'];
+        } else {
+            $product_length = max($products_lengths);
+            $product_width = max($products_widths);
+            $product_height = $product_height;
+            $products_weight = $products_weight;
+        }
 
         $girth = 2 * ($product_width + $product_height); 
         if ($girth > 165  && $products_weight < 100) {
@@ -748,22 +908,73 @@ class UserHelper
             'items'=> $items
         ];
 
-        $headers = [
-            "Content-Type: application/json",
-            'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-        ];
-        $responseBody = null;
-        $response = $client->post($shipstation_order_url, [
-            'headers' => $headers,
-            'json' => $data,
-        ]);
-        $statusCode = $response->getStatusCode();
-        $responseBody = $response->getBody()->getContents();
+        // $headers = [
+        //     "Content-Type: application/json",
+        //     'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+        // ];
+        // $responseBody = null;
+        // $response = $client->post($shipstation_order_url, [
+        //     'headers' => $headers,
+        //     'json' => $data,
+        // ]);
+        // $statusCode = $response->getStatusCode();
+        // $responseBody = $response->getBody()->getContents();
         
-        return [
-            'statusCode' => $statusCode,
-            'responseBody' => json_decode($responseBody)
-        ];
+        // return [
+        //     'statusCode' => $statusCode,
+        //     'responseBody' => json_decode($responseBody)
+        // ];
+
+        try {
+            $headers = [
+                "Content-Type: application/json",
+                'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
+            ];
+        
+            $responseBody = null;
+            $response = $client->post($shipstation_order_url, [
+                'headers' => $headers,
+                'json' => $data,
+            ]);
+        
+            $statusCode = $response->getStatusCode();
+            $responseBody = $response->getBody()->getContents();
+        
+            return [
+                'statusCode' => $statusCode,
+                'responseBody' => json_decode($responseBody)
+            ];
+        
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $errorBody = $e->hasResponse()
+                ? $e->getResponse()->getBody()->getContents()
+                : $e->getMessage();
+        
+            
+
+            Log::error('GuzzleHttp RequestException: ' . $errorBody, [
+                'request' => $e->getRequest()->getBody(),
+                'response' => $e->hasResponse() ? $e->getResponse()->getBody() : null,
+            ]);
+
+            return [
+                'statusCode' => $e->getCode(),
+                'error' => $errorBody
+            ];
+
+        } catch (\Exception $e) {
+            
+            Log::error('General Exception: ' . $e->getMessage(), [
+                'request' => $data,
+                'response' => $e->getMessage(),
+            ]);
+
+            return [
+                'statusCode' => 500,
+                'error' => $e->getMessage()
+            ];
+
+        }
         
     }
     public static function wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status , $carrier_code , $service_code) {
@@ -778,8 +989,11 @@ class UserHelper
         $product_length = 0;
         $products_lengths = [];
         $products_widths = [];
+        $products_heights = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
+        $pot_category_flag = false;
+        $pots_category = 'pots & containers';
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -789,22 +1003,38 @@ class UserHelper
             ];
             $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
-                $products_weight += $product_option->optionWeight * $order_item['quantity'];
-                if (!empty($product_option->products)) {
-
-                    array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                    array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-
-
-                    $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-                    $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
-                    $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
+                if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
+                    $pot_category_flag = true;
+                    $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $order_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
+                } 
+                else {
+                    $pot_category_flag = false;
+                    $products_weight += $product_option->optionWeight * $order_item['quantity'];
+                    if (!empty($product_option->products)) {
+                        
+                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
+                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
+                        
+                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $order_item['quantity'] : 0;
+                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
+                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $order_item['quantity'] : 0;
+                        
+                    }
                 }
             }
         }
 
-        $product_length = max($products_lengths);
-        $product_width = max($products_widths);
+        if ($pot_category_flag == true) {
+            $product_height = $get_pot_category_dimensions['product_height'];
+            $product_width = $get_pot_category_dimensions['products_widths'];
+            $product_length = $get_pot_category_dimensions['products_lengths'];
+            $products_weight = $get_pot_category_dimensions['products_weight'];
+        } else {
+            $product_length = max($products_lengths);
+            $product_width = max($products_widths);
+            $product_height = $product_height;
+            $products_weight = $products_weight;
+        }
 
 
         if (!empty($products_weight) && ($products_weight  > 70)) {
@@ -813,9 +1043,6 @@ class UserHelper
                 'responseBody' => 'Weight error: Weight value exceeds allowed limits.'
             ];
         }
-
-
-        
 
 
         $client = new \GuzzleHttp\Client();
@@ -1543,6 +1770,55 @@ class UserHelper
     
         return trim($cleanedDescription); // Trim any leading or trailing spaces
     }
+
+
+    public static function calculateNestedItemDimensions(
+        $product_option,
+        $product,
+        $quantity,
+        $products_lengths,
+        $products_widths,
+        $products_heights,
+        $product_height,
+        $product_width,
+        $product_length,
+        $weight
+    ) {
+        $additional_height = 0;
+        $total_height = 0;
+        $total_weight = 0;
+    
+        // Use base unit weight per item (optionWeight) for calculation
+        $unit_weight = $product_option->optionWeight;
+    
+        if ($quantity > 1) {
+            $additional_height = floor(($quantity - 1) / 100) * 0.2;
+        }
+    
+        array_push($products_lengths, !empty($product->length) ? $product->length : 0);
+        array_push($products_widths, !empty($product->width) ? $product->width : 0);
+        array_push($products_heights, !empty($product->height) ? $product->height : 0);
+    
+        $product_height += !empty($product->height) ? $product->height * $quantity : 0;
+        $product_width += !empty($product->width) ? $product->width * $quantity : 0;
+        $product_length += !empty($product->length) ? $product->length * $quantity : 0;
+    
+        $max_height = max($products_heights);
+        $total_height = $max_height + $additional_height;
+    
+        // Weight calculation per 100 items group
+        $group_weight = floor($quantity / 100) * ($unit_weight * 100);
+        $remaining_weight = ($quantity % 100) * $unit_weight;
+        $total_weight = $group_weight + $remaining_weight;
+    
+        return [
+            'products_lengths' => max($products_lengths),
+            'products_widths' => max($products_widths),
+            'product_height' => $total_height,
+            'products_weight' => $total_weight
+        ];
+    }
+    
 
 
     

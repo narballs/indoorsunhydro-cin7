@@ -29,6 +29,7 @@
                         <tr>
                             <th>Product</th>
                             <th>Price</th>
+                            <th>Sku</th>
                             <th>Quantity</th>
                             <th>Subtotal</th>
 
@@ -39,7 +40,7 @@
                             @foreach ($list_product->product->options as $option)
                                 @php
                                     $retail_price = 0;
-                                    $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                    $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                     foreach ($option->price as $price) {
                                         $retail_price = $price->$user_price_column;
                                         if ($retail_price == 0) {
@@ -50,11 +51,13 @@
                                         }
                                     }
                                 @endphp
+                                <input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $list_product->product_id }}" value="{{ $option->stockAvailable }}">
                                 <tr id="product_row_{{ $list_product->product_id }}">
                                     <td>
                                         <img src="{{ $option->image }}" alt="Product 1" class="img-circle img-size-32 mr-2">
                                         {{ $list_product->product->name }}
                                     </td>
+                                    <td>{{$list_product->product->code}}</td>
                                     <td>${{ number_format($$retail_price , 2) }}</td>
                                     <td class="jsutify-content-middle">
                                         <!--   <small class="text-success mr-1">
@@ -157,7 +160,7 @@
             var grand_total = $('#grand_total').html();
             grand_total = parseFloat(grand_total);
 
-            console.log('Grand Total => ' + grand_total);
+            // console.log('Grand Total => ' + grand_total);
 
 
             grand_total = grand_total - difference;

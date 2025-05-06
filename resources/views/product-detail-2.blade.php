@@ -295,8 +295,8 @@
                                     </div>
                                     @endif
                                     <div class="col-md-12">
-                                        <span class="sku-div">
-                                            <span class="product-detail-sku-head-new">SKU: </span>
+                                        <span class="sku-div d-flex justify-content-start align-items-center">
+                                            <span class="product-detail-sku-head-new mr-1">SKU: </span>
                                             <span class="product-detail-sku-new">{{$productOption->code}}
                                             </span>
                                         </span>

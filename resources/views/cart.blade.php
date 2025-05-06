@@ -61,6 +61,7 @@
         class=" fs-2 product-btn my-auto border-0 text-white text-center align-middle cart-title">
         <span class="cart-page-cart-title">CART</span>
     </p>
+    <input type="hidden" name="" id="buy_list_id" class="buy_list_id" value="{{ !empty($buy_list_id) ? $buy_list_id : '' }}">
 </div>
 {{-- @if (session('success'))
     <div class="alert alert-success">
@@ -352,10 +353,23 @@
                                                                             id="subtotal_{{ $pk_product_id}}">${{ number_format($cart['price'] * $cart['quantity'], 2) }}</span>
                                                                     </span>
                                                                     <p class="text-center remove-item-cart mb-0">
+                                                                        {{-- <input type="hidden" name="stock_per_product" id="user_id" value="{{ $stock_per_product }}">
                                                                         <input type="hidden" name="user_id" id="user_id" value="{{!empty($cart['user_id']) ? $cart['user_id'] : null}}">
                                                                         <input type="hidden" name="contact_id" id="contact_id" value="{{!empty($cart['contact_id']) ? $cart['contact_id'] : null}}"> 
                                                                         <a href="{{ url('remove/' . $pk_product_id) }}" id="remove"
-                                                                            class="remove-cart-page-button">Remove</a>
+                                                                            class="remove-cart-page-button">Remove</a> --}}
+                                                                            <!-- Hidden Form -->
+                                                                        <form id="remove-form-{{ $pk_product_id }}" action="{{ url('remove/' . $pk_product_id) }}" method="get" style="display: none;">
+                                                                            @csrf
+                                                                            <input type="hidden" name="stock_per_product" value="{{ $stock_per_product }}">
+                                                                            <input type="hidden" name="user_id" value="{{ !empty($cart['user_id']) ? $cart['user_id'] : null }}">
+                                                                            <input type="hidden" name="contact_id" value="{{ !empty($cart['contact_id']) ? $cart['contact_id'] : null }}">
+                                                                        </form>
+
+                                                                        <!-- Anchor styled as button -->
+                                                                        <a href="#" class="remove-cart-page-button" onclick="event.preventDefault(); document.getElementById('remove-form-{{ $pk_product_id }}').submit();">
+                                                                            Remove
+                                                                        </a>
                                                                     </p>
                                                                 </div>
                                                             </td>
@@ -456,11 +470,45 @@
                     @endif
                     <div class="table-responsive" style="padding-top:3px !important;">
                         <?php
-                        $tax=0;
+                            $tax=0;
+                            $discounted_value = 0;
                             if (!empty($tax_class)) {
                                 $tax = $cart_total * ($tax_class->rate / 100);
                             }
+
                             $total_including_tax = $tax + $cart_total;
+
+
+                            if (!empty($shipping_cost)) {
+                                $total_including_tax = $total_including_tax + floatval($shipping_cost);
+                            }
+
+                            // dd($total_including_tax, '1');
+
+
+                            // if (!empty($discount)) {
+                            //     if ($discount_type == 'percentage') {
+                            //         $discounted_value = ($total_including_tax * $discount) / 100;
+                            //         $total_including_tax = $total_including_tax - floatval($discounted_value);                                    
+                            //     } else {
+                            //         $discounted_value = floatval($discount);
+                            //         $total_including_tax = $total_including_tax - floatval($discounted_value);
+                            //     }
+                            // }
+
+
+                            if (!empty($buy_list_discount_calculated)) {
+                                $total_including_tax = $total_including_tax - floatval($buy_list_discount_calculated);
+                                $discounted_value = $buy_list_discount_calculated;
+                            } else {
+                                $discounted_value = 0;
+                                $total_including_tax = $total_including_tax - floatval($discounted_value);
+                            }
+
+
+                            // dd($total_including_tax , '2');
+
+
                         ?>
                         @if(!empty($tax_class->rate))
                         <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
@@ -504,6 +552,54 @@
                                         </div>
                                     </td>
                                 </tr>
+                                {{-- buy list shipping  --}}
+                                @if (!empty($shipping_cost))
+                                    <tr>
+                                        <td class="ps-0" colspan="2">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <span>
+                                                    {{-- <i class="fa fa-shipping-fast mx-1" style="font-size: 20x;"></i> --}}
+                                                    <span class="cart-total">Shipping</span>
+                                                </span>
+                                                <span id="shipping_total_value">
+                                                    <strong class=" d-flex justify-content-end cart-page-items ">
+                                                        ${{ number_format($shipping_cost, 2) }}
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    <input type="hidden" id="buy_list_shipping_cost" value="{{ !empty($shipping_cost) ? floatval($shipping_cost) : 0 }}">
+
+                                {{-- buylist discount  --}}
+                                @if (!empty($discount))
+                                    <tr>
+                                        <td class="ps-0" colspan="2">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <span>
+                                                    {{-- <i class="fa fa-percent mx-1" style="font-size: 20px;"></i> --}}
+                                                    <span> <strong class="cart-total" id="discountHead">Discount
+                                                            {{-- @if(!empty($discount_type))
+                                                                @if ($discount_type == 'percentage')
+                                                                    {{ number_format($discount, 2) }}%
+                                                                @else
+                                                                    ${{ number_format($discount, 2) }}
+                                                                @endif
+                                                            @endif --}}
+                                                        </strong>
+                                                    </span>
+                                                </span>
+                                                <span id="" class="discountValue">
+                                                    <strong class=" d-flex justify-content-end cart-page-items" id="discountValue">
+                                                        ${{ number_format($discounted_value, 2) }}
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
+                                <input type="hidden" id="buy_list_discount_cost" value="{{ !empty($discounted_value) ? floatval($discounted_value) : 0 }}">
                                 <tr>
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
@@ -527,12 +623,6 @@
                                         @if(!empty($tax_class->name))
                                             <div class="mx-2"><span><strong class="cart-total mx-3 px-3" >{{'Tax Class:' . $tax_class->name}}</strong></span></div>
                                         @endif
-                                        {{-- <div>
-                                            <span class="tax-calculater">
-                                                (Tax is calculated when order is invoiced, could be 0% based
-                                                on your account setup)
-                                            </span>
-                                        </div> --}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -1219,10 +1309,12 @@
                 var tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
-                $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
                 var grand_total_include_tax = 0;
-                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+                $('.grandTotal').children().html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
                 if (response.free_postal_state == true) {
                     if (grand_total <= initial_free_shipping_value) {
                         $('.promotional_banner_div_congrats').addClass('d-none');
@@ -1239,16 +1331,38 @@
                 } 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
             }
         });
     }
 
     /* *****   DECREASE QTY   ****  */
     function decrease_qty(pk_product_id ,get_wholesale_terms) {
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+        var contact_us_url = "{{ url('contact-us') }}";
+
+        if (buy_list_id != null) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact admin at <a href="' + contact_us_url + '" target="_blank">Contact Us</a>',
+                // timer: 3000,
+                position: 'top',
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            });
+
+            return false;
+        }
+
         var pass_original_items_quantity = $('#pass_original_items_quantity').val();
         var product_id = pk_product_id;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
@@ -1323,13 +1437,17 @@
                 $('.ipad_cart_subtotal').html('$' + grand_total.toFixed(2));
 
                 var tax = 0;
+                var grand_total_include_tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
 
-                var grand_total_include_tax = 0;
-                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
+                $('.grandTotal').children().html('$' + (tax + grand_total + buy_list_shipping - buy_list_discount).toFixed(2));
+
+
                 if (response.free_postal_state == true) {
                     if (grand_total <= initial_free_shipping_value) {
                         $('.promotional_banner_div_congrats').addClass('d-none');
@@ -1346,10 +1464,10 @@
                 } 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (grand_total_include_tax).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (grand_total_include_tax).toFixed(2));
             }
         });
     }
@@ -1360,6 +1478,30 @@
         var product_id = pk_product_id;
         var qty_input = 0;
         var old_qty = parseInt($('#row_quantity_' + pk_product_id).attr('data-old'));
+        var new_qty_input = $('#row_quantity_' + pk_product_id).val() != '' ? parseInt($('#row_quantity_' + pk_product_id).val()) : '';
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+        var contact_us_url = "{{ url('contact-us') }}";
+
+        if ((new_qty_input != '' || new_qty_input < old_qty) && (buy_list_id != '' && buy_list_id != null)) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact admin at <a href="' + contact_us_url + '" target="_blank">Contact Us</a>',
+                // timer: 3000,
+                position: 'top',
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            });
+
+            $('#row_quantity_' + product_id).val(old_qty);
+            return false;
+        }
+
         if (($('#row_quantity_' + pk_product_id).val() != '') && $('#row_quantity_' + pk_product_id).val()) {
             qty_input = parseInt($('#row_quantity_' + pk_product_id).val());
         } else {
@@ -1436,11 +1578,13 @@
                 var tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
-                $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
-
                 var grand_total_include_tax = 0;
-                grand_total_include_tax = (tax + grand_total).toFixed(2);
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
+                $('.tax_cart').children().html('$' + tax.toFixed(2));
+                $('.grandTotal').children().html('$' + (grand_total_include_tax).toFixed(2));
+
                 if (response.free_postal_state == true) {
                     if (grand_total <= initial_free_shipping_value) {
                         $('.promotional_banner_div_congrats').addClass('d-none');
@@ -1458,10 +1602,10 @@
 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (grand_total_include_tax).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (grand_total_include_tax).toFixed(2));
             }
         });
     }
@@ -1474,6 +1618,32 @@
         var old_qty = parseInt($('#itm_qty' + pk_product_id).attr('data-old'));
         var stock_available = parseInt($('#itm_qty' + pk_product_id).attr('max'));
         var qty_input = parseInt($('#itm_qty' + product_id).val());
+        var new_qty_input = $('#itm_qty' + pk_product_id).val() != '' ? parseInt($('#itm_qty' + pk_product_id).val()) : '';
+        var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+        var contact_us_url = "{{ url('contact-us') }}";
+
+        if ((new_qty_input != '' || new_qty_input < old_qty) && (buy_list_id != '' && buy_list_id != null)) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: 'You cannot decrease the quantity of a product in the buy list. Please contact admin at <a href="' + contact_us_url + '" target="_blank">Contact Us</a>',
+                // timer: 3000,
+                position: 'top',
+                showConfirmButton: true,  // Show the confirm (OK) button
+                confirmButtonText: 'Okay',
+                timerProgressBar: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',  // Class for the confirm button
+                    actions: 'my-actions-class'  // Class for the actions container
+                }
+            });
+
+
+            $('#itm_qty' + product_id).val(old_qty);
+
+            return false;
+        }
+
         if (($('#itm_qty' + product_id).val() != '') && $('#itm_qty' + product_id).val()) {
             qty_input = parseInt($('#itm_qty' + product_id).val());
         } else {
@@ -1548,17 +1718,23 @@
 
 
                 var tax = 0;
+                var grand_total_include_tax = 0;
                 var tax_rate = parseFloat($('#tax_rate_number').val());
                 var tax = grand_total.toFixed(2) * (tax_rate / 100);
+                var buy_list_shipping = $('#buy_list_shipping_cost').val() != '' ?  parseFloat($('#buy_list_shipping_cost').val()) : 0;
+                var buy_list_discount = $('#buy_list_discount_cost').val() != '' ?  parseFloat($('#buy_list_discount_cost').val()) : 0;
+
+                grand_total_include_tax = tax + grand_total + buy_list_shipping - buy_list_discount;
+
                 $('.tax_cart').children().html('$' + tax.toFixed(2));
-                $('.grandTotal').children().html('$' + (tax + grand_total).toFixed(2));
+                $('.grandTotal').children().html('$' + (grand_total_include_tax).toFixed(2));
 
 
                 $('#mbl_tax_price').html('$' + tax.toFixed(2));
-                $('#mbl_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#mbl_total_p').html('$' + (grand_total_include_tax).toFixed(2));
 
                 $('#ipad_tax_price').html('$' + tax.toFixed(2));
-                $('#ipad_total_p').html('$' + (tax + grand_total).toFixed(2));
+                $('#ipad_total_p').html('$' + (grand_total_include_tax).toFixed(2));
             }
         });
     }
@@ -1830,6 +2006,37 @@
 
 
     function confirmEmptyCart(event) {
+
+        // var buy_list_id = $('#buy_list_id').val() != '' ? $('#buy_list_id').val() : null;
+
+        // if (buy_list_id == null) {
+           
+        //     event.preventDefault(); // Prevent the default navigation
+
+        //     Swal.fire({
+        //         title: "Are you sure?",
+        //         html: '<p class="swal-custom-text">This will remove all items from your cart!</p>',
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonText: "Yes, Empty Cart",
+        //         cancelButtonText: "Cancel",
+        //         allowOutsideClick: false,
+        //         allowEscapeKey: false,
+        //         customClass: {
+        //             title: 'swal-title-black',
+        //             popup: 'swal-popup-custom',
+        //             confirmButton: 'swal-confirm-button',
+        //             cancelButton: 'swal-cancel-button',
+        //             text: 'swal-text-black'
+        //         }
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             window.location.href = event.target.href; // Redirect to empty cart route
+        //         }
+        //     });
+        // } else {
+        //     window.location.href = event.target.href
+        // }
         event.preventDefault(); // Prevent the default navigation
 
         Swal.fire({

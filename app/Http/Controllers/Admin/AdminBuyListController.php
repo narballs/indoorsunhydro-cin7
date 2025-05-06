@@ -22,18 +22,39 @@ class AdminBuyListController extends Controller
 
     public function index(Request $request)
     {
-        $buylists = BuyList::paginate(10);
-        return view('admin/buy-lists', compact('buylists'));
+        $search = $request->input('search');
+
+        if ($search) {
+            $buylists = BuyList::where('title', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        } else {
+            $buylists = BuyList::orderBy('created_at', 'desc')->paginate(10);
+        }
+        
+        // $buylists = BuyList::paginate(10);
+        return view('admin/buy-lists', compact('buylists' , 'search'));
     }
 
     public function create(Request $request)
     {
         if ($request->id) {
-            $list = BuyList::where('id', $request->id)->with('list_products.product.options')->first();
-            $products = Product::where('status' , '!=' , 'Inactive')->paginate(10);
+            $list = BuyList::where('id', $request->id)->with('shipping_and_discount','list_products.product.options')->first();
+            $products = Product::with('options')
+            ->where('status' , '!=' , 'Inactive')
+            ->whereHas('options', function ($query){
+                $query->where('status', '!=', 'Disabled');
+            })
+            ->paginate(10);
             return view('admin/buy-list-new', compact('products', 'list'));
         } else {
-            $products = Product::where('status' , '!=' , 'Inactive')->paginate(10);
+            $products = Product::with('options')
+            ->where('status' , '!=' , 'Inactive')
+            ->whereHas('options', function ($query){
+                $query->where('status', '!=', 'Disabled');
+            })
+            ->paginate(10);
             $list = '';
             return view('admin/buy-list-new', compact('products', 'list'));
         }
@@ -50,14 +71,14 @@ class AdminBuyListController extends Controller
             'user_id' =>  $user_id
         ]);
         return response()->json([
-            'success' => 'List Created Successfully. Please add prodcuts to list.',
+            'success' => 'List Created Successfully. Please add products to list.',
             'list_id' => $list->id
         ]);
     }
 
     public function show($id)
     {
-        $list = BuyList::where('id', $id)->with('list_products.product.options')->first();
+        $list = BuyList::where('id', $id)->with('shipping_and_discount','list_products.product.options')->first();
         //dd($list);
         return view('admin/buy_list/list-detail', compact(
             'list'
@@ -100,46 +121,60 @@ class AdminBuyListController extends Controller
             $product_buy_list = ProductBuyList::where('list_id', $list_id)->delete();
             foreach ($list_items as $list_item) {
                 $product_buy_list = new ProductBuyList();
+                $raw = $list_item['subtotal'];
+                $clean = str_replace(',', '', $raw);     // Remove all commas
+                $subTotal = floatval($clean);
                 $product_buy_list->list_id = $list_id;
                 $product_buy_list->product_id = $list_item['product_id'];
                 $product_buy_list->option_id = $list_item['option_id'];
                 $product_buy_list->quantity = $list_item['quantity'];
-                $product_buy_list->sub_total = $list_item['subtotal'];
+                $product_buy_list->sub_total = $subTotal;
                 $product_buy_list->grand_total = $list_item['grand_total'];
                 $product_buy_list->save();
             }
 
-            if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
-                $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
+            $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
+            // if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
                 $BuyListShippingAndDiscount = new BuyListShippingAndDiscount();
                 $BuyListShippingAndDiscount->buylist_id = $list_id;
                 $BuyListShippingAndDiscount->shipping_cost = $request->shipping_price;
                 $BuyListShippingAndDiscount->discount = $request->discount_value;
                 $BuyListShippingAndDiscount->discount_type = $request->discount_type;
+                $BuyListShippingAndDiscount->discount_calculated = $request->discount_calculated;
+                $BuyListShippingAndDiscount->expiry_date = $request->expiry_date;
+                $BuyListShippingAndDiscount->discount_count = $request->discount_count;
+                $BuyListShippingAndDiscount->discount_limit = $request->discount_limit;
                 $BuyListShippingAndDiscount->save();
-            }
+            // }
 
         } else {
             foreach ($list_items as $list_item) {
                 $product_buy_list = new ProductBuyList();
+                $raw = $list_item['subtotal'];
+                $clean = str_replace(',', '', $raw);     // Remove all commas
+                $subTotal = floatval($clean);
                 $product_buy_list->list_id = $list_id;
                 $product_buy_list->product_id = $list_item['product_id'];
                 $product_buy_list->option_id = $list_item['option_id'];
                 $product_buy_list->quantity = $list_item['quantity'];
-                $product_buy_list->sub_total = $list_item['subtotal'];
+                $product_buy_list->sub_total = $subTotal;
                 $product_buy_list->grand_total = $list_item['grand_total'];
                 $product_buy_list->save();
             }
 
-            if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
+            // if ((!empty($request->shipping_price) && $request->shipping_price > 0) || (!empty($request->discount_value) && $request->discount_value > 0)) {
                 $BuyListShippingAndDiscountDelete = BuyListShippingAndDiscount::where('buylist_id', $list_id)->delete();
                 $BuyListShippingAndDiscount = new BuyListShippingAndDiscount();
                 $BuyListShippingAndDiscount->buylist_id = $list_id;
                 $BuyListShippingAndDiscount->shipping_cost = $request->shipping_price;
                 $BuyListShippingAndDiscount->discount = $request->discount_value;
                 $BuyListShippingAndDiscount->discount_type = $request->discount_type;
+                $BuyListShippingAndDiscount->discount_calculated = $request->discount_calculated;
+                $BuyListShippingAndDiscount->expiry_date = $request->expiry_date;
+                $BuyListShippingAndDiscount->discount_count = $request->discount_count;
+                $BuyListShippingAndDiscount->discount_limit = $request->discount_limit;
                 $BuyListShippingAndDiscount->save();
-            }
+            // }
 
 
         }

@@ -17,14 +17,14 @@
             <div class="alert alert-success d-none" role="alert" id="success_msg"></div>
             <div class="row mt-5">
                 @if ($list)
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="list_name">Title</label>
                         <input type="text" class="form-control" value={{ $list->title }} id="title"
                             aria-describedby="titleHelp" name="title" placeholder="Buy List Title">
                         <div class="text-danger" id="title_errors"></div>
                     </div>
                 @else
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="list_name">Title</label>
                         <input type="text" class="form-control" id="title" aria-describedby="titleHelp"
                             name="title" placeholder="Buy List Title">
@@ -32,15 +32,16 @@
                     </div>
                 @endif
                 @if (!empty($list->status))
-                    <div class="form-group col-md-6 mb-0">
+                    {{-- <div class="form-group col-md-6 mb-0">
                         <label for="type" name="type">Status</label>
                         <select class="form-control" name="type" id="status">
                             <option value="{{ $list->status }}">{{ $list->status }}</option>
-                        </select>
-                        <div id="status_errors" class="text-danger"></div>
-                    </div>
+                        </select> --}}
+                        <input type="hidden" name="type" id="status" value="{{ $list->status }}">
+                        {{-- <div id="status_errors" class="text-danger"></div> --}}
+                    {{-- </div> --}}
                 @else
-                    <div class="form-group col-md-6 mb-0">
+                    {{-- <div class="form-group col-md-6 mb-0">
                         <label for="type" name="type">Status</label>
 
                         <select class="form-control" name="type" id="status">
@@ -49,7 +50,8 @@
                             <option value="Shareable">Shareable</option>
                         </select>
                         <div id="status_errors" class="text-danger"></div>
-                    </div>
+                    </div> --}}
+                    <input type="hidden" name="type" id="status" value="Public">
                 @endif
                 @if (!empty($list->description))
                     <?php //dd($list);
@@ -120,9 +122,10 @@
                         ?>
                         @foreach ($list->list_products as $list_product)
                             @foreach ($list_product->product->options as $option)
+                            <input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $list_product->product_id }}" value="{{ $option->stockAvailable }}">
                             @php
                                 $retail_price = 0;
-                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {
@@ -133,7 +136,6 @@
                                     }
                                 }
                             @endphp
-                                <!-- <tr id="product_row_{{ $list_product->product_id }}"> -->
                                 <tr id="product_row_{{ $list_product->product_id }}"
                                     class="product-row-{{ $list_product->product_id }} admin-buy-list">
                                     <td>
@@ -150,16 +152,16 @@
                                     </td>
                                     <td>
                                         $<span id="retail_price_{{ $list_product->product_id }}">
-                                            {{ $retail_price }} </span></td>
+                                            {{ number_format($retail_price , 2) }} </span></td>
                                     <td>
                                         <input type="number" min="1"
                                             id="quantity_{{ $list_product->product_id }}"
                                             value="{{ $list_product->quantity }}"
-                                            onclick="handleQuantity({{ $list_product->product_id }})">
+                                            onchange="handleQuantity({{ $list_product->product_id }})">
                                     </td>
                                     <td>
                                         $<span id="subtotal_{{ $list_product->product_id }}">
-                                            {{ number_format($retail_price * $list_product->quantity, 2) }}
+                                            {{ number_format(floatval($retail_price * $list_product->quantity), 2) }}
                                         </span>
                                     </td>
                                     <td>
@@ -182,7 +184,41 @@
                                 <div class="col-md-6">
                                     <label for="shipping_price">Shipping Price</label>
                                     <div class="form-group">
-                                        <input type="number" min="0" id="shipping_price_value" name="shipping_price" onchange="add_shipping(this)" class="form-control" value="0.00" step="any">  
+                                        <input type="number" min="0" id="shipping_price_value" name="shipping_price" onchange="add_shipping(this)" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->shipping_cost : 0.00 }}" step="any">  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center border-top">
+                        <div class="col-md-2 my-2"><strong>Discount limit & List Expiry</strong></div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="discount_limit">Discount Limit</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="buy_list_discount_limit" name="discount_limit" class="form-control" value="{{ isset($list->shipping_and_discount) && !empty($list->shipping_and_discount->discount_limit) ? $list->shipping_and_discount->discount_limit : 0}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discount_count">Discount Used</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="buy_list_discount_count" name="discount_count" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount_count : 0}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="buy_list_expiry_date">
+                                        Expiry Date
+                                    </label>
+                                    <div class="form-group">
+                                        <input type="date"
+                                            id="buy_list_expiry_date"
+                                            name="expiry_date"
+                                            class="form-control"
+                                            value="{{ isset($list->shipping_and_discount) && !empty($list->shipping_and_discount->expiry_date) 
+                                                ? \Carbon\Carbon::parse($list->shipping_and_discount->expiry_date)->format('Y-m-d') 
+                                                : \Carbon\Carbon::now()->addDays(14)->format('Y-m-d') }}"
+                                            min="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
@@ -192,19 +228,25 @@
                         <div class="col-md-3 my-2"><strong>Discount</strong></div>
                         <div class="col-md-9">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="discount_type">Discount Type</label>
                                     <div class="form-group">
                                         <select class="form-control" name="discount_type" id="discount_type" onchange="discount_type(this)">
-                                            <option value="percentage">Percentage</option>
-                                            <option value="fixed">Fixed</option>
+                                            <option value="percentage" {{ isset($list->shipping_and_discount) && $list->shipping_and_discount->discount_type == 'percentage' ? 'selected' : ''}}>Percentage</option>
+                                            <option value="fixed" {{ isset($list->shipping_and_discount) && $list->shipping_and_discount->discount_type == 'fixed' ? 'selected' : ''}}>Fixed</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="discount_value">Discount Value</label>
+                                <div class="col-md-4">
+                                    <label for="discount_value">Discount</label>
                                     <div class="form-group">
-                                        <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="0" step="any">
+                                        <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount : 0}}" step="any">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discount_value">Discount Calculated</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="discount_calculated" name="discount_calculated" readonly class="form-control" value="{{ isset($list->shipping_and_discount) ? $list->shipping_and_discount->discount_calculated : 0}}">
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +254,7 @@
                     </div>
                     <div class="row align-items-center border-top">
                         <div class="col-md-10 my-2"><strong>Grand Total</strong></div>
-                        <div class="col-md-2 ">Amount : 
+                        <div class="col-md-2 ">Amount :$ 
                             <span id="grand_total">
                                 {{ !empty($list_product) ? $list_product->grand_total : 0.00 }}
                             </span>
@@ -261,6 +303,38 @@
                         </div>
                     </div>
                     <div class="row align-items-center border-top">
+                        <div class="col-md-2 my-2"><strong>Discount limit & List Expiry</strong></div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="discount_limit">Discount Limit</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="buy_list_discount_limit" name="discount_limit" class="form-control" value="1">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discount_count">Discount Used</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="buy_list_discount_count" name="discount_count" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="buy_list_expiry_date">
+                                        Expiry Date
+                                    </label>
+                                    <div class="form-group">
+                                        <input type="date"
+                                            id="buy_list_expiry_date"
+                                            name="expiry_date"
+                                            class="form-control"
+                                            value="{{ \Carbon\Carbon::now()->addDays(14)->format('Y-m-d') }}"
+                                            min="{{ date('Y-m-d') }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center border-top">
                         <div class="col-md-3 my-2"><strong>Discount</strong></div>
                         <div class="col-md-9">
                             <div class="row">
@@ -274,9 +348,15 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="discount_value">Discount Value</label>
+                                    <label for="discount_value">Discount</label>
                                     <div class="form-group">
                                         <input type="number" min="0" id="discount_value" name="discount_type_value" onchange="add_discount(this)" class="form-control" value="0" step="any">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="discount_value">Discount Calculated</label>
+                                    <div class="form-group">
+                                        <input type="number" min="0" id="discount_calculated" readonly name="discount_calculated" readonly class="form-control" value="0">
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +364,7 @@
                     </div>
                     <div class="row border-top">
                         <div class="col-md-10 py-3 ">Grand Total</div>
-                        <div class="col-md-2">Amount : <span id="grand_total">0</span></div>
+                        <div class="col-md-2">Amount : $<span id="grand_total">0</span></div>
                     </div>
                     <div class="row border-top">
                         <div class="col-md-10 py-3"><button type="button" class="ms-2 btn btn-primary"
@@ -329,82 +409,21 @@
             padding: 6px !important;
         }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.33/sweetalert2.css">
 @stop
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('js')
     <script>
-        $(document).ready(function() {
+        function checkListId() {
             var list_id = $("#list_id").val();
-            if (list_id == '') {
+            if (list_id === '') {
                 $(".btn-add-to-cart").prop('disabled', true);
             } else {
                 $(".btn-add-to-cart").prop('disabled', false);
             }
-            // $('body').on('click', '.btn-add-to-cart', function() {
-            //     var id = $(this).attr('id');
-            //     var product_id = id.replace('btn_', '');
-            //     var row = $('#product_row_' + product_id).length;
-
-            //     if (row > 0) {
-            //         var difference = 0;
-            //         var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-            //         console.log('difference => ' + difference);
-            //         console.log('sub total before update  => ' + subtotal_before_update);
-
-            //         var retail_price = parseFloat($('#retail_price_' + product_id).html());
-            //         var quantity = parseFloat($('#quantity_' + product_id).val());
-            //         var subtotal = parseFloat($('#subtotal_' + product_id).html());
-
-            //         quantity++;
-            //         subtotal = retail_price * quantity;
-
-            //         difference = subtotal_before_update - subtotal;
-
-            //         console.log('difference => ' + difference);
-
-            //         var grand_total = $('#grand_total').html();
-            //         grand_total = parseFloat(grand_total);
-
-            //         console.log('Grand Total => ' + grand_total);
-
-
-            //         grand_total = grand_total - difference;
-            //         $('#grand_total').html(grand_total.toFixed(2));
-
-            //         console.log('Grand Total => ' + grand_total);
-
-            //         $('#quantity_' + product_id).val(quantity);
-            //         $('#subtotal_' + product_id).html(subtotal.toFixed(2));
-            //         return false;
-            //     }
-
-
-            //     jQuery.ajax({
-            //         url: "{{ url('admin/add-to-list') }}",
-            //         method: 'post',
-            //         data: {
-            //             "_token": "{{ csrf_token() }}",
-            //             product_id: product_id,
-            //             //option_id: option_id
-            //         },
-            //         success: function(response) {
-            //             $('#product_list').append(response);
-
-            //             var grand_total = $('#grand_total').html();
-            //             grand_total = parseFloat(grand_total);
-
-            //             var retail_price = $('#btn_' + product_id).attr('data-retail-price');
-            //             console.log(retail_price);
-
-            //             var subtotal = retail_price * 1;
-
-            //             grand_total = grand_total + subtotal;
-
-            //             $('#grand_total').html(grand_total.toFixed(2));
-            //         }
-            //     });
-            // });
-
+        }
+        $(document).ready(function() {
+            
             $('body').on('click', '.btn-add-to-cart', function() {
                 var id = $(this).attr('id');
                 var product_id = id.replace('btn_', '');
@@ -412,13 +431,28 @@
 
                 if (row > 0) {
                     var retail_price = parseFloat($('#retail_price_' + product_id).html());
-                    var quantity = parseFloat($('#quantity_' + product_id).val());
-                    quantity++;
+                    var quantity = parseInt($('#quantity_' + product_id).val());
+
+                    let stockAvailable = parseInt($('#product_buy_list_stock_' + product_id).val());
+                    // alert(stockAvailable);
+                    if (quantity + 1 > stockAvailable) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Stock Limit Exceeded',
+                            icon: 'error',
+                            showConfirmButton: true,
+                            allowEscapeKey: false
+                        });
+                    } else {
+                        quantity++;
+                    }
+
+                    
 
                     var subtotal = retail_price * quantity;
 
                     $('#quantity_' + product_id).val(quantity);
-                    $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+                    $('#subtotal_' + product_id).html(parseFloat(subtotal).toFixed(2));
 
                     recalculateGrandTotal();
                     return false;
@@ -449,6 +483,13 @@
             var shipping_price = $('#shipping_price_value').val() != '' ? $('#shipping_price_value').val() : 0.00;
             var discount_value = $('#discount_value').val() != '' ? $('#discount_value').val() : 0.00;
             var discount_type = $('#discount_type').val();
+            var discount_calculated = $('#discount_calculated').val() != '' ? parseFloat($('#discount_calculated').val()) : 0.00;
+            var expiry_date = $('#buy_list_expiry_date').val() !== '' ? $('#buy_list_expiry_date').val() : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            var discount_limit = $('#buy_list_discount_limit').val() != '' ? parseInt($('#buy_list_discount_limit').val()) : 1;
+            var discount_count = $('#buy_list_discount_count').val() != '' ? parseInt($('#buy_list_discount_count').val()) : 0;
+
+            // alert(discount_limit);
+
             console.log(grand_total);
             $('.admin-buy-list').each(function() {
                 var product_id = this.id;
@@ -478,6 +519,10 @@
                     shipping_price: shipping_price,
                     discount_value: discount_value,
                     discount_type: discount_type,
+                    discount_calculated: discount_calculated,
+                    expiry_date: expiry_date,
+                    discount_limit: discount_limit,
+                    discount_count: discount_count,
                 },
                 success: function(response) {
                     window.location.href = "{{ route('buy-list.index') }}";
@@ -486,24 +531,87 @@
         }
 
         function deleteProduct(product_id) {
-            var row = $('#product_row_' + product_id).length;
-            if (row < 1) {
-                $('#grand_total').html(0.00);
-            }
-            var subtotal_to_remove = parseFloat($('#subtotal_' + product_id).html());
-            var grand_total = parseFloat($('#grand_total').html());
-            var updated_total = 0;
-            updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
-            $('#subtotal_' + product_id).val();
+            // var row = $('#product_row_' + product_id).length;
+            // if (row < 1) {
+            //     $('#grand_total').html(0.00);
+            // }
+            // var subtotal_to_remove = parseFloat($('#subtotal_' + product_id).html());
+            // var grand_total = parseFloat($('#grand_total').html());
+            // var updated_total = 0;
+            // updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+            // $('#subtotal_' + product_id).val();
+            // $('#product_row_' + product_id).remove();
+            // $('#grand_total').html(updated_total.toFixed(2));
+
+            // Remove the row first
             $('#product_row_' + product_id).remove();
-            $('#grand_total').html(updated_total.toFixed(2));
+
+            // Recalculate the total using existing logic
+            recalculateGrandTotal();
         }
 
 
+        // function createList() {
+        //     var title = $('#title').val();
+        //     var description = $('#description').val();
+        //     var status = $('#status').val();
+        //     jQuery.ajax({
+        //         url: "{{ route('buy-list.store') }}",
+        //         method: 'post',
+        //         data: {
+        //             "_token": "{{ csrf_token() }}",
+        //             title: title,
+        //             description: description,
+        //             status: status
+        //         },
+        //         success: function(response) {
+        //             $("#list_title").append("<h4>" + title + "</h4>");
+        //             $("#list_id").val(response.list_id);
+        //             $("#title_errors").html('');
+        //             $("#status_errors").html('');
+        //             $("#description_errors").html('');
+        //             console.log(response);
+        //             $("#success_msg").html(response.success);
+        //             $("#success_msg").removeClass('d-none');
+        //             $(".btn-add-to-cart").prop('disabled', false);
+        //             $("#list").removeClass('d-none');
+
+        //         },
+        //         error: function(response) {
+        //             console.log(response.responseJSON.errors);
+        //             if (response.responseJSON.errors.title) {
+
+        //                 $("#title_errors").html(response.responseJSON.errors.title);
+        //             } else {
+        //                 $("#title_errors").html('');
+        //             }
+
+        //             if (response.responseJSON.errors.status) {
+        //                 $("#status_errors").html(response.responseJSON.errors.status);
+        //             } else {
+        //                 $("#status_errors").html('');
+        //             }
+
+        //             if (response.responseJSON.errors.description) {
+        //                 $("#description_errors").html(response.responseJSON.errors.description);
+        //             } else {
+        //                 $("#description_errors").html('');
+        //             }
+        //         }
+        //     });
+        // }
+
+
         function createList() {
+            // Prevent duplicate list creation
+            if ($("#list_id").val() !== '') {
+                return; // Exit if list already exists
+            }
+
             var title = $('#title').val();
             var description = $('#description').val();
             var status = $('#status').val();
+
             jQuery.ajax({
                 url: "{{ route('buy-list.store') }}",
                 method: 'post',
@@ -514,82 +622,37 @@
                     status: status
                 },
                 success: function(response) {
-                    $("#list_title").append("<h4>" + title + "</h4>");
+                    // Replace title instead of appending
+                    $("#list_title").html("<h4>" + title + "</h4>");
+
                     $("#list_id").val(response.list_id);
                     $("#title_errors").html('');
                     $("#status_errors").html('');
                     $("#description_errors").html('');
+
                     console.log(response);
-                    $("#success_msg").html(response.success);
-                    $("#success_msg").removeClass('d-none');
+                    $("#success_msg").html(response.success).removeClass('d-none');
                     $(".btn-add-to-cart").prop('disabled', false);
                     $("#list").removeClass('d-none');
-
                 },
                 error: function(response) {
-                    console.log(response.responseJSON.errors);
-                    if (response.responseJSON.errors.title) {
+                    const errors = response.responseJSON.errors;
 
-                        $("#title_errors").html(response.responseJSON.errors.title);
-                    } else {
-                        $("#title_errors").html('');
-                    }
-
-                    if (response.responseJSON.errors.status) {
-                        $("#status_errors").html(response.responseJSON.errors.status);
-                    } else {
-                        $("#status_errors").html('');
-                    }
-
-                    if (response.responseJSON.errors.description) {
-                        $("#description_errors").html(response.responseJSON.errors.description);
-                    } else {
-                        $("#description_errors").html('');
-                    }
+                    $("#title_errors").html(errors.title ? errors.title : '');
+                    $("#status_errors").html(errors.status ? errors.status : '');
+                    $("#description_errors").html(errors.description ? errors.description : '');
                 }
             });
         }
 
-        // function handleQuantity(product_id) {
-        //     var difference = 0;
-        //     var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-        //     console.log('difference => ' + difference);
-        //     console.log('sub total before update  => ' + subtotal_before_update);
 
-        //     var retail_price = parseFloat($('#retail_price_' + product_id).html());
-        //     var quantity = parseFloat($('#quantity_' + product_id).val());
-        //     var subtotal = parseFloat($('#subtotal_' + product_id).html());
-
-
-        //     subtotal = retail_price * quantity;
-        //     difference = subtotal_before_update - subtotal;
-
-        //     console.log('difference => ' + difference);
-
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-
-        //     console.log('Grand Total => ' + grand_total);
-
-
-        //     grand_total = grand_total - difference;
-        //     $('#grand_total').html(grand_total.toFixed(2));
-
-        //     console.log('Grand Total => ' + grand_total);
-
-        //     $('#quantity_' + product_id).val(quantity);
-        //     $('#subtotal_' + product_id).html(subtotal.toFixed(2));
-
-        //     add_shipping_for_qty(grand_total);
-        //     discount_type_for_qty(grand_total);
-        //     add_discount_for_qty(grand_total);
-
-        // }
+        
 
         function recalculateGrandTotal() {
             let subtotalSum = 0;
             $('[id^=subtotal_]').each(function () {
-                subtotalSum += parseFloat($(this).html());
+                let cleanValue = $(this).text().replace(/[^0-9.-]+/g, '');
+                subtotalSum += parseFloat(cleanValue);
             });
 
             let shipping_price = parseFloat($('#shipping_price_value').val() || 0);
@@ -600,26 +663,88 @@
 
             if (discount_type === 'fixed') {
                 grand_total -= discount_value;
+                $('#discount_calculated').val(discount_value.toFixed(2));
             } else if (discount_type === 'percentage') {
-                grand_total -= (grand_total * discount_value) / 100;
+                let discount_amount = (grand_total * discount_value) / 100;
+                grand_total -= discount_amount;
+                $('#discount_calculated').val(discount_amount.toFixed(2));
             }
 
             $('#grand_total').html(grand_total.toFixed(2));
         }
 
 
+
+        // function handleQuantity(product_id) {
+        //     let retail_price = parseFloat($('#retail_price_' + product_id).html());
+        //     let quantity = parseInt($('#quantity_' + product_id).val());
+        //     let subtotal = retail_price * quantity;
+
+        //     let stock_available = parseInt($('#product_buy_list_stock_' + product_id).val());
+        //     if (quantity > stock_available) {
+        //         Swal.fire({
+        //             title: 'Error',
+        //             text: 'Stock Limit Exceeded',
+        //             icon: 'error',
+        //             showConfirmButton: true,
+        //             allowEscapeKey: false
+        //         }).then((result) => {
+        //             if (result.isConfirmed) {
+        //                 quantity = 1;
+        //                 $('#quantity_' + product_id).val(1);
+        //                 recalculateTotal(product_id, quantity); // Call your calculation logic here
+        //             }
+        //         });
+        //     }
+        //     else {
+        //         recalculateTotal(product_id, quantity); // Call your calculation logic here
+        //     }
+
+
+        //     $('#quantity_' + product_id).val(quantity);
+        //     $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+        //     recalculateGrandTotal();
+        // }
+
         function handleQuantity(product_id) {
             let retail_price = parseFloat($('#retail_price_' + product_id).html());
-            let quantity = parseFloat($('#quantity_' + product_id).val());
-            let subtotal = retail_price * quantity;
+            let quantity = parseInt($('#quantity_' + product_id).val());
+            let stock_available = parseInt($('#product_buy_list_stock_' + product_id).val());
 
-            $('#quantity_' + product_id).val(quantity);
-            $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+            if (quantity > stock_available) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Stock Limit Exceeded',
+                    icon: 'error',
+                    showConfirmButton: true,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        quantity = 1;
+                        $('#quantity_' + product_id).val(quantity);
 
-            recalculateGrandTotal();
+                        let subtotal = retail_price * quantity;
+                        $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+                        // recalculateTotal(product_id, quantity);
+                        recalculateGrandTotal();
+                    }
+                });
+            } else {
+                $('#quantity_' + product_id).val(quantity);
+
+                let subtotal = retail_price * quantity;
+                $('#subtotal_' + product_id).html(subtotal.toFixed(2));
+
+                // recalculateTotal(product_id, quantity);
+                recalculateGrandTotal();
+            }
         }
 
+
         function add_shipping(el) {
+            console.log('Shipping Price => ' + $(el).val());
             recalculateGrandTotal();
         }
 
@@ -631,108 +756,13 @@
             recalculateGrandTotal();
         }
 
+        document.addEventListener('livewire:load', function () {
+            checkListId(); // Run on initial load
 
-
-       
-
-        // function add_shipping(el) {
-        //     var shipping_price = $(el).val();
-        //     shipping_price = parseFloat(shipping_price);
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-        //     console.log('Grand Total shi=> ' + grand_total);
-        //     console.log('Shipping Prices => ' + shipping_price);
-        //     grand_total = parseFloat(grand_total) + parseFloat(shipping_price);
-        //     $('#grand_total').html(grand_total.toFixed(2));
-        // }
-
-        // function discount_type(el) {
-        //     var type = $(el).val();
-        //     var discount_value = $('#discount_value').val();
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         discount_value = parseFloat(discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total dis => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
-        // function add_discount(el) {
-        //     var discount_value = $(el).val();
-        //     discount_value = parseFloat(discount_value);
-        //     var type = $('#discount_type').val();
-        //     var grand_total = $('#grand_total').html();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total type fix => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         console.log('Grand Total type percentage => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
-
-
-        // for qty INCREASE DESCREASE
-        // function add_shipping_for_qty(grand_total) {
-        //     var shipping_price = document.getElementById('shipping_price_value').value;
-        //     shipping_price = parseFloat(shipping_price);
-        //     grand_total = parseFloat(grand_total);
-        //     console.log('Grand Total shi=> ' + grand_total);
-        //     console.log('Shipping Prices => ' + shipping_price);
-        //     grand_total = parseFloat(grand_total) + parseFloat(shipping_price);
-        //     $('#grand_total').html(grand_total.toFixed(2));
-        // }
-
-        // function discount_type_for_qty(grand_total) {
-        //     var type = document.getElementById('discount_type').value;
-        //     var discount_value = $('#discount_value').val();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         discount_value = parseFloat(discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total dis => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
-        // function add_discount_for_qty(grand_total) {
-        //     var discount_value = document.getElementById('discount_value').value;
-        //     discount_value = parseFloat(discount_value);
-        //     var type = $('#discount_type').val();
-        //     grand_total = parseFloat(grand_total);
-        //     if (type == 'fixed') {
-        //         grand_total = grand_total - discount_value;
-        //         console.log('Grand Total type fix => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     } else if (type == 'percentage') {
-        //         discount_value = (grand_total * discount_value) / 100;
-        //         console.log('Grand Total type percentage => ' + grand_total);
-        //         console.log('Discount Value => ' + discount_value);
-        //         grand_total = grand_total - discount_value;
-        //         $('#grand_total').html(grand_total.toFixed(2));
-        //     }
-        // }
-
+            Livewire.hook('message.processed', () => {
+                checkListId(); // Run after each DOM update
+            });
+        });
 
     </script>
 

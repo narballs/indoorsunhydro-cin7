@@ -313,7 +313,10 @@ class SyncAPiData extends Command
                     if ($api_product->productOptions) {
 
                         foreach ($api_product->productOptions as $api_productOption) {
-                            $product_option = ProductOption::with('price')->where('option_id',$api_productOption->id)->first();
+                            $product_option = ProductOption::with('price')
+                            ->where('option_id',$api_productOption->id)
+                            ->where('product_id' , $api_productOption->productId)
+                            ->first();
 
                             if ($product_option) {
                                 $retail_price = isset($api_productOption->priceColumns->$retail_price_column) ? $api_productOption->priceColumns->$retail_price_column : 0;

@@ -947,6 +947,7 @@
             let show_price = true;
             const paymentTerms = $('#payment_terms').val() === 'true';
             const auth_value = $('#auth_value').val() === 'true';
+            const column = $('#get_column').val() || 'default';
 
             // Determine whether to show the price based on product hiding and authorization/payment terms
             if (option?.option_id && products_to_hide.includes(option.option_id)) {
@@ -968,12 +969,19 @@
                         </div>
             `;
 
+            const retail_price = 
+                (option?.default_price?.[column] != null && option?.default_price?.[column] > 0) ? option.default_price[column] :
+                (option?.default_price?.sacramentoUSD != null && option?.default_price?.sacramentoUSD > 0) ? option.default_price.sacramentoUSD :
+                (option?.default_price?.retailUSD != null && option?.default_price?.retailUSD > 0) ? option.default_price.retailUSD :
+                0;
+
             // Add price if applicable
+            // $${(productData.retail_price || 0).toFixed(2)}
             if (show_price) {
                 dataHtml += `
                     <div class="col-md-10">
                         <p class="product_price mb-1">
-                            $${(productData.retail_price || 0).toFixed(2)}
+                            $${retail_price.toFixed(2)}
                         </p>
                     </div>
                 `;

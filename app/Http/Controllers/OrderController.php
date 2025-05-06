@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\SettingHelper;
 use App\Helpers\UtilHelper;
 use App\Models\ApiKeys;
+use App\Models\BuyListShippingAndDiscount;
 use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
@@ -60,7 +61,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         
-        // dd($request->all());
         $request->validate(
             [
                 'method_name' => 'required',
@@ -73,11 +73,11 @@ class OrderController extends Controller
             //     'memo.required' => 'Delivery instructions is required',
             // ]
         );
-        $shipment_error = $request->shipment_error;
-        if ($shipment_error == 1) {
-            return back()->with('error', 'There was an issue getting a freight quote, please try again later');
-        }
 
+
+
+        $shipment_error = $request->shipment_error;
+        
         $parcel_guard = !empty($request->parcel_guard) ? $request->parcel_guard : 0;
         $shipping_service_code = null;
         $shipping_carrier_code = null;
@@ -86,48 +86,118 @@ class OrderController extends Controller
         $upgrade_shipping = 0;
         $admin_area_for_shipping = AdminSetting::where('option_name', 'admin_area_for_shipping')->first();
         $upgrade_shipping = AdminSetting::where('option_name', 'enable_upgrade_shipping')->first();
+        $buyListData = $request->buyListData;
+        $buyListShipping = !empty($request->buyLIst_shipping_cost) ? floatval($request->buyLIst_shipping_cost) : 0;
+        $buy_list_id = !empty(session()->get('buy_list_id')) ? session()->get('buy_list_id') : null;
+        $buyListDiscount = !empty($request->buyListDiscountInput) ? floatval($request->buyListDiscountInput) : 0;
+        $buyListDiscountType = !empty($request->buyListdiscount_type) ? $request->buyListdiscount_type : null;
 
-        if (!empty($upgrade_shipping) && strtolower($upgrade_shipping->option_value) == 'yes') {
 
-            if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
-                if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
-                    if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                        if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
-                            $actual_shipping_price = $request->shipment_cost_single;
-                            $shipping_service_code = $request->shipping_service_code;
-                            $shipping_carrier_code = $request->shipping_carrier_code;
-                            $shipstation_shipment_value = $actual_shipping_price;
-                        } else {
-                            if (empty($request->shipping_multi_price)) {
-                                return back()->with('error', 'Shipping price is required. Please select shipping method.');
-                            } else {
-                                $actual_shipping_price = $request->shipping_multi_price;
+        if (!empty($buyListData) &&  $buyListData == true && $buyListShipping > 0) {
+            $actual_shipping_price = $buyListShipping;
+            $shipstation_shipment_value = floatval($actual_shipping_price);
+        }
+        elseif (!empty($buyListData) &&  $buyListData == true && $buyListShipping == 0) {
+            if ($shipment_error == 1) {
+                return back()->with('error', 'There was an issue getting a freight quote, please try again later');
+            }
+
+            if (!empty($buyListData))  {
+                $buyListDiscount = $buyListDiscount;
+                $buyListDiscountType =$buyListDiscountType;
+            } else {
+                $buyListDiscount = null;
+                $buyListDiscountType = null;
+            }
+    
+    
+            if (!empty($upgrade_shipping) && strtolower($upgrade_shipping->option_value) == 'yes') {
+    
+                if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+                    if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $actual_shipping_price = $request->shipment_cost_single;
                                 $shipping_service_code = $request->shipping_service_code;
                                 $shipping_carrier_code = $request->shipping_carrier_code;
                                 $shipstation_shipment_value = $actual_shipping_price;
+                            } else {
+                                if (empty($request->shipping_multi_price)) {
+                                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                                } else {
+                                    $actual_shipping_price = $request->shipping_multi_price;
+                                    $shipping_service_code = $request->shipping_service_code;
+                                    $shipping_carrier_code = $request->shipping_carrier_code;
+                                    $shipstation_shipment_value = $actual_shipping_price;
+                                }
                             }
+                        } else {
+                            $actual_shipping_price = $request->shipment_price;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                            $shipstation_shipment_value = $actual_shipping_price;
                         }
                     } else {
-                        $actual_shipping_price = $request->shipment_price;
-                        $shipping_service_code = $request->shipping_service_code;
-                        $shipping_carrier_code = $request->shipping_carrier_code;
-                        $shipstation_shipment_value = $actual_shipping_price;
-                    }
-                } else {
-
-                    if (!empty($request->upgrade_shipping) && $request->upgrade_shipping == 1) {
-                        if (empty($request->upgrade_shipping_multi_price)) {
-                            return back()->with('error', 'Shipping price is required. Please select shipping method.');
-                        } else {
-                            $actual_shipping_price = $request->upgrade_shipping_multi_price;
-                            $shipping_service_code = $request->upgrade_shipping_service_code;
-                            $shipping_carrier_code = $request->upgrade_shipping_carrier_code;
+    
+                        if (!empty($request->upgrade_shipping) && $request->upgrade_shipping == 1) {
+                            if (empty($request->upgrade_shipping_multi_price)) {
+                                return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                            } else {
+                                $actual_shipping_price = $request->upgrade_shipping_multi_price;
+                                $shipping_service_code = $request->upgrade_shipping_service_code;
+                                $shipping_carrier_code = $request->upgrade_shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                                $upgrade_shipping = 1;
+                            }
+                        }
+    
+                        else {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
+                                $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
+                            } else {
+                                $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
+                                $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
+                            }
+        
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
                             $shipstation_shipment_value = $actual_shipping_price;
-                            $upgrade_shipping = 1;
                         }
                     }
-
-                    else {
+                } else{
+                    $actual_shipping_price = $request->shipment_price;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
+                    $shipstation_shipment_value = $actual_shipping_price;
+                }
+            } 
+            else {
+                if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+                    if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $actual_shipping_price = $request->shipment_cost_single;
+                                $shipping_service_code = $request->shipping_service_code;
+                                $shipping_carrier_code = $request->shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                            } else {
+                                if (empty($request->shipping_multi_price)) {
+                                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                                } else {
+                                    $actual_shipping_price = $request->shipping_multi_price;
+                                    $shipping_service_code = $request->shipping_service_code;
+                                    $shipping_carrier_code = $request->shipping_carrier_code;
+                                    $shipstation_shipment_value = $actual_shipping_price;
+                                }
+                            }
+                        } else {
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                            $shipstation_shipment_value = $actual_shipping_price;
+                        }
+                    } else {
+    
                         if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
                             $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
                             $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
@@ -136,61 +206,139 @@ class OrderController extends Controller
                             $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
                         }
     
-                        $actual_shipping_price = $request->shipment_price;
+                        $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
                         $shipstation_shipment_value = $actual_shipping_price;
                     }
+                } else{
+                    $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
+                    $shipstation_shipment_value = $actual_shipping_price;
                 }
-            } else{
-                $actual_shipping_price = $request->shipment_price;
-                $shipping_service_code = $request->shipping_service_code;
-                $shipping_carrier_code = $request->shipping_carrier_code;
-                $shipstation_shipment_value = $actual_shipping_price;
             }
-        } else {
-            if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
-                if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
-                    if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                        if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
-                            $actual_shipping_price = $request->shipment_cost_single;
-                            $shipping_service_code = $request->shipping_service_code;
-                            $shipping_carrier_code = $request->shipping_carrier_code;
-                            $shipstation_shipment_value = $actual_shipping_price;
-                        } else {
-                            if (empty($request->shipping_multi_price)) {
-                                return back()->with('error', 'Shipping price is required. Please select shipping method.');
-                            } else {
-                                $actual_shipping_price = $request->shipping_multi_price;
+        } 
+        else {
+            if ($shipment_error == 1) {
+                return back()->with('error', 'There was an issue getting a freight quote, please try again later');
+            }
+
+            if (!empty($buyListData))  {
+                $buyListDiscount = $buyListDiscount;
+                $buyListDiscountType =$buyListDiscountType;
+            } else {
+                $buyListDiscount = null;
+                $buyListDiscountType = null;
+            }
+    
+    
+            if (!empty($upgrade_shipping) && strtolower($upgrade_shipping->option_value) == 'yes') {
+    
+                if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+                    if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $actual_shipping_price = $request->shipment_cost_single;
                                 $shipping_service_code = $request->shipping_service_code;
                                 $shipping_carrier_code = $request->shipping_carrier_code;
                                 $shipstation_shipment_value = $actual_shipping_price;
+                            } else {
+                                if (empty($request->shipping_multi_price)) {
+                                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                                } else {
+                                    $actual_shipping_price = $request->shipping_multi_price;
+                                    $shipping_service_code = $request->shipping_service_code;
+                                    $shipping_carrier_code = $request->shipping_carrier_code;
+                                    $shipstation_shipment_value = $actual_shipping_price;
+                                }
                             }
+                        } else {
+                            $actual_shipping_price = $request->shipment_price;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                            $shipstation_shipment_value = $actual_shipping_price;
                         }
                     } else {
-                        $actual_shipping_price = $request->shipment_price;
-                        $shipping_service_code = $request->shipping_service_code;
-                        $shipping_carrier_code = $request->shipping_carrier_code;
-                        $shipstation_shipment_value = $actual_shipping_price;
+    
+                        if (!empty($request->upgrade_shipping) && $request->upgrade_shipping == 1) {
+                            if (empty($request->upgrade_shipping_multi_price)) {
+                                return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                            } else {
+                                $actual_shipping_price = $request->upgrade_shipping_multi_price;
+                                $shipping_service_code = $request->upgrade_shipping_service_code;
+                                $shipping_carrier_code = $request->upgrade_shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                                $upgrade_shipping = 1;
+                            }
+                        }
+    
+                        else {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
+                                $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
+                            } else {
+                                $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
+                                $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
+                            }
+        
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                            $shipstation_shipment_value = $actual_shipping_price;
+                        }
                     }
-                } else {
-
-                    if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
-                        $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
-                        $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
-                    } else {
-                        $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
-                        $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
-                    }
-
+                } else{
                     $actual_shipping_price = $request->shipment_price;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
                     $shipstation_shipment_value = $actual_shipping_price;
                 }
-            } else{
-                $actual_shipping_price = $request->shipment_price;
-                $shipping_service_code = $request->shipping_service_code;
-                $shipping_carrier_code = $request->shipping_carrier_code;
-                $shipstation_shipment_value = $actual_shipping_price;
+            } 
+            else {
+                if (!empty($request->charge_shipment_to_customer) && $request->charge_shipment_to_customer == 1) {
+                    if (empty($request->shipping_free_over_1000) && ($request->shipping_free_over_1000 != '1')) {
+                        if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
+                            if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                                $actual_shipping_price = $request->shipment_cost_single;
+                                $shipping_service_code = $request->shipping_service_code;
+                                $shipping_carrier_code = $request->shipping_carrier_code;
+                                $shipstation_shipment_value = $actual_shipping_price;
+                            } else {
+                                if (empty($request->shipping_multi_price)) {
+                                    return back()->with('error', 'Shipping price is required. Please select shipping method.');
+                                } else {
+                                    $actual_shipping_price = $request->shipping_multi_price;
+                                    $shipping_service_code = $request->shipping_service_code;
+                                    $shipping_carrier_code = $request->shipping_carrier_code;
+                                    $shipstation_shipment_value = $actual_shipping_price;
+                                }
+                            }
+                        } else {
+                            $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                            $shipping_service_code = $request->shipping_service_code;
+                            $shipping_carrier_code = $request->shipping_carrier_code;
+                            $shipstation_shipment_value = $actual_shipping_price;
+                        }
+                    } else {
+    
+                        if (!empty($request->product_weight) && floatval($request->product_weight) > 99) {
+                            $shipping_service_code =  SettingHelper::getSetting('shipping_carrier_code_2');
+                            $shipping_carrier_code = SettingHelper::getSetting('shipping_service_code_2');
+                        } else {
+                            $shipping_service_code =  SettingHelper::getSetting('shipping_service_code');
+                            $shipping_carrier_code = SettingHelper::getSetting('shipping_carrier_code');
+                        }
+    
+                        $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                        $shipstation_shipment_value = $actual_shipping_price;
+                    }
+                } else{
+                    $actual_shipping_price = !empty($request->shipment_price) ? $request->shipment_price : 0;
+                    $shipping_service_code = $request->shipping_service_code;
+                    $shipping_carrier_code = $request->shipping_carrier_code;
+                    $shipstation_shipment_value = $actual_shipping_price;
+                }
             }
         }
+
+        
 
         $parcel_guard = 0;
         if (floatval($actual_shipping_price) > 0) {
@@ -328,6 +476,8 @@ class OrderController extends Controller
                     $order->processedBy = 79914;
                     $order->isApproved = false;
                     $order->memberId = $active_contact_id;
+                    $order->buylist_id = $buy_list_id;
+                    $order->buylist_discount = $buyListDiscount;
                     $order->branchId = "none";
                     $order->distributionBranchId = 0;
                     $order->branchEmail = 'wqszeeshan@gmail.com';
@@ -538,6 +688,8 @@ class OrderController extends Controller
                     $order->processedBy = 79914;
                     $order->isApproved = false;
                     $order->memberId = $active_contact_id;
+                    $order->buylist_id = $buy_list_id;
+                    $order->buylist_discount = $buyListDiscount;
                     $order->branchId = "none";
                     $order->distributionBranchId = 0;
                     $order->branchEmail = 'wqszeeshan@gmail.com';
@@ -667,7 +819,7 @@ class OrderController extends Controller
                             
                         } 
                         else {
-                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total, $actual_shipping_price ,$shipstation_shipment_value, $parcel_guard );
+                            $checkout = $this->checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total, $actual_shipping_price ,$shipstation_shipment_value, $parcel_guard,$buyListDiscount ,$buyListDiscountType );
                             if ($checkout) {
                                 // session()->forget('cart');
                                 $this->empty_cart_for_current_order();
@@ -695,6 +847,8 @@ class OrderController extends Controller
                     $order->processedBy = 79914;
                     $order->isApproved = false;
                     $order->memberId = $active_contact_id;
+                    $order->buylist_id = $buy_list_id;
+                    $order->buylist_discount = $buyListDiscount;
                     $order->branchId = "none";
                     $order->distributionBranchId = 0;
                     $order->branchEmail = 'wqszeeshan@gmail.com';
@@ -789,6 +943,15 @@ class OrderController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
+
+                    if (!empty($currentOrder->buylist_id) && !empty($currentOrder->buylist_discount)) {
+                        $update_buy_list_shipping_and_discount = BuyListShippingAndDiscount::where('buylist_id', $currentOrder->buylist_id)->first();
+                        if (!empty($update_buy_list_shipping_and_discount)) {
+                            $update_buy_list_shipping_and_discount->discount_count = !empty($update_buy_list_shipping_and_discount->discount_count) ? $update_buy_list_shipping_and_discount->discount_count + 1 : 1;
+                            $update_buy_list_shipping_and_discount->save();
+                        }
+                    }
+
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $reference = $currentOrder->reference;
                     $cart_items = UserHelper::switch_price_tier($request);
@@ -980,6 +1143,8 @@ class OrderController extends Controller
             Session::forget('cart');
             Session::forget('cart_hash');
         }
+
+        Session::forget('buy_list_id');
 
         return true;
     }
@@ -1445,7 +1610,8 @@ class OrderController extends Controller
             'new_order_status' => !empty($current_order_status->status) ? $current_order_status->status : '',
             'previous_order_status' => !empty($previous_order_status->status) ? $previous_order_status->status : '',
         ];
-        $email_template = !empty($current_order_status->status) && ($current_order_status->status === 'Cancelled') ? 'emails.cancel_order_email_template' : 'emails.admin-order-received';
+        // $email_template = !empty($current_order_status->status) && ($current_order_status->status === 'Cancelled') ? 'emails.cancel_order_email_template' : 'emails.admin-order-received';
+        $email_template = 'emails.admin-order-received';
         $name = $customer->contact->firstName;
         $email =  $customer->contact->email;
         $reference  =  $currentOrder->reference;
@@ -1466,15 +1632,17 @@ class OrderController extends Controller
             'from' => SettingHelper::getSetting('noreply_email_address')
         ];
 
-        if (!empty($email)) {
-            $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
-            $data['email'] = $email;
-            MailHelper::sendMailNotification($email_template, $data);
-        }
+        
 
 
 
         if ($current_order_status->status !== 'Cancelled') {
+
+            if (!empty($email)) {
+                $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'status has been updated';
+                $data['email'] = $email;
+                MailHelper::sendMailNotification($email_template, $data);
+            }
 
             $specific_admin_notifications = SpecificAdminNotification::all();
             if (count($specific_admin_notifications) > 0) {
@@ -2028,9 +2196,11 @@ class OrderController extends Controller
         }    
     }
     
-    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value, $parcel_guard ) {
+    public function checkout_without_discount($tax_rate,  $discount_amount, $discount_type, $order_id, $currentOrder, $cart_items, $request , $discount_variation_value , $product_prices , $order_total , $actual_shipping_price,$shipstation_shipment_value, $parcel_guard , $buyListDiscount ,$buyListDiscountType ) {
         $tax_rate = number_format($tax_rate, 2);
-        
+
+        $buyListDiscount = !empty($buyListDiscount) ? number_format($buyListDiscount , 2) : 0;
+
         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
         $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
         $customer = $stripe->customers->create([
@@ -2148,6 +2318,26 @@ class OrderController extends Controller
             ];
         }
 
+
+        if (!empty($buyListDiscount) && floatval($buyListDiscount) > 0) {
+
+            // Convert to float to avoid issues with any string representation
+            $buyListDiscount = floatval($buyListDiscount);
+            
+            // Check if the discount type is percentage
+            $buyListDiscount = round($buyListDiscount, 2);
+            $discount_value = (int) round($buyListDiscount * 100); // Convert to cents
+            
+            // Create Stripe coupon for fixed amount off
+            $coupon = $stripe->coupons->create([
+                'amount_off' => $discount_value,
+                'currency' => 'usd',  // Consider making this dynamic based on user
+                'duration' => 'once'
+            ]);
+        }
+        
+        
+
         
 
         $line_items = [
@@ -2168,6 +2358,7 @@ class OrderController extends Controller
                 ]
             ],
             // 'shipping_cost' =>  !empty($request->shipment_price) ? $request->shipment_price : 0,
+            'discounts' => !empty($coupon) ? [['coupon' => $coupon->id]] : [],
             'customer' => $customer->id,
             // 'customer_email' => auth()->user()->email,
         ]);

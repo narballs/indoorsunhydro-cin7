@@ -29,7 +29,7 @@
 @foreach($product->options as $option)
 @php
 	$retail_price = 0;
-	$user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+	$user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
 	foreach ($option->price as $price) {
 		$retail_price = $price->$user_price_column;
 		if ($retail_price == 0) {
@@ -41,6 +41,7 @@
 	}
 @endphp
 <tr id="product_row_{{ $product->product_id }}" class="product-row-{{ $product->product_id }} admin-buy-list">
+	<input type="hidden" name="product_buy_list_stock" id="product_buy_list_stock_{{ $product->product_id }}" value="{{ $option->stockAvailable }}">
 	<td>
 		{{ $product->name }}
 	</td>
@@ -54,13 +55,13 @@
 		{{-- @endforeach --}}
 	</td>
 	<td>
-		$<span id="retail_price_{{ $product->product_id }}"> {{ $retail_price}} </span>
+		$<span id="retail_price_{{ $product->product_id }}"> {{ number_format($retail_price , 2)}} </span>
 	</td>
 	<td>
-		<input type="number" min="1" id="quantity_{{ $product->product_id }}" value="1" onclick="handleQuantity({{$product->product_id}})">
+		<input type="number" min="1" id="quantity_{{ $product->product_id }}" value="1" onchange="handleQuantity({{$product->product_id}})">
 	</td>
 	<td>
-		$<span id="subtotal_{{ $product->product_id }}"> {{ $retail_price * 1 }} </span>
+		$<span id="subtotal_{{ $product->product_id }}"> {{ number_format(floatval($retail_price * 1)  , 2) }} </span>
 	</td>
 	<td>
         <a class="cursor-pointer delete" title="" data-toggle="tooltip" data-original-title="Delete">

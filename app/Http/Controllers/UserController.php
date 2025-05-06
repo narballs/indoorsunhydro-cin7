@@ -1338,7 +1338,7 @@ class UserController extends Controller
         $active_products_ids = Product::whereIn('category_id' ,$active_category_ids)->where('status', '!=', 'Inactive')->pluck('product_id')->toArray();
         
 
-        $buy_again_query = Product::with('categories' , 'options')
+        $buy_again_query = Product::with('categories' , 'options' , 'options.defaultPrice')
             ->whereIn('product_id', $active_products_ids);
         $total_products = $buy_again_query->count();
 

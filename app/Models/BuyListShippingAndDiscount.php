@@ -13,8 +13,13 @@ class BuyListShippingAndDiscount extends Model
         'shipping_cost',
         'discount',
         'buylist_id',
-        'discount_type'
+        'discount_type',
+        'discount_calculated',
+        'expiry_date',
+        'discount_count',
+        'discount_limit',
     ];
+    
     public function buylist()
     {
         return $this->belongsTo(BuyList::class, 'buylist_id', 'id');

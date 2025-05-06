@@ -47,7 +47,7 @@
                         @foreach ($list_product->product->options as $option)
                             @php
                                 $retail_price = 0;
-                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                                $user_price_column = App\Helpers\UserHelper::getUserPriceColumnForBuyList();
                                 foreach ($option->price as $price) {
                                     $retail_price = $price->$user_price_column;
                                     if ($retail_price == 0) {
@@ -64,7 +64,7 @@
                                     {{ $list_product->product->name }}
                                 </td>
                                 <td>
-                                    ${{ $list_product->product->code }}
+                                    {{ $list_product->product->code }}
                                 </td>
                                 <td>${{ number_format($retail_price , 2) }}</td>
                                 <td class="jsutify-content-middle">
@@ -75,15 +75,57 @@
                                     {{ $list_product->quantity }}
                                 </td>
                                 <td>
-                                    ${{ $list_product->sub_total }}
+                                    ${{ number_format($list_product->sub_total , 2) }}
                                 </td>
                             </tr>
                         @endforeach
                     @endforeach
+                    @if (!empty($list->shipping_and_discount))
+                    <tr colspan="5">
+                        <th colspan="4">Expiry Date</th>
+                        <td class="">
+                            <h6>{{ !empty($list->shipping_and_discount->expiry_date) ? date('Y-m-d', strtotime($list->shipping_and_discount->expiry_date)) : ''}}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount Limit</th>
+                        <td class="">
+                            <h6>{{ !empty($list->shipping_and_discount->discount_limit) ? $list->shipping_and_discount->discount_limit : 0 }}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount Used</th>
+                        <td class="">
+                            <h6>{{ !empty($list->shipping_and_discount->discount_count) ? $list->shipping_and_discount->discount_count : 0 }}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Shipping</th>
+                        <td class="">
+                            <h6>${{ !empty($list->shipping_and_discount->shipping_cost) ? number_format($list->shipping_and_discount->shipping_cost , 2) : 0.00 }}</h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount</th>
+                        <td class="">
+                            <h6>
+                                {{ !empty($list->shipping_and_discount->discount_type) && $list->shipping_and_discount->discount_type == 'fixed' ? '$' : '' }}
+                                {{ !empty($list->shipping_and_discount->discount) ? $list->shipping_and_discount->discount : 0.00 }}
+                                {{ !empty($list->shipping_and_discount->discount_type) && $list->shipping_and_discount->discount_type == 'percentage' ? '%' : '' }}                                
+                            </h6>
+                        </td>
+                    </tr>
+                    <tr colspan="5">
+                        <th colspan="4">Discount Value</th>
+                        <td class="">
+                            <h6>${{ !empty($list->shipping_and_discount->discount_calculated) ? number_format($list->shipping_and_discount->discount_calculated , 2) : 0.00 }}</h6>
+                        </td>
+                    </tr>
+                    @endif
                     <tr colspan="5">
                         <th colspan="4">Grand Total</th>
                         <td class="">
-                            <h4>${{ !empty($list_product) ? $list_product->grand_total : 0.00 }}</h4>
+                            <h6>${{ !empty($list_product) ? number_format($list_product->grand_total , 2) : 0.00 }}</h6>
                         </td>
                     </tr>
                 </tbody>
@@ -105,20 +147,30 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Please enter email.</label>
+                            <label for="email">Please enter email.</label>
                             <input type="text" class="form-control" name="email" id="email">
                         </div>
+                    
                         <input type="hidden" id="list_id" name="list_id" value="{{ $list->id }}">
-                        <div class="text-light bg-success text-center " id="share-success">
-
+                        <label for="">
+                            Copy link to share
+                        </label>
+                        <div class="form-group d-flex align-items-center">
+                            <input type="text" id="copy-link" class="form-control form-control-sm" value="{{ url('/create-cart/' . $list->id) }}" readonly>
+                            <button type="button" class="btn btn-sm btn-outline-secondary ml-2" onclick="copyLink()" title="Copy link">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <small id="copy-message" class="text-success ml-2" style="display: none;">Link copied!</small>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="sendEmail();">Share</button>
-                </div>
-
-                </form>
+                        
+                    
+                        <div class="text-light bg-success text-center" id="share-success"></div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="sendEmail();">Share</button>
+                        </div>
+                    </form>
             </div>
 
         </div>
@@ -162,6 +214,7 @@
         function sendEmail() {
             var email = $('#email').val();
             var list_id = $('#list_id').val();
+            
             //alert(list_id);
             jQuery.ajax({
                 url: "{{ url('/admin/share-list/') }}",
@@ -173,9 +226,9 @@
                 },
                 success: function(success) {
                     if (success.success == true) {
-                        console.log('ppp');
                         var msg = success.msg;
                         $('#share-success').html(msg);
+                        location.reload();
                     }
                     console.log(success);
                     //jQuery('.alert').html(result.success);
@@ -183,5 +236,39 @@
                 }
             });
         }
+        function copyLink() {
+            const input = document.getElementById("copy-link");
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand("copy");
+                document.getElementById("copy-message").style.display = 'inline';
+                setTimeout(() => {
+                    document.getElementById("copy-message").style.display = 'none';
+                }, 2000);
+            } catch (err) {
+                console.error("Copy failed", err);
+            }
+        }
+
+        // function deleteProduct(product_id) {
+        //     console.log(product_id);
+        //     //$('#product_row_'+ product_id).remove();
+        //     $(`#product_row_${product_id}`).remove();
+        //     // var row = $('#product_row_' + product_id);
+        //     // console.log(row);
+        //     //   var row = $('#product_row_' + product_id).length;
+        // 
+        //     //   if (row < 1) {
+        //     //           $('#grand_total').html(0.00);
+        //     //   }
+        //     //   var subtotal_to_remove = parseFloat($('#subtotal_'+ product_id).html());
+        //     //   var grand_total = parseFloat($('#grand_total').html());
+        //     //   var updated_total = parseFloat(grand_total) - parseFloat(subtotal_to_remove);
+        //     //   $('#subtotal_'+ product_id).val();
+        //     //   $('#product_row_'+ product_id).remove();
+        //     //   $('#grand_total').html(updated_total);
+        // }
     </script>
 @stop
