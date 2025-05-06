@@ -76,6 +76,29 @@ class AdminBuyListController extends Controller
         ]);
     }
 
+
+    public function update_buy_list(Request $request, $id)
+    {
+        
+        
+        // Find the BuyList
+        $buyList = BuyList::findOrFail($id);
+
+        // Update fields
+        $buyList->title = $request->title;
+        $buyList->description = $request->description;
+        // Save changes
+        $buyList->save();
+
+        // Return a response (you can customize as needed)
+        return response()->json([
+            'success' => 'List updated successfully.',
+            'list_id' => $buyList->id
+        ]);
+    }
+
+
+
     public function show($id)
     {
         $list = BuyList::where('id', $id)->with('shipping_and_discount','list_products.product.options')->first();

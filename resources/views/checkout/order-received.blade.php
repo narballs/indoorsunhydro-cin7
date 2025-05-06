@@ -595,42 +595,13 @@
 	
 </style>
 {{session()->forget('cart');}}
-{{-- @php
-	$tax=0;
-	$tax_rate = 0;
-	$subtotal = 0;
-	$tax_without_discount = 0;
-	$subtotal = $order->total;
-	$tax_class = App\Models\TaxClass::where('name', $order_contact->tax_class)->first();
-	$discount_amount = $order->discount_amount;
-	if (isset($discount_variation_value) && !empty($discount_variation_value) && $discount_amount > 0) {
-		$discount_variation_value = $discount_variation_value;
-		if (!empty($tax_class)) {
-			$tax_rate = $tax_class->rate;
-			$tax_without_discount = $subtotal * ($tax_rate / 100);
-			if (!empty($discount_variation) && $discount_variation == 'percentage') {
-				$tax = $tax_without_discount - ($tax_without_discount * ($discount_variation_value / 100));
-			} else {
-				$tax = $tax_without_discount - $discount_variation_value;
-			}
-		}
 
-	} else {
-		if (!empty($tax_class)) {
-			$tax_rate = $tax_class->rate;
-			$tax = $subtotal * ($tax_rate / 100);
-		}
-	} 
-@endphp --}}
 <div class="container-fluid main-thankyou-div" style="width:89%;">
 	<div class="">
 		<div class="col-md-12">
 			<div class="card mt-5 border-0 thank-you-card">
 				<div class="card-body ps-5 mt-5  thank-you-card-body">
 					<div class="row ps-5 mobile_class">
-						{{-- <div class=" col-xl-12 col-lg-12 col-md-12 col-sm-12">
-							<p class="order-confirmation-page-top-heading mobile-font">Order Confirmation</p>
-						</div> --}}
 						<div class="row mb-3">
 							<input type="hidden" value="{{!empty($order_contact) && !empty($order_contact->email) ? $order_contact->email : ''}}" id="order_contact_email">
 							<input type="hidden" value="{{!empty($order) && !empty($order->apiOrderItem) ? $order->apiOrderItem : ''}}" id="order_Items_ty">
@@ -656,7 +627,6 @@
 											@else
 												{{$order_contact->firstName}} {{$order_contact->lastName}}
 											@endif
-											{{-- <span class="order-confirmation-page-user-name mobile-font mobile-font-part">Your order has been received.</span> --}}
 										</p>
 									</div>
 								</div>
@@ -713,15 +683,14 @@
 								<p class="order-confirmation-page-order-number-title">Discount</p>
 								<p class="order-confirmation-page-order-number-item">
 									{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) + $order->discount_amount }} --}}
-									${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+									{{-- ${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }} --}}
+									@if (!empty($order->buylist_id))
+										${{ !empty($order->buylist_discount) ? number_format($order->buylist_discount, 2) : '0.00' }}
+									@else
+										${{ !empty($order->discount_amount) ? number_format($order->discount_amount, 2) : '0.00' }}
+									@endif
 								</p>
 							</div>
-							{{-- <div class="col-md-3">
-								<p class="order-confirmation-page-order-number-title">ParcelGuard</p>
-								<p class="order-confirmation-page-order-number-item">
-									${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
-								</p>
-							</div> --}}
 							<div class="col-md-3">
 								<input type="hidden" name="getorderTotal" value="{{number_format($order->total_including_tax, 2)}}" class="getorderTotal" id="">
 								<input type="hidden" name="is_stripe" value="{{$order->is_stripe}}" class="isStripe" id="isStripe">
@@ -780,27 +749,19 @@
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Tax</p>
 										<p class="order-confirmation-page-order-number-item">
-											{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }} --}}
 											${{ !empty($order->tax_rate) ? number_format($order->tax_rate , 2) : number_format($tax, 2) }}
 										</p>
 									</div>
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Discount</p>
 										<p class="order-confirmation-page-order-number-item">
-											{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price, 2) }} --}}
 											@if (!empty($order->buylist_id))
-												${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+												${{ !empty($order->buylist_discount) ? number_format($order->buylist_discount, 2) : '0.00' }}
 											@else
-												${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+												${{ !empty($order->discount_amount) ? number_format($order->discount_amount, 2) : '0.00' }}
 											@endif
 										</p>
 									</div>
-									{{-- <div class="col-md-3">
-										<p class="order-confirmation-page-order-number-title">ParcelGuard</p>
-										<p class="order-confirmation-page-order-number-item">
-											${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
-										</p>
-									</div> --}}
 									<div class="col-md-3">
 										<p class="order-confirmation-page-order-number-title">Total</p>
 										<p class="order-confirmation-page-order-number-item">
@@ -869,18 +830,12 @@
 									<p class="order-confirmation-page-order-number-item">
 										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price  , 2) }} --}}
 										@if (!empty($order->buylist_id))
-											${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+											${{ !empty($order->buylist_discount) ? number_format($order->buylist_discount, 2) : '0.00' }}
 										@else
-											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+											${{ !empty($order->discount_amount) ? number_format($order->discount_amount, 2) : '0.00' }}
 										@endif
 									</p>
 								</div>
-								{{-- <div class="col-md-6 col-lg-4">
-									<p class="order-confirmation-page-order-number-title">ParcelGuard</p>
-									<p class="order-confirmation-page-order-number-item">
-										${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
-									</p>
-								</div> --}}
 								<div class="col-md-6 col-lg-4">
 									<p class="order-confirmation-page-order-number-title">Total</p>
 									<p class="order-confirmation-page-order-number-item">
@@ -942,20 +897,13 @@
 								<div class="d-flex justify-content-between">
 									<p class="order-confirmation-page-tax-title">Discount</p>
 									<p class="order-confirmation-page-tax-item">
-										{{-- ${{ number_format(($order->total_including_tax - $order->productTotal) - $order->shipment_price , 2) }} --}}
 										@if (!empty($order->buylist_id))
-											${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+											${{ !empty($order->buylist_discount) ? number_format($order->buylist_discount, 2) : '0.00' }}
 										@else
-											${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+											${{ !empty($order->discount_amount) ? number_format($order->discount_amount, 2) : '0.00' }}
 										@endif
 									</p>
 								</div>
-								{{-- <div class="d-flex justify-content-between">
-									<p class="order-confirmation-page-tax-title">ParcelGuard</p>
-									<p class="order-confirmation-page-tax-item">
-										${{!empty($order->parcel_guard) ?  number_format($order->parcel_guard, 2) : '0.00' }}
-									</p>
-								</div> --}}
 							</div>
 						</div>
 						<div class="col-sm-12">
@@ -1038,15 +986,11 @@
 													<p class="order-confirmation-page-address-line-one-title mb-1">
 														@if (!empty($order->DeliveryAddress2))
 															{{$order->DeliveryAddress2 . ','}}
-														{{-- @else
-															{{$order_contact->address2 ? $order_contact->address2: ''}} --}}
 														@endif
 													</p>
 													<p class="order-confirmation-page-address-line-one-title">
 														@if (!empty($order->DeliveryCity))
 															{{$order->DeliveryCity . ','}}
-														{{-- @else
-															{{$order_contact->city ? $order_contact->city . ',' : ''}} --}}
 														@endif
 
 														@if (!empty($order->DeliveryState))
@@ -1081,55 +1025,8 @@
 									<th class="order-confirmation-page-table-data-heading"
 										style="padding-left: 0px; !important">
 										Quantity</th>
-									{{-- <th class="order-confirmation-page-table-data-heading">Shipping</th> --}}
 									<th class="order-confirmation-page-table-data-heading">Price</th>
 								</tr>
-								{{-- <tbody class="border-0">
-									@foreach($order->apiOrderItem as $item)
-									@foreach($item->product->options as $option)
-									<tr>
-										<td>
-											<div class="row align-items-center">
-												<div class="col-md-2 py-2 mobile_thankyou_img_div">
-													@if ($option->image)
-													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
-														width="90px" style="max-height: 90px">
-													@else
-													<img src="/theme/img/image_not_available.png" alt="" width="80px">
-													@endif
-												</div>
-												<div class="col-md-5 py-2 ps-0 prod-name-img mobile_text_class" style="">
-													<a class="order-confirmation-page-product-category-name pb-3"
-														href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
-														{{$item->product->name}}
-													</a>
-												</div>
-											</div>
-										</td>
-										<td class="align-middle">
-											<div class="row">
-												<div class="col-md-12">
-													<p class="mb-0 order-confirmation-page-product-quantity">
-														{{$item->product->code}}</p>
-												</div>
-											</div>
-										</td>
-										<td class="align-middle">
-											<div class="row">
-												<div class="col-md-12">
-													<p class="mb-0 order-confirmation-page-product-quantity">
-														{{$item->quantity}}</p>
-												</div>
-											</div>
-										</td>
-										<td class="align-middle">
-											<p class="mb-0 order-confirmation-page-product-price">
-												${{number_format($item->price,2)}}</p>
-										</td>
-									</tr>
-									@endforeach
-									@endforeach
-								</tbody> --}}
 								<tbody class="border-0">
 									@foreach($orderitems as $orderitem)
 									@if (!empty($orderitem->product_option) && !empty($orderitem->product))
@@ -1188,45 +1085,6 @@
 						{{-- data show for mobile --}}
 						<div class="col-md-12 mt-5 purchaseTable for_mobile d-none">
 							<table class="table main_table_mobile">
-								{{-- <tbody class="border-0">
-									@foreach($order->apiOrderItem as $item)
-									
-										@foreach($item->product->options as $option)
-										
-										<tr class="border_bottom_mb">
-											<td style="width: 20% !important;">
-												<div class="py-2 mobile_thankyou_img_div">
-													@if ($option->image)
-													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$option->image}}" alt=""
-														width="90px" style="max-height: 90px">
-													@else
-													<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
-													@endif
-												</div>
-											</td>
-											
-											<td style="width:75%;">
-												<div class="ps-0 mobile_text_class mt-1" style="">
-													<p class="order-confirmation-page-product-title">
-														<a class="order-confirmation-page-product-category-name pb-3"
-															href=" {{ url('product-detail/'. $item->product->id.'/'.$option->option_id.'/'.$item->product->slug) }}">
-															{{$item->product->name}}
-														</a>
-													</p>
-												</div>
-												<p class=" mb-0 order-confirmation-page-product-price"> ${{number_format($item->price,2)}}</p>
-											</td>
-											<td style="width:5%;">
-												<div class="ps-0 mobile_text_class mt-1" style="">
-													<p class="order-confirmation-page-product-title">
-														{{$item->product->code}}
-													</p>
-												</div>
-											</td>
-										</tr>
-										@endforeach
-									@endforeach
-								</tbody> --}}
 								<tbody class="border-0">
 									@foreach($orderitems as $orderitem)
 									@if (!empty($orderitem->product_option) && !empty($orderitem->product))
@@ -1333,9 +1191,9 @@
 											<div class="w-50 p-1 text-right">
 												<span class="summary_sub_total_price text-right">
 													@if (!empty($order->buylist_id))
-														${{!empty($order->buylist_discount) ?  number_format($order->buylist_discount, 2) : '0.00' }}
+														${{ !empty($order->buylist_discount) ? number_format($order->buylist_discount, 2) : '0.00' }}
 													@else
-														${{!empty($order->discount_amount) ?  number_format($order->discount_amount, 2) : '0.00' }}
+														${{ !empty($order->discount_amount) ? number_format($order->discount_amount, 2) : '0.00' }}
 													@endif
 												</span>
 											</div>
