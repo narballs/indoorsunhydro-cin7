@@ -146,7 +146,7 @@ class OrderHelper {
                 "surcharge" => null,
                 "surchargeDescription" => null,
                 "discountTotal" => null,
-                "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount :' . $buy_list_discount : null,
+                "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount : ' . $buy_list_discount : null,
                 "total" => 100,
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
