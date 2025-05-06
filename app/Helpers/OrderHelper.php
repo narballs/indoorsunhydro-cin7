@@ -117,7 +117,7 @@ class OrderHelper {
         $pick_disclaimer = 'Customer Must present exact physical credit card used during purchase ' . (!empty($card_number) ? $card_number : '') . ' must show a physical ID card of the owner of the credit card to pick up the order. No exceptions.
         As an extra layer of fraud prevention, call the customer to see if they actually placed an order for the item being picked up just to see how they respond to the inquiry or even if they pick up the call.';
 
-
+        $buy_list_discount = !empty($order->buylist_id) ? $order->buylist_discount : null;
 
         
         $order_data = [
@@ -145,8 +145,8 @@ class OrderHelper {
                 "freightDescription" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? 'Pickup Order' : null,
                 "surcharge" => null,
                 "surchargeDescription" => null,
-                "discountTotal" => !empty($order->buylist_id) ? $order->buylist_discount : null,
-                "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount' : null,
+                "discountTotal" => null,
+                "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount :' . $buy_list_discount : null,
                 "total" => 100,
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
