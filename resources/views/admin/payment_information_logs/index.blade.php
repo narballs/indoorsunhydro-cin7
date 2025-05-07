@@ -43,7 +43,7 @@
                                         <span class="d-flex table-row-item"> Payment ID </span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Order Id </span>
+                                        <span class="d-flex table-row-item"> Cin7 Order Id </span>
                                     </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Order Reference </span>
