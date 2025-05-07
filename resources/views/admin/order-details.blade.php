@@ -601,7 +601,12 @@
                         <!-- Customer Notes -->
                         <div class="card mb-3">
                             <div class="card-body">
-                                <h3 class="h6" style="margin-bottom: 0px;"><strong>Order Notes</strong></h3>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h3 class="h6" style="margin-bottom: 0px;"><strong>Order Notes</strong></h3>
+                                    @if (!empty($order->order_id))
+                                        <a href="{{url('/admin/get-cin7-payment-logs?search='.$order->order_id)}}" class="btn btn-primary btn-sm float-end mb-2 text-white">Payment Logs</a>
+                                    @endif
+                                </div>
                                 @foreach ($orderComment as $comment)
                                     @php
                                         $user = auth()->user();
