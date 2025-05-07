@@ -7,6 +7,7 @@ use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
 use App\Models\ApiKeys;
 use App\Models\ApiOrderItem;
+use App\Models\PaymentInformationLog;
 use Illuminate\Support\Facades\Log;
 
 class OrderHelper {
@@ -257,13 +258,15 @@ class OrderHelper {
             $get_api_order = $get_response->getBody()->getContents();
             $get_order = json_decode($get_api_order);
 
+            $order_created_date_raw = Carbon::now();
+            $order_created_date = $order_created_date_raw->format('Y-m-d');
+            $order_created_time = $order_created_date_raw->format('H:i:s');
+            $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
+
 
 
             if (empty($get_order)) {
-                $order_created_date_raw = Carbon::now();
-                $order_created_date = $order_created_date_raw->format('Y-m-d');
-                $order_created_time = $order_created_date_raw->format('H:i:s');
-                $api_order_sync_date = $order_created_date . 'T' . $order_created_time . 'Z';
+                
                 $url = 'https://api.cin7.com/api/v1/Payments';
                 $authHeaders = [
                     'headers' => ['Content-Type' => 'application/json'],
@@ -288,6 +291,71 @@ class OrderHelper {
                 UtilHelper::saveEndpointRequestLog('Sync Payments' , $url , $api_key_id);
 
                 $response = json_decode($Payment_response->getBody()->getContents());
+
+                Log::info('Payment response: ' . json_encode($response));
+
+
+                // update logs of payment information
+
+                if (!empty($response) && isset($response[0]->success) && $response[0]->success === true) {
+                    $payment_id = $response[0]->id ?? null;
+
+                    $create_payment_information_log = new PaymentInformationLog();
+                    $create_payment_information_log->payment_id = $payment_id;
+                    $create_payment_information_log->order_id = $order_id;
+                    $create_payment_information_log->created_date = $order_created_date . ' ' . $order_created_time;
+                    $create_payment_information_log->payment_date = $order_created_date . ' ' . $order_created_time;
+                    $create_payment_information_log->status = 'success';
+                    $create_payment_information_log->save();
+
+                    try {
+                        // Fetch the created payment from Cin7
+                        $client = new \GuzzleHttp\Client();
+                        $get_order_payment_url = 'https://api.cin7.com/api/v1/Payments/' . $payment_id;
+
+                        $get_cin7_payment_response = $client->request('GET', $get_order_payment_url, [
+                            'auth' => [$cin7_auth_username, $cin7_auth_password]
+                        ]);
+
+                        UtilHelper::saveEndpointRequestLog('Sync Payments', $get_order_payment_url, $api_key_id);
+
+                        $get_cin7_payment = $get_cin7_payment_response->getBody()->getContents();
+                        $get_payment = json_decode($get_cin7_payment);
+
+                        // Update payment information
+                        if (!empty($get_payment->id)) {
+                            $update_payment_information_log = PaymentInformationLog::where('order_id', $order_id)
+                                ->where('payment_id', $get_payment->id)
+                                ->first();
+
+                            if ($update_payment_information_log) {
+                                $update_payment_information_log->order_reference = $get_payment->orderRef ?? null;
+                                $update_payment_information_log->method = $get_payment->method ?? $update_payment_information_log->method;
+                                $update_payment_information_log->amount = $get_payment->amount ?? null;
+                                $update_payment_information_log->order_type = $get_payment->orderType ?? null;
+                                $update_payment_information_log->branch_id = $get_payment->branchId ?? null;
+                                $update_payment_information_log->save();
+                            }
+                        }
+
+                    } catch (\Exception $e) {
+                        Log::error('Failed to retrieve or update payment information from Cin7: ' . $e->getMessage());
+                    }
+
+                } else {
+                    // Handle failure
+                    $create_payment_information_log = new PaymentInformationLog();
+                    $create_payment_information_log->order_id = $order_id;
+                    $create_payment_information_log->method = null;
+                    $create_payment_information_log->order_reference = null;
+                    $create_payment_information_log->created_date = $order_created_date . ' ' . $order_created_time;
+                    $create_payment_information_log->payment_date = $order_created_date . ' ' . $order_created_time;
+                    $create_payment_information_log->status = 'failed';
+                    $create_payment_information_log->save();
+
+                    Log::error('Payment creation failed for order_id: ' . $order_id . ' | Response: ' . json_encode($response));
+                }
+
             }
             
         } catch (\Exception $e) {
