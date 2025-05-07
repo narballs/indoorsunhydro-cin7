@@ -378,6 +378,7 @@ class SyncProductOptions extends Command
 
         if ($request_count >= $threshold) {
             Log::info('Request count exceeded');
+            UtilHelper::send_threshold_alert_email($request_count , $threshold , $cin7api_key_for_other_jobs);
             return false;
         }
 

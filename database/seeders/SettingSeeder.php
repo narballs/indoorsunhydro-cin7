@@ -613,14 +613,12 @@ class SettingSeeder extends Seeder
             ],
 
 
-            
+            [
+                'option_name' => 'api_threshold_alert_email',
+                'type' => 'text',
+                'option_value' => 'engrdanishsabir00@gmail.com',
+            ],
 
-
-
-
-
-
-            
         ];
 
         foreach($setting as $setting) {

@@ -14,9 +14,11 @@ use App\Helpers\SettingHelper;
 use App\Models\ApiEndpointRequest;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
+use App\Models\ApiRateLimitAlert;
 use App\Models\Cart;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class UtilHelper
@@ -56,6 +58,9 @@ class UtilHelper
 
         if ($request_count >= $threshold) {
             Log::info('Request count exceeded');
+
+            // self::send_threshold_alert_email($request_count , $threshold , $cin7api_key_for_other_jobs);
+
             return false;
         }
 
@@ -306,115 +311,13 @@ class UtilHelper
 
         if ($request_count >= $threshold) {
             Log::info('Request count exceeded');
+
+            self::send_threshold_alert_email($request_count , $threshold , $cin7api_key_for_other_jobs);
+
             return false;
         }
 
-        // try {
-        //     $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
-        //     $client2 = new \GuzzleHttp\Client();
-        //     $res = $client2->request(
-        //         'GET',
-        //         $url,
-        //         [
-        //             'auth' => [
-        //                 $cin7_auth_username,
-        //                 $cin7_auth_password
-        //             ]
-        //         ]
-        //     );
-
-
-        //     self::saveEndpointRequestLog('Sync Stock Detail','https://api.cin7.com/api/v1/Stock', $api_key_id);
-
-        //     $inventory = $res->getBody()->getContents();
-        //     $location_inventories = json_decode($inventory);
-        //     if (empty($location_inventories)) {
-        //         return [
-        //             'stock_updated' => $stock_updated,
-        //             'branch_with_stocks' => null,
-
-        //         ];
-        //     }
-        //     $inactive_inventory_locations = InventoryLocation::where('status', 0)->pluck('cin7_branch_id')->toArray();
-            
-        //     // $skip_branches = [172, 173, 174];
-        //     $skip_branches = $inactive_inventory_locations;
-        //     $branch_ids = [];
-        //     foreach ($location_inventories as $location_inventory) {
-        //         if (in_array($location_inventory->branchId, $skip_branches)) {
-        //             continue;
-        //         }
-                
-        //         if (!in_array($location_inventory->branchId, $skip_branches)) {
-        //             $branch_with_stocks[] = [
-        //                 'branch_id' => $location_inventory->branchId,
-        //                 'branch_name' => $location_inventory->branchName,
-        //                 'available' => $location_inventory->available
-        //             ];
-        //         }
-
-                
-        //         $product_stock = ProductStock::where('branch_id' , $location_inventory->branchId)
-        //             ->where('product_id' ,  $product->product_id)
-        //             ->where('option_id' , $option_id)
-        //             ->first();
-
-                   
-                
-        //         if (!empty($product_stock)) {
-        //             $product_stock->available_stock = $location_inventory->available >=0 ? $location_inventory->available : 0;
-        //             $product_stock->save();
-                    
-        //             $branch_ids[] = $location_inventory->branchId;
-        //             if (!in_array($location_inventory->branchId, $skip_branches)) {
-        //                 $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
-        //             }
-        //         }
-        //         else {
-        //             $product_stock = ProductStock::create([
-        //                 'available_stock' => $location_inventory->available >=0 ? $location_inventory->available : 0,
-        //                 'branch_id' => $location_inventory->branchId,
-        //                 'product_id' => $product->product_id,
-        //                 'branch_name' => $location_inventory->branchName,
-        //                 'option_id' => $option_id
-        //             ]);
-        //             if (!in_array($location_inventory->branchId, $skip_branches)) {
-        //                 $total_stock += $location_inventory->available >=0 ? $location_inventory->available : 0;
-        //             }
-        //             // $total_stock += $product_stock->available_stock;
-        //         }
-
-                
-
-        //         $stock_updated = true;
-        //     }
-        //     $update_product_option = ProductOption::where('option_id' , $option_id)->first();
-        //     if (!empty($update_product_option)) {
-        //         $update_product_option->stockAvailable = $total_stock;
-        //         $update_product_option->save();
-        //     } 
-            
-        //     if (!empty($branch_ids)) {
-        //         ProductStock::where('product_id' ,  $product->product_id)
-        //             ->where('option_id' , $option_id)
-        //             ->whereNotIn('branch_id', $branch_ids)
-        //             ->delete();
-        //     }
-                
-        //     self::saveDailyApiLog('product_detail_update_stock');
-        // }
-        // catch (\Exception $e) {
-        //     self::saveDailyApiLog('product_detail_update_stock');
-        //     return $stock_updated;
-        // }
-
-        // return [
-        //     'stock_updated' => $stock_updated,
-        //     'branch_with_stocks' => $branch_with_stocks,
-        //     'total_stock' => $total_stock
-        // ];
-
-
+        
         try {
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
@@ -625,106 +528,100 @@ class UtilHelper
     }
 
 
-    // public static function cart_detail ($total_quantity , $grand_total) {
-    //     $company = session()->get('company');
-    //     $contact_id = session()->get('contact_id');
-    //     $total = 0;
-    //     $grand_total = 0;
-    //     if (!auth()->user()) {
-    //         $cart_items = Session::get('cart');
-    //         if (!empty($cart_items)) {
-    //             foreach ($cart_items as $cart) {
-    //                 $total_q[] = $cart['quantity'];
-    //                 $total_quantity = array_sum($total_q);
-    //                 $total_price[] = $cart['price'] * $cart['quantity'];
-    //                 $grand_total = array_sum($total_price);
-    //             }
-    //         }
-    //     } else {
-    //         if (empty($company) || (!$company) && (!empty(!auth()->user()))) {
-    //             $cart_items = Cart::where('user_id' , auth()->user()->id)
-    //             ->get();
-    //             if (count($cart_items) > 0) {
-    //                 foreach ($cart_items as $cart) {
-    //                     $total_q[] = $cart->quantity;
-    //                     $total_quantity = array_sum($total_q);
-    //                     $total_price[] = $cart->price * $cart->quantity;
-    //                     $grand_total = array_sum($total_price);
-    //                 }
-    //             }
-    //         }
-    //         else {
-    //             $cart_items = Cart::where('contact_id', $contact_id)
-    //             ->where('user_id' , auth()->user()->id)
-    //             ->get();
-    //             if (count($cart_items) > 0) {
-    //                 foreach ($cart_items as $cart) {
-    //                     $total_q[] = $cart->quantity;
-    //                     $total_quantity = array_sum($total_q);
-    //                     $total_price[] = $cart->price * $cart->quantity;
-    //                     $grand_total = array_sum($total_price);
-    //                 }
-    //             }
-    //         }
-    //     }
     
-    //     return [
-    //         'total_quantity' => $total_quantity,
-    //         'grand_total' => $grand_total
-    //     ];
-
-    // }
-
     public static function cart_detail()
-{
-    $company = session()->get('company');
-    $contact_id = session()->get('contact_id');
-    $total_quantity = 0;
-    $grand_total = 0;
-    $total_q = [];
-    $total_price = [];
+    {
+        $company = session()->get('company');
+        $contact_id = session()->get('contact_id');
+        $total_quantity = 0;
+        $grand_total = 0;
+        $total_q = [];
+        $total_price = [];
 
-    // Handle unauthenticated (guest) users with session-based cart
-    if (!auth()->check()) {
-        $cart_items = Session::get('cart', []); // Default to empty array if session cart is missing
-        if (!empty($cart_items)) {
-            foreach ($cart_items as $cart) {
-                $total_q[] = $cart['quantity'];
-                $total_price[] = $cart['price'] * $cart['quantity'];
+        // Handle unauthenticated (guest) users with session-based cart
+        if (!auth()->check()) {
+            $cart_items = Session::get('cart', []); // Default to empty array if session cart is missing
+            if (!empty($cart_items)) {
+                foreach ($cart_items as $cart) {
+                    $total_q[] = $cart['quantity'];
+                    $total_price[] = $cart['price'] * $cart['quantity'];
+                }
+                // Calculate totals after the loop
+                $total_quantity = array_sum($total_q);
+                $grand_total = array_sum($total_price);
             }
-            // Calculate totals after the loop
-            $total_quantity = array_sum($total_q);
-            $grand_total = array_sum($total_price);
+        }
+        // Handle authenticated users with database-based cart
+        else {
+            $query = Cart::where('user_id', auth()->user()->id);
+
+            // If the user has a company (contact_id), filter by it
+            if (!empty($contact_id)) {
+                $query->where('contact_id', $contact_id);
+            }
+
+            // Retrieve cart items
+            $cart_items = $query->get();
+
+            if ($cart_items->isNotEmpty()) {
+                foreach ($cart_items as $cart) {
+                    $total_q[] = $cart->quantity;
+                    $total_price[] = $cart->price * $cart->quantity;
+                }
+                // Calculate totals after the loop
+                $total_quantity = array_sum($total_q);
+                $grand_total = array_sum($total_price);
+            }
+        }
+
+        // Return the cart details
+        return [
+            'total_quantity' => $total_quantity,
+            'grand_total' => $grand_total,
+        ];
+    }
+
+    public static function send_threshold_alert_email($request_count, $threshold, $cin7api_key_for_other_jobs)
+    {
+        $admin_email = SettingHelper::getSetting('api_threshold_alert_email');
+
+        if ($request_count >= $threshold) {
+            $existingAlert = ApiRateLimitAlert::where('api_name', $cin7api_key_for_other_jobs->name)
+                ->where('api_key', $cin7api_key_for_other_jobs->username)
+                ->where('api_secret', $cin7api_key_for_other_jobs->password)
+                ->whereDate('alert_sent_at', today())
+                ->where('email_sent', true)
+                ->first();
+
+            if (!$existingAlert) {
+                try {
+                    // Send the alert email
+                    Mail::html(
+                        'The API rate limit is reached<br/>' .
+                        'API Username: ' . $cin7api_key_for_other_jobs->username . '<br/>' .
+                        'API Password: ' . $cin7api_key_for_other_jobs->password,
+                        function ($message) use ($admin_email) {
+                            $message->from(SettingHelper::getSetting('noreply_email_address'));
+                            $message->to($admin_email)->subject('The API total threshold reached');
+                        }
+                    );
+
+                    // Email sent successfully — record the alert
+                    ApiRateLimitAlert::create([
+                        'api_name' => $cin7api_key_for_other_jobs->name,
+                        'api_key' => $cin7api_key_for_other_jobs->username,
+                        'api_secret' => $cin7api_key_for_other_jobs->password,
+                        'email_sent' => true,
+                        'alert_sent_at' => now(),
+                    ]);
+
+                } catch (\Exception $e) {
+                    Log::error('Failed to send API threshold alert email: ' . $e->getMessage());
+                    // Optionally notify someone or retry
+                }
+            }
         }
     }
-    // Handle authenticated users with database-based cart
-    else {
-        $query = Cart::where('user_id', auth()->user()->id);
 
-        // If the user has a company (contact_id), filter by it
-        if (!empty($contact_id)) {
-            $query->where('contact_id', $contact_id);
-        }
-
-        // Retrieve cart items
-        $cart_items = $query->get();
-
-        if ($cart_items->isNotEmpty()) {
-            foreach ($cart_items as $cart) {
-                $total_q[] = $cart->quantity;
-                $total_price[] = $cart->price * $cart->quantity;
-            }
-            // Calculate totals after the loop
-            $total_quantity = array_sum($total_q);
-            $grand_total = array_sum($total_price);
-        }
-    }
-
-    // Return the cart details
-    return [
-        'total_quantity' => $total_quantity,
-        'grand_total' => $grand_total,
-    ];
-}
 
 }
