@@ -16,6 +16,7 @@ use App\Models\AutoLabelSetting;
 use App\Models\AutoLabelTimeRange;
 use App\Models\Contact;
 use App\Models\ContactLogs;
+use App\Models\PaymentInformationLog;
 use App\Models\ProductStockNotification;
 use App\Models\SelectedShippingQuote;
 use App\Models\ShippingQuote;
@@ -808,6 +809,21 @@ class AdminSettingsController extends Controller
         }
 
         return view('admin.shipstation_api_logs.index', compact('shipstation_api_logs' , 'search'));
+    }
+
+    public function get_cin7_payment_logs(Request $request) {
+        $search = $request->search;
+
+        if (!empty($search)) {
+            $payment_information_logs = PaymentInformationLog::where('order_reference' , 'LIKE' , "%{$search}%")
+            ->orWhere('order_id' , $search)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        } else {
+            $payment_information_logs = PaymentInformationLog::orderBy('id', 'desc')->paginate(10);
+        }
+
+        return view('admin.payment_information_logs.index', compact('payment_information_logs' , 'search'));
     }
 
 

@@ -453,6 +453,10 @@ return [
             'text'    => 'Shipstation Logs',
             'url'  => '/admin/get-shipstation-api-logs',
         ],
+        [
+            'text'    => 'Cin7 Payment Logs',
+            'url'  => '/admin/get-cin7-payment-logs',
+        ],
 
         [
             'text'       => 'Logout',

@@ -446,6 +446,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/mark/order/shipped', [OrderController::class, 'mark_order_shipped'])->name('mark_order_shipped');
         
         Route::get('/get-shipstation-api-logs', [AdminSettingsController::class, 'get_shipstation_api_logs'])->name('get_shipstation_api_logs');
+        Route::get('/get-cin7-payment-logs', [AdminSettingsController::class, 'get_cin7_payment_logs'])->name('get_cin7_payment_logs');
 
         Route::get('/payouts', [OrderController::class, 'payouts'])->name('payouts');
         Route::get('/payout/details/{id}', [OrderController::class, 'payouts_details'])->name('admin.payouts.details');
