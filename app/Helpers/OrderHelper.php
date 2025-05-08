@@ -380,7 +380,7 @@ class OrderHelper {
             }
             
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error('Exception occurred while creating payment');
         }       
     }
 }
