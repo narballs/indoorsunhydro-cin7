@@ -882,6 +882,7 @@ class OrderManagementController extends Controller
 
     public function send_wholesale_order_to_shipstation(Request $request) {
 
+
         $orderId = $request->order_id;
         $carrierCode = $request->carrier_code;
         $serviceCode = $request->service_code;
