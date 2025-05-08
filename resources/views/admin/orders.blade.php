@@ -1308,7 +1308,6 @@
             $('form[action="{{ route('send_wholesale_order_to_shipstation') }}"]').on('submit', function (e) {
                 // const shippingValue = $('.wholesale_shipstation_select').val();
                 const shippingValue = $('select[name="shipping_method_wholesale"]').val();
-                alert(shippingValue);
                 const parts = shippingValue.split(' _and_ ');
 
                 if (parts.length !== 2) {
