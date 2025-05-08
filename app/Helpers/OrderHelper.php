@@ -290,15 +290,15 @@ class OrderHelper {
 
                 UtilHelper::saveEndpointRequestLog('Sync Payments' , $url , $api_key_id);
 
-                $response = json_decode($Payment_response->getBody()->getContents());
+                $response = json_decode($Payment_response->getBody()->getContents() , true);
 
                 Log::info('Payment response: ' . json_encode($response));
 
 
                 // update logs of payment information
 
-                if (!empty($response) && isset($response[0]->success) && $response[0]->success === true) {
-                    $payment_id = $response[0]->id ?? null;
+                if (!empty($response) && isset($response[0]['success']) && $response[0]['success'] === true) {
+                    $payment_id = $response[0]['id'] ?? null;
 
                     $create_payment_information_log = new PaymentInformationLog();
                     $create_payment_information_log->payment_id = $payment_id;
@@ -320,26 +320,47 @@ class OrderHelper {
                         UtilHelper::saveEndpointRequestLog('Sync Payments', $get_order_payment_url, $api_key_id);
 
                         $get_cin7_payment = $get_cin7_payment_response->getBody()->getContents();
-                        $get_payment = json_decode($get_cin7_payment);
+                        $get_payment = json_decode($get_cin7_payment, true);
 
-                        // Update payment information
-                        if (!empty($get_payment->id)) {
+                        // // Update payment information
+                        // if (!empty($get_payment->id)) {
+                        //     $update_payment_information_log = PaymentInformationLog::where('order_id', $order_id)
+                        //         ->where('payment_id', $get_payment->id)
+                        //         ->first();
+
+                        //     if ($update_payment_information_log) {
+                        //         $update_payment_information_log->order_reference = $get_payment->orderRef ?? null;
+                        //         $update_payment_information_log->method = $get_payment->method ?? $update_payment_information_log->method;
+                        //         $update_payment_information_log->amount = $get_payment->amount ?? null;
+                        //         $update_payment_information_log->order_type = $get_payment->orderType ?? null;
+                        //         $update_payment_information_log->branch_id = $get_payment->branchId ?? null;
+                        //         $update_payment_information_log->save();
+                        //     }
+                        // }
+
+                        if (!empty($get_payment['id'])) {
                             $update_payment_information_log = PaymentInformationLog::where('order_id', $order_id)
-                                ->where('payment_id', $get_payment->id)
+                                ->where('payment_id', $get_payment['id'])
                                 ->first();
-
+                        
                             if ($update_payment_information_log) {
-                                $update_payment_information_log->order_reference = $get_payment->orderRef ?? null;
-                                $update_payment_information_log->method = $get_payment->method ?? $update_payment_information_log->method;
-                                $update_payment_information_log->amount = $get_payment->amount ?? null;
-                                $update_payment_information_log->order_type = $get_payment->orderType ?? null;
-                                $update_payment_information_log->branch_id = $get_payment->branchId ?? null;
+                                $update_payment_information_log->order_reference = $get_payment['orderRef'] ?? null;
+                                $update_payment_information_log->method = $get_payment['method'] ?? $update_payment_information_log->method;
+                                $update_payment_information_log->amount = $get_payment['amount'] ?? null;
+                                $update_payment_information_log->order_type = $get_payment['orderType'] ?? null;
+                                $update_payment_information_log->branch_id = $get_payment['branchId'] ?? null;
                                 $update_payment_information_log->save();
                             }
                         }
 
-                    } catch (\Exception $e) {
-                        Log::error('Failed to retrieve or update payment information from Cin7: ' . $e->getMessage());
+                    } 
+                    catch (\Exception $e) {
+                        Log::error('Exception occurred while logging payment response', [
+                            'message' => $e->getMessage(),
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ]);
                     }
 
                 } else {
