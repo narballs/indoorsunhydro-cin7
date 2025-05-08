@@ -743,7 +743,7 @@
                 <input type="hidden" name="service_code" id="service_code_buy_list" value="">
                 <div class="form-group">
                   <label for="shipping_method">Select Shipping Method</label>
-                  <select class="form-control" name="shipping_method" required>
+                  <select class="form-control" name="shipping_method_buy_list" required>
                     @if(count($shipping_quotes) > 0)
                         <option value="">Select Shipping Method</option>
                         @foreach($shipping_quotes as $quote)
@@ -778,7 +778,7 @@
             @csrf
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Send Wholesale Order To Shipstation</h5>
+                <h5 class="modal-title">Send Order To Shipstation</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -789,7 +789,7 @@
                 <input type="hidden" name="service_code" id="service_code_wholesale" value="">
                 <div class="form-group">
                   <label for="shipping_method">Select Shipping Method</label>
-                  <select class="form-control" name="shipping_method" class="wholesale_shipstation_select" required>
+                  <select class="form-control" name="shipping_method_wholesale" class="wholesale_shipstation_select" required>
                     @if(count($shipping_quotes) > 0)
                         <option value="">Select Shipping Method</option>
                         @foreach($shipping_quotes as $quote)
@@ -1306,7 +1306,9 @@
 
             // Before submitting the form, split the selected shipping method
             $('form[action="{{ route('send_wholesale_order_to_shipstation') }}"]').on('submit', function (e) {
-                const shippingValue = $('.wholesale_shipstation_select').val();
+                // const shippingValue = $('.wholesale_shipstation_select').val();
+                const shippingValue = $('select[name="shipping_method_wholesale"]').val();
+                alert(shippingValue);
                 const parts = shippingValue.split(' _and_ ');
 
                 if (parts.length !== 2) {
@@ -1317,6 +1319,7 @@
 
                 $('#carrier_code_wholesale').val(parts[1]); // carrier_code
                 $('#service_code_wholesale').val(parts[0]); // service_code
+
 
                 // Show loader
                 $('#shipstation_loader').show();
@@ -1353,7 +1356,7 @@
 
             // Before submitting the form, split the selected shipping method
             $('form[action="{{ route('send_buy_list_order_to_shipstation') }}"]').on('submit', function (e) {
-                const shippingValue = $('select[name="shipping_method"]').val();
+                const shippingValue = $('select[name="shipping_method_buy_list"]').val();
                 const parts = shippingValue.split(' _and_ ');
 
                 if (parts.length !== 2) {

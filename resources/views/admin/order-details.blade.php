@@ -152,7 +152,35 @@
                                             </button>
                                         @endif
                                     </div>
-                                @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
+                                    @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1 && floatval($order->shipment_price) <= 0)
+                                        <div class="col-md-5 ">
+                                            @if (
+                                                    (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
+                                                    (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
+                                                    App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
+                                                )
+                                            
+                                                <button type="button" 
+                                                        class="btn btn-primary send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                                        data-toggle="modal" 
+                                                        data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                                        id="send_po_box_wholesale_order_shipstation" 
+                                                        data-id="{{ $order->id }}">
+                                                        Send Order to Shipstation
+                                                </button>
+                                            @else
+                                            
+                                                <button type="button" 
+                                                        class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
+                                                        data-toggle="modal" 
+                                                        data-target="#send_wholesale_order_to_shipstation" 
+                                                        id="send_wholesale_order_shipstation" 
+                                                        data-id="{{ $order->id }}">
+                                                    Send to Shipstation
+                                                </button>
+                                            @endif
+                                        </div>
+                                    @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
                                     <div class="col-md-5 ">
                                         @if (
                                                 (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
@@ -181,6 +209,36 @@
                                             </form>
                                         @endif
                                     </div>
+                                    @elseif ( $order->is_stripe == 0 && $order->shipstation_orderId == null  && $order->isApproved == 1)
+                                    <div class="col-md-5 ">
+                                        @if (
+                                                (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
+                                                (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
+                                                App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress2))
+                                            )
+                                        
+                                            <button type="button" 
+                                                    class="btn btn-primary send_po_box_wholesale_order_to_shipstation btn-sm" 
+                                                    data-toggle="modal" 
+                                                    data-target="#send_po_box_wholesale_order_to_shipstation" 
+                                                    id="send_po_box_wholesale_order_shipstation" 
+                                                    data-id="{{ $order->id }}">
+                                                    Send Order to Shipstation
+                                            </button>
+                                        @else
+                                        
+                                            <button type="button" 
+                                                    class="btn btn-primary badge_wholesale send_wholesale_order_to_shipstation btn-sm" 
+                                                    data-toggle="modal" 
+                                                    data-target="#send_wholesale_order_to_shipstation" 
+                                                    id="send_wholesale_order_shipstation" 
+                                                    data-id="{{ $order->id }}">
+                                                Send to Shipstation
+                                            </button>
+                                        @endif
+                                    </div>
+                               
+
                                 @endif
                                 @if ($order->confirmation_email_flag == 0 && $order->is_stripe == 1)
                                     <form action="{{route('send_confirmation_email')}}" class="" method="post" class="mb-0 d-none">
@@ -831,7 +889,7 @@
                 <input type="hidden" name="service_code" id="service_code_wholesale" value="">
                 <div class="form-group">
                   <label for="shipping_method">Select Shipping Method</label>
-                  <select class="form-control" name="shipping_method" required>
+                  <select class="form-control" name="shipping_method_wholesale" required>
                     @if(count($shipping_quotes) > 0)
                         <option value="">Select Shipping Method</option>
                         @foreach($shipping_quotes as $quote)
@@ -1217,7 +1275,7 @@
 
             // Before submitting the form, split the selected shipping method
             $('form[action="{{ route('send_wholesale_order_to_shipstation') }}"]').on('submit', function (e) {
-                const shippingValue = $('select[name="shipping_method"]').val();
+                const shippingValue = $('select[name="shipping_method_wholesale"]').val();
                 const parts = shippingValue.split(' _and_ ');
 
                 if (parts.length !== 2) {
