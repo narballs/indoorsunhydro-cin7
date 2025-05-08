@@ -827,8 +827,8 @@
               </div>
               <div class="modal-body">
                 <input type="hidden" id="wholesale_order_id" name="order_id" value="">
-                <input type="hidden" name="carrier_code" id="carrier_code" value="">
-                <input type="hidden" name="service_code" id="service_code" value="">
+                <input type="hidden" name="carrier_code" id="carrier_code_wholesale" value="">
+                <input type="hidden" name="service_code" id="service_code_wholesale" value="">
                 <div class="form-group">
                   <label for="shipping_method">Select Shipping Method</label>
                   <select class="form-control" name="shipping_method" required>
@@ -874,8 +874,8 @@
               </div>
               <div class="modal-body">
                 <input type="hidden" id="buylist_order_id" name="order_id" value="">
-                <input type="hidden" name="carrier_code" id="carrier_code" value="">
-                <input type="hidden" name="service_code" id="service_code" value="">
+                <input type="hidden" name="carrier_code" id="carrier_code_buy_list" value="">
+                <input type="hidden" name="service_code" id="service_code_buy_list" value="">
                 <div class="form-group">
                   <label for="shipping_method">Select Shipping Method</label>
                   <select class="form-control" name="shipping_method_buy_list" required>
@@ -1226,8 +1226,8 @@
                     return false;
                 }
 
-                $('#carrier_code').val(parts[1]); // carrier_code
-                $('#service_code').val(parts[0]); // service_code
+                $('#carrier_code_wholesale').val(parts[1]); // carrier_code
+                $('#service_code_wholesale').val(parts[0]); // service_code
 
                 // Show loader
                 $('#shipstation_loader').show();
@@ -1255,8 +1255,8 @@
                     return false;
                 }
 
-                $('#carrier_code').val(parts[1]); // carrier_code
-                $('#service_code').val(parts[0]); // service_code
+                $('#carrier_code_buy_list').val(parts[1]); // carrier_code
+                $('#service_code_buy_list').val(parts[0]); // service_code
 
                 // Show loader
                 $('#shipstation_loader').show();
