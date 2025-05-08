@@ -180,7 +180,7 @@
                                                 </button>
                                             @endif
                                         </div>
-                                    @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1)
+                                    @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1 && floatval($order->shipment_price) > 0)
                                     <div class="col-md-5 ">
                                         @if (
                                                 (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
