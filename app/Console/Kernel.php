@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\AdminStockReportInterval;
 use App\Models\AutoLabelSetting;
 use App\Models\LabelLog;
 use Carbon\Carbon;
@@ -105,6 +106,39 @@ class Kernel extends ConsoleKernel
 
 
         // Internal endpoints ends here
+
+
+        // send daily summary email to admins about user stock requests
+
+       
+
+        $stock_interval_summary_times = AdminStockReportInterval::all();
+
+        if ($stock_interval_summary_times->isEmpty()) {
+            // Fallback if no intervals found
+            $schedule->command('report:daily-user-stock-requests')
+                ->dailyAt('09:00')
+                ->name('daily-stock-report-default')
+                ->withoutOverlapping();
+            return;
+        }
+
+        foreach ($stock_interval_summary_times as $interval) {
+            if (!empty($interval->report_time)) {
+                try {
+                    $formattedTime = Carbon::createFromFormat('H:i:s', $interval->report_time)->format('H:i');
+
+                    $schedule->command('report:daily-user-stock-requests')
+                        ->dailyAt($formattedTime)
+                        ->name('daily-stock-report-' . str_replace(':', '-', $formattedTime))
+                        ->withoutOverlapping();
+
+                } catch (\Exception $e) {
+                    Log::error("Invalid report_time format in AdminStockReportInterval ID {$interval->id}: {$interval->report_time}");
+                }
+            }
+        }
+
     }
 
     /**
