@@ -455,6 +455,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/images/requests/approve/{id}', [AdminSettingsController::class, 'images_requests_approve'])->name('images_requests_approve');
         // Route::post('/payout-details', [OrderController::class, 'payout_details'])->name('payout_details');
 
+
+        // stock report settings
+
+        Route::get('/stock-report-settings', [AdminSettingsController::class, 'admin_stock_report_settings'])->name('admin_stock_report_settings');
+        Route::post('/update-stock-report-settings', [AdminSettingsController::class, 'admin_update_stock_report_settings'])->name('admin_update_stock_report_settings');
+
         
     });
 
