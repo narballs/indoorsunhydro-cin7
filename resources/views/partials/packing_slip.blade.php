@@ -77,6 +77,7 @@
             $website_name = App\Helpers\SettingHelper::getSetting('website_name');
             $address1 = App\Helpers\SettingHelper::getSetting('store_address_line_1');
             $address2 = App\Helpers\SettingHelper::getSetting('store_address_line_2');
+            $logo_name = App\Helpers\SettingHelper::getSetting('logo_name');
             $sub_total = 0;
         @endphp
 
@@ -87,13 +88,8 @@
                     <p>{{$address1}}</p>
                     <p>{{$address2}}</p>
                 </td>
-                <td style="width: 30%;vertical-align:top;">
-                    {{-- @php
-                        $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); 
-                    @endphp --}}
-                    <?php $logo_name = \App\Helpers\SettingHelper::getSetting('logo_name'); ?>
-                    <img src="{{ url('/theme/bootstrap5/images/' . $logo_name) }}" alt=""  style="width: 100%;"/>
-                    {{-- <img src="{{ url('/theme/img/' . $logo_name) }}" alt="logo" style="width: 100%;"> --}}
+                <td style="width: 30%; vertical-align: top;">
+                    <img src="{{ url('/theme/bootstrap5/images/' . $logo_name) }}" alt="" style="width: 100%;" />
                 </td>
             </tr>
         </table>
@@ -115,9 +111,6 @@
                 <td class="order-details">
                     <p><strong>Order #</strong> {{$order_id}}</p>
                     <p><strong>Order Date</strong>: {{ \Carbon\Carbon::parse($orderDate)->format('F d, Y') }}</p>
-                    {{-- <p><strong>Order Date</strong>: {{ $orderDate}}</p> --}}
-                    {{-- <p><strong>Order Reference</strong>: {{$reference}}</p>
-                    <p><strong>Ship Date</strong>: {{$shipDate}}</p> --}}
                 </td>
             </tr>
         </table>
