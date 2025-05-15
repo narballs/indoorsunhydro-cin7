@@ -61,6 +61,19 @@
             </div>
         </div>
         <div class="card card-body  mt-5">
+
+            <div class="row">
+                <form action="{{ route('notify_users') }}" method="get" class="w-100">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" name="search" class="form-control" placeholder="Search ..." value="{{ request()->get('search') }}">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <div class="col-md-12 shadow border">
                 <table class="table table-border">
                     <thead>
@@ -99,7 +112,7 @@
                             <td>
                                 <div class="row">
                                     @if ($product_stock_notification_user->status == 0)
-                                        <form action="{{route('product_stock_notification')}}" method="post">
+                                        <form action="{{route('product_stock_notification')}}" method="post" class="mb-0">
                                             
                                             @csrf
                                             <input type="hidden" name="product_stock_notification_user" id="" class="" value="{{$product_stock_notification_user->id}}">
@@ -114,17 +127,21 @@
                                             @endif
                                         </form>
                                     @else
-                                        <form action="">
+                                        <form action="" class="mb-0">
                                             <button type="button" class="btn btn-sm btn-success text-white text-white"> <i class="fa fa-bell-slash"></i></button>
                                         </form>
                                     @endif
+
+                                    <a href="{{ route('delete_product_stock_notification_user', $product_stock_notification_user->id) }}" class="btn btn-sm btn-danger text-white ml-2">
+                                        <i class="fa fa-trash mt-1"></i>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
                         @endforeach
                         @else
                         <tr>
-                            <td colspan="3">No Users Found</td>
+                            <td colspan="3">No Notifications Found</td>
                         </tr>
                         @endif
                     </tbody>
