@@ -885,7 +885,7 @@ class AdminSettingsController extends Controller
         $validated = $request->validate([
             'emails' => 'required|string',
             'admin_stock_report_interval' => 'required|array',
-            'admin_stock_report_interval.*.report_date' => 'required|date',
+            // 'admin_stock_report_interval.*.report_date' => 'required|date',
             'admin_stock_report_interval.*.report_time' => ['required', 'regex:/^\d{2}:\d{2}$/'],
         ]);
 
