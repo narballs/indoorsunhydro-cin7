@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Helpers\MailHelper;
 use App\Helpers\SettingHelper;
+use App\Models\AdminStockReportInterval;
 use Illuminate\Console\Command;
 use App\Models\AdminStockReportSetting;
 use App\Models\ProductStockNotification;
@@ -17,9 +18,35 @@ class SendAdminDailyRequestSummary extends Command
 
     public function handle()
     {
+        $stock_interval_summary_times = AdminStockReportInterval::all();
+
+        if ($stock_interval_summary_times->isEmpty()) {
+            $formattedTime = '09:00'; // Default time if no intervals are found
+            if (Carbon::now()->format('H:i') == $formattedTime) {
+                $this->sendEmail();
+            }
+        } else {
+            foreach ($stock_interval_summary_times as $interval) {
+                if (!empty($interval->report_time)) {
+                    try {
+                        $formattedTime = Carbon::createFromFormat('H:i:s', $interval->report_time)->format('H:i');
+
+                        if (Carbon::now()->format('H:i') == $formattedTime) {
+                            $this->sendEmail();
+                        }
+
+                    } catch (\Exception $e) {
+                        Log::error("Invalid report_time format in AdminStockReportInterval ID {$interval->id}: {$interval->report_time}");
+                    }
+                }
+            }
+        }
+    }
+
+    private function sendStockReportEmail()
+    {
         $yesterday = Carbon::yesterday()->toDateString();
 
-        // Fetch stock requests created yesterday and still pending (status 0)
         $stock_requests = ProductStockNotification::with('product', 'product.options')
             ->where('status', 0)
             ->whereDate('created_at', $yesterday)
@@ -51,11 +78,6 @@ class SendAdminDailyRequestSummary extends Command
         foreach ($admin_emails as $email) {
             $email = trim($email);
 
-            // if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            //     $this->warn("Invalid email skipped: {$email}");
-            //     continue;
-            // }
-
             $data = [
                 'subject' => "Stock Request Notifications for {$yesterday}",
                 'email' => $email,
@@ -67,10 +89,11 @@ class SendAdminDailyRequestSummary extends Command
                 MailHelper::sendMailNotification('pdf.stock_request_summary', $data);
                 $this->info("Email sent to: {$email}");
             } catch (\Exception $e) {
-                $this->error("Failed to send email to {$email}: ");
+                $this->error("Failed to send email to {$email}: " . $e->getMessage());
             }
         }
 
         $this->info("Daily stock request summary sent for {$yesterday}.");
     }
+
 }
