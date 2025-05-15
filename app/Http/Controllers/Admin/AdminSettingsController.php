@@ -26,6 +26,8 @@ use App\Models\SurchargeSetting;
 use App\Models\User;
 use App\Models\UserLog;
 use Carbon\Carbon;
+use App\Models\AdminStockReportSetting;
+use App\Models\AdminStockReportInterval;
 use Facade\FlareClient\Time\Time;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\DB;
@@ -848,22 +850,58 @@ class AdminSettingsController extends Controller
 
 
     public function images_requests_approve(Request $request, $id) {
-    $product_id = $id;
+        $product_id = $id;
 
-    // Find the first AI image request with status 0
-    $ai_image_generation = AIImageGeneration::where('product_id', $product_id)
-        ->where('status', 0)
-        ->first();
+        // Find the first AI image request with status 0
+        $ai_image_generation = AIImageGeneration::where('product_id', $product_id)
+            ->where('status', 0)
+            ->first();
 
-    // Check if an image request exists before updating
-    if ($ai_image_generation) {
-        $ai_image_generation->status = 1;
-        $ai_image_generation->save();
-        return redirect()->back()->with('success', 'Image request approved successfully.');
+        // Check if an image request exists before updating
+        if ($ai_image_generation) {
+            $ai_image_generation->status = 1;
+            $ai_image_generation->save();
+            return redirect()->back()->with('success', 'Image request approved successfully.');
+        }
+
+        return redirect()->back()->with('error', 'No pending image request found.');
     }
 
-    return redirect()->back()->with('error', 'No pending image request found.');
-}
+
+
+    // admin stock report settings
+
+    public function admin_stock_report_settings() {
+        $admin_stock_report_settings = AdminStockReportSetting::with('admin_stock_report_interval')->first();
+        return view('admin.stock_report_settings.index', compact('admin_stock_report_settings'));
+    }
+
+    // update admin stock report settings
+
+
+    
+
+    public function admin_update_stock_report_settings(Request $request) {
+        $validated = $request->validate([
+            'emails' => 'required|string',
+            'admin_stock_report_interval' => 'required|array',
+            // 'admin_stock_report_interval.*.report_date' => 'required|date',
+            'admin_stock_report_interval.*.report_time' => ['required', 'regex:/^\d{2}:\d{2}$/'],
+        ]);
+
+        $setting = AdminStockReportSetting::updateOrCreate(['id' => 1], [
+            'emails' => $validated['emails'],
+        ]);
+
+        $setting->admin_stock_report_interval()->delete();
+
+        foreach ($validated['admin_stock_report_interval'] as $interval) {
+            $setting->admin_stock_report_interval()->create($interval);
+        }
+
+        return back()->with('success', 'Admin Stock Report settings updated.');
+    }
+
 
 
     

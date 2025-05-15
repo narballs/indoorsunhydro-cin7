@@ -58,5 +58,16 @@ class AdminCommandsController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+
+    public function send_stock_summary_emails () {
+        try {
+            Artisan::call('report:daily-user-stock-requests');
+            return redirect()->back()->with('success', 'Stock summary command executed successfully.');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
     
 }

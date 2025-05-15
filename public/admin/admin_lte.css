@@ -630,7 +630,7 @@ a {
 
 .search_row_admin-interface {
     border-radius: 8.8914px;
-    height: 49px !important;
+    /* height: 49px !important; */
     display: flex;
     justify-content: space-between;
 

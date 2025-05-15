@@ -12,6 +12,7 @@ composer.lock
 pages/
 wholesale/
 public/products.csv
+public/customers.csv
 public/theme/img
 public/theme/products
 public/packing_slips

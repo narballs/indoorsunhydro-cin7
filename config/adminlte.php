@@ -446,6 +446,10 @@ return [
             'url'  => 'admin/cin7-api-keys-settings',
         ],
         [
+            'text'    => 'Stock Report Settings',
+            'url'  => 'admin/stock-report-settings',
+        ],
+        [
             'text'    => 'Payouts',
             'url'  => 'admin/payouts',
         ],
