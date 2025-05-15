@@ -42,27 +42,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 create_bnt d-flex justify-content-end mobile_fulfill_div">
+                        <div class="col-md-6 create_bnt mobile_fulfill_div">
                             <div class="d-flex justify-content-between">
                                 <span class="create_new_btn_mbl mr-2">
-                                    <button type="button" class="btn create_new_product_btn btn-import-contacts">
+                                    <button type="button" class="btn create_new_product_btn reduce_font_size btn-import-contacts text-dark">
                                         Import Contacts +
                                     </button>
                                 </span>
                                 <span class="create_new_btn_mbl mr-2">
-                                    <button type="button" class="btn create_new_product_btn btn-update-product-prices">
+                                    <button type="button" class="btn create_new_product_btn reduce_font_size btn-update-product-prices text-dark">
                                         Update Product Prices
                                     </button>
                                 </span>
                                 <span class="create_new_btn_mbl mr-2">
-                                    <button type="button" class="btn create_new_product_btn btn-empty-failed-jobs">
+                                    <button type="button" class="btn create_new_product_btn reduce_font_size btn-empty-failed-jobs text-dark">
                                         Empty Failed Jobs
                                     </button>
                                 </span>
 
-                                <span class="create_new_btn_mbl">
-                                    <a href="{{route('reset_cin7_api_keys')}}" class="btn create_new_product_btn">
+                                <span class="create_new_btn_mbl mr-2">
+                                    <a href="{{route('reset_cin7_api_keys')}}" class="btn create_new_product_btn reduce_font_size text-dark">
                                         Reset Cin7Api Keys
+                                    </a>
+                                </span>
+
+                                <span class="create_new_btn_mbl">
+                                    <a href="{{route('send_stock_summary_emails')}}" class="btn create_new_product_btn reduce_font_size text-dark">
+                                        Send Stock Summary Emails
                                     </a>
                                 </span>
 
@@ -81,7 +87,7 @@
                         </div>
                     </div>
                     <div class="row search_row_admin-interface">
-                        <div class="col-md-4 order-search">
+                        <div class="col-md-3 order-search">
                             <div class="has-search ">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <form method="get" action="/admin/orders" class="mb-2">
@@ -281,6 +287,9 @@
             background-color: #339AC6;
             color: #339AC6 !important;
             padding: 5px;
+        }
+        .reduce_font_size {
+            font-size: 12px;
         }
     </style>
 @endsection

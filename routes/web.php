@@ -460,6 +460,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/stock-report-settings', [AdminSettingsController::class, 'admin_stock_report_settings'])->name('admin_stock_report_settings');
         Route::post('/update-stock-report-settings', [AdminSettingsController::class, 'admin_update_stock_report_settings'])->name('admin_update_stock_report_settings');
+        Route::get('/send-stock-summary-emails', [AdminCommandsController::class, 'send_stock_summary_emails'])->name('send_stock_summary_emails');
 
         
     });
