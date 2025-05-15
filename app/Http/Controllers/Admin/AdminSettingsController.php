@@ -325,7 +325,10 @@ class AdminSettingsController extends Controller
         return view('admin.contact_logs.index', compact('contact_logs'));
     }
 
-    public function notify_users() {
+    public function notify_users(Request $request) {
+
+        $search = $request->search;
+
         $auto_notify = false;
         $auto_notify = AdminSetting::where('option_name', 'auto_notify')->first();
         $auto_notify_value = $auto_notify->option_value;
@@ -334,8 +337,38 @@ class AdminSettingsController extends Controller
         } else {
             $auto_notify = false;
         }
-        $product_stock_notification_users = ProductStockNotification::with('product' , 'productStockNotificationAlternatives')->orderBy('created_at' , 'Desc')->paginate(10);
+
+        if (!empty($search)) {
+            $product_stock_notification_users = ProductStockNotification::with('product' , 'productStockNotificationAlternatives')
+            ->where('email', 'LIKE', "%{$search}%")
+            ->orWhere('sku', 'LIKE', "%{$search}%")
+            ->orderBy('created_at' , 'Desc')->paginate(10)->appends(request()->query());
+
+        } else {
+            $product_stock_notification_users = ProductStockNotification::with('product' , 'productStockNotificationAlternatives')
+            ->orderBy('created_at' , 'Desc')->paginate(10)->appends(request()->query());
+        }
+
+
         return view ('admin.product_stock_notification_users', compact('product_stock_notification_users' , 'auto_notify'));
+    }
+
+    public function delete_product_stock_notification_user($id) {
+        $product_stock_notification_user = ProductStockNotification::with('product' , 'productStockNotificationAlternatives')
+        ->where('id', $id)
+        ->first();
+        if (!empty($product_stock_notification_user)) {
+            if (!empty($product_stock_notification_user->productStockNotificationAlternatives)) {
+                foreach ($product_stock_notification_user->productStockNotificationAlternatives as $product_stock_notification_alternative) {
+                    $product_stock_notification_alternative->delete();
+                }
+            }
+
+            $product_stock_notification_user->delete();
+            return redirect()->back()->with('success', 'Product stock notification user deleted successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Product stock notification user not found.');
+        }
     }
 
     public function product_stock_notification (Request $request) {
