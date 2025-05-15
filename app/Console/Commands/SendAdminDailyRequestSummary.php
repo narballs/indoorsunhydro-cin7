@@ -37,10 +37,24 @@ class SendAdminDailyRequestSummary extends Command
             return;
         }
 
-        $emails = explode(',', $setting->emails);
+        $emailsArray = json_decode($setting->emails, true);
+        $admin_emails = [];
 
-        foreach ($emails as $email) {
+        if (is_array($emailsArray)) {
+            foreach ($emailsArray as $emailObj) {
+                if (isset($emailObj['value'])) {
+                    $admin_emails[] = $emailObj['value'];
+                }
+            }
+        }
+
+        foreach ($admin_emails as $email) {
             $email = trim($email);
+
+            // if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            //     $this->warn("Invalid email skipped: {$email}");
+            //     continue;
+            // }
 
             $data = [
                 'subject' => "Stock Request Notifications for {$yesterday}",
@@ -49,8 +63,12 @@ class SendAdminDailyRequestSummary extends Command
                 'from' => SettingHelper::getSetting('noreply_email_address'),
             ];
 
-            // Send the email using your custom MailHelper
-            MailHelper::sendMailNotification('pdf.stock_request_summary', $data);
+            try {
+                MailHelper::sendMailNotification('pdf.stock_request_summary', $data);
+                $this->info("Email sent to: {$email}");
+            } catch (\Exception $e) {
+                $this->error("Failed to send email to {$email}: ");
+            }
         }
 
         $this->info("Daily stock request summary sent for {$yesterday}.");
