@@ -23,7 +23,7 @@ class SendAdminDailyRequestSummary extends Command
         if ($stock_interval_summary_times->isEmpty()) {
             $formattedTime = '09:00'; // Default time if no intervals are found
             if (Carbon::now()->format('H:i') == $formattedTime) {
-                $this->sendEmail();
+                $this->sendStockReportEmail();
             }
         } else {
             foreach ($stock_interval_summary_times as $interval) {
@@ -32,7 +32,9 @@ class SendAdminDailyRequestSummary extends Command
                         $formattedTime = Carbon::createFromFormat('H:i:s', $interval->report_time)->format('H:i');
 
                         if (Carbon::now()->format('H:i') == $formattedTime) {
-                            $this->sendEmail();
+                            $this->sendStockReportEmail();
+                        } else {
+                            $this->info("Current time does not match the scheduled time: {$formattedTime}");
                         }
 
                     } catch (\Exception $e) {
