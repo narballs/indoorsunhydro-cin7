@@ -32,14 +32,14 @@
                             @foreach(old('admin_stock_report_interval', $admin_stock_report_settings->admin_stock_report_interval) as $index => $admin_stock_report_interval)
                                 <div class="interval-set my-2" data-index="{{ $index }}">
                                     <div class="row align-items-end">
-                                        <div class="col-md-5">
+                                        {{-- <div class="col-md-5">
                                             <label>Date</label>
                                             <div class="form-group mb-0">
                                                 <input type="date" name="admin_stock_report_interval[{{ $index }}][report_date]"
                                                     value="{{ is_array($admin_stock_report_interval) ? $admin_stock_report_interval['report_date'] : $admin_stock_report_interval->report_date }}"
                                                     class="form-control">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-md-5">
                                             <label>Time</label>
                                             <div class="form-group mb-0">
@@ -48,21 +48,23 @@
                                                     class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="btn btn-danger remove-interval">Remove</button>
-                                        </div>
+                                        @if ($index != 0)
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger remove-interval">Remove</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
                         @else
                             <div class="interval-set my-2" data-index="0">
                                 <div class="row align-items-center">
-                                    <div class="col-md-5">
+                                    {{-- <div class="col-md-5">
                                         <label>Date</label>
                                         <div class="form-group mb-0">
                                             <input type="date" name="admin_stock_report_interval[0][report_date]" class="form-control">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-5">
                                         <label>Time</label>
                                         <div class="form-group mb-0">
@@ -261,12 +263,12 @@
 
                     newIntervalSet.innerHTML = `
                         <div class="row align-items-end">
-                            <div class="col-md-5">
+                            {{--<div class="col-md-5">
                                 <label>Date</label>
                                 <div class="form-group mb-0">
                                     <input type="date" name="admin_stock_report_interval[${newIndex}][report_date]" class="form-control">
                                 </div>
-                            </div>
+                            </div>--}}
                             <div class="col-md-5">
                                 <label>Time</label>
                                 <div class="form-group mb-0">
