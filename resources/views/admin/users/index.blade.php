@@ -24,50 +24,83 @@
                             </a>
                         </div>
                     </div>
-                    <div class="row search_row_admin-interface" style="margin-top: 12px !important;">
-                        <div class="col-md-4 product_search">
-                            <div class="has-search">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/users" class="mb-2">
-                                    <input type="text" class="form-control border-0" id="search" name="search"
-                                        placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-md-2"></div>
-                        <div class="col-md-4">
-                            <div class="row filter-row-mobile-secreen">
-                                <div class="col-md-6 fillter-mobile-screen">
-                                    <select name="users" id="users" onchange="userFilter()" class="form-control"
-                                        style="height: 39px;margin-top: -7px;">
-                                        <option value="all" class="form-control">All</option>
-                                        <option value="admin-user" class="form-control"
-                                            {{ isset($usersData) && $usersData == 'admin-user' ? 'selected="selected"' : '' }}>
-                                            Admin Users </option>
-                                        <option value="cin7-merged" class="form-control"
-                                            {{ isset($usersData) && $usersData == 'cin7-merged' ? 'selected="selected"' : '' }}>
-                                            Cin7 Merged</option>
-                                        <option value="not-merged" class="form-control"
-                                            {{ isset($usersData) && $usersData == 'not-merged' ? 'selected="selected"' : '' }}>
-                                            Not Merged</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 fillter-mobile-screen">
-                                    <select name="secondary_user" id="secondary-user" onchange="userFilter()"
-                                        class="form-control select-primary-users" style="">
-                                        <option value="all" class="form-control">Secondary/Primary</option>
-                                        <option value="secondary-user" class="form-control"
-                                            {{ isset($secondaryUser) && $secondaryUser == 'secondary-user' ? 'selected="selected"' : '' }}>
-                                            Secondary Users
-                                        </option>
-                                        <option value="primary-user" class="form-control"
-                                            {{ isset($secondaryUser) && $secondaryUser == 'primary-user' ? 'selected="selected"' : '' }}>
-                                            Primary Users</option>
-                                    </select>
+                    <form method="get" action="/admin/users" class="mb-2 w-100">
+                        <div class="row search_row_admin-interface align-items-end my-2">
+                            <div class="col-md-7">
+                                <div class="row align-items-end">
+                                    <div class="col-md-4 product_search">
+                                        <div class="has-search">
+                                            <span class="fa fa-search form-control-feedback"></span>
+                                            
+                                                <input type="text" class="form-control border-0" id="search" name="search"
+                                                    placeholder="Search" value="{{ isset($search) ? $search : '' }}" />
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row align-items-end">
+                                            <div class="col-md-6">
+                                                <label for="">
+                                                    From Date
+                                                </label>
+                                                <input type="date" name="from_date" id="user_from_date" class="form-control"
+                                                    value="{{ isset($from_date) ? $from_date : '' }}" placeholder="From Date">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="">
+                                                    To Date
+                                                </label>
+                                                <input type="date" name="to_date" id="user_to_date" class="form-control"
+                                                    value="{{ isset($to_date) ? $to_date : '' }}" placeholder="From Date">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-md-5">
+                                <div class="row filter-row-mobile-secreen">
+                                    <div class="col-md-3 fillter-mobile-screen">
+                                        <select name="usersData" id="users" class="form-control"
+                                            style="height: 39px;margin-top: -7px;">
+                                            <option value="all" class="form-control">All</option>
+                                            <option value="admin-user" class="form-control"
+                                                {{ isset($usersData) && $usersData == 'admin-user' ? 'selected="selected"' : '' }}>
+                                                Admin Users </option>
+                                            <option value="cin7-merged" class="form-control"
+                                                {{ isset($usersData) && $usersData == 'cin7-merged' ? 'selected="selected"' : '' }}>
+                                                Cin7 Merged</option>
+                                            <option value="not-merged" class="form-control"
+                                                {{ isset($usersData) && $usersData == 'not-merged' ? 'selected="selected"' : '' }}>
+                                                Not Merged</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 fillter-mobile-screen">
+                                        <select name="secondary_user" id="secondary-user" 
+                                            class="form-control select-primary-users" style="">
+                                            <option value="all" class="form-control" {{ isset($secondary_user) && $secondary_user == 'all' ? 'selected="selected"' : '' }}>Secondary/Primary</option>
+                                            <option value="secondary-user" class="form-control"
+                                                {{ isset($secondary_user) && $secondary_user == 'secondary-user' ? 'selected="selected"' : '' }}>
+                                                Secondary Users
+                                            </option>
+                                            <option value="primary-user" class="form-control"
+                                                {{ isset($secondary_user) && $secondary_user == 'primary-user' ? 'selected="selected"' : '' }}>
+                                                Primary Users</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5 fillter-mobile-screen">
+                                        <button type="submit" class="btn btn-sm btn-primary btn-sm">Filter</button>
+
+                                        @if (request()->has('search') || request()->has('from_date') || request()->has('to_date') || request()->has('usersData') || request()->has('secondary_user'))
+                                            <a href="{{ url('/admin/users') }}" class="btn btn-info btn-sm text-white ml-2">Reset</a>
+                                        @endif
+                                        <a href="{{ request()->fullUrlWithQuery(['download_csv' => '1']) }}">
+                                            <button type="button" class="btn btn-sm btn-danger ml-2">Download CSV</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="card-body product_table_body">

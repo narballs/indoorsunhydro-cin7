@@ -83,10 +83,13 @@ class UserController extends Controller
         $sort_by_asc = $request->get('sort_by_asc');
         $sort_by_name = $request->get('sort_by_name');
         $sort_by_email = $request->get('sort_by_email');
+        $from_date = $request->get('from_date');
+        $to_date = $request->get('to_date');
         $primaryUserSearch = $request->primaryUserSearch;
         $secondaryUserSearch = $request->secondaryUserSearch;
         $usersData = $request->usersData;
         $secondaryUser = $request->secondaryUser;
+        $secondary_user = $request->secondary_user;
         // $user_query = User::withTrashed()->with('contact' , function($query) {
         //     $query->withTrashed();
         // });
@@ -104,15 +107,30 @@ class UserController extends Controller
                 });
             }
         }
-        if (!empty($secondaryUser)) {
+        // if (!empty($secondaryUser)) {
 
-            if ($secondaryUser == 'secondary-user') {
+        //     if ($secondaryUser == 'secondary-user') {
+        //         $user_query = $user_query->orWhereHas('contact', function ($query) {
+        //             $query->whereNotNull('secondary_id')->with('childeren');
+        //         });
+        //         $user = $user_query->limit(10)->get();
+        //     }
+        //     if ($secondaryUser == 'primary-user') {
+
+        //         $user_query = $user_query->orWhereHas('contact', function ($query) {
+        //             $query->whereNotNull('contact_id');
+        //         });
+        //     }
+        // }
+        if (!empty($secondary_user)) {
+
+            if ($secondary_user == 'secondary-user') {
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
                     $query->whereNotNull('secondary_id')->with('childeren');
                 });
                 $user = $user_query->limit(10)->get();
             }
-            if ($secondaryUser == 'primary-user') {
+            if ($secondary_user == 'primary-user') {
 
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
                     $query->whereNotNull('contact_id');
@@ -160,7 +178,77 @@ class UserController extends Controller
             }
         }
 
-        $data = $user_query->orderBy('created_at' , 'Desc')->paginate(10);
+
+        if (!empty($from_date) || !empty($to_date)) {
+            if (!empty($from_date) && !empty($to_date)) {
+                $user_query = $user_query->whereBetween('created_at', [$from_date, $to_date]);
+            } elseif (!empty($from_date)) {
+                $user_query = $user_query->whereDate('created_at', '>=', $from_date);
+            } elseif (!empty($to_date)) {
+                $user_query = $user_query->whereDate('created_at', '<=', $to_date);
+            }
+        }
+
+
+
+
+        $download_csv = $request->get('download_csv');
+        if ($download_csv == '1') {
+            $data = $user_query->get();
+            if (!empty($data)) {
+
+                $csv_data = [];
+                $csv_data[] = [
+                    'First Name',
+                    'Last Name',
+                    'Email',
+                    'Phone No',
+                    'Address',
+                    'Address 2',
+                    'City',
+                    'State',
+                    'Country',
+                    'Zip Code',
+                ];
+
+                foreach ($data as $key => $user) {
+                    foreach ($user->contact as $contact) {
+                      
+                        $csv_data[] = [
+                            !empty($contact->firstName) ? $contact->lastName : $user->first_name,
+                            !empty($contact->lastName) ? $contact->firstName : $user->last_name,
+                            !empty($contact->email) ? $contact->email : $user->email,
+                            !empty($contact->phone) ? $contact->phone : $contact->mobile,
+                            !empty($contact->postalAddress1) ? $contact->postalAddress1 : '',
+                            !empty($contact->postalAddress2) ? $contact->postalAddress2 : '',
+                            !empty($contact->postalCity) ? $contact->postalCity : '',
+                            !empty($contact->postalState) ? $contact->postalState : '',
+                            'US',
+                            !empty($contact->postalPostCode) ? $contact->postalPostCode : '',
+                        ];
+                    }
+                }
+
+                $csv_file_name = 'customers.csv';
+                $file_path = public_path($csv_file_name);
+                $file = fopen($file_path, 'w');
+                foreach ($csv_data as $line) {
+                    fputcsv($file, $line);
+                }
+                fclose($file);
+
+                $headers = array(
+                    'Content-Type' => 'text/csv',
+                );
+
+                return response()->download($file_path, $csv_file_name, $headers);
+            }
+
+        } else {
+
+            $data = $user_query->orderBy('created_at' , 'Desc')->paginate(10)->appends(request()->query());
+        }
+
         $users = User::role(['Admin'])->get();
         $count = $users->count();
         return view('admin.users.index', compact(
@@ -173,6 +261,9 @@ class UserController extends Controller
             'sort_by_asc',
             'sort_by_name',
             'sort_by_email',
+            'from_date',
+            'to_date',
+            'secondary_user'
         ))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
