@@ -52,6 +52,7 @@ class SendAdminDailyRequestSummary extends Command
         $stock_requests = ProductStockNotification::with('product', 'product.options')
             ->where('status', 0)
             ->whereDate('created_at', $yesterday)
+            ->where('stock_summary_sent', 0)
             ->get();
 
         if ($stock_requests->isEmpty()) {
@@ -95,7 +96,20 @@ class SendAdminDailyRequestSummary extends Command
             }
         }
 
+        $this->stock_summary_sent($stock_requests);
         $this->info("Daily stock request summary sent for {$yesterday}.");
+    }
+
+    private function stock_summary_sent($product_stock_notification_users)
+    {
+        foreach ($product_stock_notification_users as $notification) {
+            try {
+                $notification->stock_summary_sent = 1;
+                $notification->save();
+            } catch (\Exception $e) {
+                $this->error("Failed to update stock_summary_sent for ID {$notification->id}: ");
+            }
+        }
     }
 
 }

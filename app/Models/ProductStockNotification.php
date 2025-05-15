@@ -15,6 +15,7 @@ class ProductStockNotification extends Model
         'email',
         'status',
         'is_notified',
+        'stock_summary_sent'
     ];
 
 
