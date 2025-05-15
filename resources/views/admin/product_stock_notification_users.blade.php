@@ -128,11 +128,11 @@
                                         </form>
                                     @else
                                         <form action="" class="mb-0">
-                                            <button type="button" class="btn btn-sm btn-success text-white text-white"> <i class="fa fa-bell-slash"></i></button>
+                                            <button type="button" class="btn btn-sm btn-success text-white text-white"> <i class="fa fa-bell-slash mt-1"></i></button>
                                         </form>
                                     @endif
 
-                                    <a href="{{ route('delete_product_stock_notification_user', $product_stock_notification_user->id) }}" class="btn btn-sm btn-danger text-white ml-2">
+                                    <a href="{{ route('delete_product_stock_notification_user', $product_stock_notification_user->id) }}" onclick="return confirm('Are you sure you want to delete?');" class="btn btn-sm btn-danger text-white ml-2">
                                         <i class="fa fa-trash mt-1"></i>
                                     </a>
                                 </div>
