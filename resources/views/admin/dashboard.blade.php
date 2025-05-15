@@ -68,7 +68,7 @@
 
                                 <span class="create_new_btn_mbl">
                                     <a href="{{route('send_stock_summary_emails')}}" class="btn create_new_product_btn reduce_font_size text-dark">
-                                        Send Stock Summary Emails
+                                        Send Stock Notification Summary
                                     </a>
                                 </span>
 
