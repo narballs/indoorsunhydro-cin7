@@ -99,11 +99,13 @@ class UserController extends Controller
                 $user_query = $user_query->role(['Admin']);
             } elseif ($usersData == 'cin7-merged') {
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
-                    $query->whereNotNull('contact_id');
+                    $query->whereNotNull('contact_id')
+                    ->orWhereNotNull('secondary_id');
                 });
             } elseif ($usersData == 'not-merged') {
                 $user_query = $user_query->orWhereHas('contact', function ($query) {
-                    $query->whereNull('contact_id');
+                    $query->whereNull('contact_id')
+                    ->whereNull('secondary_id');
                 });
             }
         }
