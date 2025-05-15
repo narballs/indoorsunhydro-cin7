@@ -181,11 +181,17 @@ class UserController extends Controller
 
         if (!empty($from_date) || !empty($to_date)) {
             if (!empty($from_date) && !empty($to_date)) {
-                $user_query = $user_query->whereBetween('created_at', [$from_date, $to_date]);
+                $user_query = $user_query->whereHas('contact', function ($query) use ($from_date, $to_date) {
+                    $query->whereBetween('created_at', [$from_date, $to_date]);
+                });
             } elseif (!empty($from_date)) {
-                $user_query = $user_query->whereDate('created_at', '>=', $from_date);
+                $user_query = $user_query->whereHas('contact', function ($query) use ($from_date) {
+                    $query->where('created_at', '>=', $from_date);
+                });
             } elseif (!empty($to_date)) {
-                $user_query = $user_query->whereDate('created_at', '<=', $to_date);
+                $user_query = $user_query->whereHas('contact', function ($query) use ($to_date) {
+                    $query->where('created_at', '<=', $to_date);
+                });
             }
         }
 
