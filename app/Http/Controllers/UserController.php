@@ -221,8 +221,8 @@ class UserController extends Controller
                     foreach ($user->contact as $contact) {
                       
                         $csv_data[] = [
-                            !empty($contact->firstName) ? $contact->lastName : $user->first_name,
-                            !empty($contact->lastName) ? $contact->firstName : $user->last_name,
+                            !empty($contact->firstName) ? $contact->firstName : $user->first_name,
+                            !empty($contact->lastName) ? $contact->lastName : $user->last_name,
                             !empty($contact->email) ? $contact->email : $user->email,
                             !empty($contact->phone) ? $contact->phone : $contact->mobile,
                             !empty($contact->postalAddress1) ? $contact->postalAddress1 : '',
