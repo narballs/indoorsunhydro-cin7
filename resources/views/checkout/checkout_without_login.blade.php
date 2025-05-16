@@ -382,7 +382,7 @@ $cart_price = 0;
                                     <div class="col-xl-2 col-md-4 col-lg-4 col-12">
                                         <label for="" class="update_checkout_labels password_label">Password</label>   
                                     </div>
-                                    <div class="col-xl-10  col-md-8 col-lg-8 col-12">  
+                                    <div class="col-xl-10  col-md-8 col-lg-8 col-12 d-none">  
                                         <span class="d-flex align-items-center justify-content-start justify-content-md-end">
                                             <input type="checkbox" name="is_guest"  id="is_guest" class="is_guest" onclick="not_register_user()">
                                             <label for="" class="update_checkout_labels mb-0 ml-2">I do not want to register for an account</label>
