@@ -1332,9 +1332,14 @@ class CheckoutController extends Controller
                     }
     
                   
-                    $order_items = ApiOrderItem::with('order.texClasses','product','product.options')
-                    ->where('order_id', $order_id)
-                    ->get();
+                    // $order_items = ApiOrderItem::with('order.texClasses','product','product.options')
+                    // ->where('order_id', $order_id)
+                    // ->get();
+
+                    $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
+                    $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
+                        $q->whereIn('option_id', $option_ids);
+                    }])->where('order_id', $order_id)->get();
                     
                     $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && (strtolower($currentOrder->logisticsCarrier) !== 'pickup order' && empty($currentOrder->buylist_id))) {
