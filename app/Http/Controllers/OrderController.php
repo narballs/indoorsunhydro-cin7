@@ -1569,7 +1569,16 @@ class OrderController extends Controller
         $update_order_status_comment->comment = 'Order status updated manually from' . ' ' . (!empty($previous_order_status->status) ? $previous_order_status->status : '') . ' ' . 'to' . ' ' .  (!empty($current_order_status->status) ? $current_order_status->status : '');
         $update_order_status_comment->save();
 
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')->where('order_id', $order_id)->get();
+        // $order_items = ApiOrderItem::with('order.texClasses', 'product.options')->where('order_id', $order_id)->get();
+        $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
+        $order_items = ApiOrderItem::with([
+            'product.options' => function ($q) use ($option_ids) {
+                $q->whereIn('option_id', $option_ids);
+            },
+            'order.texClasses'
+        ])
+        ->where('order_id', $order_id)
+        ->get();
         $user = User::where('id', $order->user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
