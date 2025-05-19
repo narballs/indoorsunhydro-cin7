@@ -2993,7 +2993,8 @@ class CheckoutController extends Controller
                                 'action' => 'Signup',
                                 'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
                             ]);
-                            $content = 'Your account has been created successfully and approved by admin.';
+                            // $content = 'Your account has been created successfully and approved by admin.';
+                            $content = '';
                             $auto_approved = true;
                             $message = $content;
                         }
