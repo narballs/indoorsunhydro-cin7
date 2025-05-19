@@ -256,13 +256,13 @@
                                                 @endif
                                             </td>
                                         </tr> --}}
-                                        <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
+                                        {{-- <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($addresses['billing_address']['mobile'] != null)
                                                 {{$addresses['billing_address']['mobile']}}
                                                 @endif
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             <td>
                                                 @if ($currentOrder->DeliveryPhone != null)
