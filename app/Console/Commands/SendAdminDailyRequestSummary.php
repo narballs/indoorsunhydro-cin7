@@ -47,7 +47,7 @@ class SendAdminDailyRequestSummary extends Command
 
     private function sendStockReportEmail()
     {
-        $yesterday = Carbon::yesterday()->toDateString();
+        $yesterday = Carbon::now('America/Los_Angeles')->subDay()->toDateString();
 
         $stock_requests = ProductStockNotification::with('product', 'product.options')
             ->where('status', 0)
