@@ -369,11 +369,11 @@ $cart_price = 0;
                                 <label for="" class="update_checkout_labels">Email</label>
                                 <div class="form-group">
                                     <input type="text" name="email_address_checkout" class="form-control update_checkout_label_input email_address_checkout" id="email_address_checkout" placeholder="Enter your email">
-                                    <span class="">
+                                    {{-- <span class="">
                                         <span class="success_text existed_text" style="position: absolute;top:45px;right:5%;"></span>
                                     </span>
                                     <div class="success_text success_div mt-1"></div>
-                                    <div class="error_text error_div_email mt-1"></div>
+                                    <div class="error_text error_div_email mt-1"></div> --}}
                                     <div class="checkout_validation_errors email_errors"></div>
                                 </div>
                             </div>
