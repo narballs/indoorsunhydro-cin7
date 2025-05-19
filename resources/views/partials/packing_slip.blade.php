@@ -77,7 +77,9 @@
             $website_name = App\Helpers\SettingHelper::getSetting('website_name');
             $address1 = App\Helpers\SettingHelper::getSetting('store_address_line_1');
             $address2 = App\Helpers\SettingHelper::getSetting('store_address_line_2');
+            // /$logo_name = App\Helpers\SettingHelper::getSetting('logo_name');
             $logo_name = App\Helpers\SettingHelper::getSetting('logo_name');
+            $logo_path = public_path('theme/bootstrap5/images/' . $logo_name);
             $sub_total = 0;
         @endphp
 
@@ -89,7 +91,7 @@
                     <p>{{$address2}}</p>
                 </td>
                 <td style="width: 30%; vertical-align: top;">
-                    <img src="{{ url('/theme/bootstrap5/images/' . $logo_name) }}" alt="" style="width: 100%;" />
+                    <img src="{{ $logo_path }}" alt="" style="width: 100%;" />
                 </td>
             </tr>
         </table>
