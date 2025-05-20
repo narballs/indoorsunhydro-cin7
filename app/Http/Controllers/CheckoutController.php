@@ -1670,12 +1670,32 @@ class CheckoutController extends Controller
 
     public function check_existing_email(Request $request)
     {
+        $is_guest = false;
         $email = $request->email;
-        $user = User::where('email', $email)->first();
+        $user = User::with('guest_contact')
+        ->where('email', $email)
+        ->first();
+
         if (!empty($user)) {
-            return response()->json(['status' => 'success', 'user_status' => 'Existed' , 'message' => 'Please enter your password to continue.']);
-        } else {
-            return response()->json(['status' => 'error', 'user_status' => 'Not Exists' , 'message' => 'Please enter your complete details to continue.']);
+            $is_guest = !empty($user->guest_contact) && $user->guest_contact->is_guest == 1 ? true : false;
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'is_guest' => $is_guest,
+                    'user_status' => 'Existed',
+                    'message' => 'Please enter your password to continue.'
+                ]
+            );
+        } 
+        else {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'is_guest' => $is_guest,
+                    'user_status' => 'Not Exists', 
+                    'message' => 'Please enter your complete details to continue.'
+                ]
+            );
         }
     }
 

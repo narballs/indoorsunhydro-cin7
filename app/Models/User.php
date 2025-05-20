@@ -59,4 +59,10 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\Contact', 'user_id', 'id');
     }
 
+
+    public function guest_contact()
+    {
+        return $this->hasOne('App\Models\Contact', 'user_id', 'id');
+    }
+
 }
