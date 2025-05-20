@@ -392,7 +392,7 @@ $cart_price = 0;
                                 <div class="form-group password_group_input">
                                     <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
                                     <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right" id="password_show_hide">
-                                        Forgot password?
+                                        Reset password
                                     </a>
                                     <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
