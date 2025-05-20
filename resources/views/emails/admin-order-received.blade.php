@@ -152,8 +152,8 @@
                                         <tr style="color:#000000;font-color:#000000;font-size: 12px; font-weight:400;">
                                             @if ($currentOrder->BillingPhone != null)
                                                 {{$currentOrder->BillingPhone}}
-                                            @elseif ($addresses['shipping_address']['phone'] != null)
-                                                {{$addresses['shipping_address']['phone']}}
+                                            @elseif ($addresses['billing_address']['phone'] != null)
+                                                {{$addresses['billing_address']['phone']}}
                                             @endif
                                         </tr>
                                     </tbody>
