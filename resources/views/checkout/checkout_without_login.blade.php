@@ -2,6 +2,18 @@
 @include('partials.top-bar')
 @include('partials.search-bar')
 <style>
+    .reset_password_style {
+        color: #7dc73e;
+        font-weight: 400;
+        font-family: 'poppins';
+        line-height: normal;
+        font-size: 14px;
+    }
+
+    .reset_password_style:hover {
+        color: #7dc73e;
+        text-decoration: underline;
+    }
     .update_checkout_labels {
         color: #111;
         font-family: 'Poppins';
@@ -391,7 +403,7 @@ $cart_price = 0;
                                 </div>
                                 <div class="form-group password_group_input">
                                     <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
-                                    <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right" id="password_show_hide">
+                                    <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right reset_password_style" id="password_show_hide">
                                         Reset password
                                     </a>
                                     <div class=" password_errors checkout_validation_errors"></div>
