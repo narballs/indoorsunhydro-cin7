@@ -382,7 +382,7 @@ $cart_price = 0;
                                     <div class="col-xl-2 col-md-4 col-lg-4 col-12">
                                         <label for="" class="update_checkout_labels password_label">Password</label>   
                                     </div>
-                                    <div class="col-xl-10  col-md-8 col-lg-8 col-12 d-none">  
+                                    <div class="col-xl-10  col-md-8 col-lg-8 col-12 guest_user_div d-none">  
                                         <span class="d-flex align-items-center justify-content-start justify-content-md-end">
                                             <input type="checkbox" name="is_guest"  id="is_guest" class="is_guest" onclick="not_register_user()">
                                             <label for="" class="update_checkout_labels mb-0 ml-2">I do not want to register for an account</label>
@@ -391,6 +391,9 @@ $cart_price = 0;
                                 </div>
                                 <div class="form-group password_group_input">
                                     <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
+                                    <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right" id="password_show_hide">
+                                        Forgot password?
+                                    </a>
                                     <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
                             </div>
@@ -786,36 +789,105 @@ $cart_price = 0;
             }
         });
 
-        $('.email_address_checkout').on('change', function(e) {
+        // $('.email_address_checkout').on('input', function(e) {
+        //     e.preventDefault();
+        //     var email = $(this).val();
+        //     if (email != '') {
+        //         $.ajax({
+        //             url: '/check-existing-email',
+        //             type: 'get',
+        //             data: {
+        //                 email: email,
+        //                 _token: '{{ csrf_token() }}'
+        //             },
+        //             success: function(response) {
+        //                 if (response.status == 'success') {
+        //                     $('.error_div_email').html('');
+        //                     $('.existed_text').html(response.user_status);
+        //                     $('.success_div').html(response.message);
+        //                     $('.password_div').removeClass('d-none');
+        //                     $('.billing_div').addClass('d-none');
+        //                     $('.shipping_div').addClass('d-none');
+        //                     $('.password_show_hide').removeClass('d-none');
+        //                     $('.guest_user_div').addClass('d-none');
+        //                 } else {
+        //                     $('.success_div').html('');
+        //                     $('.existed_text').html(response.user_status);
+        //                     $('.error_div_email').html(response.message);
+        //                     $('.billing_div').removeClass('d-none');
+        //                     $('.password_div').removeClass('d-none');
+        //                     $('.password_show_hide').addClass('d-none');
+        //                     $('.guest_user_div').removeClass('d-none');
+
+        //                 }
+        //             }
+        //         });
+        //     }
+        // });
+
+        let debounceTimer;
+
+        function completeEmail(email) {
+            let re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        $('.email_address_checkout').on('input', function(e) {
             e.preventDefault();
-            var email = $(this).val();
-            if (email != '') {
-                $.ajax({
-                    url: '/check-existing-email',
-                    type: 'get',
-                    data: {
-                        email: email,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.status == 'success') {
-                            $('.error_div_email').html('');
-                            $('.existed_text').html(response.user_status);
-                            $('.success_div').html(response.message);
-                            $('.password_div').removeClass('d-none');
-                            $('.billing_div').addClass('d-none');
-                            $('.shipping_div').addClass('d-none');
-                        } else {
-                            $('.success_div').html('');
-                            $('.existed_text').html(response.user_status);
-                            $('.error_div_email').html(response.message);
-                            $('.billing_div').removeClass('d-none');
-                            $('.password_div').removeClass('d-none');
+            clearTimeout(debounceTimer);
+
+            let email = $(this).val().trim();
+
+            debounceTimer = setTimeout(function() {
+                if (email !== '' && completeEmail(email)) {
+                    $.ajax({
+                        url: '/check-existing-email',
+                        type: 'GET',
+                        data: {
+                            email: email,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                $('.error_div_email').html('');
+                                $('.existed_text').html(response.user_status);
+                                $('.success_div').html(response.message);
+
+                                $('.password_div').removeClass('d-none');
+                                $('.billing_div').addClass('d-none');
+                                $('.shipping_div').addClass('d-none');
+                                $('.password_show_hide').removeClass('d-none');
+
+                                $('.guest_user_div').addClass('d-none');
+
+                                $('#is_guest').prop('checked', false); // optional reset
+
+                                $('.password_group_input').removeClass('d-none');
+                                $('.password_label').removeClass('d-none');
+
+                            } else {
+                                $('.success_div').html('');
+                                $('.existed_text').html(response.user_status);
+                                $('.error_div_email').html(response.message);
+
+                                $('.billing_div').removeClass('d-none');
+                                $('.password_div').removeClass('d-none');
+                                $('.password_show_hide').addClass('d-none');
+
+                                $('.guest_user_div').removeClass('d-none');
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                } else {
+                    $('.error_div_email, .success_div, .existed_text').html('');
+                    $('.guest_user_div').addClass('d-none');
+                    $('#is_guest').prop('checked', false); // optional reset
+                } // ✅ This was missing
+            }, 300); // debounce time
         });
+
+
+
         $('.check_out_pay_now').on('click', function(e) {
             e.preventDefault();
             var is_guest = $('.is_guest').is(':checked') ? 1 : 0;

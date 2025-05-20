@@ -2785,7 +2785,8 @@ class UserController extends Controller
     public function reset_password(Request $request)
     {
         // Retrieve the user first
-        $user = User::where('email', $request->email)->first();
+        $user = User::with('guest_contact')
+        ->where('email', $request->email)->first();
 
 
 
@@ -2805,6 +2806,19 @@ class UserController extends Controller
             'hash' => null,
             // 'updated_at' => Carbon::now()
         ]);
+
+
+        if (!empty($user->guest_contact)) {
+            $update_guest_contact = Contact::where('user_id', $user->id)
+            ->where('is_guest', 1)
+            ->first();
+
+            if (!empty($update_guest_contact)) {
+                $update_guest_contact->user_id = $user->id;
+                $update_guest_contact->is_guest = 0;
+                $update_guest_contact->save();
+            }
+        }
 
         // Log in the user
         Auth::loginUsingId($user->id);
