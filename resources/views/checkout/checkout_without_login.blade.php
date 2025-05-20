@@ -16,7 +16,7 @@
     }
 
 
-    .guest_user_message {
+    .guest_user_message mx-3 {
         color: #000;
         font-family: 'Poppins';
         font-size: 14px;
@@ -416,7 +416,7 @@ $cart_price = 0;
                                     <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right reset_password_style" id="password_show_hide">
                                         Reset password
                                     </a>
-                                    <span class="guest_user_message"></span>
+                                    <span class="guest_user_message mx-3"></span>
                                     <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
                             </div>
