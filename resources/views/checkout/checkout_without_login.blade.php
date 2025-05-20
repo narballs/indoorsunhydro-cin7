@@ -21,7 +21,7 @@
         font-family: 'Poppins';
         font-size: 14px;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 400;
         line-height: normal;
     }
     .update_checkout_labels {
@@ -412,7 +412,7 @@ $cart_price = 0;
                                     </div>
                                 </div>
                                 <div class="form-group password_group_input">
-                                    <input type="password" name="password" class="form-control update_checkout_label_input password_checkout" id="password" placeholder="Password">
+                                    <input type="password" name="password" class="form-control update_checkout_label_input password_checkout mb-2" id="password" placeholder="Password">
                                     <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right reset_password_style" id="password_show_hide">
                                         Reset password
                                     </a>
