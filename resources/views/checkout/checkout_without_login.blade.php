@@ -14,6 +14,16 @@
         color: #7dc73e;
         text-decoration: underline;
     }
+
+
+    .guest_user_message {
+        color: #000;
+        font-family: 'Poppins';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
     .update_checkout_labels {
         color: #111;
         font-family: 'Poppins';
@@ -406,6 +416,7 @@ $cart_price = 0;
                                     <a href="{{ url('/lost-password') }}" class="password_show_hide btn-btn-info text-right reset_password_style" id="password_show_hide">
                                         Reset password
                                     </a>
+                                    <span class="guest_user_message"></span>
                                     <div class=" password_errors checkout_validation_errors"></div>
                                 </div>
                             </div>
@@ -877,6 +888,12 @@ $cart_price = 0;
                                 $('.password_group_input').removeClass('d-none');
                                 $('.password_label').removeClass('d-none');
 
+                                if (response.is_guest == true) {
+                                    $('.guest_user_message').text('(Returning customer)');
+                                } else {
+                                    $('.guest_user_message').text('');
+                                }
+
                             } else {
                                 $('.success_div').html('');
                                 $('.existed_text').html(response.user_status);
@@ -887,6 +904,7 @@ $cart_price = 0;
                                 $('.password_show_hide').addClass('d-none');
 
                                 $('.guest_user_div').removeClass('d-none');
+                                $('.guest_user_message').text('');
                             }
                         }
                     });
@@ -894,6 +912,7 @@ $cart_price = 0;
                     $('.error_div_email, .success_div, .existed_text').html('');
                     $('.guest_user_div').addClass('d-none');
                     $('#is_guest').prop('checked', false); // optional reset
+                    $('.guest_user_message').text('');
                 } // ✅ This was missing
             }, 300); // debounce time
         });
