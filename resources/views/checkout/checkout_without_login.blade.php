@@ -16,7 +16,7 @@
     }
 
 
-    .guest_user_message mx-3 {
+    .guest_user_message {
         color: #000;
         font-family: 'Poppins';
         font-size: 14px;
