@@ -1753,7 +1753,7 @@ class UserHelper
     //     return $data['status'];
     // }
 
-    public static function validateFullAddress($address1, $address2, $city, $state, $zip, $country = 'USA')
+    public static function validateFullAddress($address1, $address2, $city, $state, $zip, $country)
     {
         // Convert state name to state code
         $us_state = DB::table('us_states')->whereRaw('LOWER(state_name) = ?', [strtolower($state)])->first();
@@ -1772,7 +1772,7 @@ class UserHelper
         $fullAddress = trim("{$address1} {$address2}, {$city}, {$stateCode} {$zip}");
         $cacheKey = 'validated_address_' . md5(strtolower($fullAddress));
 
-        return Cache::remember($cacheKey, now()->addDays(7), function () use ($fullAddress, $zip, $city, $stateCode, $address1) {
+        return Cache::remember($cacheKey, now()->addDays(7), function () use ($fullAddress, $zip, $city, $stateCode) {
             $client = new \GuzzleHttp\Client();
             $apiKey = config('services.google_address_validator.address_validator_google_key');
 
@@ -1795,81 +1795,48 @@ class UserHelper
                 }
 
                 $result = $data['results'][0];
-
-                // Handle partial match from Google
-                if (!empty($result['partial_match'])) {
-                    return [
-                        'valid' => false,
-                        'status' => 'partial_match',
-                        'message' => 'We found a close match for your address. Please review and confirm the suggestion.',
-                        'suggested_address' => $result['formatted_address'],
-                    ];
-                }
-
-                // Compare components
                 $components = $result['address_components'];
-                $matchScore = 0;
 
-                // Normalize input street
-                $normalizedInputStreet = strtolower(preg_replace('/[^a-z0-9]/', '', $address1));
+                // Check city, state, zip
+                $cityMatch = false;
+                $stateMatch = false;
+                $zipMatch = false;
 
-                // Get Google street
-                $streetParts = [];
-                foreach ($components as $component) {
-                    if (in_array('street_number', $component['types']) || in_array('route', $component['types'])) {
-                        $streetParts[] = strtolower($component['long_name']);
-                    }
-                }
-                $googleStreet = strtolower(preg_replace('/[^a-z0-9]/', '', implode(' ', $streetParts)));
-
-                if ($googleStreet === $normalizedInputStreet) $matchScore++;
-
-                // Match city
                 foreach ($components as $component) {
                     if (in_array('locality', $component['types']) || in_array('postal_town', $component['types'])) {
                         if (strtolower($component['long_name']) === strtolower($city)) {
-                            $matchScore++;
+                            $cityMatch = true;
                         }
                     }
-                }
-
-                // Match state
-                foreach ($components as $component) {
                     if (in_array('administrative_area_level_1', $component['types'])) {
                         if (
                             strtolower($component['short_name']) === strtolower($stateCode) ||
                             strtolower($component['long_name']) === strtolower($stateCode)
                         ) {
-                            $matchScore++;
+                            $stateMatch = true;
                         }
                     }
-                }
-
-                // Match ZIP
-                foreach ($components as $component) {
                     if (in_array('postal_code', $component['types'])) {
                         if (strtolower($component['long_name']) === strtolower($zip)) {
-                            $matchScore++;
+                            $zipMatch = true;
                         }
                     }
                 }
 
-                // Fully matched
-                if ($matchScore === 4) {
+                if ($cityMatch && $stateMatch && $zipMatch) {
                     return [
                         'valid' => true,
                         'status' => 'success',
-                        'message' => 'Address validated successfully.',
+                        'message' => 'Address validated successfully (city, state, and ZIP code matched).',
                         'formatted_address' => $result['formatted_address'],
                         'location' => $result['geometry']['location'],
                     ];
                 }
 
-                // Partial match (structure matched but differs slightly)
                 return [
                     'valid' => false,
-                    'status' => 'partial',
-                    'message' => 'The address was found, but some parts do not match exactly. Please review our suggested version.',
+                    'status' => 'error',
+                    'message' => 'City, state, or ZIP code does not match the validated address. Please check your input.',
                     'suggested_address' => $result['formatted_address'],
                 ];
 
@@ -1882,6 +1849,7 @@ class UserHelper
             }
         });
     }
+
 
 
 

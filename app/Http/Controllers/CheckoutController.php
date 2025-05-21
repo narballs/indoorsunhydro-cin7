@@ -2915,45 +2915,24 @@ class CheckoutController extends Controller
                     $postalState = $postal_state_name;
                     $postalPostCode = $request->postal_zip_code;
 
-                    // $validate_address_1 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode);
-                    
-                    // if (!$validate_address_1['valid']) {
-                    //     if ($validate_address_1['status'] === 'error') {
-                    //         return response()->json([
-                    //             'status' => 'error',
-                    //             'address_validator' => false,
-                    //             'validator_message' => $validate_address_1['message'] ?? 'Address validation failed.',
-                    //             'suggested_address' => $validate_address_1['suggested_address'] ?? null,
-                    //             'formatted_address' => $validate_address_1['formatted_address'] ?? null,
-                    //         ], 400);
-                    //     }
-
-                    //     if ($validate_address_1['status'] === 'partial_match' || $validate_address_1['status'] === 'partial') {
-                    //         return response()->json([
-                    //             'status' => 'warning',
-                    //             'address_validator' => false,
-                    //             'validator_message' => $validate_address_1['message'] ?? 'Address partially matched.',
-                    //             'suggested_address' => $validate_address_1['suggested_address'] ?? null,
-                    //             'formatted_address' => $validate_address_1['formatted_address'] ?? null,
-                    //         ]);
-                    //     }
-
-                    //     // Fully invalid address (or error)
+                    // $validate_address_1 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode, $country = 'USA');
+                    // if ($validate_address_1['valid'] == false) {
                     //     return response()->json([
-                    //         'status' => 'error',
+                    //         'different_shipping_address' => 1,
+                    //         'status' => 'address_error',
                     //         'address_validator' => false,
                     //         'validator_message' => $validate_address_1['message'] ?? 'Address validation failed.',
-                    //         'suggested_address' => $validate_address_1['suggested_address'] ?? null,
-                    //         'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    //         'suggested_address' => $validate_address_1['suggested_address'] ?? '',
+                    //         'formatted_address' => $validate_address_1['formatted_address'] ?? '',
                     //     ], 400);
                     // }
 
-                    // Success — address is valid
                     // return response()->json([
-                    //     'status' => 'success',
+                    //     'different_shipping_address' => 1,
+                    //     'status' => 'address_success',
                     //     'address_validator' => true,
                     //     'validator_message' => $validate_address_1['message'] ?? 'Address validated successfully.',
-                    //     'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    //     'formatted_address' => $validate_address_1['formatted_address'] ?? '',
                     // ]);
                 } 
                 else {
@@ -2963,45 +2942,24 @@ class CheckoutController extends Controller
                     $postalState = $state_name;
                     $postalPostCode =$postCode;
                     
-                    // $validate_address_2 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode);
-
-                    // if (!$validate_address_2['valid']) {
-                    //     if ($validate_address_2['status'] === 'error') {
-                    //         return response()->json([
-                    //             'status' => 'error',
-                    //             'address_validator' => false,
-                    //             'validator_message' => $validate_address_2['message'] ?? 'Address validation failed.',
-                    //             'suggested_address' => $validate_address_2['suggested_address'] ?? null,
-                    //             'formatted_address' => $validate_address_2['formatted_address'] ?? null,
-                    //         ], 400);
-                    //     }
-
-                    //     if ($validate_address_2['status'] === 'partial_match' || $validate_address_2['status'] === 'partial') {
-                    //         return response()->json([
-                    //             'status' => 'warning',
-                    //             'address_validator' => false,
-                    //             'validator_message' => $validate_address_2['message'] ?? 'Address partially matched.',
-                    //             'suggested_address' => $validate_address_2['suggested_address'] ?? null,
-                    //             'formatted_address' => $validate_address_2['formatted_address'] ?? null,
-                    //         ]);
-                    //     }
-
-                    //     // Fully invalid address (or error)
+                    // $validate_address_2 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode, $country = 'USA');
+                    // if ($validate_address_2['valid'] == false) {
                     //     return response()->json([
-                    //         'status' => 'error',
+                    //         'different_shipping_address' => 0,
+                    //         'status' => 'address_error',
                     //         'address_validator' => false,
                     //         'validator_message' => $validate_address_2['message'] ?? 'Address validation failed.',
-                    //         'suggested_address' => $validate_address_2['suggested_address'] ?? null,
-                    //         'formatted_address' => $validate_address_2['formatted_address'] ?? null,
+                    //         'suggested_address' => $validate_address_2['suggested_address'] ?? '',
+                    //         'formatted_address' => $validate_address_2['formatted_address'] ?? '',
                     //     ], 400);
                     // }
 
-                    // Success — address is valid
                     // return response()->json([
-                    //     'status' => 'success',
+                    //     'different_shipping_address' => 0,
+                    //     'status' => 'address_success',
                     //     'address_validator' => true,
                     //     'validator_message' => $validate_address_2['message'] ?? 'Address validated successfully.',
-                    //     'formatted_address' => $validate_address_2['formatted_address'] ?? null,
+                    //     'formatted_address' => $validate_address_2['formatted_address'] ?? '',
                     // ]);
                 }
                 

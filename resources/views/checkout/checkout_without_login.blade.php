@@ -971,6 +971,70 @@ $cart_price = 0;
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
+
+
+                        // if (response.address_validator === false) {
+                        //     $('.update_checkout_loader').addClass('d-none');
+
+                        //     let title = response.different_shipping_address == 1 
+                        //         ? 'Shipping Address Error' 
+                        //         : 'Billing & Shipping Address Error';
+
+                        //     Swal.fire({
+                        //         toast: false,
+                        //         icon: 'error',
+                        //         title: title,
+                        //         html: `${response.validator_message}<br/>${response.suggested_address}<br/>${response.formatted_address}`,
+                        //         position: 'center',
+                        //         showConfirmButton: true,
+                        //         confirmButtonText: 'Confirm',
+                        //         timerProgressBar: false,
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         customClass: {
+                        //             confirmButton: 'my-confirm-button',
+                        //             popup: 'swal2-popup-class',
+                        //             actions: 'my-actions-class'
+                        //         }
+                        //     });
+
+                        //     return false;
+                        // } 
+                        // else {
+                        //     if (response.status == 'success') {
+                        //         if (response.access === true) {
+                        //             if (response.auto_approved == true) {
+                        //                 if (response.is_admin === true) {
+                        //                     window.location.href = '/admin/dashboard';
+                        //                 } else {
+                        //                     window.location.href = '/checkout';
+                        //                 }
+                        //             } else {
+                        //                 window.location.href = '/cart';
+                        //             }
+                        //         } else {
+                        //             $('.update_checkout_loader').addClass('d-none');
+                        //             $('.error_div').text(response.message);
+                        //         }
+                        //     } else {
+                        //         if (response.registration_status == true) {
+                        //             if (response.auto_approved == true) {
+                        //                 $('.update_checkout_loader').addClass('d-none');
+                        //                 $('.error_div').text('Thankyou for entering your details. Now you can place order');
+                        //                 window.location.href = '/checkout';
+                        //             } else {
+                        //                 $('.update_checkout_loader').addClass('d-none');
+                        //                 $('.error_div').text(response.message);
+                        //                 window.location.href = '/cart';
+                        //             }
+                                    
+                        //         } else {
+                        //             $('.update_checkout_loader').addClass('d-none');
+                        //             $('.error_div').text(response.message);
+                        //         }
+                        //     }
+                        // }
+
                         
                         if (response.status == 'success') {
                             if (response.access === true) {
@@ -1006,11 +1070,35 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        // console.log(response);
-                        // if (response.responseJSON.address_validator == false) {
+                        // if (response.responseJSON.address_validator === false) {
                         //     $('.update_checkout_loader').addClass('d-none');
-                        //     $('.address_validator').html(response.responseJSON.validator_message);
+
+                        //     let title = response.responseJSON.different_shipping_address == 1 
+                        //         ? 'Shipping Address Error' 
+                        //         : 'Billing & Shipping Address Error';
+
+                        //     Swal.fire({
+                        //         toast: false,
+                        //         icon: 'error',
+                        //         title: title,
+                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        //         position: 'center',
+                        //         showConfirmButton: true,
+                        //         confirmButtonText: 'Confirm',
+                        //         timerProgressBar: false,
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         customClass: {
+                        //             confirmButton: 'my-confirm-button',
+                        //             popup: 'swal2-popup-class',
+                        //             actions: 'my-actions-class'
+                        //         }
+                        //     });
+
+                        //     return false;
                         // }
+
+
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
                         if (errors) {
@@ -1127,6 +1215,67 @@ $cart_price = 0;
                     },
                     success: function(response) {
                         
+                        // if (response.address_validator === false) {
+                        //     $('.update_checkout_loader').addClass('d-none');
+
+                        //     let title = response.different_shipping_address == 1 
+                        //         ? 'Shipping Address Error' 
+                        //         : 'Billing & Shipping Address Error';
+
+                        //     Swal.fire({
+                        //         toast: false,
+                        //         icon: 'error',
+                        //         title: title,
+                        //         html: `${response.validator_message}<br/>${response.suggested_address}<br/>${response.formatted_address}`,
+                        //         position: 'center',
+                        //         showConfirmButton: true,
+                        //         confirmButtonText: 'Confirm',
+                        //         timerProgressBar: false,
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         customClass: {
+                        //             confirmButton: 'my-confirm-button',
+                        //             popup: 'swal2-popup-class',
+                        //             actions: 'my-actions-class'
+                        //         }
+                        //     });
+
+                        //     return false;
+                        // } else {
+                        //     if (response.status == 'success') {
+                        //         if (response.access === true) {
+                        //             if (response.auto_approved == true) {
+                        //                 if (response.is_admin === true) {
+                        //                     window.location.href = '/admin/dashboard';
+                        //                 } else {
+                        //                     window.location.href = '/checkout';
+                        //                 }
+                        //             } else {
+                        //                 window.location.href = '/cart';
+                        //             }
+                        //         } else {
+                        //             $('.update_checkout_loader').addClass('d-none');
+                        //             $('.error_div').text(response.message);
+                        //         }
+                        //     } else {
+                        //         if (response.registration_status == true) {
+                        //             if (response.auto_approved == true) {
+                        //                 $('.update_checkout_loader').addClass('d-none');
+                        //                 $('.error_div').text(response.message);
+                        //                 window.location.href = '/checkout';
+                        //             } else {
+                        //                 $('.update_checkout_loader').addClass('d-none');
+                        //                 $('.error_div').text(response.message);
+                        //                 window.location.href = '/cart';
+                        //             }
+                                    
+                        //         } else {
+                        //             $('.update_checkout_loader').addClass('d-none');
+                        //             $('.error_div').text(response.message);
+                        //         }
+                        //     }
+                        // }
+                        
                         if (response.status == 'success') {
                             if (response.access === true) {
                                 if (response.auto_approved == true) {
@@ -1161,11 +1310,34 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        // console.log(response);
-                        // if (response.responseJSON.address_validator == false) {
+                        // if (response.responseJSON.address_validator === false) {
                         //     $('.update_checkout_loader').addClass('d-none');
-                        //     $('.address_validator').html(response.responseJSON.validator_message);
+
+                        //     let title = response.responseJSON.different_shipping_address == 1 
+                        //         ? 'Shipping Address Error' 
+                        //         : 'Billing & Shipping Address Error';
+
+                        //     Swal.fire({
+                        //         toast: false,
+                        //         icon: 'error',
+                        //         title: title,
+                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        //         position: 'center',
+                        //         showConfirmButton: true,
+                        //         confirmButtonText: 'Confirm',
+                        //         timerProgressBar: false,
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         customClass: {
+                        //             confirmButton: 'my-confirm-button',
+                        //             popup: 'swal2-popup-class',
+                        //             actions: 'my-actions-class'
+                        //         }
+                        //     });
+
+                        //     return false;
                         // }
+
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
                         if (errors) {
