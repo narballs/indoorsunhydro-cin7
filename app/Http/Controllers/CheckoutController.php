@@ -2914,13 +2914,89 @@ class CheckoutController extends Controller
                     $postalCity = $request->postal_city;
                     $postalState = $postal_state_name;
                     $postalPostCode = $request->postal_zip_code;
-                } else {
+
+                    // $validate_address_1 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode);
+                    
+                    // if (!$validate_address_1['valid']) {
+                    //     if ($validate_address_1['status'] === 'error') {
+                    //         return response()->json([
+                    //             'status' => 'error',
+                    //             'address_validator' => false,
+                    //             'validator_message' => $validate_address_1['message'] ?? 'Address validation failed.',
+                    //             'suggested_address' => $validate_address_1['suggested_address'] ?? null,
+                    //             'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    //         ], 400);
+                    //     }
+
+                    //     if ($validate_address_1['status'] === 'partial_match' || $validate_address_1['status'] === 'partial') {
+                    //         return response()->json([
+                    //             'status' => 'warning',
+                    //             'address_validator' => false,
+                    //             'validator_message' => $validate_address_1['message'] ?? 'Address partially matched.',
+                    //             'suggested_address' => $validate_address_1['suggested_address'] ?? null,
+                    //             'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    //         ]);
+                    //     }
+
+                    //     // Fully invalid address (or error)
+                    //     return response()->json([
+                    //         'status' => 'error',
+                    //         'address_validator' => false,
+                    //         'validator_message' => $validate_address_1['message'] ?? 'Address validation failed.',
+                    //         'suggested_address' => $validate_address_1['suggested_address'] ?? null,
+                    //         'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    //     ], 400);
+                    // }
+
+                    // Success — address is valid
+                    return response()->json([
+                        'status' => 'success',
+                        'address_validator' => true,
+                        'validator_message' => $validate_address_1['message'] ?? 'Address validated successfully.',
+                        'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    ]);
+                } 
+                else {
                     $postalAddress1 = $address1;
                     $postalAddress2 =$address2;
                     $postalCity = $city;
                     $postalState = $state_name;
                     $postalPostCode =$postCode;
+                    
+                    // $validate_address_2 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode);
+
+                    // if (!$validate_address_2['valid']) {
+                    //     if ($validate_address_2['status'] === 'error') {
+                    //         return response()->json([
+                    //             'status' => 'error',
+                    //             'address_validator' => false,
+                    //             'validator_message' => $validate_address_2['message'] ?? 'Address validation failed.',
+                    //             'suggested_address' => $validate_address_2['suggested_address'] ?? null,
+                    //             'formatted_address' => $validate_address_2['formatted_address'] ?? null,
+                    //         ], 400);
+                    //     }
+
+                    //     if ($validate_address_2['status'] === 'partial_match' || $validate_address_2['status'] === 'partial') {
+                    //         return response()->json([
+                    //             'status' => 'warning',
+                    //             'address_validator' => false,
+                    //             'validator_message' => $validate_address_2['message'] ?? 'Address partially matched.',
+                    //             'suggested_address' => $validate_address_2['suggested_address'] ?? null,
+                    //             'formatted_address' => $validate_address_2['formatted_address'] ?? null,
+                    //         ]);
+                    //     }
+
+                    //     // Fully invalid address (or error)
+                    //     return response()->json([
+                    //         'status' => 'error',
+                    //         'address_validator' => false,
+                    //         'validator_message' => $validate_address_2['message'] ?? 'Address validation failed.',
+                    //         'suggested_address' => $validate_address_2['suggested_address'] ?? null,
+                    //         'formatted_address' => $validate_address_2['formatted_address'] ?? null,
+                    //     ], 400);
+                    // }
                 }
+                
                 DB::beginTransaction();
                 try {
                     $price_column = null;
