@@ -64,6 +64,12 @@
                                             <span class="badge badge-primary">New</span>
                                         @elseif($order_detail->order_id == null && $order_detail->isApproved == 2)
                                             <span class="badge badge-danger">Cancelled</span>
+                                        @elseif($order_detail->order_id != null && $order_detail->isApproved == 3)
+                                            <span class="badge badge-info">Refunded</span>
+                                        @elseif($order_detail->order_id != null && $order_detail->isApproved == 4)
+                                            <span class="badge badge-info">Partially Refunded</span>
+                                        @elseif($order_detail->order_id == null && $order_detail->isApproved == 5)
+                                            <span class="badge badge-info">Pending</span>
                                         @endif
                                     </span>
                                 </div>

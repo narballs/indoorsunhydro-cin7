@@ -244,6 +244,8 @@
                                                                             <span class="badge badge-info">Refunded</span>
                                                                         @elseif ($user_order->isApproved == 4)
                                                                             <span class="badge badge-info">Partially Refunded</span>
+                                                                        @elseif ($user_order->isApproved == 5)
+                                                                            <span class="badge badge-info">Pending</span>
                                                                         @endif
                                                                     </span>
                                                                 </td>
