@@ -1307,7 +1307,7 @@ class CheckoutController extends Controller
 
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
-                        $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;
+                        $currentOrder->isApproved = $currentOrder->isApproved == 2 || $currentOrder->isApproved == 5 ? 0 :  $currentOrder->isApproved;
                         $currentOrder->charge_id = $chargeId;
                         $currentOrder->card_number = $card_brand . ' '. $last4;
                         $currentOrder->save();
@@ -1428,14 +1428,6 @@ class CheckoutController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
     
-                    // if (!empty($users_with_role_admin)) {
-                    //     foreach ($users_with_role_admin as $role_admin) {
-                    //         $subject = 'New order received';
-                    //         $adminTemplate = 'emails.admin-order-received';
-                    //         $data['email'] = $role_admin->email;
-                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    //     }
-                    // }
 
                     $specific_admin_notifications = SpecificAdminNotification::all();
                     if (count($specific_admin_notifications) > 0) {
@@ -1502,7 +1494,7 @@ class CheckoutController extends Controller
 
                     if ($payment_succeeded->data->object->paid == true) {
                         $currentOrder->payment_status = 'paid';
-                        $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 0 :  $currentOrder->isApproved;
+                        $currentOrder->isApproved = $currentOrder->isApproved == 2 || $currentOrder->isApproved == 5 ? 0 :  $currentOrder->isApproved;
                         $currentOrder->charge_id = $chargeId;
                         $currentOrder->card_number = $card_brand . ' '. $last4;
                         $currentOrder->save();
@@ -1527,9 +1519,14 @@ class CheckoutController extends Controller
                     }
     
                   
-                    $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
-                    ->where('order_id', $order_id)
-                    ->get();
+                    // $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    // ->where('order_id', $order_id)
+                    // ->get();
+
+                    $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
+                    $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
+                        $q->whereIn('option_id', $option_ids);
+                    }])->where('order_id', $order_id)->get();
 
                     $pickup = !empty($currentOrder->logisticsCarrier) && strtolower($currentOrder->logisticsCarrier) === 'pickup order' ? true : false;
                     
@@ -1662,6 +1659,40 @@ class CheckoutController extends Controller
 
 
             break;
+            case 'charge.pending':
+            $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+            $payment_event = $stripe->events->retrieve($event->id, []);
+
+            $charge = $event->data->object;
+            $chargeId = $charge->id;
+            $last4 = $charge->payment_method_details->card->last4 ?? null;
+            $card_brand = $charge->payment_method_details->card->brand ?? null;
+
+            $order_id = $payment_event->data->object->metadata->order_id ?? null;
+
+            if ($order_id) {
+                $currentOrder = ApiOrder::where('id', $order_id)->first();
+
+                if ($currentOrder) {
+                    // Mark order as pending payment (waiting on bank funds)
+                    $currentOrder->payment_status = 'pending';
+                     $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 5 :  $currentOrder->isApproved; 
+                    $currentOrder->charge_id = $chargeId;
+                    $currentOrder->card_number = $card_brand . ' ' . $last4;
+                    $currentOrder->save();
+
+                    // Add comment to order history
+                    $order_comment = new OrderComment;
+                    $order_comment->order_id = $order_id;
+                    $order_comment->comment = 'Order payment is pending — awaiting funds from bank (charge.pending webhook).';
+                    $order_comment->save();
+
+                    // You can add email notification to customer/admin here if needed
+                }
+            }
+            break;
+
+
             // Add more cases for other event types you want to handle
         }
         

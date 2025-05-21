@@ -327,6 +327,12 @@
                                                         <span class="text-success">Fullfilled</span>
                                                     @elseif ($order->isApproved == 2)
                                                         <span class="text-danger">Cancelled</span>
+                                                    @elseif ($order->isApproved == 3)
+                                                        <span class="text-info">Refunded</span>
+                                                    @elseif ($order->isApproved == 4)
+                                                        <span class="text-info">Partially Refunded</span>
+                                                    @elseif ($order->isApproved == 5)
+                                                        <span class="text-info">Pending</span>
                                                     @endif
                                                 </div>
                                             </div>
