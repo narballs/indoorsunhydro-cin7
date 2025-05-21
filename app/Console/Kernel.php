@@ -47,13 +47,27 @@ class Kernel extends ConsoleKernel
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyFourMinutes();
-        $schedule->command('stock:checking')->everyFiveMinutes();
+        // $schedule->command('stock:checking')->everyFiveMinutes();
+        // 9:00 AM – 5:59 PM → every 5 minutes
+        $schedule->command('stock:checking')
+            ->everyFiveMinutes()
+            ->between('09:00', '17:59');
+
+        // 6:00 PM – 11:59 PM → every 30 minutes
+        $schedule->command('stock:checking')
+            ->everyThirtyMinutes()
+            ->between('18:00', '23:59');
+
+        // 12:00 AM – 8:59 AM → every 30 minutes
+        $schedule->command('stock:checking')
+            ->everyThirtyMinutes()
+            ->between('00:00', '08:59');
+
         $schedule->command('auto:notify')->everyThreeMinutes();
-        $schedule->command('admin:stockrequest')->weekly();
+        // $schedule->command('admin:stockrequest')->weekly();
         $schedule->command('sync:payouts')->daily();
         $schedule->command('sync:gmc')->hourly();
         $schedule->command('sync:ai_suggested_prices')->hourly();
-        // $schedule->command('update:lags-products')->hourly();
         $schedule->command('ContactsTo:Users')->hourly();
         $schedule->command('Assign:UserToContacts')->hourly();
         $schedule->command('reset:cin7_api_keys')->dailyAt('00:00');

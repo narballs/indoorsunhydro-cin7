@@ -12,6 +12,7 @@ use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
 use App\Models\ApiOrderItem;
 use App\Models\AdminSetting;
+use App\Models\SpecificAdminNotification;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -89,11 +90,22 @@ class CheckOrderStatus extends Command
                 'subject' => 'Pending ' .' '. 'Orders',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
             ];    
-            if (!empty($users_with_role_admin)) {
-                foreach ($users_with_role_admin as $role_admin) {
+            // if (!empty($users_with_role_admin)) {
+            //     foreach ($users_with_role_admin as $role_admin) {
+            //         $subject = 'Orders Not Fullfilled';
+            //         $adminTemplate = 'emails.orders-not-fullfilled';
+            //         $data['email'] = $role_admin->email;
+            //         MailHelper::sendMailNotification('emails.orders-not-fullfilled', $data);
+            //     }
+            // }
+
+            $specific_admin_notifications = SpecificAdminNotification::all();
+            if (count($specific_admin_notifications) > 0) {
+                foreach ($specific_admin_notifications as $specific_admin_notification) {
                     $subject = 'Orders Not Fullfilled';
                     $adminTemplate = 'emails.orders-not-fullfilled';
-                    $data['email'] = $role_admin->email;
+                    $data['email'] = $specific_admin_notification->email;
+
                     MailHelper::sendMailNotification('emails.orders-not-fullfilled', $data);
                 }
             }
