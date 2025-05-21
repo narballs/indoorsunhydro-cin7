@@ -47,9 +47,17 @@ class Kernel extends ConsoleKernel
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyFourMinutes();
-        $schedule->command('stock:checking')->everyFiveMinutes();
+        // $schedule->command('stock:checking')->everyFiveMinutes();
+        $schedule->command('stock:checking')
+            ->everyFiveMinutes()
+            ->between('9:00', '17:59');
+
+        $schedule->command('stock:checking')
+            ->everyThirtyMinutes()
+            ->between('18:00', '23:59');
+            
         $schedule->command('auto:notify')->everyThreeMinutes();
-        $schedule->command('admin:stockrequest')->weekly();
+        // $schedule->command('admin:stockrequest')->weekly();
         $schedule->command('sync:payouts')->daily();
         $schedule->command('sync:gmc')->hourly();
         $schedule->command('sync:ai_suggested_prices')->hourly();
