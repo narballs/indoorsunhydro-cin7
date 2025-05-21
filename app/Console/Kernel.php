@@ -51,12 +51,12 @@ class Kernel extends ConsoleKernel
         // 9:00 AM – 5:59 PM → every 5 minutes
         $schedule->command('stock:checking')
             ->everyFiveMinutes()
-            ->between('09:00', '17:59');
+            ->between('09:00', '16:59');
 
         // 6:00 PM – 11:59 PM → every 30 minutes
         $schedule->command('stock:checking')
             ->everyThirtyMinutes()
-            ->between('18:00', '23:59');
+            ->between('17:00', '23:59');
 
         // 12:00 AM – 8:59 AM → every 30 minutes
         $schedule->command('stock:checking')
