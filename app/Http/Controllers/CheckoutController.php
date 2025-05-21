@@ -2949,12 +2949,12 @@ class CheckoutController extends Controller
                     // }
 
                     // Success — address is valid
-                    return response()->json([
-                        'status' => 'success',
-                        'address_validator' => true,
-                        'validator_message' => $validate_address_1['message'] ?? 'Address validated successfully.',
-                        'formatted_address' => $validate_address_1['formatted_address'] ?? null,
-                    ]);
+                    // return response()->json([
+                    //     'status' => 'success',
+                    //     'address_validator' => true,
+                    //     'validator_message' => $validate_address_1['message'] ?? 'Address validated successfully.',
+                    //     'formatted_address' => $validate_address_1['formatted_address'] ?? null,
+                    // ]);
                 } 
                 else {
                     $postalAddress1 = $address1;
@@ -2995,6 +2995,14 @@ class CheckoutController extends Controller
                     //         'formatted_address' => $validate_address_2['formatted_address'] ?? null,
                     //     ], 400);
                     // }
+
+                    // Success — address is valid
+                    // return response()->json([
+                    //     'status' => 'success',
+                    //     'address_validator' => true,
+                    //     'validator_message' => $validate_address_2['message'] ?? 'Address validated successfully.',
+                    //     'formatted_address' => $validate_address_2['formatted_address'] ?? null,
+                    // ]);
                 }
                 
                 DB::beginTransaction();
