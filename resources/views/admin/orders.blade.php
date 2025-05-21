@@ -327,6 +327,8 @@
                                                     <span class="badge badge-info is_approded_3">Refunded</span>
                                                 @elseif ($order->isApproved == 4)
                                                     <span class="badge badge-info is_approded_4">Partially Refunded</span>
+                                                @elseif ($order->isApproved == 5)
+                                                    <span class="badge badge-info is_approded_5">Pending</span>
                                                 @endif
                                             </td>
                                             <td data-label="Payment Status :" class="td_padding_row">
@@ -337,6 +339,8 @@
                                                         <span class="badge badge-info p-1">Refunded</span>
                                                     @elseif($order->payment_status == 'partially refunded')
                                                         <span class="badge badge-info p-1">Partially Refunded</span>
+                                                    @elseif($order->payment_status == 'pending')
+                                                        <span class="badge badge-info p-1">Pending</span>
                                                     @else
                                                         <span class="badge badge-danger p-1">Unpaid</span>
                                                     @endif
