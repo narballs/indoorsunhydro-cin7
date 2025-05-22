@@ -23,6 +23,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 
+
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+
 class UserHelper
 {
     /**
@@ -1734,20 +1738,123 @@ class UserHelper
         return $cart_items;
     }
 
-    public static function validateAddress($address)
-    {
-        $client = new \GuzzleHttp\Client();
-        $address_validator_key = config('services.google_address_validator.address_validator_google_key');
-        $response = $client->get('https://maps.googleapis.com/maps/api/geocode/json', [
-            'query' => [
-                'address' => $address,
-                'key' => $address_validator_key,
-            ]
-        ]);
-        $data = json_decode($response->getBody(), true);
+    // public static function validateAddress($address)
+    // {
+    //     $client = new \GuzzleHttp\Client();
+    //     $address_validator_key = config('services.google_address_validator.address_validator_google_key');
+    //     $response = $client->get('https://maps.googleapis.com/maps/api/geocode/json', [
+    //         'query' => [
+    //             'address' => $address,
+    //             'key' => $address_validator_key,
+    //         ]
+    //     ]);
+    //     $data = json_decode($response->getBody(), true);
 
-        return $data['status'];
+    //     return $data['status'];
+    // }
+
+    public static function validateFullAddress($address1, $address2, $city, $state, $zip, $country)
+    {
+        // Convert state name to state code
+        $us_state = DB::table('us_states')->whereRaw('LOWER(state_name) = ?', [strtolower($state)])->first();
+
+        if (!$us_state) {
+            return [
+                'valid' => false,
+                'status' => 'error',
+                'message' => 'The state name provided is invalid. Please select a valid U.S. state.',
+            ];
+        }
+
+        $stateCode = $us_state->state_code;
+
+        // Compose full address string
+        $fullAddress = trim("{$address1} {$address2}, {$city}, {$stateCode} {$zip}");
+        $cacheKey = 'validated_address_' . md5(strtolower($fullAddress));
+
+        return Cache::remember($cacheKey, now()->addDays(7), function () use ($fullAddress, $zip, $city, $stateCode) {
+            $client = new \GuzzleHttp\Client();
+            $apiKey = config('services.google_address_validator.address_validator_google_key');
+
+            try {
+                $response = $client->get('https://maps.googleapis.com/maps/api/geocode/json', [
+                    'query' => [
+                        'address' => $fullAddress,
+                        'key' => $apiKey,
+                    ],
+                ]);
+
+                $data = json_decode($response->getBody(), true);
+
+                if ($data['status'] !== 'OK' || empty($data['results'])) {
+                    return [
+                        'valid' => false,
+                        'status' => 'error',
+                        'message' => 'Address could not be validated. Please double-check your input.',
+                    ];
+                }
+
+                $result = $data['results'][0];
+                $components = $result['address_components'];
+
+                // Check city, state, zip
+                $cityMatch = false;
+                $stateMatch = false;
+                $zipMatch = false;
+
+                foreach ($components as $component) {
+                    if (in_array('locality', $component['types']) || in_array('postal_town', $component['types'])) {
+                        if (strtolower($component['long_name']) === strtolower($city)) {
+                            $cityMatch = true;
+                        }
+                    }
+                    if (in_array('administrative_area_level_1', $component['types'])) {
+                        if (
+                            strtolower($component['short_name']) === strtolower($stateCode) ||
+                            strtolower($component['long_name']) === strtolower($stateCode)
+                        ) {
+                            $stateMatch = true;
+                        }
+                    }
+                    if (in_array('postal_code', $component['types'])) {
+                        if (strtolower($component['long_name']) === strtolower($zip)) {
+                            $zipMatch = true;
+                        }
+                    }
+                }
+
+                if ($cityMatch && $stateMatch && $zipMatch) {
+                    return [
+                        'valid' => true,
+                        'status' => 'success',
+                        'message' => 'Address validated successfully (city, state, and ZIP code matched).',
+                        'formatted_address' => $result['formatted_address'],
+                        'location' => $result['geometry']['location'],
+                    ];
+                }
+
+                return [
+                    'valid' => false,
+                    'status' => 'error',
+                    'message' => 'City, state, or ZIP code does not match the validated address. Please check your input.',
+                    'suggested_address' => $result['formatted_address'],
+                ];
+
+            } catch (\Exception $e) {
+                return [
+                    'valid' => false,
+                    'status' => 'error',
+                    'message' => 'We were unable to validate the address due to a technical issue. Please try again later.',
+                ];
+            }
+        });
     }
+
+
+
+
+
+
 
     public static function  cleanDescription($description) {
         // Step 1: Decode HTML entities
