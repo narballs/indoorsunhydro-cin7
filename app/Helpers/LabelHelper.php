@@ -104,16 +104,18 @@ class LabelHelper {
                 SettingHelper::getSetting('engrdanish_shipstation_email'),
             ]);
 
-            // Send email to all valid admin addresses
             if (!empty($email_addresses)) {
-                Mail::html(
-                    'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
-                    function ($message) use ($email_addresses) {
-                        $message->from(SettingHelper::getSetting('noreply_email_address'));
-                        $message->to($email_addresses)->subject('Error processing order during label creation');
-                    }
-                );
+                Mail::send([], [], function ($message) use ($email_addresses, $order_id, $e) {
+                    $message->from(SettingHelper::getSetting('noreply_email_address'));
+                    $message->to($email_addresses);
+                    $message->subject('Error processing order during label creation');
+                    $message->setBody(
+                        'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
+                        'text/html'
+                    );
+                });
             }
+
 
             return false;
         }
@@ -167,20 +169,22 @@ class LabelHelper {
                 'status' => 500,
             ]);
 
+            // Send email to all valid admin addresses
             $email_addresses = array_filter([
                 SettingHelper::getSetting('naris_indoor_email'),
                 SettingHelper::getSetting('engrdanish_shipstation_email'),
             ]);
 
-            // Send email to all valid admin addresses
             if (!empty($email_addresses)) {
-                Mail::html(
-                    'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
-                    function ($message) use ($email_addresses) {
-                        $message->from(SettingHelper::getSetting('noreply_email_address'));
-                        $message->to($email_addresses)->subject('Error processing order during label creation');
-                    }
-                );
+                Mail::send([], [], function ($message) use ($email_addresses, $order_id, $e) {
+                    $message->from(SettingHelper::getSetting('noreply_email_address'));
+                    $message->to($email_addresses);
+                    $message->subject('Error processing order during label creation');
+                    $message->setBody(
+                        'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
+                        'text/html'
+                    );
+                });
             }
 
         }
@@ -275,16 +279,18 @@ class LabelHelper {
                 SettingHelper::getSetting('engrdanish_shipstation_email'),
             ]);
 
-            // Send email to all valid admin addresses
             if (!empty($email_addresses)) {
-                Mail::html(
-                    'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
-                    function ($message) use ($email_addresses) {
-                        $message->from(SettingHelper::getSetting('noreply_email_address'));
-                        $message->to($email_addresses)->subject('Error processing order during label creation');
-                    }
-                );
+                Mail::send([], [], function ($message) use ($email_addresses, $order_id, $e) {
+                    $message->from(SettingHelper::getSetting('noreply_email_address'));
+                    $message->to($email_addresses);
+                    $message->subject('Error processing order during label creation');
+                    $message->setBody(
+                        'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
+                        'text/html'
+                    );
+                });
             }
+
         }
 
     }
