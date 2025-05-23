@@ -129,14 +129,6 @@ class SalesOrders implements ShouldQueue
             $api_order->save();
 
 
-            $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
-            if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
-                if (!empty($api_order) && !empty($api_order->order_id)) {
-                    OrderHelper::update_order_payment_in_cin7($api_order->order_id);
-                }
-            }
-
-
 
             if (
                 (!empty($api_order->DeliveryAddress1) || !empty($api_order->DeliveryAddress2)) &&
@@ -161,7 +153,14 @@ class SalesOrders implements ShouldQueue
                     });
                 }
             }
- 
+
+
+            $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
+            if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
+                if (!empty($api_order) && !empty($api_order->order_id)) {
+                    OrderHelper::update_order_payment_in_cin7($api_order->order_id);
+                }
+            }
             
         }
 
