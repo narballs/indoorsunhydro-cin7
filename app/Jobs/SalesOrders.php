@@ -129,6 +129,33 @@ class SalesOrders implements ShouldQueue
             $api_order->save();
 
 
+
+            if (
+                (!empty($api_order->DeliveryAddress1) || !empty($api_order->DeliveryAddress2)) &&
+                (SettingHelper::startsWithPOBox($api_order->DeliveryAddress1) || SettingHelper::startsWithPOBox($api_order->DeliveryAddress2))
+            ) {
+                $orderID = $api_order->id;
+
+                $email_addresses = array_filter([
+                    SettingHelper::getSetting('naris_indoor_email'),
+                    SettingHelper::getSetting('engrdanish_shipstation_email'),
+                ]);
+
+                if (!empty($email_addresses)) {
+                    Mail::send([], [], function ($message) use ($email_addresses, $orderID) {
+                        $message->from(SettingHelper::getSetting('noreply_email_address'));
+                        $message->to($email_addresses);
+                        $message->subject('Manual Processing Required (PO Box) – Order ID: ' . $orderID);
+                        $message->setBody(
+                            'Order ID: ' . $orderID . ' requires manual processing due to a PO Box specified in the delivery address. Please review and address this order at your earliest convenience.',
+                            'text/html'
+                        );
+                    });
+                }
+
+            }
+
+
             $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
             if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
                 if (!empty($api_order) && !empty($api_order->order_id)) {

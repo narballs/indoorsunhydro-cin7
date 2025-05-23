@@ -11,7 +11,7 @@ use App\Helpers\SettingHelper;
 use App\Helpers\MailHelper;
 use App\Models\ShipstationApiLogs;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Mail;
 
 class LabelHelper {
 
@@ -99,6 +99,24 @@ class LabelHelper {
                 'status' => 500,
             ]);
 
+            $email_addresses = array_filter([
+                SettingHelper::getSetting('naris_indoor_email'),
+                SettingHelper::getSetting('engrdanish_shipstation_email'),
+            ]);
+
+            if (!empty($email_addresses)) {
+                Mail::send([], [], function ($message) use ($email_addresses, $order_id, $e) {
+                    $message->from(SettingHelper::getSetting('noreply_email_address'));
+                    $message->to($email_addresses);
+                    $message->subject('Error processing order during label creation');
+                    $message->setBody(
+                        'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
+                        'text/html'
+                    );
+                });
+            }
+
+
             return false;
         }
     }
@@ -150,6 +168,24 @@ class LabelHelper {
                 'order_id' => $order_id,
                 'status' => 500,
             ]);
+
+            // Send email to all valid admin addresses
+            $email_addresses = array_filter([
+                SettingHelper::getSetting('naris_indoor_email'),
+                SettingHelper::getSetting('engrdanish_shipstation_email'),
+            ]);
+
+            if (!empty($email_addresses)) {
+                Mail::send([], [], function ($message) use ($email_addresses, $order_id, $e) {
+                    $message->from(SettingHelper::getSetting('noreply_email_address'));
+                    $message->to($email_addresses);
+                    $message->subject('Error processing order during label creation');
+                    $message->setBody(
+                        'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
+                        'text/html'
+                    );
+                });
+            }
 
         }
     }
@@ -227,7 +263,8 @@ class LabelHelper {
         
             $responseBody = json_decode($response->getBody()->getContents());
             self::createAndSendLabel($order, $order_id, $orderData, $prepare_data_for_creating_label, $order_items_array, false, $responseBody);
-        } catch (\Exception $e) {
+        } 
+        catch (\Exception $e) {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
                 'action' => 'create_label',
@@ -236,6 +273,24 @@ class LabelHelper {
                 'order_id' => $order_id,
                 'status' => 500,
             ]);
+
+            $email_addresses = array_filter([
+                SettingHelper::getSetting('naris_indoor_email'),
+                SettingHelper::getSetting('engrdanish_shipstation_email'),
+            ]);
+
+            if (!empty($email_addresses)) {
+                Mail::send([], [], function ($message) use ($email_addresses, $order_id, $e) {
+                    $message->from(SettingHelper::getSetting('noreply_email_address'));
+                    $message->to($email_addresses);
+                    $message->subject('Error processing order during label creation');
+                    $message->setBody(
+                        'Error processing order: ' . $order_id . ' - ' . $e->getMessage(),
+                        'text/html'
+                    );
+                });
+            }
+
         }
 
     }
