@@ -132,7 +132,7 @@ class SalesOrders implements ShouldQueue
 
             if (
                 (!empty($api_order->DeliveryAddress1) || !empty($api_order->DeliveryAddress2)) &&
-                (SettingHelper::startsWithPOBox($api_order->DeliveryAddress1) && SettingHelper::startsWithPOBox($api_order->DeliveryAddress2))
+                (SettingHelper::startsWithPOBox($api_order->DeliveryAddress1) || SettingHelper::startsWithPOBox($api_order->DeliveryAddress2))
             ) {
                 $orderID = $api_order->id;
 
