@@ -26,12 +26,14 @@ class LabelHelper {
             $default_ship_from_address = self::getDefaultShipFromAddress();
             
             if (!$default_ship_from_address) {
-                return Log::info('Default Ship From Address not found.');
+                Log::info('Default Ship From Address not found.');
+                return false;
             }
     
             $orderData = self::getOrderDataFromShipstation($client, "https://ssapi.shipstation.com/orders/{$shipstation_order_id}", self::getShipstationHeaders(), $order_id);
             if (!$orderData) {
-                return Log::info('Order not found in ShipStation.');
+                Log::info('Order not found in ShipStation.');
+                return false;
             }
 
 
@@ -46,7 +48,9 @@ class LabelHelper {
     
             $order_items_array = self::processOrderItems($orderData['items']);
             if (empty($order_items_array)) {
-                return Log::info('Order items not found in ShipStation.');
+                Log::info('Order items not found in ShipStation.');
+                return false;
+
             }
     
             $prepare_data_for_creating_label = UserHelper::prepare_data_for_creating_label($orderData, $default_ship_from_address);
