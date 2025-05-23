@@ -295,6 +295,8 @@ class LabelHelper {
                 });
             }
 
+            return false;
+
         }
 
     }
