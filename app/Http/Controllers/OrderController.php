@@ -1360,7 +1360,7 @@ class OrderController extends Controller
         //     return redirect()->route('admin.orders')->with('error', 'Error creating label.');
         // }
 
-        if ($label_created === true) {
+        if ($label_created == true) {
             return redirect()->route('admin.orders')->with('success', 'Label created successfully.');
         } else {
             return redirect()->route('admin.orders')->with('error', 'Error creating label.');
