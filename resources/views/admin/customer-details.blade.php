@@ -754,34 +754,88 @@
             console.timeEnd('time1');
         }
 
-        function refreshContact(contactId, type) {
+        // function refreshContact(contactId, type) {
 
+        //     $('#spinner').removeClass('d-none');
+        //     jQuery.ajax({
+        //         url: "{{ url('admin/refresh-contact') }}",
+        //         method: 'post',
+        //         data: {
+        //             "_token": "{{ csrf_token() }}",
+        //             "contactId": contactId,
+        //             "type": type
+        //         },
+        //         success: function(response) {
+        //             console.log(response);
+
+        //         }
+
+        //     })
+        //     setTimeout(function() {
+        //         window.location.reload();
+        //     }, 5000);
+        // }
+
+        function refreshContact(contactId, type) {
             $('#spinner').removeClass('d-none');
-            jQuery.ajax({
+
+            $.ajax({
                 url: "{{ url('admin/refresh-contact') }}",
-                method: 'post',
+                method: 'POST',
                 data: {
                     "_token": "{{ csrf_token() }}",
                     "contactId": contactId,
                     "type": type
                 },
                 success: function(response) {
-                    console.log(response);
-                    // $('#refreshed_email').html(response.updated_email);
-                    // $('#refreshed_firstname').html(response.updated_firstName);
-                    // $('#refreshed_lastname').html(' '+response.updated_lastName);
-                    // $('#refreshed_company').html(response.updated_company);
-                    // console.log(response.updated_priceColumn);
-                    // $('#pricingColumn').find('option[value="'+response.updated_priceColumn+'"]').prop('selected', true);
-                    // $('#spinner').addClass('d-none');
+                    $('#spinner').addClass('d-none');
 
+                    Swal.fire({
+                        toast: false,
+                        icon: 'success',
+                        title: 'Contact Refreshed',
+                        html: 'The contact has been successfully refreshed.',
+                        position: 'top',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        timerProgressBar: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',
+                            actions: 'my-actions-class'
+                        }
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    $('#spinner').addClass('d-none');
+
+                    let validatorMessage = xhr.responseJSON?.validator_message || 'An unknown error occurred.';
+                    let suggestedAddress = xhr.responseJSON?.suggested_address || '';
+                    let formattedAddress = xhr.responseJSON?.formatted_address || '';
+
+                    Swal.fire({
+                        toast: false,
+                        icon: 'error',
+                        title: 'Address Error',
+                        html: `${validatorMessage}<br/>${suggestedAddress}<br/>${formattedAddress}`,
+                        position: 'top',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',
+                            actions: 'my-actions-class'
+                        }
+                    });
                 }
-
-            })
-            setTimeout(function() {
-                window.location.reload();
-            }, 5000);
+            });
         }
+
 
         function disableSecondary(secondary_id) {
             jQuery.ajax({
