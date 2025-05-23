@@ -647,8 +647,6 @@
                                                         (Pay in Advanced)
                                                     @endif
                                                 @else
-                                                    (Pay in Advanced)
-                                                @endif
                                             </span>
                                         </div>
                                     </td>
