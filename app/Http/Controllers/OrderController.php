@@ -1354,7 +1354,13 @@ class OrderController extends Controller
         
         $label_created = LabelHelper::processControllerOrder($order, $client, $currentDate, $shipstation_order_id);
 
-        if ($label_created) {
+        // if ($label_created) {
+        //     return redirect()->route('admin.orders')->with('success', 'Label created successfully.');
+        // } else {
+        //     return redirect()->route('admin.orders')->with('error', 'Error creating label.');
+        // }
+
+        if ($label_created === true) {
             return redirect()->route('admin.orders')->with('success', 'Label created successfully.');
         } else {
             return redirect()->route('admin.orders')->with('error', 'Error creating label.');
