@@ -1070,33 +1070,33 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        // if (response.responseJSON.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
+                        if (response.responseJSON.address_validator === false) {
+                            $('.update_checkout_loader').addClass('d-none');
 
-                        //     let title = response.responseJSON.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
+                            let title = response.responseJSON.different_shipping_address == 1 
+                                ? 'Shipping Address Error' 
+                                : 'Billing & Shipping Address Error';
 
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
+                            Swal.fire({
+                                toast: false,
+                                icon: 'error',
+                                title: title,
+                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                position: 'center',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Confirm',
+                                timerProgressBar: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                customClass: {
+                                    confirmButton: 'my-confirm-button',
+                                    popup: 'swal2-popup-class',
+                                    actions: 'my-actions-class'
+                                }
+                            });
 
-                        //     return false;
-                        // }
+                            return false;
+                        }
 
 
                         $('.update_checkout_loader').addClass('d-none');
@@ -1310,33 +1310,33 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        // if (response.responseJSON.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
+                        if (response.responseJSON.address_validator === false) {
+                            $('.update_checkout_loader').addClass('d-none');
 
-                        //     let title = response.responseJSON.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
+                            let title = response.responseJSON.different_shipping_address == 1 
+                                ? 'Shipping Address Error' 
+                                : 'Billing & Shipping Address Error';
 
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
+                            Swal.fire({
+                                toast: false,
+                                icon: 'error',
+                                title: title,
+                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                position: 'center',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Confirm',
+                                timerProgressBar: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                customClass: {
+                                    confirmButton: 'my-confirm-button',
+                                    popup: 'swal2-popup-class',
+                                    actions: 'my-actions-class'
+                                }
+                            });
 
-                        //     return false;
-                        // }
+                            return false;
+                        }
 
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
