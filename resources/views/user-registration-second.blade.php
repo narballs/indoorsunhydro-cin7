@@ -477,9 +477,10 @@
                                     </div> --}}
                                     <div class="input-placeholder col-md-6 mt-2">
                                         <input type="text" name="city" id="city-dd" required="" class="sign-up-fields p-3 pl-0 w-100">
-                                        <div class="placeholder pl-3 fontAwesome_new  top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
+                                        <div class="placeholder pl-3 fontAwesome  top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
                                             <i class="fa fa-city  ml-2 mr-2"></i>City
                                         </div>
+                                        <div class="text-danger" id="town_city_errors"></div>
                                     </div>
                                     <div class="input-placeholder col-md-6 mt-2">
                                         <input type="text" name="zip" id="zip" required="" class="sign-up-fields p-3 pl-0 w-100">
@@ -933,7 +934,35 @@
                 //     $('#sign_up_loader').addClass('d-none');
                 //     $('.row_error').html(response.validatedAddress_message);
                 // }
+
+
+                if (response.responseJSON.address_validator === false) {
+                    let title = 'Address Error';
+
+                    Swal.fire({
+                        toast: false,
+                        icon: 'error',
+                        title: title,
+                        html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        position: 'top',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',
+                            actions: 'my-actions-class'
+                        }
+                    });
+
+                    return false;
+                }
+
                 var error_message = response.responseJSON;
+
+                 
+
                 var error_text = '';
                 if (typeof error_message.errors.street_address != 'undefined') {
                     error_text = error_message.errors.street_address;

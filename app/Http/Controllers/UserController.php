@@ -792,16 +792,43 @@ class UserController extends Controller
                     // },
                 ],
                 'state_id' => 'required',
-                // 'city_id' => 'required',
+                'city_id' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
             ],
             [
                 'state_id.required' => 'The state field is required.',
-                // 'city_id.required' => 'The city field is required.',
+                'city_id.required' => 'The city field is required.',
             ] 
                 
         );
-            
+
+
+        $states = UsState::where('id', $request->state_id)->first();
+        $state_name = $states->state_name;
+
+
+
+        $validate_street_address_1 = $request->input('street_address');
+        $validate_street_address_2 = $request->input('suit_apartment');
+        $validate_city = $request->city_id;
+        $validate_state = $state_name;
+        $validate_zip = $request->input('zip');
+
+
+
+        $validate_address =  UserHelper::validateFullAddress($validate_street_address_1 , $validate_street_address_2 , $validate_city , $validate_state , $validate_zip, $country = 'USA');
+
+        if ($validate_address['valid'] == false) {
+            return response()->json([
+                'status' => 'address_error',
+                'address_validator' => false,
+                'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
+                'suggested_address' => $validate_address['suggested_address'] ?? '',
+                'formatted_address' => $validate_address['formatted_address'] ?? '',
+            ], 400);
+        }
+        
+        
         $contacts = Contact::where('email', $request->email)->first();
         if (!empty($contacts)) {
             $api_contact = $contacts->toArray();
@@ -879,8 +906,7 @@ class UserController extends Controller
         else {
             DB::beginTransaction();
             try {
-                $states = UsState::where('id', $request->state_id)->first();
-                $state_name = $states->state_name;
+                
                 // $cities = UsCity::where('id', $request->city_id)->first();
                 // $city_name = $cities->city;
                 $city_name =  $request->city_id;
