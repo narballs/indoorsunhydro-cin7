@@ -135,6 +135,33 @@ class SalesOrders implements ShouldQueue
                     OrderHelper::update_order_payment_in_cin7($api_order->order_id);
                 }
             }
+
+
+
+            if (
+                (!empty($api_order->DeliveryAddress1) || !empty($api_order->DeliveryAddress2)) &&
+                (SettingHelper::startsWithPOBox($api_order->DeliveryAddress1) && SettingHelper::startsWithPOBox($api_order->DeliveryAddress2))
+            ) {
+                $orderID = $api_order->id;
+
+                $email_addresses = array_filter([
+                    SettingHelper::getSetting('naris_indoor_email'),
+                    SettingHelper::getSetting('engrdanish_shipstation_email'),
+                ]);
+
+                if (!empty($email_addresses)) {
+                    Mail::send([], [], function ($message) use ($email_addresses, $orderID) {
+                        $message->from(SettingHelper::getSetting('noreply_email_address'));
+                        $message->to($email_addresses);
+                        $message->subject('Order Processing Issue with UPS');
+                        $message->setBody(
+                            'The order with ID: ' . $orderID . ' could not be processed through UPS and should be handled manually.',
+                            'text/html'
+                        );
+                    });
+                }
+            }
+ 
             
         }
 
