@@ -181,11 +181,11 @@ class SyncSuppliers extends Command
                     $validate_delivery_address =  UserHelper::validateFullAddress($delivery_address_1 , $delivery_address_2 , $delivery_city , $delivery_state , $delivery_postal_code, $country = 'USA');
                     
                     if ($validate_billing_address['valid'] == false || $validate_delivery_address['valid'] == false) {
-                        $this->info('Invalid address for contact id: ' . $api_contact->id);
-                        $errorlog = new ApiErrorLog();
-                        $errorlog->payload = 'Invalid address for contact id: ' . $api_contact->id;
-                        $errorlog->exception = 'Invalid address';
-                        $errorlog->save();
+                        // $this->info('Invalid address for contact id: ' . $api_contact->id);
+                        // $errorlog = new ApiErrorLog();
+                        // $errorlog->payload = 'Invalid address for contact id: ' . $api_contact->id;
+                        // $errorlog->exception = 'Invalid address';
+                        // $errorlog->save();
                         continue;
                     }
                     
