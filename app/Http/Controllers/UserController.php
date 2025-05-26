@@ -792,16 +792,43 @@ class UserController extends Controller
                     // },
                 ],
                 'state_id' => 'required',
-                // 'city_id' => 'required',
+                'city_id' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
             ],
             [
                 'state_id.required' => 'The state field is required.',
-                // 'city_id.required' => 'The city field is required.',
+                'city_id.required' => 'The city field is required.',
             ] 
                 
         );
-            
+
+
+        $states = UsState::where('id', $request->state_id)->first();
+        $state_name = $states->state_name;
+
+
+
+        $validate_street_address_1 = $request->input('street_address');
+        $validate_street_address_2 = $request->input('suit_apartment');
+        $validate_city = $request->city_id;
+        $validate_state = $state_name;
+        $validate_zip = $request->input('zip');
+
+
+
+        $validate_address =  UserHelper::validateFullAddress($validate_street_address_1 , $validate_street_address_2 , $validate_city , $validate_state , $validate_zip, $country = 'USA');
+
+        if ($validate_address['valid'] == false) {
+            return response()->json([
+                'status' => 'address_error',
+                'address_validator' => false,
+                'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
+                'suggested_address' => $validate_address['suggested_address'] ?? '',
+                'formatted_address' => $validate_address['formatted_address'] ?? '',
+            ], 400);
+        }
+        
+        
         $contacts = Contact::where('email', $request->email)->first();
         if (!empty($contacts)) {
             $api_contact = $contacts->toArray();
@@ -879,8 +906,7 @@ class UserController extends Controller
         else {
             DB::beginTransaction();
             try {
-                $states = UsState::where('id', $request->state_id)->first();
-                $state_name = $states->state_name;
+                
                 // $cities = UsCity::where('id', $request->city_id)->first();
                 // $city_name = $cities->city;
                 $city_name =  $request->city_id;
@@ -2090,23 +2116,26 @@ class UserController extends Controller
         // ];
 
         // $response = $client->tickets()->create($ticketData);
-        $request->validate([
-            'first_name' => 'required',
-            // 'last_name' => 'required',
-            // 'company_name' => 'required',
-            // 'address' => 'required',
-            'address' => [
-                'required',
-                // function ($attribute, $value, $fail) {
-                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                //     }
-                // },
-            ],
-            'state' => 'required',
-            'phone' => 'required',
-            'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-        ]);
+        $request->validate(
+            [
+                'first_name' => 'required',
+                'address' => [
+                    'required',
+                    // function ($attribute, $value, $fail) {
+                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                    //     }
+                    // },
+                ],
+                'state' => 'required',
+                'phone' => 'required',
+                'town_city' => 'required',
+                'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+            ], 
+            [
+                'town_city.required' => 'City is required.',
+            ]
+        );
 
         $response  = null;
         $get_contact = null;
@@ -2150,6 +2179,18 @@ class UserController extends Controller
             if ($address_type === 'shipping') {
 
 
+                $validate_address_shipping =  UserHelper::validateFullAddress($request->address , $request->address2 , $request->town_city , $request->state , $request->zip, $country = 'USA');
+                if ($validate_address_shipping['valid'] == false) {
+                    return response()->json([
+                        'status' => 'address_error',
+                        'address_validator' => false,
+                        'validator_message' => $validate_address_shipping['message'] ?? 'Address validation failed.',
+                        'suggested_address' => $validate_address_shipping['suggested_address'] ?? '',
+                        'formatted_address' => $validate_address_shipping['formatted_address'] ?? '',
+                    ], 400);
+                }
+
+
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
                 
@@ -2172,6 +2213,18 @@ class UserController extends Controller
             }
 
             if ($address_type === 'billing') {
+
+                $validate_address_shipping =  UserHelper::validateFullAddress($request->address , $request->address2 , $request->town_city , $request->state , $request->zip, $country = 'USA');
+                if ($validate_address_shipping['valid'] == false) {
+                    return response()->json([
+                        'status' => 'address_error',
+                        'address_validator' => false,
+                        'validator_message' => $validate_address_shipping['message'] ?? 'Address validation failed.',
+                        'suggested_address' => $validate_address_shipping['suggested_address'] ?? '',
+                        'formatted_address' => $validate_address_shipping['formatted_address'] ?? '',
+                    ], 400);
+                }
+
                 $get_contact->firstName = $request->first_name;
                 $get_contact->lastName = $request->last_name;
 
@@ -2317,6 +2370,7 @@ class UserController extends Controller
                 'zip' => 'required',
                 // 'address' => 'required',
                 'state' => 'required',
+                'city' => 'required',
                 'address' => [
                     'required',
                     // function ($attribute, $value, $fail) {
@@ -2363,6 +2417,20 @@ class UserController extends Controller
                 'status' => '400',
                 'msg' => 'Contact not found'
             ]);
+        }
+
+
+
+        $validate_address =  UserHelper::validateFullAddress($address1 , $address2 , $city , $state , $postal_code, $country = 'USA');
+
+        if ($validate_address['valid'] == false) {
+            return response()->json([
+                'status' => 'address_error',
+                'address_validator' => false,
+                'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
+                'suggested_address' => $validate_address['suggested_address'] ?? '',
+                'formatted_address' => $validate_address['formatted_address'] ?? '',
+            ], 400);
         }
 
 

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 use App\Helpers\UtilHelper;
 use App\Helpers\SettingHelper;
+use App\Helpers\UserHelper;
 use App\Models\ApiKeys;
 use Illuminate\Support\Facades\Log;
 
@@ -161,6 +162,34 @@ class SyncSuppliers extends Command
                     $this->info('Processing contacts ' . $api_contact->firstName);
                     $contact = Contact::where('contact_id', $api_contact->id)->first();
                     array_push($api_contact_ids, $api_contact->id);
+
+
+                    $billing_address_1 = !empty($api_contact->postalAddress1) ? $api_contact->postalAddress1 : $contact->postalAddress1;
+                    $billing_address_2 = !empty($api_contact->postalAddress2) ? $api_contact->postalAddress2 : $contact->postalAddress2;
+                    $billing_city = !empty($api_contact->postalCity) ? $api_contact->postalCity : $contact->postalCity;
+                    $billing_state = !empty($api_contact->postalState) ? $api_contact->postalState : $contact->postalState;
+                    $billing_postal_code = !empty($api_contact->postalPostCode) ? $api_contact->postalPostCode : $contact->postalPostCode;
+
+                    $delivery_address_1 = !empty($api_contact->address1) ? $api_contact->address1 : $contact->address1;
+                    $delivery_address_2 = !empty($api_contact->address2) ? $api_contact->address2 : $contact->address2;
+                    $delivery_city = !empty($api_contact->city) ? $api_contact->city : $contact->city;
+                    $delivery_state = !empty($api_contact->state) ? $api_contact->state : $contact->state;
+                    $delivery_postal_code = !empty($api_contact->postCode) ? $api_contact->postCode : $contact->postCode;
+
+
+                    $validate_billing_address =  UserHelper::validateFullAddress($billing_address_1 , $billing_address_2 , $billing_city , $billing_state , $billing_postal_code, $country = 'USA');
+                    $validate_delivery_address =  UserHelper::validateFullAddress($delivery_address_1 , $delivery_address_2 , $delivery_city , $delivery_state , $delivery_postal_code, $country = 'USA');
+                    
+                    if ($validate_billing_address['valid'] == false || $validate_delivery_address['valid'] == false) {
+                        $this->info('Invalid address for contact id: ' . $api_contact->id);
+                        $errorlog = new ApiErrorLog();
+                        $errorlog->payload = 'Invalid address for contact id: ' . $api_contact->id;
+                        $errorlog->exception = 'Invalid address';
+                        $errorlog->save();
+                        continue;
+                    }
+                    
+                    
                     if (!empty($contact)) {
                         $this->info($api_contact->id);
                         $this->info('---------------------------------------');

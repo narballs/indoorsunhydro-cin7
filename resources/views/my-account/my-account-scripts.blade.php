@@ -1691,6 +1691,36 @@
                 }
             },
             error: function(response) {
+
+                if (response.responseJSON.address_validator === false) {
+                    $('#address_loader_shipping').addClass('d-none');
+                    $('#address_loader').addClass('d-none');
+
+                    let title = type === 'update shipping address'
+                        ? 'Shipping Address Error' 
+                        : 'Billing & Shipping Address Error';
+
+                    Swal.fire({
+                        toast: false,
+                        icon: 'error',
+                        title: title,
+                        html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        position: 'center',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Confirm',
+                        timerProgressBar: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        customClass: {
+                            confirmButton: 'my-confirm-button',
+                            popup: 'swal2-popup-class',
+                            actions: 'my-actions-class'
+                        }
+                    });
+
+                    return false;
+                }
+
                 if (type === 'update shipping address') {
                     
                     $('#address_loader_shipping').addClass('d-none');
@@ -1972,7 +2002,7 @@
                         </div>
                        
                         <div class="mb-3">
-                            <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
+                            <label for="town">Town/City</label>
                             <input type="text" class="form-control bg-light billing_city" name="town_city"
                                 value="{{ !empty($address_user->postalCity) ? $address_user->postalCity : '' }}" placeholder="Enter your town">
                                 <div id="error_city" class="text-danger"></div>
@@ -2181,7 +2211,7 @@
                         </div>
                        
                         <div class="mb-3">
-                            <label for="town">Town/City <span class="text-muted">(Optional)</span></label>
+                            <label for="town">Town/City</label>
                             <input type="text" class="form-control bg-light shipping_city" name="town_city"
                                 value="{{ !empty($address_user->city) ?  $address_user->city  : ''}}" placeholder="Enter your town">
                                 <div id="error_city_shipping" class="text-danger"></div>

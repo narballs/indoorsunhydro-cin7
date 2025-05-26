@@ -2379,7 +2379,7 @@ $cart_price = 0;
                             <div id="error_shipping_address_new_2" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="shipping_city_new">Town/City <span class="text-muted">(Optional)</span></label>
+                            <label for="shipping_city_new">Town/City</label>
                             <input type="text" class="form-control bg-light shipping_city_new" name="shipping_city_new"
                                 value="" placeholder="Enter your town" id="shipping_city_new">
                                 <div id="error_shipping_city_new" class="text-danger"></div>
@@ -4184,6 +4184,33 @@ $cart_price = 0;
                         error: function(response) {
                             $('#address_loader_shipping_new').addClass('d-none');
                             $('#waiting_loader_shipping_new').addClass('d-none');
+
+                            if (response.responseJSON.address_validator === false) {
+                                $('.update_checkout_loader').addClass('d-none');
+
+                                let title = 'Shipping Address Error';
+
+                                Swal.fire({
+                                    toast: false,
+                                    icon: 'error',
+                                    title: title,
+                                    html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                    position: 'center',
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Confirm',
+                                    timerProgressBar: false,
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    customClass: {
+                                        confirmButton: 'my-confirm-button',
+                                        popup: 'swal2-popup-class',
+                                        actions: 'my-actions-class'
+                                    }
+                                });
+
+                                return false;
+                            }
+
                             var error_message = response.responseJSON;
                             var error_text = '';
                             if (typeof error_message.errors.first_name != 'undefined') {
@@ -4221,6 +4248,13 @@ $cart_price = 0;
                             } else {
                                 error_text = '';
                                 $('#error_shipping_phone_new').html(error_text);
+                            }
+                            if (typeof error_message.errors.city != 'undefined') {
+                                var error_text = error_message.errors.city;
+                                $('#error_shipping_city_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_shipping_city_new').html(error_text);
                             }
                         }
                     });
