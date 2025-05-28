@@ -228,7 +228,8 @@
                                                     </th>
                                                     <th scope="col" class="th-lg text-center" class="table-head-items">
                                                         <span>
-                                                            <img class=" cart-icons-cart " src="/theme/img/pricing_tag.png">
+                                                            {{-- <img class=" cart-icons-cart " src="/theme/img/pricing_tag.png"> --}}
+                                                            <i class="fa fa-tags"></i>
                                                         </span>
                                                         <span class=" cart-total">Total</span>
         
@@ -629,7 +630,8 @@
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <span>
-                                                <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png">
+                                                {{-- <img class="img-fluid subtotal-img-cart-page" src="/theme/img/total-icon.png"> --}}
+                                                <i class="fa fa-tag"></i>
                                                 <strong class="cart-total">SubTotal</strong>
                                             </span>
                                             <span id="cart_grand_total" class="grandTotal">
