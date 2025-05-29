@@ -1930,6 +1930,7 @@ class CheckoutController extends Controller
                             ],
                             'postal_state' => 'required',
                             'postal_zip_code' => 'required',
+                            'city' => 'required',
                         ]);
                     }
                     else {
@@ -1959,6 +1960,7 @@ class CheckoutController extends Controller
                             ],
                             'postal_state' => 'required',
                             'postal_zip_code' => 'required',
+                            'city' => 'required',
                         ]);
                     }
                    
@@ -1979,6 +1981,7 @@ class CheckoutController extends Controller
                             'state' => 'required',
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
+                            'city' => 'required',
                         ]);
                     }
                     else {
@@ -1998,6 +2001,7 @@ class CheckoutController extends Controller
                             'state' => 'required',
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
+                            'city' => 'required',
                         ]);
                     }
                 }
