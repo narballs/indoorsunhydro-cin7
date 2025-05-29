@@ -214,14 +214,16 @@
                                                     </th>
                                                     <th scope="col" class="th-lg" width="147px" class="table-head-items">
                                                         <span>
-                                                            <img src="/theme/img/price_target.png" class="img-fluid">
+                                                            {{-- <img src="/theme/img/price_target.png" class="img-fluid"> --}}
+                                                            <i class="fas fa-dollar-sign"></i>
                                                         </span>
                                                         <span class="cart-total">Price</span>
         
                                                     </th>
                                                     <th scope="col" class="th-lg" width="170px;" class="table-head-items">
                                                         <span>
-                                                            <img src="/theme/img/Arrows_Down_Up.png" alt="">
+                                                            {{-- <img src="/theme/img/Arrows_Down_Up.png" alt=""> --}}
+                                                            <i class="fas fa-sort-numeric-up-alt"></i>
                                                         </span>
                                                         <span class="cart-total">Quantity</span>
         
@@ -542,7 +544,8 @@
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <span>
-                                                <img class=" img-fluid" src="/theme/img/sub-totals-icon.png">
+                                                {{-- <img class=" img-fluid" src="/theme/img/sub-totals-icon.png"> --}}
+                                                <i class="fas fa-calculator"></i>
                                                 <strong class=" cart-total">Subtotal</strong>
                                             </span>
                                             <span id="cart_grand_total">
@@ -605,7 +608,8 @@
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <span>
-                                                <img class=" img-fluid" src="/theme/img/text-rate-icon.png">
+                                                {{-- <img class=" img-fluid" src="/theme/img/text-rate-icon.png"> --}}
+                                                <i class="fas fa-file-invoice-dollar"></i>
                                                 <span> <strong class="cart-total" id="tax_rate">Tax
                                                         @if(!empty($tax_class->rate))
                                                             {{ number_format($tax_class->rate, 2) }}%
@@ -991,7 +995,8 @@
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     <div class="w-50 d-flex align-items-center text-left">
                                                         <span class="">
-                                                            <img src="/theme/img/sub-totals-icon.png" width="25px" height="30">
+                                                            {{-- <img src="/theme/img/sub-totals-icon.png" width="25px" height="30"> --}}
+                                                            <i class="fas fa-calculator"></i>
                                                         </span>
                                                         <span class="ml-2 cart-sub-total-checkout-page text-dark mt-0">
                                                             Sub Total
@@ -1007,7 +1012,8 @@
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     <div class="w-50 d-flex align-items-center">
                                                         <span>
-                                                            <img src="/theme/img/text-rate-icon.png" alt=""  width="25px" height="30">
+                                                            {{-- <img src="/theme/img/text-rate-icon.png" alt=""  width="25px" height="30"> --}}
+                                                            <i class="fas fa-file-invoice-dollar"></i>
                                                         </span>
                                                         <span id="mbl_tax_rate" class="ml-2 cart-sub-total-checkout-page text-dark">Rate
                                                             @if(!empty($tax_class->rate))
@@ -1036,7 +1042,8 @@
                                                 <div class="d-flex pb-3 mb-3" style="border-bottom:1px solid #dee2e6;">
                                                     <div class="w-50 d-flex align-items-center">
                                                         <span>
-                                                            <img src="/theme/img/pricing_tag.png" alt=""  width="25px" height="30">
+                                                            {{-- <img src="/theme/img/pricing_tag.png" alt=""  width="25px" height="30"> --}}
+                                                            <i class="fas fa-tags"></i>
                                                         </span>
                                                         <span class="ml-2 cart-total-checkout-page text-dark">Total</span>
                                                     </div>
