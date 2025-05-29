@@ -1904,64 +1904,84 @@ class CheckoutController extends Controller
             } else {
                 if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
                     if ( $is_guest_user == 1) {
-                        $request->validate([
-                            'email' => 'required|email',
-                            // 'password' =>'required',
-                            'first_name' => 'required',
-                            // 'address' => 'required',
-                            'address' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
+                        $request->validate(
+                            [
+                                'email' => 'required|email',
+                                // 'password' =>'required',
+                                'first_name' => 'required',
+                                // 'address' => 'required',
+                                'address' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'state' => 'required',
+                                'city' => 'required',
+                                'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                                'phone' => 'required',
+                                'postal_address1' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'postal_state' => 'required',
+                                'postal_zip_code' => 'required',
+                                'postal_city' => 'required',
                             ],
-                            'state' => 'required',
-                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                            'phone' => 'required',
-                            'postal_address1' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
-                            ],
-                            'postal_state' => 'required',
-                            'postal_zip_code' => 'required',
-                            'city' => 'required',
-                        ]);
+                            [
+                                'postal_address1.required' => 'Shipping Address is required.',
+                                'postal_state.required' => 'Shipping State is required.',
+                                'postal_zip_code.required' => 'Shipping Zip Code is required.',
+                                'postal_city.required' => 'Shipping City is required.',
+                            ]
+                        );
                     }
                     else {
-                        $request->validate([
-                            'email' => 'required|email',
-                            'password' =>'required',
-                            'first_name' => 'required',
-                            // 'address' => 'required',
-                            'address' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
-                            ],
-                            'state' => 'required',
-                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                            'phone' => 'required',
-                            'postal_address1' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
-                            ],
-                            'postal_state' => 'required',
-                            'postal_zip_code' => 'required',
-                            'city' => 'required',
-                        ]);
+                        $request->validate(
+                            [
+                                'email' => 'required|email',
+                                'password' =>'required',
+                                'first_name' => 'required',
+                                // 'address' => 'required',
+                                'address' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'state' => 'required',
+                                'city' => 'required',
+                                'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                                'phone' => 'required',
+                                'postal_address1' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'postal_state' => 'required',
+                                'postal_zip_code' => 'required',
+                                'postal_city' => 'required',
+                                
+                            ] , 
+
+                            [
+                                'postal_address1.required' => 'Shipping Address is required.',
+                                'postal_state.required' => 'Shipping State is required.',
+                                'postal_zip_code.required' => 'Shipping Zip Code is required.',
+                                'postal_city.required' => 'Shipping City is required.',
+                            ]
+                        );
                     }
                    
                 } else {
