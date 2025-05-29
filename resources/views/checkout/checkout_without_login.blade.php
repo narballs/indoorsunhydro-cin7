@@ -595,7 +595,7 @@ $cart_price = 0;
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="postalCity" id="postalCity" class="form-control update_checkout_input mb-1 postalCity" placeholder="Town/City">
-                                        <div class=" postal_city_errors checkout_validation_errors"></div>
+                                        <div class="postal_city_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -1182,6 +1182,22 @@ $cart_price = 0;
                             else {
                                 $('.postalpostCode_errors').html('');
                             }
+
+                            if (errors.city) {
+                                var error_text_city = errors.city[0];
+                                $('.city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.city_errors').html('');
+                            }
+
+                            if (errors.postal_city) {
+                                var error_text_city = errors.postal_city[0];
+                                $('.postal_city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.postal_city_errors').html('');
+                            }
                         }
                     }
                 });
@@ -1420,6 +1436,22 @@ $cart_price = 0;
                             }
                             else {
                                 $('.postalpostCode_errors').html('');
+                            }
+
+                            if (errors.city) {
+                                var error_text_city = errors.city[0];
+                                $('.city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.city_errors').html('');
+                            }
+
+                            if (errors.postal_city) {
+                                var error_text_city = errors.postal_city[0];
+                                $('.postal_city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.postal_city_errors').html('');
                             }
                         }
                     }
