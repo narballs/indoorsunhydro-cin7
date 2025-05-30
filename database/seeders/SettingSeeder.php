@@ -619,6 +619,23 @@ class SettingSeeder extends Seeder
                 'option_value' => 'engrdanishsabir00@gmail.com',
             ],
 
+            [
+                'option_name' => 'invalid_contacts_summary_danish_email',
+                'type' => 'text',
+                'option_value' => 'engrdanishsabir00@gmail.com',
+            ],
+
+            [
+                'option_name' => 'invalid_contacts_summary_naris_email',
+                'type' => 'text',
+                'option_value' => 'khadijaniazkhan111@gmail.com',
+            ],
+            [
+                'option_name' => 'enable_invalid_contacts_summary_email',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
         ];
 
         foreach($setting as $setting) {

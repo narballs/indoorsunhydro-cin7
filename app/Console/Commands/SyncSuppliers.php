@@ -15,6 +15,7 @@ use App\Helpers\UtilHelper;
 use App\Helpers\SettingHelper;
 use App\Helpers\UserHelper;
 use App\Models\ApiKeys;
+use App\Models\InvalidAddressUser;
 use Illuminate\Support\Facades\Log;
 
 class SyncSuppliers extends Command
@@ -200,6 +201,43 @@ class SyncSuppliers extends Command
                         // $errorlog->payload = 'Invalid address for contact id: ' . $api_contact->id;
                         // $errorlog->exception = 'Invalid address';
                         // $errorlog->save();
+
+                        $check_invalid_address_user = InvalidAddressUser::where('email', $api_contact->email)->first();
+                        
+                        if (empty($check_invalid_address_user)) {
+                            $invalid_address_user = new InvalidAddressUser();
+                            $invalid_address_user->email = $api_contact->email;
+                            $invalid_address_user->firstName = $api_contact->firstName;
+                            $invalid_address_user->lastName = $api_contact->lastName;
+                            $invalid_address_user->billing_address_1 = $billing_address_1;
+                            $invalid_address_user->billing_address_2 = $billing_address_2;
+                            $invalid_address_user->billing_city = $billing_city;
+                            $invalid_address_user->billing_state = $billing_state;
+                            $invalid_address_user->billing_postal_code = $billing_postal_code;
+                            $invalid_address_user->shipping_address_1 = $delivery_address_1;
+                            $invalid_address_user->shipping_address_2 = $delivery_address_2;
+                            $invalid_address_user->shipping_city = $delivery_city;
+                            $invalid_address_user->shipping_state = $delivery_state;
+                            $invalid_address_user->shipping_postal_code = $delivery_postal_code;
+                            $invalid_address_user->save();
+                        } else {
+                            $check_invalid_address_user->email = $api_contact->email;
+                            $check_invalid_address_user->firstName = $api_contact->firstName;
+                            $check_invalid_address_user->lastName = $api_contact->lastName;
+                            $check_invalid_address_user->billing_address_1 = $billing_address_1;
+                            $check_invalid_address_user->billing_address_2 = $billing_address_2;
+                            $check_invalid_address_user->billing_city = $billing_city;
+                            $check_invalid_address_user->billing_state = $billing_state;
+                            $check_invalid_address_user->billing_postal_code = $billing_postal_code;
+                            $check_invalid_address_user->shipping_address_1 = $delivery_address_1;
+                            $check_invalid_address_user->shipping_address_2 = $delivery_address_2;
+                            $check_invalid_address_user->shipping_city = $delivery_city;
+                            $check_invalid_address_user->shipping_state = $delivery_state;
+                            $check_invalid_address_user->shipping_postal_code = $delivery_postal_code;
+                            $check_invalid_address_user->save();
+                        }
+
+
                         continue;
                     }
                     
