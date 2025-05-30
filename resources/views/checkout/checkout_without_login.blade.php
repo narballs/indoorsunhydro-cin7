@@ -595,7 +595,7 @@ $cart_price = 0;
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <input type="text" name="postalCity" id="postalCity" class="form-control update_checkout_input mb-1 postalCity" placeholder="Town/City">
-                                        <div class=" postal_city_errors checkout_validation_errors"></div>
+                                        <div class="postal_city_errors checkout_validation_errors"></div>
                                     </div>
                                 </div>
                             </div>
@@ -1070,33 +1070,33 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        // if (response.responseJSON.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
+                        if (response.responseJSON.address_validator === false) {
+                            $('.update_checkout_loader').addClass('d-none');
 
-                        //     let title = response.responseJSON.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
+                            let title = response.responseJSON.different_shipping_address == 1 
+                                ? 'Shipping Address Error' 
+                                : 'Billing & Shipping Address Error';
 
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
+                            Swal.fire({
+                                toast: false,
+                                icon: 'error',
+                                title: title,
+                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                position: 'center',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Confirm',
+                                timerProgressBar: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                customClass: {
+                                    confirmButton: 'my-confirm-button',
+                                    popup: 'swal2-popup-class',
+                                    actions: 'my-actions-class'
+                                }
+                            });
 
-                        //     return false;
-                        // }
+                            return false;
+                        }
 
 
                         $('.update_checkout_loader').addClass('d-none');
@@ -1181,6 +1181,22 @@ $cart_price = 0;
                             }
                             else {
                                 $('.postalpostCode_errors').html('');
+                            }
+
+                            if (errors.city) {
+                                var error_text_city = errors.city[0];
+                                $('.city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.city_errors').html('');
+                            }
+
+                            if (errors.postal_city) {
+                                var error_text_city = errors.postal_city[0];
+                                $('.postal_city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.postal_city_errors').html('');
                             }
                         }
                     }
@@ -1310,33 +1326,33 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
-                        // if (response.responseJSON.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
+                        if (response.responseJSON.address_validator === false) {
+                            $('.update_checkout_loader').addClass('d-none');
 
-                        //     let title = response.responseJSON.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
+                            let title = response.responseJSON.different_shipping_address == 1 
+                                ? 'Shipping Address Error' 
+                                : 'Billing & Shipping Address Error';
 
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
+                            Swal.fire({
+                                toast: false,
+                                icon: 'error',
+                                title: title,
+                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                position: 'center',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Confirm',
+                                timerProgressBar: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                customClass: {
+                                    confirmButton: 'my-confirm-button',
+                                    popup: 'swal2-popup-class',
+                                    actions: 'my-actions-class'
+                                }
+                            });
 
-                        //     return false;
-                        // }
+                            return false;
+                        }
 
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
@@ -1420,6 +1436,22 @@ $cart_price = 0;
                             }
                             else {
                                 $('.postalpostCode_errors').html('');
+                            }
+
+                            if (errors.city) {
+                                var error_text_city = errors.city[0];
+                                $('.city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.city_errors').html('');
+                            }
+
+                            if (errors.postal_city) {
+                                var error_text_city = errors.postal_city[0];
+                                $('.postal_city_errors').html(error_text_city);
+                            }
+                            else {
+                                $('.postal_city_errors').html('');
                             }
                         }
                     }

@@ -1904,62 +1904,84 @@ class CheckoutController extends Controller
             } else {
                 if (!empty($request->different_shipping_address) && $request->different_shipping_address == 1) {
                     if ( $is_guest_user == 1) {
-                        $request->validate([
-                            'email' => 'required|email',
-                            // 'password' =>'required',
-                            'first_name' => 'required',
-                            // 'address' => 'required',
-                            'address' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
+                        $request->validate(
+                            [
+                                'email' => 'required|email',
+                                // 'password' =>'required',
+                                'first_name' => 'required',
+                                // 'address' => 'required',
+                                'address' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'state' => 'required',
+                                'city' => 'required',
+                                'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                                'phone' => 'required',
+                                'postal_address1' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'postal_state' => 'required',
+                                'postal_zip_code' => 'required',
+                                'postal_city' => 'required',
                             ],
-                            'state' => 'required',
-                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                            'phone' => 'required',
-                            'postal_address1' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
-                            ],
-                            'postal_state' => 'required',
-                            'postal_zip_code' => 'required',
-                        ]);
+                            [
+                                'postal_address1.required' => 'Shipping Address is required.',
+                                'postal_state.required' => 'Shipping State is required.',
+                                'postal_zip_code.required' => 'Shipping Zip Code is required.',
+                                'postal_city.required' => 'Shipping City is required.',
+                            ]
+                        );
                     }
                     else {
-                        $request->validate([
-                            'email' => 'required|email',
-                            'password' =>'required',
-                            'first_name' => 'required',
-                            // 'address' => 'required',
-                            'address' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
-                            ],
-                            'state' => 'required',
-                            'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                            'phone' => 'required',
-                            'postal_address1' => [
-                                'required',
-                                // function ($attribute, $value, $fail) {
-                                //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                                //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                                //     }
-                                // },
-                            ],
-                            'postal_state' => 'required',
-                            'postal_zip_code' => 'required',
-                        ]);
+                        $request->validate(
+                            [
+                                'email' => 'required|email',
+                                'password' =>'required',
+                                'first_name' => 'required',
+                                // 'address' => 'required',
+                                'address' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'state' => 'required',
+                                'city' => 'required',
+                                'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                                'phone' => 'required',
+                                'postal_address1' => [
+                                    'required',
+                                    // function ($attribute, $value, $fail) {
+                                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+                                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+                                    //     }
+                                    // },
+                                ],
+                                'postal_state' => 'required',
+                                'postal_zip_code' => 'required',
+                                'postal_city' => 'required',
+                                
+                            ] , 
+
+                            [
+                                'postal_address1.required' => 'Shipping Address is required.',
+                                'postal_state.required' => 'Shipping State is required.',
+                                'postal_zip_code.required' => 'Shipping Zip Code is required.',
+                                'postal_city.required' => 'Shipping City is required.',
+                            ]
+                        );
                     }
                    
                 } else {
@@ -1979,6 +2001,7 @@ class CheckoutController extends Controller
                             'state' => 'required',
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
+                            'city' => 'required',
                         ]);
                     }
                     else {
@@ -1998,6 +2021,7 @@ class CheckoutController extends Controller
                             'state' => 'required',
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
+                            'city' => 'required',
                         ]);
                     }
                 }
@@ -2028,25 +2052,25 @@ class CheckoutController extends Controller
                     $postalState = $postal_state_name;
                     $postalPostCode = $request->postal_zip_code;
 
-                    // $validate_address_1 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode, $country = 'USA');
-                    // if ($validate_address_1['valid'] == false) {
-                    //     return response()->json([
-                    //         'different_shipping_address' => 1,
-                    //         'status' => 'address_error',
-                    //         'address_validator' => false,
-                    //         'validator_message' => $validate_address_1['message'] ?? 'Address validation failed.',
-                    //         'suggested_address' => $validate_address_1['suggested_address'] ?? '',
-                    //         'formatted_address' => $validate_address_1['formatted_address'] ?? '',
-                    //     ], 400);
-                    // }
+                    $validate_address_1 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode, $country = 'USA');
+                    if ($validate_address_1['valid'] == false) {
+                        return response()->json([
+                            'different_shipping_address' => 1,
+                            'status' => 'address_error',
+                            'address_validator' => false,
+                            'validator_message' => $validate_address_1['message'] ?? 'Address validation failed.',
+                            'suggested_address' => $validate_address_1['suggested_address'] ?? '',
+                            'formatted_address' => $validate_address_1['formatted_address'] ?? '',
+                        ], 400);
+                    }
 
-                    // return response()->json([
-                    //     'different_shipping_address' => 1,
-                    //     'status' => 'address_success',
-                    //     'address_validator' => true,
-                    //     'validator_message' => $validate_address_1['message'] ?? 'Address validated successfully.',
-                    //     'formatted_address' => $validate_address_1['formatted_address'] ?? '',
-                    // ]);
+                    return response()->json([
+                        'different_shipping_address' => 1,
+                        'status' => 'address_success',
+                        'address_validator' => true,
+                        'validator_message' => $validate_address_1['message'] ?? 'Address validated successfully.',
+                        'formatted_address' => $validate_address_1['formatted_address'] ?? '',
+                    ]);
                 } 
                 else {
                     $postalAddress1 = $address1;
@@ -2055,25 +2079,25 @@ class CheckoutController extends Controller
                     $postalState = $state_name;
                     $postalPostCode =$postCode;
                     
-                    // $validate_address_2 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode, $country = 'USA');
-                    // if ($validate_address_2['valid'] == false) {
-                    //     return response()->json([
-                    //         'different_shipping_address' => 0,
-                    //         'status' => 'address_error',
-                    //         'address_validator' => false,
-                    //         'validator_message' => $validate_address_2['message'] ?? 'Address validation failed.',
-                    //         'suggested_address' => $validate_address_2['suggested_address'] ?? '',
-                    //         'formatted_address' => $validate_address_2['formatted_address'] ?? '',
-                    //     ], 400);
-                    // }
+                    $validate_address_2 =  UserHelper::validateFullAddress($postalAddress1 , $postalAddress2 , $postalCity , $postalState , $postalPostCode, $country = 'USA');
+                    if ($validate_address_2['valid'] == false) {
+                        return response()->json([
+                            'different_shipping_address' => 0,
+                            'status' => 'address_error',
+                            'address_validator' => false,
+                            'validator_message' => $validate_address_2['message'] ?? 'Address validation failed.',
+                            'suggested_address' => $validate_address_2['suggested_address'] ?? '',
+                            'formatted_address' => $validate_address_2['formatted_address'] ?? '',
+                        ], 400);
+                    }
 
-                    // return response()->json([
-                    //     'different_shipping_address' => 0,
-                    //     'status' => 'address_success',
-                    //     'address_validator' => true,
-                    //     'validator_message' => $validate_address_2['message'] ?? 'Address validated successfully.',
-                    //     'formatted_address' => $validate_address_2['formatted_address'] ?? '',
-                    // ]);
+                    return response()->json([
+                        'different_shipping_address' => 0,
+                        'status' => 'address_success',
+                        'address_validator' => true,
+                        'validator_message' => $validate_address_2['message'] ?? 'Address validated successfully.',
+                        'formatted_address' => $validate_address_2['formatted_address'] ?? '',
+                    ]);
                 }
                 
                 DB::beginTransaction();
