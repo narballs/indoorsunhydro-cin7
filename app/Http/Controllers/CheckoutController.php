@@ -2091,13 +2091,13 @@ class CheckoutController extends Controller
                         ], 400);
                     }
 
-                    return response()->json([
-                        'different_shipping_address' => 0,
-                        'status' => 'address_success',
-                        'address_validator' => true,
-                        'validator_message' => $validate_address_2['message'] ?? 'Address validated successfully.',
-                        'formatted_address' => $validate_address_2['formatted_address'] ?? '',
-                    ]);
+                    // return response()->json([
+                    //     'different_shipping_address' => 0,
+                    //     'status' => 'address_success',
+                    //     'address_validator' => true,
+                    //     'validator_message' => $validate_address_2['message'] ?? 'Address validated successfully.',
+                    //     'formatted_address' => $validate_address_2['formatted_address'] ?? '',
+                    // ]);
                 }
                 
                 DB::beginTransaction();
