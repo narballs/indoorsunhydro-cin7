@@ -268,6 +268,7 @@
     <div class="">
         <div class="row">
             <div class="col-md-12">
+                <input type="hidden" value="{{ !empty($order->is_stripe) && $order->is_stripe ==  1 ? 'stripe' : 'none' }}" name="order_stripe_status" id="order_stripe_status">
                 <input type="hidden" value="{{$order->id}}" name="order_id" id="orderID">
                 @if(!empty($tax_class))
                 <input type="hidden" value="{{$tax_class->rate}}" name="tax_rate" id="tax_rate">
@@ -1754,14 +1755,15 @@
             var order_status_id = $('#order_status_id').val();
             var payment_status = paid;
             check_status_name = $('#order_status_id option:selected').text();
+            var order_stripe_status = $('#order_stripe_status').val();
 
-            if (check_status_name == 'Partial Refund') {
+            if (check_status_name == 'Partial Refund' && order_stripe_status == 'stripe') {
                 $('.order-status-spinner').addClass('d-none');
                 $('#partial_refund').modal('show');
                 $('#grand_popup_total_text').val($('#grand_total_value').val());
                 $('#pop_up_grand_total').val($('#grand_total_value').val());
                 $('#pop_up_grand_total').attr('max', $('#grand_total_value').val());
-            } else if (check_status_name == 'Refunded') {
+            } else if (check_status_name == 'Refunded' && order_stripe_status == 'stripe') {
                 $('.order-status-spinner').addClass('d-none');
                 $('#refundReasonModal').modal('show');
             }
