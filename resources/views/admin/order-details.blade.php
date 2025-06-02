@@ -849,8 +849,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="full_refund_btn('{{$order->id}}')">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <div class="row">
+                        <div class="spinner-border text-warning full-refund-order-status-spinner d-none mx-2" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <button type="button" class="btn btn-primary mx-2" onclick="full_refund_btn('{{$order->id}}')">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1794,7 +1799,8 @@
                         $('.order-status-spinner').addClass('d-none');
                         $('.success_text_div').removeClass('d-none');
                         $('.success_text').text(response.message);
-                        $('.error_message_refund').children('span').text(response.message);        
+                        $('.error_message_refund').children('span').text(response.message);
+                        $('.full-refund-order-status-spinner').addClass('d-none');        
                     }
                 }
             });
@@ -1830,6 +1836,7 @@
         }
 
         function full_refund_btn(order_id) {
+            $('.full-refund-order-status-spinner').removeClass('d-none');
             var order_status_id = $('#order_status_id').val();
             var payment_status = 'refunded';
             var order_status_type = 'full_refund';
@@ -1837,6 +1844,7 @@
             var refund_reason = $('#refund_reason').val();
             if (refund_reason == null || refund_reason == '') {
                 $('.error_message_refund').children('span').text('Refund reason is required');
+                $('.full-refund-order-status-spinner').addClass('d-none');
                 return false;
             }
             order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value , refund_reason);
