@@ -831,6 +831,33 @@
         </div>
     </div>
 
+    {{-- full refund  adding a reason--}}
+    <div class="modal fade" id="refundReasonModal" tabindex="-1" aria-labelledby="refundReasonModalLabel" aria-hidden="true" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                {{-- <div class="modal-header">
+                    <h5 class="modal-title" id="refundReasonModalLabel">Refund Reason</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div> --}}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="refund_reason" class="form-label">Please provide a reason for the refund:</label>
+                        <textarea class="form-control" id="refund_reason" name="refund_reason" rows="4" required></textarea>
+                        <div class="error_message_refund">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="full_refund_btn('{{$order->id}}')">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- full refund  end--}}
+
     <div class="modal fade" id="send_po_box_wholesale_order_to_shipstation" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="send_po_box_wholesale_order_to_shipstation" aria-hidden="true">
         <div class="modal-dialog">
           <form method="POST" action="{{ route('send_po_box_wholesale_order_to_shipstation') }}">
@@ -1729,15 +1756,19 @@
                 $('#grand_popup_total_text').val($('#grand_total_value').val());
                 $('#pop_up_grand_total').val($('#grand_total_value').val());
                 $('#pop_up_grand_total').attr('max', $('#grand_total_value').val());
+            } else if (check_status_name == 'Refunded') {
+                $('.order-status-spinner').addClass('d-none');
+                $('#refundReasonModal').modal('show');
             }
             else {
                 $('#partial_refund').modal('hide');
+                $('#refundReasonModal').modal('hide');
                 var order_status_type = 'null';
-                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value = 0);
+                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value = 0 , refund_reason = null);
             }
         }
 
-        function order_status_updating_by_admin(order_id ,order_status_id, payment_status, order_status_type , refund_value) {
+        function order_status_updating_by_admin(order_id ,order_status_id, payment_status, order_status_type , refund_value, refund_reason) {
             jQuery.ajax({
                 url: "{{ url('admin/order/update-order-status') }}",
                 method: 'post',
@@ -1747,9 +1778,11 @@
                     "order_status_id": order_status_id,
                     "payment_status": payment_status,
                     "order_status_type": order_status_type,
-                    "refund_value": refund_value
+                    "refund_value": refund_value,
+                    "refund_reason": refund_reason,
                 },
                 success: function(response) {
+                    console.log(response);
                     if (response.success == true) {
                         $('.order-status-spinner').addClass('d-none');
                         $('.success_text_div').removeClass('d-none');
@@ -1761,6 +1794,7 @@
                         $('.order-status-spinner').addClass('d-none');
                         $('.success_text_div').removeClass('d-none');
                         $('.success_text').text(response.message);
+                        $('.error_message_refund').children('span').text(response.message);        
                     }
                 }
             });
@@ -1790,9 +1824,23 @@
                 var order_status_id = $('#order_status_id').val();
                 var payment_status = 'partially refunded';
                 var order_status_type = 'partial_refund';
-                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value);
+                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value , refund_reason = null);
             }       
             
         }
+
+        function full_refund_btn(order_id) {
+            var order_status_id = $('#order_status_id').val();
+            var payment_status = 'refunded';
+            var order_status_type = 'full_refund';
+            var refund_value = $('#grand_total_value').val();
+            var refund_reason = $('#refund_reason').val();
+            if (refund_reason == null || refund_reason == '') {
+                $('.error_message_refund').children('span').text('Refund reason is required');
+                return false;
+            }
+            order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value , refund_reason);
+        }
+
     </script>
 @stop

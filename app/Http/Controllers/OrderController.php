@@ -1508,6 +1508,12 @@ class OrderController extends Controller
                         $order_refund->refund_amount = $order->total_including_tax;
                         $order_refund->save();
 
+
+                        $order_comment = new OrderComment;
+                        $order_comment->order_id = $order_id;
+                        $order_comment->comment = !empty($request->refund_reason) ? $request->refund_reason : '';    
+                        $order_comment->save();
+
                         if (!empty($order->order_id)) {
                             $this->cancel_order($order , $current_order_status , $order_status_id,$cin7_auth_username , $cin7_auth_password);
                         }
@@ -1523,7 +1529,7 @@ class OrderController extends Controller
                 } 
                 catch (\Exception $e) {
                     $request_status = false;
-                    $message = $e->getMessage();
+                    $message = 'Stripe Refund failed: ' . $e->getMessage();
                     return response()->json(['success' => false , 'message' => $message]);
                 }
             }
