@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Invalid Contacts Summary Sync Fron Cin7</title>
+    <title>Contacts Skipped During Cin7 Sync (Invalid Addresses)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <h1>Invalid Contacts Summary Sync Fron Cin7</h1>
+    <h1>Contacts Skipped During Cin7 Sync (Invalid Addresses)</h1>
     <table>
         <thead>
             <tr>

@@ -42,7 +42,7 @@ class SendInvalidContactsSummary extends Command
         
         foreach ($email_addresses as $email) {
             $data = [
-                'subject' => 'Invalid Contacts Summary',
+                'subject' => 'Contacts Skipped During Cin7 Sync (Invalid Addresses)',
                 'email' => $email,
                 'invalid_contacts' => $invalid_contacts,
                 'from' => SettingHelper::getSetting('noreply_email_address'),
