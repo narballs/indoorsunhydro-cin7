@@ -47,7 +47,10 @@ class AutoVoidMultiLabels extends Command
                     continue;
                 }
 
-                $response = $client->get("{$shipmentsUrl}/{$order->shipstation_orderId}", [
+                // $response = $client->get("{$shipmentsUrl}?{$order->shipstation_orderId}", [
+                //     'headers' => $headers,
+                // ]);
+                $response = $client->get("{$shipmentsUrl}?orderId={$order->shipstation_orderId}", [
                     'headers' => $headers,
                 ]);
 
