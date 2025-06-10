@@ -69,7 +69,7 @@ class Kernel extends ConsoleKernel
         // auto void duplicate labels 
         $schedule->command('shipstation:auto-void-labels')
             ->everyFourMinutes()
-            ->between('10:32', '10:42');
+            ->between('10:36', '10:42');
 
         $schedule->command('shipstation:auto-void-labels')
             ->everyTenMinutes()
@@ -77,11 +77,11 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('shipstation:auto-void-labels')
             ->everyTenMinutes()
-            ->between('14:35', '14:56');
+            ->between('14:40', '14:56');
 
         $schedule->command('shipstation:auto-void-labels')
              ->everyTenMinutes()
-            ->between('16:35', '17:01');    
+            ->between('16:40', '17:01');    
 
         $schedule->command('auto:notify')->everyThreeMinutes();
         // $schedule->command('admin:stockrequest')->weekly();
