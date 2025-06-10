@@ -116,7 +116,7 @@ class AutoVoidMultiLabels extends Command
     {
         return [
             'Authorization' => 'Basic ' . base64_encode(
-                config('services.shipstation.api_key') . ':' . config('services.shipstation.api_secret')
+                config('services.shipstation.key') . ':' . config('services.shipstation.secret')
             ),
             'Content-Type' => 'application/json',
         ];
