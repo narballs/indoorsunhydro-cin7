@@ -45,6 +45,11 @@
                         <div class="col-md-6 create_bnt mobile_fulfill_div">
                             <div class="d-flex justify-content-between">
                                 <span class="create_new_btn_mbl mr-2">
+                                    <button type="button" class="btn btn-info rounded btn-import-specific-contact text-white" onclick="importSpecificContact()">
+                                        Import Specific Contact
+                                    </button>
+                                </span>
+                                <span class="create_new_btn_mbl mr-2">
                                     <button type="button" class="btn create_new_product_btn reduce_font_size btn-import-contacts text-dark">
                                         Import Contacts +
                                     </button>
@@ -101,6 +106,37 @@
             </div>
         </div>
     </div>
+    {{-- import Specific Contact--}}
+    <div class="modal fade" id="importSpecific" tabindex="-1" aria-labelledby="importSpecificContact" aria-hidden="true" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5 class="text-center text-bold">Import Specific Contact</h5>
+                    <div class="mb-3">
+                        <div class="email-success">
+                            <span class="text-success"></span>
+                        </div>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" name="email" id="contactEmail" class="form-control" placeholder="Enter contact email" required>
+                        <div class="email-error">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="spinner-border text-warning import-specific-contact-spinner d-none mx-2" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <button type="button" class="btn btn-primary mx-2" onclick="importContact()">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- import Specific Contact end--}}
 @endsection
 @section('css')
     <link rel="stylesheet" href="/theme/css/admin_custom.css?v2">
@@ -378,5 +414,95 @@
                 });
             });
         });
+
+        function importSpecificContact() {
+            $('#importSpecific').modal('show');
+        }
+
+        // function importContact() {
+        //     var email = $('#contactEmail').val();
+        //     $('.email-error span').text('');
+        //     if (email === '') {
+        //         $('.email-error span').text('Email is required');
+        //         return;
+        //     }
+
+        //     $('.import-specific-contact-spinner').removeClass('d-none');
+
+        //     $.ajax({
+        //         url: "{{ url('admin/commands/import_specific_contact') }}",
+        //         method: 'get',
+        //         data: {
+        //             email: email,
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function(response) {
+        //             // $('.import-specific-contact-spinner').addClass('d-none');
+        //             if (response.status === 'success') {
+        //                 $('.email-success span').html('contact imported successfully');
+
+        //                 setTimeout(function() {
+        //                     $('#importSpecific').modal('hide');
+        //                     location.reload();
+        //                 }, 5000);
+
+                        
+        //             } else {
+        //                 $('#email-error span').html(response.message);
+        //             }
+        //         },
+        //         error: function(xhr) {
+        //             $('.import-specific-contact-spinner').addClass('d-none');
+        //             $('#email-error span').html( xhr.responseText);
+        //         }
+        //     });
+        // }
+
+        function importContact() {
+            var email = $('#contactEmail').val();
+            $('.email-error span, .email-success span').text('');
+            
+            if (email === '') {
+                $('.email-error span').text('Email is required');
+                return;
+            }
+
+            $('.import-specific-contact-spinner').removeClass('d-none');
+
+            $.ajax({
+                url: "{{ url('admin/commands/import_specific_contact') }}",
+                method: 'GET',
+                data: {
+                    email: email,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    $('.import-specific-contact-spinner').addClass('d-none');
+                    
+                    if (response.status === 'success') {
+                        $('.email-success span').html('Contact imported successfully');
+
+                        setTimeout(function() {
+                            $('#importSpecific').modal('hide');
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        $('.email-error span').html(response.message || 'An error occurred.');
+                    }
+                },
+                error: function(xhr) {
+                    $('.import-specific-contact-spinner').addClass('d-none');
+                    let errorMessage = 'An unexpected error occurred.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        errorMessage = xhr.responseText;
+                    }
+                    $('.email-error span').html(errorMessage);
+                }
+            });
+        }
+
+
     </script>
 @endsection

@@ -238,6 +238,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/commands/import_contacts', [AdminCommandsController::class, 'import_contacts'])->name('admin.commands.import_contacts');
     Route::get('admin/commands/update-product-prices', [AdminCommandsController::class, 'update_product_prices'])->name('update_product_prices');
     Route::get('admin/empty-failed-jobs', [AdminSettingsController::class, 'empty_failed_jobs'])->name('empty_failed_jobs');
+    Route::get('admin/commands/import_specific_contact', [AdminCommandsController::class, 'import_specific_contact'])->name('import_specific_contact');
 
 
     Route::get('admin/customer/create', [ContactController::class, 'customer_create'])->name('admin.customer.create');
