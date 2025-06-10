@@ -44,7 +44,6 @@ class Kernel extends ConsoleKernel
         //     ]);
         // });
         $schedule->command('sync:supplier')->everyTwoHours();
-        $schedule->command('shipstation:auto-void-labels')->everyTwoHours();
         $schedule->command('AutoOrder:Sync')->everyThreeMinutes();
         $schedule->command('check:orderstatus')->everyThreeHours();
         $schedule->command('cancel:order')->everyFourMinutes();
@@ -67,21 +66,21 @@ class Kernel extends ConsoleKernel
 
 
         // auto void duplicate labels 
-        $schedule->command('shipstation:auto-void-labels')
-            ->everyFourMinutes()
-            ->between('10:36', '10:42');
+        // $schedule->command('shipstation:auto-void-labels')
+        //     ->everyFourMinutes()
+        //     ->between('10:36', '10:42');
 
-        $schedule->command('shipstation:auto-void-labels')
-            ->everyTenMinutes()
-            ->between('12:20', '12:50');
+        // $schedule->command('shipstation:auto-void-labels')
+        //     ->everyTenMinutes()
+        //     ->between('12:20', '12:50');
 
-        $schedule->command('shipstation:auto-void-labels')
-            ->everyTenMinutes()
-            ->between('14:40', '14:56');
+        // $schedule->command('shipstation:auto-void-labels')
+        //     ->everyTenMinutes()
+        //     ->between('14:40', '14:56');
 
-        $schedule->command('shipstation:auto-void-labels')
-             ->everyTenMinutes()
-            ->between('16:40', '17:01');    
+        // $schedule->command('shipstation:auto-void-labels')
+        //      ->everyTenMinutes()
+        //     ->between('16:40', '17:01');    
 
         $schedule->command('auto:notify')->everyThreeMinutes();
         // $schedule->command('admin:stockrequest')->weekly();

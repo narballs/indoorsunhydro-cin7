@@ -256,6 +256,10 @@ class LabelHelper {
                 return Log::info('Label already created for order: ' . $order_id);
             }
 
+            if ($order->label_created === 1) {
+                return Log::info('Label already created for order: ' . $order_id);
+            }
+
             $response = $client->post(config('services.shipstation.shipment_label_url'), [
                 'headers' => self::getShipstationHeaders(),
                 'json' => $prepare_data_for_creating_label,
@@ -314,8 +318,10 @@ class LabelHelper {
         ]);
 
         $label_email_data = self::prepareLabelEmailData($order_id, $orderData['customerEmail'], $prepare_data_for_creating_label, $packingSlipFileName, $file_name, $order_items_array);
+        $tracking_number = $label_api_response ? $label_api_response->trackingNumber : null;
+        $shipmentId = $label_api_response ? $label_api_response->shipmentId : null;
     
-        self::update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response);
+        self::update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response , $tracking_number, $shipmentId);
     }
 
 
@@ -343,10 +349,10 @@ class LabelHelper {
         ];
     }
     
-    public static function update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response) {
+    public static function update_and_sendLabelEmail($label_email_data, $order, $file_name , $label_api_response , $tracking_number , $shipmentId ) {
 
-        $tracking_number = $label_api_response ? $label_api_response->trackingNumber : null;
-        $shipmentId = $label_api_response ? $label_api_response->shipmentId : null;
+        // $tracking_number = $label_api_response ? $label_api_response->trackingNumber : null;
+        // $shipmentId = $label_api_response ? $label_api_response->shipmentId : null;
         
         $order_update = $order->update(
             [
