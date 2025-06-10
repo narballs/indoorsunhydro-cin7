@@ -21,7 +21,7 @@ class AutoVoidMultiLabels extends Command
             ->where('is_shipped', 1)
             ->whereNotNull('shipstation_orderId')
             ->whereNotNull('tracking_number')
-            ->where('created_at' ,'>=' ,'2025-06-09 11:30:13')
+            ->where('created_at' ,'>=' ,'2025-06-07 16:49:33')
             ->get();
 
         if ($orders->isEmpty()) {
