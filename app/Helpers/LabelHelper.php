@@ -38,7 +38,7 @@ class LabelHelper {
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
                 'action' => 'get_order',
-                'request' => 'get order data from shipstation',
+                'request' => 'get order data from shipstation (manually)',
                 'response' => json_encode($orderData),
                 'order_id' => $order_id,
                 'status' => 200,
@@ -523,5 +523,4 @@ class LabelHelper {
         return true;
 
     }
-    
 }
