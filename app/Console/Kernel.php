@@ -92,7 +92,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('reset:cin7_api_keys')->dailyAt('00:00');
 
 
-        $schedule->command('contacts:send-invalid-contacts-summary')->weeklyOn(1, '10:00');
+        // $schedule->command('contacts:send-invalid-contacts-summary')->weeklyOn(1, '10:00');
         
         $autoLabelSetting = AutoLabelSetting::first();
 
