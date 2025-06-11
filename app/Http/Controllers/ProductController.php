@@ -3588,7 +3588,7 @@ class ProductController extends Controller
             $client->setAuth('basic', ['username' => $username, 'token' => $token]);
 
             $subject = 'Bulk Products Request Received ' . $request->name . ' ' . Str::limit($request->items_list, 20) ;
-            $description = "Item: " . $request->items_list . "\nQuantity: " . $request->quantity . "\nPhone Number: " . $request->phone_number . "\nDelivery: " . $request->delievery;
+            $description = "Item: " . $request->items_list . "\nQuantity: " . $request->quantity . "\nPhone Number: " . $request->phone_number . "\nDelivery: " . $request->delievery . "\nEmail: " . $request->email;
             $requesterName = $request->name;
             $requesterEmail = $request->email;
 
