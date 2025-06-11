@@ -165,81 +165,81 @@ class SyncSuppliers extends Command
                     array_push($api_contact_ids, $api_contact->id);
 
 
-                    $billing_contact_address_1 = !empty($contact) && !empty($contact->postalAddress1) ? $contact->postalAddress1 : '';
-                    $billing_contact_address_2 = !empty($contact) && !empty($contact->postalAddress2) ? $contact->postalAddress2 : '';
-                    $billing_contact_city = !empty($contact) && !empty($contact->postalCity) ? $contact->postalCity : '';
-                    $billing_contact_state = !empty($contact) && !empty($contact->postalState) ? $contact->postalState : '';
-                    $billing_contact_postal_code = !empty($contact) && !empty($contact->postalPostCode) ? $contact->postalPostCode : '';
+                    // $billing_contact_address_1 = !empty($contact) && !empty($contact->postalAddress1) ? $contact->postalAddress1 : '';
+                    // $billing_contact_address_2 = !empty($contact) && !empty($contact->postalAddress2) ? $contact->postalAddress2 : '';
+                    // $billing_contact_city = !empty($contact) && !empty($contact->postalCity) ? $contact->postalCity : '';
+                    // $billing_contact_state = !empty($contact) && !empty($contact->postalState) ? $contact->postalState : '';
+                    // $billing_contact_postal_code = !empty($contact) && !empty($contact->postalPostCode) ? $contact->postalPostCode : '';
 
 
-                    $delivery_contact_address_1 = !empty($contact) && !empty($contact->address1) ? $contact->address1 : '';
-                    $delivery_contact_address_2 = !empty($contact) && !empty($contact->address2) ? $contact->address2 : '';
-                    $delivery_contact_city = !empty($contact) && !empty($contact->city) ? $contact->city : '';
-                    $delivery_contact_state = !empty($contact) && !empty($contact->state) ? $contact->state : '';
-                    $delivery_contact_postal_code = !empty($contact) && !empty($contact->postCode) ? $contact->postCode : '';
+                    // $delivery_contact_address_1 = !empty($contact) && !empty($contact->address1) ? $contact->address1 : '';
+                    // $delivery_contact_address_2 = !empty($contact) && !empty($contact->address2) ? $contact->address2 : '';
+                    // $delivery_contact_city = !empty($contact) && !empty($contact->city) ? $contact->city : '';
+                    // $delivery_contact_state = !empty($contact) && !empty($contact->state) ? $contact->state : '';
+                    // $delivery_contact_postal_code = !empty($contact) && !empty($contact->postCode) ? $contact->postCode : '';
 
 
-                    $billing_address_1 = !empty($api_contact->postalAddress1) ? $api_contact->postalAddress1 : $billing_contact_address_1;
-                    $billing_address_2 = !empty($api_contact->postalAddress2) ? $api_contact->postalAddress2 : $billing_contact_address_2;
-                    $billing_city = !empty($api_contact->postalCity) ? $api_contact->postalCity : $billing_contact_city;
-                    $billing_state = !empty($api_contact->postalState) ? $api_contact->postalState : $billing_contact_state;
-                    $billing_postal_code = !empty($api_contact->postalPostCode) ? $api_contact->postalPostCode : $billing_contact_postal_code;
+                    // $billing_address_1 = !empty($api_contact->postalAddress1) ? $api_contact->postalAddress1 : $billing_contact_address_1;
+                    // $billing_address_2 = !empty($api_contact->postalAddress2) ? $api_contact->postalAddress2 : $billing_contact_address_2;
+                    // $billing_city = !empty($api_contact->postalCity) ? $api_contact->postalCity : $billing_contact_city;
+                    // $billing_state = !empty($api_contact->postalState) ? $api_contact->postalState : $billing_contact_state;
+                    // $billing_postal_code = !empty($api_contact->postalPostCode) ? $api_contact->postalPostCode : $billing_contact_postal_code;
 
-                    $delivery_address_1 = !empty($api_contact->address1) ? $api_contact->address1 : $delivery_contact_address_1;
-                    $delivery_address_2 = !empty($api_contact->address2) ? $api_contact->address2 : $delivery_contact_address_2;
-                    $delivery_city = !empty($api_contact->city) ? $api_contact->city : $delivery_contact_city;
-                    $delivery_state = !empty($api_contact->state) ? $api_contact->state : $delivery_contact_state;
-                    $delivery_postal_code = !empty($api_contact->postCode) ? $api_contact->postCode : $delivery_contact_postal_code;
+                    // $delivery_address_1 = !empty($api_contact->address1) ? $api_contact->address1 : $delivery_contact_address_1;
+                    // $delivery_address_2 = !empty($api_contact->address2) ? $api_contact->address2 : $delivery_contact_address_2;
+                    // $delivery_city = !empty($api_contact->city) ? $api_contact->city : $delivery_contact_city;
+                    // $delivery_state = !empty($api_contact->state) ? $api_contact->state : $delivery_contact_state;
+                    // $delivery_postal_code = !empty($api_contact->postCode) ? $api_contact->postCode : $delivery_contact_postal_code;
 
 
-                    $validate_billing_address =  UserHelper::validateFullAddress($billing_address_1 , $billing_address_2 , $billing_city , $billing_state , $billing_postal_code, $country = 'USA');
-                    $validate_delivery_address =  UserHelper::validateFullAddress($delivery_address_1 , $delivery_address_2 , $delivery_city , $delivery_state , $delivery_postal_code, $country = 'USA');
+                    // $validate_billing_address =  UserHelper::validateFullAddress($billing_address_1 , $billing_address_2 , $billing_city , $billing_state , $billing_postal_code, $country = 'USA');
+                    // $validate_delivery_address =  UserHelper::validateFullAddress($delivery_address_1 , $delivery_address_2 , $delivery_city , $delivery_state , $delivery_postal_code, $country = 'USA');
                     
-                    if ($validate_billing_address['valid'] == false || $validate_delivery_address['valid'] == false) {
-                        // $this->info('Invalid address for contact id: ' . $api_contact->id);
-                        // $errorlog = new ApiErrorLog();
-                        // $errorlog->payload = 'Invalid address for contact id: ' . $api_contact->id;
-                        // $errorlog->exception = 'Invalid address';
-                        // $errorlog->save();
+                    // if ($validate_billing_address['valid'] == false || $validate_delivery_address['valid'] == false) {
+                    //     // $this->info('Invalid address for contact id: ' . $api_contact->id);
+                    //     // $errorlog = new ApiErrorLog();
+                    //     // $errorlog->payload = 'Invalid address for contact id: ' . $api_contact->id;
+                    //     // $errorlog->exception = 'Invalid address';
+                    //     // $errorlog->save();
 
-                        $check_invalid_address_user = InvalidAddressUser::where('email', $api_contact->email)->first();
+                    //     $check_invalid_address_user = InvalidAddressUser::where('email', $api_contact->email)->first();
                         
-                        if (empty($check_invalid_address_user)) {
-                            $invalid_address_user = new InvalidAddressUser();
-                            $invalid_address_user->email = $api_contact->email;
-                            $invalid_address_user->firstName = $api_contact->firstName;
-                            $invalid_address_user->lastName = $api_contact->lastName;
-                            $invalid_address_user->billing_address_1 = $billing_address_1;
-                            $invalid_address_user->billing_address_2 = $billing_address_2;
-                            $invalid_address_user->billing_city = $billing_city;
-                            $invalid_address_user->billing_state = $billing_state;
-                            $invalid_address_user->billing_postal_code = $billing_postal_code;
-                            $invalid_address_user->shipping_address_1 = $delivery_address_1;
-                            $invalid_address_user->shipping_address_2 = $delivery_address_2;
-                            $invalid_address_user->shipping_city = $delivery_city;
-                            $invalid_address_user->shipping_state = $delivery_state;
-                            $invalid_address_user->shipping_postal_code = $delivery_postal_code;
-                            $invalid_address_user->save();
-                        } else {
-                            $check_invalid_address_user->email = $api_contact->email;
-                            $check_invalid_address_user->firstName = $api_contact->firstName;
-                            $check_invalid_address_user->lastName = $api_contact->lastName;
-                            $check_invalid_address_user->billing_address_1 = $billing_address_1;
-                            $check_invalid_address_user->billing_address_2 = $billing_address_2;
-                            $check_invalid_address_user->billing_city = $billing_city;
-                            $check_invalid_address_user->billing_state = $billing_state;
-                            $check_invalid_address_user->billing_postal_code = $billing_postal_code;
-                            $check_invalid_address_user->shipping_address_1 = $delivery_address_1;
-                            $check_invalid_address_user->shipping_address_2 = $delivery_address_2;
-                            $check_invalid_address_user->shipping_city = $delivery_city;
-                            $check_invalid_address_user->shipping_state = $delivery_state;
-                            $check_invalid_address_user->shipping_postal_code = $delivery_postal_code;
-                            $check_invalid_address_user->save();
-                        }
+                    //     if (empty($check_invalid_address_user)) {
+                    //         $invalid_address_user = new InvalidAddressUser();
+                    //         $invalid_address_user->email = $api_contact->email;
+                    //         $invalid_address_user->firstName = $api_contact->firstName;
+                    //         $invalid_address_user->lastName = $api_contact->lastName;
+                    //         $invalid_address_user->billing_address_1 = $billing_address_1;
+                    //         $invalid_address_user->billing_address_2 = $billing_address_2;
+                    //         $invalid_address_user->billing_city = $billing_city;
+                    //         $invalid_address_user->billing_state = $billing_state;
+                    //         $invalid_address_user->billing_postal_code = $billing_postal_code;
+                    //         $invalid_address_user->shipping_address_1 = $delivery_address_1;
+                    //         $invalid_address_user->shipping_address_2 = $delivery_address_2;
+                    //         $invalid_address_user->shipping_city = $delivery_city;
+                    //         $invalid_address_user->shipping_state = $delivery_state;
+                    //         $invalid_address_user->shipping_postal_code = $delivery_postal_code;
+                    //         $invalid_address_user->save();
+                    //     } else {
+                    //         $check_invalid_address_user->email = $api_contact->email;
+                    //         $check_invalid_address_user->firstName = $api_contact->firstName;
+                    //         $check_invalid_address_user->lastName = $api_contact->lastName;
+                    //         $check_invalid_address_user->billing_address_1 = $billing_address_1;
+                    //         $check_invalid_address_user->billing_address_2 = $billing_address_2;
+                    //         $check_invalid_address_user->billing_city = $billing_city;
+                    //         $check_invalid_address_user->billing_state = $billing_state;
+                    //         $check_invalid_address_user->billing_postal_code = $billing_postal_code;
+                    //         $check_invalid_address_user->shipping_address_1 = $delivery_address_1;
+                    //         $check_invalid_address_user->shipping_address_2 = $delivery_address_2;
+                    //         $check_invalid_address_user->shipping_city = $delivery_city;
+                    //         $check_invalid_address_user->shipping_state = $delivery_state;
+                    //         $check_invalid_address_user->shipping_postal_code = $delivery_postal_code;
+                    //         $check_invalid_address_user->save();
+                    //     }
 
 
-                        continue;
-                    }
+                    //     continue;
+                    // }
                     
                     
                     if (!empty($contact)) {
