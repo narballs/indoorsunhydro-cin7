@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminCommandsController extends Controller
 {
@@ -135,6 +136,8 @@ class AdminCommandsController extends Controller
             UtilHelper::saveDailyApiLog('sync_contacts');
 
             $apiContact = json_decode($res->getBody()->getContents());
+
+            Log::info('API Contact Response: ', ['response' => $apiContact]);
 
             // Correct check to ensure exactly 1 contact is returned
             if (!is_array($apiContact) || count($apiContact) < 1 || !isset($apiContact[0])) {
