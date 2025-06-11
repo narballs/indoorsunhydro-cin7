@@ -124,7 +124,9 @@ class AdminCommandsController extends Controller
             ]);
         }
 
-        $contacts_api_url = "https://api.cin7.com/api/v1/Contacts?where=email='{$email}'&limit=1";
+        // $contacts_api_url = "https://api.cin7.com/api/v1/Contacts?where=email='{$email}'&limit=1";
+        $where = urlencode("email='$email'");
+        $contacts_api_url = "https://api.cin7.com/api/v1/Contacts?where={$where}&limit=1";
         $client = new Client();
 
         try {
