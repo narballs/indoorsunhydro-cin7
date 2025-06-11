@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
+use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\ApiOrderItem;
 use App\Models\PaymentInformationLog;
@@ -355,12 +356,19 @@ class OrderHelper {
 
                     } 
                     catch (\Exception $e) {
-                        Log::error('Exception occurred while logging payment response', [
-                            'message' => $e->getMessage(),
-                            'file' => $e->getFile(),
-                            'line' => $e->getLine(),
-                            'trace' => $e->getTraceAsString(),
+                        // Log::error('Exception occurred while logging payment response', [
+                        //     'message' => $e->getMessage(),
+                        //     'file' => $e->getFile(),
+                        //     'line' => $e->getLine(),
+                        //     'trace' => $e->getTraceAsString(),
+                        // ]);
+
+                        
+                        ApiErrorLog::create([
+                            'payload' => $e->getMessage(),
+                            'exception' => $e->getCode()
                         ]);
+
                     }
 
                 } else {
@@ -380,7 +388,12 @@ class OrderHelper {
             }
             
         } catch (\Exception $e) {
-            Log::error('Exception occurred while creating payment');
+            // Log::error('Exception occurred while creating payment');
+            
+            ApiErrorLog::create([
+                'payload' => $e->getMessage(),
+                'exception' => $e->getCode()
+            ]);
         }       
     }
 }
