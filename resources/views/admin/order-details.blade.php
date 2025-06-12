@@ -686,33 +686,22 @@
 
                             </div>
                         </div>
-                        {{-- <div class="col-lg-12">
-                            <form method="POST" id="order_notes" name="order_notes">
-                                <div class="form-group">
-                                    <label for="exampleFormControlTextarea1" class="ms-2">Add Order Notes</label>
-                                    <textarea class="form-control" id="comment" rows="3">
-                    </textarea>
-                                    <input class="btn btn-primary mt-2" type="button" value="Add Notes"
-                                        onclick="addComment(1)">
-                                    <input type="hidden" value="{!! $order->id !!}" id="order_id">
+                        {{-- order logs --}}
+                        @if (count($order->orderJobLog) > 0)
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h3 class="h6"><strong class="mb-2">Order Logs</strong></h3>
+                                    </div>
+                                    @foreach ($order->orderJobLog as $orderJobLog)
+                                        <p>{{ !empty($orderJobLog->message) ? $orderJobLog->message : '' }}</p>
+                                        {{-- <p><strong>{{ !empty($orderJobLog->logged_at) ? $orderJobLog->logged_at : '' }}</strong></p> --}}
+                                    @endforeach
+
                                 </div>
-
-                            </form>
-                        </div> --}}
-                        {{-- <div class="col-lg-12">
-                            <form method="POST" id="order_notes" name="order_notes">
-                                <div class="form-group">
-                                    <label for="exampleFormControlTextarea1" class="ms-2">Fullfil</label>
-                                    <textarea class="form-control" id="comment" rows="3">
-                    </textarea>
-                                    <input class="btn btn-primary mt-2" type="button" value="Add Notes"
-                                        onclick="fullFillOrder()">
-                                    <input type="hidden" value="{!! $order->id !!}" id="order_id">
-                                </div>
-
-                            </form>
-                        </div> --}}
-
+                            </div>
+                        @endif
+                        {{-- order logs end --}}
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h3 class="h6 summary-head"><strong>Internal Comments</strong></h3>

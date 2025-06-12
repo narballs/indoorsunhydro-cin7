@@ -143,4 +143,9 @@ class ApiOrder extends Model
     {
         return $this->hasMany('App\Models\OrderRefund', 'order_id', 'id');
     }
+
+    public function orderJobLog()
+    {
+        return $this->hasMany('App\Models\OrderJobLog', 'api_order_id', 'id');
+    }
 }
