@@ -61,7 +61,7 @@ class ResetCin7ApiKeys extends Command
                     'name' => 'Cin7 Key 1', 
                     'username' => !empty($cin7_api_username) ? $cin7_api_username->option_value : '', 
                     'password' => !empty($cin7_api_key1) ? $cin7_api_key1->option_value : '',
-                    'threshold' => 5000,
+                    'threshold' => 4900,
                     'request_count' => 0,
                     'is_active' => true,
                     'is_stop' => false,
