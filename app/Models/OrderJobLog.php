@@ -15,4 +15,10 @@ class OrderJobLog extends Model
         'message',
         'logged_at',
     ];
+
+
+    public function apiOrder()
+    {
+        return $this->belongsTo(ApiOrder::class, 'api_order_id');
+    }
 }
