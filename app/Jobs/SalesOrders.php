@@ -12,7 +12,7 @@ use App\Helpers\UtilHelper;
 use App\Models\ApiOrder;
 use App\Models\ApiOrderItem;
 use App\Models\Contact;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\OrderStatus;
@@ -24,6 +24,7 @@ use App\Helpers\OrderHelper;
 use App\Helpers\SettingHelper;
 use App\Models\AdminSetting;
 use App\Models\Order;
+use App\Models\OrderJobLog;
 use Carbon\Carbon;
 use Google\Service\MyBusinessAccountManagement\Admin;
 
@@ -61,12 +62,22 @@ class SalesOrders implements ShouldQueue
     protected $_body;
     protected $_apiBaseURL = 'https://api.cin7.com/api/';
     protected $_pathParam;
+    protected $_global_primary_id;
 
     public function __construct($method, $body, $pathParam = null)
     {
         $this->_method = $method;
         $this->_body = $body;
         $this->_pathParam = $pathParam;
+
+        
+        $orderModel = $body[0][0] ?? null;
+
+        if ($orderModel && $orderModel instanceof \App\Models\ApiOrder) {
+            $this->_global_primary_id = $orderModel->id;
+        } else {
+            $this->_global_primary_id = null;
+        }
     }
 
     /**
@@ -76,7 +87,9 @@ class SalesOrders implements ShouldQueue
      */
     public function handle()
     {
+        
         switch ($this->_method) {
+            
             case 'create_order':
                 $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'create_order']);
             break;
@@ -94,10 +107,21 @@ class SalesOrders implements ShouldQueue
                 $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
             break;
         }
+
+        
+
         $response = json_decode($res);
         $order_id = $response[0]->id;
         $reference = $response[0]->code;
         echo $order_id . '-----' . $reference;
+
+
+        $status = $response[0]->success ?? null; // will be true, false, or null
+        $status_text = is_bool($status) ? ($status ? 'success' : 'failed') : 'unknown';
+
+        $errors = $response[0]->errors ?? ['no error'];
+        $error_message = is_array($errors) ? implode(', ', $errors) : (string) $errors;
+
         $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
         $admin_users = $admin_users->toArray();
         $users_with_role_admin = User::select("email")
@@ -127,6 +151,20 @@ class SalesOrders implements ShouldQueue
             $api_order->isApproved = 1;
             $api_order->order_status_id = $order_status->id;
             $api_order->save();
+
+            $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
+            $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
+            if ($record_order_job_logs == 'yes') {
+                $attempt = $this->attempts();
+                $primary_id = $this->_global_primary_id;
+                OrderJobLog::create([
+                    'api_order_id'   => $api_order->id,
+                    'reference'      => $reference,
+                    'attempt_number' => $this->attempts(),
+                    'message'        => "[" . now() . "] Job {$status_text} after " . $this->attempts() . " attempts. Response: " . json_encode($response),
+                    'logged_at'      => now(),
+                ]);
+            }
 
 
 
@@ -163,6 +201,25 @@ class SalesOrders implements ShouldQueue
                 }
             }
             
+        } else {
+
+            $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
+            $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
+            if ($record_order_job_logs == 'yes') {
+                $attempt = $this->attempts();
+                $primary_id = $this->_global_primary_id;
+                $apiOrder = $primary_id ? ApiOrder::where('id', $primary_id)->first() : null;
+
+                if ($apiOrder && $primary_id) {
+                    OrderJobLog::create([
+                        'api_order_id'   => $apiOrder->id,
+                        'reference'      => $apiOrder->reference,
+                        'attempt_number' => $attempt,
+                        'message'        => "[" . now() . "] Job failed after {$attempt} attempts. Error: " . $error_message,
+                        'logged_at'      => now(),
+                    ]);
+                }
+            }
         }
 
 
@@ -177,6 +234,32 @@ class SalesOrders implements ShouldQueue
      */
     public function failed(\Exception $exception)
     {
+        
+        
+        $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
+        $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
+        if ($record_order_job_logs == 'yes') {
+            $attempt = $this->attempts();
+            $primary_id = $this->_global_primary_id;
+            $apiOrder = $primary_id ? ApiOrder::where('id', $primary_id)->first() : null;
+
+            $message = "[" . now() . "] FINAL FAILURE at attempt #{$attempt}: " . $exception->getMessage();
+            if ($apiOrder && $primary_id) {
+                try {
+                    OrderJobLog::create([
+                        'api_order_id'   => $apiOrder->id,
+                        'reference'      => $apiOrder->reference,
+                        'attempt_number' => $attempt,
+                        'message'        => $message,
+                        'logged_at'      => now(),
+                    ]);
+                    Log::info('OrderJobLog created successfully.');
+                } catch (\Exception $e) {
+                    Log::error('Failed to create OrderJobLog', ['error' => $e->getMessage()]);
+                }
+            }
+        }
+
         Log::error($exception->getMessage());
     }
 }
