@@ -335,7 +335,12 @@
                             @foreach ($item['product']->options as $option)
                                 <tr>
                                     <td width="20%">
-                                        <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                        {{-- <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;"> --}}
+                                        @if (!empty({{ $item['product']->images }}))
+                                            <img src="{{ asset($item['product']->images) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                        @else
+                                            <img src="{{ asset('theme/img/image_not_available.png') }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                        @endif
                                     </td>
                                     <td style="vertical-align:top;">
                                         <table width="100%" align="left" border="0">
