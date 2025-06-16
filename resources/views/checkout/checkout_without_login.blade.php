@@ -360,6 +360,7 @@ $cart_price = 0;
     @endforeach
 @endif
 <?php $zip_code_is_valid = true; ?>
+<inpput type="hidden" name="selected_shipping_choice" id="selected_shipping_choice" value="">
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -942,6 +943,7 @@ $cart_price = 0;
             var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
             var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
             $('.address_validator').html('');
+            var selectedShippingChoice = $('#selected_shipping_choice').val();
             
             if (email != '' && is_guest == 1) {
                 $('.update_checkout_loader').removeClass('d-none');
@@ -968,74 +970,11 @@ $cart_price = 0;
                         postal_city: postal_city,
                         postal_zip_code: postal_zip_code,
                         is_guest: is_guest,
+                        selected_shipping_choice : selectedShippingChoice,
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
 
-
-                        // if (response.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
-
-                        //     let title = response.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
-
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.validator_message}<br/>${response.suggested_address}<br/>${response.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
-
-                        //     return false;
-                        // } 
-                        // else {
-                        //     if (response.status == 'success') {
-                        //         if (response.access === true) {
-                        //             if (response.auto_approved == true) {
-                        //                 if (response.is_admin === true) {
-                        //                     window.location.href = '/admin/dashboard';
-                        //                 } else {
-                        //                     window.location.href = '/checkout';
-                        //                 }
-                        //             } else {
-                        //                 window.location.href = '/cart';
-                        //             }
-                        //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
-                        //         }
-                        //     } else {
-                        //         if (response.registration_status == true) {
-                        //             if (response.auto_approved == true) {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text('Thankyou for entering your details. Now you can place order');
-                        //                 window.location.href = '/checkout';
-                        //             } else {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text(response.message);
-                        //                 window.location.href = '/cart';
-                        //             }
-                                    
-                        //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
-                        //         }
-                        //     }
-                        // }
-
-                        
                         if (response.status == 'success') {
                             if (response.access === true) {
                                 if (response.auto_approved == true) {
@@ -1070,6 +1009,34 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
+                        // if (response.responseJSON.address_validator === false) {
+                        //     $('.update_checkout_loader').addClass('d-none');
+
+                        //     let title = response.responseJSON.different_shipping_address == 1 
+                        //         ? 'Shipping Address Error' 
+                        //         : 'Billing & Shipping Address Error';
+
+                        //     Swal.fire({
+                        //         toast: false,
+                        //         icon: 'error',
+                        //         title: title,
+                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        //         position: 'center',
+                        //         showConfirmButton: true,
+                        //         confirmButtonText: 'Confirm',
+                        //         timerProgressBar: false,
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         customClass: {
+                        //             confirmButton: 'my-confirm-button',
+                        //             popup: 'swal2-popup-class',
+                        //             actions: 'my-actions-class'
+                        //         }
+                        //     });
+
+                        //     return false;
+                        // }
+
                         if (response.responseJSON.address_validator === false) {
                             $('.update_checkout_loader').addClass('d-none');
 
@@ -1081,22 +1048,36 @@ $cart_price = 0;
                                 toast: false,
                                 icon: 'error',
                                 title: title,
-                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                html: `
+                                    <p>${response.responseJSON.validator_message}</p>
+                                    <p><strong>Suggested:</strong><br/>${response.responseJSON.suggested_address || 'No suggestion available.'}</p>
+                                    <p><strong>Formatted:</strong><br/>${response.responseJSON.formatted_address || 'Not available.'}</p>
+                                `,
                                 position: 'center',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancel',
                                 showConfirmButton: true,
-                                confirmButtonText: 'Confirm',
-                                timerProgressBar: false,
+                                confirmButtonText: 'Proceed with Entered Input',
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
                                 customClass: {
                                     confirmButton: 'my-confirm-button',
+                                    cancelButton: 'my-cancel-button',
                                     popup: 'swal2-popup-class',
                                     actions: 'my-actions-class'
                                 }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User insists, proceed with the entered address
+                                    $('#selected_shipping_choice').val('entered');
+                                    $('.check_out_pay_now').trigger('click');
+                                }
+                                // Do nothing if Cancel is clicked
                             });
 
                             return false;
                         }
+
 
 
                         $('.update_checkout_loader').addClass('d-none');
@@ -1231,67 +1212,6 @@ $cart_price = 0;
                     },
                     success: function(response) {
                         
-                        // if (response.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
-
-                        //     let title = response.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
-
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.validator_message}<br/>${response.suggested_address}<br/>${response.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
-
-                        //     return false;
-                        // } else {
-                        //     if (response.status == 'success') {
-                        //         if (response.access === true) {
-                        //             if (response.auto_approved == true) {
-                        //                 if (response.is_admin === true) {
-                        //                     window.location.href = '/admin/dashboard';
-                        //                 } else {
-                        //                     window.location.href = '/checkout';
-                        //                 }
-                        //             } else {
-                        //                 window.location.href = '/cart';
-                        //             }
-                        //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
-                        //         }
-                        //     } else {
-                        //         if (response.registration_status == true) {
-                        //             if (response.auto_approved == true) {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text(response.message);
-                        //                 window.location.href = '/checkout';
-                        //             } else {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text(response.message);
-                        //                 window.location.href = '/cart';
-                        //             }
-                                    
-                        //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
-                        //         }
-                        //     }
-                        // }
-                        
                         if (response.status == 'success') {
                             if (response.access === true) {
                                 if (response.auto_approved == true) {
@@ -1326,6 +1246,34 @@ $cart_price = 0;
                         }
                     },
                     error: function(response) {
+                        // if (response.responseJSON.address_validator === false) {
+                        //     $('.update_checkout_loader').addClass('d-none');
+
+                        //     let title = response.responseJSON.different_shipping_address == 1 
+                        //         ? 'Shipping Address Error' 
+                        //         : 'Billing & Shipping Address Error';
+
+                        //     Swal.fire({
+                        //         toast: false,
+                        //         icon: 'error',
+                        //         title: title,
+                        //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        //         position: 'center',
+                        //         showConfirmButton: true,
+                        //         confirmButtonText: 'Confirm',
+                        //         timerProgressBar: false,
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         customClass: {
+                        //             confirmButton: 'my-confirm-button',
+                        //             popup: 'swal2-popup-class',
+                        //             actions: 'my-actions-class'
+                        //         }
+                        //     });
+
+                        //     return false;
+                        // }
+
                         if (response.responseJSON.address_validator === false) {
                             $('.update_checkout_loader').addClass('d-none');
 
@@ -1337,18 +1285,31 @@ $cart_price = 0;
                                 toast: false,
                                 icon: 'error',
                                 title: title,
-                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                                html: `
+                                    <p>${response.responseJSON.validator_message}</p>
+                                    <p><strong>Suggested:</strong><br/>${response.responseJSON.suggested_address || 'No suggestion available.'}</p>
+                                    <p><strong>Formatted:</strong><br/>${response.responseJSON.formatted_address || 'Not available.'}</p>
+                                `,
                                 position: 'center',
+                                showCancelButton: true,
+                                cancelButtonText: 'Cancel',
                                 showConfirmButton: true,
-                                confirmButtonText: 'Confirm',
-                                timerProgressBar: false,
+                                confirmButtonText: 'Proceed with Entered Input',
                                 allowOutsideClick: false,
                                 allowEscapeKey: false,
                                 customClass: {
                                     confirmButton: 'my-confirm-button',
+                                    cancelButton: 'my-cancel-button',
                                     popup: 'swal2-popup-class',
                                     actions: 'my-actions-class'
                                 }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // User insists, proceed with the entered address
+                                    $('#selected_shipping_choice').val('entered');
+                                    $('.check_out_pay_now').trigger('click');
+                                }
+                                // Do nothing if Cancel is clicked
                             });
 
                             return false;
