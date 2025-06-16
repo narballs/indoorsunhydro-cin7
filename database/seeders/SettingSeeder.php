@@ -635,6 +635,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'record_order_job_logs',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
         ];
 

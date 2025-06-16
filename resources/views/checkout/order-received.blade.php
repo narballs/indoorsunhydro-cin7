@@ -1034,8 +1034,14 @@
 										<td>
 											<div class="row align-items-center">
 												<div class="col-md-2 py-2 mobile_thankyou_img_div">
-													@if ($orderitem->product_option->image)
+													{{-- @if ($orderitem->product_option->image)
 													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product_option->image}}" alt=""
+														width="90px" style="max-height: 90px">
+													@else
+													<img src="/theme/img/image_not_available.png" alt="" width="80px">
+													@endif --}}
+													@if (!empty($orderitem->product->images))
+														<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product->images}}" alt=""
 														width="90px" style="max-height: 90px">
 													@else
 													<img src="/theme/img/image_not_available.png" alt="" width="80px">
@@ -1092,11 +1098,17 @@
 										<tr class="border_bottom_mb">
 											<td style="width: 20% !important;">
 												<div class="py-2 mobile_thankyou_img_div">
-													@if ($orderitem->product_option->image)
+													{{-- @if ($orderitem->product_option->image)
 													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product_option->image}}" alt=""
 														width="90px" style="max-height: 90px">
 													@else
 													<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
+													@endif --}}
+													@if (!empty($orderitem->product->images))
+														<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product->images}}" alt=""
+														width="90px" style="max-height: 90px">
+													@else
+													<img src="/theme/img/image_not_available.png" alt="" width="80px">
 													@endif
 												</div>
 											</td>
