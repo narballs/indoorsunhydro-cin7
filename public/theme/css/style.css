@@ -97,7 +97,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
         padding-left: 0; /* Remove default padding */
     }
 }
-.my-confirm-button {
+.my-confirm-button , .my-cancel-button {
     background-color: #7BC533 !important;
     color: #FFFFFF !important;
     border: none !important;

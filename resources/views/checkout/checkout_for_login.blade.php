@@ -715,6 +715,7 @@ $cart_price = 0;
 <?php 
     $zip_code_is_valid = true;
 ?>
+<input type="hidden" name="selected_shipping_choice" id="selected_shipping_choice_shipping" value="">
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -2526,7 +2527,6 @@ $cart_price = 0;
 
                 
                 function updateContact_address(type , user_id) {
-        
                     if (type === 'update shipping address') {
                         $('#address_loader_shipping').removeClass('d-none');
                         var companyNameShipping = $('.companyNameShipping').val();
@@ -4137,6 +4137,7 @@ $cart_price = 0;
                     var state = $('#shipping_state_new').val();
                     var country = $('#shipping_country_new').val();
                     var postal_code = $('#shipping_postal_code_new').val();
+                    let selected_shipping_choice_shipping = $('#selected_shipping_choice_shipping').val();
 
 
                     jQuery.ajax({
@@ -4155,7 +4156,8 @@ $cart_price = 0;
                             "state": state,
                             "zip": postal_code,
                             "type": type,
-                            "country": country                         
+                            "country": country,
+                            "selected_shipping_choice_shipping": selected_shipping_choice_shipping,                        
                         },
 
                         success: function(response) {
@@ -4185,27 +4187,66 @@ $cart_price = 0;
                             $('#address_loader_shipping_new').addClass('d-none');
                             $('#waiting_loader_shipping_new').addClass('d-none');
 
+                            // if (response.responseJSON.address_validator === false) {
+                            //     $('.update_checkout_loader').addClass('d-none');
+
+                            //     let title = 'Shipping Address Error';
+
+                            //     Swal.fire({
+                            //         toast: false,
+                            //         icon: 'error',
+                            //         title: title,
+                            //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                            //         position: 'center',
+                            //         showConfirmButton: true,
+                            //         confirmButtonText: 'Confirm',
+                            //         timerProgressBar: false,
+                            //         allowOutsideClick: false,
+                            //         allowEscapeKey: false,
+                            //         customClass: {
+                            //             confirmButton: 'my-confirm-button',
+                            //             popup: 'swal2-popup-class',
+                            //             actions: 'my-actions-class'
+                            //         }
+                            //     });
+
+                            //     return false;
+                            // }
+
+
                             if (response.responseJSON.address_validator === false) {
                                 $('.update_checkout_loader').addClass('d-none');
-
                                 let title = 'Shipping Address Error';
+                                let userMessage = response.responseJSON.validator_message || 'The entered address seems invalid.';
+                                let suggestedAddress = response.responseJSON.suggested_address || '';
+                                let formattedAddress = response.responseJSON.formatted_address || '';
 
                                 Swal.fire({
-                                    toast: false,
-                                    icon: 'error',
                                     title: title,
-                                    html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                                    position: 'center',
-                                    showConfirmButton: true,
-                                    confirmButtonText: 'Confirm',
-                                    timerProgressBar: false,
+                                    icon: 'warning',
+                                    html: `
+                                        <div style="text-align: left;">
+                                            <p>${userMessage}</p>
+                                            ${suggestedAddress ? `<strong>Suggested Address:</strong><br/>${suggestedAddress}` : ''}
+                                            <br/><br/>
+                                            <em>You can continue with your entered address or manually update it using the suggestion above.</em>
+                                        </div>
+                                    `,
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Use My Entered Address',
+                                    cancelButtonText: 'Update Manually',
                                     allowOutsideClick: false,
                                     allowEscapeKey: false,
                                     customClass: {
                                         confirmButton: 'my-confirm-button',
-                                        popup: 'swal2-popup-class',
+                                        cancelButton: 'my-cancel-button',
                                         actions: 'my-actions-class'
                                     }
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $('#selected_shipping_choice_shipping').val('entered');
+                                        add_new_shipping_address(type, contact_id);
+                                    } 
                                 });
 
                                 return false;

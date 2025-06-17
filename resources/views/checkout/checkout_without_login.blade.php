@@ -360,6 +360,7 @@ $cart_price = 0;
     @endforeach
 @endif
 <?php $zip_code_is_valid = true; ?>
+<inpput type="hidden" name="selected_shipping_choice" id="selected_shipping_choice" value="">
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -942,263 +943,57 @@ $cart_price = 0;
             var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
             var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
             $('.address_validator').html('');
+            var selectedShippingChoice = $('#selected_shipping_choice').val();
             
             if (email != '' && is_guest == 1) {
                 $('.update_checkout_loader').removeClass('d-none');
                 $.ajax({
                     url: '/authenticate-user',
                     type: 'post',
-                    data: {
-                        email: email,
-                        password: password,
-                        different_shipping_address: different_shipping_address,
-                        company: company_name,
-                        first_name: first_name,
-                        last_name: last_name,
-                        address: address,
-                        address_2: address_2,
-                        country: country,
-                        state: state,
-                        city: city,
-                        zip_code: zip_code,
-                        phone: phone,
-                        postal_address1: postal_address1,
-                        postal_address2: postal_address2,
-                        postal_state: postal_state,
-                        postal_city: postal_city,
-                        postal_zip_code: postal_zip_code,
-                        is_guest: is_guest,
-                        _token: '{{ csrf_token() }}'
-                    },
+                    data: getCheckoutFormData(),
                     success: function(response) {
 
-
-                        // if (response.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
-
-                        //     let title = response.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
-
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.validator_message}<br/>${response.suggested_address}<br/>${response.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
-
-                        //     return false;
-                        // } 
-                        // else {
-                        //     if (response.status == 'success') {
-                        //         if (response.access === true) {
-                        //             if (response.auto_approved == true) {
-                        //                 if (response.is_admin === true) {
-                        //                     window.location.href = '/admin/dashboard';
-                        //                 } else {
-                        //                     window.location.href = '/checkout';
-                        //                 }
+                        // if (response.status == 'success') {
+                        //     if (response.access === true) {
+                        //         if (response.auto_approved == true) {
+                        //             if (response.is_admin === true) {
+                        //                 window.location.href = '/admin/dashboard';
                         //             } else {
-                        //                 window.location.href = '/cart';
+                        //                 window.location.href = '/checkout';
                         //             }
                         //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
+                        //             window.location.href = '/cart';
                         //         }
                         //     } else {
-                        //         if (response.registration_status == true) {
-                        //             if (response.auto_approved == true) {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text('Thankyou for entering your details. Now you can place order');
-                        //                 window.location.href = '/checkout';
-                        //             } else {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text(response.message);
-                        //                 window.location.href = '/cart';
-                        //             }
-                                    
+                        //         $('.update_checkout_loader').addClass('d-none');
+                        //         $('.error_div').text(response.message);
+                        //     }
+                        // } else {
+                        //     if (response.registration_status == true) {
+                        //         if (response.auto_approved == true) {
+                        //             $('.update_checkout_loader').addClass('d-none');
+                        //             $('.error_div').text('Thankyou for entering your details. Now you can place order');
+                        //             window.location.href = '/checkout';
                         //         } else {
                         //             $('.update_checkout_loader').addClass('d-none');
                         //             $('.error_div').text(response.message);
+                        //             window.location.href = '/cart';
                         //         }
+                                
+                        //     } else {
+                        //         $('.update_checkout_loader').addClass('d-none');
+                        //         $('.error_div').text(response.message);
                         //     }
                         // }
-
-                        
-                        if (response.status == 'success') {
-                            if (response.access === true) {
-                                if (response.auto_approved == true) {
-                                    if (response.is_admin === true) {
-                                        window.location.href = '/admin/dashboard';
-                                    } else {
-                                        window.location.href = '/checkout';
-                                    }
-                                } else {
-                                    window.location.href = '/cart';
-                                }
-                            } else {
-                                $('.update_checkout_loader').addClass('d-none');
-                                $('.error_div').text(response.message);
-                            }
-                        } else {
-                            if (response.registration_status == true) {
-                                if (response.auto_approved == true) {
-                                    $('.update_checkout_loader').addClass('d-none');
-                                    $('.error_div').text('Thankyou for entering your details. Now you can place order');
-                                    window.location.href = '/checkout';
-                                } else {
-                                    $('.update_checkout_loader').addClass('d-none');
-                                    $('.error_div').text(response.message);
-                                    window.location.href = '/cart';
-                                }
-                                
-                            } else {
-                                $('.update_checkout_loader').addClass('d-none');
-                                $('.error_div').text(response.message);
-                            }
-                        }
+                        handleSuccess(response);
                     },
                     error: function(response) {
-                        if (response.responseJSON.address_validator === false) {
-                            $('.update_checkout_loader').addClass('d-none');
-
-                            let title = response.responseJSON.different_shipping_address == 1 
-                                ? 'Shipping Address Error' 
-                                : 'Billing & Shipping Address Error';
-
-                            Swal.fire({
-                                toast: false,
-                                icon: 'error',
-                                title: title,
-                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                                position: 'center',
-                                showConfirmButton: true,
-                                confirmButtonText: 'Confirm',
-                                timerProgressBar: false,
-                                allowOutsideClick: false,
-                                allowEscapeKey: false,
-                                customClass: {
-                                    confirmButton: 'my-confirm-button',
-                                    popup: 'swal2-popup-class',
-                                    actions: 'my-actions-class'
-                                }
-                            });
-
-                            return false;
-                        }
-
+                        address_option(response);
 
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
-                        if (errors) {
-                            if (errors.email) {
-                                error_email = errors.email[0];
-                                $('.email_errors').html(error_email);
-                            }
-                            else {
-                                $('.email_errors').html('');
-                            }
-                            if (errors.first_name) {
-                                error_first_name = errors.first_name[0];
-                                $('.first_name_errors').html(error_first_name);
-                            }
-                            else {
-                                $('.first_name_errors').html('');
-                            }
-
-                            if (errors.address) {
-                                var error_billing_address = errors.address[0];
-                                $('.street_address_errors').html(error_billing_address);
-                            }
-                            else {
-                                $('.street_address_errors').html('');
-                            }
-
-                            if (errors.state) {
-                                var error_billing_state = errors.state[0];
-                                $('.state_errors').html(error_billing_state);
-                            }
-                            else {
-                                $('.state_errors').html('');
-                            }
-
-                            // if (errors.company) {
-                            //     var error_company = errors.company[0];
-                            //     $('.company_name_errors').html(error_company);
-                            // }
-                            // else {
-                            //     $('.company_name_errors').html('');
-                            // }
-
-                            if (errors.zip_code) {
-                                var error_zip_code = errors.zip_code[0];
-                                $('.post_code_errors').html(error_zip_code);
-                            }
-                            else {
-                                $('.post_code_errors').html('');
-                            }
-
-                            if (errors.phone) {
-                                var error_phone = errors.phone[0];
-                                $('.phone_errors').html(error_phone);
-                            }
-                            else {
-                                $('.phone_errors').html('');
-                            }
-                            
-                            if (errors.postal_address1) {
-                                var error_postal_address = errors.postal_address1[0];
-                                $('.postal_address_errors').html(error_postal_address);
-                            }
-                            else {
-                                $('.postal_address_errors').html('');
-                            }
-
-                            
-
-                            if (errors.postal_state) {
-                                var error_state = errors.postal_state[0];
-                                $('.postal_state_errors').html(error_state);
-                            }
-                            else {
-                                $('.postal_state_errors').html('');
-                            }
-
-                            if (errors.postal_zip_code) {
-                                var error_text_postal_code = errors.postal_zip_code[0];
-                                $('.postalpostCode_errors').html(error_text_postal_code);
-                            }
-                            else {
-                                $('.postalpostCode_errors').html('');
-                            }
-
-                            if (errors.city) {
-                                var error_text_city = errors.city[0];
-                                $('.city_errors').html(error_text_city);
-                            }
-                            else {
-                                $('.city_errors').html('');
-                            }
-
-                            if (errors.postal_city) {
-                                var error_text_city = errors.postal_city[0];
-                                $('.postal_city_errors').html(error_text_city);
-                            }
-                            else {
-                                $('.postal_city_errors').html('');
-                            }
-                        }
+                        handleError(errors);
+                        
                     }
                 });
             } 
@@ -1207,253 +1002,114 @@ $cart_price = 0;
                 $.ajax({
                     url: '/authenticate-user',
                     type: 'post',
-                    data: {
-                        email: email,
-                        password: password,
-                        different_shipping_address: different_shipping_address,
-                        company: company_name,
-                        first_name: first_name,
-                        last_name: last_name,
-                        address: address,
-                        address_2: address_2,
-                        country: country,
-                        state: state,
-                        city: city,
-                        zip_code: zip_code,
-                        phone: phone,
-                        postal_address1: postal_address1,
-                        postal_address2: postal_address2,
-                        postal_state: postal_state,
-                        postal_city: postal_city,
-                        postal_zip_code: postal_zip_code,
-                        is_guest: is_guest,
-                        _token: '{{ csrf_token() }}'
-                    },
+                    data: getCheckoutFormData(),
                     success: function(response) {
                         
-                        // if (response.address_validator === false) {
-                        //     $('.update_checkout_loader').addClass('d-none');
-
-                        //     let title = response.different_shipping_address == 1 
-                        //         ? 'Shipping Address Error' 
-                        //         : 'Billing & Shipping Address Error';
-
-                        //     Swal.fire({
-                        //         toast: false,
-                        //         icon: 'error',
-                        //         title: title,
-                        //         html: `${response.validator_message}<br/>${response.suggested_address}<br/>${response.formatted_address}`,
-                        //         position: 'center',
-                        //         showConfirmButton: true,
-                        //         confirmButtonText: 'Confirm',
-                        //         timerProgressBar: false,
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         customClass: {
-                        //             confirmButton: 'my-confirm-button',
-                        //             popup: 'swal2-popup-class',
-                        //             actions: 'my-actions-class'
-                        //         }
-                        //     });
-
-                        //     return false;
-                        // } else {
-                        //     if (response.status == 'success') {
-                        //         if (response.access === true) {
-                        //             if (response.auto_approved == true) {
-                        //                 if (response.is_admin === true) {
-                        //                     window.location.href = '/admin/dashboard';
-                        //                 } else {
-                        //                     window.location.href = '/checkout';
-                        //                 }
-                        //             } else {
-                        //                 window.location.href = '/cart';
-                        //             }
-                        //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
-                        //         }
-                        //     } else {
-                        //         if (response.registration_status == true) {
-                        //             if (response.auto_approved == true) {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text(response.message);
-                        //                 window.location.href = '/checkout';
-                        //             } else {
-                        //                 $('.update_checkout_loader').addClass('d-none');
-                        //                 $('.error_div').text(response.message);
-                        //                 window.location.href = '/cart';
-                        //             }
-                                    
-                        //         } else {
-                        //             $('.update_checkout_loader').addClass('d-none');
-                        //             $('.error_div').text(response.message);
-                        //         }
-                        //     }
-                        // }
-                        
-                        if (response.status == 'success') {
-                            if (response.access === true) {
-                                if (response.auto_approved == true) {
-                                    if (response.is_admin === true) {
-                                        window.location.href = '/admin/dashboard';
-                                    } else {
-                                        window.location.href = '/checkout';
-                                    }
-                                } else {
-                                    window.location.href = '/cart';
-                                }
-                            } else {
-                                $('.update_checkout_loader').addClass('d-none');
-                                $('.error_div').text(response.message);
-                            }
-                        } else {
-                            if (response.registration_status == true) {
-                                if (response.auto_approved == true) {
-                                    $('.update_checkout_loader').addClass('d-none');
-                                    $('.error_div').text(response.message);
-                                    window.location.href = '/checkout';
-                                } else {
-                                    $('.update_checkout_loader').addClass('d-none');
-                                    $('.error_div').text(response.message);
-                                    window.location.href = '/cart';
-                                }
-                                
-                            } else {
-                                $('.update_checkout_loader').addClass('d-none');
-                                $('.error_div').text(response.message);
-                            }
-                        }
+                        handleSuccess(response);
                     },
                     error: function(response) {
-                        if (response.responseJSON.address_validator === false) {
-                            $('.update_checkout_loader').addClass('d-none');
-
-                            let title = response.responseJSON.different_shipping_address == 1 
-                                ? 'Shipping Address Error' 
-                                : 'Billing & Shipping Address Error';
-
-                            Swal.fire({
-                                toast: false,
-                                icon: 'error',
-                                title: title,
-                                html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                                position: 'center',
-                                showConfirmButton: true,
-                                confirmButtonText: 'Confirm',
-                                timerProgressBar: false,
-                                allowOutsideClick: false,
-                                allowEscapeKey: false,
-                                customClass: {
-                                    confirmButton: 'my-confirm-button',
-                                    popup: 'swal2-popup-class',
-                                    actions: 'my-actions-class'
-                                }
-                            });
-
-                            return false;
-                        }
-
+                        address_option(response);
                         $('.update_checkout_loader').addClass('d-none');
                         var errors = response.responseJSON.errors;
-                        if (errors) {
-                            if (errors.email) {
-                                error_email = errors.email[0];
-                                $('.email_errors').html(error_email);
-                            }
-                            else {
-                                $('.email_errors').html('');
-                            }
-                            if (errors.first_name) {
-                                error_first_name = errors.first_name[0];
-                                $('.first_name_errors').html(error_first_name);
-                            }
-                            else {
-                                $('.first_name_errors').html('');
-                            }
+                        // if (errors) {
+                        //     if (errors.email) {
+                        //         error_email = errors.email[0];
+                        //         $('.email_errors').html(error_email);
+                        //     }
+                        //     else {
+                        //         $('.email_errors').html('');
+                        //     }
+                        //     if (errors.first_name) {
+                        //         error_first_name = errors.first_name[0];
+                        //         $('.first_name_errors').html(error_first_name);
+                        //     }
+                        //     else {
+                        //         $('.first_name_errors').html('');
+                        //     }
 
-                            if (errors.address) {
-                                var error_billing_address = errors.address[0];
-                                $('.street_address_errors').html(error_billing_address);
-                            }
-                            else {
-                                $('.street_address_errors').html('');
-                            }
+                        //     if (errors.address) {
+                        //         var error_billing_address = errors.address[0];
+                        //         $('.street_address_errors').html(error_billing_address);
+                        //     }
+                        //     else {
+                        //         $('.street_address_errors').html('');
+                        //     }
 
-                            if (errors.state) {
-                                var error_billing_state = errors.state[0];
-                                $('.state_errors').html(error_billing_state);
-                            }
-                            else {
-                                $('.state_errors').html('');
-                            }
+                        //     if (errors.state) {
+                        //         var error_billing_state = errors.state[0];
+                        //         $('.state_errors').html(error_billing_state);
+                        //     }
+                        //     else {
+                        //         $('.state_errors').html('');
+                        //     }
 
-                            if (errors.company) {
-                                var error_company = errors.company[0];
-                                $('.company_name_errors').html(error_company);
-                            }
-                            else {
-                                $('.company_name_errors').html('');
-                            }
+                        //     if (errors.company) {
+                        //         var error_company = errors.company[0];
+                        //         $('.company_name_errors').html(error_company);
+                        //     }
+                        //     else {
+                        //         $('.company_name_errors').html('');
+                        //     }
 
-                            if (errors.zip_code) {
-                                var error_zip_code = errors.zip_code[0];
-                                $('.post_code_errors').html(error_zip_code);
-                            }
-                            else {
-                                $('.post_code_errors').html('');
-                            }
+                        //     if (errors.zip_code) {
+                        //         var error_zip_code = errors.zip_code[0];
+                        //         $('.post_code_errors').html(error_zip_code);
+                        //     }
+                        //     else {
+                        //         $('.post_code_errors').html('');
+                        //     }
 
-                            if (errors.phone) {
-                                var error_phone = errors.phone[0];
-                                $('.phone_errors').html(error_phone);
-                            }
-                            else {
-                                $('.phone_errors').html('');
-                            }
+                        //     if (errors.phone) {
+                        //         var error_phone = errors.phone[0];
+                        //         $('.phone_errors').html(error_phone);
+                        //     }
+                        //     else {
+                        //         $('.phone_errors').html('');
+                        //     }
                             
-                            if (errors.postal_address1) {
-                                var error_postal_address = errors.postal_address1[0];
-                                $('.postal_address_errors').html(error_postal_address);
-                            }
-                            else {
-                                $('.postal_address_errors').html('');
-                            }
+                        //     if (errors.postal_address1) {
+                        //         var error_postal_address = errors.postal_address1[0];
+                        //         $('.postal_address_errors').html(error_postal_address);
+                        //     }
+                        //     else {
+                        //         $('.postal_address_errors').html('');
+                        //     }
 
                             
 
-                            if (errors.postal_state) {
-                                var error_state = errors.postal_state[0];
-                                $('.postal_state_errors').html(error_state);
-                            }
-                            else {
-                                $('.postal_state_errors').html('');
-                            }
+                        //     if (errors.postal_state) {
+                        //         var error_state = errors.postal_state[0];
+                        //         $('.postal_state_errors').html(error_state);
+                        //     }
+                        //     else {
+                        //         $('.postal_state_errors').html('');
+                        //     }
 
-                            if (errors.postal_zip_code) {
-                                var error_text_postal_code = errors.postal_zip_code[0];
-                                $('.postalpostCode_errors').html(error_text_postal_code);
-                            }
-                            else {
-                                $('.postalpostCode_errors').html('');
-                            }
+                        //     if (errors.postal_zip_code) {
+                        //         var error_text_postal_code = errors.postal_zip_code[0];
+                        //         $('.postalpostCode_errors').html(error_text_postal_code);
+                        //     }
+                        //     else {
+                        //         $('.postalpostCode_errors').html('');
+                        //     }
 
-                            if (errors.city) {
-                                var error_text_city = errors.city[0];
-                                $('.city_errors').html(error_text_city);
-                            }
-                            else {
-                                $('.city_errors').html('');
-                            }
+                        //     if (errors.city) {
+                        //         var error_text_city = errors.city[0];
+                        //         $('.city_errors').html(error_text_city);
+                        //     }
+                        //     else {
+                        //         $('.city_errors').html('');
+                        //     }
 
-                            if (errors.postal_city) {
-                                var error_text_city = errors.postal_city[0];
-                                $('.postal_city_errors').html(error_text_city);
-                            }
-                            else {
-                                $('.postal_city_errors').html('');
-                            }
-                        }
+                        //     if (errors.postal_city) {
+                        //         var error_text_city = errors.postal_city[0];
+                        //         $('.postal_city_errors').html(error_text_city);
+                        //     }
+                        //     else {
+                        //         $('.postal_city_errors').html('');
+                        //     }
+                        // }
+                        handleError(errors);
                     }
                 });
             } 
@@ -1463,6 +1119,248 @@ $cart_price = 0;
             }
         });
     });
+
+    function address_option(response) {
+        if (response.responseJSON.address_validator === false) {
+            $('.update_checkout_loader').addClass('d-none');
+
+            let title = response.responseJSON.different_shipping_address == 1 
+                ? 'Shipping Address Error' 
+                : 'Billing & Shipping Address Error';
+
+            let userMessage = response.responseJSON.validator_message || 'The entered address seems invalid.';
+            let suggestedAddress = response.responseJSON.suggested_address || '';
+            let formattedAddress = response.responseJSON.formatted_address || '';
+
+            Swal.fire({
+                title: title,
+                icon: 'warning',
+                html: `
+                    <div style="text-align: left;">
+                        <p>${userMessage}</p>
+                        ${suggestedAddress ? `<strong>Suggested Address:</strong><br/>${suggestedAddress}` : ''}
+                        <br/><br/>
+                        <em>You can continue with your entered address or manually update it using the suggestion above.</em>
+                    </div>
+                `,
+                position: 'center',
+                showCancelButton: true,
+                cancelButtonText: 'Update Manually',
+                showConfirmButton: true,
+                confirmButtonText: 'Use My Entered Address',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                customClass: {
+                    confirmButton: 'my-confirm-button',
+                    cancelButton: 'my-cancel-button',
+                    popup: 'swal2-popup-class',
+                    actions: 'my-actions-class'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('.update_checkout_loader').removeClass('d-none');
+                    // User insists, proceed with the entered address
+                    $('#selected_shipping_choice').val('entered');
+                    // $('.check_out_pay_now').trigger('click');
+                    var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
+                    var email = $('.email_address_checkout').val();
+                    var password = $('.password_checkout').val();
+                    var company_name = $('.company_name').val();
+                    var first_name = $('.first_name').val();
+                    var last_name = $('.last_name').val();
+                    var address= $('.street_address').val();
+                    var address_2= $('.street_address_2').val();
+                    var country= $('.country').val();
+                    var state= $('.state').val();
+                    var city= $('.city').val();
+                    var zip_code= $('.zip_code').val();
+                    var phone= $('.phone').val();
+                    var postal_address1= $('.postalStreetAddress').val();
+                    var postal_address2= $('.postalStreetAddress_2').val();
+                    var postal_state= $('.postalState').val();
+                    var postal_city= $('.postalCity').val();
+                    var postal_zip_code= $('.postalpostCode').val();
+                    var is_guest = $('.is_guest').is(':checked') ? 1 : 0;
+                    var different_shipping_address = $('.ship_to_different_address').is(':checked') ? 1 : 0;
+                    $('.address_validator').html('');
+                    var selectedShippingChoice = $('#selected_shipping_choice').val();
+                    const res = response.responseJSON;
+                    $.ajax({
+                        url: '/authenticate-user',
+                        type: 'post',
+                        data: getCheckoutFormData(),
+                        success: function(response) {
+                            
+                            handleSuccess(response);
+                        },
+                        error: function(response) {
+                            $('.update_checkout_loader').addClass('d-none');
+                            var errors = response.responseJSON.errors;
+                            handleError(errors);
+                        }
+                    });
+                }
+                // Do nothing if Cancel is clicked
+            });
+
+            return false;
+        }
+    }
+    
+    function getCheckoutFormData() {
+        return {
+            email: $('.email_address_checkout').val(),
+            password: $('.password_checkout').val(),
+            different_shipping_address: $('.ship_to_different_address').is(':checked') ? 1 : 0,
+            company: $('.company_name').val(),
+            first_name: $('.first_name').val(),
+            last_name: $('.last_name').val(),
+            address: $('.street_address').val(),
+            address_2: $('.street_address_2').val(),
+            country: $('.country').val(),
+            state: $('.state').val(),
+            city: $('.city').val(),
+            zip_code: $('.zip_code').val(),
+            phone: $('.phone').val(),
+            postal_address1: $('.postalStreetAddress').val(),
+            postal_address2: $('.postalStreetAddress_2').val(),
+            postal_state: $('.postalState').val(),
+            postal_city: $('.postalCity').val(),
+            postal_zip_code: $('.postalpostCode').val(),
+            is_guest: $('.is_guest').is(':checked') ? 1 : 0,
+            selected_shipping_choice: $('#selected_shipping_choice').val(),
+            _token: '{{ csrf_token() }}'
+        };
+    }
+
+    function handleSuccess(response){
+        if (response.status == 'success') {
+            if (response.access === true) {
+                if (response.auto_approved == true) {
+                    if (response.is_admin === true) {
+                        window.location.href = '/admin/dashboard';
+                    } else {
+                        window.location.href = '/checkout';
+                    }
+                } else {
+                    window.location.href = '/cart';
+                }
+            } else {
+                $('.update_checkout_loader').addClass('d-none');
+                $('.error_div').text(response.message);
+            }
+        } else {
+            if (response.registration_status == true) {
+                if (response.auto_approved == true) {
+                    $('.update_checkout_loader').addClass('d-none');
+                    $('.error_div').text(response.message);
+                    window.location.href = '/checkout';
+                } else {
+                    $('.update_checkout_loader').addClass('d-none');
+                    $('.error_div').text(response.message);
+                    window.location.href = '/cart';
+                }
+                
+            } else {
+                $('.update_checkout_loader').addClass('d-none');
+                $('.error_div').text(response.message);
+            }
+        }
+    }
+    
+    function handleError(errors) {
+        if (errors) {
+            if (errors.email) {
+                error_email = errors.email[0];
+                $('.email_errors').html(error_email);
+            }
+            else {
+                $('.email_errors').html('');
+            }
+            if (errors.first_name) {
+                error_first_name = errors.first_name[0];
+                $('.first_name_errors').html(error_first_name);
+            }
+            else {
+                $('.first_name_errors').html('');
+            }
+
+            if (errors.address) {
+                var error_billing_address = errors.address[0];
+                $('.street_address_errors').html(error_billing_address);
+            }
+            else {
+                $('.street_address_errors').html('');
+            }
+
+            if (errors.state) {
+                var error_billing_state = errors.state[0];
+                $('.state_errors').html(error_billing_state);
+            }
+            else {
+                $('.state_errors').html('');
+            }
+
+            if (errors.zip_code) {
+                var error_zip_code = errors.zip_code[0];
+                $('.post_code_errors').html(error_zip_code);
+            }
+            else {
+                $('.post_code_errors').html('');
+            }
+
+            if (errors.phone) {
+                var error_phone = errors.phone[0];
+                $('.phone_errors').html(error_phone);
+            }
+            else {
+                $('.phone_errors').html('');
+            }
+            
+            if (errors.postal_address1) {
+                var error_postal_address = errors.postal_address1[0];
+                $('.postal_address_errors').html(error_postal_address);
+            }
+            else {
+                $('.postal_address_errors').html('');
+            }
+
+            
+
+            if (errors.postal_state) {
+                var error_state = errors.postal_state[0];
+                $('.postal_state_errors').html(error_state);
+            }
+            else {
+                $('.postal_state_errors').html('');
+            }
+
+            if (errors.postal_zip_code) {
+                var error_text_postal_code = errors.postal_zip_code[0];
+                $('.postalpostCode_errors').html(error_text_postal_code);
+            }
+            else {
+                $('.postalpostCode_errors').html('');
+            }
+
+            if (errors.city) {
+                var error_text_city = errors.city[0];
+                $('.city_errors').html(error_text_city);
+            }
+            else {
+                $('.city_errors').html('');
+            }
+
+            if (errors.postal_city) {
+                var error_text_city = errors.postal_city[0];
+                $('.postal_city_errors').html(error_text_city);
+            }
+            else {
+                $('.postal_city_errors').html('');
+            }
+        }
+    }
+
 
     function not_register_user () {
         if ($('.is_guest').is(':checked')) {
