@@ -752,58 +752,58 @@ class ContactController extends Controller
             $pricing = preg_replace('/\R/', '', $api_contact->priceColumn);
             $contact_update = Contact::where('contact_id', $contact_id)->first();
 
-            $billing_address_1 = !empty($api_contact->postalAddress1) ? $api_contact->postalAddress1 : $contact_update->postalAddress1;
-            $billing_address_2 = !empty($api_contact->postalAddress2) ? $api_contact->postalAddress2 : $contact_update->postalAddress2;
-            $billing_city = !empty($api_contact->postalCity) ? $api_contact->postalCity : $contact_update->postalCity;
-            $billing_state = !empty($api_contact->postalState) ? $api_contact->postalState : $contact_update->postalState;
-            $billing_postal_code = !empty($api_contact->postalPostCode) ? $api_contact->postalPostCode : $contact_update->postalPostCode;
+            // $billing_address_1 = !empty($api_contact->postalAddress1) ? $api_contact->postalAddress1 : $contact_update->postalAddress1;
+            // $billing_address_2 = !empty($api_contact->postalAddress2) ? $api_contact->postalAddress2 : $contact_update->postalAddress2;
+            // $billing_city = !empty($api_contact->postalCity) ? $api_contact->postalCity : $contact_update->postalCity;
+            // $billing_state = !empty($api_contact->postalState) ? $api_contact->postalState : $contact_update->postalState;
+            // $billing_postal_code = !empty($api_contact->postalPostCode) ? $api_contact->postalPostCode : $contact_update->postalPostCode;
 
-            $delivery_address_1 = !empty($api_contact->address1) ? $api_contact->address1 : $contact_update->address1;
-            $delivery_address_2 = !empty($api_contact->address2) ? $api_contact->address2 : $contact_update->address2;
-            $delivery_city = !empty($api_contact->city) ? $api_contact->city : $contact_update->city;
-            $delivery_state = !empty($api_contact->state) ? $api_contact->state : $contact_update->state;
-            $delivery_postal_code = !empty($api_contact->postCode) ? $api_contact->postCode : $contact_update->postCode;
-
-
-
-            if (empty($billing_address_1) || empty($billing_city) || empty($billing_state) || empty($billing_postal_code)) {
-                return response()->json([
-                    'status' => 'address_error',
-                    'address_validator' => false,
-                    'validator_message' => 'Billing address is incomplete from cin7 api.',
-                ], 400);
-            }
-
-            if (empty($delivery_address_1) || empty($delivery_city) || empty($delivery_state) || empty($delivery_postal_code)) {
-                return response()->json([
-                    'status' => 'address_error',
-                    'address_validator' => false,
-                    'validator_message' => 'Shipping address is incomplete from cin7 api.',
-                ], 400);
-            }
+            // $delivery_address_1 = !empty($api_contact->address1) ? $api_contact->address1 : $contact_update->address1;
+            // $delivery_address_2 = !empty($api_contact->address2) ? $api_contact->address2 : $contact_update->address2;
+            // $delivery_city = !empty($api_contact->city) ? $api_contact->city : $contact_update->city;
+            // $delivery_state = !empty($api_contact->state) ? $api_contact->state : $contact_update->state;
+            // $delivery_postal_code = !empty($api_contact->postCode) ? $api_contact->postCode : $contact_update->postCode;
 
 
-            $validate_billing_address =  UserHelper::validateFullAddress($billing_address_1 , $billing_address_2 , $billing_city , $billing_state , $billing_postal_code, $country = 'USA');
-            if ($validate_billing_address['valid'] == false) {
-                return response()->json([
-                    'status' => 'address_error',
-                    'address_validator' => false,
-                    'validator_message' => $validate_billing_address['message'] ?? 'Address validation failed.',
-                    'suggested_address' => $validate_billing_address['suggested_address'] ?? '',
-                    'formatted_address' => $validate_billing_address['formatted_address'] ?? '',
-                ], 400);
-            }
 
-            $validate_shipping_address =  UserHelper::validateFullAddress($delivery_address_1 , $delivery_address_2 , $delivery_city , $delivery_state , $delivery_postal_code, $country = 'USA');
-            if ($validate_shipping_address['valid'] == false) {
-                return response()->json([
-                    'status' => 'address_error',
-                    'address_validator' => false,
-                    'validator_message' => $validate_shipping_address['message'] ?? 'Address validation failed.',
-                    'suggested_address' => $validate_shipping_address['suggested_address'] ?? '',
-                    'formatted_address' => $validate_shipping_address['formatted_address'] ?? '',
-                ], 400);
-            }
+            // if (empty($billing_address_1) || empty($billing_city) || empty($billing_state) || empty($billing_postal_code)) {
+            //     return response()->json([
+            //         'status' => 'address_error',
+            //         'address_validator' => false,
+            //         'validator_message' => 'Billing address is incomplete from cin7 api.',
+            //     ], 400);
+            // }
+
+            // if (empty($delivery_address_1) || empty($delivery_city) || empty($delivery_state) || empty($delivery_postal_code)) {
+            //     return response()->json([
+            //         'status' => 'address_error',
+            //         'address_validator' => false,
+            //         'validator_message' => 'Shipping address is incomplete from cin7 api.',
+            //     ], 400);
+            // }
+
+
+            // $validate_billing_address =  UserHelper::validateFullAddress($billing_address_1 , $billing_address_2 , $billing_city , $billing_state , $billing_postal_code, $country = 'USA');
+            // if ($validate_billing_address['valid'] == false) {
+            //     return response()->json([
+            //         'status' => 'address_error',
+            //         'address_validator' => false,
+            //         'validator_message' => $validate_billing_address['message'] ?? 'Address validation failed.',
+            //         'suggested_address' => $validate_billing_address['suggested_address'] ?? '',
+            //         'formatted_address' => $validate_billing_address['formatted_address'] ?? '',
+            //     ], 400);
+            // }
+
+            // $validate_shipping_address =  UserHelper::validateFullAddress($delivery_address_1 , $delivery_address_2 , $delivery_city , $delivery_state , $delivery_postal_code, $country = 'USA');
+            // if ($validate_shipping_address['valid'] == false) {
+            //     return response()->json([
+            //         'status' => 'address_error',
+            //         'address_validator' => false,
+            //         'validator_message' => $validate_shipping_address['message'] ?? 'Address validation failed.',
+            //         'suggested_address' => $validate_shipping_address['suggested_address'] ?? '',
+            //         'formatted_address' => $validate_shipping_address['formatted_address'] ?? '',
+            //     ], 400);
+            // }
 
             $contact_update->update([
                 'email'  => $api_contact->email,
