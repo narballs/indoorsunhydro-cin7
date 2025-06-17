@@ -1605,6 +1605,7 @@
         // var email = $('input[name=email]').val();
         var contact_id = $('#contact_id_val').val();
         var secondary_id = $('input[name=secondary_id]').val();
+        var user_choice_address = $('#user_choice_address').val();
         
         console.log(state);
         jQuery.ajax({
@@ -1627,7 +1628,8 @@
                 'secondary_id': secondary_id,
                 // 'company_name': companyName,
                 'type': type,
-                'check_company_count': check_company_count
+                'check_company_count': check_company_count,
+                'user_choice_address': user_choice_address,
             },
             success: function(response) {
                 if (response.cin7_status == 200 || response.status == true) {
@@ -1692,30 +1694,77 @@
             },
             error: function(response) {
 
-                if (response.responseJSON.address_validator === false) {
-                    $('#address_loader_shipping').addClass('d-none');
-                    $('#address_loader').addClass('d-none');
+                // if (response.responseJSON.address_validator === false) {
+                //     $('#address_loader_shipping').addClass('d-none');
+                //     $('#address_loader').addClass('d-none');
 
-                    let title = type === 'update shipping address'
+                //     let title = type === 'update shipping address'
+                //         ? 'Shipping Address Error' 
+                //         : 'Billing & Shipping Address Error';
+
+                //     Swal.fire({
+                //         toast: false,
+                //         icon: 'error',
+                //         title: title,
+                //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                //         position: 'center',
+                //         showConfirmButton: true,
+                //         confirmButtonText: 'Confirm',
+                //         timerProgressBar: false,
+                //         allowOutsideClick: false,
+                //         allowEscapeKey: false,
+                //         customClass: {
+                //             confirmButton: 'my-confirm-button',
+                //             popup: 'swal2-popup-class',
+                //             actions: 'my-actions-class'
+                //         }
+                //     });
+
+                //     return false;
+                // }
+
+                if (response.responseJSON.address_validator === false) {
+                    $('.update_checkout_loader').addClass('d-none');
+
+                    let title = response.responseJSON.different_shipping_address == 1 
                         ? 'Shipping Address Error' 
                         : 'Billing & Shipping Address Error';
 
+                    let userMessage = response.responseJSON.validator_message || 'The entered address seems invalid.';
+                    let suggestedAddress = response.responseJSON.suggested_address || '';
+                    let formattedAddress = response.responseJSON.formatted_address || '';
+
                     Swal.fire({
-                        toast: false,
-                        icon: 'error',
                         title: title,
-                        html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                        icon: 'warning',
+                        html: `
+                            <div style="text-align: left;">
+                                <p>${userMessage}</p>
+                                ${suggestedAddress ? `<strong>Suggested Address:</strong><br/>${suggestedAddress}` : ''}
+                                <br/><br/>
+                                <em>You can continue with your entered address or manually update it using the suggestion above.</em>
+                            </div>
+                        `,
                         position: 'center',
+                        showCancelButton: true,
+                        cancelButtonText: 'Update Manually',
                         showConfirmButton: true,
-                        confirmButtonText: 'Confirm',
-                        timerProgressBar: false,
+                        confirmButtonText: 'Use My Entered Address',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
                         customClass: {
                             confirmButton: 'my-confirm-button',
+                            cancelButton: 'my-cancel-button',
                             popup: 'swal2-popup-class',
                             actions: 'my-actions-class'
                         }
+                    
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#user_choice_address').val('entered');
+                            // $('#address_loader').removeClass('d-none');
+                            updateContact(type , user_id);
+                        } 
                     });
 
                     return false;
@@ -1784,7 +1833,8 @@
                         $('#error_phone_shipping').html(error_text);
                     }
 
-                } else {
+                } 
+                else {
                     $('#address_loader').addClass('d-none');
                     var error_message = response.responseJSON;
                     var error_text = '';
@@ -1860,6 +1910,7 @@
 
 
 {{-- billing address --}}
+<input type="hidden" name="user_choice_address" id="user_choice_address" value="">
 <div class="modal fade" id="address_modal_id" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">

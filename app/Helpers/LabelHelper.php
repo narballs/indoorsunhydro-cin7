@@ -137,6 +137,15 @@ class LabelHelper {
                 return Log::info('Order not found in ShipStation.');
             }
 
+
+            $ship_station_log = ShipstationApiLogs::where('order_id', $order_id)
+            ->where('action', 'get_order')
+            ->first();
+
+            if ($ship_station_log) {
+                return Log::info('Order already processed: ' . $order_id);
+            }
+
             ShipstationApiLogs::create([
                 'api_url' => config('services.shipstation.shipment_label_url') . " {$order_id}",
                 'action' => 'get_order',
@@ -145,6 +154,9 @@ class LabelHelper {
                 'order_id' => $order_id,
                 'status' => 200,
             ]);
+
+
+
     
             $order_items_array = self::processOrderItems($orderData['items']);
             if (empty($order_items_array)) {

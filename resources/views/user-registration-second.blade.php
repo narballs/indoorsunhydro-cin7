@@ -148,6 +148,7 @@
 </style>
 
 <div class="container-fluid pl-0 pr-0">
+    <input type="hidden" name="user_choice" id="user_choice" value="">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 pl-0 pr-0">
         <div class="row">
             <div class="col-md-12 bg-light text-center d-none">
@@ -838,6 +839,7 @@
         var password = $('.user_password_signup').val();
         var email = $('#email').val();
         var confirm_password = $('input[name=confirm_password]').val();
+        let user_choice = $('#user_choice').val();
         var paymentTerms = $('#paymentTerms').val();
         jQuery.ajax({
             method: 'post',
@@ -857,7 +859,8 @@
                 "city_id": town_city_address,
                 "state_id": state,
                 "zip": zip,
-                'paymentTerms':paymentTerms
+                'paymentTerms':paymentTerms,
+                'user_choice': user_choice
             },
             success: function(response) {
                 if (response.success == true) {
@@ -936,28 +939,66 @@
                 // }
 
 
+                // if (response.responseJSON.address_validator === false) {
+                //     let title = 'Address Error';
+
+                //     Swal.fire({
+                //         toast: false,
+                //         icon: 'error',
+                //         title: title,
+                //         html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
+                //         position: 'top',
+                //         showConfirmButton: true,
+                //         confirmButtonText: 'Confirm',
+                //         timerProgressBar: false,
+                //         allowOutsideClick: false,
+                //         allowEscapeKey: false,
+                //         customClass: {
+                //             confirmButton: 'my-confirm-button',
+                //             actions: 'my-actions-class'
+                //         }
+                //     });
+
+                //     return false;
+                // }
+
                 if (response.responseJSON.address_validator === false) {
                     let title = 'Address Error';
+                    let userMessage = response.responseJSON.validator_message || 'The entered address seems invalid.';
+                    let suggestedAddress = response.responseJSON.suggested_address || '';
+                    let formattedAddress = response.responseJSON.formatted_address || '';
 
                     Swal.fire({
-                        toast: false,
-                        icon: 'error',
                         title: title,
-                        html: `${response.responseJSON.validator_message}<br/>${response.responseJSON.suggested_address}<br/>${response.responseJSON.formatted_address}`,
-                        position: 'top',
-                        showConfirmButton: true,
-                        confirmButtonText: 'Confirm',
-                        timerProgressBar: false,
+                        icon: 'warning',
+                        html: `
+                            <div style="text-align: left;">
+                                <p>${userMessage}</p>
+                                ${suggestedAddress ? `<strong>Suggested Address:</strong><br/>${suggestedAddress}` : ''}
+                                <br/><br/>
+                                <em>You can continue with your entered address or manually update it using the suggestion above.</em>
+                            </div>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Use My Entered Address',
+                        cancelButtonText: 'Update Manually',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
                         customClass: {
                             confirmButton: 'my-confirm-button',
+                            cancelButton: 'my-cancel-button',
                             actions: 'my-actions-class'
                         }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#user_choice').val('entered');
+                            thankYou();
+                        } 
                     });
 
                     return false;
                 }
+
 
                 var error_message = response.responseJSON;
 

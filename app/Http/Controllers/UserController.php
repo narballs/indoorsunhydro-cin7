@@ -813,19 +813,21 @@ class UserController extends Controller
         $validate_city = $request->city_id;
         $validate_state = $state_name;
         $validate_zip = $request->input('zip');
+        $selectedChoice = $request->input('user_choice') ?? null;
 
 
+        if (!$selectedChoice || $selectedChoice !== 'entered') {
+            $validate_address =  UserHelper::validateFullAddress($validate_street_address_1 , $validate_street_address_2 , $validate_city , $validate_state , $validate_zip, $country = 'USA');
 
-        $validate_address =  UserHelper::validateFullAddress($validate_street_address_1 , $validate_street_address_2 , $validate_city , $validate_state , $validate_zip, $country = 'USA');
-
-        if ($validate_address['valid'] == false) {
-            return response()->json([
-                'status' => 'address_error',
-                'address_validator' => false,
-                'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
-                'suggested_address' => $validate_address['suggested_address'] ?? '',
-                'formatted_address' => $validate_address['formatted_address'] ?? '',
-            ], 400);
+            if ($validate_address['valid'] == false) {
+                return response()->json([
+                    'status' => 'address_error',
+                    'address_validator' => false,
+                    'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
+                    'suggested_address' => $validate_address['suggested_address'] ?? '',
+                    'formatted_address' => $validate_address['formatted_address'] ?? '',
+                ], 400);
+            }
         }
         
         
@@ -2172,22 +2174,26 @@ class UserController extends Controller
             $get_contact = Contact::where('contact_id', $secondary_contact->parent_id)->first();
         }
 
+
+        $user_choice_address = $request->user_choice_address ?? null;
+
         
 
 
         if (!empty($get_contact) && !empty($address_type)) {
             if ($address_type === 'shipping') {
 
-
-                $validate_address_shipping =  UserHelper::validateFullAddress($request->address , $request->address2 , $request->town_city , $request->state , $request->zip, $country = 'USA');
-                if ($validate_address_shipping['valid'] == false) {
-                    return response()->json([
-                        'status' => 'address_error',
-                        'address_validator' => false,
-                        'validator_message' => $validate_address_shipping['message'] ?? 'Address validation failed.',
-                        'suggested_address' => $validate_address_shipping['suggested_address'] ?? '',
-                        'formatted_address' => $validate_address_shipping['formatted_address'] ?? '',
-                    ], 400);
+                if (!$user_choice_address || $user_choice_address !== 'entered') {
+                    $validate_address_shipping =  UserHelper::validateFullAddress($request->address , $request->address2 , $request->town_city , $request->state , $request->zip, $country = 'USA');
+                    if ($validate_address_shipping['valid'] == false) {
+                        return response()->json([
+                            'status' => 'address_error',
+                            'address_validator' => false,
+                            'validator_message' => $validate_address_shipping['message'] ?? 'Address validation failed.',
+                            'suggested_address' => $validate_address_shipping['suggested_address'] ?? '',
+                            'formatted_address' => $validate_address_shipping['formatted_address'] ?? '',
+                        ], 400);
+                    }
                 }
 
 
@@ -2214,15 +2220,17 @@ class UserController extends Controller
 
             if ($address_type === 'billing') {
 
-                $validate_address_shipping =  UserHelper::validateFullAddress($request->address , $request->address2 , $request->town_city , $request->state , $request->zip, $country = 'USA');
-                if ($validate_address_shipping['valid'] == false) {
-                    return response()->json([
-                        'status' => 'address_error',
-                        'address_validator' => false,
-                        'validator_message' => $validate_address_shipping['message'] ?? 'Address validation failed.',
-                        'suggested_address' => $validate_address_shipping['suggested_address'] ?? '',
-                        'formatted_address' => $validate_address_shipping['formatted_address'] ?? '',
-                    ], 400);
+                if (!$user_choice_address || $user_choice_address !== 'entered') {
+                    $validate_address_shipping =  UserHelper::validateFullAddress($request->address , $request->address2 , $request->town_city , $request->state , $request->zip, $country = 'USA');
+                    if ($validate_address_shipping['valid'] == false) {
+                        return response()->json([
+                            'status' => 'address_error',
+                            'address_validator' => false,
+                            'validator_message' => $validate_address_shipping['message'] ?? 'Address validation failed.',
+                            'suggested_address' => $validate_address_shipping['suggested_address'] ?? '',
+                            'formatted_address' => $validate_address_shipping['formatted_address'] ?? '',
+                        ], 400);
+                    }
                 }
 
                 $get_contact->firstName = $request->first_name;
@@ -2421,16 +2429,19 @@ class UserController extends Controller
 
 
 
-        $validate_address =  UserHelper::validateFullAddress($address1 , $address2 , $city , $state , $postal_code, $country = 'USA');
+        $selectedChoice = $request->input('selected_shipping_choice_shipping') ?? null;
+        if (!$selectedChoice || $selectedChoice !== 'entered') {
+            $validate_address =  UserHelper::validateFullAddress($address1 , $address2 , $city , $state , $postal_code, $country = 'USA');
 
-        if ($validate_address['valid'] == false) {
-            return response()->json([
-                'status' => 'address_error',
-                'address_validator' => false,
-                'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
-                'suggested_address' => $validate_address['suggested_address'] ?? '',
-                'formatted_address' => $validate_address['formatted_address'] ?? '',
-            ], 400);
+            if ($validate_address['valid'] == false) {
+                return response()->json([
+                    'status' => 'address_error',
+                    'address_validator' => false,
+                    'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
+                    'suggested_address' => $validate_address['suggested_address'] ?? '',
+                    'formatted_address' => $validate_address['formatted_address'] ?? '',
+                ], 400);
+            }
         }
 
 
