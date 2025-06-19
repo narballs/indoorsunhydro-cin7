@@ -581,9 +581,72 @@ class UtilHelper
         ];
     }
 
+    // public static function send_threshold_alert_email($request_count, $threshold, $cin7api_key_for_other_jobs)
+    // {
+        
+    //     $cin7api_key_for_other_jobs->load(['api_endpoint_requests', 'api_event_logs']);
+
+    //     $api_endpoint_requests = count($cin7api_key_for_other_jobs->api_endpoint_requests) > 0 ? $cin7api_key_for_other_jobs->api_endpoint_requests : [];
+       
+
+    //     $admin_email = SettingHelper::getSetting('api_threshold_alert_email');
+
+    //     if ($request_count >= $threshold) {
+    //         $existingAlert = ApiRateLimitAlert::where('api_name', $cin7api_key_for_other_jobs->name)
+    //             ->where('api_key', $cin7api_key_for_other_jobs->username)
+    //             ->where('api_secret', $cin7api_key_for_other_jobs->password)
+    //             ->whereDate('alert_sent_at', today())
+    //             ->where('email_sent', true)
+    //             ->first();
+
+    //         if (!$existingAlert) {
+    //             try {
+    //                 // Send the alert email
+                    
+    //                 Mail::html(
+    //                     'The API rate limit is reached<br/>' .
+    //                     'Total Threshold: ' . $threshold . '<br/>' .
+    //                     'Total Request Count: ' . $request_count ,
+    //                     'API Endpoint Requests: ' . '<br/>' .
+
+    //                     implode('<br/>', array_map(function ($request) {
+    //                         return $request->title . ' - ' . $request->request_count . ' requests';
+    //                     }, $api_endpoint_requests)) .
+
+    //                     function ($message) use ($admin_email) {
+    //                         $message->from(SettingHelper::getSetting('noreply_email_address'));
+    //                         $message->to($admin_email)->subject('The API total threshold reached');
+    //                     }
+    //                 );
+
+    //                 // Email sent successfully — record the alert
+    //                 ApiRateLimitAlert::create([
+    //                     'api_name' => $cin7api_key_for_other_jobs->name,
+    //                     'api_key' => $cin7api_key_for_other_jobs->username,
+    //                     'api_secret' => $cin7api_key_for_other_jobs->password,
+    //                     'email_sent' => true,
+    //                     'alert_sent_at' => now(),
+    //                 ]);
+
+    //             } catch (\Exception $e) {
+    //                 Log::error('Failed to send API threshold alert email: ' . $e->getMessage());
+    //                 // Optionally notify someone or retry
+    //             }
+    //         }
+    //     }
+    // }
+
     public static function send_threshold_alert_email($request_count, $threshold, $cin7api_key_for_other_jobs)
     {
+        $cin7api_key_for_other_jobs->load(['api_endpoint_requests', 'api_event_logs']);
+        $api_endpoint_requests = $cin7api_key_for_other_jobs->api_endpoint_requests ?? [];
+
         $admin_email = SettingHelper::getSetting('api_threshold_alert_email');
+
+        if (empty($admin_email)) {
+            Log::warning('API threshold alert email skipped — admin email not set.');
+            return;
+        }
 
         if ($request_count >= $threshold) {
             $existingAlert = ApiRateLimitAlert::where('api_name', $cin7api_key_for_other_jobs->name)
@@ -595,18 +658,24 @@ class UtilHelper
 
             if (!$existingAlert) {
                 try {
-                    // Send the alert email
-                    Mail::html(
-                        'The API rate limit is reached<br/>' .
-                        'Threshold: ' . $threshold . '<br/>' .
-                        'Request Count: ' . $request_count ,
-                        function ($message) use ($admin_email) {
-                            $message->from(SettingHelper::getSetting('noreply_email_address'));
-                            $message->to($admin_email)->subject('The API total threshold reached');
-                        }
-                    );
+                    $htmlBody = 'The API rate limit is reached<br/>' .
+                                'Total Threshold: ' . $threshold . '<br/>' .
+                                'Total Request Count: ' . $request_count . '<br/><br/>';
 
-                    // Email sent successfully — record the alert
+                    if (count($api_endpoint_requests) > 0) {
+                        $htmlBody .= 'API Endpoint Requests:<br/>' .
+                            implode('<br/>', array_map(function ($request) {
+                                return ($request->title ?? '[No Title]') . ' : ' .
+                                    ($request->url ?? '[No URL]') . ' ---- ' .
+                                    ($request->request_count ?? 0) . ' requests';
+                            }, $api_endpoint_requests->all())) . '<br/>';
+                    }
+
+                    Mail::html($htmlBody, function ($message) use ($admin_email, $cin7api_key_for_other_jobs) {
+                        $message->from(SettingHelper::getSetting('noreply_email_address'));
+                        $message->to($admin_email)->subject('API Threshold Reached: ' . $cin7api_key_for_other_jobs->name);
+                    });
+
                     ApiRateLimitAlert::create([
                         'api_name' => $cin7api_key_for_other_jobs->name,
                         'api_key' => $cin7api_key_for_other_jobs->username,
@@ -614,14 +683,14 @@ class UtilHelper
                         'email_sent' => true,
                         'alert_sent_at' => now(),
                     ]);
-
                 } catch (\Exception $e) {
                     Log::error('Failed to send API threshold alert email: ' . $e->getMessage());
-                    // Optionally notify someone or retry
                 }
             }
         }
     }
+
+
 
 
 }
