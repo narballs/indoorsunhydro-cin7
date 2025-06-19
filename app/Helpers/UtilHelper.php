@@ -598,8 +598,8 @@ class UtilHelper
                     // Send the alert email
                     Mail::html(
                         'The API rate limit is reached<br/>' .
-                        'API Username: ' . $cin7api_key_for_other_jobs->username . '<br/>' .
-                        'API Password: ' . $cin7api_key_for_other_jobs->password,
+                        'Threshold: ' . $threshold . '<br/>' .
+                        'Request Count: ' . $request_count ,
                         function ($message) use ($admin_email) {
                             $message->from(SettingHelper::getSetting('noreply_email_address'));
                             $message->to($admin_email)->subject('The API total threshold reached');
