@@ -1204,20 +1204,23 @@ class CheckoutController extends Controller
                 $tax_rate = $tax_class->rate;
                 $tax = $subtotal * ($tax_rate / 100);
             }
-        } 
+        }
+        
+        
 
-
-        FacebookConversionService::sendPurchaseEvent(
-            $order_contact->email,
-            $order->DeliveryPhone,
-            $order->DeliveryFirstName,
-            $order->DeliveryLastName,
-            $order->DeliveryCity,
-            $order->DeliveryState,
-            $order->DeliveryZip,
-            $order->total_including_tax,
-            $order->reference
-        );
+        if ($order->is_stripe == 1) {
+                FacebookConversionService::sendPurchaseEvent(
+                $order_contact->email,
+                $order->DeliveryPhone,
+                $order->DeliveryFirstName,
+                $order->DeliveryLastName,
+                $order->DeliveryCity,
+                $order->DeliveryState,
+                $order->DeliveryZip,
+                $order->total_including_tax,
+                $order->reference
+            );
+        }
 
         return view(
             'checkout/order-received',
