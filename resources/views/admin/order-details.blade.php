@@ -51,7 +51,7 @@
                     <div class="col-md-6">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-4 ">
+                                <div class="col-md-4 mb-2">
                                     <form class="mb-0">
                                         @csrf
                                         <input type="hidden" value="{{ $time_diff }}" id="timeSpanToCancel">
@@ -78,7 +78,7 @@
                                         @endif
                                     </form>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 mb-2">
                                     <form class="mb-0">
                                         @csrf
                                         @if ($order->isApproved == 1 )
@@ -126,7 +126,7 @@
                                     </form>
                                 </div>
                                 @if (!empty($order->buylist_id) && ($order->label_created == 0) && ($order->is_shipped == 0) && empty($order->shipstation_orderId) && $order->isApproved == 1)
-                                    <div class="col-md-5 ">
+                                    <div class="col-md-5 mb-2">
                                         @if (
                                                 (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
                                                 (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
@@ -153,7 +153,7 @@
                                         @endif
                                     </div>
                                     @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1 && floatval($order->shipment_price) <= 0)
-                                        <div class="col-md-5 ">
+                                        <div class="col-md-5 mb-2">
                                             @if (
                                                     (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
                                                     (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
@@ -181,7 +181,7 @@
                                             @endif
                                         </div>
                                     @elseif ( $order->is_stripe == 1 && $order->shipstation_orderId == null && $order->payment_status == 'paid' && $order->isApproved == 1 && floatval($order->shipment_price) > 0)
-                                    <div class="col-md-5 ">
+                                    <div class="col-md-5 mb-2">
                                         @if (
                                                 (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
                                                 (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
@@ -210,7 +210,7 @@
                                         @endif
                                     </div>
                                     @elseif ( $order->is_stripe == 0 && $order->shipstation_orderId == null  && $order->isApproved == 1)
-                                    <div class="col-md-5 ">
+                                    <div class="col-md-5 mb-2">
                                         @if (
                                                 (!empty($order->DeliveryAddress1) || !empty($order->DeliveryAddress2)) &&
                                                 (App\Helpers\SettingHelper::startsWithPOBox($order->DeliveryAddress1) ||
@@ -410,7 +410,7 @@
                                 </div>
                             </div>
                             
-                            <div class="">
+                            <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr class="background-color">
