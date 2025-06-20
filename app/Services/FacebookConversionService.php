@@ -36,6 +36,7 @@ class FacebookConversionService
 
         $response = Http::post("https://graph.facebook.com/v18.0/" . env('FB_PIXEL_ID') . "/events", array_merge($payload, [
             'access_token' => env('FB_META_ACCESS_TOKEN'),
+            'test_event_code' => env('FB_TEST_EVENT_CODE') // Optional
         ]));
 
 
