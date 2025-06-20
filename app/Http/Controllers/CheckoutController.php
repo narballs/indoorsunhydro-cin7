@@ -52,6 +52,7 @@ use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
 use App\Models\ShippingQuoteSetting;
 use App\Models\SpecificAdminNotification;
+use App\Services\FacebookConversionService;
 
 use function PHPSTORM_META\type;
 
@@ -1154,12 +1155,6 @@ class CheckoutController extends Controller
         $user = User::where('id', $user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $order_contact_query = Contact::whereIn('id', $all_ids)->first();
-        // dd($order_contact_query);
-        // if (!empty($order_contact_query)) {
-        //     $order_contact = Contact::where('id', $order_contact_query->id)->first();
-        // } else {
-        //     $order_contact = Contact::where('contact_id', $order->memberId)->first();
-        // }
         
         $order_contact = Contact::where('contact_id', $order->memberId)->first();
         if (empty($order_contact) && $order_contact->is_parent == 0) {
@@ -1172,26 +1167,7 @@ class CheckoutController extends Controller
         $count = $orderitems->count();
         $best_products = Product::where('status', '!=', 'Inactive')->orderBy('views', 'DESC')->limit(4)->get();
         
-        // $delete_cart = Cart::where('user_id', $user_id)->where('is_active', 1)->get();
-        // if (count($delete_cart) > 0) {
-        //     foreach ($delete_cart as $cart) {
-        //         if (!empty($cart->contact_id) && $cart->contact_id == $session_contact_id) {
-        //             $cart->delete();
-        //         } 
-        //         // else {
-        //         //     $cart->delete();
-        //         // }
-        //     }
-        // }
-
-        // // Session::forget('cart');
-        // // Session::forget('cart_hash');
-
-        // if ($session_contact_id) {
-        //     Session::forget('cart');
-        //     Session::forget('cart_hash');
-        // }
-
+        
         $contact = Contact::where('user_id', $user_id)->first();
 
         $pricing = $contact->priceColumn;
@@ -1229,6 +1205,20 @@ class CheckoutController extends Controller
                 $tax = $subtotal * ($tax_rate / 100);
             }
         } 
+
+
+        FacebookConversionService::sendPurchaseEvent(
+            $order_contact->email,
+            $order->DeliveryPhone,
+            $order->DeliveryFirstName,
+            $order->DeliveryLastName,
+            $order->DeliveryCity,
+            $order->DeliveryState,
+            $order->DeliveryZip,
+            $order->total_including_tax,
+            $order->reference
+        );
+
         return view(
             'checkout/order-received',
             compact(
