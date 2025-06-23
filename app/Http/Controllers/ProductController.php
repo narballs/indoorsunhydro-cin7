@@ -779,7 +779,7 @@ class ProductController extends Controller
                 $inventory_update_time_flag = true;
             }
             if ($inventory_update_time_flag == true) {
-                $stock_updated_helper = UtilHelper::updateProductStock($product, $option_id);
+                $stock_updated_helper = $stock_updation_by_visiting_detail;
                 if ($stock_updated_helper != null) {
                     $stock_updated = $stock_updated_helper['stock_updated'];
                     $stock_with_branches = $stock_updated_helper['branch_with_stocks'];
