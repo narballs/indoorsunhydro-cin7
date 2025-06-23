@@ -383,47 +383,61 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    {{-- <div class="col-md-12">
                                         @if ($customer_demand_inventory_number === 1)
-                                        @if ($inventory_update_time_flag == true)
-                                        @if($stock_updated)
-                                        @if (!empty($locations))
-                                        @foreach ($locations as $location)
-                                        <div>
-                                            <p class="mb-1">
-                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{ $location['available'] >= 0 ?
-                                                    $location['available'] : 0 }}</span>
-                                            </p>
-                                        </div>
-                                        @endforeach
-                                        @endif
-                                        @endif
+                                            @if ($inventory_update_time_flag == true)
+                                                @if($stock_updated)
+                                                    @if (!empty($locations))
+                                                        @foreach ($locations as $location)
+                                                            <div>
+                                                                <p class="mb-1">
+                                                                    <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                    <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                        $location['available'] : 0 }}</span>
+                                                                </p>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                @endif
+                                            @else
+                                                @if (!empty($locations))
+                                                    @foreach ($locations as $location)
+                                                        <div>
+                                                            <p class="mb-1">
+                                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                    $location['available'] : 0 }}</span>
+                                                            </p>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                            @endif
                                         @else
+                                            @if (!empty($locations))
+                                                @foreach ($locations as $location)
+                                                    <div>
+                                                        <p class="mb-1">
+                                                            <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                            <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                $location['available'] : 0 }}</span>
+                                                        </p>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        @endif
+                                    </div> --}}
+
+                                    <div class="col-md-12">
                                         @if (!empty($locations))
-                                        @foreach ($locations as $location)
-                                        <div>
-                                            <p class="mb-1">
-                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{ $location['available'] >= 0 ?
-                                                    $location['available'] : 0 }}</span>
-                                            </p>
-                                        </div>
-                                        @endforeach
-                                        @endif
-                                        @endif
-                                        @else
-                                        @if (!empty($locations))
-                                        @foreach ($locations as $location)
-                                        <div>
-                                            <p class="mb-1">
-                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{ $location['available'] >= 0 ?
-                                                    $location['available'] : 0 }}</span>
-                                            </p>
-                                        </div>
-                                        @endforeach
-                                        @endif
+                                            @foreach ($locations as $location)
+                                                <div>
+                                                    <p class="mb-1">
+                                                        <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                        <span class="text-success">{{ $location['available'] >= 0 ?
+                                                            $location['available'] : 0 }}</span>
+                                                    </p>
+                                                </div>
+                                            @endforeach
                                         @endif
                                     </div>
 
@@ -752,36 +766,42 @@
                     z-index:9999;
                 ">
                 <span class="inventory_info" style="width: 800px !important">
-                    @if ($customer_demand_inventory_number === 1)
-                    @if ($inventory_update_time_flag == true)
-                    @if (!$stock_updated)
-                    Unable to show accurate stock levels.<br />
-                    @endif
+                    {{-- @if ($customer_demand_inventory_number === 1)
+                        @if ($inventory_update_time_flag == true)
+                            @if (!$stock_updated)
+                                Unable to show accurate stock levels.<br />
+                            @endif
+                            @if (!empty($locations))
+                                @foreach ($locations as $location)
+                                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                                @endforeach
+                            @else
+                                Unable to show accurate stock levels.<br />
+                            @endif
+                        @else
+                            @if (!empty($locations))
+                                @foreach ($locations as $location)
+                                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                                @endforeach
+                            @else
+                                Unable to show accurate stock levels.<br />
+                            @endif
+                        @endif
+                    @else
+                        @if (!empty($locations))
+                            @foreach ($locations as $location)
+                                {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                            @endforeach
+                        @else
+                            Unable to show accurate stock levels.<br />
+                        @endif
+                    @endif --}}
                     @if (!empty($locations))
-                    @foreach ($locations as $location)
-                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
-                    @endforeach
-                    @else
-                    Unable to show accurate stock levels.<br />
+                        @foreach ($locations as $location)
+                            {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
+                        @endforeach
                     @endif
-                    @else
-                    @if (!empty($locations))
-                    @foreach ($locations as $location)
-                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
-                    @endforeach
-                    @else
-                    Unable to show accurate stock levels.<br />
-                    @endif
-                    @endif
-                    @else
-                    @if (!empty($locations))
-                    @foreach ($locations as $location)
-                    {{ $location['branch_name'] }}: {{ $location['available'] >= 0 ? $location['available'] : 0 }}<br />
-                    @endforeach
-                    @else
-                    Unable to show accurate stock levels.<br />
-                    @endif
-                    @endif
+                    {{!$stock_updated ? 'Unable to show accurate stock levels' : ''}}.<br />
                 </span>
             </div>
         </div>
