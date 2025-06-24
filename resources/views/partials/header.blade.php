@@ -140,7 +140,7 @@
         }
     
         .owl-prev {
-            left: -100px;
+            left: -65px;
             width: 50px;
             height: 50px;
             vertical-align: middle;
@@ -151,7 +151,7 @@
         }
     
         .owl-next {
-            right: -100px;
+            right: -65px;
             width: 50px;
             height: 50px;
             vertical-align: middle;
