@@ -279,6 +279,7 @@ class UtilHelper
 
    
     public static function updateProductStock($product, $option_id) {
+        Log::info("updateProductStock called from:", debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5));
         $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
         $total_stock = 0;
         $stock_updated = false;
