@@ -279,7 +279,15 @@ class UtilHelper
 
    
     public static function updateProductStock($product, $option_id) {
-        Log::info("updateProductStock called from:", debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5));
+        Log::info("🟡 updateProductStock CALLED — Product: {$product->id}, Option: {$option_id}");
+        Log::info("🔍 Trace:", collect(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10))->map(function ($trace) {
+            return [
+                'file' => $trace['file'] ?? '',
+                'line' => $trace['line'] ?? '',
+                'function' => $trace['function'] ?? '',
+                'class' => $trace['class'] ?? '',
+            ];
+        })->toArray());
         $setting = AdminSetting::where('option_name', 'check_product_stock')->first();
         $total_stock = 0;
         $stock_updated = false;
