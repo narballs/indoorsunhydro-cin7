@@ -670,6 +670,13 @@ class ProductController extends Controller
     public function showProductDetail(Request $request ,$id, $option_id)
     {
         $similar_products = null;
+
+        Log::info('updateProductStock called from', [
+            'url' => request()->fullUrl(),
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'timestamp' => now(),
+        ]);
         
        
         $product = Product::with('categories' , 'brand' , 'ai_image_generation')
