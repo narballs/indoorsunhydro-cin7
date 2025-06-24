@@ -47,6 +47,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Services\ZendeskService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use Zendesk\API\HttpClient as ZendeskClient;
@@ -691,8 +692,35 @@ class ProductController extends Controller
             
         }
 
+        $cacheKey = 'product_stock_updated_' . $product->id . '_' . $option_id;
+        $counterKey = 'stock_update_count_' . $product->id . '_' . $option_id;
 
-        $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+        $stock_updation_by_visiting_detail = null;
+
+        // 🧠 Throttle: Only call if cache not set
+        if (!Cache::has($cacheKey)) {
+
+            // 🔁 Count how many times it was called today
+            if (!Cache::has($counterKey)) {
+                Cache::put($counterKey, 1, now()->addDay());
+            } else {
+                Cache::increment($counterKey);
+            }
+
+            $currentCount = Cache::get($counterKey);
+
+            Log::info("Calling updateProductStock [{$currentCount}x] for Product ID: {$product->id}, Option ID: {$option_id}");
+
+            // ✅ Call the actual stock update helper
+            $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+
+            // ⏱️ Only cache if API was successful
+            if (!empty($stock_updation_by_visiting_detail) && $stock_updation_by_visiting_detail['api_status']) {
+                Cache::put($cacheKey, true, now()->addMinutes(5)); // prevent another call for 2 minutes
+            }
+        } else {
+            Log::info("Stock update skipped (throttled) for Product ID: {$product->id}, Option ID: {$option_id}");
+        }
         
         if (!empty($stock_updation_by_visiting_detail)) {
            $api_status = $stock_updation_by_visiting_detail['api_status'];
