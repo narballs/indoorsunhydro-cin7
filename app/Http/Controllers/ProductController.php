@@ -693,47 +693,11 @@ class ProductController extends Controller
 
         $stock_updation_by_visiting_detail = null;
 
-        // 🧠 Throttle: Only call if cache not set
-        $cacheKey = 'product_stock_updated_' . (string) $product->id . '_' . (string) $option_id;
-        $counterKey = 'stock_update_count_' . (string) $product->id . '_' . (string) $option_id;
+        $userAgent = strtolower(request()->userAgent());
 
-        if (!Cache::has($cacheKey)) {
-            Log::info("🔁 Cache not found, updating: {$cacheKey}");
-
-            if (!Cache::has($counterKey)) {
-                Cache::put($counterKey, 1, now()->addDay());
-            } else {
-                Cache::increment($counterKey);
-            }
-
-            $currentCount = Cache::get($counterKey);
-            Log::info("Calling updateProductStock [{$currentCount}x] for Product ID: {$product->id}, Option ID: {$option_id}");
-
-            // 🧠 Bot check
-            $userAgent = strtolower(request()->userAgent());
-            if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
-                // ✅ Safe to call third-party API
-                $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
-
-                if (!empty($stock_updation_by_visiting_detail) && $stock_updation_by_visiting_detail['api_status']) {
-                    Cache::put($cacheKey, true, now()->addMinutes(5));
-                    Log::info("✔️ Cache set for key: {$cacheKey}");
-                }
-            } else {
-                Log::info("⛔ Skipping updateProductStock due to bot user agent: {$userAgent}");
-            }
-        } else {
-            Log::info("⏸️ Stock update skipped (throttled) for Product ID: {$product->id}, Option ID: {$option_id}");
-        }
-
-        Log::info('updateProductStock called from', [
-            'url' => request()->fullUrl(),
-            'ip' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'timestamp' => now(),
-        ]);
-
-
+        if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+            $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+        } 
 
         
         if (!empty($stock_updation_by_visiting_detail)) {
