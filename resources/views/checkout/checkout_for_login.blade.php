@@ -368,12 +368,25 @@
         }
         .free_shipping_gif {
            max-height: 25px !important;
-        }  
+        }
+        
+        .add_new_shipping_address_button {
+            font-size: 12px !important;
+        }
+
+        .checkout_main_sub_address {
+            font-size: 14px !important;
+        }
     }
     .custom-padding {
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
     }
+
+    .add_new_shipping_address_button {
+        font-family: 'Poppins';
+    }
+
     @media only screen and (max-width: 550px) and (min-width: 280px) {
         .proceedCheckoutmbl {
             border-radius: 5px;
@@ -1605,7 +1618,7 @@ $cart_price = 0;
                                                 <h6 class="checkout_main_sub_address mb-0">Shipping Address</h6>
                                             </div>
                                             <div class="col-md-4 col-4">
-                                                <a data-bs-toggle="modal" href="#add_new_address_shipping" role="button" class="float-end" style="font-size:20px">Add New</a>
+                                                <a data-bs-toggle="modal" href="#add_new_address_shipping" role="button" class="float-end add_new_shipping_address_button" style="font-size:20px">Add New</a>
                                             </div>
                                             {{-- <div class="col-md-2 col-2">
                                                 <a data-bs-toggle="modal" href="#address_modal_id_shipping" role="button" class="float-end" style="font-size:20px">Change</a>

@@ -43,7 +43,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
 
 @media only screen and (max-width: 767px) {
     .similar_items_div {
-        width: 75%;
+        width: 60%;
         margin:auto;
     }
 }
@@ -51,11 +51,16 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
 
 @media only screen and (max-width: 700px) {
     #similar_products_owl_carasoul > .owl-nav > .owl-prev {
-        left : -30px;
+        left : 0px;
+        width: 40px;
+        height: 40px;
     }
     #similar_products_owl_carasoul > .owl-nav > .owl-next {
-        right : -30px;
+        right : 0px;
+        width: 40px;
+        height: 40px;
     }
+    
 } 
 
 
@@ -5456,7 +5461,7 @@ select.list-dt:focus {
         font-size: 12px !important;
         line-height: 29px !important;
         text-decoration: none !important;
-        padding: 0.6rem !important;
+        padding: 0rem 0.6rem !important;
     }
 
     .mbl_cmp_drp {
