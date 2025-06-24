@@ -829,7 +829,8 @@
                                                                         
                                                                     @endphp
                                                                     @if($company->type != "Supplier")
-                                                                        <a class="mb_item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">{{ $company->company }}
+                                                                        <a class="mb_item {{ $disabled }} {{ $muted }}" type="button" onclick="switch_company_user({{ $contact_id }})">
+                                                                            {{ !empty($company->company) ? $company->company : $company->firstName . ' ' . $company->lastName }}
                                                                             <span
                                                                                 style="font-size: 9px;font-family: 'Poppins';"
                                                                                 class="{{ $muted }}">{{ $primary }}
@@ -853,7 +854,7 @@
                                                     <p class="your-cart-title ps-1 mb-0"> Your Cart</p>
                                                     <p class="cart-page-items text-danger text-right mb-0"> Price Subject to Change</p>
                                                 </div>
-                                                <div class="text-right">
+                                                <div class="text-md-right text-left my-1">
                                                     <a href="{{ route('emptyCart') }}" class="clear_cart btn btn-info btn-sm" onclick="confirmEmptyCart(event)">
                                                         Empty Cart
                                                     </a>
