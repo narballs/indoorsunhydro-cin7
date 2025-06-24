@@ -692,9 +692,38 @@ class ProductController extends Controller
             
         }
 
-        $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+        $cacheKey = 'product_stock_updated_' . $product->id . '_' . $option_id;
+        $counterKey = 'stock_update_count_' . $product->id . '_' . $option_id;
 
-        
+        $stock_updation_by_visiting_detail = null;
+
+        // 🧠 Throttle: Only call if cache not set
+        $cacheKey = 'product_stock_updated_' . (string) $product->id . '_' . (string) $option_id;
+        $counterKey = 'stock_update_count_' . (string) $product->id . '_' . (string) $option_id;
+
+        if (!Cache::has($cacheKey)) {
+            // log the absence of cache
+            Log::info("🔁 Cache not found, updating: {$cacheKey}");
+
+            if (!Cache::has($counterKey)) {
+                Cache::put($counterKey, 1, now()->addDay());
+            } else {
+                Cache::increment($counterKey);
+            }
+
+            $currentCount = Cache::get($counterKey);
+            Log::info("Calling updateProductStock [{$currentCount}x] for Product ID: {$product->id}, Option ID: {$option_id}");
+
+            $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+
+            if (!empty($stock_updation_by_visiting_detail) && $stock_updation_by_visiting_detail['api_status']) {
+                Cache::put($cacheKey, true, now()->addMinutes(5));
+                Log::info("✔️ Cache set for key: {$cacheKey}");
+            }
+        } else {
+            Log::info("⏸️ Stock update skipped (throttled) for Product ID: {$product->id}, Option ID: {$option_id}");
+        }
+
         
         if (!empty($stock_updation_by_visiting_detail)) {
            $api_status = $stock_updation_by_visiting_detail['api_status'];
