@@ -746,9 +746,9 @@ class ProductController extends Controller
             }
            
         }
-        if (!empty($product->category_id) && !empty($product)) {
-            $similar_products = $this->getSimilarProducts($request , $id, $option_id);
-        }
+        // if (!empty($product->category_id) && !empty($product)) {
+        //     $similar_products = $this->getSimilarProducts($request , $id, $option_id);
+        // }
         $request_bulk_quantity_discount = AdminSetting::where('option_name', 'request_bulk_quantity_discount')->first();
         $best_selling_products = null;
         $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
@@ -1054,7 +1054,7 @@ class ProductController extends Controller
             'product_stocks',
             'notify_user_about_product_stock',
             'request_bulk_quantity_discount',
-            'similar_products',
+            // 'similar_products',
             'total_stock',
             'best_selling_products',
             'locations', 
