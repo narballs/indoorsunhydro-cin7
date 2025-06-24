@@ -120,12 +120,7 @@
                 @endif
             @endif
         @endforeach
-    @else
-        <div class="row">
-            <div class="col-md-12">
-                <p class="buy_again_heading">No Similar products to show</p>
-            </div>
-        </div>
+    
     @endif
     {{-- {{ $similar_products->links() }} --}}
 </div>
