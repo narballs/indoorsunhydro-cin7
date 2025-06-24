@@ -709,23 +709,30 @@ class ProductController extends Controller
             $currentCount = Cache::get($counterKey);
             Log::info("Calling updateProductStock [{$currentCount}x] for Product ID: {$product->id}, Option ID: {$option_id}");
 
-            // 🧠 Bot check: exit early if it's a crawler
+            // 🧠 Bot check
             $userAgent = strtolower(request()->userAgent());
-            if (preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+            if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+                // ✅ Safe to call third-party API
+                $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+
+                if (!empty($stock_updation_by_visiting_detail) && $stock_updation_by_visiting_detail['api_status']) {
+                    Cache::put($cacheKey, true, now()->addMinutes(5));
+                    Log::info("✔️ Cache set for key: {$cacheKey}");
+                }
+            } else {
                 Log::info("⛔ Skipping updateProductStock due to bot user agent: {$userAgent}");
-                return;
-            }
-
-            // ✅ Now safe to call third-party API
-            $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
-
-            if (!empty($stock_updation_by_visiting_detail) && $stock_updation_by_visiting_detail['api_status']) {
-                Cache::put($cacheKey, true, now()->addMinutes(5));
-                Log::info("✔️ Cache set for key: {$cacheKey}");
             }
         } else {
             Log::info("⏸️ Stock update skipped (throttled) for Product ID: {$product->id}, Option ID: {$option_id}");
         }
+
+        Log::info('updateProductStock called from', [
+            'url' => request()->fullUrl(),
+            'ip' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'timestamp' => now(),
+        ]);
+
 
 
         
@@ -753,9 +760,9 @@ class ProductController extends Controller
             }
            
         }
-        // if (!empty($product->category_id) && !empty($product)) {
-        //     $similar_products = $this->getSimilarProducts($request , $id, $option_id);
-        // }
+        if (!empty($product->category_id) && !empty($product)) {
+            $similar_products = $this->getSimilarProducts($request , $id, $option_id);
+        }
         $request_bulk_quantity_discount = AdminSetting::where('option_name', 'request_bulk_quantity_discount')->first();
         $best_selling_products = null;
         $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
