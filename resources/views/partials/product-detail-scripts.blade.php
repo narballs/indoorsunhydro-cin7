@@ -365,6 +365,7 @@
     .product-detail-heading-text-new {
         font-size: 24px;
         margin-top: 1rem;
+        line-height: 30px;
     }
 
     .sku-div {
