@@ -1,6 +1,6 @@
 
 <div class="card-body" id="products-container">
-    {{-- @if(!empty($similar_products))
+    @if(!empty($similar_products))
         <div class="row">
             <div class="col-md-12">
                 <p class="buy_again_heading">Similar Products</p>
@@ -120,8 +120,13 @@
                 @endif
             @endif
         @endforeach
-    
-    @endif --}}
+    @else
+        <div class="row">
+            <div class="col-md-12">
+                <p class="buy_again_heading">No Similar products to show</p>
+            </div>
+        </div>
+    @endif
     {{-- {{ $similar_products->links() }} --}}
 </div>
 
