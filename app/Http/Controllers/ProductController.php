@@ -671,14 +671,6 @@ class ProductController extends Controller
     {
         $similar_products = null;
 
-        Log::info('updateProductStock called from', [
-            'url' => request()->fullUrl(),
-            'ip' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'timestamp' => now(),
-        ]);
-        
-       
         $product = Product::with('categories' , 'brand' , 'ai_image_generation')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
@@ -706,7 +698,6 @@ class ProductController extends Controller
         $counterKey = 'stock_update_count_' . (string) $product->id . '_' . (string) $option_id;
 
         if (!Cache::has($cacheKey)) {
-            // log the absence of cache
             Log::info("🔁 Cache not found, updating: {$cacheKey}");
 
             if (!Cache::has($counterKey)) {
@@ -718,6 +709,14 @@ class ProductController extends Controller
             $currentCount = Cache::get($counterKey);
             Log::info("Calling updateProductStock [{$currentCount}x] for Product ID: {$product->id}, Option ID: {$option_id}");
 
+            // 🧠 Bot check: exit early if it's a crawler
+            $userAgent = strtolower(request()->userAgent());
+            if (preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+                Log::info("⛔ Skipping updateProductStock due to bot user agent: {$userAgent}");
+                return;
+            }
+
+            // ✅ Now safe to call third-party API
             $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
 
             if (!empty($stock_updation_by_visiting_detail) && $stock_updation_by_visiting_detail['api_status']) {
@@ -727,6 +726,7 @@ class ProductController extends Controller
         } else {
             Log::info("⏸️ Stock update skipped (throttled) for Product ID: {$product->id}, Option ID: {$option_id}");
         }
+
 
         
         if (!empty($stock_updation_by_visiting_detail)) {
