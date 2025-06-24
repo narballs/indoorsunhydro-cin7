@@ -692,9 +692,6 @@ class ProductController extends Controller
             
         }
 
-        $cacheKey = 'product_stock_updated_' . $product->id . '_' . $option_id;
-        $counterKey = 'stock_update_count_' . $product->id . '_' . $option_id;
-
         $stock_updation_by_visiting_detail = null;
 
         // 🧠 Throttle: Only call if cache not set
