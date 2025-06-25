@@ -536,7 +536,7 @@
 	@media only screen and (min-width: 1921px) {
 		.confirmation_check {
 			position: absolute;
-			left: 1.5%;
+			left: 2%;
 			top: 16%;
 		}
 	}
@@ -601,11 +601,26 @@
 		<div class="col-md-12">
 			<div class="card mt-5 border-0 thank-you-card">
 				<div class="card-body ps-5 mt-5  thank-you-card-body">
+					@if (\Session::has('success'))
+						<div class="alert alert-success alert-dismissible fade show mb-4 mx-5" role="alert">
+							{!! \Session::get('success') !!}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						@elseif (\Session::has('error'))
+						<div class="alert alert-danger alert-dismissible fade show mb-4 mx-5" role="alert">
+							{!! \Session::get('error') !!}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					@endif
 					<div class="row ps-5 mobile_class">
-						<div class="row mb-3">
+						<div class="row mb-3 align-items-start">
 							<input type="hidden" value="{{!empty($order_contact) && !empty($order_contact->email) ? $order_contact->email : ''}}" id="order_contact_email">
 							<input type="hidden" value="{{!empty($order) && !empty($order->apiOrderItem) ? $order->apiOrderItem : ''}}" id="order_Items_ty">
-							<div class="col-md-12 d-flex main-logo-confirm-div">
+							<div class="col-md-9 d-flex main-logo-confirm-div">
 								<div class="logo-confirm-div-1">
 									<svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
 										<circle cx="37.6923" cy="37.923" r="37.6923" fill="#7CC633" fill-opacity="0.12"/>
@@ -631,6 +646,13 @@
 									</div>
 								</div>
 							</div>
+							@if (!empty($enable_reminders) && strtolower($enable_reminders->option_value) == 'yes')
+							<div class="col-3 text-center">
+								<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reminderModal">
+									Set Re-Order Reminder
+								</button>
+							</div>
+							@endif
 						</div>
 					</div>
 					<div class="p-3 ms-5 me-5 main-color-div main-view ">
@@ -1242,6 +1264,48 @@
 		</div>
 	</div>
 </div>
+
+
+<div class="modal fade" id="reminderModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('store_order_reminder') }}">
+      @csrf
+      <input type="hidden" name="user_id" value="{{ $order_contact->user_id }}">
+      <input type="hidden" name="contact_id" value="{{ Session::get('contact_id') }}">
+      <input type="hidden" name="order_id" value="{{ $order->id }}">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Set Reminder for Reordering</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="reminder_date">Reminder Date</label>
+          <input type="date" class="form-control" name="reminder_date" required>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          	<button id="submitReminderBtn" class="btn btn-primary" type="submit">
+				<span class="spinner-border spinner-border-sm me-1 d-none" id="submitReminderSpinner" role="status" aria-hidden="true"></span>
+				Save Reminder
+			</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  document.querySelector('#reminderModal form').addEventListener('submit', function () {
+    const btn = document.getElementById('submitReminderBtn');
+    const spinner = document.getElementById('submitReminderSpinner');
+
+    spinner.classList.remove('d-none'); // show spinner
+    btn.setAttribute('disabled', true); // disable button to prevent double click
+  });
+</script>
+
 
 @include('partials.product-footer')
 

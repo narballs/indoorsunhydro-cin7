@@ -148,4 +148,9 @@ class ApiOrder extends Model
     {
         return $this->hasMany('App\Models\OrderJobLog', 'api_order_id', 'id');
     }
+
+    public function OrderReminder()
+    {
+        return $this->hasOne('App\Models\OrderReminder', 'order_id', 'id');
+    }
 }

@@ -649,6 +649,9 @@ Route::post('/updateItemQuantitytoOriginal', [ProductController::class, 'updateI
 Route::post('/removeOutOfStock', [ProductController::class, 'removeOutOfStock'])->name('removeOutOfStock');
 Route::get('/PackingSlip', [ProductController::class, 'PackingSlip'])->name('PackingSlip');
 Route::get('/retriveProducts', [ProductController::class, 'retriveProducts'])->name('retriveProducts');
+Route::post('/order/reminder/store', [CheckoutController::class, 'store_order_reminder'])->name('store_order_reminder');
+Route::get('/re-order/{id}', [CheckoutController::class, 're_order'])->name('re_order');
+
 
 
 
