@@ -128,7 +128,7 @@
                 </tr>
                 <tr>
                     <td colspan="6" style="text-align: center; padding-top: 20px;color: #fff; !important;">
-                        <a href="{{ $link }}" class="buy-now-btn">Buy Now</a>
+                        <a href="{{ $link }}" class="buy-now-btn" style="color: #fff; !important;">Buy Now</a>
                     </td>
                 </tr>
             </tbody>
