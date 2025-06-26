@@ -551,22 +551,22 @@
 	@media only screen and (max-width: 1440px) and (min-width: 1025px) {
 		.confirmation_check {
 			position: absolute;
-			left: 2.8%;
+			left: 3.4%;
 			top: 16%;
 		}
 	}
 	@media only screen and (max-width: 1024px) and (min-width: 769px) {
 		.confirmation_check {
 			position: absolute;
-			left: 5.5%;
+			left: 7%;
 			top: 16%;
 		}
 	}
 	@media only screen and (max-width: 768px) and (min-width: 600px) {
 		.confirmation_check {
 			position: absolute;
-			left: 8%;
-			top: 15%;
+			left: 10%;
+			top: 8%;
 		}
 	}
 	@media only screen and (max-width: 599px) and (min-width: 426px) {
