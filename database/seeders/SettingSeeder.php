@@ -640,6 +640,11 @@ class SettingSeeder extends Seeder
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],
+            [
+                'option_name' => 'enable_order_reminder',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
 
         ];
 

@@ -7,7 +7,9 @@ class FacebookConversionService
 {
     public static function sendPurchaseEvent($email, $phone, $firstName, $lastName, $city, $state, $zip, $value, $reference)
     {
-        $hashed = fn($val) => hash('sha256', strtolower(trim($val)));
+        $hashed = function ($val) {
+            return hash('sha256', strtolower(trim($val)));
+        };
         $eventId = $reference;
 
         $payload = [

@@ -2085,6 +2085,7 @@ class ProductController extends Controller
         } else {
             $tax_class = TaxClass::where('name', $contact->tax_class)->first();
         }
+
         if (!empty($cart_items)) {
             foreach ($cart_items as $cart_item) {
                 $subtotal += $cart_item['price'] * $cart_item['quantity'];
