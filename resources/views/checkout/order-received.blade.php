@@ -545,7 +545,7 @@
 		.confirmation_check {
 			position: absolute;
 			top: 16%;
-			left: 2.1%;
+			left: 3.5%;
 		}
 	}
 	@media only screen and (max-width: 1440px) and (min-width: 1025px) {
@@ -558,15 +558,15 @@
 	@media only screen and (max-width: 1024px) and (min-width: 769px) {
 		.confirmation_check {
 			position: absolute;
-			left: 4.1%;
+			left: 5.5%;
 			top: 16%;
 		}
 	}
 	@media only screen and (max-width: 768px) and (min-width: 600px) {
 		.confirmation_check {
 			position: absolute;
-			left: 6%;
-			top: 18%;
+			left: 8%;
+			top: 15%;
 		}
 	}
 	@media only screen and (max-width: 599px) and (min-width: 426px) {
@@ -620,7 +620,7 @@
 						<div class="row mb-3 align-items-start">
 							<input type="hidden" value="{{!empty($order_contact) && !empty($order_contact->email) ? $order_contact->email : ''}}" id="order_contact_email">
 							<input type="hidden" value="{{!empty($order) && !empty($order->apiOrderItem) ? $order->apiOrderItem : ''}}" id="order_Items_ty">
-							<div class="col-md-9 d-flex main-logo-confirm-div">
+							<div class="col-12 col-xl-9 col-md-7 d-flex main-logo-confirm-div">
 								<div class="logo-confirm-div-1">
 									<svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
 										<circle cx="37.6923" cy="37.923" r="37.6923" fill="#7CC633" fill-opacity="0.12"/>
@@ -647,7 +647,7 @@
 								</div>
 							</div>
 							@if (!empty($enable_reminders) && strtolower($enable_reminders->option_value) == 'yes')
-							<div class="col-3 text-center">
+							<div class="col-12 col-xl-3 col-md-5 text-center">
 								<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reminderModal">
 									Set Re-Order Reminder
 								</button>
