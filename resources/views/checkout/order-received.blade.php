@@ -647,7 +647,7 @@
 								</div>
 							</div>
 							@if (!empty($enable_reminders) && strtolower($enable_reminders->option_value) == 'yes')
-							<div class="col-12 col-xl-3 col-md-5 text-center">
+							<div class="col-12 col-xl-3 col-md-5 text-center my-3 my-md-0">
 								<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reminderModal">
 									Set Re-Order Reminder
 								</button>
