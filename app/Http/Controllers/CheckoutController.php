@@ -1330,12 +1330,13 @@ class CheckoutController extends Controller
                         'is_active'  => 1,
                         'updated_at' => now(),
                     ];
-                    session()->put('cart', $cart);
+                    // session()->put('cart', $cart);
                 } else {
                     $cart[$product->id] = $this->reOrderEntry($assigned_contact, $retailPrice, $apiOrderItem, $cartHash, $userId, $product);
                     Cart::create($cart[$product->id]); // Store the cart entry in the database
                 }
-            } else {
+            } 
+            else {
                 // Match by product_id + option_id to avoid duplicates
                 $existingCartItem = Cart::where('cart_hash', $cartHash)
                     ->where('qoute_id', $product->id)
@@ -1362,7 +1363,7 @@ class CheckoutController extends Controller
                         'is_active'  => 1,
                         'updated_at' => now(),
                     ];
-                    session()->put('cart', $cart);
+                    // session()->put('cart', $cart);
                 } else {
                     $cart[$product->id] = $this->reOrderEntry($assigned_contact, $retailPrice, $apiOrderItem, $cartHash, $userId, $product);
                     Cart::create($cart[$product->id]); // Store the cart entry in the database
