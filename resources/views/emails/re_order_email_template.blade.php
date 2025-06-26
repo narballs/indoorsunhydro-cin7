@@ -127,14 +127,14 @@
                     <td>${{ number_format($order_data->total_including_tax ?? $grandTotal, 2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="6" style="text-align: center; padding-top: 20px;">
+                    <td colspan="6" style="text-align: center; padding-top: 20px;color: #fff; !important;">
                         <a href="{{ $link }}" class="buy-now-btn">Buy Now</a>
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <p style="margin-top: 40px;">
+        <p style="margin-top: 40px;text-align: center;">
             <?php $email_logo_name = \App\Helpers\SettingHelper::getSetting('email_logo_name'); ?>
             <img src="{{ url('/theme/bootstrap5/images/' . $email_logo_name) }}" alt="" />
         </p>
