@@ -545,7 +545,7 @@
 		.confirmation_check {
 			position: absolute;
 			top: 16%;
-			left: 3.5%;
+			left: 2.6%;
 		}
 	}
 	@media only screen and (max-width: 1440px) and (min-width: 1025px) {
