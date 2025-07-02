@@ -807,6 +807,13 @@
                         <span class="text-danger"></span>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="partial_refund_reason" class="form-label">Please provide a reason for the refund:</label>
+                    <textarea class="form-control" id="partial_refund_reason" name="partial_refund_reason" rows="4" required></textarea>
+                    <div class="error_message_refund">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="row">
@@ -1802,6 +1809,7 @@
         function partial_refund_ftn(order_id) {
             var grand_total = parseFloat($('#grand_total_value').val());
             var refund_value = parseFloat($('#pop_up_grand_total').val());
+            var partial_refund_reason = $('#partial_refund_reason').val();  
             if ($('#pop_up_grand_total').val() == null || $('#pop_up_grand_total').val() == '') {
                 $('.error_message_parial_refund').children('span').text('Patial refund value is required');
                 return false;
@@ -1821,7 +1829,7 @@
                 var order_status_id = $('#order_status_id').val();
                 var payment_status = 'partially refunded';
                 var order_status_type = 'partial_refund';
-                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value , refund_reason = null);
+                order_status_updating_by_admin(order_id ,order_status_id, payment_status , order_status_type , refund_value , partial_refund_reason);
             }       
             
         }
