@@ -1484,6 +1484,15 @@ class OrderController extends Controller
                             $order_refund->refund_amount = $refund_value;
                             $order_refund->save();
 
+                            if (!empty($request->refund_reason)) {
+
+                                $order_comment = new OrderComment;
+                                $order_comment->order_id = $order_id;
+                                $order_comment->comment = !empty($request->refund_reason) ? $request->refund_reason : '';    
+                                $order_comment->save();
+                            }
+
+
                         } else {
                             $request_status = false;
                             $message = 'Partial Refund failed';
@@ -1518,9 +1527,6 @@ class OrderController extends Controller
                             $this->cancel_order($order , $current_order_status , $order_status_id,$cin7_auth_username , $cin7_auth_password);
                         }
                         
-                        
-
-
                     } else {
                         $request_status = false;
                         $message = 'Refund failed';
