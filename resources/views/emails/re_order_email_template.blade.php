@@ -65,20 +65,19 @@
                 </tr>
             </thead>
             <tbody>
-                @php $grandTotal = 0; @endphp
+                @php $grandTotal = 0; $subtotal = 0; @endphp
 
                 @foreach($order_data->apiOrderItem as $apiOrderItem)
                     @php
-                        $retail_price = 0;
-                        $user_price_column = App\Helpers\UserHelper::getUserPriceColumn();
+                        // $retail_price = 0;
                         $product = $apiOrderItem->product;
-                        $option = $apiOrderItem->product_option;
-                        foreach ($option->price ?? [] as $price) {
-                            $retail_price = $price->$user_price_column ?? 0;
-                            if (!$retail_price) $retail_price = $price->sacramentoUSD ?? 0;
-                            if (!$retail_price) $retail_price = $price->retailUSD ?? 0;
-                        }
-                        $subtotal = $retail_price * $apiOrderItem->quantity;
+                        // $option = $apiOrderItem->product_option;
+                        // foreach ($option->price ?? [] as $price) {
+                        //     $retail_price = $price->$user_price_column ?? 0;
+                        //     if (!$retail_price) $retail_price = $price->sacramentoUSD ?? 0;
+                        //     if (!$retail_price) $retail_price = $price->retailUSD ?? 0;
+                        // }
+                        $subtotal = $apiOrderItem->price * $apiOrderItem->quantity;
                         $grandTotal = $subtotal + 
                         ($order_data->tax_rate ?? 0) + 
                         ($order_data->shipment_price ?? 0) - 
@@ -96,7 +95,7 @@
                         </td>
                         <td>{{ $product->name }}</td>
                         <td>{{ $product->code }}</td>
-                        <td>${{ number_format($retail_price, 2) }}</td>
+                        <td>${{ number_format($apiOrderItem->price, 2) }}</td>
                         <td>{{ $apiOrderItem->quantity }}</td>
                         <td>${{ number_format($subtotal, 2) }}</td>
                     </tr>
