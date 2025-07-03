@@ -810,7 +810,7 @@
                 <div class="mb-3">
                     <label for="partial_refund_reason" class="form-label">Please provide a reason for the refund:</label>
                     <textarea class="form-control" id="partial_refund_reason" name="partial_refund_reason" rows="4" required></textarea>
-                    <div class="error_message_refund">
+                    <div class="error_message_partial_refund_text">
                         <span class="text-danger"></span>
                     </div>
                 </div>
@@ -1812,6 +1812,11 @@
             var partial_refund_reason = $('#partial_refund_reason').val();  
             if ($('#pop_up_grand_total').val() == null || $('#pop_up_grand_total').val() == '') {
                 $('.error_message_parial_refund').children('span').text('Patial refund value is required');
+                return false;
+            }
+            if (partial_refund_reason == null || partial_refund_reason == '') {
+                $('.error_message_partial_refund_text').children('span').text('Prtial Refund reason is required');
+                $('.partial-order-status-spinner').addClass('d-none');
                 return false;
             }
             $('.partial-order-status-spinner').removeClass('d-none');
