@@ -1811,11 +1811,11 @@
             var refund_value = parseFloat($('#pop_up_grand_total').val());
             var partial_refund_reason = $('#partial_refund_reason').val();  
             if ($('#pop_up_grand_total').val() == null || $('#pop_up_grand_total').val() == '') {
-                $('.error_message_parial_refund').children('span').text('Patial refund value is required');
+                $('.error_message_parial_refund').children('span').text('Partial refund value is required');
                 return false;
             }
             if (partial_refund_reason == null || partial_refund_reason == '') {
-                $('.error_message_partial_refund_text').children('span').text('Prtial Refund reason is required');
+                $('.error_message_partial_refund_text').children('span').text('Partial Refund reason is required');
                 $('.partial-order-status-spinner').addClass('d-none');
                 return false;
             }
