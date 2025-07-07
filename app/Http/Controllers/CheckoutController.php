@@ -50,9 +50,11 @@ use App\Models\BuyList;
 use App\Models\BuyListShippingAndDiscount;
 use App\Models\ContactsAddress;
 use App\Models\NewsletterSubscription;
+use App\Models\OrderReminder;
 use App\Models\ShippingQuoteSetting;
 use App\Models\SpecificAdminNotification;
 use App\Services\FacebookConversionService;
+use Illuminate\Support\Str;
 
 use function PHPSTORM_META\type;
 
@@ -1150,6 +1152,7 @@ class CheckoutController extends Controller
                 'apiOrderItem.product.options',
                 'texClasses',
                 'discount',
+                'OrderReminder'
             )
             ->first();
         $user = User::where('id', $user_id)->first();
@@ -1222,6 +1225,8 @@ class CheckoutController extends Controller
             );
         }
 
+        $enable_reminders = AdminSetting::where('option_name', 'enable_order_reminder')->first();
+
         return view(
             'checkout/order-received',
             compact(
@@ -1232,10 +1237,168 @@ class CheckoutController extends Controller
                 'count',
                 'best_products',
                 'pricing',
-                'tax'
+                'tax',
+                'enable_reminders'
             )
         );
     }
+
+    public function store_order_reminder(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $contact_id = $request->input('contact_id');
+        $order_id = $request->input('order_id');
+        $reminder_date = Carbon::parse($request->input('reminder_date'))->format('Y-m-d');
+
+
+         // Prevent duplicate reminder for the same order_id
+        $exists = OrderReminder::where('order_id', $order_id)->where('reminder_date' , $reminder_date)->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Reminder for this order already exists for the selected date.');
+        }
+
+        $reminder = new OrderReminder();
+        $reminder->user_id = $user_id;
+        $reminder->contact_id = $contact_id;
+        $reminder->order_id = $order_id;
+        $reminder->reminder_date = $reminder_date;
+        $reminder->is_sent = 0; // Default to not sent
+        $reminder->save();
+
+
+        return redirect()->back()->with('success', 'Order reminder has been set successfully.');
+    }
+
+
+
+    public function re_order(Request $request, $id)
+    {
+        $re_order = ApiOrder::where('id', $id)
+        ->with('apiOrderItem', 'apiOrderItem.product', 'apiOrderItem.product.options')
+        ->first();
+
+        if (!$re_order) {
+            return redirect()->back()->with('error', 'Order not found.');
+        }
+
+        // Ensure cart_hash exists
+        if (!session()->has('cart_hash')) {
+            session()->put('cart_hash', Str::random(10));
+        }
+
+        $cartHash = session()->get('cart_hash');
+        $cart = session()->get('cart', []);
+        $userPriceColumn = UserHelper::getUserPriceColumn();
+        $userId = auth()->id() ?? 0;
+        $contactId = session()->get('contact_id') ?? null;
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
+
+        foreach ($re_order->apiOrderItem as $apiOrderItem) {
+            $product = $apiOrderItem->product;
+            $option = $product->options->first();
+            $retailPrice = 0;
+
+            if ($option && $option->price) {
+                foreach ($option->price as $price) {
+                    $retailPrice = $price->$userPriceColumn ?? 0;
+                    $retailPrice = $retailPrice ?: ($price->sacramentoUSD ?? $price->retailUSD ?? 0);
+                }
+            }
+
+
+            if (auth()->user()) {
+                $product_in_active_cart = Cart::where('qoute_id',$product->id)->where('contact_id', $assigned_contact)->first();
+                if ($product_in_active_cart) {
+                    $product_in_active_cart->quantity += $apiOrderItem->quantity;
+                    $product_in_active_cart->updated_at = now();
+                    $product_in_active_cart->save();
+
+                    
+                    $cart[$product_in_active_cart->qoute_id] = [
+                        'qoute_id'   => $product->id,
+                        'product_id' => $product->id,
+                        'option_id'  => $apiOrderItem->option_id,
+                        'quantity'   => $product_in_active_cart->quantity,
+                        'name'       => $product->name,
+                        'price'      => $retailPrice,
+                        'image'      => $product->images,
+                        'slug'       => $product->slug,
+                        'code'     => $product->code,
+                        'user_id'    => $userId,
+                        'contact_id' => $contactId,
+                        'is_active'  => 1,
+                        'updated_at' => now(),
+                    ];
+                    // session()->put('cart', $cart);
+                } else {
+                    $cart[$product->id] = $this->reOrderEntry($assigned_contact, $retailPrice, $apiOrderItem, $cartHash, $userId, $product);
+                    Cart::create($cart[$product->id]); // Store the cart entry in the database
+                }
+            } 
+            else {
+                // Match by product_id + option_id to avoid duplicates
+                $existingCartItem = Cart::where('cart_hash', $cartHash)
+                    ->where('qoute_id', $product->id)
+                    ->first();
+
+                if ($existingCartItem) {
+                    $existingCartItem->quantity += $apiOrderItem->quantity;
+                    $existingCartItem->updated_at = now();
+                    $existingCartItem->save();
+
+                    
+                    $cart[$existingCartItem->qoute_id] = [
+                        'qoute_id'   => $product->id,
+                        'product_id' => $product->id,
+                        'option_id'  => $apiOrderItem->option_id,
+                        'quantity'   => $existingCartItem->quantity,
+                        'name'       => $product->name,
+                        'price'      => $retailPrice,
+                        'image'      => $product->images,
+                        'slug'       => $product->slug,
+                        'code'     => $product->code,
+                        'user_id'    => $userId,
+                        'contact_id' => $contactId,
+                        'is_active'  => 1,
+                        'updated_at' => now(),
+                    ];
+                    // session()->put('cart', $cart);
+                } else {
+                    $cart[$product->id] = $this->reOrderEntry($assigned_contact, $retailPrice, $apiOrderItem, $cartHash, $userId, $product);
+                    Cart::create($cart[$product->id]); // Store the cart entry in the database
+                }
+            }
+
+            
+        }
+
+        session()->put('cart', $cart);
+
+        return redirect()->route('cart');
+    }
+
+    private function reOrderEntry($contactId, $retailPrice, $apiOrderItem, $cartHash, $userId, $product)
+    {
+        return [
+            'qoute_id'   => $product->id,
+            'product_id' => $product->product_id,
+            'name'       => $product->name,
+            'quantity'   => $apiOrderItem->quantity,
+            'price'      => $retailPrice,
+            'code'       => $product->code,
+            'image'      => $product->images,
+            'option_id'  => $apiOrderItem->option_id,
+            'slug'       => $product->slug,
+            'cart_hash'  => $cartHash,
+            'user_id'    => $userId,
+            'contact_id' => $contactId,
+            'is_active'  => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
     public function webhook(Request $request) {
         $payload = $request->getContent();
         $stripeSignature = $request->header('Stripe-Signature');
