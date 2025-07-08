@@ -36,6 +36,7 @@ use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
 use App\Models\OrderRefund;
+use App\Models\OrderReminder;
 use App\Models\OrderStatus;
 use App\Models\Payout;
 use App\Models\PayoutBalance;
@@ -77,6 +78,7 @@ class OrderController extends Controller
 
 
         $shipment_error = $request->shipment_error;
+        $re_order_id = !empty($request->re_order_id) ? $request->re_order_id : null;
         
         $parcel_guard = !empty($request->parcel_guard) ? $request->parcel_guard : 0;
         $shipping_service_code = null;
@@ -532,6 +534,7 @@ class OrderController extends Controller
                     $order->BillingPhone = $phone_billing;
 
                     $order->upgrade_shipping = $upgrade_shipping;
+                    $order->re_order_id = $re_order_id;
 
                     $order->save();
 
@@ -558,6 +561,19 @@ class OrderController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
+
+
+                    // update order reminder table to expire the notification
+                    if (!empty($order->re_order_id)) {
+
+                        $order_reminder = OrderReminder::where('order_id' ,$order->re_order_id)->first();
+                        $order_reminder->update([
+                            'is_expired' => Carbon::today()
+                        ]);
+
+                        session()->forget('re_order_id');
+                    }
+
 
                     //adding comment to order
 
@@ -751,6 +767,7 @@ class OrderController extends Controller
                     $order->BillingCountry = $country_billing;
                     $order->BillingPhone = $phone_billing;
                     $order->upgrade_shipping = $upgrade_shipping;
+                    $order->re_order_id = $re_order_id;
 
                     $order->save();
 
@@ -794,6 +811,17 @@ class OrderController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
+
+
+                    if (!empty($order->re_order_id)) {
+
+                        $order_reminder = OrderReminder::where('order_id' ,$order->re_order_id)->first();
+                        $order_reminder->update([
+                            'is_expired' => Carbon::today()
+                        ]);
+
+                        session()->forget('re_order_id');
+                    }
 
                     //adding comment to order
 
@@ -908,6 +936,7 @@ class OrderController extends Controller
                     $order->BillingCountry = $country_billing;
                     $order->BillingPhone = $phone_billing;
                     $order->upgrade_shipping = $upgrade_shipping;
+                    $order->re_order_id = $re_order_id;
                     $order->save();
 
 
@@ -948,6 +977,17 @@ class OrderController extends Controller
                         'apiOrderItem.product.options',
                         'texClasses'
                     )->first();
+
+
+                    if (!empty($order->re_order_id)) {
+
+                        $order_reminder = OrderReminder::where('order_id' ,$order->re_order_id)->first();
+                        $order_reminder->update([
+                            'is_expired' => Carbon::today()
+                        ]);
+
+                        session()->forget('re_order_id');
+                    }
 
                     if (!empty($currentOrder->buylist_id) && !empty($currentOrder->buylist_discount)) {
                         $update_buy_list_shipping_and_discount = BuyListShippingAndDiscount::where('buylist_id', $currentOrder->buylist_id)->first();
