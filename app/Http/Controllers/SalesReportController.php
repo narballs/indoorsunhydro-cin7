@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use App\Exports\SalesReportExport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cookie;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class SalesReportController extends Controller
 {
@@ -203,7 +205,7 @@ class SalesReportController extends Controller
         $totalAmount = $filteredData->sum('amount');
         $totalPartialRefund = $filteredData->sum('partial_refund_amount');
 
-        // Export to CSV or Excel
+        // // Export to CSV or Excel
         if (in_array($type, ['csv', 'xlsx'])) {
             return Excel::download(
                 new SalesReportExport($filteredData, $totalAmount, $totalPartialRefund),
@@ -211,7 +213,7 @@ class SalesReportController extends Controller
             );
         }
 
-        // Export to PDF
+        // // Export to PDF
         if ($type === 'pdf') {
             $pdf = Pdf::loadView('admin.sales_report.pdf', [
                     'data' => $filteredData,
@@ -222,6 +224,8 @@ class SalesReportController extends Controller
 
             return $pdf->download("$filename.pdf");
         }
+
+        
 
         return back();
     }

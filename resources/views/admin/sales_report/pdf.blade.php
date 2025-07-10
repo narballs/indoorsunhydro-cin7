@@ -29,8 +29,8 @@
         @if ($data->count())
             <tr style="font-weight:bold;">
                 <td colspan="2" align="right">Total:</td>
-                <td>{{$totalAmount ?  '$'. number_format($totalAmount, 2) }}</td>
-                <td>{{ $totalPartialRefund ? '$'.number_format($totalPartialRefund, 2) }}</td>
+                <td>{{$totalAmount ?  '$'. number_format($totalAmount, 2) : 0.00 }}</td>
+                <td>{{ $totalPartialRefund ? '$'.number_format($totalPartialRefund, 2) : 0.00 }}</td>
                 <td colspan="5"></td>
             </tr>
         @endif
