@@ -80,28 +80,31 @@ class SalesReportController extends Controller
                 $refundDate = null;
                 $partialRefundReason = null;
                 $partialRefundAmount = 0;
+                $hasPartialRefund = false;
                 $hasFullRefund = false;
 
-                // ✅ Handle partial refunds (skip full refunds)
-                if (
-                    $charge->refunded &&
-                    isset($charge->refunds->data) &&
-                    count($charge->refunds->data) > 0
-                ) {
+                // 🔁 Loop all refunds
+                if ($charge->refunded && isset($charge->refunds->data) && count($charge->refunds->data) > 0) {
                     foreach ($charge->refunds->data as $refund) {
                         if ($refund->amount < $charge->amount) {
+                            $hasPartialRefund = true;
+                            $partialRefundAmount += $refund->amount / 100;
                             $partialRefundReason = $refund->reason ?? 'Partial refund';
                             $refundDate = \Carbon\Carbon::createFromTimestamp($refund->created);
-                            $partialRefundAmount += $refund->amount / 100;
-                            $status = 'partially_refunded';
-                        } elseif ($refund->amount == $charge->amount) {
+                        }
+                        if ($refund->amount == $charge->amount) {
                             $hasFullRefund = true;
                         }
                     }
+
+                    // Finalize status
+                    if ($hasPartialRefund) {
+                        $status = 'partially_refunded';
+                    }
                 }
 
-                // ❌ Skip fully refunded charges
-                if ($hasFullRefund) {
+                // ❌ Skip charges that are only fully refunded
+                if ($hasFullRefund && !$hasPartialRefund) {
                     continue;
                 }
 
@@ -112,7 +115,7 @@ class SalesReportController extends Controller
                     }
                 }
 
-                // ✅ Handle partial payments
+                // ✅ Handle partial paid
                 if (isset($charge->metadata->expected_amount)) {
                     $expected = (float) $charge->metadata->expected_amount;
                     $actual = $charge->amount / 100;
@@ -122,12 +125,12 @@ class SalesReportController extends Controller
                     }
                 }
 
-                // ✅ Skip if already imported
+                // ✅ Skip duplicates
                 if (SalesReport::where('stripe_id', $charge->id)->exists()) {
                     continue;
                 }
 
-                // ✅ Save to database
+                // ✅ Save charge
                 SalesReport::create([
                     'order_id' => $charge->metadata->order_id ?? null,
                     'stripe_id' => $charge->id,
@@ -149,40 +152,6 @@ class SalesReportController extends Controller
 
         return back()->with('success', 'All Stripe transactions imported successfully.');
     }
-
-
-    // public function export(Request $request, $type)
-    // {
-    //     $filename = 'sales_report_' . now()->format('Ymd_His');
-
-    //     // Build query with filters
-    //     $query = SalesReport::query();
-
-    //     if ($request->filled('status')) {
-    //         $query->where('status', $request->status);
-    //     }
-
-    //     if ($request->filled('from') && $request->filled('to')) {
-    //         $query->whereBetween('transaction_date', [$request->from, $request->to]);
-    //     }
-
-    //     $filteredData = $query->get();
-
-    //     // Export to CSV or Excel
-    //     if (in_array($type, ['csv', 'xlsx'])) {
-    //         return Excel::download(new SalesReportExport($filteredData), "$filename.$type");
-    //     }
-
-    //     // Export to PDF
-    //     if ($type === 'pdf') {
-    //         $pdf = Pdf::loadView('admin.sales_report.pdf', ['data' => $filteredData])
-    //             ->setPaper('A4', 'landscape');
-    //         return $pdf->download("$filename.pdf");
-    //     }
-
-    //     return back();
-    // }
-
 
     public function export(Request $request, $type)
     {
