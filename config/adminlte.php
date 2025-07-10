@@ -365,6 +365,10 @@ return [
             'url'  => 'admin/settings/index',
         ],
         [
+            'text'    => 'Sales Report',
+            'url'  => 'admin/sales-report',
+        ],
+        [
             'text'    => 'Tax Classes',
             'url'  => 'admin/tax_classes',
         ],
