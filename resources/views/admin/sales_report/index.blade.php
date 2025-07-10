@@ -11,8 +11,20 @@
         <h3 class="fw-bold text-dark mb-4 extra-sales-report-heading">Sales Reports</h3>
 
         {{-- Success Alert --}}
-        @if(session('success'))
-            <div class="alert alert-success shadow-sm extra-sales-report-alert">{{ session('success') }}</div>
+        @if (\Session::has('success'))
+            <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                {!! \Session::get('success') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @elseif (\Session::has('error'))
+            <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                {!! \Session::get('error') !!}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         @endif
 
         {{-- Filter Form --}}
@@ -39,8 +51,8 @@
                         </select>
                     </div>
                     <div class="col-md-3 d-flex align-items-end form-group">
-                        <button type="submit" class="btn btn-primary fw-semibold">Filter</button>
-                        <a href="{{ route('sales-report.index') }}" class="btn btn-outline-secondary fw-semibold ml-2 ">Reset</a>
+                        <button type="submit" class="btn btn-primary fw-semibold filter_sales_report">Filter</button>
+                        <a href="{{ route('sales-report.index') }}" class="btn btn-outline-secondary fw-semibold ml-2 reset_sales_report">Reset</a>
                     </div>
                 </div>
             </div>
@@ -49,11 +61,11 @@
         {{-- Import / Export Buttons --}}
         <form method="POST" action="{{ route('sales-report.import') }}" class="d-flex flex-wrap align-items-center justify-content-between mb-4 extra-import-export">
             @csrf
-            <button class="btn btn-success fw-semibold">Import from Stripe</button>
+            <button class="btn btn-success fw-semibold import_sales_report">Import from Stripe</button>
             <div class="btn-group mt-2 mt-md-0 extra-export-buttons">
-                <a class="btn btn-outline-secondary fw-semibold extra-export-csv" href="{{ route('sales-report.export', ['type' => 'csv', 'status' => request('status'), 'from' => request('from'), 'to' => request('to')]) }}">CSV</a>
-                <a class="btn btn-outline-primary fw-semibold extra-export-excel" href="{{ route('sales-report.export', ['type' => 'xlsx', 'status' => request('status'), 'from' => request('from'), 'to' => request('to')]) }}">Excel</a>
-                <a class="btn btn-outline-info fw-semibold extra-export-pdf" href="{{ route('sales-report.export', ['type' => 'pdf', 'status' => request('status'), 'from' => request('from'), 'to' => request('to')]) }}">PDF</a>
+                <a class="export-indoor-btn btn btn-outline-secondary fw-semibold extra-export-csv" href="{{ route('sales-report.export', ['type' => 'csv', 'status' => request('status'), 'from' => request('from'), 'to' => request('to')]) }}">CSV</a>
+                <a class="export-indoor-btn btn btn-outline-primary fw-semibold extra-export-excel" href="{{ route('sales-report.export', ['type' => 'xlsx', 'status' => request('status'), 'from' => request('from'), 'to' => request('to')]) }}">Excel</a>
+                <a class="export-indoor-btn btn btn-outline-info fw-semibold extra-export-pdf" href="{{ route('sales-report.export', ['type' => 'pdf', 'status' => request('status'), 'from' => request('from'), 'to' => request('to')]) }}">PDF</a>
             </div>
         </form>
 
@@ -133,6 +145,9 @@
 
         {{ $reports->withQueryString()->links('pagination.custom_pagination') }}
     </div>
+</div>
+<div id="page-loader-overlay-indoor" style="display: none;">
+    <div class="loader-spinner-indoor"></div>
 </div>
 @stop
 
@@ -381,6 +396,49 @@
                 margin-bottom: 10px;
             }
         }
+
+        #page-loader-overlay-indoor {
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: all;
+        }
+
+        .loader-spinner-indoor {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 
 @stop
+
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loader = document.getElementById('page-loader-overlay-indoor');
+
+        // Show loader only on specific buttons
+        document.querySelectorAll('.import_sales_report, .filter_sales_report, .reset_sales_report').forEach(button => {
+            button.addEventListener('click', () => {
+                loader.style.display = 'flex';
+            });
+        });
+    });
+</script>
+@endsection
