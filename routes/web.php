@@ -40,6 +40,7 @@ use App\Http\Controllers\NewsletterTemplateController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\ShippingQuoteSettingController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\SmsController;
 use App\Models\SalePayments;
 use App\Models\TaxClass;
@@ -47,6 +48,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
+
 use Google\Service\Dfareporting\OrderContact;
 use Carbon\Carbon;
 
@@ -462,6 +464,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/stock-report-settings', [AdminSettingsController::class, 'admin_stock_report_settings'])->name('admin_stock_report_settings');
         Route::post('/update-stock-report-settings', [AdminSettingsController::class, 'admin_update_stock_report_settings'])->name('admin_update_stock_report_settings');
         Route::get('/send-stock-summary-emails', [AdminCommandsController::class, 'send_stock_summary_emails'])->name('send_stock_summary_emails');
+
+        
+        Route::get('/sales-report', [SalesReportController::class, 'index'])->name('sales-report.index');
+        Route::post('/sales-report/import', [SalesReportController::class, 'importStripeTransactions'])->name('sales-report.import');
+        Route::get('/sales-report/export/{type}', [SalesReportController::class, 'export'])->name('sales-report.export');
+
 
         
     });
