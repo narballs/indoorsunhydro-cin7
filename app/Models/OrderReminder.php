@@ -17,6 +17,7 @@ class OrderReminder extends Model
         'order_id',
         'reminder_date',
         'is_sent',
+        'is_expired'
     ];
 
     /**

@@ -85,6 +85,7 @@ class CheckoutController extends Controller
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
         $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+        
             
         // Get wholesale_contact
         if (!empty($user_id)) {
@@ -340,6 +341,7 @@ class CheckoutController extends Controller
     public function new_checkout(Request $request)
     {
         $shipment_error = 0;
+        $re_order_id = Session::get('re_order_id');
         $enable_free_shipping_banner = AdminSetting::where('option_name' , 'enable_free_shipping_banner')->first();
         $enable_free_shipping_banner_text = AdminSetting::where('option_name' , 'enable_free_shipping_banner_text')->first();
         $enable_extra_shipping_value = false;
@@ -390,7 +392,7 @@ class CheckoutController extends Controller
             } else {
                 $buyListData = false;
             }
-            return view ('checkout.checkout_without_login' ,compact('states','cart_total' ,'buy_list_discount_calculated','buyListData', 'cart_items' , 'tax_class' , 'shipment_price' , 'shipping_cost' , 'discount' , 'discount_type'));
+            return view ('checkout.checkout_without_login' ,compact('states','cart_total','re_order_id','buy_list_discount_calculated','buyListData', 'cart_items' , 'tax_class' , 'shipment_price' , 'shipping_cost' , 'discount' , 'discount_type'));
         }
         $user_id = auth()->user()->id;
         $selected_company = Session::get('contact_id');
@@ -1132,7 +1134,8 @@ class CheckoutController extends Controller
                 'buyListdiscount',
                 'buyListdiscount_type',
                 'buy_list_discount_calculated',
-                'buy_list_id'
+                'buy_list_id',
+                're_order_id'
 
 
                 // 'toggle_shipment_insurance'
@@ -1275,11 +1278,19 @@ class CheckoutController extends Controller
     public function re_order(Request $request, $id)
     {
         $re_order = ApiOrder::where('id', $id)
-        ->with('apiOrderItem', 'apiOrderItem.product', 'apiOrderItem.product.options')
-        ->first();
+            ->with('apiOrderItem', 'apiOrderItem.product', 'apiOrderItem.product.options')
+            ->first();
 
         if (!$re_order) {
-            return redirect()->back()->with('error', 'Order not found.');
+            return redirect()->route('index')->with('error', 'Order Not Found');
+        }
+
+        $order_reminder = OrderReminder::where('order_id', $id)
+            ->whereNotNull('is_expired')
+            ->first();
+
+        if (!empty($order_reminder)) {
+            return redirect()->route('index')->with('error', 'Re-order Notification Expired');
         }
 
         // Ensure cart_hash exists
@@ -1373,6 +1384,7 @@ class CheckoutController extends Controller
             
         }
 
+        session()->put('re_order_id' , $id);
         session()->put('cart', $cart);
 
         return redirect()->route('cart');

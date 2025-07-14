@@ -363,6 +363,7 @@ $cart_price = 0;
 <inpput type="hidden" name="selected_shipping_choice" id="selected_shipping_choice" value="">
 <div class="container-fluid">
     <div class="row justify-content-center">
+        <input type="hidden" name="re_order_id" id="re_order_id" value="{{ isset($re_order_id) ? $re_order_id : null }}">
         <div class="col-md-10">
             <form action="" class="checkout_form">
                 <div class="row justify-content-between">

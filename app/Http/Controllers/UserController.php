@@ -749,6 +749,7 @@ class UserController extends Controller
         Session::forget('companies');
         Session::forget('cart');
         Session::forget('logged_in_as_another_user');
+        Session::forget('re_order_id');
         Session::flush();
 
         Auth::logout();
