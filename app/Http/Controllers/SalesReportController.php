@@ -51,6 +51,109 @@ class SalesReportController extends Controller
     }
 
 
+    // public function importStripeTransactions()
+    // {
+    //     \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    //     $startingAfter = null;
+    //     $hasMore = true;
+
+    //     while ($hasMore) {
+    //         $params = [
+    //             'limit' => 100,
+    //             'expand' => ['data.refunds', 'data.dispute'],
+    //         ];
+
+    //         if ($startingAfter) {
+    //             $params['starting_after'] = $startingAfter;
+    //         }
+
+    //         $charges = \Stripe\Charge::all($params);
+    //         $chargesData = $charges->data;
+
+    //         if (count($chargesData) === 0) {
+    //             break;
+    //         }
+
+    //         foreach ($chargesData as $charge) {
+    //             $status = $charge->status;
+    //             $refundDate = null;
+    //             $partialRefundReason = null;
+    //             $partialRefundAmount = 0;
+    //             $hasPartialRefund = false;
+    //             $hasFullRefund = false;
+
+    //             // 🔁 Loop all refunds
+    //             if ($charge->refunded && isset($charge->refunds->data) && count($charge->refunds->data) > 0) {
+    //                 foreach ($charge->refunds->data as $refund) {
+    //                     if ($refund->amount < $charge->amount) {
+    //                         $hasPartialRefund = true;
+    //                         $partialRefundAmount += $refund->amount / 100;
+    //                         $partialRefundReason = $refund->reason ?? 'Partial refund';
+    //                         $refundDate = \Carbon\Carbon::createFromTimestamp($refund->created);
+    //                     }
+    //                     if ($refund->amount == $charge->amount) {
+    //                         $hasFullRefund = true;
+    //                     }
+    //                 }
+
+    //                 // Finalize status
+    //                 if ($hasPartialRefund) {
+    //                     $status = 'partially_refunded';
+    //                 }
+    //             }
+
+    //             // ❌ Skip charges that are only fully refunded
+    //             if ($hasFullRefund && !$hasPartialRefund) {
+    //                 continue;
+    //             }
+
+    //             // ✅ Handle disputes
+    //             if ($charge->dispute && isset($charge->dispute->status)) {
+    //                 if ($charge->dispute->status === 'lost') {
+    //                     $status = 'dispute_lost';
+    //                 }
+    //             }
+
+    //             // ✅ Handle partial paid
+    //             if (isset($charge->metadata->expected_amount)) {
+    //                 $expected = (float) $charge->metadata->expected_amount;
+    //                 $actual = $charge->amount / 100;
+
+    //                 if ($actual < $expected) {
+    //                     $status = 'partial_paid';
+    //                 }
+    //             }
+
+    //             // ✅ Skip duplicates
+    //             if (SalesReport::where('stripe_id', $charge->id)->exists()) {
+    //                 continue;
+    //             }
+
+    //             // ✅ Save charge
+    //             SalesReport::create([
+    //                 'order_id' => $charge->metadata->order_id ?? null,
+    //                 'stripe_id' => $charge->id,
+    //                 'status' => $status,
+    //                 'amount' => $charge->amount / 100,
+    //                 'partial_refund_amount' => $partialRefundAmount > 0 ? $partialRefundAmount : null,
+    //                 'currency' => $charge->currency,
+    //                 'customer_email' => $charge->billing_details->email ?? null,
+    //                 'partial_refund_reason' => $partialRefundReason,
+    //                 'refund_date' => $refundDate,
+    //                 'payment_method' => $charge->payment_method_details->type ?? null,
+    //                 'transaction_date' => \Carbon\Carbon::createFromTimestamp($charge->created),
+    //             ]);
+    //         }
+
+    //         $startingAfter = end($chargesData)->id;
+    //         $hasMore = $charges->has_more;
+    //     }
+
+    //     return back()->with('success', 'All Stripe transactions imported successfully.');
+    // }
+
+
     public function importStripeTransactions()
     {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -76,6 +179,11 @@ class SalesReportController extends Controller
             }
 
             foreach ($chargesData as $charge) {
+                // ❌ Skip failed charges
+                if ($charge->status === 'failed') {
+                    continue;
+                }
+
                 $status = $charge->status;
                 $refundDate = null;
                 $partialRefundReason = null;
