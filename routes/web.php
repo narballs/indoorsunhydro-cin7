@@ -184,6 +184,7 @@ Route::group(['prefix' => 'my-account/'], function () {
     Route::get('additional-users', [UserController::class, 'additional_users'])->name('additional_users');
     Route::post('address/default', [UserController::class, 'make_address_default'])->name('make_address_default');
     Route::post('/allow-access', [UserController::class, 'allow_access'])->name('allow_access');
+    Route::get('/get-all-favorites', [UserController::class, 'getAllFavorites']);
 });
 
 Route::group(['middleware' => ['auth']], function () {
