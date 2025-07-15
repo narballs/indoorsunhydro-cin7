@@ -345,6 +345,8 @@ Route::get('cart', [ProductController::class, 'cart'])->name('cart');
 // Route::get('/get-lists-names/', [ProductController::class, 'getListNames']);
 // Route::post('/create-list/', [ProductController::class, 'createList']);
 Route::post('/multi-favorites-to-cart/', [ProductController::class, 'multi_favorites_to_cart']);
+Route::post('/multi-favorites-to-cart-validate', [ProductController::class, 'multiFavoritesValidate']);
+
 Route::get('/order/items/{id}', [ProductController::class, 'order_items']);
 Route::post('/buy/order/items', [ProductController::class, 'buy_again_order_items']);
 Route::get('/products/buy-again', [ProductController::class, 'buy_again']);
