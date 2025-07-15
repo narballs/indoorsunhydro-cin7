@@ -3045,40 +3045,98 @@ class ProductController extends Controller
     
     
 
+    // public function multi_favorites_to_cart(Request $request)
+    // {
+    //     $errors = []; // Initialize an array to store errors
+    //     $cart = session()->get('cart', []); // Initialize the cart
+
+    //     // Step 1: Get products to hide
+    //     $products_to_hide = $this->getProductsToHide();
+
+    //     $user_id = Auth::id() ?? '';
+    //     $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
+    //     $main_contact_id = null;
+    //     $free_postal_state = false;
+
+    //     // Step 2: Get main contact and free postal state
+    //     if ($user_id !== null) {
+    //         [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
+    //     }
+
+    //     // Step 4: Loop through all favorites from the request
+    //     if (!empty($request->all_fav)) {
+    //         foreach ($request->all_fav as $multi_favorite) {
+    //             $error = $this->processFavorite($multi_favorite, $request->quantity, $products_to_hide, $assigned_contact, $cart, $main_contact_id, $free_postal_state);
+    //             if ($error) {
+    //                 $errors[] = $error; // Collect errors
+    //             }
+    //         }
+
+    //         $cart_items = session()->get('cart');
+
+    //         // Handle errors and success response
+    //         if (!empty($errors)) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Product(s) is out of stock or not available.',
+    //                 'free_postal_state' => $free_postal_state,
+    //                 'main_contact_id' => $main_contact_id,
+    //                 'cart_items' => $cart,
+    //                 'cart' => $cart,
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'cart_items' => $cart,
+    //             'cart' => $cart,
+    //             'main_contact_id' => $main_contact_id,
+    //             'free_postal_state' => $free_postal_state
+    //         ]);
+
+            
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'No products found to add to the cart.',
+    //     ]);
+    // }
+
     public function multi_favorites_to_cart(Request $request)
     {
-        $errors = []; // Initialize an array to store errors
-        $cart = session()->get('cart', []); // Initialize the cart
+        $errors = [];
+        $cart = session()->get('cart', []);
 
-        // Step 1: Get products to hide
         $products_to_hide = $this->getProductsToHide();
-
         $user_id = Auth::id() ?? '';
-        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id'));
         $main_contact_id = null;
         $free_postal_state = false;
 
-        // Step 2: Get main contact and free postal state
         if ($user_id !== null) {
             [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
         }
 
-        // Step 4: Loop through all favorites from the request
         if (!empty($request->all_fav)) {
             foreach ($request->all_fav as $multi_favorite) {
                 $error = $this->processFavorite($multi_favorite, $request->quantity, $products_to_hide, $assigned_contact, $cart, $main_contact_id, $free_postal_state);
                 if ($error) {
-                    $errors[] = $error; // Collect errors
+                    // Get product name for better error feedback
+                    $product_name = Product::where('product_id', $multi_favorite['product_id'])->value('name');
+                    $error['name'] = $product_name ?? 'Unknown';
+                    $errors[] = $error;
                 }
             }
 
+            session()->put('cart', $cart);
             $cart_items = session()->get('cart');
 
-            // Handle errors and success response
             if (!empty($errors)) {
                 return response()->json([
-                    'status' => 'error',
-                    'message' => 'Product(s) is out of stock or not available.',
+                    'status' => 'partial',
+                    'message' => 'Some products could not be added to the cart.',
+                    'errors' => $errors,
                     'free_postal_state' => $free_postal_state,
                     'main_contact_id' => $main_contact_id,
                     'cart_items' => $cart,
@@ -3088,13 +3146,12 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => 'success',
+                'message' => 'All products added to cart successfully.',
                 'cart_items' => $cart,
                 'cart' => $cart,
                 'main_contact_id' => $main_contact_id,
                 'free_postal_state' => $free_postal_state
             ]);
-
-            
         }
 
         return response()->json([
@@ -3102,6 +3159,8 @@ class ProductController extends Controller
             'message' => 'No products found to add to the cart.',
         ]);
     }
+
+
 
     // Helper function to get products to hide
     private function getProductsToHide()
@@ -3311,6 +3370,85 @@ class ProductController extends Controller
             'updated_at' => now(),
         ];
     }
+
+    private function getWholesaleTerms($user_id)
+    {
+        $contact = Contact::where('user_id', $user_id)->first();
+        return $contact ? strtolower($contact->paymentTerms) : '';
+    }
+
+
+    public function multiFavoritesValidate(Request $request)
+    {
+        $errors = [];
+        $validItems = [];
+
+        $products_to_hide = $this->getProductsToHide();
+        $user_id = Auth::id() ?? '';
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id'));
+        $main_contact_id = null;
+        $free_postal_state = false;
+
+        if ($user_id !== null) {
+            [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
+        }
+
+        // foreach ($request->all_fav as $multi_favorite) {
+        //     $product_id = $multi_favorite['product_id'];
+        //     $option_id = $multi_favorite['option_id'];
+        //     $productOption = $this->getProductOption($option_id, $products_to_hide);
+
+        //     if (!$productOption || $productOption->stockAvailable <= 0) {
+        //         $errors[] = [
+        //             'product_id' => $product_id,
+        //             'name' => !empty($productOption->products->name) ? $productOption->products->name : $productOption->products->code,
+        //             'message' => 'Out of stock'
+        //         ];
+        //         continue;
+        //     }
+
+        //     $validItems[] = $multi_favorite;
+        // }
+
+        foreach ($request->all_fav as $multi_favorite) {
+            $product_id = $multi_favorite['product_id'];
+            $option_id = $multi_favorite['option_id'];
+
+            Log::debug('Validating favorite', compact('product_id', 'option_id'));
+
+            $productOption = $this->getProductOption($option_id, $products_to_hide);
+
+            if (!$productOption || $productOption->stockAvailable <= 0) {
+                Log::debug("Invalid or out-of-stock", ['option_id' => $option_id, 'stock' => optional($productOption)->stockAvailable]);
+
+                $errors[] = [
+                    'product_id' => $product_id,
+                    'name' => optional($productOption->products)->name ?? optional($productOption->products)->code ?? 'Unknown Product',
+                    'message' => 'Out of stock'
+                ];
+                continue;
+            }
+
+            $validItems[] = $multi_favorite;
+        }
+
+        if (!empty($errors) && !empty($validItems)) {
+            return response()->json([
+                'status' => 'partial',
+                'errors' => $errors,
+            ]);
+        } elseif (empty($validItems)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No valid items found.'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success'
+        ]);
+    }
+
 
 
 
