@@ -852,287 +852,424 @@
     //     add_multi_to_cart(all_fav);
     // }
     // //add selected favorites to cart
-    function add_selected_to_cart() {
-        const selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
-        const all_fav = Object.values(selectedData);
+    // function add_selected_to_cart() {
+    //     const selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
+    //     const all_fav = Object.values(selectedData);
 
-        if (all_fav.length === 0) {
-            Swal.fire({
-                toast: false,
-                icon: 'error',
-                title: 'Please select at least one product to add it into your cart.',
-                position: 'center',
-                showConfirmButton: true,
-                confirmButtonText: 'Confirm',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                customClass: {
-                    confirmButton: 'my-confirm-button',
-                    popup: 'swal2-popup-class',
-                    actions: 'my-actions-class'
-                }
-            });
-            return;
-        }
+    //     if (all_fav.length === 0) {
+    //         Swal.fire({
+    //             toast: false,
+    //             icon: 'error',
+    //             title: 'Please select at least one product to add it into your cart.',
+    //             position: 'center',
+    //             showConfirmButton: true,
+    //             confirmButtonText: 'Confirm',
+    //             allowOutsideClick: false,
+    //             allowEscapeKey: false,
+    //             customClass: {
+    //                 confirmButton: 'my-confirm-button',
+    //                 popup: 'swal2-popup-class',
+    //                 actions: 'my-actions-class'
+    //             }
+    //         });
+    //         return;
+    //     }
 
-        // ✅ Validate first before adding
-        $.ajax({
-            url: "{{ url('/multi-favorites-to-cart-validate') }}",
-            method: 'POST',
-            data: {
-                _token: "{{ csrf_token() }}",
-                all_fav: all_fav,
-                quantity: 1
-            },
-            success: function (response) {
-                if (response.status === 'partial') {
-                    let errorList = '<ul class="text-left">';
-                    let failed_keys = [];
+    //     // ✅ Validate first before adding
+    //     $.ajax({
+    //         url: "{{ url('/multi-favorites-to-cart') }}",
+    //         method: 'POST',
+    //         data: {
+    //             _token: "{{ csrf_token() }}",
+    //             all_fav: all_fav,
+    //             quantity: 1
+    //         },
+    //         success: function (response) {
+    //             if (response.status === 'partial') {
+    //                 let errorList = '<ul class="text-left">';
+    //                 let failed_keys = [];
 
-                    response.errors.forEach(function (err) {
-                        errorList += `<li><span style="font-family:poppins;font-size:14px;">${err.name}</span> — <span style="font-family:poppins;font-size:14px;">${err.message}</span></li>`;
-                        failed_keys.push(`${err.product_id}_${err.option_id}`);
-                    });
+    //                 response.errors.forEach(function (err) {
+    //                     errorList += `<li><span style="font-family:poppins;font-size:14px;">${err.name}</span> — <span style="font-family:poppins;font-size:14px;">${err.message}</span></li>`;
+    //                     failed_keys.push(`${err.product_id}_${err.option_id}`);
+    //                 });
 
-                    errorList += '</ul>';
+    //                 errorList += '</ul>';
 
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Some items could not be added',
-                        html: `<div style="text-align:left">${errorList}</div>`,
-                        showCancelButton: true,
-                        confirmButtonText: 'Proceed with others',
-                        cancelButtonText: 'Cancel',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        customClass: {
-                            confirmButton: 'my-confirm-button',
-                            popup: 'swal2-popup-class',
-                            actions: 'my-actions-class'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const successfulItems = Object.entries(selectedData)
-                                .filter(([key]) => !failed_keys.includes(key))
-                                .map(([_, value]) => value);
+    //                 Swal.fire({
+    //                     icon: 'warning',
+    //                     title: 'Some items could not be added',
+    //                     html: `<div style="text-align:left">${errorList}</div>`,
+    //                     showCancelButton: true,
+    //                     confirmButtonText: 'Proceed with others',
+    //                     cancelButtonText: 'Cancel',
+    //                     allowOutsideClick: false,
+    //                     allowEscapeKey: false,
+    //                     customClass: {
+    //                         confirmButton: 'my-confirm-button',
+    //                         popup: 'swal2-popup-class',
+    //                         actions: 'my-actions-class'
+    //                     }
+    //                 }).then((result) => {
+    //                     if (result.isConfirmed) {
+    //                         const successfulItems = Object.entries(selectedData)
+    //                             .filter(([key]) => !failed_keys.includes(key))
+    //                             .map(([_, value]) => value);
 
-                            if (successfulItems.length > 0) {
-                                send_items_to_cart(successfulItems, () => {
-                                    localStorage.removeItem('selectedFavorites');
-                                    $('.single_fav_check').prop('checked', false);
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'No valid products to add.'
-                                });
-                            }
-                        }
-                    });
+    //                         if (successfulItems.length > 0) {
+    //                             send_items_to_cart(successfulItems, () => {
+    //                                 localStorage.removeItem('selectedFavorites');
+    //                                 $('.single_fav_check').prop('checked', false);
+    //                             });
+    //                         } else {
+    //                             Swal.fire({
+    //                                 icon: 'info',
+    //                                 title: 'No valid products to add.'
+    //                             });
+    //                         }
+    //                     }
+    //                 });
 
-                } else if (response.status === 'success') {
-                    send_items_to_cart(all_fav, () => {
-                        localStorage.removeItem('selectedFavorites');
-                        $('.single_fav_check').prop('checked', false);
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: response.message || 'Error',
-                    });
-                }
-            },
-            error: function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Request failed',
-                    text: 'Unable to validate selected favorites.'
+    //             } else if (response.status === 'success') {
+    //                 send_items_to_cart(all_fav, () => {
+    //                     localStorage.removeItem('selectedFavorites');
+    //                     $('.single_fav_check').prop('checked', false);
+    //                 });
+    //             } else {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: response.message || 'Error',
+    //                 });
+    //             }
+    //         },
+    //         error: function () {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Request failed',
+    //                 text: 'Unable to validate selected favorites.'
+    //             });
+    //         }
+    //     });
+    // }
+
+   function add_selected_to_cart() {
+    const selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
+    const all_fav = Object.values(selectedData);
+
+    if (all_fav.length === 0) {
+        Swal.fire({
+            toast: false,
+            icon: 'error',
+            title: 'Please select at least one product to add it into your cart.',
+            position: 'center',
+            showConfirmButton: true,
+            confirmButtonText: 'Confirm',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            customClass: {
+                confirmButton: 'my-confirm-button',
+                popup: 'swal2-popup-class',
+                actions: 'my-actions-class'
+            }
+        });
+        return;
+    }
+
+    $.ajax({
+        url: "{{ url('/multi-favorites-to-cart') }}",
+        method: 'POST',
+        data: {
+            _token: "{{ csrf_token() }}",
+            all_fav: all_fav,
+            quantity: 1,
+            validate_only: true
+        },
+        success: function (response) {
+            if (response.status === 'partial') {
+                let errorList = '<ul class="text-left">';
+                let failed_keys = [];
+
+                response.errors.forEach(function (err) {
+                    errorList += `<li><span style="font-family:poppins;font-size:14px;">${err.name}</span> — <span style="font-family:poppins;font-size:14px;">${err.message}</span></li>`;
+                    failed_keys.push(`${err.product_id}_${err.option_id}`);
                 });
-            }
-        });
-    }
 
+                errorList += '</ul>';
 
-    function restoreSelections() {
-        const selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
-
-        $('.single_fav_check').each(function () {
-            const productId = $(this).attr('product-id');
-            const optionId = $(this).attr('option-id');
-            const uniqueKey = `${productId}_${optionId}`;
-
-            if (selectedData[uniqueKey]) {
-                $(this).prop('checked', true);
-            }
-        });
-    }
-
-
-    
-   
-    function add_multi_to_cart(all_fav) {
-        $.ajax({
-            url: "{{ url('/multi-favorites-to-cart-validate') }}", // ✅ First request = validation only
-            method: 'POST',
-            data: {
-                _token: "{{ csrf_token() }}",
-                all_fav: all_fav,
-                quantity: 1
-            },
-            success: function(response) {
-                if (response.status === 'partial') {
-                    let errorList = '<ul class="text-left">';
-                    let failed_ids = [];
-
-                    response.errors.forEach(function (err) {
-                        errorList += `<li><span="font-family:poppins;font-size:14px;">${err.name}</span=> — ${err.message}</li>`;
-                        failed_ids.push(parseInt(err.product_id));
-                    });
-
-                    errorList += '</ul>';
-
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Some items could not be added',
-                        html: `<div style="text-align:left">${errorList}</div>`,
-                        showCancelButton: true,
-                        confirmButtonText: 'Proceed with others',
-                        cancelButtonText: 'Cancel',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        customClass: {
-                            confirmButton: 'my-confirm-button',
-                            popup: 'swal2-popup-class',
-                            actions: 'my-actions-class'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const successfulItems = all_fav.filter(item => !failed_ids.includes(parseInt(item.product_id)));
-
-                            if (successfulItems.length > 0) {
-                                // ✅ Now send the successful ones to actual add-to-cart endpoint
-                                send_items_to_cart(successfulItems);
-                            } else {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'No valid products to add.'
-                                });
-                            }
-                        }
-                    });
-
-                } else if (response.status === 'success') {
-                    // All valid — directly add
-                    send_items_to_cart(all_fav);
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: response.message || 'Error',
-                    });
-                }
-            },
-            error: function () {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Request failed',
-                    text: 'Unable to validate favorites.'
-                });
-            }
-        });
-    }
+                    icon: 'warning',
+                    title: 'Some items could not be added',
+                    html: `<div style="text-align:left">${errorList}</div>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Proceed with others',
+                    cancelButtonText: 'Cancel',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    customClass: {
+                        confirmButton: 'my-confirm-button',
+                        popup: 'swal2-popup-class',
+                        actions: 'my-actions-class'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const successfulItems = Object.values(selectedData).filter(item => {
+                            const key = `${item.product_id}_${item.option_id}`;
+                            return !failed_keys.includes(key);
+                        });
 
-    function send_items_to_cart(items, callback = null) {
-        $.ajax({
-            url: "{{ url('/multi-favorites-to-cart') }}",
-            method: 'POST',
-            data: {
-                _token: "{{ csrf_token() }}",
-                all_fav: items,
-                quantity: 1
-            },
-            success: function (response) {
-                let cart_total = 0;
-                let total_cart_quantity = 0;
-                const cart_items = Object.values(response.cart_items || {});
-
-                cart_items.forEach(item => {
-                    const product_id = item.prd_id;
-                    const price = parseFloat(item.price || 0);
-                    const quantity = parseFloat(item.quantity || 0);
-                    const subtotal = price * quantity;
-
-                    cart_total += subtotal;
-                    total_cart_quantity += quantity;
-
-                    // Update item subtotal if exists on page
-                    const $subtotal = $('#subtotal_' + product_id);
-                    if ($subtotal.length) {
-                        $subtotal.html('$' + subtotal.toFixed(2));
+                        if (successfulItems.length > 0) {
+                            send_items_to_cart(successfulItems, () => {
+                                localStorage.removeItem('selectedFavorites');
+                                $('.single_fav_check').prop('checked', false);
+                            });
+                        } else {
+                            Swal.fire({ icon: 'info', title: 'No valid products to add.' });
+                        }
                     }
                 });
 
-                // Update top bar quantities and total
-                $('#top_cart_quantity').html(total_cart_quantity);
-                $('#cart_items_quantity').html(total_cart_quantity);
-                $('#topbar_cart_total').html('$' + cart_total.toFixed(2));
+            } else if (response.status === 'success') {
+                send_items_to_cart(all_fav, () => {
+                    localStorage.removeItem('selectedFavorites');
+                    $('.single_fav_check').prop('checked', false);
+                });
+            } else {
+                Swal.fire({ icon: 'error', title: response.message || 'Error' });
+            }
+        },
+        error: function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Request failed',
+                text: 'Unable to validate selected favorites.'
+            });
+        }
+    });
+}
+
+function send_items_to_cart(items, callback = null) {
+    $.ajax({
+        url: "{{ url('/multi-favorites-to-cart') }}",
+        method: 'POST',
+        data: {
+            _token: "{{ csrf_token() }}",
+            all_fav: items,
+            quantity: 1
+        },
+        success: function (response) {
+            let cart_total = 0;
+            let total_cart_quantity = 0;
+            const cart_items = Object.values(response.cart_items || {});
+
+            cart_items.forEach(item => {
+                const product_id = item.prd_id;
+                const price = parseFloat(item.price || 0);
+                const quantity = parseFloat(item.quantity || 0);
+                const subtotal = price * quantity;
+
+                cart_total += subtotal;
+                total_cart_quantity += quantity;
+
+                const $subtotal = $('#subtotal_' + product_id);
+                if ($subtotal.length) {
+                    $subtotal.html('$' + subtotal.toFixed(2));
+                }
+            });
+
+            $('#top_cart_quantity').html(total_cart_quantity);
+            $('#cart_items_quantity').html(total_cart_quantity);
+            $('#topbar_cart_total').html('$' + cart_total.toFixed(2));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Selected items have been added to cart',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                if (typeof callback === 'function') callback();
+            });
+        },
+        error: function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Add to cart failed',
+                text: 'Something went wrong while adding items.'
+            });
+        }
+    });
+}
+
+function restoreSelections() {
+    const selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
+
+    $('.single_fav_check').each(function () {
+        const productId = $(this).attr('product-id');
+        const optionId = $(this).attr('option-id');
+        const uniqueKey = `${productId}_${optionId}`;
+
+        if (selectedData[uniqueKey]) {
+            $(this).prop('checked', true);
+        }
+    });
+}
+
+function add_multi_to_cart(all_fav) {
+    $.ajax({
+        url: "{{ url('/multi-favorites-to-cart') }}",
+        method: 'POST',
+        data: {
+            _token: "{{ csrf_token() }}",
+            all_fav: all_fav,
+            quantity: 1,
+            validate_only: true
+        },
+        success: function (response) {
+            if (response.status === 'partial') {
+                let errorList = '<ul class="text-left">';
+                let failed_keys = [];
+
+                response.errors.forEach(function (err) {
+                    errorList += `<li><span style="font-family:poppins;font-size:14px;">${err.name}</span> — ${err.message}</li>`;
+                    failed_keys.push(`${err.product_id}_${err.option_id}`);
+                });
+
+                errorList += '</ul>';
 
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Selected items have been added to cart',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    if (typeof callback === 'function') callback();
+                    icon: 'warning',
+                    title: 'Some items could not be added',
+                    html: `<div style="text-align:left">${errorList}</div>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Proceed with others',
+                    cancelButtonText: 'Cancel',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const successfulItems = all_fav.filter(item => {
+                            const key = `${item.product_id}_${item.option_id}`;
+                            return !failed_keys.includes(key);
+                        });
+
+                        if (successfulItems.length > 0) {
+                            send_items_to_cart(successfulItems);
+                        } else {
+                            Swal.fire({ icon: 'info', title: 'No valid products to add.' });
+                        }
+                    }
                 });
-            },
-            error: function () {
+
+            } else if (response.status === 'success') {
+                send_items_to_cart(all_fav);
+            } else {
+                Swal.fire({ icon: 'error', title: response.message || 'Error' });
+            }
+        },
+        error: function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Request failed',
+                text: 'Unable to validate favorites.'
+            });
+        }
+    });
+}
+
+function add_all_to_cart() {
+    Swal.fire({
+        title: 'Please wait...',
+        text: 'Fetching all your favorite items...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    $.ajax({
+        url: "{{ url('/my-account/get-all-favorites') }}",
+        method: 'GET',
+        success: function (all_fav) {
+            Swal.close();
+            if (!Array.isArray(all_fav) || all_fav.length === 0) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Add to cart failed',
-                    text: 'Something went wrong while adding items.'
+                    title: 'No favorites found to add to cart'
                 });
+                return;
             }
-        });
-    }
 
+            $.ajax({
+                url: "{{ url('/multi-favorites-to-cart') }}",
+                method: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    all_fav: all_fav,
+                    quantity: 1,
+                    validate_only: true
+                },
+                success: function (response) {
+                    if (response.status === 'partial') {
+                        let errorList = '<ul class="text-left">';
+                        let failed_keys = [];
 
+                        response.errors.forEach(function (err) {
+                            errorList += `<li><span style="font-family:poppins;font-size:14px;">${err.name}</span> — ${err.message}</li>`;
+                            failed_keys.push(`${err.product_id}_${err.option_id}`);
+                        });
 
+                        errorList += '</ul>';
 
-    // ✅ Add all favorites (from all pages, not just current view)
-    function add_all_to_cart() {
-        Swal.fire({
-            title: 'Please wait...',
-            text: 'Fetching all your favorite items...',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Some items could not be added',
+                            html: `<div style="text-align:left">${errorList}</div>`,
+                            showCancelButton: true,
+                            confirmButtonText: 'Proceed with others',
+                            cancelButtonText: 'Cancel',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const successfulItems = all_fav.filter(item => {
+                                    const key = `${item.product_id}_${item.option_id}`;
+                                    return !failed_keys.includes(key);
+                                });
 
-        $.ajax({
-            url: "{{ url('/my-account/get-all-favorites') }}",
-            method: 'GET',
-            success: function (all_fav) {
-                Swal.close();
-                if (!Array.isArray(all_fav) || all_fav.length === 0) {
+                                if (successfulItems.length > 0) {
+                                    send_items_to_cart(successfulItems);
+                                } else {
+                                    Swal.fire({ icon: 'info', title: 'No valid products to add.' });
+                                }
+                            }
+                        });
+
+                    } else if (response.status === 'success') {
+                        send_items_to_cart(all_fav);
+                    } else {
+                        Swal.fire({ icon: 'error', title: response.message || 'Validation error' });
+                    }
+                },
+                error: function () {
                     Swal.fire({
                         icon: 'error',
-                        title: 'No favorites found to add to cart'
+                        title: 'Validation Failed',
+                        text: 'Unable to validate favorites.'
                     });
-                    return;
                 }
-                add_multi_to_cart(all_fav);
-            },
-            error: function () {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error fetching favorites',
-                    text: 'Please try again later.'
-                });
-            }
-        });
-    }
+            });
+        },
+        error: function () {
+            Swal.close();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error fetching favorites',
+                text: 'Please try again later.'
+            });
+        }
+    });
+}
+
+
 
     
     function remove_from_favorite(id) {

@@ -78,8 +78,8 @@
                     </div>
                     <div class="card-body p-0">
                         <div id="fav_content">
-                            @php
-                                $i = 1;
+                           @php
+                                $i = ($lists->currentPage() - 1) * $lists->perPage() + 1;
                             @endphp
                             {{-- @foreach ($lists as $list) --}}
                                 <div class="table-responsive">
