@@ -3022,7 +3022,11 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        $lists = BuyList::where('user_id', $user_id)
+        ->where('contact_id', $contact_id)
+        ->with('list_products.product.options.price')
+        ->where('title', 'My Favorites')
+        ->get();
 
         $product_buy_list_id = $request->product_buy_list_id;
         $delete_favorite = ProductBuyList::find($product_buy_list_id)->delete();
@@ -3032,6 +3036,58 @@ class ProductController extends Controller
             'message' => 'product removed successfully!'
         ], 200);
     }
+
+
+
+    // public function delete_favorite_product(Request $request) {
+    //     $user_id = Auth::id();
+    //     $contact_id = session()->get('contact_id');
+    //     $product_buy_list_id = $request->product_buy_list_id;
+    //     $page = $request->get('page', 1);
+    //     $perPage = 6;
+        
+    //     $product = ProductBuyList::find($product_buy_list_id);
+    //     if ($product) {
+    //         $product->delete();
+    //     }
+
+    //     // Get the user's favorite list
+    //     $buyList = BuyList::where('user_id', $user_id)
+    //         ->where('contact_id', $contact_id)
+    //         ->where('title', 'My Favorites')
+    //         ->first();
+
+    //     if (!$buyList) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'html' => view('my-account.my-favorites')->render(),
+    //             'message' => 'No favorite list found.'
+    //         ]);
+    //     }
+
+    //     // Get paginated products
+    //     $products = $buyList->list_products()
+    //         ->with('product.options.price')
+    //         ->paginate($perPage, ['*'], 'page', $page);
+
+    //     // If current page is empty, redirect to previous page
+    //     if ($products->isEmpty() && $page > 1) {
+    //         return response()->json([
+    //             'status' => 'redirect',
+    //             'redirect_url' => url('/get/favorite/list?page=' . ($page - 1))
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'html' => view('my-account.my-favorites', compact('products'))->render(),
+    //         'message' => 'Product removed successfully!'
+    //     ]);
+    // }
+
+
+
+    
 
     public function get_child_categories($parent_id)
     {
