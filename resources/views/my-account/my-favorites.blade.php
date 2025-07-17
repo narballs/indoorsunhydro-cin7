@@ -78,10 +78,11 @@
                     </div>
                     <div class="card-body p-0">
                         <div id="fav_content">
-                           @php
-                                $i = ($lists->currentPage() - 1) * $lists->perPage() + 1;
+                            @php
+                                $i = ($lists instanceof \Illuminate\Pagination\LengthAwarePaginator || $lists instanceof \Illuminate\Pagination\Paginator)
+                                    ? ($lists->currentPage() - 1) * $lists->perPage() + 1
+                                    : 1;
                             @endphp
-                            {{-- @foreach ($lists as $list) --}}
                                 <div class="table-responsive">
                                     <table class="table address-table-items-data m-0 ">
                                         <thead>
@@ -205,8 +206,8 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            {{-- @endforeach --}}
                         </div>
+                        @if (count($lists) > 0)
                         <div class="row">
                             <div class="col-md-12">
                                 @if (!empty($lists))
@@ -214,6 +215,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -1274,46 +1274,53 @@ function add_all_to_cart() {
     
     function remove_from_favorite(id) {
         var product_buy_list_id = id;
-        var option_id = $(this).attr('data-option');
-        var contact_id = $(this).attr('data-contact');
-        var user_id = $(this).attr('data-user');
-        var list_id = $(this).attr('data-list');
-        var title = $(this).attr('data-title');
+
         $.ajax({
             url: "{{ url('/delete/favorite/product') }}",
             method: 'post',
             data: {
                 "_token": "{{ csrf_token() }}",
-                product_buy_list_id,
-                option_id,
-                contact_id,
-                user_id,
-                list_id,
-                title
+                product_buy_list_id
             },
             success: function(response) {
-                if (response.status == 'success') {
-                    wishLists();
+                if (response.status === 'success') {
                     Swal.fire({
                         toast: false,
                         icon: 'success',
                         title: 'Product removed from your favorites.',
                         position: 'center',
-                        showConfirmButton: true,  // Show the confirm (OK) button
+                        showConfirmButton: true,
                         confirmButtonText: 'Confirm',
                         timerProgressBar: false,
-                        allowOutsideClick: false, // Disable clicking outside to close the modal
-                        allowEscapeKey: false, // Disable Esc key to close the modal
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
                         customClass: {
-                                confirmButton: 'my-confirm-button',  // Class for the confirm button
-                                popup: 'swal2-popup-class',  // Class for the actions container
-                                actions: 'my-actions-class'  // Class for the actions container
+                            confirmButton: 'my-confirm-button',
+                            popup: 'swal2-popup-class',
+                            actions: 'my-actions-class'
                         }
+                    }).then(() => {
+                        // Show loading dialog
+                        Swal.fire({
+                            title: 'Please wait...',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Simulate delay if needed, then reload
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000); // Optional slight delay for visual smoothness
                     });
                 }
             }
         });
     }
+
+
 
     function add_favorite_to_cart(id, option_id) {
         jQuery.ajax({
