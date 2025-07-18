@@ -3261,8 +3261,9 @@ class ProductController extends Controller
                 );
 
                 if ($error) {
-                    $product_name = Product::where('product_id', $multi_favorite['product_id'])->value('name');
+                    $product_name = Product::where('id', $multi_favorite['product_id'])->value('name');
                     $error['name'] = $product_name ?? 'Unknown';
+                    // 'name' => optional($productOption->products)->name ?? optional($productOption->products)->code ?? 'Unknown Product',
                     $error['option_id'] = $multi_favorite['option_id'];
                     $errors[] = $error;
                 }
@@ -3390,6 +3391,10 @@ class ProductController extends Controller
 
         $actual_stock = $productOption->stockAvailable;
         $payment_terms = $this->getUserPaymentTerms($user_id);
+
+        if (intval($actual_stock) < 1 && strtolower($payment_terms) === 'pay in advanced') {
+            return ['product_id' => $product_id, 'message' => 'out of stock.'];
+        }
 
         if (intval($requested_quantity) > intval($actual_stock) && strtolower($payment_terms) === 'pay in advanced') {
             return ['product_id' => $product_id, 'message' => 'You cannot add more than ' . intval($actual_stock) . ' items.'];
@@ -3590,6 +3595,10 @@ class ProductController extends Controller
         $current_quantity = $product->quantity;
         $total_quantity = intval($current_quantity) + intval($requested_quantity);
 
+        if (intval($actual_stock) < 1 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'out of stock.';
+        }
+        
         if ($total_quantity > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
@@ -3635,6 +3644,11 @@ class ProductController extends Controller
         }
 
         $actual_stock = $productOption->stockAvailable;
+        
+        if (intval($actual_stock) < 1 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'out of stock.';
+        }
+
         if (intval($requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
@@ -3971,6 +3985,9 @@ class ProductController extends Controller
             $wholesale_contact = null;
         }
 
+        if (intval($actual_stock) < 1 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'out of stock.';
+        }
 
         if ($requested_quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
