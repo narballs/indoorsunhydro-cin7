@@ -37,6 +37,7 @@ use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\Category;
+use App\Models\ContactLogs;
 use App\Models\ContactsAddress;
 use App\Models\DailyApiLog;
 use App\Models\NewsletterSubscription;
@@ -2390,6 +2391,16 @@ class UserController extends Controller
             
             $responseBody = $response->getBody()->getContents();
             $cin7_status = $response->getStatusCode();
+
+
+            if ($cin7_status == 200) {
+                $contact_log = new ContactLogs();
+                $contact_log->user_id = $contact->user_id;
+                $contact_log->action_by = auth()->user()->id;
+                $contact_log->action = 'Updated';
+                $contact_log->description = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now();
+                $contact_log->save();
+            }
         }
 
 

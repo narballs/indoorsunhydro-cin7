@@ -339,6 +339,8 @@ class ContactController extends Controller
         $contact_price_columns = ContactPriceColumn::where('site_id', $site_id)->pluck('price_column')->toArray();
         $get_secondary_contact = Contact::where('contact_id', $customer->parent_id)->first();
 
+        $contact_logs = ContactLogs::where('user_id', $customer->user_id)->get();
+
         return view('admin/customer-details', compact(
             'customer',
             'secondary_contacts',
@@ -353,7 +355,8 @@ class ContactController extends Controller
             'contact_price_columns',
             'pricing',
             'get_secondary_contact',
-            'show_deleted_users'
+            'show_deleted_users',
+            'contact_logs'
         ));
     }
 
