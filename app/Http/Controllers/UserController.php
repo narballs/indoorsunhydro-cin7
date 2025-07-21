@@ -1572,6 +1572,40 @@ class UserController extends Controller
         ));
         // return $images;
     }
+    
+    public function getAllFavorites()
+    {
+        $contact_id = session()->get('contact_id');
+        $user_id = auth()->id(); // Ensure this is defined
+
+        // Get all BuyList entries titled "My Favorites" for this user/contact
+        $lists = BuyList::where('user_id', $user_id)
+            ->where('contact_id', $contact_id)
+            ->where('title', 'My Favorites')
+            ->get();
+
+        if ($lists->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Collect all matching ProductBuyList entries across those lists
+        $list_ids = $lists->pluck('id');
+        $favorites = ProductBuyList::with('buylist','product.options.price')
+            ->whereIn('list_id', $list_ids)
+            ->get();
+
+        // Format the result
+        $data = $favorites->map(function ($fav) {
+            return [
+                'product_id' => $fav->product_id,
+                'option_id' => $fav->option_id
+            ];
+        });
+
+        return response()->json($data);
+    }
+
+
     //end
 
     //order

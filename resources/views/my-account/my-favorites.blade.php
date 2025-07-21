@@ -79,9 +79,10 @@
                     <div class="card-body p-0">
                         <div id="fav_content">
                             @php
-                                $i = 1;
+                                $i = ($lists instanceof \Illuminate\Pagination\LengthAwarePaginator || $lists instanceof \Illuminate\Pagination\Paginator)
+                                    ? ($lists->currentPage() - 1) * $lists->perPage() + 1
+                                    : 1;
                             @endphp
-                            {{-- @foreach ($lists as $list) --}}
                                 <div class="table-responsive">
                                     <table class="table address-table-items-data m-0 ">
                                         <thead>
@@ -205,8 +206,8 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            {{-- @endforeach --}}
                         </div>
+                        @if (count($lists) > 0)
                         <div class="row">
                             <div class="col-md-12">
                                 @if (!empty($lists))
@@ -214,6 +215,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -231,6 +233,52 @@
 </style>
 
 @include('my-account.my-account-scripts')
+
 @include('partials.product-footer')
 <!-- End of .container -->
 @include('partials.footer')
+
+<script>
+    // Restore selected checkboxes on page load
+    function restoreSelections() {
+        const selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
+
+        $('.single_fav_check').each(function () {
+            const productId = $(this).attr('product-id');
+            const optionId = $(this).attr('option-id');
+            const uniqueKey = `${productId}_${optionId}`;
+
+            if (selectedData[uniqueKey]) {
+                $(this).prop('checked', true);
+            }
+        });
+    }
+
+    // Save checkbox changes
+    $(document).on('change', '.single_fav_check', function () {
+        const productId = $(this).attr('product-id');
+        const optionId = $(this).attr('option-id');
+        const uniqueKey = `${productId}_${optionId}`;
+
+        let selectedData = JSON.parse(localStorage.getItem('selectedFavorites')) || {};
+
+        if ($(this).is(':checked')) {
+            selectedData[uniqueKey] = {
+                product_id: productId,
+                option_id: optionId
+            };
+        } else {
+            delete selectedData[uniqueKey];
+        }
+
+        localStorage.setItem('selectedFavorites', JSON.stringify(selectedData));
+    });
+
+    // Run restore on every full page load
+    $(document).ready(function () {
+        restoreSelections();
+    });
+</script>
+
+
+

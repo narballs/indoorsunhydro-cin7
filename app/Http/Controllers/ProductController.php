@@ -3022,7 +3022,11 @@ class ProductController extends Controller
     {
         $user_id = Auth::id();
         $contact_id = session()->get('contact_id');
-        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products.product.options.price')->where('title', 'My Favorites')->get();
+        $lists = BuyList::where('user_id', $user_id)
+        ->where('contact_id', $contact_id)
+        ->with('list_products.product.options.price')
+        ->where('title', 'My Favorites')
+        ->get();
 
         $product_buy_list_id = $request->product_buy_list_id;
         $delete_favorite = ProductBuyList::find($product_buy_list_id)->delete();
@@ -3032,6 +3036,58 @@ class ProductController extends Controller
             'message' => 'product removed successfully!'
         ], 200);
     }
+
+
+
+    // public function delete_favorite_product(Request $request) {
+    //     $user_id = Auth::id();
+    //     $contact_id = session()->get('contact_id');
+    //     $product_buy_list_id = $request->product_buy_list_id;
+    //     $page = $request->get('page', 1);
+    //     $perPage = 6;
+        
+    //     $product = ProductBuyList::find($product_buy_list_id);
+    //     if ($product) {
+    //         $product->delete();
+    //     }
+
+    //     // Get the user's favorite list
+    //     $buyList = BuyList::where('user_id', $user_id)
+    //         ->where('contact_id', $contact_id)
+    //         ->where('title', 'My Favorites')
+    //         ->first();
+
+    //     if (!$buyList) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'html' => view('my-account.my-favorites')->render(),
+    //             'message' => 'No favorite list found.'
+    //         ]);
+    //     }
+
+    //     // Get paginated products
+    //     $products = $buyList->list_products()
+    //         ->with('product.options.price')
+    //         ->paginate($perPage, ['*'], 'page', $page);
+
+    //     // If current page is empty, redirect to previous page
+    //     if ($products->isEmpty() && $page > 1) {
+    //         return response()->json([
+    //             'status' => 'redirect',
+    //             'redirect_url' => url('/get/favorite/list?page=' . ($page - 1))
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'html' => view('my-account.my-favorites', compact('products'))->render(),
+    //         'message' => 'Product removed successfully!'
+    //     ]);
+    // }
+
+
+
+    
 
     public function get_child_categories($parent_id)
     {
@@ -3045,56 +3101,189 @@ class ProductController extends Controller
     
     
 
+    // public function multi_favorites_to_cart(Request $request)
+    // {
+    //     $errors = []; // Initialize an array to store errors
+    //     $cart = session()->get('cart', []); // Initialize the cart
+
+    //     // Step 1: Get products to hide
+    //     $products_to_hide = $this->getProductsToHide();
+
+    //     $user_id = Auth::id() ?? '';
+    //     $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
+    //     $main_contact_id = null;
+    //     $free_postal_state = false;
+
+    //     // Step 2: Get main contact and free postal state
+    //     if ($user_id !== null) {
+    //         [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
+    //     }
+
+    //     // Step 4: Loop through all favorites from the request
+    //     if (!empty($request->all_fav)) {
+    //         foreach ($request->all_fav as $multi_favorite) {
+    //             $error = $this->processFavorite($multi_favorite, $request->quantity, $products_to_hide, $assigned_contact, $cart, $main_contact_id, $free_postal_state);
+    //             if ($error) {
+    //                 $errors[] = $error; // Collect errors
+    //             }
+    //         }
+
+    //         $cart_items = session()->get('cart');
+
+    //         // Handle errors and success response
+    //         if (!empty($errors)) {
+    //             return response()->json([
+    //                 'status' => 'error',
+    //                 'message' => 'Product(s) is out of stock or not available.',
+    //                 'free_postal_state' => $free_postal_state,
+    //                 'main_contact_id' => $main_contact_id,
+    //                 'cart_items' => $cart,
+    //                 'cart' => $cart,
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'cart_items' => $cart,
+    //             'cart' => $cart,
+    //             'main_contact_id' => $main_contact_id,
+    //             'free_postal_state' => $free_postal_state
+    //         ]);
+
+            
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'No products found to add to the cart.',
+    //     ]);
+    // }
+
+    // public function multi_favorites_to_cart(Request $request)
+    // {
+    //     $errors = [];
+    //     $cart = session()->get('cart', []);
+
+    //     $products_to_hide = $this->getProductsToHide();
+    //     $user_id = Auth::id() ?? '';
+    //     $assigned_contact = UserHelper::assign_contact(session()->get('contact_id'));
+    //     $main_contact_id = null;
+    //     $free_postal_state = false;
+    //     $validateOnly = $request->boolean('validate_only');
+
+    //     if ($user_id !== null) {
+    //         [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
+    //     }
+
+    //     if (!empty($request->all_fav)) {
+    //         foreach ($request->all_fav as $multi_favorite) {
+    //             $error = $this->processFavorite(
+    //                 $multi_favorite,
+    //                 $request->quantity,
+    //                 $products_to_hide,
+    //                 $assigned_contact,
+    //                 $cart,
+    //                 $main_contact_id,
+    //                 $free_postal_state,
+    //                 $validateOnly // ✅ Pass to processor
+    //             );
+
+    //             if ($error) {
+    //                 $product_name = Product::where('product_id', $multi_favorite['product_id'])->value('name');
+    //                 $error['name'] = $product_name ?? 'Unknown';
+    //                 $error['option_id'] = $multi_favorite['option_id']; // ✅ for precise matching in JS
+    //                 $errors[] = $error;
+    //             }
+    //         }
+
+    //         if (!$validateOnly) {
+    //             session()->put('cart', $cart);
+    //         }
+
+    //         if (!empty($errors)) {
+    //             return response()->json([
+    //                 'status' => 'partial',
+    //                 'message' => 'Some products could not be added to the cart.',
+    //                 'errors' => $errors,
+    //                 'free_postal_state' => $free_postal_state,
+    //                 'main_contact_id' => $main_contact_id,
+    //                 'cart_items' => $cart,
+    //                 'cart' => $cart,
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => $validateOnly ? 'Validation successful.' : 'All products added to cart successfully.',
+    //             'cart_items' => $cart,
+    //             'cart' => $cart,
+    //             'main_contact_id' => $main_contact_id,
+    //             'free_postal_state' => $free_postal_state
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'No products found to add to the cart.',
+    //     ]);
+    // }
+
+
     public function multi_favorites_to_cart(Request $request)
     {
-        $errors = []; // Initialize an array to store errors
-        $cart = session()->get('cart', []); // Initialize the cart
+        session()->start();
 
-        // Step 1: Get products to hide
+        $errors = [];
+        $cart = session()->get('cart', []);
+
         $products_to_hide = $this->getProductsToHide();
-
         $user_id = Auth::id() ?? '';
-        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id')); // Assign contact
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id'));
         $main_contact_id = null;
         $free_postal_state = false;
+        $validateOnly = $request->boolean('validate_only');
 
-        // Step 2: Get main contact and free postal state
         if ($user_id !== null) {
             [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
         }
 
-        // Step 4: Loop through all favorites from the request
         if (!empty($request->all_fav)) {
             foreach ($request->all_fav as $multi_favorite) {
-                $error = $this->processFavorite($multi_favorite, $request->quantity, $products_to_hide, $assigned_contact, $cart, $main_contact_id, $free_postal_state);
+                $error = $this->processFavorite(
+                    $multi_favorite,
+                    $request->quantity,
+                    $products_to_hide,
+                    $assigned_contact,
+                    $cart,
+                    $main_contact_id,
+                    $free_postal_state,
+                    $validateOnly
+                );
+
                 if ($error) {
-                    $errors[] = $error; // Collect errors
+                    $product_name = Product::where('id', $multi_favorite['product_id'])->value('name');
+                    $error['name'] = $product_name ?? 'Unknown';
+                    // 'name' => optional($productOption->products)->name ?? optional($productOption->products)->code ?? 'Unknown Product',
+                    $error['option_id'] = $multi_favorite['option_id'];
+                    $errors[] = $error;
                 }
             }
 
-            $cart_items = session()->get('cart');
-
-            // Handle errors and success response
-            if (!empty($errors)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Product(s) is out of stock or not available.',
-                    'free_postal_state' => $free_postal_state,
-                    'main_contact_id' => $main_contact_id,
-                    'cart_items' => $cart,
-                    'cart' => $cart,
-                ]);
+            if (!$validateOnly) {
+                session()->put('cart', $cart);
             }
 
             return response()->json([
-                'status' => 'success',
+                'status' => !empty($errors) ? 'partial' : 'success',
+                'message' => !empty($errors)
+                    ? 'Some products could not be added to the cart.'
+                    : ($validateOnly ? 'Validation successful.' : 'All products added to cart successfully.'),
+                'errors' => $errors,
                 'cart_items' => $cart,
                 'cart' => $cart,
                 'main_contact_id' => $main_contact_id,
-                'free_postal_state' => $free_postal_state
+                'free_postal_state' => $free_postal_state,
             ]);
-
-            
         }
 
         return response()->json([
@@ -3102,6 +3291,11 @@ class ProductController extends Controller
             'message' => 'No products found to add to the cart.',
         ]);
     }
+
+
+
+
+
 
     // Helper function to get products to hide
     private function getProductsToHide()
@@ -3112,6 +3306,8 @@ class ProductController extends Controller
 
         return $products_to_hide ? $products_to_hide->list_products->pluck('option_id')->toArray() : [];
     }
+
+    
 
     // Helper function to get main contact and free postal state
     private function getMainContactAndState($user_id)
@@ -3125,51 +3321,106 @@ class ProductController extends Controller
         return [null, false];
     }
 
+    private function getUserPaymentTerms($user_id)
+    {
+        $contact = Contact::where('user_id', $user_id)->first();
+        return $contact ? $contact->paymentTerms : '';
+    }
+
+
     // Helper function to process each favorite item
-    private function processFavorite($multi_favorite, $requested_quantity, $products_to_hide, $assigned_contact, &$cart, $main_contact_id, $free_postal_state)
+    // private function processFavorite($multi_favorite, $requested_quantity, $products_to_hide, $assigned_contact, &$cart, $main_contact_id, $free_postal_state)
+    // {
+    //     $product_id = $multi_favorite['product_id'];
+    //     $option_id = $multi_favorite['option_id'];
+    //     $user_id = Auth::id() ?? '';
+
+    //     // Step 5: Retrieve the product option
+    //     $productOption = $this->getProductOption($option_id, $products_to_hide);
+    //     if (!$productOption) {
+    //         return ['product_id' => $product_id, 'message' => 'Product option not found.'];
+    //     }
+
+    //     // Step 6: Get the price for the user
+    //     $user_price_column = UserHelper::getUserPriceColumn();
+    //     $price = $this->getUserPrice($productOption, $user_price_column);
+
+    //     // Step 7: Check if the product is already in the cart
+    //     $product_in_active_cart = Cart::where('qoute_id', $product_id)
+    //         ->where('contact_id', $assigned_contact)
+    //         ->first();
+
+    //     $actual_stock = $productOption->stockAvailable; // Get the available stock
+
+    //     if ($product_in_active_cart) {
+    //         // Update the existing cart item
+    //         $error_message = $this->updateFavouriteCartItem($product_in_active_cart, $requested_quantity, $actual_stock, $cart, $product_id);
+    //         if ($error_message) {
+    //             return ['product_id' => $product_id, 'message' => $error_message];
+    //         }
+    //     } else {
+    //         // Add a new cart item
+    //         if ($product_id && $option_id) {
+    //             $error_message = $this->addFavouriteToCart($cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+    //             if ($error_message) {
+    //                 return ['product_id' => $product_id, 'message' => $error_message];
+    //             }
+    //         } else {
+    //             return ['product_id' => $product_id, 'message' => 'Invalid product or option ID.'];
+    //         }
+    //     }
+
+    //     session()->put('cart', $cart); // Update session cart
+    //     return null; // No error
+    // }
+
+
+    private function processFavorite($multi_favorite, $requested_quantity, $products_to_hide, $assigned_contact, &$cart, $main_contact_id, $free_postal_state, $validateOnly = false)
     {
         $product_id = $multi_favorite['product_id'];
         $option_id = $multi_favorite['option_id'];
         $user_id = Auth::id() ?? '';
 
-        // Step 5: Retrieve the product option
         $productOption = $this->getProductOption($option_id, $products_to_hide);
         if (!$productOption) {
             return ['product_id' => $product_id, 'message' => 'Product option not found.'];
         }
 
-        // Step 6: Get the price for the user
         $user_price_column = UserHelper::getUserPriceColumn();
         $price = $this->getUserPrice($productOption, $user_price_column);
 
-        // Step 7: Check if the product is already in the cart
-        $product_in_active_cart = Cart::where('qoute_id', $product_id)
-            ->where('contact_id', $assigned_contact)
-            ->first();
+        $actual_stock = $productOption->stockAvailable;
+        $payment_terms = $this->getUserPaymentTerms($user_id);
 
-        $actual_stock = $productOption->stockAvailable; // Get the available stock
+        if (intval($actual_stock) < 1 && strtolower($payment_terms) === 'pay in advanced') {
+            return ['product_id' => $product_id, 'message' => 'out of stock.'];
+        }
 
-        if ($product_in_active_cart) {
-            // Update the existing cart item
-            $error_message = $this->updateFavouriteCartItem($product_in_active_cart, $requested_quantity, $actual_stock, $cart, $product_id);
+        if (intval($requested_quantity) > intval($actual_stock) && strtolower($payment_terms) === 'pay in advanced') {
+            return ['product_id' => $product_id, 'message' => 'You cannot add more than ' . intval($actual_stock) . ' items.'];
+        }
+
+        if (!$validateOnly) {
+            $product_in_active_cart = Cart::where('qoute_id', $product_id)
+                ->where('contact_id', $assigned_contact)
+                ->first();
+
+            if ($product_in_active_cart) {
+                $error_message = $this->updateFavouriteCartItem($product_in_active_cart, $requested_quantity, $actual_stock, $cart, $product_id);
+            } else {
+                $error_message = $this->addFavouriteToCart($cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+            }
+
             if ($error_message) {
                 return ['product_id' => $product_id, 'message' => $error_message];
             }
-        } else {
-            // Add a new cart item
-            if ($product_id && $option_id) {
-                $error_message = $this->addFavouriteToCart($cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
-                if ($error_message) {
-                    return ['product_id' => $product_id, 'message' => $error_message];
-                }
-            } else {
-                return ['product_id' => $product_id, 'message' => 'Invalid product or option ID.'];
-            }
+
+            session()->put('cart', $cart);
         }
 
-        session()->put('cart', $cart); // Update session cart
-        return null; // No error
+        return null;
     }
+
 
     // Helper function to retrieve product option
     private function getProductOption($option_id, $products_to_hide)
@@ -3180,23 +3431,153 @@ class ProductController extends Controller
             ->first();
     }
     // Helper function to update existing cart item
+    // private function updateFavouriteCartItem($product, $requested_quantity, $actual_stock, &$cart, $product_id)
+    // {
+    //     if (!$product) {
+    //         return 'Product not found in the cart.';
+    //     }
+
+
+    //     // Check stock availability
+    //     $get_wholesale_contact_id = null;
+    //     $get_wholesale_terms = null;
+    //     $user_id = Auth::id();
+
+    //     // Get wholesale_contact
+    //     if (!empty($user_id)) {
+    //         $wholesale_contact = Contact::where('user_id',$user_id)->first();
+    //         if (!empty($wholesale_contact)) {
+    //             if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+    //                 $get_wholesale_contact_id = $wholesale_contact->contact_id;
+    //                 $get_wholesale_terms = $wholesale_contact->paymentTerms;
+    //             } else {
+    //                 $wholesale_contact_child = Contact::where('user_id', $user_id)
+    //                     ->whereNull('contact_id')
+    //                     ->where('is_parent', 0)
+    //                     ->first();
+                    
+    //                 // Ensure $wholesale_contact_child is not null before accessing parent_id
+    //                 $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+    //                 $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+    //             }
+    //         }
+    //     } else {
+    //         $wholesale_contact = null;
+    //     }
+
+    //     $current_quantity = $product->quantity;
+
+    //     $total_quantity = 0;
+
+    //     $total_quantity = intval($current_quantity) + intval($requested_quantity);
+
+    //     if ($total_quantity > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
+    //         return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+    //     }
+
+    //     // Update quantity and save
+    //     $product->quantity += $requested_quantity;
+    //     $product->save();
+
+    //     // Update the session cart
+    //     if (isset($cart[$product_id])) {
+    //         $cart[$product_id]['quantity'] = $product->quantity;
+    //     }
+
+    //     return null; // No error
+    // }
+
+    // Helper function to add a new cart item
+    // private function addFavouriteToCart(&$cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
+    // {
+    //     $user_id = Auth::id();
+    //     // Check stock availability
+    //     $get_wholesale_contact_id = null;
+    //     $get_wholesale_terms = null;
+    //     $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+    //     // Get wholesale_contact
+    //     if (!empty($user_id)) {
+    //         $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+    //         ->where('contact_id', $session_contact)
+    //         ->orWhere('secondary_id', $session_contact)
+    //         ->first();
+
+    //         if (!empty($wholesale_contact)) {
+    //             if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+    //                 $get_wholesale_contact_id = $wholesale_contact->contact_id;
+    //                 $get_wholesale_terms = $wholesale_contact->paymentTerms;
+    //             } else {
+    //                 $wholesale_contact_child = Contact::where('user_id', $user_id)
+    //                     ->whereNull('contact_id')
+    //                     ->where('is_parent', 0)
+    //                     ->where('secondary_id', $session_contact)
+    //                     ->first();
+                    
+    //                 // Ensure $wholesale_contact_child is not null before accessing parent_id
+    //                 $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+    //                 $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+    //             }
+    //         }
+    //     } else {
+    //         $wholesale_contact = null;
+    //     }
+
+    //     $actual_stock = $productOption->stockAvailable;
+    //     if (intval($requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
+    //         return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+    //     }
+
+    //     $cart[$product_id] = $this->createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+
+    //     // Store the cart entry in the database
+    //     Cart::create($cart[$product_id]);
+
+    //     return null; // No error
+    // }
+
+    // Helper function to create cart entry for a favorite item
+    // private function createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
+    // {
+    //     // Check if cart hash exists, if not create a new one
+    //     if (!session()->has('cart_hash')) {
+    //         session()->put('cart_hash', Str::random(10));
+    //     }
+
+    //     return [
+    //         'qoute_id' => $product_id,
+    //         'product_id' => $productOption->products->product_id,
+    //         'name' => $productOption->products->name,
+    //         'option_id' => $productOption->option_id,
+    //         'price' => $price,
+    //         'quantity' => $requested_quantity,
+    //         'contact_id' => $assigned_contact,
+    //         'image' => !empty($productOption->products->images) ? $productOption->products->images : '',
+    //         'code' => $productOption->code,
+    //         'slug' => $productOption->products->slug,
+    //         'cart_hash' => session()->get('cart_hash'),
+    //         'user_id' => !empty($user_id) ? $user_id : 0,
+    //         'is_active' => 1,
+    //         'created_at' => now(),
+    //         'updated_at' => now(),
+    //     ];
+    // }
+
+
     private function updateFavouriteCartItem($product, $requested_quantity, $actual_stock, &$cart, $product_id)
     {
         if (!$product) {
             return 'Product not found in the cart.';
         }
 
-
-        // Check stock availability
+        $user_id = Auth::id();
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
-        $user_id = Auth::id();
 
-        // Get wholesale_contact
         if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id',$user_id)->first();
+            $wholesale_contact = Contact::where('user_id', $user_id)->first();
             if (!empty($wholesale_contact)) {
-                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                if ($wholesale_contact->is_parent && $wholesale_contact->contact_id) {
                     $get_wholesale_contact_id = $wholesale_contact->contact_id;
                     $get_wholesale_terms = $wholesale_contact->paymentTerms;
                 } else {
@@ -3204,48 +3585,132 @@ class ProductController extends Controller
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
                         ->first();
-                    
-                    // Ensure $wholesale_contact_child is not null before accessing parent_id
+
                     $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
-                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms ?? null;
                 }
             }
-        } else {
-            $wholesale_contact = null;
         }
 
         $current_quantity = $product->quantity;
-
-        $total_quantity = 0;
-
         $total_quantity = intval($current_quantity) + intval($requested_quantity);
 
+        if (intval($actual_stock) < 1 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'out of stock.';
+        }
+        
         if ($total_quantity > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
         }
 
-        // Update quantity and save
         $product->quantity += $requested_quantity;
         $product->save();
 
-        // Update the session cart
         if (isset($cart[$product_id])) {
             $cart[$product_id]['quantity'] = $product->quantity;
         }
 
-        return null; // No error
+        return null;
     }
 
-    // Helper function to add a new cart item
     private function addFavouriteToCart(&$cart, $productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
     {
-        $user_id = Auth::id();
-        // Check stock availability
+        $session_contact = Session::get('contact_id') ?? null;
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
+
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', $user_id)
+                ->where(function ($query) use ($session_contact) {
+                    $query->where('contact_id', $session_contact)
+                        ->orWhere('secondary_id', $session_contact);
+                })->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent && $wholesale_contact->contact_id) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms ?? null;
+                }
+            }
+        }
+
+        $actual_stock = $productOption->stockAvailable;
+        
+        if (intval($actual_stock) < 1 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'out of stock.';
+        }
+
+        if (intval($requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+        }
+
+        $cart[$product_id] = $this->createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
+
+        Cart::create($cart[$product_id]);
+
+        return null;
+    }
+
+    private function createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
+    {
+        if (!session()->has('cart_hash')) {
+            session()->put('cart_hash', Str::random(10));
+        }
+
+        return [
+            'qoute_id' => $product_id,
+            'product_id' => $productOption->products->product_id,
+            'name' => $productOption->products->name,
+            'option_id' => $productOption->option_id,
+            'price' => $price,
+            'quantity' => $requested_quantity,
+            'contact_id' => $assigned_contact,
+            'image' => !empty($productOption->products->images) ? $productOption->products->images : '',
+            'code' => $productOption->code,
+            'slug' => $productOption->products->slug,
+            'cart_hash' => session()->get('cart_hash'),
+            'user_id' => !empty($user_id) ? $user_id : 0,
+            'is_active' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+
+    private function getWholesaleTerms($user_id)
+    {
+        $contact = Contact::where('user_id', $user_id)->first();
+        return $contact ? strtolower($contact->paymentTerms) : '';
+    }
+
+
+    public function multiFavoritesValidate(Request $request)
+    {
+        $errors = [];
+        $validItems = [];
+        $get_wholesale_terms = null;
+
+        $products_to_hide = $this->getProductsToHide();
+        $user_id = Auth::id() ?? '';
+        $assigned_contact = UserHelper::assign_contact(session()->get('contact_id'));
+        $main_contact_id = null;
+        $free_postal_state = false;
         $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
-            
-        // Get wholesale_contact
+
+        if ($user_id !== null) {
+            [$main_contact_id, $free_postal_state] = $this->getMainContactAndState($user_id);
+        }
+
+
         if (!empty($user_id)) {
             $wholesale_contact = Contact::where('user_id', auth()->user()->id)
             ->where('contact_id', $session_contact)
@@ -3272,45 +3737,46 @@ class ProductController extends Controller
             $wholesale_contact = null;
         }
 
-        $actual_stock = $productOption->stockAvailable;
-        if (intval($requested_quantity) > intval($actual_stock) && strtolower($get_wholesale_terms) === 'pay in advanced') {
-            return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';
+        
+        foreach ($request->all_fav as $multi_favorite) {
+            $product_id = $multi_favorite['product_id'];
+            $option_id = $multi_favorite['option_id'];
+
+            Log::debug('Validating favorite', compact('product_id', 'option_id'));
+
+            $productOption = $this->getProductOption($option_id, $products_to_hide);
+
+            if (!$productOption || $productOption->stockAvailable <= 0 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+                Log::debug("Invalid or out-of-stock", ['option_id' => $option_id, 'stock' => optional($productOption)->stockAvailable]);
+
+                $errors[] = [
+                    'product_id' => $product_id,
+                    'name' => optional($productOption->products)->name ?? optional($productOption->products)->code ?? 'Unknown Product',
+                    'message' => 'Out of stock'
+                ];
+                continue;
+            }
+
+            $validItems[] = $multi_favorite;
         }
 
-        $cart[$product_id] = $this->createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id);
-
-        // Store the cart entry in the database
-        Cart::create($cart[$product_id]);
-
-        return null; // No error
-    }
-
-    // Helper function to create cart entry for a favorite item
-    private function createCartForFavourite($productOption, $requested_quantity, $price, $assigned_contact, $user_id, $product_id)
-    {
-        // Check if cart hash exists, if not create a new one
-        if (!session()->has('cart_hash')) {
-            session()->put('cart_hash', Str::random(10));
+        if (!empty($errors) && !empty($validItems)) {
+            return response()->json([
+                'status' => 'partial',
+                'errors' => $errors,
+            ]);
+        } elseif (empty($validItems)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No valid items found.'
+            ]);
         }
 
-        return [
-            'qoute_id' => $product_id,
-            'product_id' => $productOption->products->product_id,
-            'name' => $productOption->products->name,
-            'option_id' => $productOption->option_id,
-            'price' => $price,
-            'quantity' => $requested_quantity,
-            'contact_id' => $assigned_contact,
-            'image' => !empty($productOption->products->images) ? $productOption->products->images : '',
-            'code' => $productOption->code,
-            'slug' => $productOption->products->slug,
-            'cart_hash' => session()->get('cart_hash'),
-            'user_id' => !empty($user_id) ? $user_id : 0,
-            'is_active' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
+        return response()->json([
+            'status' => 'success'
+        ]);
     }
+
 
 
 
@@ -3519,6 +3985,9 @@ class ProductController extends Controller
             $wholesale_contact = null;
         }
 
+        if (intval($actual_stock) < 1 && strtolower($get_wholesale_terms) === 'pay in advanced') {
+            return 'out of stock.';
+        }
 
         if ($requested_quantity > intval($actual_stock) && strtolower($get_wholesale_terms === 'pay in advanced')) {
             return 'You cannot add more than ' . intval($actual_stock) . ' items to the cart.';

@@ -25,6 +25,7 @@ use App\Helpers\SettingHelper;
 use App\Models\AdminSetting;
 use App\Models\Order;
 use App\Models\OrderJobLog;
+use App\Models\SpecificAdminNotification;
 use Carbon\Carbon;
 use Google\Service\MyBusinessAccountManagement\Admin;
 
@@ -127,6 +128,7 @@ class SalesOrders implements ShouldQueue
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
             ->get();
+        $specific_admin_notifications = SpecificAdminNotification::all();
         $order_status = OrderStatus::where('status', 'FullFilled')->first();
         if (!empty($order_id) && !empty($reference)) {
             $data = [
@@ -139,10 +141,13 @@ class SalesOrders implements ShouldQueue
                 'from' => SettingHelper::getSetting('noreply_email_address'),
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
-            foreach ($users_with_role_admin as $role_admin) {
-                $data['email'] = $role_admin->email;
-                $adminTemplate = 'emails.approval-notifications';
-                MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+            
+            if (count($specific_admin_notifications) > 0) {
+                foreach ($specific_admin_notifications as $role_admin) {
+                    $data['email'] = $role_admin->email;
+                    $adminTemplate = 'emails.approval-notifications';
+                    MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+                }
             }
 
 
