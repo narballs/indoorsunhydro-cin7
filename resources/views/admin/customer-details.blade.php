@@ -521,20 +521,6 @@
                             @endif
                         </div>
                     </div>
-
-                    <!-- Customer Notes -->
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3 class="h6"><strong>Contact Logs (updation)</strong></h3>
-                            @if (!count($contact_logs) > 0)
-                                @foreach ($contact_logs as $log)
-                                    <div>{{ $log->description }}</div>
-                                @endforeach
-                            @else
-                                <div>No Contact Logs Found</div>
-                            @endif
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

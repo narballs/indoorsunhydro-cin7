@@ -339,7 +339,7 @@ class ContactController extends Controller
         $contact_price_columns = ContactPriceColumn::where('site_id', $site_id)->pluck('price_column')->toArray();
         $get_secondary_contact = Contact::where('contact_id', $customer->parent_id)->first();
 
-        $contact_logs = ContactLogs::where('user_id', $customer->user_id)->get();
+        
 
         return view('admin/customer-details', compact(
             'customer',
@@ -356,7 +356,6 @@ class ContactController extends Controller
             'pricing',
             'get_secondary_contact',
             'show_deleted_users',
-            'contact_logs'
         ));
     }
 
@@ -441,6 +440,15 @@ class ContactController extends Controller
             $contact->priceColumn = $pricingCol;
             $contact->save();
 
+            $contact = Contact::where('id' , $contact->id)->first();
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
+
             return response()->json([
                 'success' => true,
                 'created' => true,
@@ -451,6 +459,16 @@ class ContactController extends Controller
             $contact->firstName = $first_name;
             $contact->lastName = $last_name;
             $contact->save();
+
+
+            $contact = Contact::where('id' , $contact->id)->first();
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             
             return response()->json([
                 'success' => true,
@@ -553,6 +571,14 @@ class ContactController extends Controller
             ]
         );
         if ($update_contact) {
+            $contact = Contact::find($id);
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             return redirect()->back()->with('success', 'Customer Updated Successfully');
         } else {
             return redirect()->back()->with('error', 'Customer Not Updated');
@@ -832,6 +858,15 @@ class ContactController extends Controller
                 'tax_class' => $api_contact->taxStatus ? $api_contact->taxStatus : $contact->tax_class,
             ]);
 
+            $contact = Contact::where('id' , $contact_update->id)->first();
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
+
             if ($api_contact->secondaryContacts) {
                 foreach ($api_contact->secondaryContacts as $apiSecondaryContact) {
                     $secondary_contact = Contact::where('secondary_id', $apiSecondaryContact->id)->where('parent_id', $contact->contact_id)->first();
@@ -961,6 +996,16 @@ class ContactController extends Controller
         } else {
             $contact->status = 1;
         }
+
+        $contact = Contact::where('id' , $contact->id)->first();
+        $user_log = new UserLog();
+        $user_log->user_id = auth()->user()->id;
+        $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+        $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+        $user_log->action = 'Updation';
+        $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+        $user_log->save();
+
         $contact->save();
 
         return response()->json([
@@ -977,6 +1022,15 @@ class ContactController extends Controller
                 $contact->charge_shipping = 0;
             }
             $contact->save();
+
+            $contact = Contact::where('id' , $contact->id)->first();
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
     
             return response()->json([
                 'msg' => 'success'
@@ -998,7 +1052,15 @@ class ContactController extends Controller
                 $contact->charge_shipping = 1;
             }
             $contact->save();
-    
+
+            $contact = Contact::where('id' , $contact->id)->first();
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
             return response()->json([
                 'msg' => 'success'
             ], 200);
@@ -1024,6 +1086,15 @@ class ContactController extends Controller
             }
 
             $contact->save();
+
+            $contact = Contact::where('id' , $contact->id)->first();
+            $user_log = new UserLog();
+            $user_log->user_id = auth()->user()->id;
+            $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+            $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+            $user_log->action = 'Updation';
+            $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+            $user_log->save();
 
             return response()->json([
                 'msg' => 'success'
