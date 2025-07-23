@@ -83,12 +83,9 @@ class SendDailySalesReport extends Command
         fclose($handle);
 
         // Send email with CSV attached
-        Mail::send('emails.daily_sales_report', [
-            'sales' => $sales,
-            'start' => $start,
-            'end' => $end
-        ], function ($message) use ($emails, $start, $csvPath, $csvFileName) {
-            $message->to(...$emails)
+        Mail::raw('Please find the attached daily sales report as a CSV file.', function ($message) use ($emails, $start, $csvPath, $csvFileName) {
+            $message->from('noreply@indoorsunhydro.com', 'Indoorsun Hydro')
+                ->to(...$emails)
                 ->subject('Daily Sales Report for ' . $start->format('Y-m-d'))
                 ->attach($csvPath, [
                     'as' => $csvFileName,
