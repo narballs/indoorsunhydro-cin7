@@ -33,7 +33,7 @@ class SendOrderReminders extends Command
         $base_url = url('/');
 
         foreach ($reminders as $reminder) {
-            if ($reminder->contact && $reminder->contact->email && $reminder->order) {
+            if (!empty($reminder->contact) && !empty($reminder->contact->email) && !empty($reminder->order)) {
                 $data = [
                     'name' => $reminder->contact->firstName . ' ' . $reminder->contact->lastName,
                     'email' => $reminder->contact->email,
