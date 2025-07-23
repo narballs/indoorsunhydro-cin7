@@ -454,6 +454,10 @@ return [
             'url'  => 'admin/stock-report-settings',
         ],
         [
+            'text'    => 'Sales Report Settings',
+            'url'  => 'admin/sales-report-settings',
+        ],
+        [
             'text'    => 'Payouts',
             'url'  => 'admin/payouts',
         ],

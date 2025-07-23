@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Models\AdminStockReportInterval;
 use App\Models\AutoLabelSetting;
 use App\Models\LabelLog;
+use App\Models\SalesReportInterval;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -174,6 +175,36 @@ class Kernel extends ConsoleKernel
 
                 } catch (\Exception $e) {
                     Log::error("Invalid report_time format in AdminStockReportInterval ID {$interval->id}: {$interval->report_time}");
+                }
+            }
+        }
+
+
+        // sales report settings
+
+        $sales_interval_summary_times = SalesReportInterval::all();
+
+        if ($sales_interval_summary_times->isEmpty()) {
+            // Fallback if no intervals found
+            $schedule->command('sales:send-daily-report')
+                ->dailyAt('08:00')
+                ->name('daily-sales-report-default')
+                ->withoutOverlapping();
+            return;
+        }
+
+        foreach ($sales_interval_summary_times as $interval) {
+            if (!empty($interval->report_time)) {
+                try {
+                    $formattedTime = Carbon::createFromFormat('H:i:s', $interval->report_time)->format('H:i');
+
+                    $schedule->command('sales:send-daily-report')
+                        ->dailyAt($formattedTime)
+                        ->name('daily-sales-report-' . str_replace(':', '-', $formattedTime))
+                        ->withoutOverlapping();
+
+                } catch (\Exception $e) {
+                    Log::error("Invalid report_time format in Sales Report ID {$interval->id}: {$interval->report_time}");
                 }
             }
         }

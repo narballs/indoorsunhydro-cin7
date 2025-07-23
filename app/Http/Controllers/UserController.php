@@ -37,6 +37,7 @@ use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\Category;
+use App\Models\ContactLogs;
 use App\Models\ContactsAddress;
 use App\Models\DailyApiLog;
 use App\Models\NewsletterSubscription;
@@ -2390,6 +2391,25 @@ class UserController extends Controller
             
             $responseBody = $response->getBody()->getContents();
             $cin7_status = $response->getStatusCode();
+
+
+            if ($cin7_status == 200) {
+                // $contact_log = new ContactLogs();
+                // $contact_log->user_id = $contact->user_id;
+                // $contact_log->action_by = auth()->user()->id;
+                // $contact_log->action = 'Updated';
+                // $contact_log->description = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now();
+                // $contact_log->save();
+
+                $contact = Contact::where('id' , $contact->id)->first();
+                $user_log = new UserLog();
+                $user_log->user_id = auth()->user()->id;
+                $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+                $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+                $user_log->action = 'Updation';
+                $user_log->user_notes = !empty($contact->email) ? $contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $contact->firstName .' '. $contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+                $user_log->save();
+            }
         }
 
 
@@ -3294,6 +3314,14 @@ class UserController extends Controller
         $user_profile_contact->lastName = $request->input('lastName');
         $user_profile_contact->phone = $request->input('phone');
         $user_profile_contact->save();
+
+        $user_log = new UserLog();
+        $user_log->user_id = auth()->user()->id;
+        $user_log->contact_id = !empty($user_profile_contact->contact_id) ? $user_profile_contact->contact_id : $user_profile_contact->id;
+        $user_log->secondary_id = !empty($user_profile_contact->secondary_id) ? $user_profile_contact->secondary_id : $user_profile_contact->id;
+        $user_log->action = 'Updation';
+        $user_log->user_notes = !empty($user_profile_contact->email) ? $user_profile_contact->email . ' ' . 'is ' . 'updated by ' . auth()->user()->email . ' ' .'at'. ' '. now() : $user_profile_contact->firstName .' '. $user_profile_contact->lastName  . 'is ' . 'updated by ' . auth()->user()->email .' ' .'at'. ' '. now();
+        $user_log->save();
 
         return redirect()->back()->with('success', 'Profile Updated Successfully !');
     }

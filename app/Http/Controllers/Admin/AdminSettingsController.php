@@ -28,6 +28,7 @@ use App\Models\UserLog;
 use Carbon\Carbon;
 use App\Models\AdminStockReportSetting;
 use App\Models\AdminStockReportInterval;
+use App\Models\SalesReportSetting;
 use Facade\FlareClient\Time\Time;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\DB;
@@ -911,9 +912,6 @@ class AdminSettingsController extends Controller
 
     // update admin stock report settings
 
-
-    
-
     public function admin_update_stock_report_settings(Request $request) {
         $validated = $request->validate([
             'emails' => 'required|string',
@@ -930,6 +928,37 @@ class AdminSettingsController extends Controller
 
         foreach ($validated['admin_stock_report_interval'] as $interval) {
             $setting->admin_stock_report_interval()->create($interval);
+        }
+
+        return back()->with('success', 'Admin Stock Report settings updated.');
+    }
+
+
+
+    // sales report settings
+
+    public function sales_report_settings() {
+        $sales_report_settings = SalesReportSetting::with('sales_report_interval')->first();
+        return view('admin.sales_report_settings.index', compact('sales_report_settings'));
+    }
+
+    // sales stock report settings
+
+    public function update_sales_report_settings(Request $request) {
+        $validated = $request->validate([
+            'emails' => 'required|string',
+            'sales_report_interval' => 'required|array',
+            'sales_report_interval.*.report_time' => ['required', 'regex:/^\d{2}:\d{2}$/'],
+        ]);
+
+        $setting = SalesReportSetting::updateOrCreate(['id' => 1], [
+            'emails' => $validated['emails'],
+        ]);
+
+        $setting->sales_report_interval()->delete();
+
+        foreach ($validated['sales_report_interval'] as $interval) {
+            $setting->sales_report_interval()->create($interval);
         }
 
         return back()->with('success', 'Admin Stock Report settings updated.');
