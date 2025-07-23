@@ -20,7 +20,11 @@ class Handler extends ExceptionHandler
 
     public function report(Throwable $exception)
     {
-        if ($this->shouldReport($exception)) {
+        // Only notify Slack if the environment is 'production'
+        if (
+            app()->environment('production') &&
+            $this->shouldReport($exception)
+        ) {
             (new SlackNotifier)->notify(new SlackErrorNotification($exception));
         }
         parent::report($exception);
