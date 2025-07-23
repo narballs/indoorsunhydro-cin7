@@ -204,7 +204,7 @@ class Kernel extends ConsoleKernel
                         ->withoutOverlapping();
 
                 } catch (\Exception $e) {
-                    Log::error("Invalid report_time format in AdminStockReportInterval ID {$interval->id}: {$interval->report_time}");
+                    Log::error("Invalid report_time format in Sales Report ID {$interval->id}: {$interval->report_time}");
                 }
             }
         }

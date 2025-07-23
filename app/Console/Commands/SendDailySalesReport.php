@@ -17,12 +17,12 @@ class SendDailySalesReport extends Command
     {
         // Get email recipients from your settings table
         $settings = SalesReportSetting::first();
-        if (!$settings || empty($settings->email_recipients)) {
+        if (!$settings || empty($settings->emails)) {
             $this->error('No email recipients found in settings.');
             return;
         }
 
-        $emails = json_decode($settings->email_recipients, true);
+        $emails = json_decode($settings->emails, true);
         if (!$emails || !is_array($emails)) {
             $this->error('Invalid email recipients.');
             return;
