@@ -80,7 +80,7 @@ class SendDailySalesReport extends Command
             'start' => $start,
             'end' => $end
         ], function ($message) use ($emails, $start, $csvPath, $csvFileName) {
-            $message->to($emails)
+            $message->to(...$emails)
                 ->subject('Daily Sales Report for ' . $start->format('Y-m-d'))
                 ->attach($csvPath, [
                     'as' => $csvFileName,
