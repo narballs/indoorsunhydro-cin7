@@ -22,9 +22,18 @@ class SendDailySalesReport extends Command
             return;
         }
 
+        // Decode and flatten emails array
         $emails = json_decode($settings->emails, true);
-        if (!$emails || !is_array($emails)) {
-            $this->error('Invalid email recipients.');
+        $emails = collect($emails)->flatten()->all();
+
+        // Filter out invalid email addresses
+        $emails = array_filter($emails, function ($email) {
+            return filter_var($email, FILTER_VALIDATE_EMAIL);
+        });
+
+        // Make sure there is at least one valid email
+        if (empty($emails)) {
+            $this->error('No valid email recipients found after filtering.');
             return;
         }
 
@@ -45,7 +54,7 @@ class SendDailySalesReport extends Command
             return;
         }
 
-        // CSV header (edit columns as needed)
+        // CSV header
         fputcsv($handle, [
             'Order ID',
             'Stripe ID',
@@ -63,8 +72,7 @@ class SendDailySalesReport extends Command
                 $sale->order_id,
                 $sale->stripe_id,
                 $sale->amount !== null ? '$' . number_format($sale->amount, 2) : '-',
-                // Make sure you have this property on the model, or change accordingly
-                $sale->partially_refund_amount !== null ? '$' . number_format($sale->partially_refund_amount, 2) : '-', 
+                $sale->partially_refund_amount !== null ? '$' . number_format($sale->partially_refund_amount, 2) : '-',
                 $sale->customer_email ?? '',
                 ucfirst(str_replace('_', ' ', $sale->status)),
                 $sale->refund_date ? Carbon::parse($sale->refund_date)->format('Y-m-d H:i:s') : '',
