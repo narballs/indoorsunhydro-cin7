@@ -36,7 +36,7 @@
     $auth = false;
     $paymentTerms = false;
     if (!empty($products_to_hide)) {
-        if (in_array($productOption->option_id, $products_to_hide)) {
+        if (!empty($productOption) && (in_array($productOption->option_id, $products_to_hide))) {
             if (!auth()->user()) {
                 $add_to_cart = false;
                 $show_price = false;
