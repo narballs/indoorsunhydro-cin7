@@ -44,6 +44,11 @@ class SendDailySalesReport extends Command
         // Fetch transactions for previous day
         $sales = SalesReport::whereBetween('transaction_date', [$start, $end])->get();
 
+        if ($sales->isEmpty()) {
+            $this->info('No sales for the previous day. No email sent.');
+            return;
+        }
+
         // Generate CSV file
         $csvFileName = 'sales_report_' . $start->format('Ymd') . '.csv';
         $csvPath = storage_path('app/' . $csvFileName);
