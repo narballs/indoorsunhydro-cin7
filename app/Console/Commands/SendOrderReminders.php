@@ -8,6 +8,7 @@ use App\Models\AdminSetting;
 use App\Models\OrderReminder;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SendOrderReminders extends Command
 {
@@ -29,6 +30,8 @@ class SendOrderReminders extends Command
             ->whereDate('reminder_date', $today)
             ->where('is_sent', false)
             ->get();
+
+        Log::info("Sending reminders for " . $reminders->count() . " orders for date: " . $today->toDateString());
 
         $base_url = url('/');
 
