@@ -22,14 +22,14 @@ class SendDailySalesReport extends Command
             return;
         }
 
-        // Decode and flatten emails array
-        $emails = json_decode($settings->emails, true);
-        $emails = collect($emails)->flatten()->all();
-
-        // Filter out invalid email addresses
-        $emails = array_filter($emails, function ($email) {
-            return filter_var($email, FILTER_VALIDATE_EMAIL);
-        });
+        // Decode emails and extract valid email addresses from the 'value' key
+        $emailsArray = json_decode($settings->emails, true);
+        $emails = collect($emailsArray)
+            ->pluck('value')
+            ->filter(function ($email) {
+                return filter_var($email, FILTER_VALIDATE_EMAIL);
+            })
+            ->all();
 
         // Make sure there is at least one valid email
         if (empty($emails)) {
@@ -44,6 +44,7 @@ class SendDailySalesReport extends Command
         // Fetch transactions for previous day
         $sales = SalesReport::whereBetween('transaction_date', [$start, $end])->get();
 
+        // Do not send email if there are no sales
         if ($sales->isEmpty()) {
             $this->info('No sales for the previous day. No email sent.');
             return;
