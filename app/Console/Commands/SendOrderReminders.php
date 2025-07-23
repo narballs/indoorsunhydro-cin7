@@ -36,6 +36,7 @@ class SendOrderReminders extends Command
         $base_url = url('/');
 
         foreach ($reminders as $reminder) {
+            Log::info($reminder->contact);
             if (!empty($reminder->contact) && !empty($reminder->contact->email) && !empty($reminder->order)) {
                 $data = [
                     'name' => $reminder->contact->firstName . ' ' . $reminder->contact->lastName,
