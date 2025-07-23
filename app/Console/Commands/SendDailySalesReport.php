@@ -31,6 +31,7 @@ class SendDailySalesReport extends Command
             })
             ->all();
 
+
         // Make sure there is at least one valid email
         if (empty($emails)) {
             $this->error('No valid email recipients found after filtering.');
@@ -88,10 +89,10 @@ class SendDailySalesReport extends Command
         }
         fclose($handle);
 
-        // Send email with CSV attached
+        // Send email with CSV attached to ALL recipients as TO
         Mail::raw('Please find the attached daily sales report as a CSV file.', function ($message) use ($emails, $start, $csvPath, $csvFileName) {
             $message->from('noreply@indoorsunhydro.com', 'Indoorsun Hydro')
-                ->to(...$emails)
+                ->to($emails) // Pass array directly!
                 ->subject('Daily Sales Report for ' . $start->format('Y-m-d'))
                 ->attach($csvPath, [
                     'as' => $csvFileName,
