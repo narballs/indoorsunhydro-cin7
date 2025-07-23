@@ -894,7 +894,7 @@ class ProductController extends Controller
         }
         
         $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
-        if ($productOption->products->categories != '') {
+        if (!empty($productOption->products) &&  !empty($productOption->products->categories)) {
             $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
             $parent_category = Category::where('category_id', $category->parent_id)->first();
             $pname = '';
