@@ -118,10 +118,22 @@ class OrderManagementController extends Controller
             }
         }
         $show_alert = false;
+        $show_processing_alert = false;
         $show_unfulled_orders = $request->get('show_unfulled_orders');
+        $show_processing_orders = $request->get('show_processing_orders');
         if (!empty($show_unfulled_orders)) {
             $orders = $orders_query->where('order_id', null)->where('isApproved', 0)
             ->where('created_at', '<', now()->subHours(3))
+            ->whereNotIn('payment_status', ['unpaid', 'pending'])
+            ->orderBy('id' , 'Desc')
+            ->whereNotIn('payment_status', ['unpaid', 'pending'])
+            ->paginate(10)
+            ->withQueryString();
+        }
+        if (!empty($show_processing_orders)) {
+            $orders = $orders_query->where('order_id', null)->where('isApproved', 5)
+            ->where('created_at', '<', now()->subHours(3))
+            ->where('payment_status', 'pending')
             ->orderBy('id' , 'Desc')
             ->paginate(10)
             ->withQueryString();
@@ -129,10 +141,20 @@ class OrderManagementController extends Controller
         
         $orders =  $orders_query->orderBy('id' , 'Desc')->paginate(10)->withQueryString();
         $pending_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
-        ->where('order_id' , null)
-        ->where('isApproved' , 0)
-        ->where('created_at', '<', now()->subHours(3))
-        ->orderBy('id' , 'Desc')->get();
+            ->whereNull('order_id')
+            ->where('isApproved', 0)
+            ->whereNotIn('payment_status', ['unpaid', 'pending'])
+            ->where('created_at', '<', now()->subHours(3))
+            ->orderBy('id', 'desc')
+            ->get();
+        $processing_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
+            ->whereNull('order_id')
+            ->where('isApproved', 5)
+            ->where('payment_status', 'pending')
+            ->where('created_at', '<', now()->subHours(3))
+            ->orderBy('id', 'desc')
+            ->get();
+        $processing_order_ids = [];
         $get_order_ids = [];
         if (count($pending_orders) > 0) {
             
@@ -146,13 +168,38 @@ class OrderManagementController extends Controller
             }
             $show_alert = true;
         }
+
+        if (count($processing_orders) > 0) {
+            
+            foreach ($processing_orders as $order) {
+                $contact = Contact::where('contact_id', $order->memberId)->first();
+                if (!empty($contact) && $contact->is_test_user == 0) {
+                    $processing_order_ids[] = $order->id;
+                } else{
+                    continue;
+                }
+            }
+            $show_processing_alert = true;
+        }
+
         $order_ids = implode(',', $get_order_ids);
+        $processingOrderIds = implode(',', $processing_order_ids);
 
         $shipping_quotes = ShippingQuoteSetting::where('status' , 1)->get();
         $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
         $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
-        return view('admin/orders', compact('orders','order_ids','po_box_carrier_code','po_box_service_code','po_box_order_shipping_text', 'shipping_quotes','search','pending_orders','show_alert', 'auto_createlabel','auto_createLabel','auto_fulfill', 'auto_fullfill', 'sort_by_desc', 'sort_by_asc' , 'sort_by_created_at'));
+        return view('admin/orders', compact(
+            'orders','order_ids','processingOrderIds','po_box_carrier_code',
+            'po_box_service_code','po_box_order_shipping_text',
+            'shipping_quotes','search',
+            'pending_orders','show_alert',
+            'processing_orders','show_processing_alert',
+            'auto_createlabel','auto_createLabel',
+            'auto_fulfill', 'auto_fullfill',
+            'sort_by_desc', 'sort_by_asc' ,
+            'sort_by_created_at'
+        ));
     }
 
     public function show($id)

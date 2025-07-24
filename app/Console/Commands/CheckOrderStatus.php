@@ -47,68 +47,87 @@ class CheckOrderStatus extends Command
      *
      * @return int
      */
-    public function handle()
-    {
-        // $option = AdminSetting::where('option_name', 'auto_full_fill')->first();
-        // if ($option->option_value == 0) {
-        //     return;
-        // }
-
+    // public function handle()
+    // {
         
+    //     $pending_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
+    //     ->where('order_id' , null)
+    //     ->where('isApproved' , 0)
+    //     ->where('payment_status' , '!=' , 'unpaid')
+    //     ->where('payment_status' , '!=' , 'pending')
+    //     ->where('created_at', '<', now()->subHours(3))
+    //     ->orderBy('id' , 'Desc')->get();
 
-        // $this->info('---------------------------------------------------------');
+    //     if (count($pending_orders) > 0) {
+    //         $this->info(count($pending_orders) . ' => Pending Orders Found');
+    //         $get_order_ids = [];
+    //         foreach ($pending_orders as $order) {
+    //             $get_order_ids[] = $order->id;
+    //         }
+    //         $order_ids = implode(',', $get_order_ids);
+    //         $data = [
+    //             'orders' => $pending_orders,
+    //             'count_orders' => count($pending_orders),
+    //             'name' =>  'Admin',
+    //             'order_ids' => $order_ids,
+    //             'email' => '',
+    //             'contact_email' => '',
+    //             'subject' => 'Pending ' .' '. 'Orders',
+    //             'from' => SettingHelper::getSetting('noreply_email_address'),
+    //         ];    
+            
+    //         $specific_admin_notifications = SpecificAdminNotification::all();
+    //         if (count($specific_admin_notifications) > 0) {
+    //             foreach ($specific_admin_notifications as $specific_admin_notification) {
+    //                 $subject = 'Orders Not Fullfilled';
+    //                 $adminTemplate = 'emails.orders-not-fullfilled';
+    //                 $data['email'] = $specific_admin_notification->email;
 
+    //                 MailHelper::sendMailNotification('emails.orders-not-fullfilled', $data);
+    //             }
+    //         }
+    //     }
+    // }
+
+
+    public function handle() {
         $pending_orders = ApiOrder::with(['createdby', 'processedby', 'contact'])
-        ->where('order_id' , null)
-        ->where('isApproved' , 0)
-        ->where('payment_status' , '!=' , 'unpaid')
-        // ->whereBetween('created_at', [Carbon::now()->subHours(3), Carbon::now()])
-        ->where('created_at', '<', now()->subHours(3))
-        ->orderBy('id' , 'Desc')->get();
+            ->whereNull('order_id')
+            ->where('isApproved', 0)
+            ->whereNotIn('payment_status', ['unpaid', 'pending'])
+            ->where('created_at', '<', now()->subHours(3))
+            ->orderBy('id', 'desc')
+            ->get();
 
         if (count($pending_orders) > 0) {
             $this->info(count($pending_orders) . ' => Pending Orders Found');
-            $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-
-            $admin_users = $admin_users->toArray();
-
-            $users_with_role_admin = User::select("email")
-                ->whereIn('id', $admin_users)
-                ->get();
+            
             $get_order_ids = [];
             foreach ($pending_orders as $order) {
                 $get_order_ids[] = $order->id;
             }
             $order_ids = implode(',', $get_order_ids);
+
             $data = [
                 'orders' => $pending_orders,
                 'count_orders' => count($pending_orders),
-                'name' =>  'Admin',
+                'name' => 'Admin',
                 'order_ids' => $order_ids,
-                'email' => '',
+                'email' => '', // will be set below
                 'contact_email' => '',
-                'subject' => 'Pending ' .' '. 'Orders',
+                'subject' => 'Pending Orders',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
-            ];    
-            // if (!empty($users_with_role_admin)) {
-            //     foreach ($users_with_role_admin as $role_admin) {
-            //         $subject = 'Orders Not Fullfilled';
-            //         $adminTemplate = 'emails.orders-not-fullfilled';
-            //         $data['email'] = $role_admin->email;
-            //         MailHelper::sendMailNotification('emails.orders-not-fullfilled', $data);
-            //     }
-            // }
+            ];
 
             $specific_admin_notifications = SpecificAdminNotification::all();
             if (count($specific_admin_notifications) > 0) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
-                    $subject = 'Orders Not Fullfilled';
-                    $adminTemplate = 'emails.orders-not-fullfilled';
                     $data['email'] = $specific_admin_notification->email;
-
                     MailHelper::sendMailNotification('emails.orders-not-fullfilled', $data);
                 }
             }
         }
     }
+
+
 }

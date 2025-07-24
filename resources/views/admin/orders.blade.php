@@ -45,6 +45,17 @@
                                     </div>
                                 @endif
                             @endif
+                            @if (isset($show_processing_alert) && $show_processing_alert == true)
+                                @if (!empty($order_ids))
+                                    <div class="alert alert-info alert-dismissible mb-0 unprocess_alert p-1">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <a class="text-white mx-3" href="{{ url('admin/orders?show_processing_orders=1') }}">
+                                            click here
+                                        </a>
+                                        <span>Order #{{ $processingOrderIds }} {{'payment is in processing phase'}}</span>
+                                    </div>
+                                @endif
+                            @endif
                         </div>
                     </div>
                     <div class="row">
