@@ -260,11 +260,11 @@ class SalesOrders implements ShouldQueue
                     ]);
                     Log::info('OrderJobLog created successfully.');
                 } catch (\Exception $e) {
-                    Log::error('Failed to create OrderJobLog', ['error' => $e->getMessage()]);
+                    // Log::error('Failed to create OrderJobLog', ['error' => $e->getMessage()]);
                 }
             }
         }
 
-        Log::error($exception->getMessage());
+        // Log::error($exception->getMessage());
     }
 }

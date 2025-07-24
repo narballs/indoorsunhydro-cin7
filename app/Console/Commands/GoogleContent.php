@@ -103,7 +103,6 @@ class GoogleContent extends Command
         // $inactiveProducts = $this->getInactiveProductIdsFromGMC($client, $token);
         // $zeroPriceProducts = $this->getZeroPriceProductIdsFromGMC($client, $token);
         $disapprovedProducts = array_merge($disapprovedProducts, $inactiveProducts, $zeroPriceProducts);
-        Log::info('Disapproved Products: ' . json_encode($disapprovedProducts));
         $default_price_column = AdminSetting::where('option_name', 'default_price_column')->first();
         if (!empty($default_price_column)) {
             $price_column = $default_price_column->option_value;
@@ -450,7 +449,7 @@ class GoogleContent extends Command
                 // Get the next page token for pagination
                 $pageToken = $productsGMC->getNextPageToken();
             } catch (\Exception $e) {
-                $this->error('Failed to retrieve inactive products from Google Merchant Center. Error: ' . $e->getMessage());
+                // $this->error('Failed to retrieve inactive products from Google Merchant Center. Error: ' . $e->getMessage());
                 return [];
             }
         } while (!empty($pageToken));
@@ -485,7 +484,7 @@ class GoogleContent extends Command
 
                 $pageToken = $productPrices->getNextPageToken();
             } catch (\Exception $e) {
-                $this->error('Failed to retrieve zero-price products from Google Merchant Center. Error: ' . $e->getMessage());
+                // $this->error('Failed to retrieve zero-price products from Google Merchant Center. Error: ' . $e->getMessage());
                 return [];
             }
         } while (!empty($pageToken));

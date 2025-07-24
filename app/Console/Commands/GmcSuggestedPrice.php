@@ -125,7 +125,8 @@ class GmcSuggestedPrice extends Command
             return $finalResults;
 
         } catch (\Exception $e) {
-            return $e->getMessage();
+            // return $e->getMessage();
+            return ;
         }
     }
 
