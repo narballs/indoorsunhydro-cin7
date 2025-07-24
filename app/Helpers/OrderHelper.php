@@ -157,14 +157,14 @@ class OrderHelper {
                 "taxStatus" => 2, //(1 = Tax inclusive, 2 = Tax exclusive, 3 = Tax exempt)
                 "taxRate" => $order->texClasses->rate,
 
-                "source" => "sample string 62",
+                "source" => null,
                 "accountingAttributes" =>
                 [
-                    "importDate" => "2022-07-13T15:21:16.1946848+12:00",
+                    "importDate" => null,
                     "accountingImportStatus" => "NotImported"
                 ],
                 "memberEmail" => "wqszeeshan@gmail.com",
-                "memberCostCenter" => "sample string 6",
+                "memberCostCenter" => null,
                 "memberAlternativeTaxRate" => $order->texClasses->name,
                 "costCenter" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced' ? 'Online Sales' : Null,
                 "alternativeTaxRate" => $order->texClasses->name,
@@ -173,10 +173,10 @@ class OrderHelper {
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
                 "paymentTerms" => $order->paymentTerms,
                 "customerOrderNo" => $order->po_number,
-                "voucherCode" => "sample string 14",
+                "voucherCode" => null,
                 "deliveryInstructions" => $order->memo,
                 "status" => "VOID",
-                "invoiceDate" => null,
+                "invoiceDate" => $dateCreated,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
                 "logisticsCarrier" => $order->logisticsCarrier,
@@ -229,12 +229,12 @@ class OrderHelper {
             $request_count = !empty($cin7api_key_for_other_jobs->request_count) ? $cin7api_key_for_other_jobs->request_count : 0;
             $api_key_id = $cin7api_key_for_other_jobs->id;
         } else {
-            Log::info('No active api key found');
+            // Log::info('No active api key found');
             return false;
         }
 
         if ($request_count >= $threshold) {
-            Log::info('Request count exceeded');
+            // Log::info('Request count exceeded');
             return false;
         }
 
@@ -293,7 +293,6 @@ class OrderHelper {
 
                 $response = json_decode($Payment_response->getBody()->getContents() , true);
 
-                Log::info('Payment response: ' . json_encode($response));
 
 
                 // update logs of payment information
@@ -323,21 +322,7 @@ class OrderHelper {
                         $get_cin7_payment = $get_cin7_payment_response->getBody()->getContents();
                         $get_payment = json_decode($get_cin7_payment, true);
 
-                        // // Update payment information
-                        // if (!empty($get_payment->id)) {
-                        //     $update_payment_information_log = PaymentInformationLog::where('order_id', $order_id)
-                        //         ->where('payment_id', $get_payment->id)
-                        //         ->first();
-
-                        //     if ($update_payment_information_log) {
-                        //         $update_payment_information_log->order_reference = $get_payment->orderRef ?? null;
-                        //         $update_payment_information_log->method = $get_payment->method ?? $update_payment_information_log->method;
-                        //         $update_payment_information_log->amount = $get_payment->amount ?? null;
-                        //         $update_payment_information_log->order_type = $get_payment->orderType ?? null;
-                        //         $update_payment_information_log->branch_id = $get_payment->branchId ?? null;
-                        //         $update_payment_information_log->save();
-                        //     }
-                        // }
+                        
 
                         if (!empty($get_payment['id'])) {
                             $update_payment_information_log = PaymentInformationLog::where('order_id', $order_id)
@@ -356,13 +341,7 @@ class OrderHelper {
 
                     } 
                     catch (\Exception $e) {
-                        // Log::error('Exception occurred while logging payment response', [
-                        //     'message' => $e->getMessage(),
-                        //     'file' => $e->getFile(),
-                        //     'line' => $e->getLine(),
-                        //     'trace' => $e->getTraceAsString(),
-                        // ]);
-
+                       
                         
                         ApiErrorLog::create([
                             'payload' => $e->getMessage(),
