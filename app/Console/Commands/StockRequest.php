@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Helpers\MailHelper;
 use App\Helpers\SettingHelper;
 use App\Models\ProductStockNotification;
+use App\Models\SpecificAdminNotification;
 use App\Models\User;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -61,15 +62,35 @@ class StockRequest extends Command
     }
 
     private function sendEmail($product_stock_notification_users) {
-        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
-        $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
+        // $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
+        // $users_with_role_admin = User::select("email")->whereIn('id', $admin_users)->get();
 
-        if ($users_with_role_admin->isNotEmpty()) {
-            foreach ($users_with_role_admin as $role_admin) {
+        // if ($users_with_role_admin->isNotEmpty()) {
+        //     foreach ($users_with_role_admin as $role_admin) {
+        //         $subject = 'Stock Request Notifications';
+        //         $data = [
+        //             'subject' => $subject,
+        //             'email' => $role_admin->email,
+        //             'product_stock_notification_users' => $product_stock_notification_users,
+        //             'from' => SettingHelper::getSetting('noreply_email_address'),
+        //         ];
+        //         MailHelper::sendMailNotification('pdf.stock_request', $data);
+        //     }
+        // }
+
+
+        $specific_admin_notifications = SpecificAdminNotification::all();
+        if ($specific_admin_notifications->isNotEmpty()) {
+            foreach ($specific_admin_notifications as $specific_admin_notification) {
+                // Check if this admin should receive order notifications
+                if (!$specific_admin_notification->recieve_order_notification) {
+                    continue;
+                }
+
                 $subject = 'Stock Request Notifications';
                 $data = [
                     'subject' => $subject,
-                    'email' => $role_admin->email,
+                    'email' => $specific_admin_notification->email,
                     'product_stock_notification_users' => $product_stock_notification_users,
                     'from' => SettingHelper::getSetting('noreply_email_address'),
                 ];

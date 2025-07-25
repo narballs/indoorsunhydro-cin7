@@ -1096,52 +1096,36 @@ class OrderController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
                     //old code
-                    // if (!empty($users_with_role_admin)) {
-                    //     foreach ($users_with_role_admin as $role_admin) {
+                    
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         if (empty($specific_admin_notification->receive_order_notifications)) {
+                    //             continue;
+                    //         }   
                     //         $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
                     //         $adminTemplate = 'emails.admin-order-received';
                     //         $data['subject'] = $subject;
-                    //         $data['email'] = $role_admin->email;
+                    //         $data['email'] = $specific_admin_notification->email;
                     //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     //     }
                     // }
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
-                            $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
-                            $adminTemplate = 'emails.admin-order-received';
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->recieve_order_notification) {
+                                continue;
+                            }
+
+                            $subject = 'New Indoorsun Hydro order #' . $currentOrder->id . ' received';
                             $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
+                            
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
 
                     
-                    $credit_limit = $customer->contact->credit_limit;
-                    $parent_email = Contact::where('contact_id', $active_contact_id)->first();
-
-                    // if ($credit_limit < $cart_total) {
-                    //     if ($is_primary == null) {
-                    //         $data['subject'] = 'Credit limit reached';
-                    //         $data['email'] = $parent_email->email;
-
-                    //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                    //     }
-                    //     if ($is_primary != null) {
-                    //         $data['subject'] = 'Credit limit reached';
-                    //         $data['email'] = $email;
-
-                    //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                    //     }
-                        
-                    //     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
-                    //     $data['email'] = $email;
-                    //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    // } else {
-                    //     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
-                    //     $data['email'] = $email;
-                    //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    // }
                     if (!empty($email)) {
                         $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
                         $data['email'] = $email;

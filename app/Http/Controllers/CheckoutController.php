@@ -1597,15 +1597,34 @@ class CheckoutController extends Controller
                     ];
     
 
+                    // $specific_admin_notifications = SpecificAdminNotification::all();
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         $subject = 'New order received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['email'] = $specific_admin_notification->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->recieve_order_notification) {
+                                continue;
+                            }
+
                             $subject = 'New order received';
-                            $adminTemplate = 'emails.admin-order-received';
+
+                            $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
+
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
+
+
     
                     if (!empty($customer_email->email)) {
                         $data['email'] = $customer_email->email;
@@ -1783,12 +1802,29 @@ class CheckoutController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
 
+                    // $specific_admin_notifications = SpecificAdminNotification::all();
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         $subject = 'New order received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['email'] = $specific_admin_notification->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->recieve_order_notification) {
+                                continue;
+                            }
+
                             $subject = 'New order received';
-                            $adminTemplate = 'emails.admin-order-received';
+                            
+                            $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
+
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
@@ -2503,22 +2539,32 @@ class CheckoutController extends Controller
                     $access = true;
                     if ($registration_status == true) {
                         if ($is_guest_user == 0) {
-                            // if (!empty($users_with_role_admin)) {
-                            //     foreach ($users_with_role_admin as $role_admin) {
+                            
+
+                            // $specific_admin_notifications = SpecificAdminNotification::all();
+                            // if (count($specific_admin_notifications) > 0) {
+                            //     foreach ($specific_admin_notifications as $specific_admin_notification) {
                             //         $subject = 'New Register User';
-                            //         $data['email'] = $role_admin->email;
+                            //         $data['email'] = $specific_admin_notification->email;
                             //         MailHelper::sendMailNotification('emails.admin_notification', $data);
                             //     }
                             // }
 
                             $specific_admin_notifications = SpecificAdminNotification::all();
-                            if (count($specific_admin_notifications) > 0) {
+                            if ($specific_admin_notifications->isNotEmpty()) {
                                 foreach ($specific_admin_notifications as $specific_admin_notification) {
+                                    // Check if this admin should receive order notifications
+                                    if (!$specific_admin_notification->recieve_order_notification) {
+                                        continue;
+                                    }
+
                                     $subject = 'New Register User';
                                     $data['email'] = $specific_admin_notification->email;
+
                                     MailHelper::sendMailNotification('emails.admin_notification', $data);
                                 }
                             }
+                            
     
                             if (!empty($created_contact)) {
                                 if ($auto_approved == true) {

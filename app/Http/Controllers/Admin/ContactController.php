@@ -29,6 +29,7 @@ use App\Helpers\UtilHelper;
 use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
@@ -400,9 +401,22 @@ class ContactController extends Controller
                 'content' => 'New account activated.'
             ];
 
-            if (!empty($users_with_role_admin)) {
-                foreach ($users_with_role_admin as $role_admin) {
-                    $data['email'] = $role_admin->email;
+            // if (!empty($users_with_role_admin)) {
+            //     foreach ($users_with_role_admin as $role_admin) {
+            //         $data['email'] = $role_admin->email;
+            //         $adminTemplate = 'emails.approval-notifications';
+            //         MailHelper::sendMailNotification('emails.approval-notifications', $data);
+            //     }
+            // }
+            $specific_admin_notifications = SpecificAdminNotification::all();
+            if ($specific_admin_notifications->isNotEmpty()) {
+                foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    // Check if this admin should receive order notifications
+                    if (!$specific_admin_notification->recieve_order_notification) {
+                        continue;
+                    }
+
+                    $data['email'] = $specific_admin_notification->email;
                     $adminTemplate = 'emails.approval-notifications';
                     MailHelper::sendMailNotification('emails.approval-notifications', $data);
                 }
