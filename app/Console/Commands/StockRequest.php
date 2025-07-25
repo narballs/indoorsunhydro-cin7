@@ -83,7 +83,7 @@ class StockRequest extends Command
         if ($specific_admin_notifications->isNotEmpty()) {
             foreach ($specific_admin_notifications as $specific_admin_notification) {
                 // Check if this admin should receive order notifications
-                if (!$specific_admin_notification->recieve_order_notification) {
+                if (!$specific_admin_notification->receive_order_notifications) {
                     continue;
                 }
 
