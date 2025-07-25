@@ -442,7 +442,7 @@ class LabelHelper {
 
         
         // Get all admins who opted to receive label notifications
-        $specific_admin_notifications = SpecificAdminNotification::where('recieve_label_notification', true)->pluck('email')->toArray();
+        $specific_admin_notifications = SpecificAdminNotification::where('receive_label_notifications', true)->pluck('email')->toArray();
 
         if (!empty($specific_admin_notifications)) {
             $email_addresses = $specific_admin_notifications;
