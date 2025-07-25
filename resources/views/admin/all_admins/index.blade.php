@@ -1,91 +1,100 @@
 @extends('adminlte::page')
-@section('title', 'Dashboard')
-@section('content_header')
-@stop
+
+@section('title', 'All Admins')
+
 @section('content')
-    @if (\Session::has('success'))
-        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-            {!! \Session::get('success') !!}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @elseif (\Session::has('error'))
-        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-            {!! \Session::get('error') !!}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
+@if (\Session::has('success'))
+    <div class="alert alert-success">{{ \Session::get('success') }}</div>
+@endif
 
-    <div class="alert alert-info alert-dismissible fade show mt-2 select_user_div" role="alert">
-        <span class="select_user_text"></span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+@if (\Session::has('error'))
+    <div class="alert alert-danger">{{ \Session::get('error') }}</div>
+@endif
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h3 class="card-title">Admin Notification Preferences</h3>
     </div>
-    <div class="table-wrapper">
-        <div class="card-body product_secion_main_body">
-            <div class="row border-bottom product_section_header">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6 mobile_heading">
-                            <p class="product_heading">
-                                All Admins
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card card-body  mt-5">
-            <div>
-                <button class="btn btn-primary select_specific_admins mb-3" onclick="select_specific_admins()">Submit</button>
-            </div>
-            <div class="col-md-12 shadow border">
-                
-                <table class="table table-border">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+    <div class="card-body">
+        <button class="btn btn-primary select_specific_admins mb-3" onclick="select_specific_admins()" style="display: none;">Submit</button>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Email</th>
+                        <th>Receive Order Notifications</th>
+                        <th>Receive Label Notifications</th>
+                        <th>Receive Accounting Reports</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $i = 1; @endphp
+                    @foreach ($admins as $admin)
                         @php
-                            $i =1; 
+                            $record = $specific_admin_notifications->firstWhere('user_id', $admin->id);
                         @endphp
-                        @if(count($admins) > 0 )
-                            @foreach ($admins as $admin)
-                            @php
-                               $find_user = in_array($admin->id, $specific_admins); 
-                            @endphp
-                                <tr>
-                                    <td>
-                                        <span>
-                                            <input type="checkbox" class="admin_users" onclick="select_user()" {{!empty($find_user) && $find_user == true ? 'checked' : '' }}  data-id="{{$admin->id}}"  id="admin_users{{$admin->id}}" name="admin_users[]" value="{{ $admin->id }}">
-                                        </span>
-                                        <span>
-                                            {{ $i++ }}
-                                        </span>
-                                    </td>
-                                    <td>{{$admin->email}}</td>
-                                </tr>
-                            @endforeach
-                        @else
                         <tr>
-                            <td colspan="3">No Admins Found</td>
+                            <td>{{ $i++ }}</td>
+                            <td>{{ $admin->email }}</td>
+
+                            <!-- Order Notification -->
+                            <td>
+                                <div class="form-group mb-0">
+                                    <label class="switch">
+                                        <input type="checkbox"
+                                               class="switch-input admin_users"
+                                               name="admin_users[]"
+                                               value="{{ $admin->id }}"
+                                               onclick="select_user()"
+                                               {{ $record && $record->receive_order_notifications ? 'checked' : '' }}>
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </td>
+
+                            <!-- Label Notification -->
+                            <td>
+                                <div class="form-group mb-0">
+                                    <label class="switch">
+                                        <input type="checkbox"
+                                               class="switch-input label_admin_users"
+                                               name="label_admin_users[]"
+                                               value="{{ $admin->id }}"
+                                               onclick="select_user()"
+                                               {{ $record && $record->receive_label_notifications ? 'checked' : '' }}>
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </td>
+
+                            <!-- Accounting Notification -->
+                            <td>
+                                <div class="form-group mb-0">
+                                    <label class="switch">
+                                        <input type="checkbox"
+                                               class="switch-input accounting_admin_users"
+                                               name="accounting_admin_users[]"
+                                               value="{{ $admin->id }}"
+                                               onclick="select_user()"
+                                               {{ $record && $record->receive_accounting_reports ? 'checked' : '' }}>
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span>
+                                        <span class="switch-handle"></span>
+                                    </label>
+                                </div>
+                            </td>
                         </tr>
-                        @endif
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-    @stop
-
-
-    @section('css')
+    </div>
+</div>
+@stop
+@section('css')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('admin/admin_lte.css') }}">
     <style type="text/css">
@@ -273,65 +282,61 @@
             font-weight: 500;
             font-size: 11.3289px;
         }
-        .custom-checkbox {
-            min-height: 1rem;
-            padding-left: 0;
-            margin-right: 0;
-            cursor: pointer;
-        }
-
-        .custom-checkbox .custom-control-indicator {
-            content: "";
-            display: inline-block;
+        .switch {
             position: relative;
-            width: 30px;
-            height: 10px;
-            background-color: #818181;
-            border-radius: 15px;
-            margin-right: 10px;
-            -webkit-transition: background .3s ease;
-            transition: background .3s ease;
-            vertical-align: middle;
-            margin: 0 16px;
-            box-shadow: none;
-        }
-
-        .custom-checkbox .custom-control-indicator:after {
-            content: "";
-            position: absolute;
             display: inline-block;
-            width: 18px;
-            height: 18px;
-            background-color: #f1f1f1;
-            border-radius: 21px;
-            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
-            left: -2px;
-            top: -4px;
-            -webkit-transition: left .3s ease, background .3s ease, box-shadow .1s ease;
-            transition: left .3s ease, background .3s ease, box-shadow .1s ease;
+            width: 70px;
+            user-select: none;
         }
-
-        .custom-checkbox .custom-control-input:checked~.custom-control-indicator {
+        .switch-input {
+            display: none;
+        }
+        .switch-label {
+            display: block;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #eceeef;
+            border-radius: 20px;
+        }
+        .switch-label:before, .switch-label:after {
+            content: attr(data-off);
+            display: block;
+            width: 50%;
+            float: left;
+            text-align: center;
+            line-height: 30px;
+            font-size: 14px;
+            color: white;
+            background-color: #eceeef;
+            transition: 0.3s;
+        }
+        .switch-input:checked + .switch-label:before {
             background-color: #28a745;
-            background-image: none;
-            box-shadow: none !important;
+            content: attr(data-on);
         }
-
-        .custom-checkbox .custom-control-input:checked~.custom-control-indicator:after {
+        .switch-input:checked + .switch-label:after {
             background-color: #28a745;
-            left: 15px;
         }
-
-        .custom-checkbox .custom-control-input:focus~.custom-control-indicator {
-            box-shadow: none !important;
+        .switch-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 30px;
+            height: 28px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.3s;
         }
-
+        .switch-input:checked + .switch-label + .switch-handle {
+            left: 38px;
+        }
     </style>
+
 @stop
 
 
 @section('js')
-<script>
+{{-- <script>
     $(document).ready(function() {
         $('.select_specific_admins').hide();
         $('.select_user_div').hide();
@@ -385,5 +390,80 @@
             alert('Please select atleast one admin');
         }
     }
+</script> --}}
+<script>
+    $(document).ready(function() {
+        $('.select_specific_admins').hide();
+        $('.select_user_div').hide();
+    });
+
+    function select_user() {
+        let checked = $('input[type="checkbox"]:checked').length > 0;
+        if (checked) {
+            $('.select_specific_admins').show();
+        } else {
+            $('.select_specific_admins').hide();
+        }
+    }
+
+    function select_specific_admins() {
+        $('.select_specific_admins').hide();
+
+        let admin_users = [];
+        $("input.admin_users:checked").each(function() {
+            admin_users.push($(this).val());
+        });
+
+        let label_admin_users = [];
+        $("input.label_admin_users:checked").each(function() {
+            label_admin_users.push($(this).val());
+        });
+
+        let accounting_admin_users = [];
+        $("input.accounting_admin_users:checked").each(function() {
+            accounting_admin_users.push($(this).val());
+        });
+
+        if (admin_users.length || label_admin_users.length || accounting_admin_users.length) {
+            $.ajax({
+                url: "{{ route('send_email_to_specific_admin') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    admin_users: admin_users,
+                    label_admin_users: label_admin_users,
+                    accounting_admin_users: accounting_admin_users
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: response.status ? 'success' : 'error',
+                        title: response.status ? 'Success' : 'Error',
+                        text: response.msg,
+                        confirmButtonColor: '#28a745',
+                    }).then((result) => {
+                        if (response.status) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong while processing your request.',
+                        confirmButtonColor: '#dc3545',
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one admin.',
+                confirmButtonColor: '#ffc107',
+            });
+        }
+    }
+
 </script>
 @stop

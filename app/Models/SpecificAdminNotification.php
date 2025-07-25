@@ -11,5 +11,8 @@ class SpecificAdminNotification extends Model
     protected $fillable = [
         'user_id',
         'email',
+        'receive_order_notifications',
+        'receive_label_notifications',
+        'receive_accounting_reports',
     ];
 }

@@ -119,13 +119,21 @@ class CheckOrderStatus extends Command
                 'from' => SettingHelper::getSetting('noreply_email_address'),
             ];
 
+            
             $specific_admin_notifications = SpecificAdminNotification::all();
-            if (count($specific_admin_notifications) > 0) {
+            if ($specific_admin_notifications->isNotEmpty()) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    // Check if this admin should receive order notifications
+                    if (!$specific_admin_notification->recieve_order_notification) {
+                        continue;
+                    }
+
                     $data['email'] = $specific_admin_notification->email;
                     MailHelper::sendMailNotification('emails.orders-not-fullfilled', $data);
                 }
             }
+
+            
         }
     }
 

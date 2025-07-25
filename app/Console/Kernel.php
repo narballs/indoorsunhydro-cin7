@@ -94,6 +94,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('Assign:UserToContacts')->hourly();
         $schedule->command('reset:cin7_api_keys')->dailyAt('00:00');
         $schedule->command('import:stripe-transactions')->dailyAt('00:00');
+        $schedule->command('sales:send-daily-report')->dailyAt('08:00');
 
 
         // $schedule->command('contacts:send-invalid-contacts-summary')->weeklyOn(1, '10:00');
@@ -182,32 +183,32 @@ class Kernel extends ConsoleKernel
 
         // sales report settings
 
-        $sales_interval_summary_times = SalesReportInterval::all();
+        // $sales_interval_summary_times = SalesReportInterval::all();
 
-        if ($sales_interval_summary_times->isEmpty()) {
-            // Fallback if no intervals found
-            $schedule->command('sales:send-daily-report')
-                ->dailyAt('08:00')
-                ->name('daily-sales-report-default')
-                ->withoutOverlapping();
-            return;
-        }
+        // if ($sales_interval_summary_times->isEmpty()) {
+        //     // Fallback if no intervals found
+        //     $schedule->command('sales:send-daily-report')
+        //         ->dailyAt('08:00')
+        //         ->name('daily-sales-report-default')
+        //         ->withoutOverlapping();
+        //     return;
+        // }
 
-        foreach ($sales_interval_summary_times as $interval) {
-            if (!empty($interval->report_time)) {
-                try {
-                    $formattedTime = Carbon::createFromFormat('H:i:s', $interval->report_time)->format('H:i');
+        // foreach ($sales_interval_summary_times as $interval) {
+        //     if (!empty($interval->report_time)) {
+        //         try {
+        //             $formattedTime = Carbon::createFromFormat('H:i:s', $interval->report_time)->format('H:i');
 
-                    $schedule->command('sales:send-daily-report')
-                        ->dailyAt($formattedTime)
-                        ->name('daily-sales-report-' . str_replace(':', '-', $formattedTime))
-                        ->withoutOverlapping();
+        //             $schedule->command('sales:send-daily-report')
+        //                 ->dailyAt($formattedTime)
+        //                 ->name('daily-sales-report-' . str_replace(':', '-', $formattedTime))
+        //                 ->withoutOverlapping();
 
-                } catch (\Exception $e) {
-                    Log::error("Invalid report_time format in Sales Report ID {$interval->id}: {$interval->report_time}");
-                }
-            }
-        }
+        //         } catch (\Exception $e) {
+        //             Log::error("Invalid report_time format in Sales Report ID {$interval->id}: {$interval->report_time}");
+        //         }
+        //     }
+        // }
 
     }
 

@@ -1136,21 +1136,32 @@ class UserController extends Controller
                     'from' => SettingHelper::getSetting('noreply_email_address')
                 ];
                 if ($registration_status == true) {
-                    // if (!empty($users_with_role_admin)) {
-                    //     foreach ($users_with_role_admin as $role_admin) {
+                    
+                    // $specific_admin_notifications = SpecificAdminNotification::all();
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
                     //         $subject = 'New Register User';
-                    //         $data['email'] = $role_admin->email;
+                    //         $data['email'] = $specific_admin_notification->email;
                     //         MailHelper::sendMailNotification('emails.admin_notification', $data);
                     //     }
                     // }
+
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->recieve_order_notification) {
+                                continue;
+                            }
+
                             $subject = 'New Register User';
+                            
                             $data['email'] = $specific_admin_notification->email;
+
                             MailHelper::sendMailNotification('emails.admin_notification', $data);
                         }
                     }
+                    
                     if (!empty($created_contact)) {
                         if ($auto_approved == true) {
                             $data['contact_name'] = $created_contact->firstName . ' ' . $created_contact->lastName;

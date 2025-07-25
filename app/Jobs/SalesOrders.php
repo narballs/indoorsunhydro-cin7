@@ -142,10 +142,23 @@ class SalesOrders implements ShouldQueue
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
             
-            if (count($specific_admin_notifications) > 0) {
-                foreach ($specific_admin_notifications as $role_admin) {
-                    $data['email'] = $role_admin->email;
-                    $adminTemplate = 'emails.approval-notifications';
+            // if (count($specific_admin_notifications) > 0) {
+            //     foreach ($specific_admin_notifications as $role_admin) {
+            //         $data['email'] = $role_admin->email;
+            //         $adminTemplate = 'emails.approval-notifications';
+            //         MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+            //     }
+            // }
+
+            $specific_admin_notifications = SpecificAdminNotification::all();
+            if ($specific_admin_notifications->isNotEmpty()) {
+                foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    // Check if this admin should receive order notifications
+                    if (!$specific_admin_notification->recieve_order_notification) {
+                        continue;
+                    }
+
+                    $data['email'] = $specific_admin_notification->email;
                     MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
                 }
             }
