@@ -392,6 +392,13 @@ class UserController extends Controller
                 }
             }
         }
+       
+        if (!empty($request->input('roles') && !empty($request->input('roles')[0]) && $request->input('roles')[0] == 'user')) {
+            $find_email = SpecificAdminNotification::where('email', $request->email)->first();
+            if (!empty($find_email)) {
+                $find_email->delete();
+            }            
+        }
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
