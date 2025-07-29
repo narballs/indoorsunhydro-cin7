@@ -154,4 +154,8 @@ class ApiOrder extends Model
     {
         return $this->hasOne('App\Models\OrderReminder', 'order_id', 'id');
     }
+    Public function drop_shipped()
+    {
+        return $this->hasOne('App\Models\DropShipped', 'order_id', 'id');
+    } 
 }
