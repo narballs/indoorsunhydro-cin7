@@ -1803,7 +1803,7 @@ class OrderController extends Controller
                         'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                     ]);
 
-                    $update_internal_comments = $order->internalComments . '<br>' . $get_refund_reason_comment;
+                    $update_internal_comments = !empty($get_refund_reason_comment) ? $order->internalComments . '<br>' . $get_refund_reason_comment : $order->internalComments;
                 }
 
                 if ($current_order_status->status == 'Cancelled') {
@@ -1811,6 +1811,8 @@ class OrderController extends Controller
                         'order_status_id' => $order_status_id,
                         'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
                     ]);
+
+                    $update_internal_comments = !empty($get_refund_reason_comment) ? $order->internalComments . '<br>' . $get_refund_reason_comment : $order->internalComments;
                 }
 
                 $curent_order_voided = $get_order->isVoid ?? false;
