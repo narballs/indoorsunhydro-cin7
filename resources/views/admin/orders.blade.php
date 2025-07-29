@@ -436,6 +436,14 @@
                                                         <button type="button" class="badge badge-warning p-2 border-0 ml-2">
                                                             Manual Label
                                                         </button>
+                                                        <button type="button" 
+                                                                class="badge badge-primary p-2 border-0 ml-2 open-mark-shipped-modal" 
+                                                                data-toggle="modal" 
+                                                                data-target="#markShippedModal" 
+                                                                data-order-id="{{ $order->id }}"
+                                                                data-shipstation-order-id="{{ $order->shipstation_orderId }}">
+                                                            Mark Shipped
+                                                        </button>
                                                     </div>
                                                 @elseif(!empty($order->buylist_id))
                                                     <div class="d-flex justify-content-center">
@@ -513,21 +521,37 @@
                                                                     <button type="button" class="badge badge-warning p-2 border-0 ml-2">
                                                                         Manual Label
                                                                     </button>
+                                                                    <button type="button" 
+                                                                            class="badge badge-primary p-2 border-0 ml-2 open-mark-shipped-modal" 
+                                                                            data-toggle="modal" 
+                                                                            data-target="#markShippedModal" 
+                                                                            data-order-id="{{ $order->id }}"
+                                                                            data-shipstation-order-id="{{ $order->shipstation_orderId }}">
+                                                                        Mark Shipped
+                                                                    </button>
                                                                 </div>
 
                                                             {{-- Case: SEKO carrier, label not created, not shipped --}}
                                                             @elseif (!$labelCreated && !$isShipped && $isSekoWalleted)
                                                                 <div class="d-flex">
-                                                                    <form action="{{ url('admin/mark/order/shipped') }}" method="post">
+                                                                    {{-- <form action="{{ url('admin/mark/order/shipped') }}" method="post">
                                                                         @csrf
                                                                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                                                                         <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
                                                                         <button type="submit" class="badge badge-primary p-2 border-0">
                                                                             Mark Shipped
                                                                         </button>
-                                                                    </form>
+                                                                    </form> --}}
                                                                     <button type="button" class="badge badge-warning p-2 border-0 ml-2">
                                                                         Manual Label
+                                                                    </button>
+                                                                    <button type="button" 
+                                                                            class="badge badge-primary p-2 border-0 ml-2 open-mark-shipped-modal" 
+                                                                            data-toggle="modal" 
+                                                                            data-target="#markShippedModal" 
+                                                                            data-order-id="{{ $order->id }}"
+                                                                            data-shipstation-order-id="{{ $order->shipstation_orderId }}">
+                                                                        Mark Shipped
                                                                     </button>
                                                                 </div>
 
@@ -542,14 +566,22 @@
                                                                             Create Label
                                                                         </button>
                                                                     </form>
-                                                                    <form action="{{ url('admin/mark/order/shipped') }}" method="post">
+                                                                    {{-- <form action="{{ url('admin/mark/order/shipped') }}" method="post">
                                                                         @csrf
                                                                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                                                                         <input type="hidden" name="shipstation_orderId" value="{{ $order->shipstation_orderId }}">
                                                                         <button type="submit" class="badge badge-primary p-2 border-0">
                                                                             Mark Shipped
                                                                         </button>
-                                                                    </form>
+                                                                    </form> --}}
+                                                                    <button type="button" 
+                                                                            class="badge badge-primary p-2 border-0 ml-2 open-mark-shipped-modal" 
+                                                                            data-toggle="modal" 
+                                                                            data-target="#markShippedModal" 
+                                                                            data-order-id="{{ $order->id }}"
+                                                                            data-shipstation-order-id="{{ $order->shipstation_orderId }}">
+                                                                        Mark Shipped
+                                                                    </button>
                                                                 </div>
 
                                                             {{-- Case: Label created or shipped --}}
@@ -600,7 +632,7 @@
                                                     @else
                                                         @if ($order->label_created == 0 && $order->is_shipped == 0 && $order->shipping_carrier_code == 'seko_ltl_walleted')
                                                             <div class="d-flex">
-                                                                <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                                {{-- <form action="{{url('admin/mark/order/shipped')}}" method="post">
                                                                     @csrf
                                                                     <input type="hidden" name="order_id" id="order_id"
                                                                         value="{{ $order->id }}">
@@ -609,7 +641,15 @@
                                                                     <button type="submit" class="badge badge-primary p-2 border-0">
                                                                         Mark Shipped
                                                                     </button>
-                                                                </form>
+                                                                </form> --}}
+                                                                <button type="button" 
+                                                                        class="badge badge-primary p-2 border-0 ml-2 open-mark-shipped-modal" 
+                                                                        data-toggle="modal" 
+                                                                        data-target="#markShippedModal" 
+                                                                        data-order-id="{{ $order->id }}"
+                                                                        data-shipstation-order-id="{{ $order->shipstation_orderId }}">
+                                                                    Mark Shipped
+                                                                </button>
         
                                                                 <button type="button" class="badge badge-warning p-2 border-0 ml-2">
                                                                     Manual Label
@@ -628,7 +668,7 @@
                                                                     </button>
                                                                 </form>
     
-                                                                <form action="{{url('admin/mark/order/shipped')}}" method="post">
+                                                                {{-- <form action="{{url('admin/mark/order/shipped')}}" method="post">
                                                                     @csrf
                                                                     <input type="hidden" name="order_id" id="order_id"
                                                                         value="{{ $order->id }}">
@@ -637,7 +677,15 @@
                                                                     <button type="submit" class="badge badge-primary p-2 border-0">
                                                                         Mark Shipped
                                                                     </button>
-                                                                </form>
+                                                                </form> --}}
+                                                                <button type="button" 
+                                                                        class="badge badge-primary p-2 border-0 ml-2 open-mark-shipped-modal" 
+                                                                        data-toggle="modal" 
+                                                                        data-target="#markShippedModal" 
+                                                                        data-order-id="{{ $order->id }}"
+                                                                        data-shipstation-order-id="{{ $order->shipstation_orderId }}">
+                                                                    Mark Shipped
+                                                                </button>
     
                                                             </div>
 
@@ -875,6 +923,50 @@
               </div>
             </div>
           </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="markShippedModal" tabindex="-1" role="dialog" aria-labelledby="markShippedModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <form action="{{ url('admin/mark/order/shipped') }}" method="post" id="markShippedForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="markShippedModalLabel">
+                            Enter Notes regarding the drop ship (e.g. vendor, sales order #, invoice #)
+                        </h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- Hidden fields -->
+                        <input type="hidden" id="main_order_id" name="main_order_id">
+                        <input type="hidden" id="markShippedOrderId" name="main_shipstation_order_id">
+
+                        <!-- Description field -->
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea name="description" id="description" class="form-control" rows="5" placeholder="Enter any notes..."></textarea>
+                        </div>
+
+                        <!-- Loader (hidden by default) -->
+                        <div id="markShippedLoader" class="text-center my-3" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p class="mt-2">Processing shipment...</p>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="markShippedSubmitBtn">Yes, Mark Shipped</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
       
@@ -1388,6 +1480,20 @@
                 // Optional: disable the submit button to prevent multiple clicks
                 $(this).find('button[type="submit"]').prop('disabled', true);
             });
+        });
+
+        $(document).on('click', '.open-mark-shipped-modal', function () {
+            let orderId = $(this).data('order-id');
+            let shipstationOrderId = $(this).data('shipstation-order-id');
+
+            $('#main_order_id').val(orderId);
+            $('#markShippedOrderId').val(shipstationOrderId);
+        });
+
+        // Show loader when the form is submitted
+        $('#markShippedForm').on('submit', function () {
+            $('#markShippedLoader').show();
+            $('#markShippedSubmitBtn').prop('disabled', true);
         });
 
         // delete employee ajax request

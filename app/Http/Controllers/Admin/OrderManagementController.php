@@ -212,7 +212,7 @@ class OrderManagementController extends Controller
             $auto_fullfill = false;
         }
         $statuses = OrderStatus::all();
-        $order = ApiOrder::where('id', $id)->with('texClasses' , 'orderJobLog')
+        $order = ApiOrder::where('id', $id)->with('texClasses' , 'orderJobLog','drop_shipped')
         ->with([
             'secondary_contact' => function ($query) {
                 $query->withTrashed();
