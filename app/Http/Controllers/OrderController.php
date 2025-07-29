@@ -1842,6 +1842,8 @@ class OrderController extends Controller
 
                     $response = json_decode($res->getBody()->getContents());
 
+                    Log::info('Cin7 Sales Order Updated: ' . json_encode($response));
+
                 }
             }
         } catch (\Exception $e) {
