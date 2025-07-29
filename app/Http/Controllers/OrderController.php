@@ -1785,6 +1785,14 @@ class OrderController extends Controller
     
             $cin7_order = $res->getBody()->getContents();
             $get_order = json_decode($cin7_order);
+            // Correct way to log internalComments as part of a message
+            Log::info('Cin7 Sales Order Comments: ' . ($get_order->internalComments ?? 'N/A'));
+
+            // Correct way to log full object as a string
+            Log::info('Cin7 Sales Order: ' . json_encode($get_order));
+
+
+            
 
             $update_internal_comments = '';
             $get_refund_reason_comment = '';
