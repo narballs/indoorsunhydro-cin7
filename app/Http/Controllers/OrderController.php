@@ -35,6 +35,7 @@ use App\Models\BuyListShippingAndDiscount;
 use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
+use App\Models\DropShipped;
 use App\Models\OrderRefund;
 use App\Models\OrderReminder;
 use App\Models\OrderStatus;
@@ -2865,18 +2866,103 @@ class OrderController extends Controller
     }
 
 
+    // public function mark_order_shipped(Request $request) {
+    //     $order_id = $request->order_id;
+    //     $order = ApiOrder::where('id', $order_id)->first();
+    //     if (empty($order)) {
+    //         return redirect()->back()->with('error', 'Order not found');
+    //     }
+
+    //     $order->is_shipped = 1;
+    //     $order->label_created = 1;
+    //     $order->save();
+
+    //     return redirect()->back()->with('success', 'Order marked as shipped');
+    // }
+
+
     public function mark_order_shipped(Request $request) {
-        $order_id = $request->order_id;
+        $order_id = $request->main_order_id;
+        $shipstation_order_id = $request->main_shipstation_order_id;
         $order = ApiOrder::where('id', $order_id)->first();
         if (empty($order)) {
             return redirect()->back()->with('error', 'Order not found');
         }
 
-        $order->is_shipped = 1;
-        $order->label_created = 1;
-        $order->save();
+        $order_contact = Contact::where('contact_id', $order->memberId)
+        ->orWhere('parent_id' , $order->memberId)
+        ->first();
 
-        return redirect()->back()->with('success', 'Order marked as shipped');
+        $name = !empty($order_contact) && $order_contact->DeliveryFirstName  ? $order_contact->DeliveryFirstName. ' ' .$order_contact->DeliveryLastName : ''; 
+
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    ->where('order_id', $order_id)
+                    ->get();
+
+        $main_user_email = !empty($order_contact) ? $order_contact->email : '';
+
+
+        $data = [
+            'name' =>  $name,
+            'email' => $main_user_email,
+            'subject' => 'Track Your Order #'. $order_id  ,
+            'order_items' => $order_items,
+            'tracking_url' => null,
+            'tracking_number' => null,
+            'service_code' => null,
+            'carrier_code' => null,
+            'from' => SettingHelper::getSetting('noreply_email_address')
+        ];
+
+
+
+        $response = Http::withBasicAuth(env('SHIPMENT_KEY'), env('SHIPMENT_SECRET'))
+            ->get('https://ssapi.shipstation.com/shipments', [
+                'orderId' => $shipstation_order_id
+            ]);
+
+        if ($response->successful()) {
+            // Convert response to array
+            $shipment = $response['shipments'][0] ?? null;
+            if ($shipment) {
+                $trackingNumber = $shipment['trackingNumber'];
+                $carrierCode = $shipment['carrierCode'];
+                $serviceCode = $shipment['serviceCode'];
+                $user_email = !empty($shipment['customerEmail']) ? $shipment['customerEmail'] : $main_user_email;
+                
+                $order->is_shipped = 1;
+                $order->label_created = 1;
+                $order->tracking_number = $trackingNumber;
+                $order->shipping_carrier_code = empty($order->shipping_carrier_code) ? $carrierCode : $order->shipping_carrier_code;
+                $order->shipping_service_code = empty($order->shipping_service_code) ? $serviceCode : $order->shipping_service_code;
+                $order->save();
+
+                $drop_shipped = new DropShipped();
+                $drop_shipped->order_id = $order_id;
+                $drop_shipped->description = $request->description;
+                $drop_shipped->save();
+
+                $data ['tracking_url'] = 'https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum=' . $trackingNumber;
+                $data ['tracking_number'] = $trackingNumber;
+                $data ['service_code'] = $order->shipping_service_code;
+                $data ['carrier_code'] = $order->shipping_carrier_code;
+
+
+                if (!empty($user_email)) {
+                    $data['email'] = $user_email;
+                    MailHelper::sendMailNotification('emails.track_order_template', $data);
+                }
+
+                return redirect()->back()->with('success', 'Order marked as shipped');
+            } else {
+                return redirect()->back()->with('error' , 'shipment not found');
+            }
+
+        } else {
+            // Handle errors
+            return redirect()->back()->with('error', $response->body());
+        }
+
     }
 
 

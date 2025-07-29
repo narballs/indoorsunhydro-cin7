@@ -608,6 +608,19 @@
                                             <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" target="_blank" class="text-primary">Track Order</a>
                                         @endif
 
+                                        @if (!empty($order->drop_shipped) && !empty($order->drop_shipped->description))
+                                            <div class="row my-2">
+                                                <div class="col-12">
+                                                    <h6><strong>Notes regarding the drop ship</strong></h6>
+                                                </div>
+                                                <div class="col-12">
+                                                    <p>
+                                                        {{ $order->drop_shipped->description }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endif
+
 
 
                                     </div>
