@@ -1785,13 +1785,6 @@ class OrderController extends Controller
     
             $cin7_order = $res->getBody()->getContents();
             $get_order = json_decode($cin7_order);
-            // Correct way to log internalComments as part of a message
-            Log::info('Cin7 Sales Order Comments: ' . ($get_order->internalComments ?? 'N/A'));
-
-            // Correct way to log full object as a string
-            Log::info('Cin7 Sales Order: ' . json_encode($get_order));
-
-
             
 
             $update_internal_comments = '';
@@ -1799,7 +1792,6 @@ class OrderController extends Controller
             $get_refund_reason = OrderComment::where('order_id', $order->id)
                 ->where('comment', 'like', '%Refund Note:%')
                 ->first();
-            Log::info('Cin7 Sales Order Refund Reason: ' . json_encode($get_refund_reason));
             if (!empty($get_refund_reason)) {
                 $get_refund_reason_comment = str_replace('Refund Note:', '', $get_refund_reason->comment);
             }
@@ -1840,8 +1832,6 @@ class OrderController extends Controller
                     $update_array = [
                         [
                             "id" => $order->order_id,
-                            // "isVoid" => true,
-                            // "isApproved" => false,
                             "internalComments" => $update_internal_comments,
                         ]
                     ];
@@ -1852,7 +1842,23 @@ class OrderController extends Controller
 
                     $response = json_decode($res->getBody()->getContents());
 
-                    Log::info('Cin7 Sales Order Updated: ' . json_encode($response));
+                    // voiding the order
+                    
+                    UtilHelper::saveEndpointRequestLog('Update Sales Order','https://api.cin7.com/api/v1/SalesOrders', $api_key_id);
+
+                    $void_payload = [
+                        [
+                            "id" => $order->order_id,
+                            "isVoid" => true,
+                            "isApproved" => false,
+                        ]
+                    ];
+
+                    $authHeaders['json'] = $void_payload;
+
+                    $res = $client->put($url, $authHeaders);
+
+                    $response = json_decode($res->getBody()->getContents());
 
                 }
             }
