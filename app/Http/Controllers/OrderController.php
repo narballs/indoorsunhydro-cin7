@@ -1840,8 +1840,8 @@ class OrderController extends Controller
                     $update_array = [
                         [
                             "id" => $order->order_id,
-                            "isVoid" => true,
-                            "isApproved" => false,
+                            // "isVoid" => true,
+                            // "isApproved" => false,
                             "internalComments" => $update_internal_comments,
                         ]
                     ];
