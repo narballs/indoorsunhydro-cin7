@@ -1799,7 +1799,7 @@ class OrderController extends Controller
             $get_refund_reason = OrderComment::where('order_id', $order->id)
                 ->where('comment', 'like', '%Refund Note:%')
                 ->first();
-
+            Log::info('Cin7 Sales Order Refund Reason: ' . json_encode($get_refund_reason));
             if (!empty($get_refund_reason)) {
                 $get_refund_reason_comment = str_replace('Refund Note:', '', $get_refund_reason->comment);
             }
