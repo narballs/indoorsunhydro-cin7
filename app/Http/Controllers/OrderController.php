@@ -1512,7 +1512,7 @@ class OrderController extends Controller
 
                                 $order_comment = new OrderComment;
                                 $order_comment->order_id = $order_id;
-                                $order_comment->comment = !empty($request->refund_reason) ? $request->refund_reason : '';    
+                                $order_comment->comment = !empty($request->refund_reason) ? 'Partial Refund Note :'.' '.$request->refund_reason : '';    
                                 $order_comment->save();
                             }
 
@@ -1544,7 +1544,7 @@ class OrderController extends Controller
 
                         $order_comment = new OrderComment;
                         $order_comment->order_id = $order_id;
-                        $order_comment->comment = !empty($request->refund_reason) ? $request->refund_reason : '';    
+                        $order_comment->comment = !empty($request->refund_reason) ? 'Refund Note:'.' '.$request->refund_reason : '';    
                         $order_comment->save();
 
                         if (!empty($order->order_id)) {
@@ -1785,6 +1785,16 @@ class OrderController extends Controller
     
             $cin7_order = $res->getBody()->getContents();
             $get_order = json_decode($cin7_order);
+
+            $update_internal_comments = '';
+            $get_refund_reason_comment = '';
+            $get_refund_reason = OrderComment::where('id', $order->id)
+                ->where('comment', 'like', '%Refund Note:%')
+                ->first();
+
+            if (!empty($get_refund_reason)) {
+                $get_refund_reason_comment = str_replace('Refund Note:', '', $get_refund_reason->comment);
+            }
     
             if (!empty($get_order)) {
                 if ($current_order_status->status == 'Refunded') {
@@ -1792,6 +1802,8 @@ class OrderController extends Controller
                         'order_status_id' => $order_status_id,
                         'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                     ]);
+
+                    $update_internal_comments = $order->internalComments . '<br>' . $get_refund_reason_comment;
                 }
 
                 if ($current_order_status->status == 'Cancelled') {
@@ -1820,6 +1832,7 @@ class OrderController extends Controller
                             "id" => $order->order_id,
                             "isVoid" => true,
                             "isApproved" => false,
+                            "internalComments" => $update_internal_comments,
                         ]
                     ];
 
