@@ -1796,7 +1796,7 @@ class OrderController extends Controller
 
             $update_internal_comments = '';
             $get_refund_reason_comment = '';
-            $get_refund_reason = OrderComment::where('id', $order->id)
+            $get_refund_reason = OrderComment::where('order_id', $order->id)
                 ->where('comment', 'like', '%Refund Note:%')
                 ->first();
 
