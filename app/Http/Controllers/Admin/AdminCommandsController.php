@@ -285,6 +285,19 @@ class AdminCommandsController extends Controller
             'action' => 'Sync',
             'user_notes' => 'Sync from Cin7 at ' . Carbon::now()->toDateTimeString(),
         ]);
+
+        $get_contact = Contact::where('contact_id', $contact_id)->first();
+        if (!$get_contact) {
+            return;
+        }
+
+        $user_log = new UserLog();
+        $user_log->user_id = $get_contact->user_id;
+        $user_log->contact_id = !empty($get_contact->contact_id) ? $get_contact->contact_id : $get_contact->id;
+        $user_log->secondary_id = !empty($get_contact->secondary_id) ? $get_contact->secondary_id : $get_contact->id;
+        $user_log->action = 'Creation';
+        $user_log->user_notes = 'Imported through Import Specific Contact From Cin7. ' . Carbon::now()->toDateTimeString();
+        $user_log->save();
     }
 
 

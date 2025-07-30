@@ -1023,11 +1023,19 @@ class UserController extends Controller
                             ->whereIn('id', $admin_users)
                             ->get();
                         
-                        $user_log = UserLog::create([
-                            'user_id' => $user->id,
-                            'action' => 'Signup',
-                            'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
-                        ]);
+                        // $user_log = UserLog::create([
+                        //     'user_id' => $user->id,
+                        //     'action' => 'Signup',
+                        //     'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
+                        // ]);
+
+                        $user_log = new UserLog();
+                        $user_log->user_id = $created_contact->user_id;
+                        $user_log->contact_id = !empty($created_contact->contact_id) ? $created_contact->contact_id : $created_contact->id;
+                        $user_log->secondary_id = !empty($created_contact->secondary_id) ? $created_contact->secondary_id : $created_contact->id;
+                        $user_log->action = 'Creation';
+                        $user_log->user_notes = 'Created Through QCOM User Registration Form. '. Carbon::now()->toDateTimeString();
+                        $user_log->save();
         
                         $contact = Contact::where('user_id', $user->id)->first()->update(
                             [
@@ -1084,11 +1092,19 @@ class UserController extends Controller
                         ->whereIn('id', $admin_users)
                         ->get();
                     
-                    $user_log = UserLog::create([
-                        'user_id' => $user->id,
-                        'action' => 'Signup',
-                        'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
-                    ]);
+                    // $user_log = UserLog::create([
+                    //     'user_id' => $user->id,
+                    //     'action' => 'Signup',
+                    //     'user_notes' => $content.' '. Carbon::now()->toDateTimeString()
+                    // ]);
+
+                    $user_log = new UserLog();
+                    $user_log->user_id = $created_contact->user_id;
+                    $user_log->contact_id = !empty($created_contact->contact_id) ? $created_contact->contact_id : $created_contact->id;
+                    $user_log->secondary_id = !empty($created_contact->secondary_id) ? $created_contact->secondary_id : $created_contact->id;
+                    $user_log->action = 'Creation';
+                    $user_log->user_notes = 'Created Through QCOM User Registration Form. '. Carbon::now()->toDateTimeString();
+                    $user_log->save();
 
                     $contact = Contact::where('user_id', $user->id)->first()->update(
                         [

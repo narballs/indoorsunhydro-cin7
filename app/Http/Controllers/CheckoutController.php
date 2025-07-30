@@ -2494,11 +2494,13 @@ class CheckoutController extends Controller
                                 ->whereIn('id', $admin_users)
                                 ->get();
 
-                            $user_log = UserLog::create([
-                                'user_id' => $created_contact->user_id,
-                                'action' => 'Signup',
-                                'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
-                            ]);
+                            $user_log = new UserLog();
+                            $user_log->user_id = $created_contact->user_id;
+                            $user_log->contact_id = !empty($created_contact->contact_id) ? $created_contact->contact_id : $created_contact->id;
+                            $user_log->secondary_id = !empty($created_contact->secondary_id) ? $created_contact->secondary_id : $created_contact->id;
+                            $user_log->action = 'Creation';
+                            $user_log->user_notes = 'Created Through QCOM Checkcout Registration Form. '. Carbon::now()->toDateTimeString();
+                            $user_log->save();
                             // $content = 'Your account has been created successfully and approved by admin.';
                             $content = '';
                             $auto_approved = true;
@@ -2516,11 +2518,14 @@ class CheckoutController extends Controller
                             ->whereIn('id', $admin_users)
                             ->get();
 
-                        $user_log = UserLog::create([
-                            'user_id' => $created_contact->user_id,
-                            'action' => 'Signup',
-                            'user_notes' => 'new contact created' . Carbon::now()->toDateTimeString()
-                        ]);
+                        $user_log = new UserLog();
+                        $user_log->user_id = $created_contact->user_id;
+                        $user_log->contact_id = !empty($created_contact->contact_id) ? $created_contact->contact_id : $created_contact->id;
+                        $user_log->secondary_id = !empty($created_contact->secondary_id) ? $created_contact->secondary_id : $created_contact->id;
+                        $user_log->action = 'Creation';
+                        $user_log->user_notes = 'Created Through QCOM Checkcout Registration Form. '. Carbon::now()->toDateTimeString();
+                        $user_log->save();
+
                         $content = 'Your account registration request has been submitted. You will receive an email once your account has been approved.';
                         $auto_approved = false;
                         $message = $content;
