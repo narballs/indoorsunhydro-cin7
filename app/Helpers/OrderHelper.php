@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Console\Commands\OrderStatus;
 use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
@@ -9,6 +10,7 @@ use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\ApiOrderItem;
 use App\Models\PaymentInformationLog;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\Log;
 
 class OrderHelper {
@@ -375,4 +377,99 @@ class OrderHelper {
             ]);
         }       
     }
+
+
+    public static function check_order_in_cin7($order_id)
+    {
+        $cin7_auth_username = SettingHelper::getSetting('cin7_auth_username');
+        $cin7_auth_password = SettingHelper::getSetting('cin7_auth_password_3');
+
+        $cin7api_key_for_other_jobs = ApiKeys::where('password', $cin7_auth_password)
+            ->where('is_active', 1)
+            ->where('is_stop', 0)
+            ->first();
+
+        $api_key_id = null;
+        $threshold = 0;
+        $request_count = 0;
+
+        if ($cin7api_key_for_other_jobs) {
+            $cin7_auth_username = $cin7api_key_for_other_jobs->username;
+            $cin7_auth_password = $cin7api_key_for_other_jobs->password;
+            $threshold = $cin7api_key_for_other_jobs->threshold;
+            $request_count = $cin7api_key_for_other_jobs->request_count ?? 0;
+            $api_key_id = $cin7api_key_for_other_jobs->id;
+        } else {
+            return false;
+        }
+
+        if ($request_count >= $threshold) {
+            return false;
+        }
+
+        $api_order = ApiOrder::where('id', $order_id)->first();
+        if (empty($api_order)) {
+            return false;
+        }
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            $reference = $api_order->reference;
+            $url = 'https://api.cin7.com/api/v1/SalesOrders/?where=Reference=' . urlencode($reference) . '&page=1&rows=1';
+
+            $res = $client->request('GET', $url, [
+                'auth' => [
+                    $cin7_auth_username,
+                    $cin7_auth_password,
+                ],
+                'timeout' => 30,
+            ]);
+
+            UtilHelper::saveEndpointRequestLog('Get Sales Order', $url, $api_key_id);
+
+            $cin7_order = $res->getBody()->getContents();
+            $get_order = json_decode($cin7_order);
+
+            $order_status = OrderStatus::where('status', 'FullFilled')->first();
+            $order_status_id = $order_status ? $order_status->id : null;
+
+            if (!empty($get_order) && isset($get_order[0]) && isset($get_order[0]->id)) {
+                $api_order->update([
+                    'order_id' => $get_order[0]->id,
+                    'isApproved' => 1,
+                    'order_status_id' => $order_status_id,
+                    'updated_at' => now()
+                ]);
+
+                $data = [
+                    'order_id' => $get_order[0]->id,
+                    'name' => 'Admin',
+                    'email' => '',
+                    'contact_email' => '',
+                    'reference' => $reference,
+                    'subject' => 'Order fulfilled',
+                    'from' => SettingHelper::getSetting('noreply_email_address'),
+                    'content' => 'Order has been fulfilled.'
+                ];
+
+                $specific_admin_notifications = SpecificAdminNotification::all();
+                if ($specific_admin_notifications->isNotEmpty()) {
+                    foreach ($specific_admin_notifications as $specific_admin_notification) {
+                        if (!$specific_admin_notification->receive_order_notifications) {
+                            continue;
+                        }
+                        $data['email'] = $specific_admin_notification->email;
+                        MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+                    }
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }
