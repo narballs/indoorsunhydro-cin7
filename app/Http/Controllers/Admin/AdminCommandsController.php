@@ -280,11 +280,11 @@ class AdminCommandsController extends Controller
 
     protected function logSync($contact_id)
     {
-        UserLog::create([
-            'contact_id' => $contact_id,
-            'action' => 'Sync',
-            'user_notes' => 'Sync from Cin7 at ' . Carbon::now()->toDateTimeString(),
-        ]);
+        // UserLog::create([
+        //     'contact_id' => $contact_id,
+        //     'action' => 'Sync',
+        //     'user_notes' => 'Sync from Cin7 at ' . Carbon::now()->toDateTimeString(),
+        // ]);
 
         $get_contact = Contact::where('contact_id', $contact_id)->first();
         if (!$get_contact) {
