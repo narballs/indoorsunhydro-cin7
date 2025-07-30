@@ -86,50 +86,197 @@ class SalesOrders implements ShouldQueue
      *
      * @return void
      */
+    // public function handle()
+    // {
+        
+    //     switch ($this->_method) {
+            
+    //         case 'create_order':
+    //             $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'create_order']);
+    //         break;
+    //         case 'update_order':
+    //             $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'update_order']);
+    //         break;
+    //         case 'list_order':
+    //             $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'list_order']);
+    //         break;
+    //         case 'retrieve_order':
+    //             $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders/' . $this->_pathParam, $this->_body, ['api_end_point' => 'retrieve_order']);
+    //         break;
+
+    //         default:
+    //             $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
+    //         break;
+    //     }
+
+        
+
+    //     $response = json_decode($res);
+    //     $order_id = $response[0]->id;
+    //     $reference = $response[0]->code;
+    //     echo $order_id . '-----' . $reference;
+
+
+    //     $status = $response[0]->success ?? null; // will be true, false, or null
+    //     $status_text = is_bool($status) ? ($status ? 'success' : 'failed') : 'unknown';
+
+    //     $errors = $response[0]->errors ?? ['no error'];
+    //     $error_message = is_array($errors) ? implode(', ', $errors) : (string) $errors;
+
+    //     $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+    //     $admin_users = $admin_users->toArray();
+    //     $users_with_role_admin = User::select("email")
+    //         ->whereIn('id', $admin_users)
+    //         ->get();
+    //     $specific_admin_notifications = SpecificAdminNotification::all();
+    //     $order_status = OrderStatus::where('status', 'FullFilled')->first();
+    //     if (!empty($order_id) && !empty($reference)) {
+    //         $data = [
+    //             'order_id' => $order_id,
+    //             'name' =>  'Admin',
+    //             'email' => '',
+    //             'contact_email' => '',
+    //             'reference' => $reference,
+    //             'subject' => 'Order ' .' '. 'fulfilled',
+    //             'from' => SettingHelper::getSetting('noreply_email_address'),
+    //             'content' => 'Order fulfilled has been fulfilled.'
+    //         ];
+            
+            
+
+    //         $specific_admin_notifications = SpecificAdminNotification::all();
+    //         if ($specific_admin_notifications->isNotEmpty()) {
+    //             foreach ($specific_admin_notifications as $specific_admin_notification) {
+    //                 // Check if this admin should receive order notifications
+    //                 if (!$specific_admin_notification->receive_order_notifications) {
+    //                     continue;
+    //                 }
+
+    //                 $data['email'] = $specific_admin_notification->email;
+    //                 MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
+    //             }
+    //         }
+
+
+    //         $api_order = ApiOrder::where('reference', $reference)->first();
+    //         $api_order->order_id = $order_id;
+    //         $api_order->isApproved = 1;
+    //         $api_order->order_status_id = $order_status->id;
+    //         $api_order->save();
+
+    //         $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
+    //         $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
+    //         if ($record_order_job_logs == 'yes') {
+    //             $attempt = $this->attempts();
+    //             $primary_id = $this->_global_primary_id;
+    //             OrderJobLog::create([
+    //                 'api_order_id'   => $api_order->id,
+    //                 'reference'      => $reference,
+    //                 'attempt_number' => $this->attempts(),
+    //                 'message'        => "[" . now() . "] Job {$status_text} after " . $this->attempts() . " attempts. Response: " . json_encode($response),
+    //                 'logged_at'      => now(),
+    //             ]);
+    //         }
+
+
+
+    //         if (
+    //             (!empty($api_order->DeliveryAddress1) || !empty($api_order->DeliveryAddress2)) &&
+    //             (SettingHelper::startsWithPOBox($api_order->DeliveryAddress1) || SettingHelper::startsWithPOBox($api_order->DeliveryAddress2))
+    //         ) {
+    //             $orderID = $api_order->id;
+
+    //             $email_addresses = array_filter([
+    //                 SettingHelper::getSetting('naris_indoor_email'),
+    //                 SettingHelper::getSetting('engrdanish_shipstation_email'),
+    //             ]);
+
+    //             if (!empty($email_addresses)) {
+    //                 Mail::send([], [], function ($message) use ($email_addresses, $orderID) {
+    //                     $message->from(SettingHelper::getSetting('noreply_email_address'));
+    //                     $message->to($email_addresses);
+    //                     $message->subject('Manual Processing Required (PO Box) – Order ID: ' . $orderID);
+    //                     $message->setBody(
+    //                         'Order ID: ' . $orderID . ' requires manual processing due to a PO Box specified in the delivery address. Please review and address this order at your earliest convenience.',
+    //                         'text/html'
+    //                     );
+    //                 });
+    //             }
+
+    //         }
+
+
+    //         $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
+    //         if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
+    //             if (!empty($api_order) && !empty($api_order->order_id)) {
+    //                 OrderHelper::update_order_payment_in_cin7($api_order->order_id);
+    //             }
+    //         }
+            
+    //     } else {
+
+    //         $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
+    //         $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
+    //         if ($record_order_job_logs == 'yes') {
+    //             $attempt = $this->attempts();
+    //             $primary_id = $this->_global_primary_id;
+    //             $apiOrder = $primary_id ? ApiOrder::where('id', $primary_id)->first() : null;
+
+    //             if ($apiOrder && $primary_id) {
+    //                 OrderJobLog::create([
+    //                     'api_order_id'   => $apiOrder->id,
+    //                     'reference'      => $apiOrder->reference,
+    //                     'attempt_number' => $attempt,
+    //                     'message'        => "[" . now() . "] Job failed after {$attempt} attempts. Error: " . $error_message,
+    //                     'logged_at'      => now(),
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+
+    //     exit;
+    // }
     public function handle()
     {
-        
         switch ($this->_method) {
-            
             case 'create_order':
                 $res = UtilHelper::sendRequest('POST', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'create_order']);
-            break;
+                break;
             case 'update_order':
                 $res = UtilHelper::sendRequest('PUT', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'update_order']);
-            break;
+                break;
             case 'list_order':
                 $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, ['api_end_point' => 'list_order']);
-            break;
+                break;
             case 'retrieve_order':
                 $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders/' . $this->_pathParam, $this->_body, ['api_end_point' => 'retrieve_order']);
-            break;
-
+                break;
             default:
                 $res = UtilHelper::sendRequest('GET', $this->_apiBaseURL . 'v1/SalesOrders', $this->_body, []);
-            break;
+                break;
         }
 
-        
-
         $response = json_decode($res);
-        $order_id = $response[0]->id;
-        $reference = $response[0]->code;
-        echo $order_id . '-----' . $reference;
 
-
-        $status = $response[0]->success ?? null; // will be true, false, or null
+        // Defensive assignments for error/success handling
+        $order_id  = isset($response[0]->id)    ? $response[0]->id    : null;
+        $reference = isset($response[0]->code)  ? $response[0]->code  : null;
+        $cin7_order_status = isset($response[0]->success) && $response[0]->success === true ? true : false;
+        $status = $response[0]->success ?? null;
         $status_text = is_bool($status) ? ($status ? 'success' : 'failed') : 'unknown';
 
         $errors = $response[0]->errors ?? ['no error'];
         $error_message = is_array($errors) ? implode(', ', $errors) : (string) $errors;
 
-        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
-        $admin_users = $admin_users->toArray();
+        $admin_users =  DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id')->toArray();
         $users_with_role_admin = User::select("email")
             ->whereIn('id', $admin_users)
             ->get();
         $specific_admin_notifications = SpecificAdminNotification::all();
         $order_status = OrderStatus::where('status', 'FullFilled')->first();
+
+        // Happy path: Success response from Cin7 API
         if (!empty($order_id) && !empty($reference)) {
             $data = [
                 'order_id' => $order_id,
@@ -137,46 +284,38 @@ class SalesOrders implements ShouldQueue
                 'email' => '',
                 'contact_email' => '',
                 'reference' => $reference,
-                'subject' => 'Order ' .' '. 'fulfilled',
+                'subject' => 'Order fulfilled',
                 'from' => SettingHelper::getSetting('noreply_email_address'),
                 'content' => 'Order fulfilled has been fulfilled.'
             ];
-            
-            // if (count($specific_admin_notifications) > 0) {
-            //     foreach ($specific_admin_notifications as $role_admin) {
-            //         $data['email'] = $role_admin->email;
-            //         $adminTemplate = 'emails.approval-notifications';
-            //         MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
-            //     }
-            // }
 
-            $specific_admin_notifications = SpecificAdminNotification::all();
+            // Admin notifications
             if ($specific_admin_notifications->isNotEmpty()) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
-                    // Check if this admin should receive order notifications
                     if (!$specific_admin_notification->receive_order_notifications) {
                         continue;
                     }
-
                     $data['email'] = $specific_admin_notification->email;
                     MailHelper::sendMailNotification('emails.admin-order-fullfillment', $data);
                 }
             }
 
-
             $api_order = ApiOrder::where('reference', $reference)->first();
-            $api_order->order_id = $order_id;
-            $api_order->isApproved = 1;
-            $api_order->order_status_id = $order_status->id;
-            $api_order->save();
+            if ($api_order) {
+                $api_order->order_id = $order_id;
+                $api_order->isApproved = 1;
+                $api_order->order_status_id = $order_status ? $order_status->id : null;
+                $api_order->save();
+            }
 
+            // Job log if enabled
             $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
             $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
             if ($record_order_job_logs == 'yes') {
                 $attempt = $this->attempts();
                 $primary_id = $this->_global_primary_id;
                 OrderJobLog::create([
-                    'api_order_id'   => $api_order->id,
+                    'api_order_id'   => $api_order ? $api_order->id : null,
                     'reference'      => $reference,
                     'attempt_number' => $this->attempts(),
                     'message'        => "[" . now() . "] Job {$status_text} after " . $this->attempts() . " attempts. Response: " . json_encode($response),
@@ -184,19 +323,16 @@ class SalesOrders implements ShouldQueue
                 ]);
             }
 
-
-
+            // PO Box handling
             if (
                 (!empty($api_order->DeliveryAddress1) || !empty($api_order->DeliveryAddress2)) &&
                 (SettingHelper::startsWithPOBox($api_order->DeliveryAddress1) || SettingHelper::startsWithPOBox($api_order->DeliveryAddress2))
             ) {
                 $orderID = $api_order->id;
-
                 $email_addresses = array_filter([
                     SettingHelper::getSetting('naris_indoor_email'),
                     SettingHelper::getSetting('engrdanish_shipstation_email'),
                 ]);
-
                 if (!empty($email_addresses)) {
                     Mail::send([], [], function ($message) use ($email_addresses, $orderID) {
                         $message->from(SettingHelper::getSetting('noreply_email_address'));
@@ -208,10 +344,9 @@ class SalesOrders implements ShouldQueue
                         );
                     });
                 }
-
             }
 
-
+            // Auto payment update in Cin7
             $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
             if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
                 if (!empty($api_order) && !empty($api_order->order_id)) {
@@ -219,8 +354,11 @@ class SalesOrders implements ShouldQueue
                 }
             }
 
-            if (!empty($this->_global_primary_id)) {
+            // Extra double-check for Cin7 status (edge case, not usually needed here)
+            if (!empty($this->_global_primary_id) && ($cin7_order_status === false || $cin7_order_status === null)) {
+                // Log::info('Happy path: About to call check_order_in_cin7', ['global_primary_id' => $this->_global_primary_id]);
                 $check_order_in_cin7 = OrderHelper::check_order_in_cin7($this->_global_primary_id);
+                // Log::info('Happy path: Returned from check_order_in_cin7', ['result' => $check_order_in_cin7]);
                 if ($check_order_in_cin7 == true) {
                     $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
                     if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
@@ -232,9 +370,8 @@ class SalesOrders implements ShouldQueue
                 }
             }
 
-            
         } else {
-
+            // ELSE: Error/Failure path
             $record_order_job_logs = AdminSetting::where('option_name', 'record_order_job_logs')->first();
             $record_order_job_logs = !empty($record_order_job_logs) ? strtolower($record_order_job_logs->option_value) : 'no';
             if ($record_order_job_logs == 'yes') {
@@ -253,8 +390,14 @@ class SalesOrders implements ShouldQueue
                 }
             }
 
-            if (!empty($this->_global_primary_id)) {
+            // Log entry and attempt Cin7 order check
+            if (!empty($this->_global_primary_id) && ($cin7_order_status === false || $cin7_order_status === null)) {
+                // Log::error('SalesOrders job failed: failed43', [
+                //     'global_primary_id' => $this->_global_primary_id
+                // ]);
+                // Log::info('Error path: About to call check_order_in_cin7', ['global_primary_id' => $this->_global_primary_id]);
                 $check_order_in_cin7 = OrderHelper::check_order_in_cin7($this->_global_primary_id);
+                // Log::info('Error path: Returned from check_order_in_cin7', ['result' => $check_order_in_cin7]);
                 if ($check_order_in_cin7 == true) {
                     $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
                     if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
@@ -267,9 +410,9 @@ class SalesOrders implements ShouldQueue
             }
         }
 
-
         exit;
     }
+
 
     /**
      * Handle a job failure.
@@ -301,20 +444,6 @@ class SalesOrders implements ShouldQueue
                     Log::info('OrderJobLog created successfully.');
                 } catch (\Exception $e) {
                     // Log::error('Failed to create OrderJobLog', ['error' => $e->getMessage()]);
-                }
-            }
-        }
-
-
-        if (!empty($this->_global_primary_id)) {
-            $check_order_in_cin7 = OrderHelper::check_order_in_cin7($this->_global_primary_id);
-            if ($check_order_in_cin7 == true) {
-                $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
-                if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
-                    $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
-                    if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
-                        OrderHelper::update_order_payment_in_cin7($find_api_order->order_id);
-                    }
                 }
             }
         }
