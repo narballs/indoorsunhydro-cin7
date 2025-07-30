@@ -456,18 +456,60 @@ class AdminSettingsController extends Controller
         return view('admin.all_admins.index', compact('admins', 'specific_admin_notifications'));
     }
 
+    // public function send_email_to_specific_admin(Request $request)
+    // {
+    //     $admin_users = $request->admin_users ?? [];
+    //     $label_admin_users = $request->label_admin_users ?? [];
+    //     $accounting_admin_users = $request->accounting_admin_users ?? [];
+
+    //     $status = false;
+
+    //     if (!empty($admin_users) || !empty($label_admin_users) || !empty($accounting_admin_users)) {
+
+    //         $all_user_ids = array_unique(array_merge($admin_users, $label_admin_users, $accounting_admin_users));
+
+    //         foreach ($all_user_ids as $user_id) {
+    //             $user = User::find($user_id);
+    //             if (!$user) {
+    //                 continue;
+    //             }
+
+    //             $existing = SpecificAdminNotification::where('user_id', $user_id)->first();
+
+    //             if (!$existing) {
+    //                 $specific_admin = new SpecificAdminNotification();
+    //                 $specific_admin->user_id = $user_id;
+    //                 $specific_admin->email = $user->email;
+    //             } else {
+    //                 $specific_admin = $existing;
+    //             }
+
+    //             $specific_admin->receive_order_notifications = in_array($user_id, $admin_users);
+    //             $specific_admin->receive_label_notifications = in_array($user_id, $label_admin_users);
+    //             $specific_admin->receive_accounting_reports = in_array($user_id, $accounting_admin_users);
+
+    //             $specific_admin->save();
+    //         }
+
+    //         $status = true;
+    //     }
+
+    //     return response()->json([
+    //         'status' => $status,
+    //         'msg' => 'Admin preferences saved successfully'
+    //     ]);
+    // }
+
     public function send_email_to_specific_admin(Request $request)
     {
         $admin_users = $request->admin_users ?? [];
         $label_admin_users = $request->label_admin_users ?? [];
         $accounting_admin_users = $request->accounting_admin_users ?? [];
+        $all_user_ids = $request->all_user_ids ?? [];
 
         $status = false;
 
-        if (!empty($admin_users) || !empty($label_admin_users) || !empty($accounting_admin_users)) {
-
-            $all_user_ids = array_unique(array_merge($admin_users, $label_admin_users, $accounting_admin_users));
-
+        if (!empty($all_user_ids)) {
             foreach ($all_user_ids as $user_id) {
                 $user = User::find($user_id);
                 if (!$user) {
@@ -484,13 +526,13 @@ class AdminSettingsController extends Controller
                     $specific_admin = $existing;
                 }
 
+                // These flags are set true or false depending on the POST arrays
                 $specific_admin->receive_order_notifications = in_array($user_id, $admin_users);
                 $specific_admin->receive_label_notifications = in_array($user_id, $label_admin_users);
                 $specific_admin->receive_accounting_reports = in_array($user_id, $accounting_admin_users);
 
                 $specific_admin->save();
             }
-
             $status = true;
         }
 
@@ -499,6 +541,7 @@ class AdminSettingsController extends Controller
             'msg' => 'Admin preferences saved successfully'
         ]);
     }
+
 
 
     public function shipping_quotes() {
