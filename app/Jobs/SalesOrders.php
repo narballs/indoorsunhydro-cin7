@@ -400,6 +400,7 @@ class SalesOrders implements ShouldQueue
                 // Log::info('Error path: Returned from check_order_in_cin7', ['result' => $check_order_in_cin7]);
                 if ($check_order_in_cin7 == true) {
                     $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
+                    Log::info('Error path: Found ApiOrder', ['api_order_id' => $find_api_order->order_id ?? null]);
                     if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
                         $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
                         if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
