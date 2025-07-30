@@ -218,6 +218,20 @@ class SalesOrders implements ShouldQueue
                     OrderHelper::update_order_payment_in_cin7($api_order->order_id);
                 }
             }
+
+            if (!empty($this->_global_primary_id)) {
+                $check_order_in_cin7 = OrderHelper::check_order_in_cin7($this->_global_primary_id);
+                if ($check_order_in_cin7 == true) {
+                    $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
+                    if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
+                        $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
+                        if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
+                            OrderHelper::update_order_payment_in_cin7($find_api_order->order_id);
+                        }
+                    }
+                }
+            }
+
             
         } else {
 
@@ -236,6 +250,19 @@ class SalesOrders implements ShouldQueue
                         'message'        => "[" . now() . "] Job failed after {$attempt} attempts. Error: " . $error_message,
                         'logged_at'      => now(),
                     ]);
+                }
+            }
+
+            if (!empty($this->_global_primary_id)) {
+                $check_order_in_cin7 = OrderHelper::check_order_in_cin7($this->_global_primary_id);
+                if ($check_order_in_cin7 == true) {
+                    $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
+                    if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
+                        $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
+                        if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
+                            OrderHelper::update_order_payment_in_cin7($find_api_order->order_id);
+                        }
+                    }
                 }
             }
         }
@@ -274,6 +301,20 @@ class SalesOrders implements ShouldQueue
                     Log::info('OrderJobLog created successfully.');
                 } catch (\Exception $e) {
                     // Log::error('Failed to create OrderJobLog', ['error' => $e->getMessage()]);
+                }
+            }
+        }
+
+
+        if (!empty($this->_global_primary_id)) {
+            $check_order_in_cin7 = OrderHelper::check_order_in_cin7($this->_global_primary_id);
+            if ($check_order_in_cin7 == true) {
+                $find_api_order = ApiOrder::where('id', $this->_global_primary_id)->first();
+                if (!empty($find_api_order) && !empty($find_api_order->order_id)) {
+                    $add_payment_in_cin7_for_order = AdminSetting::where('option_name', 'add_payment_in_cin7_for_order')->first();
+                    if (!empty($add_payment_in_cin7_for_order) && strtolower($add_payment_in_cin7_for_order->option_value) == 'yes') {
+                        OrderHelper::update_order_payment_in_cin7($find_api_order->order_id);
+                    }
                 }
             }
         }
