@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Contact;
 use App\Models\User;
-
+use App\Models\UserLog;
 
 class UserToContacts extends Command
 {
@@ -55,6 +55,16 @@ class UserToContacts extends Command
                     foreach ($contacts as $contact) {
                         $contact->user_id = $user_id;
                         $contact->save();
+
+                        $user_log = new UserLog();
+                        $user_log->user_id = $user_id;
+                        $user_log->contact_id = !empty($contact->contact_id) ? $contact->contact_id : $contact->id;
+                        $user_log->secondary_id = !empty($contact->secondary_id) ? $contact->secondary_id : $contact->id;
+                        $user_log->action = 'Creation';
+                        $user_log->user_notes = 'Imported through UserToContacts Command From Cin7. '. now()->toDateTimeString();
+                        $user_log->save();
+
+                        
                     }
                 } 
             }

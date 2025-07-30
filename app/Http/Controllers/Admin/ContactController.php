@@ -288,7 +288,7 @@ class ContactController extends Controller
         $logs = UserLog::orWhere('contact_id', $get_contactID)
         ->orWhere('secondary_id', $get_secondaryID)
         ->orderBy('created_at', 'desc')
-        ->take(10)
+        // ->take(10)
         ->get();
         $user_id = $customer->user_id;
         if (!empty($customer->contact_id)) {
