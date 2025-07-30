@@ -434,7 +434,7 @@ return [
             'url'  => 'admin/notify-users',
         ],
         [
-            'text'    => 'Select Specific Admins',
+            'text'    => 'Admin Notifications',
             'url'  => 'admin/all-admins',
         ],
         [
