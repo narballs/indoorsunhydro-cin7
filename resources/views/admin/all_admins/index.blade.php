@@ -397,6 +397,73 @@
         $('.select_user_div').hide();
     });
 
+    // function select_user() {
+    //     let checked = $('input[type="checkbox"]:checked').length > 0;
+    //     if (checked) {
+    //         $('.select_specific_admins').show();
+    //     } else {
+    //         $('.select_specific_admins').hide();
+    //     }
+    // }
+
+    // function select_specific_admins() {
+    //     $('.select_specific_admins').hide();
+
+    //     let admin_users = [];
+    //     $("input.admin_users:checked").each(function() {
+    //         admin_users.push($(this).val());
+    //     });
+
+    //     let label_admin_users = [];
+    //     $("input.label_admin_users:checked").each(function() {
+    //         label_admin_users.push($(this).val());
+    //     });
+
+    //     let accounting_admin_users = [];
+    //     $("input.accounting_admin_users:checked").each(function() {
+    //         accounting_admin_users.push($(this).val());
+    //     });
+
+    //     if (admin_users.length || label_admin_users.length || accounting_admin_users.length) {
+    //         $.ajax({
+    //             url: "{{ route('send_email_to_specific_admin') }}",
+    //             type: "POST",
+    //             data: {
+    //                 _token: "{{ csrf_token() }}",
+    //                 admin_users: admin_users,
+    //                 label_admin_users: label_admin_users,
+    //                 accounting_admin_users: accounting_admin_users
+    //             },
+    //             success: function(response) {
+    //                 Swal.fire({
+    //                     icon: response.status ? 'success' : 'error',
+    //                     title: response.status ? 'Success' : 'Error',
+    //                     text: response.msg,
+    //                     confirmButtonColor: '#28a745',
+    //                 }).then((result) => {
+    //                     if (response.status) {
+    //                         location.reload();
+    //                     }
+    //                 });
+    //             },
+    //             error: function() {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error',
+    //                     text: 'Something went wrong while processing your request.',
+    //                     confirmButtonColor: '#dc3545',
+    //                 });
+    //             }
+    //         });
+    //     } else {
+    //         Swal.fire({
+    //             icon: 'warning',
+    //             title: 'No Selection',
+    //             text: 'Please select at least one admin.',
+    //             confirmButtonColor: '#ffc107',
+    //         });
+    //     }
+    // }
     function select_user() {
         let checked = $('input[type="checkbox"]:checked').length > 0;
         if (checked) {
@@ -405,7 +472,7 @@
             $('.select_specific_admins').hide();
         }
     }
-
+    
     function select_specific_admins() {
         $('.select_specific_admins').hide();
 
@@ -424,12 +491,22 @@
             accounting_admin_users.push($(this).val());
         });
 
-        if (admin_users.length || label_admin_users.length || accounting_admin_users.length) {
+        // Get ALL user IDs (checked or not)
+        let all_user_ids = [];
+        $("input.admin_users, input.label_admin_users, input.accounting_admin_users").each(function() {
+            let id = $(this).val();
+            if (all_user_ids.indexOf(id) === -1) {
+                all_user_ids.push(id);
+            }
+        });
+
+        if (all_user_ids.length) {
             $.ajax({
                 url: "{{ route('send_email_to_specific_admin') }}",
                 type: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
+                    all_user_ids: all_user_ids,
                     admin_users: admin_users,
                     label_admin_users: label_admin_users,
                     accounting_admin_users: accounting_admin_users
@@ -464,6 +541,7 @@
             });
         }
     }
+
 
 </script>
 @stop
