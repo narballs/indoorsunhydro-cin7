@@ -574,7 +574,7 @@
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <h3 class="h6 summary-head">Delivery Method</h3>
                                         <span class="delivery">
                                             @if (!empty($order->logisticsCarrier ))
@@ -608,10 +608,23 @@
                                             <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" target="_blank" class="text-primary">Track Order</a>
                                         @endif
 
+                                        @if (!empty($order->drop_shipped) && !empty($order->drop_shipped->description))
+                                            <div class="row my-2">
+                                                <div class="col-12">
+                                                    <h6><strong>Notes regarding the drop ship</strong></h6>
+                                                </div>
+                                                <div class="col-12">
+                                                    <p>
+                                                        {{ $order->drop_shipped->description }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endif
+
 
 
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <h3 class="h6 summary-head">Billing address</h3>
                                         <address>
                                             @if (!empty($order->BillingCompany))
@@ -657,6 +670,55 @@
                                             @endif
                                         </address>
                                     </div>
+                                    <div class="col-lg-4">
+                                        <h3 class="h6 summary-head">Shipping address</h3>
+                                        <address>
+                                            @if (!empty($order->DeliveryCompany))
+                                                Company:<strong>{{ ucfirst($order->DeliveryCompany) }}</strong><br>
+                                            @elseif (!empty($customer->contact->company ))
+                                                Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
+                                            @endif
+                                                
+                                            {{!empty($order->DeliveryFirstName) ? $order->DeliveryFirstName : $customer->contact->firstName }}&nbsp;{{ !empty($order->DeliveryLastName) ? $order->DeliveryLastName : $customer->contact->lastName }}<br>
+                                            
+                                            @if (!empty($order->DeliveryAddress1))
+                                                {{ $order->DeliveryAddress1 . ',' }}
+                                            @elseif(!empty($customer->contact->address1))
+                                                {{$customer->contact->address1 . ','}} 
+                                            @endif
+
+                                            @if (!empty($order->DeliveryAddress2))
+                                                {{ $order->DeliveryAddress2 . ',' }}<br>
+                                            @elseif(!empty($customer->contact->address2))
+                                                {{$customer->contact->address2 . ','}}<br>
+                                            @endif
+
+                                            @if (!empty($order->DeliveryCity))
+                                                {{ $order->DeliveryCity . ',' }}
+                                            @elseif(!empty($customer->contact->city))
+                                                {{$customer->contact->city . ','}}
+                                            @endif
+
+                                            @if (!empty($order->DeliveryState))
+                                                {{ $order->DeliveryState . ',' }}
+                                            @elseif(!empty($customer->contact->state))
+                                                {{$customer->contact->state . ','}}
+                                            @endif
+
+                                            @if (!empty($order->DeliveryZip))
+                                                {{ $order->DeliveryZip }}<br>
+                                            @elseif(!empty($customer->contact->postCode))
+                                                {{$customer->contact->postCode}}
+                                            @endif
+
+                                            @if (!empty($order->DeliveryPhone))
+                                                <p title="Phone" class="mb-0">P: {{ '('. $order->DeliveryPhone . ')' }}</p>
+                                            @else
+                                                <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
+                                            @endif
+                                            <p title="Phone">{{ $customer->contact->email }}</p>
+                                        </address>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -686,22 +748,7 @@
 
                             </div>
                         </div>
-                        {{-- order logs --}}
-                        @if (count($order->orderJobLog) > 0)
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h3 class="h6"><strong class="mb-2">Order Logs</strong></h3>
-                                    </div>
-                                    @foreach ($order->orderJobLog as $orderJobLog)
-                                        <p>{{ !empty($orderJobLog->message) ? $orderJobLog->message : '' }}</p>
-                                        {{-- <p><strong>{{ !empty($orderJobLog->logged_at) ? $orderJobLog->logged_at : '' }}</strong></p> --}}
-                                    @endforeach
-
-                                </div>
-                            </div>
-                        @endif
-                        {{-- order logs end --}}
+                        
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h3 class="h6 summary-head"><strong>Internal Comments</strong></h3>
@@ -726,60 +773,23 @@
                                 <p><span class="delivery">{{ $order->memo }}</span></p>
                             </div>
                         </div>
-                        <div class="card mb-4">
-                            <!-- Shipping information -->
-                            <div class="card-body">
-                                <h3 class="h6">Shipping Information</h3>
+                        {{-- order logs --}}
+                        @if (count($order->orderJobLog) > 0)
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h3 class="h6"><strong class="mb-2">Order Logs</strong></h3>
+                                    </div>
+                                    @foreach ($order->orderJobLog as $orderJobLog)
+                                        <p>{{ !empty($orderJobLog->message) ? $orderJobLog->message : '' }}</p>
+                                        {{-- <p><strong>{{ !empty($orderJobLog->logged_at) ? $orderJobLog->logged_at : '' }}</strong></p> --}}
+                                    @endforeach
 
-                                <hr>
-                                <address>
-                                    @if (!empty($order->DeliveryCompany))
-                                        Company:<strong>{{ ucfirst($order->DeliveryCompany) }}</strong><br>
-                                    @elseif (!empty($customer->contact->company ))
-                                        Company:<strong>{{ ucfirst($customer->contact->company) }}</strong><br>
-                                    @endif
-                                        
-                                    {{!empty($order->DeliveryFirstName) ? $order->DeliveryFirstName : $customer->contact->firstName }}&nbsp;{{ !empty($order->DeliveryLastName) ? $order->DeliveryLastName : $customer->contact->lastName }}<br>
-                                    
-                                    @if (!empty($order->DeliveryAddress1))
-                                        {{ $order->DeliveryAddress1 . ',' }}
-                                    @elseif(!empty($customer->contact->address1))
-                                        {{$customer->contact->address1 . ','}} 
-                                    @endif
-
-                                    @if (!empty($order->DeliveryAddress2))
-                                        {{ $order->DeliveryAddress2 . ',' }}<br>
-                                    @elseif(!empty($customer->contact->address2))
-                                        {{$customer->contact->address2 . ','}}<br>
-                                    @endif
-
-                                    @if (!empty($order->DeliveryCity))
-                                        {{ $order->DeliveryCity . ',' }}
-                                    @elseif(!empty($customer->contact->city))
-                                        {{$customer->contact->city . ','}}
-                                    @endif
-
-                                    @if (!empty($order->DeliveryState))
-                                        {{ $order->DeliveryState . ',' }}
-                                    @elseif(!empty($customer->contact->state))
-                                        {{$customer->contact->state . ','}}
-                                    @endif
-
-                                    @if (!empty($order->DeliveryZip))
-                                        {{ $order->DeliveryZip }}<br>
-                                    @elseif(!empty($customer->contact->postCode))
-                                        {{$customer->contact->postCode}}
-                                    @endif
-
-                                    @if (!empty($order->DeliveryPhone))
-                                        <p title="Phone" class="mb-0">P: {{ '('. $order->DeliveryPhone . ')' }}</p>
-                                    @else
-                                        <p title="Phone" class="mb-0">P: {{ !empty($customer->contact->mobile) ? '('. $customer->contact->mobile . ')' : '('. $customer->contact->phone . ')' }}</p>
-                                    @endif
-                                    <p title="Phone">{{ $customer->contact->email }}</p>
-                                </address>
+                                </div>
                             </div>
-                        </div>
+                        @endif
+                        {{-- order logs end --}}
+                        
                     </div>
                 </div>
             </div>

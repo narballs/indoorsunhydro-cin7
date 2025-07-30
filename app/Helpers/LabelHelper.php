@@ -10,6 +10,7 @@ use App\Helpers\UserHelper;
 use App\Helpers\SettingHelper;
 use App\Helpers\MailHelper;
 use App\Models\ShipstationApiLogs;
+use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -432,12 +433,20 @@ class LabelHelper {
     }
     
     public static function sendAdminEmails($label_email_data, $order, $file_name, $mail_send) {
-        $email_addresses = array_filter([
-            SettingHelper::getSetting('naris_indoor_email'),
-            SettingHelper::getSetting('wally_shipstation_email'),
-            SettingHelper::getSetting('engrdanish_shipstation_email'),
-            SettingHelper::getSetting('kevin_shipstation_email')
-        ]);
+        // $email_addresses = array_filter([
+        //     SettingHelper::getSetting('naris_indoor_email'),
+        //     SettingHelper::getSetting('wally_shipstation_email'),
+        //     SettingHelper::getSetting('engrdanish_shipstation_email'),
+        //     SettingHelper::getSetting('kevin_shipstation_email')
+        // ]);
+
+        
+        // Get all admins who opted to receive label notifications
+        $specific_admin_notifications = SpecificAdminNotification::where('receive_label_notifications', true)->pluck('email')->toArray();
+
+        if (!empty($specific_admin_notifications)) {
+            $email_addresses = $specific_admin_notifications;
+        }
 
         $email_sent_to_admin = ShipstationApiLogs::where('order_id', $order->id)
             ->where('action', 'send_email_to_admin')

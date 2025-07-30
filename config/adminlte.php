@@ -434,7 +434,7 @@ return [
             'url'  => 'admin/notify-users',
         ],
         [
-            'text'    => 'Select Specific Admins',
+            'text'    => 'Admin Notifications',
             'url'  => 'admin/all-admins',
         ],
         [
@@ -453,10 +453,10 @@ return [
             'text'    => 'Stock Report Settings',
             'url'  => 'admin/stock-report-settings',
         ],
-        [
-            'text'    => 'Sales Report Settings',
-            'url'  => 'admin/sales-report-settings',
-        ],
+        // [
+        //     'text'    => 'Sales Report Settings',
+        //     'url'  => 'admin/sales-report-settings',
+        // ],
         [
             'text'    => 'Payouts',
             'url'  => 'admin/payouts',

@@ -403,41 +403,103 @@ class AdminSettingsController extends Controller
         }
     }
 
-    public function all_admins () {
-        $admin_users = DB::table('model_has_roles')->where('role_id', 1)->pluck('model_id');
+    // public function all_admins () {
+    //     $admin_users = DB::table('model_has_roles')
+    //     ->whereIn('role_id', [1,6])
+    //     ->pluck('model_id');
 
-        $admin_users = $admin_users->toArray();
+    //     $admin_users = $admin_users->toArray();
 
-        $admins = User::select("id" , "email")
+    //     $admins = User::select("id" , "email")
+    //         ->whereIn('id', $admin_users)
+    //         ->get();
+    //     $specific_admins = SpecificAdminNotification::pluck('user_id')->toArray();
+    //     return view('admin.all_admins.index', compact('admins' , 'specific_admins'));
+    // }
+
+    // public function send_email_to_specific_admin (Request $request) {
+    //     $admin_users = $request->admin_users;
+    //     $check_previous_admins = SpecificAdminNotification::pluck('user_id')->toArray();
+    //     $update_previous_admins = SpecificAdminNotification::whereIn('user_id', $check_previous_admins)->delete();
+    //     $status = false;
+    //     if ( !empty($admin_users)) {
+    //         foreach ($admin_users as $admin_user) {
+    //             $specific_admin = new SpecificAdminNotification();
+    //             $specific_admin->user_id = $admin_user;
+    //             $specific_admin->email = User::where('id', $admin_user)->first()->email;
+    //             $specific_admin->save();
+    //         }
+
+    //         $status = true;
+    //     } else {
+    //         $status = false;
+    //     }
+
+    //     return response()->json([
+    //         'status' => $status,
+    //         'msg' => 'Admins Selected Succesfully'
+    //     ]);
+    // }
+    public function all_admins()
+    {
+        $admin_users = DB::table('model_has_roles')
+            ->whereIn('role_id', [1, 6,7,8,9])
+            ->pluck('model_id')
+            ->toArray();
+
+        $admins = User::select('id', 'email')
             ->whereIn('id', $admin_users)
             ->get();
-        $specific_admins = SpecificAdminNotification::pluck('user_id')->toArray();
-        return view('admin.all_admins.index', compact('admins' , 'specific_admins'));
+
+        $specific_admin_notifications = SpecificAdminNotification::all(); // Include full records
+
+        return view('admin.all_admins.index', compact('admins', 'specific_admin_notifications'));
     }
 
-    public function send_email_to_specific_admin (Request $request) {
-        $admin_users = $request->admin_users;
-        $check_previous_admins = SpecificAdminNotification::pluck('user_id')->toArray();
-        $update_previous_admins = SpecificAdminNotification::whereIn('user_id', $check_previous_admins)->delete();
+    public function send_email_to_specific_admin(Request $request)
+    {
+        $admin_users = $request->admin_users ?? [];
+        $label_admin_users = $request->label_admin_users ?? [];
+        $accounting_admin_users = $request->accounting_admin_users ?? [];
+
         $status = false;
-        if ( !empty($admin_users)) {
-            foreach ($admin_users as $admin_user) {
-                $specific_admin = new SpecificAdminNotification();
-                $specific_admin->user_id = $admin_user;
-                $specific_admin->email = User::where('id', $admin_user)->first()->email;
+
+        if (!empty($admin_users) || !empty($label_admin_users) || !empty($accounting_admin_users)) {
+
+            $all_user_ids = array_unique(array_merge($admin_users, $label_admin_users, $accounting_admin_users));
+
+            foreach ($all_user_ids as $user_id) {
+                $user = User::find($user_id);
+                if (!$user) {
+                    continue;
+                }
+
+                $existing = SpecificAdminNotification::where('user_id', $user_id)->first();
+
+                if (!$existing) {
+                    $specific_admin = new SpecificAdminNotification();
+                    $specific_admin->user_id = $user_id;
+                    $specific_admin->email = $user->email;
+                } else {
+                    $specific_admin = $existing;
+                }
+
+                $specific_admin->receive_order_notifications = in_array($user_id, $admin_users);
+                $specific_admin->receive_label_notifications = in_array($user_id, $label_admin_users);
+                $specific_admin->receive_accounting_reports = in_array($user_id, $accounting_admin_users);
+
                 $specific_admin->save();
             }
 
             $status = true;
-        } else {
-            $status = false;
         }
 
         return response()->json([
             'status' => $status,
-            'msg' => 'Admins Selected Succesfully'
+            'msg' => 'Admin preferences saved successfully'
         ]);
     }
+
 
     public function shipping_quotes() {
         $shipping_quotes = ShippingQuote::with('selected_shipping_quote')->get();

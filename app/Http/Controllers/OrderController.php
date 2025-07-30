@@ -35,6 +35,7 @@ use App\Models\BuyListShippingAndDiscount;
 use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
 use App\Models\Discount;
+use App\Models\DropShipped;
 use App\Models\OrderRefund;
 use App\Models\OrderReminder;
 use App\Models\OrderStatus;
@@ -1096,52 +1097,36 @@ class OrderController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
                     //old code
-                    // if (!empty($users_with_role_admin)) {
-                    //     foreach ($users_with_role_admin as $role_admin) {
+                    
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         if (empty($specific_admin_notification->receive_order_notifications)) {
+                    //             continue;
+                    //         }   
                     //         $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
                     //         $adminTemplate = 'emails.admin-order-received';
                     //         $data['subject'] = $subject;
-                    //         $data['email'] = $role_admin->email;
+                    //         $data['email'] = $specific_admin_notification->email;
                     //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
                     //     }
                     // }
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
-                            $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
-                            $adminTemplate = 'emails.admin-order-received';
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->receive_order_notifications) {
+                                continue;
+                            }
+
+                            $subject = 'New Indoorsun Hydro order #' . $currentOrder->id . ' received';
                             $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
+                            
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
 
                     
-                    $credit_limit = $customer->contact->credit_limit;
-                    $parent_email = Contact::where('contact_id', $active_contact_id)->first();
-
-                    // if ($credit_limit < $cart_total) {
-                    //     if ($is_primary == null) {
-                    //         $data['subject'] = 'Credit limit reached';
-                    //         $data['email'] = $parent_email->email;
-
-                    //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                    //     }
-                    //     if ($is_primary != null) {
-                    //         $data['subject'] = 'Credit limit reached';
-                    //         $data['email'] = $email;
-
-                    //         MailHelper::sendMailNotification('emails.credit-limit-reached', $data);
-                    //     }
-                        
-                    //     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
-                    //     $data['email'] = $email;
-                    //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    // } else {
-                    //     $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
-                    //     $data['email'] = $email;
-                    //     MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    // }
                     if (!empty($email)) {
                         $data['subject'] = 'Your Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' .'has been received';
                         $data['email'] = $email;
@@ -1528,7 +1513,7 @@ class OrderController extends Controller
 
                                 $order_comment = new OrderComment;
                                 $order_comment->order_id = $order_id;
-                                $order_comment->comment = !empty($request->refund_reason) ? $request->refund_reason : '';    
+                                $order_comment->comment = !empty($request->refund_reason) ? 'Partial Refund Note :'.' '.$request->refund_reason : '';    
                                 $order_comment->save();
                             }
 
@@ -1560,7 +1545,7 @@ class OrderController extends Controller
 
                         $order_comment = new OrderComment;
                         $order_comment->order_id = $order_id;
-                        $order_comment->comment = !empty($request->refund_reason) ? $request->refund_reason : '';    
+                        $order_comment->comment = !empty($request->refund_reason) ? 'Refund Note:'.' '.$request->refund_reason : '';    
                         $order_comment->save();
 
                         if (!empty($order->order_id)) {
@@ -1801,6 +1786,16 @@ class OrderController extends Controller
     
             $cin7_order = $res->getBody()->getContents();
             $get_order = json_decode($cin7_order);
+            
+
+            $update_internal_comments = '';
+            $get_refund_reason_comment = '';
+            $get_refund_reason = OrderComment::where('order_id', $order->id)
+                ->where('comment', 'like', '%Refund Note:%')
+                ->first();
+            if (!empty($get_refund_reason)) {
+                $get_refund_reason_comment = str_replace('Refund Note:', '', $get_refund_reason->comment);
+            }
     
             if (!empty($get_order)) {
                 if ($current_order_status->status == 'Refunded') {
@@ -1808,6 +1803,8 @@ class OrderController extends Controller
                         'order_status_id' => $order_status_id,
                         'isApproved' => $current_order_status->status == 'Refunded' ? 3 : $order->isApproved
                     ]);
+
+                    $update_internal_comments = !empty($get_refund_reason_comment) ? $get_order->internalComments . ' ' . $get_refund_reason_comment : $get_order->internalComments;
                 }
 
                 if ($current_order_status->status == 'Cancelled') {
@@ -1815,6 +1812,8 @@ class OrderController extends Controller
                         'order_status_id' => $order_status_id,
                         'isApproved' => $current_order_status->status == 'Cancelled' ? 2 : $order->isApproved
                     ]);
+
+                    $update_internal_comments = !empty($get_refund_reason_comment) ? $get_order->internalComments . ' ' . $get_refund_reason_comment : $get_order->internalComments;
                 }
 
                 $curent_order_voided = $get_order->isVoid ?? false;
@@ -1834,12 +1833,29 @@ class OrderController extends Controller
                     $update_array = [
                         [
                             "id" => $order->order_id,
+                            "internalComments" => $update_internal_comments,
+                        ]
+                    ];
+
+                    $authHeaders['json'] = $update_array;
+
+                    $res = $client->put($url, $authHeaders);
+
+                    $response = json_decode($res->getBody()->getContents());
+
+                    // voiding the order
+                    
+                    UtilHelper::saveEndpointRequestLog('Update Sales Order','https://api.cin7.com/api/v1/SalesOrders', $api_key_id);
+
+                    $void_payload = [
+                        [
+                            "id" => $order->order_id,
                             "isVoid" => true,
                             "isApproved" => false,
                         ]
                     ];
 
-                    $authHeaders['json'] = $update_array;
+                    $authHeaders['json'] = $void_payload;
 
                     $res = $client->put($url, $authHeaders);
 
@@ -2850,18 +2866,103 @@ class OrderController extends Controller
     }
 
 
+    // public function mark_order_shipped(Request $request) {
+    //     $order_id = $request->order_id;
+    //     $order = ApiOrder::where('id', $order_id)->first();
+    //     if (empty($order)) {
+    //         return redirect()->back()->with('error', 'Order not found');
+    //     }
+
+    //     $order->is_shipped = 1;
+    //     $order->label_created = 1;
+    //     $order->save();
+
+    //     return redirect()->back()->with('success', 'Order marked as shipped');
+    // }
+
+
     public function mark_order_shipped(Request $request) {
-        $order_id = $request->order_id;
+        $order_id = $request->main_order_id;
+        $shipstation_order_id = $request->main_shipstation_order_id;
         $order = ApiOrder::where('id', $order_id)->first();
         if (empty($order)) {
             return redirect()->back()->with('error', 'Order not found');
         }
 
-        $order->is_shipped = 1;
-        $order->label_created = 1;
-        $order->save();
+        $order_contact = Contact::where('contact_id', $order->memberId)
+        ->orWhere('parent_id' , $order->memberId)
+        ->first();
 
-        return redirect()->back()->with('success', 'Order marked as shipped');
+        $name = !empty($order_contact) && $order_contact->DeliveryFirstName  ? $order_contact->DeliveryFirstName. ' ' .$order_contact->DeliveryLastName : ''; 
+
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                    ->where('order_id', $order_id)
+                    ->get();
+
+        $main_user_email = !empty($order_contact) ? $order_contact->email : '';
+
+
+        $data = [
+            'name' =>  $name,
+            'email' => $main_user_email,
+            'subject' => 'Track Your Order #'. $order_id  ,
+            'order_items' => $order_items,
+            'tracking_url' => null,
+            'tracking_number' => null,
+            'service_code' => null,
+            'carrier_code' => null,
+            'from' => SettingHelper::getSetting('noreply_email_address')
+        ];
+
+
+
+        $response = Http::withBasicAuth(env('SHIPMENT_KEY'), env('SHIPMENT_SECRET'))
+            ->get('https://ssapi.shipstation.com/shipments', [
+                'orderId' => $shipstation_order_id
+            ]);
+
+        if ($response->successful()) {
+            // Convert response to array
+            $shipment = $response['shipments'][0] ?? null;
+            if ($shipment) {
+                $trackingNumber = $shipment['trackingNumber'];
+                $carrierCode = $shipment['carrierCode'];
+                $serviceCode = $shipment['serviceCode'];
+                $user_email = !empty($shipment['customerEmail']) ? $shipment['customerEmail'] : $main_user_email;
+                
+                $order->is_shipped = 1;
+                $order->label_created = 1;
+                $order->tracking_number = $trackingNumber;
+                $order->shipping_carrier_code = empty($order->shipping_carrier_code) ? $carrierCode : $order->shipping_carrier_code;
+                $order->shipping_service_code = empty($order->shipping_service_code) ? $serviceCode : $order->shipping_service_code;
+                $order->save();
+
+                $drop_shipped = new DropShipped();
+                $drop_shipped->order_id = $order_id;
+                $drop_shipped->description = $request->description;
+                $drop_shipped->save();
+
+                $data ['tracking_url'] = 'https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum=' . $trackingNumber;
+                $data ['tracking_number'] = $trackingNumber;
+                $data ['service_code'] = $order->shipping_service_code;
+                $data ['carrier_code'] = $order->shipping_carrier_code;
+
+
+                if (!empty($user_email)) {
+                    $data['email'] = $user_email;
+                    MailHelper::sendMailNotification('emails.track_order_template', $data);
+                }
+
+                return redirect()->back()->with('success', 'Order marked as shipped');
+            } else {
+                return redirect()->back()->with('error' , 'shipment not found');
+            }
+
+        } else {
+            // Handle errors
+            return redirect()->back()->with('error', $response->body());
+        }
+
     }
 
 

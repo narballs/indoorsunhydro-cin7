@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Models\SalesReportSetting;
+use App\Models\SpecificAdminNotification;
 
 class SendDailySalesReport extends Command
 {
@@ -16,21 +17,39 @@ class SendDailySalesReport extends Command
     public function handle()
     {
         // Get email recipients from your settings table
-        $settings = SalesReportSetting::first();
-        if (!$settings || empty($settings->emails)) {
-            $this->error('No email recipients found in settings.');
-            return;
-        }
+        // $settings = SalesReportSetting::first();
+        // if (!$settings || empty($settings->emails)) {
+        //     $this->error('No email recipients found in settings.');
+        //     return;
+        // }
+
+        
 
         // Decode emails and extract valid email addresses from the 'value' key
-        $emailsArray = json_decode($settings->emails, true);
-        $emails = collect($emailsArray)
-            ->pluck('value')
+        // $emailsArray = json_decode($settings->emails, true);
+        // $emails = collect($emailsArray)
+        //     ->pluck('value')
+        //     ->filter(function ($email) {
+        //         return filter_var($email, FILTER_VALIDATE_EMAIL);
+        //     })
+        //     ->all();
+
+        $emails = SpecificAdminNotification::where('receive_accounting_reports', true)
+            ->pluck('email')
             ->filter(function ($email) {
                 return filter_var($email, FILTER_VALIDATE_EMAIL);
             })
+            ->unique()
+            ->values()
             ->all();
 
+        // Step 2: Ensure we have at least one valid email
+        if (empty($emails)) {
+            $this->error('No valid email recipients found after filtering.');
+            return;
+        }
+
+        // dd($emails); // Debugging line to check emails
 
         // Make sure there is at least one valid email
         if (empty($emails)) {

@@ -1597,15 +1597,34 @@ class CheckoutController extends Controller
                     ];
     
 
+                    // $specific_admin_notifications = SpecificAdminNotification::all();
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         $subject = 'New order received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['email'] = $specific_admin_notification->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->receive_order_notifications) {
+                                continue;
+                            }
+
                             $subject = 'New order received';
-                            $adminTemplate = 'emails.admin-order-received';
+
+                            $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
+
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
+
+
     
                     if (!empty($customer_email->email)) {
                         $data['email'] = $customer_email->email;
@@ -1783,12 +1802,29 @@ class CheckoutController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
 
+                    // $specific_admin_notifications = SpecificAdminNotification::all();
+                    // if (count($specific_admin_notifications) > 0) {
+                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    //         $subject = 'New order received';
+                    //         $adminTemplate = 'emails.admin-order-received';
+                    //         $data['email'] = $specific_admin_notification->email;
+                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
+                    //     }
+                    // }
+
                     $specific_admin_notifications = SpecificAdminNotification::all();
-                    if (count($specific_admin_notifications) > 0) {
+                    if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {
+                            // Check if this admin should receive order notifications
+                            if (!$specific_admin_notification->receive_order_notifications) {
+                                continue;
+                            }
+
                             $subject = 'New order received';
-                            $adminTemplate = 'emails.admin-order-received';
+                            
+                            $data['subject'] = $subject;
                             $data['email'] = $specific_admin_notification->email;
+
                             MailHelper::sendMailNotification('emails.admin-order-received', $data);
                         }
                     }
@@ -1827,16 +1863,45 @@ class CheckoutController extends Controller
 
 
             break;
-            case 'charge.pending':
+            case 'payment_intent.processing':
             $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
             $payment_event = $stripe->events->retrieve($event->id, []);
 
-            $charge = $event->data->object;
-            $chargeId = $charge->id;
-            $last4 = $charge->payment_method_details->card->last4 ?? null;
-            $card_brand = $charge->payment_method_details->card->brand ?? null;
+            $intent = $event->data->object;
+            $charge = null;
+            $chargeId = null;
+            $bank_details = null;
+            $last4 = null;
+            $card_brand = null;
 
-            $order_id = $payment_event->data->object->metadata->order_id ?? null;
+            // Extract the charge object from PaymentIntent, if available
+            if (!empty($intent->charges->data) && count($intent->charges->data) > 0) {
+                $charge = $intent->charges->data[0];
+                $chargeId = $charge->id ?? null;
+
+                // Card (Visa, MC, Amex, Apple Pay, Google Pay, etc.)
+                if (isset($charge->payment_method_details->card)) {
+                    $last4 = $charge->payment_method_details->card->last4 ?? '';
+                    $card_brand = $charge->payment_method_details->card->brand ?? '';
+                    $bank_details = trim($card_brand . ' ' . $last4);
+                }
+                // US Bank Account (ACH debit, Plaid)
+                elseif (isset($charge->payment_method_details->us_bank_account)) {
+                    $bank_name = $charge->payment_method_details->us_bank_account->bank_name ?? '';
+                    $last4 = $charge->payment_method_details->us_bank_account->last4 ?? '';
+                    $bank_details = trim($bank_name . ' ' . $last4);
+                }
+                // ACH Credit Transfer
+                elseif (isset($charge->payment_method_details->ach_credit_transfer)) {
+                    $bank_name = $charge->payment_method_details->ach_credit_transfer->bank_name ?? '';
+                    $routing_number = $charge->payment_method_details->ach_credit_transfer->routing_number ?? '';
+                    $account_number = $charge->payment_method_details->ach_credit_transfer->account_number ?? '';
+                    $bank_details = trim($bank_name . ' ' . $routing_number . ' ' . $account_number);
+                }
+                // Add more payment methods here if needed
+            }
+
+            $order_id = $intent->metadata->order_id ?? null;
 
             if ($order_id) {
                 $currentOrder = ApiOrder::where('id', $order_id)->first();
@@ -1844,20 +1909,53 @@ class CheckoutController extends Controller
                 if ($currentOrder) {
                     // Mark order as pending payment (waiting on bank funds)
                     $currentOrder->payment_status = 'pending';
-                     $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 5 :  $currentOrder->isApproved; 
+                    $currentOrder->isApproved = $currentOrder->isApproved == 0 ? 5 : $currentOrder->isApproved;
                     $currentOrder->charge_id = $chargeId;
-                    $currentOrder->card_number = $card_brand . ' ' . $last4;
+                    $currentOrder->card_number = $bank_details;
                     $currentOrder->save();
 
                     // Add comment to order history
                     $order_comment = new OrderComment;
                     $order_comment->order_id = $order_id;
-                    $order_comment->comment = 'Order payment is pending — awaiting funds from bank (charge.pending webhook).';
+                    $order_comment->comment = 'Order payment is pending — awaiting funds from bank (payment_intent.processing webhook).';
                     $order_comment->save();
 
-                    // You can add email notification to customer/admin here if needed
+                    // Optional: add email notification to customer/admin
                 }
             }
+            break;
+
+            case 'charge.pending':
+                $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+                $payment_event = $stripe->events->retrieve($event->id, []);
+
+                $charge = $event->data->object;
+                $chargeId = $charge->id;
+                $last4 = $charge->payment_method_details->card->last4 ?? null;
+                $card_brand = $charge->payment_method_details->card->brand ?? null;
+
+                $order_id = $payment_event->data->object->metadata->order_id ?? null;
+
+                if ($order_id) {
+                    $currentOrder = ApiOrder::where('id', $order_id)->first();
+
+                    if ($currentOrder) {
+                        // Mark order as pending payment (waiting on bank funds)
+                        $currentOrder->payment_status = 'pending';
+                        $currentOrder->isApproved = $currentOrder->isApproved == 2 ? 5 :  $currentOrder->isApproved; 
+                        $currentOrder->charge_id = $chargeId;
+                        $currentOrder->card_number = $card_brand . ' ' . $last4;
+                        $currentOrder->save();
+
+                        // Add comment to order history
+                        $order_comment = new OrderComment;
+                        $order_comment->order_id = $order_id;
+                        $order_comment->comment = 'Order payment is pending — awaiting funds from bank (charge.pending webhook).';
+                        $order_comment->save();
+
+                        // You can add email notification to customer/admin here if needed
+                    }
+                }
             break;
 
 
@@ -2441,22 +2539,32 @@ class CheckoutController extends Controller
                     $access = true;
                     if ($registration_status == true) {
                         if ($is_guest_user == 0) {
-                            // if (!empty($users_with_role_admin)) {
-                            //     foreach ($users_with_role_admin as $role_admin) {
+                            
+
+                            // $specific_admin_notifications = SpecificAdminNotification::all();
+                            // if (count($specific_admin_notifications) > 0) {
+                            //     foreach ($specific_admin_notifications as $specific_admin_notification) {
                             //         $subject = 'New Register User';
-                            //         $data['email'] = $role_admin->email;
+                            //         $data['email'] = $specific_admin_notification->email;
                             //         MailHelper::sendMailNotification('emails.admin_notification', $data);
                             //     }
                             // }
 
                             $specific_admin_notifications = SpecificAdminNotification::all();
-                            if (count($specific_admin_notifications) > 0) {
+                            if ($specific_admin_notifications->isNotEmpty()) {
                                 foreach ($specific_admin_notifications as $specific_admin_notification) {
+                                    // Check if this admin should receive order notifications
+                                    if (!$specific_admin_notification->receive_order_notifications) {
+                                        continue;
+                                    }
+
                                     $subject = 'New Register User';
                                     $data['email'] = $specific_admin_notification->email;
+
                                     MailHelper::sendMailNotification('emails.admin_notification', $data);
                                 }
                             }
+                            
     
                             if (!empty($created_contact)) {
                                 if ($auto_approved == true) {
