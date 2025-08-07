@@ -953,6 +953,14 @@ class AdminSettingsController extends Controller
         return view('admin.shipstation_api_logs.index', compact('shipstation_api_logs' , 'search'));
     }
 
+    public function delete_shipstation_api_logs(Request $request , $id) {
+        $delete_logs = ShipstationApiLogs::where('id' ,$id)->first();
+        if ($delete_logs) {
+            $delete_logs->delete();
+            return redirect()->route('get_shipstation_api_logs')->with('success' , 'Shipstation Api log deleted successfully');
+        }
+    }
+
     public function get_cin7_payment_logs(Request $request) {
         $search = $request->search;
 
