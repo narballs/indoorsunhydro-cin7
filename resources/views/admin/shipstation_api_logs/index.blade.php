@@ -3,9 +3,19 @@
 @section('content_header')
 @stop
 @section('content')
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
+    @if (\Session::has('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            {!! \Session::get('success') !!}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @elseif (\Session::has('error'))
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+            {!! \Session::get('error') !!}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @endif
     <div class="table-wrapper">
@@ -39,6 +49,9 @@
                         <tr>
                             <thead>
                                 <tr class="table-header-background">
+                                    <td class="d-flex table-row-item">
+                                        Action
+                                    </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Order ID </span>
                                     </td>
@@ -59,6 +72,11 @@
                             <tbody>
                                 @foreach ($shipstation_api_logs as  $shipstation_api_log)
                                     <tr class="user-row border-bottom">
+                                        <td class="">
+                                            <a class="btn btn-danger btn-sm text-white" href="{{ route('delete_shipstation_api_logs' , $shipstation_api_log) }}" onclick="return confirm('Are you sure you want to delete this log?');">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
                                         <td class="">
                                             {{$shipstation_api_log->order_id}}
                                         </td>

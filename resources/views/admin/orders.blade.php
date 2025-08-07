@@ -36,7 +36,7 @@
                             @endif --}}
                             @if (request()->url() == 'https://www.indoorsunhydro.com/admin/orders' && isset($show_alert) && $show_alert == true)
                                 @if (!empty($order_ids))
-                                    <div class="alert alert-danger alert-dismissible mb-0 unprocess_alert p-1">
+                                    <div class="alert alert-danger alert-dismissible mb-0 unprocess_alert p-1 mx-3">
                                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                         <a class="text-white mx-3" href="{{ url('admin/orders?show_unfulled_orders=1') }}">
                                             click here
@@ -47,7 +47,7 @@
                             @endif
                             @if (isset($show_processing_alert) && $show_processing_alert == true)
                                 @if (!empty($order_ids))
-                                    <div class="alert alert-info alert-dismissible mb-0 unprocess_alert p-1">
+                                    <div class="alert alert-info alert-dismissible mb-0 unprocess_alert p-1 mx-3">
                                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                         <a class="text-white mx-3" href="{{ url('admin/orders?show_processing_orders=1') }}">
                                             click here
@@ -56,6 +56,24 @@
                                     </div>
                                 @endif
                             @endif
+                            @if (!empty($unshipped_orders_ids))
+                                <div class="alert alert-danger alert-dismissible mb-0 unprocess_alert p-1 my-2 mx-3">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+
+                                    <span class="mx-3">Label creation failed for the following Order ID(s). Click on each to check logs:</span>
+
+                                    <ul class="mb-0 mt-2">
+                                        @foreach ($unshipped_orders_ids as $orderId)
+                                            <li>
+                                                <a class="text-white" href="{{ url('admin/get-shipstation-api-logs?search=' . $orderId) }}">
+                                                    Order #{{ $orderId }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                     <div class="row">
