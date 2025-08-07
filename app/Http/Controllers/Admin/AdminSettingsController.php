@@ -945,7 +945,8 @@ class AdminSettingsController extends Controller
         if (!empty($search)) {
             $shipstation_api_logs = ShipstationApiLogs::where('order_id', $search)
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends(request()->query());
         } else {
             $shipstation_api_logs = ShipstationApiLogs::orderBy('id', 'desc')->paginate(10);
         }
