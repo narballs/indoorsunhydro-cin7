@@ -38,6 +38,7 @@ use App\Models\BulkQuantityDiscount;
 use App\Models\ProductStock;
 use App\Models\ProductStockNotification;
 use App\Models\SpecificAdminNotification;
+use App\Models\StockApiLog;
 use App\Services\AIImageGenerationService;
 use App\Services\ScraperService;
 use Illuminate\Support\Facades\Session;
@@ -701,9 +702,19 @@ class ProductController extends Controller
 
         
         if (!empty($stock_updation_by_visiting_detail)) {
-           $api_status = $stock_updation_by_visiting_detail['api_status'];
+            $api_status = $stock_updation_by_visiting_detail['api_status'];
+            $stock_api_log = StockApiLog::create([
+                'product_id' => $id,
+                'option_id' => $option_id,
+                'request' => $stock_updation_by_visiting_detail['request'] ?? null,
+                'response' => $stock_updation_by_visiting_detail['response'] ?? null,
+                'status' => $api_status,
+                'time_taken' => $stock_updation_by_visiting_detail['elapsed_time_readable'] ?? null,
+                'product_name' => $product->name,
+                'sku' => $product->code,
+            ]);
 
-           $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
+            $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
 
             if ($api_status == false) {
                 if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'Yes') {

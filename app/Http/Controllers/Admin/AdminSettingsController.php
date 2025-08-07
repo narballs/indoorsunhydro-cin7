@@ -29,6 +29,7 @@ use Carbon\Carbon;
 use App\Models\AdminStockReportSetting;
 use App\Models\AdminStockReportInterval;
 use App\Models\SalesReportSetting;
+use App\Models\StockApiLog;
 use Facade\FlareClient\Time\Time;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\DB;
@@ -965,6 +966,22 @@ class AdminSettingsController extends Controller
         }
 
         return view('admin.payment_information_logs.index', compact('payment_information_logs' , 'search'));
+    }
+
+
+    public function get_stock_api_logs(Request $request) {
+        $search = $request->search;
+
+        if (!empty($search)) {
+            $stock_api_logs = StockApiLog::where('product_name' , 'LIKE' , "%{$search}%")
+            ->orWhere('sku' , $search)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        } else {
+            $stock_api_logs = StockApiLog::orderBy('id', 'desc')->paginate(10);
+        }
+
+        return view('admin.stock_api_logs.index', compact('stock_api_logs' , 'search'));
     }
 
 

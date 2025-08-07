@@ -471,6 +471,11 @@ return [
         ],
 
         [
+            'text'    => 'Stock Api Logs',
+            'url'  => '/admin/get-stock-api-logs',
+        ],
+
+        [
             'text'       => 'Logout',
             'icon' => 'fa fa-sign-out-alt logout_icon',
             'url'        => 'admin/logout',
