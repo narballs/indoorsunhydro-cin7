@@ -189,6 +189,23 @@ class OrderManagementController extends Controller
         $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
         $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
+
+        $unshipped_orders_ids = ApiOrder::with('shipstation_api_logs')
+            ->where('is_shipped', 0)
+            ->where('label_created', 0)
+            ->where('is_stripe', 1)
+            ->where('shipment_price', '>', 0)
+            ->whereNotNull('shipstation_orderId')
+            ->where('payment_status', 'paid')
+            ->where('isApproved', 1)
+            ->whereNull('buylist_id')
+            ->where('created_at', '>=', '2025-01-09 12:23:51')
+            ->where('shipping_carrier_code', 'ups_walleted')
+            ->whereHas('shipstation_api_logs' , function($q) {
+                $q->where('action' , 'create_label');
+            })
+            ->pluck('id')->toArray();
+
         return view('admin/orders', compact(
             'orders','order_ids','processingOrderIds','po_box_carrier_code',
             'po_box_service_code','po_box_order_shipping_text',
@@ -198,7 +215,8 @@ class OrderManagementController extends Controller
             'auto_createlabel','auto_createLabel',
             'auto_fulfill', 'auto_fullfill',
             'sort_by_desc', 'sort_by_asc' ,
-            'sort_by_created_at'
+            'sort_by_created_at',
+            'unshipped_orders_ids'
         ));
     }
 

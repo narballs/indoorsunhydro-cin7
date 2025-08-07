@@ -3,19 +3,9 @@
 @section('content_header')
 @stop
 @section('content')
-    @if (\Session::has('success'))
-        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-            {!! \Session::get('success') !!}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @elseif (\Session::has('error'))
-        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-            {!! \Session::get('error') !!}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
         </div>
     @endif
     <div class="table-wrapper">
@@ -25,7 +15,7 @@
                     <div class="row">
                         <div class="col-md-6 mobile_heading">
                             <p class="product_heading">
-                                Shipstation Api Logs
+                                Stock Api Logs
                             </p>
                         </div>
                     </div>
@@ -33,9 +23,9 @@
                         <div class="col-md-4 product_search">
                             <div class="has-search">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <form method="get" action="/admin/get-shipstation-api-logs" class="mb-2">
+                                <form method="get" action="/admin/get-stock-api-logs" class="mb-2">
                                     <input type="text" class="form-control border-0" id="search" name="search"
-                                        placeholder="Search By Order ID" value="{{ isset($search) ? $search : '' }}" />
+                                        placeholder="Search By Product Name / Sku" value="{{ isset($search) ? $search : '' }}" />
                                 </form>
                             </div>
                         </div>
@@ -49,80 +39,85 @@
                         <tr>
                             <thead>
                                 <tr class="table-header-background">
-                                    <td class="d-flex table-row-item">
-                                        Action
+                                    <td>
+                                        <span class="d-flex table-row-item"> Product Name </span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Order ID </span>
-                                    </td>
-                                    <td>
-                                        <span class="d-flex table-row-item"> Action </span>
+                                        <span class="d-flex table-row-item"> Sku</span>
                                     </td>
                                     <td>
                                         <span class="d-flex table-row-item"> Request </span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> Response</span>
+                                        <span class="d-flex table-row-item">Response</span>
                                     </td>
                                     <td>
-                                        <span class="d-flex table-row-item"> created at</span>
+                                        <span class="d-flex table-row-item">Response Time</span>
+                                    </td>
+                                    <td>
+                                        <span class="d-flex table-row-item">Status</span>
                                     </td>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($shipstation_api_logs as  $shipstation_api_log)
+                                @if (count($stock_api_logs) == 0)
+                                    <tr class="user-row border-bottom">
+                                        <td colspan="8" class="text-center">No Stock API Logs Found</td>
+                                    </tr>
+                                @endif
+                                @foreach ($stock_api_logs as  $stock_api_log)
                                     <tr class="user-row border-bottom">
                                         <td class="">
-                                            <a class="btn btn-danger btn-sm text-white" href="{{ route('delete_shipstation_api_logs' , $shipstation_api_log) }}" onclick="return confirm('Are you sure you want to delete this log?');">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
+                                            <span class="d-flex table-row-item">{{ $stock_api_log->product_name }}</span>
                                         </td>
                                         <td class="">
-                                            {{$shipstation_api_log->order_id}}
+                                            <span class="d-flex table-row-item">{{ $stock_api_log->sku }}</span>
                                         </td>
                                         <td class="">
-                                            {{str_replace('_',' ', $shipstation_api_log->action)}}
+                                            <span class="d-flex table-row-item">{{ $stock_api_log->request }}</span>
                                         </td>
+                                        
                                         <td class="">
+                                            @php
+                                                $decodedResponse = json_decode($stock_api_log->response);
+                                            @endphp
 
-                                            @if (gettype(json_decode($shipstation_api_log->request)) == 'object')
-
+                                            @if (is_object($decodedResponse) || is_array($decodedResponse))
                                                 <div>
-                                                    <pre style="font-size:14px;" id="shortText-{{ $shipstation_api_log->id }}">{{ Str::limit(json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT), 50) }}</pre>
-                                                    <a href="#" data-toggle="collapse" data-target="#fullText-{{ $shipstation_api_log->id }}">See more</a>
-                                                    <pre id="fullText-{{ $shipstation_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">{{ json_encode(json_decode($shipstation_api_log->request, true), JSON_PRETTY_PRINT) }}</pre>
-                                                </div>  
-                                                
+                                                    <pre style="font-size:14px;" id="shortText-{{ $stock_api_log->id }}">
+                                                        {{ Str::limit(json_encode($decodedResponse, JSON_PRETTY_PRINT), 50) }}
+                                                    </pre>
+                                                    <a href="#" data-toggle="collapse" data-target="#fullText-{{ $stock_api_log->id }}">See more</a>
+                                                    <pre id="fullText-{{ $stock_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">
+                                                        {{ json_encode($decodedResponse, JSON_PRETTY_PRINT) }}
+                                                    </pre>
+                                                </div>
                                             @else
                                                 <div>
-                                                    {{$shipstation_api_log->request}}
+                                                    {{ $stock_api_log->response }}
                                                 </div>
                                             @endif
                                         </td>
                                         <td class="">
-                                            @if (gettype(json_decode($shipstation_api_log->response)) == 'object')
-                                                
-                                                <div>
-                                                    <pre style="font-size:14px;" id="shortTextRes-{{ $shipstation_api_log->id }}">{{ Str::limit(json_encode(json_decode($shipstation_api_log->response, true), JSON_PRETTY_PRINT), 50) }}</pre>
-                                                    <a href="#" data-toggle="collapse" data-target="#fullTextRes-{{ $shipstation_api_log->id }}">See more</a>
-                                                    <pre id="fullTextRes-{{ $shipstation_api_log->id }}" class="collapse" style="white-space: pre-wrap;font-size:14px;">{{ json_encode(json_decode($shipstation_api_log->response, true), JSON_PRETTY_PRINT) }}</pre>
-                                                </div>
-                                            @else
-                                                <div>
-                                                    {{$shipstation_api_log->response}}
-                                                </div>
-                                            @endif
+                                            <span class="d-flex table-row-item">{{ $stock_api_log->time_taken }}</span>
                                         </td>
                                         <td class="">
-                                            {{$shipstation_api_log->created_at}}
+                                            <span class="d-flex table-row-item">
+                                                @if ($stock_api_log->status == 1)
+                                                    <span class="badge badge-success">Enabled</span>
+                                                @elseif ($stock_api_log->status == 0)
+                                                     <span class="badge badge-danger">Disabled</span>
+                                                @endif
+                                            </span>
                                         </td>
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="5" class="mobile-screen">
-                                        {{ $shipstation_api_logs->links('pagination.custom_pagination') }}
+                                        {{ $stock_api_logs->links('pagination.custom_pagination') }}
                                     </td>
                                 </tr>
                             </tfoot>

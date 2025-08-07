@@ -158,4 +158,9 @@ class ApiOrder extends Model
     {
         return $this->hasOne('App\Models\DropShipped', 'order_id', 'id');
     } 
+
+    Public function shipstation_api_logs()
+    {
+        return $this->hasOne('App\Models\ShipstationApiLogs', 'order_id', 'id');
+    } 
 }

@@ -29,6 +29,7 @@ use Carbon\Carbon;
 use App\Models\AdminStockReportSetting;
 use App\Models\AdminStockReportInterval;
 use App\Models\SalesReportSetting;
+use App\Models\StockApiLog;
 use Facade\FlareClient\Time\Time;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\DB;
@@ -944,12 +945,21 @@ class AdminSettingsController extends Controller
         if (!empty($search)) {
             $shipstation_api_logs = ShipstationApiLogs::where('order_id', $search)
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends(request()->query());
         } else {
             $shipstation_api_logs = ShipstationApiLogs::orderBy('id', 'desc')->paginate(10);
         }
 
         return view('admin.shipstation_api_logs.index', compact('shipstation_api_logs' , 'search'));
+    }
+
+    public function delete_shipstation_api_logs(Request $request , $id) {
+        $delete_logs = ShipstationApiLogs::where('id' ,$id)->first();
+        if ($delete_logs) {
+            $delete_logs->delete();
+            return redirect()->route('get_shipstation_api_logs')->with('success' , 'Shipstation Api log deleted successfully');
+        }
     }
 
     public function get_cin7_payment_logs(Request $request) {
@@ -965,6 +975,22 @@ class AdminSettingsController extends Controller
         }
 
         return view('admin.payment_information_logs.index', compact('payment_information_logs' , 'search'));
+    }
+
+
+    public function get_stock_api_logs(Request $request) {
+        $search = $request->search;
+
+        if (!empty($search)) {
+            $stock_api_logs = StockApiLog::where('product_name' , 'LIKE' , "%{$search}%")
+            ->orWhere('sku' , $search)
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        } else {
+            $stock_api_logs = StockApiLog::orderBy('id', 'desc')->paginate(10);
+        }
+
+        return view('admin.stock_api_logs.index', compact('stock_api_logs' , 'search'));
     }
 
 
