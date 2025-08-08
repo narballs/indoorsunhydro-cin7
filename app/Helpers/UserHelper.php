@@ -529,6 +529,12 @@ class UserHelper
         $zip = self::get_AddressValue($currentOrder->BillingZip, $order_contact->postalPostCode, $order_contact->postCode);
         $phone = self::get_AddressValue($currentOrder->BillingPhone, $order_contact->phone, $order_contact->mobile);
 
+        $phone = !empty($phone) ? self::cleanPhoneForShipStation($phone) : null;
+        if (empty($phone)) {
+            $phone = null;
+        }
+
+
         // Shipping Address
         $DeliveryfirstName = self::get_AddressValue($currentOrder->DeliveryFirstName, $order_contact->firstName);
         $DeliverylastName = self::get_AddressValue($currentOrder->DeliveryLastName, $order_contact->lastName);
@@ -540,6 +546,12 @@ class UserHelper
         $Deliveryzip = self::get_AddressValue($currentOrder->DeliveryZip, $order_contact->postCode, $order_contact->postalPostCode);
         $Deliverycountry = !empty($currentOrder->DeliveryCountry) ? $currentOrder->DeliveryCountry : 'US';
         $Deliveryphone = self::get_AddressValue($currentOrder->DeliveryPhone, $order_contact->phone, $order_contact->mobile);
+
+        $Deliveryphone = !empty($Deliveryphone) ? self::cleanPhoneForShipStation($Deliveryphone) : null;
+        if (empty($Deliveryphone)) {
+            $Deliveryphone = null;
+        }
+
 
         $confirmation_value = null;
 
@@ -679,6 +691,19 @@ class UserHelper
         }
         
         
+    }
+
+
+    public static function cleanPhoneForShipStation($phone) {
+        // Remove all non-alphanumeric characters
+        $cleaned = preg_replace('/[^a-zA-Z0-9]/', '', $phone);
+
+        // Check if cleaned phone is exactly 10 characters
+        if (strlen($cleaned) === 10) {
+            return $cleaned; // valid, return cleaned phone
+        }
+
+        return null; // invalid, return null
     }
 
 
