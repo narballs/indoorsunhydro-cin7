@@ -2189,7 +2189,7 @@ class CheckoutController extends Controller
                                 'state' => 'required',
                                 'city' => 'required',
                                 'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                                'phone' => 'required',
+                                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                                 'postal_address1' => [
                                     'required',
                                     // function ($attribute, $value, $fail) {
@@ -2207,6 +2207,9 @@ class CheckoutController extends Controller
                                 'postal_state.required' => 'Shipping State is required.',
                                 'postal_zip_code.required' => 'Shipping Zip Code is required.',
                                 'postal_city.required' => 'Shipping City is required.',
+                                'phone.required' => 'Phone is required',
+                                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                                'phone.size' => 'Phone must be exactly 10 characters',
                             ]
                         );
                     }
@@ -2228,7 +2231,7 @@ class CheckoutController extends Controller
                                 'state' => 'required',
                                 'city' => 'required',
                                 'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                                'phone' => 'required',
+                                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                                 'postal_address1' => [
                                     'required',
                                     // function ($attribute, $value, $fail) {
@@ -2248,6 +2251,9 @@ class CheckoutController extends Controller
                                 'postal_state.required' => 'Shipping State is required.',
                                 'postal_zip_code.required' => 'Shipping Zip Code is required.',
                                 'postal_city.required' => 'Shipping City is required.',
+                                'phone.required' => 'Phone is required',
+                                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                                'phone.size' => 'Phone must be exactly 10 characters',
                             ]
                         );
                     }
@@ -2270,6 +2276,7 @@ class CheckoutController extends Controller
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
                             'city' => 'required',
+                            'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                         ]);
                     }
                     else {
@@ -2290,6 +2297,7 @@ class CheckoutController extends Controller
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
                             'city' => 'required',
+                            'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                         ]);
                     }
                 }

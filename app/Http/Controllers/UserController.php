@@ -803,10 +803,14 @@ class UserController extends Controller
                 'state_id' => 'required',
                 'city_id' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
             ],
             [
                 'state_id.required' => 'The state field is required.',
                 'city_id.required' => 'The city field is required.',
+                'phone.required' => 'Phone is required',
+                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                'phone.size' => 'Phone must be exactly 10 characters',
             ] 
                 
         );
@@ -2200,12 +2204,15 @@ class UserController extends Controller
                     // },
                 ],
                 'state' => 'required',
-                'phone' => 'required',
                 'town_city' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
             ], 
             [
                 'town_city.required' => 'City is required.',
+                'phone.required' => 'Phone is required',
+                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                'phone.size' => 'Phone must be exactly 10 characters',
             ]
         );
 
