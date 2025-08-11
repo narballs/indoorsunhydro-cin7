@@ -612,7 +612,8 @@ class CheckoutController extends Controller
             ->first();
 
             $get_all_user_addresses = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->where('is_default' , 0)->get();
-
+            $get_all_user_billing_addresses_all = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Billing')->where('is_default' , 0)->get();
+            
 
             $charge_shipment_fee = false;
             if (!empty($user_address) && $user_address->charge_shipping == 1) {
@@ -1123,6 +1124,7 @@ class CheckoutController extends Controller
                 'get_user_default_billing_address',
                 'get_user_default_shipping_address',
                 'get_all_user_addresses',
+                'get_all_user_billing_addresses_all',
                 'surcharge_type_settings_for_weight_greater_then_150',
                 'upgrade_shipping',
                 'upgrade_admin_selected_shipping_quote',
@@ -3038,6 +3040,32 @@ class CheckoutController extends Controller
         }
         
     }
+    
+
+    public function select_default_billing_address(Request $request) {
+        $contact_id = $request->contact_id;
+        $address_id = $request->address_id;
+        if (!empty($contact_id) && !empty($address_id)) {
+            $contact_addresses = ContactsAddress::where('contact_id', $contact_id)->where('address_type' , 'Billing')->get();
+            if (count($contact_addresses) == 0) {
+                return response()->json(['status' => 400, 'message' => 'No address found']);
+            } else {
+                foreach ($contact_addresses as $contact_address) {
+                    $contact_address->is_default = 0;
+                    $contact_address->save();
+                }
+
+                $selected_address = ContactsAddress::where('id', $address_id)->first();
+                $selected_address->is_default = 1;
+                $selected_address->save();
+                return response()->json(['status' => 200, 'message' => 'Billing address selected successfully']);
+            }
+        } else {
+            return response()->json(['status' => 400, 'message' => 'Contact  is required']);
+        }
+        
+    }
+
 
 
     public function get_shipping_rate_new($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address ,$productTotal) {

@@ -159,6 +159,7 @@ Route::post('update-product-cart', [ProductController::class, 'update_product_ca
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 // select default address
 Route::post('select-default-shipping-address', [CheckoutController::class, 'select_default_shipping_address'])->name('select_default_shipping_address');
+Route::post('select-default-billing-address', [CheckoutController::class, 'select_default_billing_address'])->name('select_default_billing_address');
 
 Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
