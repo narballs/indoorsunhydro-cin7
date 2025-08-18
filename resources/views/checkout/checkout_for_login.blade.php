@@ -1678,34 +1678,34 @@ $cart_price = 0;
                                     <div class="col-md-12">
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
-                                                {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryFirstName) ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                {{ !empty($get_user_default_shipping_address->DeliveryLastName) ? $get_user_default_shipping_address->DeliveryLastName : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Ship to</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryAddress1 ? $get_user_default_shipping_address->DeliveryAddress1 : ''}}  {{$get_user_default_shipping_address->DeliveryAddress2 ? ', ' .$get_user_default_shipping_address->DeliveryAddress2 : ''}}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ? $get_user_default_shipping_address->DeliveryAddress1 : ''}}  {{!empty($get_user_default_shipping_address->DeliveryAddress2) ? ', ' .$get_user_default_shipping_address->DeliveryAddress2 : ''}}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryCity ? $get_user_default_shipping_address->DeliveryCity : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryCity) ? $get_user_default_shipping_address->DeliveryCity : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryState ? $get_user_default_shipping_address->DeliveryState : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryState) ? $get_user_default_shipping_address->DeliveryState : '' }}</span></div>
                                             
                                         </div>
                                         
                                         <div class="row  custom-border-bottom custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryZip ? $get_user_default_shipping_address->DeliveryZip : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryZip) ? $get_user_default_shipping_address->DeliveryZip : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Phone</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryPhone ? $get_user_default_shipping_address->DeliveryPhone : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryPhone) ? $get_user_default_shipping_address->DeliveryPhone : '' }}</span></div>
                                             
                                         </div>
                                     </div>
