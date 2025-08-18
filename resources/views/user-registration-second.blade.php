@@ -348,8 +348,8 @@
                                                     <div class="placeholder pl-3 fontAwesome top_placeholder_style text-dark border-0 bg-none customplaceholderclass">
                                                         <i class="fa fa-phone  ml-2 mr-2"></i>Phone
                                                     </div>
+                                                    <div class="text-danger text-left" id="phone_errors"></div>
                                                 </div>
-                                                <div class="text-danger" id="phone_errors"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -760,6 +760,7 @@
                 "phone": phone
             },
             success: function(response) {
+                console.log(response);
                 // if (response.code == 201) {
                 //     $("#thanks").removeClass('d-none');
                 //     $(".address").hide();
@@ -927,6 +928,7 @@
                         error_text5 = '';
                         $('#zip_errors').html(error_text5);
                     }
+                    
 
                 }
 
@@ -1041,6 +1043,7 @@
                     error_text5 = '';
                     $('#zip_errors').html(error_text5);
                 }
+                
 
             },
         });

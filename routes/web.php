@@ -262,6 +262,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/customersearch', [CustomerSearchController::class, 'customerSearch'])->name('admin.customer.search');
     Route::resource('admin/products', AdminProductController::class);
     Route::resource('admin/buy-list', AdminBuyListController::class);
+    Route::post('/admin/products/{id}/toggle-compressed', [AdminProductController::class, 'toggleCompressed'])->name('products.toggleCompressed');
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('/admin/buy-list/update/{id}', [AdminBuyListController::class, 'update_buy_list']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);
