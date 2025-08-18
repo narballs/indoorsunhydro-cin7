@@ -730,7 +730,12 @@ class CheckoutController extends Controller
             $shipping_free_over_1000 = 0;
             $calculator = new DistanceCalculator();
             $allow_pickup = 0;
-            $distance = $calculator->calculate_distance('95826', $get_user_default_shipping_address->DeliveryZip);
+            if (!empty( $get_user_default_shipping_address->DeliveryZip)) {
+
+                $distance = $calculator->calculate_distance('95826', $get_user_default_shipping_address->DeliveryZip);
+            } else {
+                $distance = null;
+            }
 
             if (empty($distance)) {
                 $allow_pickup = 0;
