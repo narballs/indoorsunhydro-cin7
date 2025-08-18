@@ -502,4 +502,22 @@ class AdminProductController extends Controller
 
 
     }
+
+
+    
+    public function toggleCompressed(Request $request, $id)
+    {
+        $request->validate([
+            'is_compressed' => 'required|boolean',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->is_compressed = (bool)$request->is_compressed;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'is_compressed' => $product->is_compressed,
+        ]);
+    }
 }

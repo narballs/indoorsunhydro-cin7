@@ -670,10 +670,17 @@ class UserController extends Controller
 
     public function checkAddress(Request $request) {
     
-        $validatedData = $request->validate([
-            // 'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'phone' => 'required',
-        ]);
+        $validatedData = $request->validate(
+            [
+                // 'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
+            ], 
+            [
+                'phone.required' => 'Phone is required',
+                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                'phone.size' => 'Phone must be exactly 10 characters',
+            ]
+        );
 
         if($validatedData) {
             return response()->json([
