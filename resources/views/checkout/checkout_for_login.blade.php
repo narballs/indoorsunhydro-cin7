@@ -1656,17 +1656,15 @@ $cart_price = 0;
                                             <div class="col-md-8 col-lg-7 col-12 col-xl-6">
                                                 <div class="dropdown">
                                                     <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
-                                                        {{-- {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }} --}}
-                                                        {{$get_user_default_shipping_address->DeliveryAddress1 ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
-                                                        {{$get_user_default_shipping_address->DeliveryZip ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
+                                                        {{ !empty($get_user_default_shipping_address->DeliveryFirstName) ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                        {{!empty($get_user_default_shipping_address->DeliveryAddress1) ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
+                                                        {{!empty($get_user_default_shipping_address->DeliveryZip) ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
                                                     </button>
                                                 
                                                     <div class="dropdown-menu pl-1" aria-labelledby="dropdownMenuButton">
                                                         @foreach($get_all_user_addresses as $get_all_user_addresse)
                                                             <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_shipment_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
                                                                 {{ $get_all_user_addresse->DeliveryFirstName ? $get_all_user_addresse->DeliveryFirstName : '' }}
-                                                                {{-- {{ $get_all_user_addresse->DeliveryLastName ? $get_all_user_addresse->DeliveryLastName : '' }} --}}
                                                                 {{$get_all_user_addresse->DeliveryAddress1 ? ', ' .$get_all_user_addresse->DeliveryAddress1 : ''}}
                                                                 {{$get_all_user_addresse->DeliveryZip ? ', ' .$get_all_user_addresse->DeliveryZip : ''}}
                                                             </a> 
