@@ -381,36 +381,18 @@ class UserHelper
         $products_widths = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
-        // foreach ($order_items as $order_item) {
-        //     $items[] = [
-        //         'name' => $order_item->product->name,
-        //         'sku' => $order_item->product->code,
-        //         'quantity' => $order_item->quantity,
-        //         'unitPrice' => $order_item->price,
-        //     ];
-        //     $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
-        //     foreach ($product_options as $product_option) {
-        //         $products_weight += $product_option->optionWeight * $order_item['quantity'];
-        //         if (!empty($product_option->products)) {
-
-        //             array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-        //             array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-
-
-        //             $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-        //             $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
-        //             $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
-        //         }
-        //     }
-        // }
-
-        // $product_length = max($products_lengths);
-        // $product_width = max($products_widths);
+        
 
         $products_heights = [];
-        $total_height = 0.0;
         $pot_category_flag = false;
         $pots_category = 'pots & containers';
+        $total_height = 0.0;
+
+        $HEIGHT_CAP = 30; // 24–36" is typical; tune per your ship boxes
+
+        // Accumulators for COMPRESSED items ONLY (they will grow footprint)
+        $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;      // final compressed footprint+height
+        $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0; // current compressed layer 
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -420,24 +402,7 @@ class UserHelper
             ];
             $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
             foreach ($product_options as $product_option) {
-                // if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
-                //     $pot_category_flag = true;
-                //     $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $order_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
-                // } 
-                // else {
-                //     $pot_category_flag = false;
-                //     $products_weight += $product_option->optionWeight * $order_item['quantity'];
-                //     if (!empty($product_option->products)) {
-                        
-                //         array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                //         array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-                        
-                //         $product_height += !empty($product_option->products->height) ? $product_option->products->height * $order_item['quantity'] : 0;
-                //         $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-                //         $product_length += !empty($product_option->products->length) ? $product_option->products->length * $order_item['quantity'] : 0;
-                        
-                //     }
-                // }
+                
 
                 if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
                     $pot_category_flag = true; // KEEP true once set
@@ -456,82 +421,104 @@ class UserHelper
                         $products_weight = 0
                     );
 
-                } else {
-                    // DO NOT set $pot_category_flag = false here (small fix)
-                    // $pot_category_flag = false; // REMOVE this line
+                } 
+                else {
+                    
+                    $qty = (int)$order_item['quantity'];
 
-                    // sum actual weight (prefer optionWeight)
-                    $products_weight += (float)$product_option->optionWeight * (int)$order_item['quantity'];
+                    // Prefer option weight; fallback to product weight
+                    $unitWt = (float)($product_option->optionWeight ?? 0);
+                    if ($unitWt <= 0 && isset($product_option->products->weight)) {
+                        $unitWt = (float)$product_option->products->weight;
+                    }
 
-                    if (!empty($product_option->products)) {
+                    // Rotate so L ≥ W ≥ H
+                    $pLen = (float)($product_option->products->length ?? 0);
+                    $pWid = (float)($product_option->products->width  ?? 0);
+                    $pHei = (float)($product_option->products->height ?? 0);
+                    $dims = [$pLen, $pWid, $pHei];
+                    rsort($dims, SORT_NUMERIC);
+                    $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
 
-                        // SMALL CHANGE: rotate so we stack the smallest edge
-                        $pLen = (float)($product_option->products->length ?: 0);
-                        $pWid = (float)($product_option->products->width  ?: 0);
-                        $pHei = (float)($product_option->products->height ?: 0);
+                    // If compressed -> use compressed, else normal stack
+                    $isCompressed = (bool) ($product_option->products->is_compressed ?? false);
 
-                        $dims = [$pLen, $pWid, $pHei];
-                        rsort($dims, SORT_NUMERIC); // L >= W >= H
-                        $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
+                    if ($isCompressed) {
+                        ShippingHelper::accumulateCompressedItem(
+                            $qty, $L, $W, $H,
+                            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+                            $comp_box_L,   $comp_box_W,   $comp_box_H,
+                            30.0,  // $heightCap (tune if needed)
+                            0.6,   // $ratio
+                            0.25,  // $floor
+                            12     // $searchCap
+                        );
+                        
 
-                        // footprint candidates (unchanged idea, but use rotated L/W)
+                    } else {
+                        // normal (non-compressed) stacking: stack smallest edge
                         $products_lengths[] = $L;
                         $products_widths[]  = $W;
-
-                        // SMALL CHANGE: stack ONLY the smallest edge as height
-                        $total_height += $H * (int)$order_item['quantity'];
-
-                        // REMOVE these three lines that were inflating height:
-                        // $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
-                        // $product_width  += !empty($product_option->products->width)  ? $product_option->products->width  * $cart_item['quantity'] : 0;
-                        // $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
+                        $total_height      += $H * $qty;
                     }
-                }
 
+                    // add weight ONCE
+                    $products_weight += $unitWt * $qty;
+                }
             }
         }
 
-        // if ($pot_category_flag == true) {
-        //     $product_height = $get_pot_category_dimensions['product_height'];
-        //     $product_width = $get_pot_category_dimensions['products_widths'];
-        //     $product_length = $get_pot_category_dimensions['products_lengths'];
-        //     $products_weight = $get_pot_category_dimensions['products_weight'];
-        // } else {
-        //     $product_length = max($products_lengths);
-        //     $product_width = max($products_widths);
-        //     $product_height = $product_height;
-        //     $products_weight = $products_weight;
-        // }
+        ShippingHelper::finalizeCompressedBox(
+            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+            $comp_box_L,   $comp_box_W,   $comp_box_H
+        );
 
-        // $girth = 2 * ($product_width + $product_height); 
-        // if ($girth > 165  && $products_weight < 100) {
-        //     $products_weight = 100;
-        // }
+       
 
-        if ($pot_category_flag == true) {
-            // Merge pot package with non-pot stack
-            $product_height  = $get_pot_category_dimensions['product_height'] + $total_height; // CHANGED
-            $product_width   = max(
-                $get_pot_category_dimensions['products_widths'],
-                !empty($products_widths) ? max($products_widths) : 0
-            ); // CHANGED
-            $product_length  = max(
-                $get_pot_category_dimensions['products_lengths'],
-                !empty($products_lengths) ? max($products_lengths) : 0
-            ); // CHANGED
-            $products_weight = $get_pot_category_dimensions['products_weight'] + $products_weight; // CHANGED
+        // Non-compressed footprint/height from your accumulators
+        $noncomp_L = !empty($products_lengths) ? max($products_lengths) : 0.0;
+        $noncomp_W = !empty($products_widths)  ? max($products_widths)  : 0.0;
+        $noncomp_H = (float)$total_height;
+
+        // Merge with pots (if any) AND compressed box
+        if (!empty($pot_category_flag) && !empty($get_pot_category_dimensions)) {
+            $potL  = (float)($get_pot_category_dimensions['products_lengths'] ?? 0);
+            $potW  = (float)($get_pot_category_dimensions['products_widths']  ?? 0);
+            $potH  = (float)($get_pot_category_dimensions['product_height']   ?? 0);
+            $potWT = (float)($get_pot_category_dimensions['products_weight']  ?? 0);
+
+            // Footprint is the max across compressed, non-compressed, pots
+            $product_length = max($comp_box_L, $noncomp_L, $potL);
+            $product_width  = max($comp_box_W, $noncomp_W, $potW);
+
+            // Heights stack
+            $product_height = $comp_box_H + $noncomp_H + $potH;
+
+            $actual_total   = $products_weight + $potWT; // add pots' actual weight
         } else {
-            $product_length  = !empty($products_lengths) ? max($products_lengths) : 0;
-            $product_width   = !empty($products_widths)  ? max($products_widths)  : 0;
-            $product_height  = $total_height; // CHANGED (was $product_height)
-            // $products_weight already correct
+            $product_length = max($comp_box_L, $noncomp_L);
+            $product_width  = max($comp_box_W, $noncomp_W);
+            $product_height = $comp_box_H + $noncomp_H;
+
+            $actual_total   = $products_weight; // already summed in loop
         }
 
-        // Oversize rule (keep if needed)
+
+        $DIM_DIVISOR = 166; // change if your carrier uses a different divisor
+        $dim_weight = ($product_length > 0 && $product_width > 0 && $product_height > 0)
+            ? (($product_length * $product_width * $product_height) / $DIM_DIVISOR)
+            : 0.0;
+
+         $billable = $actual_total;
+
+        // ----- Oversize clamp (keep your policy) -----
         $girth = 2 * ($product_width + $product_height);
-        if ($girth > 165 && $products_weight < 100) {
-            $products_weight = 100;
+        if ($girth > 165 && $billable < 100) {
+            $billable = 100;
         }
+
+        // This is the weight you should send to ShipStation
+        $products_weight = $billable;
 
 
         if ($product_height > 108) {
@@ -699,22 +686,7 @@ class UserHelper
             'items'=> $items
         ];
 
-        // $headers = [
-        //     "Content-Type: application/json",
-        //     'Authorization' => 'Basic ' . base64_encode($ship_station_api_key . ':' . $ship_station_api_secret),
-        // ];
-        // $responseBody = null;
-        // $response = $client->post($shipstation_order_url, [
-        //     'headers' => $headers,
-        //     'json' => $data,
-        // ]);
-        // $statusCode = $response->getStatusCode();
-        // $responseBody = $response->getBody()->getContents();
         
-        // return [
-        //     'statusCode' => $statusCode,
-        //     'responseBody' => json_decode($responseBody)
-        // ];
 
         try {
             $headers = [
@@ -797,34 +769,17 @@ class UserHelper
         $products_widths = [];
         $sum_of_length = 0;
         $sum_of_width = 0;
-        // foreach ($order_items as $order_item) {
-        //     $items[] = [
-        //         'name' => $order_item->product->name,
-        //         'sku' => $order_item->product->code,
-        //         'quantity' => $order_item->quantity,
-        //         'unitPrice' => $order_item->price,
-        //     ];
-        //     $product_options = ProductOption::with('products')->where('product_id', $order_item['product_id'])->where('option_id' , $order_item['option_id'])->get();
-        //     foreach ($product_options as $product_option) {
-        //         $products_weight += $product_option->optionWeight * $order_item['quantity'];
-        //         if (!empty($product_option->products)) {
-
-        //             array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-        //             array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-
-
-        //             $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-        //             $product_height += !empty($product_option->products->height) ? $product_option->products->height  * $order_item['quantity'] : 0;
-        //             $product_length += !empty($product_option->products->length) ? $product_option->products->length  * $order_item['quantity'] : 0;
-        //         }
-        //     }
-        // }
-
-        // $product_length = max($products_lengths);
-        // $product_width = max($products_widths);
+        
         $products_heights = [];
         $pot_category_flag = false;
         $pots_category = 'pots & containers';
+        $total_height = 0.0;
+
+        $HEIGHT_CAP = 30; // 24–36" is typical; tune per your ship boxes
+
+        // Accumulators for COMPRESSED items ONLY (they will grow footprint)
+        $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;      // final compressed footprint+height
+        $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0; // current compressed layer 
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -839,38 +794,102 @@ class UserHelper
                     $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $order_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
                 } 
                 else {
-                    $pot_category_flag = false;
-                    $products_weight += $product_option->optionWeight * $order_item['quantity'];
-                    if (!empty($product_option->products)) {
-                        
-                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-                        
-                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $order_item['quantity'] : 0;
-                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $order_item['quantity'] : 0;
-                        
+                    
+                    $qty = (int)$order_item['quantity'];
+
+                    // Prefer option weight; fallback to product weight
+                    $unitWt = (float)($product_option->optionWeight ?? 0);
+                    if ($unitWt <= 0 && isset($product_option->products->weight)) {
+                        $unitWt = (float)$product_option->products->weight;
                     }
+
+                    // Rotate so L ≥ W ≥ H
+                    $pLen = (float)($product_option->products->length ?? 0);
+                    $pWid = (float)($product_option->products->width  ?? 0);
+                    $pHei = (float)($product_option->products->height ?? 0);
+                    $dims = [$pLen, $pWid, $pHei];
+                    rsort($dims, SORT_NUMERIC);
+                    $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
+
+                    // If compressed -> use compressed, else normal stack
+                    $isCompressed = (bool) ($product_option->products->is_compressed ?? false);
+
+                    if ($isCompressed) {
+                        ShippingHelper::accumulateCompressedItem(
+                            $qty, $L, $W, $H,
+                            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+                            $comp_box_L,   $comp_box_W,   $comp_box_H,
+                            30.0,  // $heightCap (tune if needed)
+                            0.6,   // $ratio
+                            0.25,  // $floor
+                            12     // $searchCap
+                        );
+                        
+
+                    } else {
+                        // normal (non-compressed) stacking: stack smallest edge
+                        $products_lengths[] = $L;
+                        $products_widths[]  = $W;
+                        $total_height      += $H * $qty;
+                    }
+
+                    // add weight ONCE
+                    $products_weight += $unitWt * $qty;
                 }
             }
         }
 
-        if ($pot_category_flag == true) {
-            $product_height = $get_pot_category_dimensions['product_height'];
-            $product_width = $get_pot_category_dimensions['products_widths'];
-            $product_length = $get_pot_category_dimensions['products_lengths'];
-            $products_weight = $get_pot_category_dimensions['products_weight'];
+        ShippingHelper::finalizeCompressedBox(
+            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+            $comp_box_L,   $comp_box_W,   $comp_box_H
+        );
+
+       
+
+        // Non-compressed footprint/height from your accumulators
+        $noncomp_L = !empty($products_lengths) ? max($products_lengths) : 0.0;
+        $noncomp_W = !empty($products_widths)  ? max($products_widths)  : 0.0;
+        $noncomp_H = (float)$total_height;
+
+        // Merge with pots (if any) AND compressed box
+        if (!empty($pot_category_flag) && !empty($get_pot_category_dimensions)) {
+            $potL  = (float)($get_pot_category_dimensions['products_lengths'] ?? 0);
+            $potW  = (float)($get_pot_category_dimensions['products_widths']  ?? 0);
+            $potH  = (float)($get_pot_category_dimensions['product_height']   ?? 0);
+            $potWT = (float)($get_pot_category_dimensions['products_weight']  ?? 0);
+
+            // Footprint is the max across compressed, non-compressed, pots
+            $product_length = max($comp_box_L, $noncomp_L, $potL);
+            $product_width  = max($comp_box_W, $noncomp_W, $potW);
+
+            // Heights stack
+            $product_height = $comp_box_H + $noncomp_H + $potH;
+
+            $actual_total   = $products_weight + $potWT; // add pots' actual weight
         } else {
-            $product_length = max($products_lengths);
-            $product_width = max($products_widths);
-            $product_height = $product_height;
-            $products_weight = $products_weight;
+            $product_length = max($comp_box_L, $noncomp_L);
+            $product_width  = max($comp_box_W, $noncomp_W);
+            $product_height = $comp_box_H + $noncomp_H;
+
+            $actual_total   = $products_weight; // already summed in loop
         }
 
-        $girth = 2 * ($product_width + $product_height); 
-        if ($girth > 165  && $products_weight < 100) {
-            $products_weight = 100;
+
+        $DIM_DIVISOR = 166; // change if your carrier uses a different divisor
+        $dim_weight = ($product_length > 0 && $product_width > 0 && $product_height > 0)
+            ? (($product_length * $product_width * $product_height) / $DIM_DIVISOR)
+            : 0.0;
+
+         $billable = $actual_total;
+
+        // ----- Oversize clamp (keep your policy) -----
+        $girth = 2 * ($product_width + $product_height);
+        if ($girth > 165 && $billable < 100) {
+            $billable = 100;
         }
+
+        // This is the weight you should send to ShipStation
+        $products_weight = $billable;
 
 
         if ($product_height > 108) {
@@ -1099,6 +1118,13 @@ class UserHelper
         $sum_of_width = 0;
         $pot_category_flag = false;
         $pots_category = 'pots & containers';
+        $total_height = 0.0;
+
+        $HEIGHT_CAP = 30; // 24–36" is typical; tune per your ship boxes
+
+        // Accumulators for COMPRESSED items ONLY (they will grow footprint)
+        $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;      // final compressed footprint+height
+        $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0; // current compressed layer 
         foreach ($order_items as $order_item) {
             $items[] = [
                 'name' => $order_item->product->name,
@@ -1113,33 +1139,103 @@ class UserHelper
                     $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $order_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
                 } 
                 else {
-                    $pot_category_flag = false;
-                    $products_weight += $product_option->optionWeight * $order_item['quantity'];
-                    if (!empty($product_option->products)) {
-                        
-                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-                        
-                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $order_item['quantity'] : 0;
-                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $order_item['quantity'] : 0;
-                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $order_item['quantity'] : 0;
-                        
+                    
+                    $qty = (int)$order_item['quantity'];
+
+                    // Prefer option weight; fallback to product weight
+                    $unitWt = (float)($product_option->optionWeight ?? 0);
+                    if ($unitWt <= 0 && isset($product_option->products->weight)) {
+                        $unitWt = (float)$product_option->products->weight;
                     }
+
+                    // Rotate so L ≥ W ≥ H
+                    $pLen = (float)($product_option->products->length ?? 0);
+                    $pWid = (float)($product_option->products->width  ?? 0);
+                    $pHei = (float)($product_option->products->height ?? 0);
+                    $dims = [$pLen, $pWid, $pHei];
+                    rsort($dims, SORT_NUMERIC);
+                    $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
+
+                    // If compressed -> use compressed, else normal stack
+                    $isCompressed = (bool) ($product_option->products->is_compressed ?? false);
+
+                    if ($isCompressed) {
+                        ShippingHelper::accumulateCompressedItem(
+                            $qty, $L, $W, $H,
+                            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+                            $comp_box_L,   $comp_box_W,   $comp_box_H,
+                            30.0,  // $heightCap (tune if needed)
+                            0.6,   // $ratio
+                            0.25,  // $floor
+                            12     // $searchCap
+                        );
+                        
+
+                    } else {
+                        // normal (non-compressed) stacking: stack smallest edge
+                        $products_lengths[] = $L;
+                        $products_widths[]  = $W;
+                        $total_height      += $H * $qty;
+                    }
+
+                    // add weight ONCE
+                    $products_weight += $unitWt * $qty;
                 }
             }
         }
 
-        if ($pot_category_flag == true) {
-            $product_height = $get_pot_category_dimensions['product_height'];
-            $product_width = $get_pot_category_dimensions['products_widths'];
-            $product_length = $get_pot_category_dimensions['products_lengths'];
-            $products_weight = $get_pot_category_dimensions['products_weight'];
+        ShippingHelper::finalizeCompressedBox(
+            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+            $comp_box_L,   $comp_box_W,   $comp_box_H
+        );
+
+       
+
+        // Non-compressed footprint/height from your accumulators
+        $noncomp_L = !empty($products_lengths) ? max($products_lengths) : 0.0;
+        $noncomp_W = !empty($products_widths)  ? max($products_widths)  : 0.0;
+        $noncomp_H = (float)$total_height;
+
+        // Merge with pots (if any) AND compressed box
+        if (!empty($pot_category_flag) && !empty($get_pot_category_dimensions)) {
+            $potL  = (float)($get_pot_category_dimensions['products_lengths'] ?? 0);
+            $potW  = (float)($get_pot_category_dimensions['products_widths']  ?? 0);
+            $potH  = (float)($get_pot_category_dimensions['product_height']   ?? 0);
+            $potWT = (float)($get_pot_category_dimensions['products_weight']  ?? 0);
+
+            // Footprint is the max across compressed, non-compressed, pots
+            $product_length = max($comp_box_L, $noncomp_L, $potL);
+            $product_width  = max($comp_box_W, $noncomp_W, $potW);
+
+            // Heights stack
+            $product_height = $comp_box_H + $noncomp_H + $potH;
+
+            $actual_total   = $products_weight + $potWT; // add pots' actual weight
         } else {
-            $product_length = max($products_lengths);
-            $product_width = max($products_widths);
-            $product_height = $product_height;
-            $products_weight = $products_weight;
+            $product_length = max($comp_box_L, $noncomp_L);
+            $product_width  = max($comp_box_W, $noncomp_W);
+            $product_height = $comp_box_H + $noncomp_H;
+
+            $actual_total   = $products_weight; // already summed in loop
         }
+
+
+        $DIM_DIVISOR = 166; // change if your carrier uses a different divisor
+        $dim_weight = ($product_length > 0 && $product_width > 0 && $product_height > 0)
+            ? (($product_length * $product_width * $product_height) / $DIM_DIVISOR)
+            : 0.0;
+
+         $billable = $actual_total;
+
+        // ----- Oversize clamp (keep your policy) -----
+        $girth = 2 * ($product_width + $product_height);
+        if ($girth > 165 && $billable < 100) {
+            $billable = 100;
+        }
+
+        // This is the weight you should send to ShipStation
+        $products_weight = $billable;
+
 
 
         if (!empty($products_weight) && ($products_weight  > 70)) {
