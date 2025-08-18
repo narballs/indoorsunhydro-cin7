@@ -756,7 +756,7 @@ class CheckoutController extends Controller
                 $shipping_free_over_1000 = 0;
             } 
             else {
-                if (!empty($free_shipping_state)) {
+                if (!empty($free_shipping_state) && !empty($get_user_default_shipping_address->DeliveryState)) {
                     if (
                         ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState 
                         || $get_user_default_shipping_address->DeliveryState == 'CA') 
