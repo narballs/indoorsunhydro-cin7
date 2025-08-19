@@ -157,7 +157,7 @@ class OrderHelper {
                 "currencySymbol" => "$",
                 
                 "taxStatus" => 2, //(1 = Tax inclusive, 2 = Tax exclusive, 3 = Tax exempt)
-                "taxRate" => $order->texClasses->rate,
+                "taxRate" => !empty($order->custom_tax_rate_percent) ? $order->custom_tax_rate_percent : $order->texClasses->rate,
 
                 "source" => null,
                 "accountingAttributes" =>
@@ -169,7 +169,7 @@ class OrderHelper {
                 "memberCostCenter" => null,
                 "memberAlternativeTaxRate" => $order->texClasses->name,
                 "costCenter" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced' ? 'Online Sales' : Null,
-                "alternativeTaxRate" => $order->texClasses->name,
+                "alternativeTaxRate" => !empty($order->custom_tax_rate_percent) ? $order->custom_tax_rate_percent : $order->texClasses->name,
                 "estimatedDeliveryDate" => $delivery_date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",

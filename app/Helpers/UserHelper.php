@@ -2233,6 +2233,8 @@ class UserHelper
         $city     = $get_contact->city;
         $zip      = $get_contact->postCode;
 
+        // dd($address1 , $city , $zip);
+
         try {
             $url = env('CUSTOM_TAX_RATE_URL');
 
@@ -2247,7 +2249,7 @@ class UserHelper
 
                 if (!empty($data['taxRateInfo'][0]['rate'])) {
                     return (object) [
-                        'rate'         => (float) $data['taxRateInfo'][0]['rate'],   // e.g. 0.1075
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // e.g. 0.1075
                         'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
                         'city'         => $data['taxRateInfo'][0]['city'] ?? null,
                         'county'       => $data['taxRateInfo'][0]['county'] ?? null,
@@ -2258,7 +2260,6 @@ class UserHelper
 
             return null;
         } catch (\Exception $e) {
-            // Log::error('CDTFA API error: ' . $e->getMessage());
             return null;
         }
     }
@@ -2285,7 +2286,7 @@ class UserHelper
 
                 if (!empty($data['taxRateInfo'][0]['rate'])) {
                     return (object) [
-                        'rate'         => (float) $data['taxRateInfo'][0]['rate'],   // e.g. 0.1075
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // e.g. 0.1075
                         'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
                         'city'         => $data['taxRateInfo'][0]['city'] ?? null,
                         'county'       => $data['taxRateInfo'][0]['county'] ?? null,
