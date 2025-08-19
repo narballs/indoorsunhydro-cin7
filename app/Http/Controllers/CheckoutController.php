@@ -562,7 +562,7 @@ class CheckoutController extends Controller
         // ----- Oversize clamp (keep your policy) -----
         $girth = 2 * ($product_width + $product_height);
         if ($girth > 165 && $billable < 150) {
-            $billable = 150;
+            $billable = 151;
         }
 
         // This is the weight you should send to ShipStation
