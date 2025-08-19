@@ -1244,7 +1244,7 @@ $cart_price = 0;
                                                     @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
                                                         <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
                                                         <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
-                                                        @if (!empty($products_weight) && $products_weight > 99)
+                                                        @if (!empty($products_weight) && $products_weight > 150)
                                                             @php
                                                                 $adding_surcharge = 0;
                                                                 $shipment_plus_surcharge = 0;
@@ -3903,7 +3903,7 @@ $cart_price = 0;
                     $('.discount_variation').val('percentage');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
-                        if (product_weight > 99) {
+                        if (product_weight > 150) {
                             shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                             add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
                             subtotal = productTotal - add_discount;
@@ -3981,7 +3981,7 @@ $cart_price = 0;
                     $('.discount_variation').val('fixed');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
-                        if (product_weight > 99) {
+                        if (product_weight > 150) {
                             shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                             add_discount = parseFloat(response.discount_variation_value);
                             if (add_discount >= productTotal) {
@@ -4273,7 +4273,7 @@ $cart_price = 0;
                     var newTotal = $('#incl_tax').val();
                     var product_weight = $('.product_weight').val() != null ? parseFloat($('.product_weight').val()) : 0;
                     var original_shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
-                    if (product_weight > 99) {
+                    if (product_weight > 150) {
                         var total = parseFloat(newTotal) - parseFloat(original_shipment_price);
                         $('#shipment_price_heavy_weight').val(0);
                         $('#shipment_price').val(0);
@@ -4734,7 +4734,7 @@ $cart_price = 0;
                     update_total_with_shipping_selected();
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
-                    if (admin_area_for_shipping_check === 'true' && product_weight > 99) {
+                    if (admin_area_for_shipping_check === 'true' && product_weight > 150) {
                         update_total_with_shipping_for_greater_weight();
                     }
                     // default ups ground checked

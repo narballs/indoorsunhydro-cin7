@@ -513,8 +513,8 @@ class UserHelper
 
         // ----- Oversize clamp (keep your policy) -----
         $girth = 2 * ($product_width + $product_height);
-        if ($girth > 165 && $billable < 100) {
-            $billable = 100;
+        if ($girth > 165 && $billable < 150) {
+            $billable = 150;
         }
 
         // This is the weight you should send to ShipStation
@@ -884,8 +884,8 @@ class UserHelper
 
         // ----- Oversize clamp (keep your policy) -----
         $girth = 2 * ($product_width + $product_height);
-        if ($girth > 165 && $billable < 100) {
-            $billable = 100;
+        if ($girth > 165 && $billable < 150) {
+            $billable = 150;
         }
 
         // This is the weight you should send to ShipStation
@@ -1229,8 +1229,8 @@ class UserHelper
 
         // ----- Oversize clamp (keep your policy) -----
         $girth = 2 * ($product_width + $product_height);
-        if ($girth > 165 && $billable < 100) {
-            $billable = 100;
+        if ($girth > 165 && $billable < 150) {
+            $billable = 150;
         }
 
         // This is the weight you should send to ShipStation
@@ -1488,7 +1488,7 @@ class UserHelper
 
         // Calculate the girth
         $girth = 2 * ($product_width + $product_height); 
-        if ($girth > 165  && $products_weight < 100) {
+        if ($girth > 165  && $products_weight < 150) {
             $products_weight = 100;
         }
         
