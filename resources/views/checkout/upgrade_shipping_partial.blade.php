@@ -2,7 +2,7 @@
     @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
         <input type="hidden" name="upgrade_admin_control_shipping" id="upgrade_admin_control_shipping" value="true">
         <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
-        @if (!empty($products_weight) && $products_weight > 99)
+        @if (!empty($products_weight) && $products_weight > 150)
             
             @php
                 $ups_ground_value = 0;
