@@ -185,6 +185,9 @@
                                     <span class="d-flex table-row-item"> Stock Available</span>
                                 </td>
                                 <td>
+                                    <span class="d-flex table-row-item">Compressed</span>
+                                </td>
+                                <td>
                                     <span class="d-flex table-row-item">Update Price</span>
                                 </td>
                                 <td>
@@ -255,6 +258,24 @@
                                                     <span class="d-flex table-items-title"> {{ isset($option) ? $option->stockAvailable : '' }}</span>
                                                 </span>
                                             </td>
+                                            <td>
+                                                <div class="custom-control custom-switch custom-switch-lg switch-success align-items-center">
+                                                    <input
+                                                    type="checkbox"
+                                                    class="custom-control-input js-toggle-compressed"
+                                                    id="compressed-{{ $product->id }}"
+                                                    data-id="{{ $product->id }}"
+                                                    {{ $product->is_compressed ? 'checked' : '' }}
+                                                    >
+                                                    <label class="custom-control-label mb-0" for="compressed-{{ $product->id }}"></label>
+                                                    <span class="js-compressed-label ml-2 {{ $product->is_compressed ? 'text-success font-weight-bold' : '' }}">
+                                                    {{ $product->is_compressed ? 'Yes' : 'No' }}
+                                                    </span>
+                                                </div>
+                                            </td>
+
+
+
                                             <td>
                                                 <form method="post" action="{{route('update_product_price')}}">
                                                     @csrf
@@ -482,10 +503,79 @@
                     font-weight: 500;
                     font-size: 11.3289px;
                 }
+
+                /* Bigger switch (like lg size) */
+                
+                /* === Custom Large Green Switch === */
+
+                /* Enlarge switch body */
+                .custom-switch.custom-switch-lg .custom-control-label {
+                    padding-left:1rem;     /* make room for the larger track */
+                    cursor: pointer;
+                }
+
+                /* Switch track (background) */
+                .custom-switch.custom-switch-lg .custom-control-label::before {
+                    width: 3.25rem;            /* track width */
+                    height: 1.6rem;            /* track height */
+                    border-radius: 1.5rem;
+                    top: .1rem;                /* vertical alignment */
+                }
+
+                /* Switch knob (circle) */
+                .custom-switch.custom-switch-lg .custom-control-label::after {
+                    width: 1.3rem;
+                    height: 1.4rem;
+                    top: .175rem;              /* center vertically */
+                    border-radius: 1.5rem;
+                    left: .2.1rem;              /* starting point */
+                    transition: transform .15s ease;  /* smooth slide */
+                }
+
+                /* Slide knob to right when checked */
+                .custom-switch.custom-switch-lg .custom-control-input:checked
+                ~ .custom-control-label::after {
+                transform: translateX(1.8rem);   /* adjust distance for perfect center */
+                }
+
+                /* Green ON state (instead of default blue) */
+                .switch-success .custom-control-input:checked ~ .custom-control-label::before {
+                    background-color: #28a745;
+                    border-color: #28a745;
+                }
+
+                /* White knob on green track */
+                .switch-success .custom-control-input:checked ~ .custom-control-label::after {
+                    background-color: #fff;
+                }
+
+                /* Optional: subtle green glow when focused */
+                .switch-success .custom-control-input:focus ~ .custom-control-label::before {
+                    box-shadow: 0 0 0 .2rem rgba(40,167,69,.25);
+                }
+
+                /* Remove blue outline glow on input */
+                .custom-control-input:focus:not(:focus-visible) ~ .custom-control-label::before {
+                    box-shadow: none;
+                }
+
+                /* Label text colors (Yes / No) */
+                .js-compressed-label.text-success {
+                    color: #28a745 !important;
+                    font-weight: bold;
+                }
+                .js-compressed-label.text-muted {
+                    color: #6c757d !important;
+                }
+
+
+
+
             </style>
         @stop
 
         @section('js')
+            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 $('.product-row').hover(function() {
                     let id = $(this).attr('id');
@@ -547,6 +637,53 @@
                         $('#stock_input_div').addClass('d-none');
                     }
                 });
+
+                $(document).on('change', '.js-toggle-compressed', function (e) {
+                    var $checkbox = $(this);
+                    var productId = $checkbox.data('id');
+                    var checked   = $checkbox.is(':checked');
+                    var $labelEl  = $checkbox.closest('td').find('.js-compressed-label');
+
+                    // Stop immediate toggle until confirmed
+                    e.preventDefault();
+                    $checkbox.prop('checked', !checked);
+
+                    Swal.fire({
+                        title: checked ? "Mark as Compressed?" : "Mark as Not Compressed?",
+                        text: "Are you sure you want to update this product setting?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, update it!",
+                        cancelButtonText: "Cancel",
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                        // Apply change visually
+                        $checkbox.prop('checked', checked);
+                        $labelEl.text(checked ? 'Yes' : 'No');
+                        $labelEl.toggleClass('text-success font-weight-bold', checked);
+
+                        // Ajax save
+                        $.ajax({
+                            url: "{{ route('products.toggleCompressed', ['id' => '___ID___']) }}".replace('___ID___', productId),
+                            type: 'POST',
+                            data: {
+                            is_compressed: checked ? 1 : 0,
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                            }
+                        }).done(function () {
+                            Swal.fire("Updated!", "Product compression status has been updated.", "success");
+                        }).fail(function () {
+                            // revert if failed
+                            $checkbox.prop('checked', !checked);
+                            $labelEl.text(!checked ? 'Yes' : 'No');
+                            $labelEl.toggleClass('text-success font-weight-bold', !checked);
+                            Swal.fire("Error!", "Failed to update product setting.", "error");
+                        });
+                        }
+                    });
+                });
+
             </script>
 
         @endsection

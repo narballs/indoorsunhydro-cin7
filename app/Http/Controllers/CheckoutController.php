@@ -43,6 +43,7 @@ use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 use PSpell\Config;
 use App\Helpers\DistanceCalculator;
 use App\Helpers\LabelHelper;
+use App\Helpers\ShippingHelper;
 use App\Helpers\UtilHelper;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
@@ -272,7 +273,7 @@ class CheckoutController extends Controller
                 $carrier_code_2 = AdminSetting::where('option_name', 'shipping_carrier_code_2')->first();
                 $service_code_2 = AdminSetting::where('option_name', 'shipping_service_code_2')->first();
 
-                if ($products_weight > 99) {
+                if ($products_weight > 150) {
                     $carrier_code = $carrier_code_2->option_value;
                     $service_code = $service_code_2->option_value;
                 } else {
@@ -421,7 +422,13 @@ class CheckoutController extends Controller
         $sum_of_length = 0;
         $sum_of_width = 0;
         $productTotal = 0;
-        $pot_category_flag = false; 
+        $total_height = 0.0;
+        $pot_category_flag = false;
+        $HEIGHT_CAP = 30; // 24–36" is typical; tune per your ship boxes
+
+        // Accumulators for COMPRESSED items ONLY (they will grow footprint)
+        $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;      // final compressed footprint+height
+        $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0; // current compressed layer 
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
             if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
@@ -445,49 +452,124 @@ class CheckoutController extends Controller
             foreach ($product_options as $product_option) {
 
                 if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
-                    $pot_category_flag = true;
-                    $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions($product_option, $product_option->products, $cart_item['quantity'], $products_lengths, $products_widths,$products_heights, $product_height, $product_width, $product_length,$products_weight = 0);
+                    $pot_category_flag = true; // KEEP true once set
+
+                    // keep your existing helper call; we'll fix its internals below
+                    $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions(
+                        $product_option,
+                        $product_option->products,
+                        $cart_item['quantity'],
+                        $products_lengths,
+                        $products_widths,
+                        $products_heights,
+                        $product_height,
+                        $product_width,
+                        $product_length,
+                        $products_weight = 0
+                    );
+
                 } 
                 else {
-                    $pot_category_flag = false;
-                    $products_weight += $product_option->optionWeight * $cart_item['quantity'];
                     if (!empty($product_option->products)) {
-                        
-                        array_push($products_lengths, !empty($product_option->products->length) ? $product_option->products->length : 0);
-                        array_push($products_widths, !empty($product_option->products->width) ? $product_option->products->width : 0);
-                        
-                        $product_height += !empty($product_option->products->height) ? $product_option->products->height * $cart_item['quantity'] : 0;
-                        $product_width += !empty($product_option->products->width) ? $product_option->products->width * $cart_item['quantity'] : 0;
-                        $product_length += !empty($product_option->products->length) ? $product_option->products->length * $cart_item['quantity'] : 0;
-                        
+                        $qty = (int)$cart_item['quantity'];
+
+                        // Prefer option weight; fallback to product weight
+                        $unitWt = (float)($product_option->optionWeight ?? 0);
+                        if ($unitWt <= 0 && isset($product_option->products->weight)) {
+                            $unitWt = (float)$product_option->products->weight;
+                        }
+
+                        // Rotate so L ≥ W ≥ H
+                        $pLen = (float)($product_option->products->length ?? 0);
+                        $pWid = (float)($product_option->products->width  ?? 0);
+                        $pHei = (float)($product_option->products->height ?? 0);
+                        $dims = [$pLen, $pWid, $pHei];
+                        rsort($dims, SORT_NUMERIC);
+                        $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
+
+                        // If compressed -> use compressed, else normal stack
+                        $isCompressed = (bool) ($product_option->products->is_compressed ?? false);
+                        if ($isCompressed) {
+                            ShippingHelper::accumulateCompressedItem(
+                                $qty, $L, $W, $H,
+                                $comp_layer_L, $comp_layer_W, $comp_layer_H,
+                                $comp_box_L,   $comp_box_W,   $comp_box_H,
+                                30.0,  // $heightCap (tune if needed)
+                                0.6,   // $ratio
+                                0.25,  // $floor
+                                12     // $searchCap
+                            );
+                            
+
+                        } else {
+                            // normal (non-compressed) stacking: stack smallest edge
+                            $products_lengths[] = $L;
+                            $products_widths[]  = $W;
+                            $total_height      += $H * $qty;
+                        }
+
+                        // add weight ONCE
+                        $products_weight += $unitWt * $qty;
                     }
                 }
-            }            
+            }
+
         }
 
+        ShippingHelper::finalizeCompressedBox(
+            $comp_layer_L, $comp_layer_W, $comp_layer_H,
+            $comp_box_L,   $comp_box_W,   $comp_box_H
+        );
 
-        if ($pot_category_flag == true) {
-            $product_height = $get_pot_category_dimensions['product_height'];
-            $product_width = $get_pot_category_dimensions['products_widths'];
-            $product_length = $get_pot_category_dimensions['products_lengths'];
-            $products_weight = $get_pot_category_dimensions['products_weight'];
+       
+
+        // Non-compressed footprint/height from your accumulators
+        $noncomp_L = !empty($products_lengths) ? max($products_lengths) : 0.0;
+        $noncomp_W = !empty($products_widths)  ? max($products_widths)  : 0.0;
+        $noncomp_H = (float)$total_height;
+
+        // Merge with pots (if any) AND compressed box
+        if (!empty($pot_category_flag) && !empty($get_pot_category_dimensions)) {
+            $potL  = (float)($get_pot_category_dimensions['products_lengths'] ?? 0);
+            $potW  = (float)($get_pot_category_dimensions['products_widths']  ?? 0);
+            $potH  = (float)($get_pot_category_dimensions['product_height']   ?? 0);
+            $potWT = (float)($get_pot_category_dimensions['products_weight']  ?? 0);
+
+            // Footprint is the max across compressed, non-compressed, pots
+            $product_length = max($comp_box_L, $noncomp_L, $potL);
+            $product_width  = max($comp_box_W, $noncomp_W, $potW);
+
+            // Heights stack
+            $product_height = $comp_box_H + $noncomp_H + $potH;
+
+            $actual_total   = $products_weight + $potWT; // add pots' actual weight
         } else {
-            $product_length = max($products_lengths);
-            $product_width = max($products_widths);
-            $product_height = $product_height;
-            $products_weight = $products_weight;
+            $product_length = max($comp_box_L, $noncomp_L);
+            $product_width  = max($comp_box_W, $noncomp_W);
+            $product_height = $comp_box_H + $noncomp_H;
+
+            $actual_total   = $products_weight; // already summed in loop
         }
 
 
-        
+        $DIM_DIVISOR = 166; // change if your carrier uses a different divisor
+        $dim_weight = ($product_length > 0 && $product_width > 0 && $product_height > 0)
+            ? (($product_length * $product_width * $product_height) / $DIM_DIVISOR)
+            : 0.0;
 
-        $girth = 2 * ($product_width + $product_height); 
-        if ($girth > 165  && $products_weight < 100) {
-            $products_weight = 100;
+        $billable = $actual_total;
+
+        // ----- Oversize clamp (keep your policy) -----
+        $girth = 2 * ($product_width + $product_height);
+        if ($girth > 165 && $billable < 150) {
+            $billable = 151;
         }
+
+        // This is the weight you should send to ShipStation
+        $products_weight = $billable;
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
-        if ($enable_extra_shipping_value == true && !empty($extra_shipping_value) &&  $products_weight > 99) {
+        if ($enable_extra_shipping_value == true && !empty($extra_shipping_value) &&  $products_weight > 150) {
             if ($sum_of_width > 40 || $product_height > 40 || $sum_of_length > 40) {
                 $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
             } else {
@@ -612,7 +694,8 @@ class CheckoutController extends Controller
             ->first();
 
             $get_all_user_addresses = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Shipping')->where('is_default' , 0)->get();
-
+            $get_all_user_billing_addresses_all = ContactsAddress::where('contact_id', $user_address->contact_id)->where('address_type', 'Billing')->where('is_default' , 0)->get();
+            
 
             $charge_shipment_fee = false;
             if (!empty($user_address) && $user_address->charge_shipping == 1) {
@@ -650,7 +733,12 @@ class CheckoutController extends Controller
             $shipping_free_over_1000 = 0;
             $calculator = new DistanceCalculator();
             $allow_pickup = 0;
-            $distance = $calculator->calculate_distance('95826', $get_user_default_shipping_address->DeliveryZip);
+            if (!empty( $get_user_default_shipping_address->DeliveryZip)) {
+
+                $distance = $calculator->calculate_distance('95826', $get_user_default_shipping_address->DeliveryZip);
+            } else {
+                $distance = null;
+            }
 
             if (empty($distance)) {
                 $allow_pickup = 0;
@@ -671,7 +759,7 @@ class CheckoutController extends Controller
                 $shipping_free_over_1000 = 0;
             } 
             else {
-                if (!empty($free_shipping_state)) {
+                if (!empty($free_shipping_state) && !empty($get_user_default_shipping_address->DeliveryState)) {
                     if (
                         ($free_shipping_state->option_value == $get_user_default_shipping_address->DeliveryState 
                         || $get_user_default_shipping_address->DeliveryState == 'CA') 
@@ -745,7 +833,7 @@ class CheckoutController extends Controller
                         $buyListData = true;
                         $buy_list_discount_calculated = $buyList->shipping_and_discount->discount_calculated ?? 0;
                         if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes' && $allow_upgrade = true) {
-                            if ($products_weight > 99) {
+                            if ($products_weight > 150) {
                                 $upgrade_shipping_carrier_code = $carrier_code_2->option_value;
                                 $upgrade_shipping_service_code = $service_code_2->option_value;
                                 $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
@@ -778,7 +866,7 @@ class CheckoutController extends Controller
                     } 
                     else {
                         if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                            if ($products_weight > 99) {
+                            if ($products_weight > 150) {
                                 $shipping_carrier_code = $carrier_code_2->option_value;
                                 $shipping_service_code = $service_code_2->option_value;
                                 $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
@@ -819,7 +907,7 @@ class CheckoutController extends Controller
                             $ship_station_api_secret = config('services.shipstation.secret');
                             
                             $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
-                            if ($products_weight > 99) {
+                            if ($products_weight > 150) {
                                 $carrier_code = $carrier_code_2->option_value;
                                 $service_code = $service_code_2->option_value;
                             } else {
@@ -892,7 +980,7 @@ class CheckoutController extends Controller
     
     
                         if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes' && $allow_upgrade = true) {
-                            if ($products_weight > 99) {
+                            if ($products_weight > 150) {
                                 $upgrade_shipping_carrier_code = $carrier_code_2->option_value;
                                 $upgrade_shipping_service_code = $service_code_2->option_value;
                                 $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
@@ -925,7 +1013,7 @@ class CheckoutController extends Controller
                     } 
                     else {
                         if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes') {
-                            if ($products_weight > 99) {
+                            if ($products_weight > 150) {
                                 $shipping_carrier_code = $carrier_code_2->option_value;
                                 $shipping_service_code = $service_code_2->option_value;
                                 $get_shipping_rates_greater = $this->get_shipping_rate_greater($products_weight, $user_address , $selected_shipment_quotes ,$shipping_quotes, $shipment_prices, $shipment_price, $product_width, $product_height, $product_length , $get_user_default_shipping_address , $get_user_default_billing_address , $productTotal);
@@ -966,7 +1054,7 @@ class CheckoutController extends Controller
                             $ship_station_api_secret = config('services.shipstation.secret');
                             
                             $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
-                            if ($products_weight > 99) {
+                            if ($products_weight > 150) {
                                 $carrier_code = $carrier_code_2->option_value;
                                 $service_code = $service_code_2->option_value;
                             } else {
@@ -1123,6 +1211,7 @@ class CheckoutController extends Controller
                 'get_user_default_billing_address',
                 'get_user_default_shipping_address',
                 'get_all_user_addresses',
+                'get_all_user_billing_addresses_all',
                 'surcharge_type_settings_for_weight_greater_then_150',
                 'upgrade_shipping',
                 'upgrade_admin_selected_shipping_quote',
@@ -2187,7 +2276,7 @@ class CheckoutController extends Controller
                                 'state' => 'required',
                                 'city' => 'required',
                                 'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                                'phone' => 'required',
+                                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                                 'postal_address1' => [
                                     'required',
                                     // function ($attribute, $value, $fail) {
@@ -2205,6 +2294,9 @@ class CheckoutController extends Controller
                                 'postal_state.required' => 'Shipping State is required.',
                                 'postal_zip_code.required' => 'Shipping Zip Code is required.',
                                 'postal_city.required' => 'Shipping City is required.',
+                                'phone.required' => 'Phone is required',
+                                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                                'phone.size' => 'Phone must be exactly 10 characters',
                             ]
                         );
                     }
@@ -2226,7 +2318,7 @@ class CheckoutController extends Controller
                                 'state' => 'required',
                                 'city' => 'required',
                                 'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
-                                'phone' => 'required',
+                                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                                 'postal_address1' => [
                                     'required',
                                     // function ($attribute, $value, $fail) {
@@ -2246,6 +2338,9 @@ class CheckoutController extends Controller
                                 'postal_state.required' => 'Shipping State is required.',
                                 'postal_zip_code.required' => 'Shipping Zip Code is required.',
                                 'postal_city.required' => 'Shipping City is required.',
+                                'phone.required' => 'Phone is required',
+                                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                                'phone.size' => 'Phone must be exactly 10 characters',
                             ]
                         );
                     }
@@ -2268,6 +2363,7 @@ class CheckoutController extends Controller
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
                             'city' => 'required',
+                            'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                         ]);
                     }
                     else {
@@ -2288,6 +2384,7 @@ class CheckoutController extends Controller
                             'zip_code' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
                             'phone' => 'required',
                             'city' => 'required',
+                            'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
                         ]);
                     }
                 }
@@ -2802,8 +2899,8 @@ class CheckoutController extends Controller
             if (!empty($quote->selected_shipping_quote)) {
                 $shipping_carrier_code = $quote->carrier_code;
                 $data = [
-                    'carrierCode' => $products_weight > 99 ? $carrier_code_2->option_value : $quote->carrier_code,
-                    'serviceCode' => $products_weight > 99 ? $service_code_2->option_value : null,
+                    'carrierCode' => $products_weight > 150 ? $carrier_code_2->option_value : $quote->carrier_code,
+                    'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : null,
                     'fromPostalCode' => '95826',
                     'toCountry' => 'US',
                     'toPostalCode' => '95899',
@@ -2855,7 +2952,7 @@ class CheckoutController extends Controller
         return [
             'shipment_prices' => !empty($shipment_prices) ? $shipment_prices[0] : null,
             'shipment_price' => $shipment_price,
-            'shipping_carrier_code' => $products_weight > 99 ? $carrier_code_2->option_value : $shipping_carrier_code,    
+            'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
         ];
     }
 
@@ -3038,6 +3135,32 @@ class CheckoutController extends Controller
         }
         
     }
+    
+
+    public function select_default_billing_address(Request $request) {
+        $contact_id = $request->contact_id;
+        $address_id = $request->address_id;
+        if (!empty($contact_id) && !empty($address_id)) {
+            $contact_addresses = ContactsAddress::where('contact_id', $contact_id)->where('address_type' , 'Billing')->get();
+            if (count($contact_addresses) == 0) {
+                return response()->json(['status' => 400, 'message' => 'No address found']);
+            } else {
+                foreach ($contact_addresses as $contact_address) {
+                    $contact_address->is_default = 0;
+                    $contact_address->save();
+                }
+
+                $selected_address = ContactsAddress::where('id', $address_id)->first();
+                $selected_address->is_default = 1;
+                $selected_address->save();
+                return response()->json(['status' => 200, 'message' => 'Billing address selected successfully']);
+            }
+        } else {
+            return response()->json(['status' => 400, 'message' => 'Contact  is required']);
+        }
+        
+    }
+
 
 
     public function get_shipping_rate_new($products_weight, $user_address, $selected_shipment_quotes,$shipping_quotes,$shipment_prices ,$shipment_price , $product_width , $product_height , $product_length , $get_user_default_shipping_address , $get_user_default_billing_address ,$productTotal) {
@@ -3067,8 +3190,8 @@ class CheckoutController extends Controller
                 // Prepare data for ShipStation request
                 $shipping_carrier_code = $quote->carrier_code;
                 $data = [
-                    'carrierCode' => $products_weight > 99 ? $carrier_code_2->option_value : $quote->carrier_code,
-                    'serviceCode' => $products_weight > 99 ? $service_code_2->option_value : $quote->service_code,
+                    'carrierCode' => $products_weight > 150 ? $carrier_code_2->option_value : $quote->carrier_code,
+                    'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : $quote->service_code,
                     'fromPostalCode' => '95826', // Default sender postal code
                     'toCountry' => 'US',
                     'toPostalCode' => $get_user_default_shipping_address->DeliveryZip ?? $get_user_default_billing_address->BillingZip,
@@ -3161,7 +3284,7 @@ class CheckoutController extends Controller
             return [
                 'shipment_prices' => $mergedArray,
                 'shipment_price' => $shipment_price,
-                'shipping_carrier_code' => $products_weight > 99 ? $carrier_code_2->option_value : $shipping_carrier_code,    
+                'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
                 'selected_shipping_methods' => $selected_shipping_methods,
             ];
         }
@@ -3205,8 +3328,8 @@ class CheckoutController extends Controller
                 // Prepare data for ShipStation request
                 $shipping_carrier_code = $quote->carrier_code;
                 $data = [
-                    'carrierCode' => $products_weight > 99 ? $carrier_code_2->option_value : $quote->carrier_code,
-                    'serviceCode' => $products_weight > 99 ? $service_code_2->option_value : $quote->service_code,
+                    'carrierCode' => $products_weight > 150 ? $carrier_code_2->option_value : $quote->carrier_code,
+                    'serviceCode' => $products_weight > 150 ? $service_code_2->option_value : $quote->service_code,
                     'fromPostalCode' => '95826', // Default sender postal code
                     'toCountry' => 'US',
                     'toPostalCode' => $get_user_default_shipping_address->DeliveryZip ?? $get_user_default_billing_address->BillingZip,
@@ -3299,7 +3422,7 @@ class CheckoutController extends Controller
             return [
                 'shipment_prices' => $mergedArray,
                 'shipment_price' => $shipment_price,
-                'shipping_carrier_code' => $products_weight > 99 ? $carrier_code_2->option_value : $shipping_carrier_code,    
+                'shipping_carrier_code' => $products_weight > 150 ? $carrier_code_2->option_value : $shipping_carrier_code,    
                 'selected_shipping_methods' => $selected_shipping_methods,
             ];
         }

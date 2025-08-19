@@ -670,10 +670,17 @@ class UserController extends Controller
 
     public function checkAddress(Request $request) {
     
-        $validatedData = $request->validate([
-            // 'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'phone' => 'required',
-        ]);
+        $validatedData = $request->validate(
+            [
+                // 'company_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
+            ], 
+            [
+                'phone.required' => 'Phone is required',
+                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                'phone.size' => 'Phone must be exactly 10 characters',
+            ]
+        );
 
         if($validatedData) {
             return response()->json([
@@ -803,10 +810,14 @@ class UserController extends Controller
                 'state_id' => 'required',
                 'city_id' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
             ],
             [
                 'state_id.required' => 'The state field is required.',
                 'city_id.required' => 'The city field is required.',
+                'phone.required' => 'Phone is required',
+                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                'phone.size' => 'Phone must be exactly 10 characters',
             ] 
                 
         );
@@ -2200,12 +2211,15 @@ class UserController extends Controller
                     // },
                 ],
                 'state' => 'required',
-                'phone' => 'required',
                 'town_city' => 'required',
                 'zip' => ['required', 'regex:/^\d{5}(-\d{4})?$/'],
+                'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
             ], 
             [
                 'town_city.required' => 'City is required.',
+                'phone.required' => 'Phone is required',
+                'phone.alpha_num' => 'Phone must only contain letters and numbers',
+                'phone.size' => 'Phone must be exactly 10 characters',
             ]
         );
 
@@ -2459,70 +2473,183 @@ class UserController extends Controller
     }
 
     // add new address 
-    public function add_new_address(Request $request) {
-        $request->validate([
-                'contact_id' => 'required',
-                'first_name' => 'required',
-                'phone' => 'required',
-                'zip' => 'required',
-                // 'address' => 'required',
-                'state' => 'required',
-                'city' => 'required',
-                'address' => [
-                    'required',
-                    // function ($attribute, $value, $fail) {
-                    //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
-                    //         $fail('Invalid address: PO Boxes are not allowed at the start.');
-                    //     }
-                    // },
-                ],
+    // public function add_new_address(Request $request) {
+    //     $request->validate([
+    //             'contact_id' => 'required',
+    //             'first_name' => 'required',
+    //             'phone' => 'required',
+    //             'zip' => 'required',
+    //             // 'address' => 'required',
+    //             'state' => 'required',
+    //             'city' => 'required',
+    //             'address' => [
+    //                 'required',
+    //                 // function ($attribute, $value, $fail) {
+    //                 //     if (preg_match('/^(P\.?\s*O\.?\s*Box)/i', trim($value))) {
+    //                 //         $fail('Invalid address: PO Boxes are not allowed at the start.');
+    //                 //     }
+    //                 // },
+    //             ],
                 
-            ],
-            [
-                'contact_id.required' => 'Primary Company is required',
-                'first_name.required' => 'First name is required',
-                // 'company_name.required' => 'Company is required',
-                'phone.required' => 'Phone is required',
-                'zip.required' => 'Postal code is required',
-                'address.required' => 'Address is required',
-                // 'city.required' => 'City is required',
-                'state.required' => 'State is required',
-                // 'country.required' => 'Country is required',
-            ] 
-        );
+    //         ],
+    //         [
+    //             'contact_id.required' => 'Primary Company is required',
+    //             'first_name.required' => 'First name is required',
+    //             // 'company_name.required' => 'Company is required',
+    //             'phone.required' => 'Phone is required',
+    //             'zip.required' => 'Postal code is required',
+    //             'address.required' => 'Address is required',
+    //             // 'city.required' => 'City is required',
+    //             'state.required' => 'State is required',
+    //             // 'country.required' => 'Country is required',
+    //         ] 
+    //     );
 
         
 
+    //     $contact_id = $request->contact_id;
+    //     $address_type = $request->type;
+    //     $first_name = $request->first_name;
+    //     $last_name = $request->last_name;
+    //     $company = $request->company_name;
+    //     $email = $request->email;
+    //     $phone = $request->phone;
+    //     $postal_code  = $request->zip;
+    //     $address1 = $request->address;
+    //     $address2 = $request->address2;
+    //     $city = $request->city;
+    //     $state = $request->state;
+    //     $country = $request->country;
+
+
+    //     $contact = Contact::where('contact_id', $contact_id)->first();
+    //     if (empty($contact)) {
+    //         return response()->json([
+    //             'status' => '400',
+    //             'msg' => 'Contact not found'
+    //         ]);
+    //     }
+
+
+
+    //     $selectedChoice = $request->input('selected_shipping_choice_shipping') ?? null;
+    //     if (!$selectedChoice || $selectedChoice !== 'entered') {
+    //         $validate_address =  UserHelper::validateFullAddress($address1 , $address2 , $city , $state , $postal_code, $country = 'USA');
+
+    //         if ($validate_address['valid'] == false) {
+    //             return response()->json([
+    //                 'status' => 'address_error',
+    //                 'address_validator' => false,
+    //                 'validator_message' => $validate_address['message'] ?? 'Address validation failed.',
+    //                 'suggested_address' => $validate_address['suggested_address'] ?? '',
+    //                 'formatted_address' => $validate_address['formatted_address'] ?? '',
+    //             ], 400);
+    //         }
+    //     }
+
+
+    //     $update_default_address = ContactsAddress::where('contact_id', $contact_id)
+    //     ->where('address_type', $address_type)
+    //     ->get();
+
+    //     if (count($update_default_address) > 0) {
+    //         foreach ($update_default_address as $update_default) {
+    //             $update_default->is_default = 0;
+    //             $update_default->save();
+    //         }
+    //     }
+
+
+
+    //     $add_new_address = new ContactsAddress();
+    //     $add_new_address->contact_id = $contact_id;
+    //     $add_new_address->address_type = $address_type;
+    //     $add_new_address->DeliveryFirstName = $first_name;
+    //     $add_new_address->DeliveryLastName = $last_name;
+    //     $add_new_address->DeliveryCompany = $company;
+    //     $add_new_address->DeliveryPhone = $phone;
+    //     $add_new_address->DeliveryZip = $postal_code;
+    //     $add_new_address->DeliveryAddress1 = $address1;
+    //     $add_new_address->DeliveryAddress2 = $address2;
+    //     $add_new_address->DeliveryCity = $city;
+    //     $add_new_address->DeliveryState = $state;
+    //     $add_new_address->DeliveryCountry = $country;
+    //     $add_new_address->is_default = 1;
+    //     $add_new_address->save();
+
+
+    //     return response()->json([
+    //         'status' => '200',
+    //         'msg' => 'Address added successfully'
+    //     ]);
+          
+    // }
+
+
+    public function add_new_address(Request $request)
+    {
+        // Validate required fields (common for both billing and shipping/delivery)
+        $request->validate([
+            'contact_id' => 'required',
+            'first_name' => 'required',
+            'phone' => ['required', 'alpha_num', 'size:10'], // exactly 10 alphanumeric chars
+            'zip' => 'required',
+            'state' => 'required',
+            'city' => 'required',
+            'address' => 'required',
+        ], [
+            'contact_id.required' => 'Primary Company is required',
+            'first_name.required' => 'First name is required',
+            'phone.required' => 'Phone is required',
+            'phone.alpha_num' => 'Phone must only contain letters and numbers',
+            'phone.size' => 'Phone must be exactly 10 characters',
+            'zip.required' => 'Postal code is required',
+            'address.required' => 'Address is required',
+            'state.required' => 'State is required',
+        ]);
+
+
         $contact_id = $request->contact_id;
-        $address_type = $request->type;
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $company = $request->company_name;
-        $email = $request->email;
-        $phone = $request->phone;
-        $postal_code  = $request->zip;
-        $address1 = $request->address;
-        $address2 = $request->address2;
-        $city = $request->city;
-        $state = $request->state;
-        $country = $request->country;
+        $address_type = strtolower($request->type ?? ''); // 'billing' or 'shipping'
 
-
+        // Verify contact exists
         $contact = Contact::where('contact_id', $contact_id)->first();
-        if (empty($contact)) {
+        if (!$contact) {
             return response()->json([
                 'status' => '400',
                 'msg' => 'Contact not found'
-            ]);
+            ], 400);
         }
 
+        // Map shipping to delivery prefix and db address_type
+        if ($address_type === 'billing') {
+            $selectedChoice = $request->input('selected_billing_choice_billing');
+            $prefix = 'Billing';
+            $mainAdressType = 'Billing';
+            $db_address_type = 'Billing';
+        } elseif ($address_type === 'shipping') {
+            $selectedChoice = $request->input('selected_shipping_choice_shipping');
+            $prefix = 'Delivery'; // DB columns use Delivery prefix for shipping addresses
+            $mainAdressType = 'Shipping';
+            $db_address_type = 'Delivery';
+        } else {
+            $selectedChoice = null;
+            $prefix = ucfirst($address_type);
+            $db_address_type = ucfirst($address_type);
+        }
 
-
-        $selectedChoice = $request->input('selected_shipping_choice_shipping') ?? null;
+        // Validate full address unless user chose to skip validation by entering address manually
         if (!$selectedChoice || $selectedChoice !== 'entered') {
-            $validate_address =  UserHelper::validateFullAddress($address1 , $address2 , $city , $state , $postal_code, $country = 'USA');
+            $validate_address = UserHelper::validateFullAddress(
+                $request->address,
+                $request->address2,
+                $request->city,
+                $request->state,
+                $request->zip,
+                'USA'
+            );
 
-            if ($validate_address['valid'] == false) {
+            if (!$validate_address['valid']) {
                 return response()->json([
                     'status' => 'address_error',
                     'address_validator' => false,
@@ -2533,43 +2660,46 @@ class UserController extends Controller
             }
         }
 
+        // Reset any previous default addresses for this contact and address type
+        ContactsAddress::where('contact_id', $contact_id)
+            ->where('address_type', $mainAdressType)
+            ->update(['is_default' => 0]);
 
-        $update_default_address = ContactsAddress::where('contact_id', $contact_id)
-        ->where('address_type', $address_type)
-        ->get();
+        // Prepare attributes for new address creation
+        $attributes = [
+            'contact_id' => $contact_id,
+            'address_type' => $mainAdressType,
+            'is_default' => 1,
+        ];
 
-        if (count($update_default_address) > 0) {
-            foreach ($update_default_address as $update_default) {
-                $update_default->is_default = 0;
-                $update_default->save();
-            }
+        // Map input data to model fields with prefix
+        $mapping = [
+            'FirstName' => $request->first_name,
+            'LastName' => $request->last_name,
+            'Company' => $request->company_name,
+            'Phone' => $request->phone,
+            'Zip' => $request->zip,
+            'Address1' => $request->address,
+            'Address2' => $request->address2,
+            'City' => $request->city,
+            'State' => $request->state,
+            'Country' => $request->country,
+        ];
+
+        foreach ($mapping as $key => $value) {
+            $attributes[$prefix . $key] = $value;
         }
 
-
-
-        $add_new_address = new ContactsAddress();
-        $add_new_address->contact_id = $contact_id;
-        $add_new_address->address_type = $address_type;
-        $add_new_address->DeliveryFirstName = $first_name;
-        $add_new_address->DeliveryLastName = $last_name;
-        $add_new_address->DeliveryCompany = $company;
-        $add_new_address->DeliveryPhone = $phone;
-        $add_new_address->DeliveryZip = $postal_code;
-        $add_new_address->DeliveryAddress1 = $address1;
-        $add_new_address->DeliveryAddress2 = $address2;
-        $add_new_address->DeliveryCity = $city;
-        $add_new_address->DeliveryState = $state;
-        $add_new_address->DeliveryCountry = $country;
-        $add_new_address->is_default = 1;
-        $add_new_address->save();
-
+        // Create new ContactsAddress record
+        ContactsAddress::create($attributes);
 
         return response()->json([
             'status' => '200',
             'msg' => 'Address added successfully'
         ]);
-          
     }
+
+
 
     public function adminUsers(Request $request)
     {

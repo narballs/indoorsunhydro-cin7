@@ -159,6 +159,7 @@ Route::post('update-product-cart', [ProductController::class, 'update_product_ca
 Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 // select default address
 Route::post('select-default-shipping-address', [CheckoutController::class, 'select_default_shipping_address'])->name('select_default_shipping_address');
+Route::post('select-default-billing-address', [CheckoutController::class, 'select_default_billing_address'])->name('select_default_billing_address');
 
 Route::post('order', [OrderController::class, 'store'])->name('order');
 Route::get('/thankyou/{id}', [CheckoutController::class, 'thankyou'])->name('thankyou');
@@ -261,6 +262,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/customersearch', [CustomerSearchController::class, 'customerSearch'])->name('admin.customer.search');
     Route::resource('admin/products', AdminProductController::class);
     Route::resource('admin/buy-list', AdminBuyListController::class);
+    Route::post('/admin/products/{id}/toggle-compressed', [AdminProductController::class, 'toggleCompressed'])->name('products.toggleCompressed');
     Route::post('admin/add-to-list', [AdminBuyListController::class, 'addToList']);
     Route::post('/admin/buy-list/update/{id}', [AdminBuyListController::class, 'update_buy_list']);
     Route::post('admin/generate-list', [AdminBuyListController::class, 'genrateList']);

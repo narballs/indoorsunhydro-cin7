@@ -729,6 +729,7 @@ $cart_price = 0;
     $zip_code_is_valid = true;
 ?>
 <input type="hidden" name="selected_shipping_choice" id="selected_shipping_choice_shipping" value="">
+<input type="hidden" name="selected_billing_choice" id="selected_billing_choice_billing" value="">
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -1243,7 +1244,7 @@ $cart_price = 0;
                                                     @if (!empty($admin_area_for_shipping) && strtolower($admin_area_for_shipping->option_value) == 'yes')
                                                         <input type="hidden" name="admin_control_shipping" id="admin_control_shipping" value="true">
                                                         <input type="hidden" name="shipment_error" id="shipment_error" value="{{$shipment_error}}">
-                                                        @if (!empty($products_weight) && $products_weight > 99)
+                                                        @if (!empty($products_weight) && $products_weight > 150)
                                                             @php
                                                                 $adding_surcharge = 0;
                                                                 $shipment_plus_surcharge = 0;
@@ -1575,11 +1576,36 @@ $cart_price = 0;
                                             <div class="col-md-10 col-10">
                                                 <h6 class="checkout_main_sub_address mb-0">Billing Address</h6>
                                             </div>
-                                            {{-- <div class="col-md-2 col-2">
-                                                <a data-bs-toggle="modal" href="#address_modal_id_billing" role="button" class="float-end" style="font-size:20px">Change</a>
-                                            </div> --}}
+                                            <div class="col-md-2 col-2">
+                                                <a data-bs-toggle="modal" href="#add_new_address_billing" role="button" class="float-end add_new_billing_address_button" style="font-size:20px">Add New</a>
+                                            </div>
                                         </div>
                                     </div>
+                                    @if (count($get_all_user_billing_addresses_all) > 0)
+                                        <div class="row">
+                                            <div class="col-md-8 col-lg-7 col-12 col-xl-6">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        {{ $get_user_default_billing_address->BillingFirstName ? $get_user_default_billing_address->BillingFirstName : '' }}
+                                                        {{-- {{ $get_user_default_billing_address->DeliveryLastName ? $get_user_default_billing_address->DeliveryLastName : '' }} --}}
+                                                        {{$get_user_default_billing_address->BillingAddress1 ? ', ' .$get_user_default_billing_address->BillingAddress1 : ''}}
+                                                        {{$get_user_default_billing_address->BillingZip ? ', ' .$get_user_default_billing_address->BillingZip : ''}}
+                                                    </button>
+                                                
+                                                    <div class="dropdown-menu pl-1" aria-labelledby="dropdownMenuButton">
+                                                        @foreach($get_all_user_billing_addresses_all as $get_all_user_addresse)
+                                                            <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_shipment_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
+                                                                {{ $get_all_user_addresse->BillingFirstName ? $get_all_user_addresse->BillingFirstName : '' }}
+                                                                {{-- {{ $get_all_user_addresse->DeliveryLastName ? $get_all_user_addresse->DeliveryLastName : '' }} --}}
+                                                                {{$get_all_user_addresse->BillingAddress1 ? ', ' .$get_all_user_addresse->BillingAddress1 : ''}}
+                                                                {{$get_all_user_addresse->BillingZip ? ', ' .$get_all_user_addresse->BillingZip : ''}}
+                                                            </a> 
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    @endif
                                     <div class="col-md-12">
                                         <div class="row  custom-border-bottom custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
@@ -1630,17 +1656,15 @@ $cart_price = 0;
                                             <div class="col-md-8 col-lg-7 col-12 col-xl-6">
                                                 <div class="dropdown">
                                                     <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
-                                                        {{-- {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }} --}}
-                                                        {{$get_user_default_shipping_address->DeliveryAddress1 ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
-                                                        {{$get_user_default_shipping_address->DeliveryZip ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
+                                                        {{ !empty($get_user_default_shipping_address->DeliveryFirstName) ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                        {{!empty($get_user_default_shipping_address->DeliveryAddress1) ? ', ' .$get_user_default_shipping_address->DeliveryAddress1 : ''}}
+                                                        {{!empty($get_user_default_shipping_address->DeliveryZip) ? ', ' .$get_user_default_shipping_address->DeliveryZip : ''}}
                                                     </button>
                                                 
                                                     <div class="dropdown-menu pl-1" aria-labelledby="dropdownMenuButton">
                                                         @foreach($get_all_user_addresses as $get_all_user_addresse)
                                                             <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_shipment_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
                                                                 {{ $get_all_user_addresse->DeliveryFirstName ? $get_all_user_addresse->DeliveryFirstName : '' }}
-                                                                {{-- {{ $get_all_user_addresse->DeliveryLastName ? $get_all_user_addresse->DeliveryLastName : '' }} --}}
                                                                 {{$get_all_user_addresse->DeliveryAddress1 ? ', ' .$get_all_user_addresse->DeliveryAddress1 : ''}}
                                                                 {{$get_all_user_addresse->DeliveryZip ? ', ' .$get_all_user_addresse->DeliveryZip : ''}}
                                                             </a> 
@@ -1654,34 +1678,34 @@ $cart_price = 0;
                                     <div class="col-md-12">
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Contact</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryFirstName ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
-                                                {{ $get_user_default_shipping_address->DeliveryLastName ? $get_user_default_shipping_address->DeliveryLastName : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryFirstName) ? $get_user_default_shipping_address->DeliveryFirstName : '' }}
+                                                {{ !empty($get_user_default_shipping_address->DeliveryLastName) ? $get_user_default_shipping_address->DeliveryLastName : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Ship to</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryAddress1 ? $get_user_default_shipping_address->DeliveryAddress1 : ''}}  {{$get_user_default_shipping_address->DeliveryAddress2 ? ', ' .$get_user_default_shipping_address->DeliveryAddress2 : ''}}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ? $get_user_default_shipping_address->DeliveryAddress1 : ''}}  {{!empty($get_user_default_shipping_address->DeliveryAddress2) ? ', ' .$get_user_default_shipping_address->DeliveryAddress2 : ''}}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">City</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryCity ? $get_user_default_shipping_address->DeliveryCity : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryCity) ? $get_user_default_shipping_address->DeliveryCity : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">State</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryState ? $get_user_default_shipping_address->DeliveryState : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryState) ? $get_user_default_shipping_address->DeliveryState : '' }}</span></div>
                                             
                                         </div>
                                         
                                         <div class="row  custom-border-bottom custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Zip Code</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryZip ? $get_user_default_shipping_address->DeliveryZip : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryZip) ? $get_user_default_shipping_address->DeliveryZip : '' }}</span></div>
                                             
                                         </div>
                                         <div class="row  custom_address_padding">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Phone</span></div>
-                                            <div class="col-md-9"><span class="checkout_address_text">{{ $get_user_default_shipping_address->DeliveryPhone ? $get_user_default_shipping_address->DeliveryPhone : '' }}</span></div>
+                                            <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryPhone) ? $get_user_default_shipping_address->DeliveryPhone : '' }}</span></div>
                                             
                                         </div>
                                     </div>
@@ -2313,7 +2337,7 @@ $cart_price = 0;
 </div>
 
 
-{{-- Add new address --}}
+{{-- Add new shipping address --}}
 <div class="modal fade" id="add_new_address_shipping" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
     aria-labelledby="exampleModalToggleLabel_new" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -2444,6 +2468,139 @@ $cart_price = 0;
     </div>
 </div>
 {{-- Add new address end --}}
+
+{{-- Add new billing address --}}
+<div class="modal fade" id="add_new_address_billing" data-dismiss="modal" data-backdrop="false" aria-hidden="true"
+    aria-labelledby="exampleModalToggleLabel_new" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel_new">Add New Billing Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="update-billing-address-section" id="address-billing-form-update">
+
+                    <form class="needs-validation mt-4 novalidate" action="" method="POST">
+                        @if(!empty($user_address->contact_id))
+                            <input type="hidden" value="{{$user_address->contact_id}}" name="contact_id" id="contact_id_new">
+                        @elseif(!empty($user_address->secondary_id))
+                            <input type="hidden" value="{{$user_address->secondary_id}}" name="secondary_id" id="secondary_id_new">
+                        @endif
+                        @csrf
+                        <div class="spinner-border text-primary d-none" role="status" id="waiting_loader_billing_new">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="alert alert-success mt-3 d-none" id="success_msg_billing_new"></div>
+                        <div class="alert alert-info mt-3 d-none" id="processing_msg_billing_new"></div>
+                        <div class="alert alert-danger mt-3 d-none" id="error_msg_billing_new"></div>
+                        <input type="hidden" name="email" id="billing_email_new" value="{{!empty($user_address->email) ? $user_address->email : ''}}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName">First name</label>
+                                <input type="text" class="form-control bg-light" id="billing_new_first_name" name="first_name_new"
+                                    placeholder="First name" value="" required>
+                                <div id="error_first_name_billing_new" class="text-danger">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName">Last name  <span class="text-muted">(Optional)</span></label>
+                                <input type="text" class="form-control bg-light" id="billing_new_last_name" name="last_name_new" placeholder=""
+                                    value="" required>
+                                <div id="error_last_name_billing_new" class="text-danger">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="company_billing_new">Company Name <span class="text-muted">(Optional)</span></label>
+                                <input type="text" class="form-control bg-light" id="billing_new_company_name" name="billing_new_company_name" placeholder=""
+                                    value="" required>
+                                <div id="error_billing_new_company_name" class="text-danger">
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="company_billing_new">Country</label>
+                                <input type="text" readonly class="form-control bg-light" value="United States" id="billing_country_new" name="billing_country_new" placeholder=""
+                                    value="" required>
+                                <div id="error_billing_country_new" class="text-danger"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="address">Street Address</label>
+                            {{-- <p class="mb-0">
+                                <small class="text-info">
+                                    Note: PO Boxes are not allowed at the start of address.
+                                </small>
+                            </p> --}}
+                            <input type="text" class="form-control bg-light billing_address1_new" name="billing_address1_new"  id="billing_address1_new"
+                            value="" placeholder="House number and street name" required>
+                            <div id="error_billing_address1_new" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address">Address 2 <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control bg-light billing_address2_new" name="billing_address2_new"  id="billing_address2_new"
+                            value="" placeholder="House number and street name" required>
+                            <div id="error_billing_address_new_2" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="billing_city_new">Town/City</label>
+                            <input type="text" class="form-control bg-light billing_city_new" name="billing_city_new"
+                                value="" placeholder="Enter your town" id="billing_city_new">
+                                <div id="error_billing_city_new" class="text-danger"></div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="state">State</label>
+
+                                <select class="form-control bg-light billing_state_new" name="billing_state_new" id="billing_state_new" autocomplete="">
+                                    @foreach ($states as $state)
+                                        <option value="{{ $state->state_name }}">{{ $state->state_name }} </option>
+                                    @endforeach
+                                    <div id="error_billing_state_new" class="text-danger"></div>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zip">Zip</label>
+                                <input type="text" class="form-control bg-light billing_postal_code_new" name="billing_postal_code_new"
+                                    placeholder="Enter zip code" value="" required id="billing_postal_code_new">
+                                <div id="error_billing_postal_code_new" class="text-danger"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control bg-light billing_phone_new" name="billing_phone_new"
+                                    placeholder="Enter your phone" value="" id="billing_phone_new" required>
+                                <div id="error_billing_phone_new" class="text-danger"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <div class="spinner-border text-primary d-none" role="status" id="address_loader_billing_new">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm updateBillingAddress" style="background-color: #7BC533; border-color: #7BC533 ;"
+                    onclick="add_new_billing_address('{{'Billing'}}'  , '{{ !empty($user_address->contact_id) ?  $user_address->contact_id : $user_address->parent_id}}' )">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Add new address end --}}
+
 
 <form class="needs-validation mt-4 novalidate" style="display:none" action="{{ url('order') }}" method="POST">
     @csrf
@@ -3746,7 +3903,7 @@ $cart_price = 0;
                     $('.discount_variation').val('percentage');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
-                        if (product_weight > 99) {
+                        if (product_weight > 150) {
                             shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                             add_discount = productTotal * parseFloat(response.discount_variation_value) / 100;
                             subtotal = productTotal - add_discount;
@@ -3824,7 +3981,7 @@ $cart_price = 0;
                     $('.discount_variation').val('fixed');
                     $('.discount_variation_value').val(response.discount_variation_value);
                     if (admin_area_for_shipping === 'true') {
-                        if (product_weight > 99) {
+                        if (product_weight > 150) {
                             shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
                             add_discount = parseFloat(response.discount_variation_value);
                             if (add_discount >= productTotal) {
@@ -4116,7 +4273,7 @@ $cart_price = 0;
                     var newTotal = $('#incl_tax').val();
                     var product_weight = $('.product_weight').val() != null ? parseFloat($('.product_weight').val()) : 0;
                     var original_shipment_price = $('#shipment_price_heavy_weight').val() != null ? parseFloat($('#shipment_price_heavy_weight').val()) : 0;
-                    if (product_weight > 99) {
+                    if (product_weight > 150) {
                         var total = parseFloat(newTotal) - parseFloat(original_shipment_price);
                         $('#shipment_price_heavy_weight').val(0);
                         $('#shipment_price').val(0);
@@ -4316,6 +4473,164 @@ $cart_price = 0;
                     
                 }
 
+                // add new billing address danish
+                function add_new_billing_address(type , contact_id) {
+                    $('#address_loader_billing_new').removeClass('d-none');
+                    $('#waiting_loader_billing_new').removeClass('d-none');
+                    var contact_id = contact_id;
+                    var type = type;
+                    var first_name = $('#billing_new_first_name').val();
+                    var last_name = $('#billing_new_last_name').val();
+                    var company_name = $('#billing_new_company_name').val();
+                    var phone = $('#billing_phone_new').val();
+                    var address = $('#billing_address1_new').val();
+                    var address2 = $('#billing_address2_new').val();
+                    var city = $('#billing_city_new').val();
+                    var state = $('#billing_state_new').val();
+                    var country = $('#billing_country_new').val();
+                    var postal_code = $('#billing_postal_code_new').val();
+                    let selected_billing_choice_billing = $('#selected_billing_choice_billing').val();
+
+
+                    jQuery.ajax({
+                        method: 'Post',
+                        url: "{{ url('/add-new-address/') }}",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "contact_id": contact_id,
+                            "first_name": first_name,
+                            "last_name": last_name,
+                            "company_name": company_name,
+                            "phone": phone,
+                            "address": address,
+                            "address2": address2,
+                            "city": city,
+                            "state": state,
+                            "zip": postal_code,
+                            "type": type,
+                            "country": country,
+                            "selected_billing_choice_billing": selected_billing_choice_billing,                        
+                        },
+
+                        success: function(response) {
+                            if (response.status == 200) {
+                                $('#address_loader_billing_new').addClass('d-none');
+                                $('#waiting_loader_billing_new').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                $('#success_msg_billing_new').removeClass('d-none');
+                                $('#success_msg_billing_new').html(response.msg);
+                                setTimeout(function() {
+                                    $('#success_msg_billing_new').addClass('d-none');
+                                    $('#success_msg_billing_new').html('');
+                                    $('#processing_msg_billing_new').removeClass('d-none');
+                                    $('#processing_msg_billing_new').html('Fetching Data ...');
+                                    window.location.href = "{{ url('/checkout') }}";
+                                }, 1000);
+                            } else {
+                                $('#address_loader_billing_new').addClass('d-none');
+                                $('#waiting_loader_billing_new').addClass('d-none');
+                                $('.modal-backdrop').remove()
+                                $('#error_msg_billing_new').removeClass('d-none');
+                                $('#error_msg_billing_new').html(response.msg);
+
+                            }
+                        },
+                        error: function(response) {
+                            $('#address_loader_billing_new').addClass('d-none');
+                            $('#waiting_loader_billing_new').addClass('d-none');
+
+                           
+
+
+                            if (response.responseJSON.address_validator === false) {
+                                $('.update_checkout_loader').addClass('d-none');
+                                let title = 'Billing Address Error';
+                                let userMessage = response.responseJSON.validator_message || 'The entered address seems invalid.';
+                                let suggestedAddress = response.responseJSON.suggested_address || '';
+                                let formattedAddress = response.responseJSON.formatted_address || '';
+
+                                Swal.fire({
+                                    title: title,
+                                    icon: 'warning',
+                                    html: `
+                                        <div style="text-align: left;">
+                                            <p>${userMessage}</p>
+                                            ${suggestedAddress ? `<strong>Suggested Address:</strong><br/>${suggestedAddress}` : ''}
+                                            <br/><br/>
+                                            <em>You can continue with your entered address or manually update it using the suggestion above.</em>
+                                        </div>
+                                    `,
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Use My Entered Address',
+                                    cancelButtonText: 'Update Manually',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    customClass: {
+                                        confirmButton: 'my-confirm-button',
+                                        cancelButton: 'my-cancel-button',
+                                        actions: 'my-actions-class'
+                                    }
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $('#selected_billing_choice_billing').val('entered');
+                                        add_new_billing_address(type, contact_id);
+                                    } 
+                                });
+
+                                return false;
+                            }
+
+                            var error_message = response.responseJSON;
+                            var error_text = '';
+                            if (typeof error_message.errors.first_name != 'undefined') {
+                                error_text = error_message.errors.first_name;
+                                $('#error_first_name_billing_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_first_name_billing_new').html(error_text);
+                            }
+                            if (typeof error_message.errors.company_name != 'undefined') {
+                                var error_text = error_message.errors.company_name;
+                                $('#error_billing_new_company_name').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_billing_new_company_name').html(error_text);
+                            }
+                            if (typeof error_message.errors.address != 'undefined') {
+                                var error_text = error_message.errors.address;
+                                $('#error_billing_address1_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_billing_address1_new').html(error_text);
+                            }
+
+                            if (typeof error_message.errors.zip != 'undefined') {
+                                var error_text = error_message.errors.zip;
+                                $('#error_billing_postal_code_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_billing_postal_code_new').html(error_text);
+                            }
+                            if (typeof error_message.errors.phone != 'undefined') {
+                                var error_text = error_message.errors.phone;
+                                $('#error_billing_phone_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_billing_phone_new').html(error_text);
+                            }
+                            if (typeof error_message.errors.city != 'undefined') {
+                                var error_text = error_message.errors.city;
+                                $('#error_billing_city_new').html(error_text);
+                            } else {
+                                error_text = '';
+                                $('#error_billing_city_new').html(error_text);
+                            }
+                        }
+                    });
+                    
+                }
+
+
                 // switch company 
                 function switch_company_user(contact_id) {
                     var company = contact_id;
@@ -4372,6 +4687,45 @@ $cart_price = 0;
                         }
                     });
                 }
+                function change_user_billing_address (contact_id , address_id) {
+                    jQuery.ajax({
+                        url: "{{ url('/select-default-billing-address/') }}",
+                        method: 'POST',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            'contact_id': contact_id,
+                            'address_id': address_id
+                        },
+                        success: function(response) {
+                            if (response.status == 200) {
+                                Swal.fire({
+                                    title: "Success",
+                                    text: response.message,
+                                    icon: "success",
+                                    button: "Ok",
+                                });
+                                setTimeout(function() {
+                                    window.location.href = "{{ url('/checkout') }}";
+                                }, 1000);
+                            } else {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: 'Something went wrong! Please try again later',
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                            }
+                        },
+                        error: function(response) {
+                            Swal.fire({
+                                title: "Error",
+                                text: 'Something went wrong! Please try again later',
+                                icon: "error",
+                                button: "Ok",
+                            });
+                        }
+                    });
+                }
             </script>
             @include('partials.footer')
             <script>
@@ -4380,7 +4734,7 @@ $cart_price = 0;
                     update_total_with_shipping_selected();
                     var admin_area_for_shipping_check = $('#admin_control_shipping').val();
                     var product_weight = $('.product_weight').val() != null ?  parseFloat($('.product_weight').val()) : 0;
-                    if (admin_area_for_shipping_check === 'true' && product_weight > 99) {
+                    if (admin_area_for_shipping_check === 'true' && product_weight > 150) {
                         update_total_with_shipping_for_greater_weight();
                     }
                     // default ups ground checked
