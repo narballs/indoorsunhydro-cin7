@@ -1133,12 +1133,12 @@ $cart_price = 0;
                                         <input type="hidden" name="total_tax" class="total_tax" id="" value="{{ number_format($tax , 2, '.', '') }}">
                                         <input type="hidden" name="shipping_free_over_1000" id="shipping_free_over_1000" value="{{$shipping_free_over_1000}}">
                                         <input type="hidden" name="extra_charges_for_total_over_499" id="extra_charges_for_total_over_499" value="{{$extra_charges_for_total_over_499}}">
-                                        @if(!empty($tax_class))
+                                        @if(!empty($tax_class) && !empty($tax_class->id))
                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{ $tax_class->id }}">
                                         @else
                                         <input type="hidden" name="tax_class_id" id="tax_class_id" value="{{$tax_class_none->id}}">
                                         @endif
-                                        
+                                        <input type="hidden" name="custom_tax_rate_percent" id="custom_tax_rate_percent" value="{{!empty($tax_class->rate) ? $tax_class->rate : ''}}">
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-8"><span class="checkout_subtotal_heading">Subtotal</span></div>
                                             <div class="col-md-3  col-4 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>

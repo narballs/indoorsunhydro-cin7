@@ -2094,7 +2094,13 @@ class ProductController extends Controller
         if (!auth()->user()) {
             $tax_class = TaxClass::where('is_default', 1)->first();
         } else {
-            $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+            $custom_tax_rate = AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+            if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+                $tax_class = UserHelper::ApplyCustomTax($contact);
+            } else {
+                $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+            }
+
         }
 
         if (!empty($cart_items)) {

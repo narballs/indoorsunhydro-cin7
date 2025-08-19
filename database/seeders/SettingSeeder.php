@@ -646,6 +646,12 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+            [
+                'option_name' => 'custom_tax_rate',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
         ];
 
         foreach($setting as $setting) {

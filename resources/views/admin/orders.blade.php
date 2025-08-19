@@ -331,10 +331,12 @@
                                                 @endif
                                             </td>
                                             <td data-label="Order Total :" class="created_by_order_total td_padding_row">${{ number_format($order->total_including_tax, 2) }}</td>
-                                            @if(!empty($order->texClasses))
-                                            <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format($order->texClasses->rate, 2) }}% </td>
+                                            @if (!empty($order->custom_tax_rate_percent))
+                                                <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format($order->custom_tax_rate_percent, 2) }}% </td>
+                                            @elseif(!empty($order->texClasses))
+                                                <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format($order->texClasses->rate, 2) }}% </td>
                                             @else
-                                            <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format(0 ,2) }}% </td>
+                                                <td data-label="Tax :" class="created_by_order_total td_padding_row">{{ number_format(0 ,2) }}% </td>
                                             @endif
                                             <td data-label="Company Name" class="td_padding_row">
                                                 @if ($order->contact)

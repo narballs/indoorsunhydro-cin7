@@ -54,7 +54,13 @@
     } else {
 
         if (!empty($contact)) {
-            $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
+            $custom_tax_rate = App\Models\AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+            if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+                $tax_class = App\Helpers\UserHelper::ApplyCustomTax($contact);
+            }
+            else {
+                $tax_class =  App\Models\TaxClass::where('name', $contact->tax_class)->first();
+            }
         } else {
             $tax_class = App\Models\TaxClass::where('is_default', 1)->first();
         }
