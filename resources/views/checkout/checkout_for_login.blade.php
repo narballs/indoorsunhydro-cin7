@@ -1594,7 +1594,7 @@ $cart_price = 0;
                                                 
                                                     <div class="dropdown-menu pl-1" aria-labelledby="dropdownMenuButton">
                                                         @foreach($get_all_user_billing_addresses_all as $get_all_user_addresse)
-                                                            <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_shipment_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
+                                                            <a class="dropdown-item user_address_dropdown" type="button" onclick="change_user_billing_address('{{ $user_address->contact_id }}' , '{{$get_all_user_addresse->id}}')">
                                                                 {{ $get_all_user_addresse->BillingFirstName ? $get_all_user_addresse->BillingFirstName : '' }}
                                                                 {{-- {{ $get_all_user_addresse->DeliveryLastName ? $get_all_user_addresse->DeliveryLastName : '' }} --}}
                                                                 {{$get_all_user_addresse->BillingAddress1 ? ', ' .$get_all_user_addresse->BillingAddress1 : ''}}

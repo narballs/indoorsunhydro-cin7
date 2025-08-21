@@ -478,13 +478,29 @@
                     <table width="100%" border="0">
                         <tr>
                             <td width="80%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                @php
+                                {{-- @php
                                     $taxt_rate = 0;
                                     foreach ($order_items as $order_item) {
                                         $taxt_rate = $order_item->order->texClasses->name;
                                     }
                                 @endphp
-                                Tax ({{ $taxt_rate }})
+                                Tax ({{ $taxt_rate }}) --}}
+                                @php
+                                    $tax_rate = 0;
+                                    foreach ($order_items as $order_item) {
+                                        $custom_tax_rate = App\Models\AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+                                        if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+                                            $tax_class = App\Helper\UserHelper::ApplyCustomTaxCheckout($get_user_default_shipping_address);
+                                            $ = $tax_class->rate;
+                                        } 
+                                        else {
+
+                                            $tax_rate = $order_item->order->texClasses->name;
+                                        }
+
+                                    }
+                                @endphp
+                                Tax ({{ $taxt_rate }}) 
                             </td>
                             <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
