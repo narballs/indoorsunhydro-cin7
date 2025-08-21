@@ -624,6 +624,7 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'option_value' => 'engrdanishsabir00@gmail.com',
             ],
+            
 
             [
                 'option_name' => 'invalid_contacts_summary_naris_email',
@@ -648,6 +649,16 @@ class SettingSeeder extends Seeder
 
             [
                 'option_name' => 'custom_tax_rate',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+            [
+                'option_name' => 'delievery_fee_disclaimer',
+                'type' => 'text',
+                'option_value' => '53',
+            ],
+            [
+                'option_name' => 'enable_new_promo_for_retail',
                 'type' => 'yes/no',
                 'option_value' => 'No',
             ],

@@ -693,6 +693,13 @@
             transform: rotate(360deg);
         }
     }
+
+    .invalid-feedback {
+        font-size: 14px;
+        font-weight: 400;
+        font-family: 'Poppins';
+    }
+
 </style>
 <div id="page-spinner" class="page-spinner"></div>
 <div class="mb-4 desktop-view">
@@ -949,61 +956,112 @@ $cart_price = 0;
                                             </div>
                                         </div>
                                         {{-- new fields for 1000 free shipping promo --}}
-                                        @if(!empty($user_address->paymentTerms) && (strtolower($user_address->paymentTerms) === 'pay in advanced') && ($shipping_free_over_1000 == 1))
-                                            @php
-                                            $delievery_fee = 53; 
-                                            @endphp
+                                        @php
+                                            $delievery_fee_settings = App\Models\AdminSetting::where('option_name', 'delievery_fee_disclaimer')->first();
+                                            $delievery_fee = !empty($delievery_fee_settings) ? $delievery_fee_settings->option_value : 53;
+
+                                            $enable_new_promo_for_retail_settings = App\Models\AdminSetting::where('option_name', 'enable_new_promo_for_retail')->first();
+                                            $enable_promo_settings = !empty($enable_new_promo_for_retail_settings) && strtolower($enable_new_promo_for_retail_settings->option_value) === 'yes';
+                                        @endphp
+
+                                        @if (!empty($user_address->paymentTerms) 
+                                            && strtolower($user_address->paymentTerms) === 'pay in advanced' 
+                                            && $shipping_free_over_1000 == 1 
+                                            && $enable_promo_settings)
+
+                                            {{-- Available Hours --}}
                                             <div class="row justify-content-center border-bottom py-3">
                                                 <div class="col-md-12 mt-1">
                                                     <p class="checkout_product_heading mb-1 ml-0">Available Hours</p>
-                                                    <select class="form-control checkout_product_heading" name="delivery_hours" id="delivery_hours">
+                                                    <select class="form-control checkout_product_heading @error('delivery_hours') is-invalid @enderror"
+                                                            name="delivery_hours" id="delivery_hours">
                                                         <option value="">Select Hours</option>
-                                                        <option value="9-12pm">9-12pm</option>
-                                                        <option value="12-4pm">12-4pm</option>
+                                                        <option value="9-12pm" {{ old('delivery_hours') == '9-12pm' ? 'selected' : '' }}>9-12pm</option>
+                                                        <option value="12-4pm" {{ old('delivery_hours') == '12-4pm' ? 'selected' : '' }}>12-4pm</option>
                                                     </select>
+                                                    @error('delivery_hours')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
                                             </div>
+
+                                            {{-- Contact Person --}}
                                             <div class="row justify-content-center border-bottom py-3">
                                                 <div class="col-md-12">
-                                                    <p class="checkout_product_heading mb-1 ml-0">Contact Person to receive order </p>
-                                                    <input type="text" name="contact_person" placeholder="Contact Person" id="contact_person"
-                                                        class="form-control fontAwesome checkout_product_heading">
+                                                    <p class="checkout_product_heading mb-1 ml-0">Contact Person to receive order</p>
+                                                    <input type="text" name="contact_person" id="contact_person"
+                                                        placeholder="Contact Person"
+                                                        value="{{ old('contact_person') }}"
+                                                        class="form-control fontAwesome checkout_product_heading @error('contact_person') is-invalid @enderror">
+                                                    @error('contact_person')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
                                             </div>
+
+                                            {{-- Contact Phone --}}
                                             <div class="row justify-content-center border-bottom py-3">
                                                 <div class="col-md-12">
-                                                    <p class="checkout_product_heading mb-1 ml-0">Contact Phone Number <small>(Must be reachable on day of delivery)</small> </p>
-                                                    <input type="text" name="contact_person_phone_number" placeholder="Contact Person Phone" id="contact_person_phone_number"
-                                                        class="form-control fontAwesome checkout_product_heading">
+                                                    <p class="checkout_product_heading mb-1 ml-0">
+                                                        Contact Phone Number <small>(Must be reachable on day of delivery)</small>
+                                                    </p>
+                                                    <input type="text" name="contact_person_phone_number" id="contact_person_phone_number"
+                                                        placeholder="Contact Person Phone"
+                                                        value="{{ old('contact_person_phone_number') }}"
+                                                        class="form-control fontAwesome checkout_product_heading @error('contact_person_phone_number') is-invalid @enderror">
+                                                    @error('contact_person_phone_number')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
                                             </div>
+
+                                            {{-- Delivery Fee Disclaimer --}}
                                             <div class="row justify-content-center border-bottom py-3">
                                                 <div class="col-md-12">
-                                                    <input type="checkbox" name="delievery_fee_disclaimer" id="delievery_fee_disclaimer" class="delievery_fee_disclaimer">
+                                                    <input type="checkbox" name="delievery_fee_disclaimer" id="delievery_fee_disclaimer"
+                                                        class="delievery_fee_disclaimer @error('delievery_fee_disclaimer') is-invalid @enderror"
+                                                        value="1" {{ old('delievery_fee_disclaimer') ? 'checked' : '' }}>
                                                     <span class="checkout_shipping_methods">
-                                                        If the freight delievery driver cannot reach the the contact person , I may be charged a  ${{ $delievery_fee }} (required to accept)
+                                                        If the freight delievery driver cannot reach the contact person, 
+                                                        I may be charged ${{ $delievery_fee }} (required to accept)
                                                     </span>
+                                                    @error('delievery_fee_disclaimer')
+                                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
-        
                                             </div>
-                                            
+
+                                            {{-- Lift Gate Option --}}
                                             <div class="row justify-content-center border-bottom py-3">
-                                                <p class="checkout_product_heading mb-1 ml-0"> Request lift gate truck OR Decline Lift Gate Truck </p>
+                                                <p class="checkout_product_heading mb-1 ml-0">Request lift gate truck OR Decline Lift Gate Truck</p>
+                                                
                                                 <div class="col-md-12">
-                                                    <input type="radio" class="request_lift_gate_truck_accept" id="request_lift_gate_truck_accept" name="request_lift_gate_truck" value="accept" style="background: #008BD3;">
-                                                    <label for="request_lift_gate_truck_accept" class="checkout_product_heading ml-2 mb-0">
-                                                        Accept 
-                                                    </label>
+                                                    <input type="radio" class="request_lift_gate_truck_accept @error('request_lift_gate_truck') is-invalid @enderror"
+                                                        id="request_lift_gate_truck_accept"
+                                                        name="request_lift_gate_truck" value="accept"
+                                                        {{ old('request_lift_gate_truck') == 'accept' ? 'checked' : '' }}
+                                                        style="background:#008BD3;">
+                                                    <label for="request_lift_gate_truck_accept" class="checkout_product_heading ml-2 mb-0">Accept</label>
                                                 </div>
+
                                                 <div class="col-md-12">
-                                                        <input type="radio" class="request_lift_gate_truck_reject" id="request_lift_gate_truck_reject" name="request_lift_gate_truck" value="reject" style="background: #008BD3;">
-                                                        <label for="request_lift_gate_truck_reject" class="checkout_product_heading ml-2 mb-0">
-                                                        Reject 
-                                                    </label>
-                                                </div>                                            
+                                                    <input type="radio" class="request_lift_gate_truck_reject @error('request_lift_gate_truck') is-invalid @enderror"
+                                                        id="request_lift_gate_truck_reject"
+                                                        name="request_lift_gate_truck" value="reject"
+                                                        {{ old('request_lift_gate_truck') == 'reject' ? 'checked' : '' }}
+                                                        style="background:#008BD3;">
+                                                    <label for="request_lift_gate_truck_reject" class="checkout_product_heading ml-2 mb-0">Reject</label>
+                                                </div>
+
+                                                @error('request_lift_gate_truck')
+                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                @enderror
                                             </div>
+
                                         @endif
                                         {{-- end --}}
+
+
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
                                                 <p class="checkout_product_heading mb-1 ml-0">Internal Comments (Optional)</p>
@@ -1640,6 +1698,53 @@ $cart_price = 0;
                                                 {{ !empty($get_user_default_shipping_address->DeliveryLastName) ? $get_user_default_shipping_address->DeliveryLastName : '' }}</span></div>
                                             
                                         </div>
+                                        @if (!empty($user_address->paymentTerms) 
+                                        && strtolower($user_address->paymentTerms) === 'pay in advanced' 
+                                        && $shipping_free_over_1000 == 1 
+                                        && $enable_promo_settings)
+
+                                        <div class="row custom-border-bottom custom_address_padding pb-1">
+                                            <div class="col-md-3 custom_head_div">
+                                                <span class="checkout_address_heading">Location Type</span>
+                                            </div>
+
+                                            <div class="col-md-9 custom_head_div">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <span class="checkout_address_text">
+                                                            <input type="radio"
+                                                                class="location_type_residential @error('location_type') is-invalid @enderror"
+                                                                id="location_type_residential"
+                                                                name="location_type"
+                                                                value="residential"
+                                                                {{ old('location_type') == 'residential' ? 'checked' : '' }}
+                                                                style="background:#008BD3;">
+                                                            <label for="location_type_residential" class="checkout_product_heading ml-2 mb-0">Residential</label>
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <span class="checkout_address_text">
+                                                            <input type="radio"
+                                                                class="location_type_commercial @error('location_type') is-invalid @enderror"
+                                                                id="location_type_commercial"
+                                                                name="location_type"
+                                                                value="commercial"
+                                                                {{ old('location_type') == 'commercial' ? 'checked' : '' }}
+                                                                style="background:#008BD3;">
+                                                            <label for="location_type_commercial" class="checkout_product_heading ml-2 mb-0">Commercial</label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Show error under radios --}}
+                                                @error('location_type')
+                                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    @endif
+
                                         <div class="row  custom-border-bottom custom_address_padding ">
                                             <div class="col-md-3 custom_head_div"><span class="checkout_address_heading">Ship to</span></div>
                                             <div class="col-md-9"><span class="checkout_address_text">{{ !empty($get_user_default_shipping_address->DeliveryAddress1) ? $get_user_default_shipping_address->DeliveryAddress1 : ''}}  {{!empty($get_user_default_shipping_address->DeliveryAddress2) ? ', ' .$get_user_default_shipping_address->DeliveryAddress2 : ''}}</span></div>
