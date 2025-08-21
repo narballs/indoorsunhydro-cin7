@@ -86,7 +86,8 @@ class ApiOrder extends Model
         'confirmation_email_flag',
         'buylist_id',
         'buylist_discount',
-        're_order_id'
+        're_order_id',
+        'custom_tax_rate_percent'
         
     ];
     public function contact()

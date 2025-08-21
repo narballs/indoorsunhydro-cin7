@@ -703,7 +703,15 @@ class CheckoutController extends Controller
                 $charge_shipment_to_customer = 1;
             }
 
-            $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
+            $custom_tax_rate = AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+            if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+                $tax_class = UserHelper::ApplyCustomTaxCheckout($get_user_default_shipping_address);
+            } 
+            else {
+
+                $tax_class = TaxClass::where('name', $user_address->tax_class)->first();
+            }
+
             $tax_class_none = TaxClass::where('name', 'none')->first();
             $get_tax_rate = 0;  
             if (!empty($tax_class)) {

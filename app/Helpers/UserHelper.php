@@ -22,8 +22,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
-
-
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -2217,6 +2216,90 @@ class UserHelper
             'product_height'   => $total_height,
             'products_weight'  => $total_weight,
         ];
+    }
+
+
+    public static function ApplyCustomTax($contact)
+    {
+        $get_contact = Contact::where('contact_id', $contact->contact_id)
+            ->orWhere('parent_id', $contact->contact_id)
+            ->first();
+
+        if (empty($get_contact)) {
+            return null;
+        }
+
+        $address1 = trim($get_contact->address1 . ' ' . $get_contact->address2);
+        $city     = $get_contact->city;
+        $zip      = $get_contact->postCode;
+
+        // dd($address1 , $city , $zip);
+
+        try {
+            $url = env('CUSTOM_TAX_RATE_URL');
+
+            $response = Http::get($url, [
+                'address' => $address1,
+                'city'    => $city,
+                'zip'     => $zip,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (!empty($data['taxRateInfo'][0]['rate'])) {
+                    return (object) [
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // e.g. 0.1075
+                        'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
+                        'city'         => $data['taxRateInfo'][0]['city'] ?? null,
+                        'county'       => $data['taxRateInfo'][0]['county'] ?? null,
+                        'tax_code'     => $data['taxRateInfo'][0]['tax'] ?? null,
+                    ];
+                }
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+
+    public static function ApplyCustomTaxCheckout($get_user_default_shipping_address)
+    {
+       
+        $address1 = trim($get_user_default_shipping_address->DeliveryAddress1 . ' ' . $get_user_default_shipping_address->DeliveryAddress2);
+        $city     = $get_user_default_shipping_address->DeliveryCity;
+        $zip      = $get_user_default_shipping_address->DeliveryZip;
+
+        try {
+            $url = env('CUSTOM_TAX_RATE_URL');
+
+            $response = Http::get($url, [
+                'address' => $address1,
+                'city'    => $city,
+                'zip'     => $zip,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                if (!empty($data['taxRateInfo'][0]['rate'])) {
+                    return (object) [
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // e.g. 0.1075
+                        'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
+                        'city'         => $data['taxRateInfo'][0]['city'] ?? null,
+                        'county'       => $data['taxRateInfo'][0]['county'] ?? null,
+                        'tax_code'     => $data['taxRateInfo'][0]['tax'] ?? null,
+                    ];
+                }
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            // Log::error('CDTFA API error: ' . $e->getMessage());
+            return null;
+        }
     }
 
 

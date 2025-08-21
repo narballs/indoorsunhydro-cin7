@@ -278,7 +278,14 @@ class OrderManagementController extends Controller
         $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
-        $tax_class = TaxClass::where('name', $customer->contact->tax_class)->first();
+        $custom_tax_rate = AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+        if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+            $tax_class = UserHelper::ApplyCustomTaxCheckout($order);
+        }
+        else {
+
+            $tax_class = TaxClass::where('name', $customer->contact->tax_class)->first();
+        }  
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         // $products  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive')->get();
         
