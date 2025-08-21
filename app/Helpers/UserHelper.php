@@ -2232,9 +2232,30 @@ class UserHelper
         $address1 = trim($get_contact->address1 . ' ' . $get_contact->address2);
         $city     = $get_contact->city;
         $zip      = $get_contact->postCode;
+        $state    = strtolower(trim($get_contact->state)); // normalize
 
-        // dd($address1 , $city , $zip);
+        // Check if address contains PO Box
+        if (preg_match('/\b(po box|p\.o\. box|pob)\b/i', $address1)) {
+            if ($state === 'ca' || $state === 'california') {
+                return (object) [
+                    'rate'         => 8.75,   // Fixed fallback rate
+                    'jurisdiction' => 'California',
+                    'city'         => $city,
+                    'county'       => null,
+                    'tax_code'     => 'CA_FALLBACK',
+                ];
+            } else {
+                return (object) [
+                    'rate'         => 0.0,
+                    'jurisdiction' => null,
+                    'city'         => $city,
+                    'county'       => null,
+                    'tax_code'     => 'NO_TAX_POBOX',
+                ];
+            }
+        }
 
+        // Otherwise try API
         try {
             $url = env('CUSTOM_TAX_RATE_URL');
 
@@ -2249,7 +2270,7 @@ class UserHelper
 
                 if (!empty($data['taxRateInfo'][0]['rate'])) {
                     return (object) [
-                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // e.g. 0.1075
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // convert 0.0875 → 8.75
                         'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
                         'city'         => $data['taxRateInfo'][0]['city'] ?? null,
                         'county'       => $data['taxRateInfo'][0]['county'] ?? null,
@@ -2260,18 +2281,54 @@ class UserHelper
 
             return null;
         } catch (\Exception $e) {
+            if ($state === 'ca' || $state === 'california') {
+                return (object) [
+                    'rate'         => 8.75,
+                    'jurisdiction' => 'California',
+                    'city'         => $city,
+                    'county'       => null,
+                    'tax_code'     => 'CA_FALLBACK_ERROR',
+                ];
+            }
             return null;
         }
     }
+
 
 
     public static function ApplyCustomTaxCheckout($get_user_default_shipping_address)
     {
-       
-        $address1 = trim($get_user_default_shipping_address->DeliveryAddress1 . ' ' . $get_user_default_shipping_address->DeliveryAddress2);
-        $city     = $get_user_default_shipping_address->DeliveryCity;
-        $zip      = $get_user_default_shipping_address->DeliveryZip;
+        $address1 = trim(
+            $get_user_default_shipping_address->DeliveryAddress1 . ' ' .
+            $get_user_default_shipping_address->DeliveryAddress2
+        );
 
+        $city  = $get_user_default_shipping_address->DeliveryCity;
+        $zip   = $get_user_default_shipping_address->DeliveryZip;
+        $state = strtolower(trim($get_user_default_shipping_address->DeliveryState)); // normalize
+
+        // Check for PO Box in address
+        if (preg_match('/\b(po box|p\.o\. box|pob)\b/i', $address1)) {
+            if ($state === 'ca' || $state === 'california') {
+                return (object) [
+                    'rate'         => 8.75,   // Fixed fallback
+                    'jurisdiction' => 'California',
+                    'city'         => $city,
+                    'county'       => null,
+                    'tax_code'     => 'CA_FALLBACK',
+                ];
+            } else {
+                return (object) [
+                    'rate'         => 0.0,
+                    'jurisdiction' => null,
+                    'city'         => $city,
+                    'county'       => null,
+                    'tax_code'     => 'NO_TAX_POBOX',
+                ];
+            }
+        }
+
+        // Otherwise call API
         try {
             $url = env('CUSTOM_TAX_RATE_URL');
 
@@ -2286,7 +2343,7 @@ class UserHelper
 
                 if (!empty($data['taxRateInfo'][0]['rate'])) {
                     return (object) [
-                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // e.g. 0.1075
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // convert to %
                         'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
                         'city'         => $data['taxRateInfo'][0]['city'] ?? null,
                         'county'       => $data['taxRateInfo'][0]['county'] ?? null,
@@ -2297,10 +2354,21 @@ class UserHelper
 
             return null;
         } catch (\Exception $e) {
-            // Log::error('CDTFA API error: ' . $e->getMessage());
+            // Optional fallback if API fails completely
+            if ($state === 'ca' || $state === 'california') {
+                return (object) [
+                    'rate'         => 8.75,
+                    'jurisdiction' => 'California',
+                    'city'         => $city,
+                    'county'       => null,
+                    'tax_code'     => 'CA_FALLBACK_ERROR',
+                ];
+            }
+
             return null;
         }
     }
+
 
 
     
