@@ -385,7 +385,7 @@
                                     foreach ($order_items as $order_item) {
                                         $custom_tax_rate = App\Models\AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
                                         if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
-                                            $tax_class = App\Helpers\UserHelper::ApplyCustomTaxCheckout($get_user_default_shipping_address);
+                                            $tax_class = App\Helpers\UserHelper::ApplyCustomTaxCheckout($currentOrder);
                                             $tax_rate = $tax_class->rate;
                                         } 
                                         else {
