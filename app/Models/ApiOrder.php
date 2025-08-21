@@ -87,7 +87,13 @@ class ApiOrder extends Model
         'buylist_id',
         'buylist_discount',
         're_order_id',
-        'custom_tax_rate_percent'
+        'custom_tax_rate_percent',
+        'delivery_hours',
+        'location_type',
+        'delievery_fee_disclaimer',
+        'contact_person',
+        'contact_person_phone_number',
+        'request_lift_gate_truck'
         
     ];
     public function contact()
