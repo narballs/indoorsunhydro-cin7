@@ -949,59 +949,60 @@ $cart_price = 0;
                                             </div>
                                         </div>
                                         {{-- new fields for 1000 free shipping promo --}}
-                                        @php
-                                           $delievery_fee = 53; 
-                                        @endphp
-                                        <div class="row justify-content-center border-bottom py-3">
-                                            <div class="col-md-12 mt-1">
-                                                <p class="checkout_product_heading mb-1 ml-0">Available Hours</p>
-                                                <select class="form-control checkout_product_heading" name="delivery_hours" id="delivery_hours">
-                                                    <option value="">Select Hours</option>
-                                                    <option value="9-12pm">9-12pm</option>
-                                                    <option value="12-4pm">12-4pm</option>
-                                                </select>
+                                        @if(!empty($user_address->paymentTerms) && (strtolower($user_address->paymentTerms) === 'pay in advanced') && ($shipping_free_over_1000 == 1))
+                                            @php
+                                            $delievery_fee = 53; 
+                                            @endphp
+                                            <div class="row justify-content-center border-bottom py-3">
+                                                <div class="col-md-12 mt-1">
+                                                    <p class="checkout_product_heading mb-1 ml-0">Available Hours</p>
+                                                    <select class="form-control checkout_product_heading" name="delivery_hours" id="delivery_hours">
+                                                        <option value="">Select Hours</option>
+                                                        <option value="9-12pm">9-12pm</option>
+                                                        <option value="12-4pm">12-4pm</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row justify-content-center border-bottom py-3">
-                                            <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Contact Person to receive order </p>
-                                                <input type="text" name="contact_person" placeholder="Contact Person" id="contact_person"
-                                                    class="form-control fontAwesome checkout_product_heading">
+                                            <div class="row justify-content-center border-bottom py-3">
+                                                <div class="col-md-12">
+                                                    <p class="checkout_product_heading mb-1 ml-0">Contact Person to receive order </p>
+                                                    <input type="text" name="contact_person" placeholder="Contact Person" id="contact_person"
+                                                        class="form-control fontAwesome checkout_product_heading">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row justify-content-center border-bottom py-3">
-                                            <div class="col-md-12">
-                                                <p class="checkout_product_heading mb-1 ml-0">Contact Phone Number <small>(Must be reachable on day of delivery)</small> </p>
-                                                <input type="text" name="contact_person_phone_number" placeholder="Contact Person" id="contact_person_phone_number"
-                                                    class="form-control fontAwesome checkout_product_heading">
+                                            <div class="row justify-content-center border-bottom py-3">
+                                                <div class="col-md-12">
+                                                    <p class="checkout_product_heading mb-1 ml-0">Contact Phone Number <small>(Must be reachable on day of delivery)</small> </p>
+                                                    <input type="text" name="contact_person_phone_number" placeholder="Contact Person Phone" id="contact_person_phone_number"
+                                                        class="form-control fontAwesome checkout_product_heading">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row align-items-center border-bottom py-3">
-                                            <div class="col-md-1 col-2">
-                                                <input type="checkbox" name="delievery_fee_disclaimer" id="delievery_fee_disclaimer" class="delievery_fee_disclaimer">
-                                            </div>
-                                            <div class="col-md-11 col-10">
-                                                <span class="checkout_shipping_methods">
-                                                    If the freight delievery driver cannot reach the the contact person , I may be charged a  {{ $delievery_fee }} (required to accept)
-                                                </span>
+                                            <div class="row justify-content-center border-bottom py-3">
+                                                <div class="col-md-12">
+                                                    <input type="checkbox" name="delievery_fee_disclaimer" id="delievery_fee_disclaimer" class="delievery_fee_disclaimer">
+                                                    <span class="checkout_shipping_methods">
+                                                        If the freight delievery driver cannot reach the the contact person , I may be charged a  ${{ $delievery_fee }} (required to accept)
+                                                    </span>
+                                                </div>
+        
                                             </div>
                                             
-                                        </div>
-                                        <div class="row justify-content-center border-bottom py-3">
-                                            <p class="checkout_product_heading mb-1 ml-0"> <small>Request lift gate truck OR Decline Lift Gate Truck</small> </p>
-                                            <div class="col-md-12">
-                                                <input type="radio" class="request_lift_gate_truck_accept" id="request_lift_gate_truck_accept" name="request_lift_gate_truck" value="accept" style="background: #008BD3;">
-                                                <label for="request_lift_gate_truck_accept" class="checkout_product_heading ml-2 mb-0">
-                                                    Accept 
-                                                </label>
+                                            <div class="row justify-content-center border-bottom py-3">
+                                                <p class="checkout_product_heading mb-1 ml-0"> Request lift gate truck OR Decline Lift Gate Truck </p>
+                                                <div class="col-md-12">
+                                                    <input type="radio" class="request_lift_gate_truck_accept" id="request_lift_gate_truck_accept" name="request_lift_gate_truck" value="accept" style="background: #008BD3;">
+                                                    <label for="request_lift_gate_truck_accept" class="checkout_product_heading ml-2 mb-0">
+                                                        Accept 
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                        <input type="radio" class="request_lift_gate_truck_reject" id="request_lift_gate_truck_reject" name="request_lift_gate_truck" value="reject" style="background: #008BD3;">
+                                                        <label for="request_lift_gate_truck_reject" class="checkout_product_heading ml-2 mb-0">
+                                                        Reject 
+                                                    </label>
+                                                </div>                                            
                                             </div>
-                                            <div class="col-md-12">
-                                                    <input type="radio" class="request_lift_gate_truck_reject" id="request_lift_gate_truck_reject" name="request_lift_gate_truck" value="reject" style="background: #008BD3;">
-                                                    <label for="request_lift_gate_truck_reject" class="checkout_product_heading ml-2 mb-0">
-                                                    Reject 
-                                                </label>
-                                            </div>                                            
-                                        </div>
+                                        @endif
                                         {{-- end --}}
                                         <div class="row justify-content-center border-bottom py-3">
                                             <div class="col-md-12">
