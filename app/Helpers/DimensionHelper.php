@@ -10,14 +10,14 @@ class DimensionHelper
      * Resolve product dimensions & weight.
      * Priority:
      *   1) DB values (adjusted for qty)
-     *   2) AI estimate
-     *   3) Formula fallback
+     *   2) AI estimate (if enabled)
+     *   3) Only weight (0 dimensions)
      */
-    public static function resolve($option, int $qty = 1): array
+    public static function resolve($option, int $qty = 1, bool $useAI = false): array
     {
         $weight = (float)($option->optionWeight ?? 0);
 
-        // 1) Use DB values if available
+        // 1) DB values if available
         $dbLength = (float)($option->products->length ?? 0);
         $dbWidth  = (float)($option->products->width ?? 0);
         $dbHeight = (float)($option->products->height ?? 0);
@@ -26,47 +26,35 @@ class DimensionHelper
             return self::adjustForQuantity($dbLength, $dbWidth, $dbHeight, $weight, $qty);
         }
 
-        // 2) Try AI estimate
-        try {
-            $aiDims = self::predictWithAI($option->products->name ?? 'Unknown', $weight);
-            if ($aiDims[0] > 0 && $aiDims[1] > 0 && $aiDims[2] > 0) {
-                return self::adjustForQuantity($aiDims[0], $aiDims[1], $aiDims[2], $weight, $qty);
+        // 2) Optional AI
+        if ($useAI) {
+            try {
+                $aiDims = self::predictWithAI($option->products->name ?? 'Unknown', $weight);
+                if ($aiDims[0] > 0 && $aiDims[1] > 0 && $aiDims[2] > 0) {
+                    return self::adjustForQuantity($aiDims[0], $aiDims[1], $aiDims[2], $weight, $qty);
+                }
+            } catch (\Exception $e) {
+                // fail silently
             }
-        } catch (\Exception $e) {
-            // fail silently → fallback
         }
 
-        // 3) Formula fallback (last resort)
-        $fallback = self::fallbackFormula($weight);
-        return self::adjustForQuantity($fallback[0], $fallback[1], $fallback[2], $weight, $qty);
+        // 3) Only weight (no dimensions)
+        return [0, 0, 0, $weight * $qty];
     }
 
-
-    /**
-     * Adjust dimensions for multiple quantity
-     * (stacking products in layers inside one box)
-     */
     private static function adjustForQuantity(float $L, float $W, float $H, float $weight, int $qty): array
     {
         if ($qty <= 1) {
             return [$L, $W, $H, $weight];
         }
 
-        // Assume best fit stacking (greedy):
-        // Try to keep L and W same, and stack height
-        $stackH = $H * $qty;
+        if ($L > 0 && $W > 0 && $H > 0) {
+            return [$L, $W, $H * $qty, $weight * $qty];
+        }
 
-        // total weight scales linearly
-        $totalWeight = $weight * $qty;
-
-        // return adjusted "virtual box"
-        return [$L, $W, $stackH, $totalWeight];
+        return [0, 0, 0, $weight * $qty];
     }
 
-
-    /**
-     * Ask AI (OpenAI GPT) for dimension estimates
-     */
     private static function predictWithAI(string $name, float $weight): array
     {
         $apiKey = config('services.ai.ai_key');
@@ -109,23 +97,5 @@ class DimensionHelper
             (float)($data['height'] ?? 0),
             $weight,
         ];
-    }
-
-
-    /**
-     * Formula fallback when both DB + AI fail
-     */
-    private static function fallbackFormula(float $weight): array
-    {
-        $weight = ($weight > 0) ? $weight : 0.5;
-
-        // assume density ~ 10 lb/ft³ = 0.006 lb/in³
-        $density = 0.006;
-        $volume = $weight / $density;
-        $side = pow($volume, 1/3);
-
-        $side = max(4, min($side, 60));
-
-        return [$side, $side, $side, $weight];
     }
 }
