@@ -573,6 +573,7 @@ class CheckoutController extends Controller
 
         $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;
         $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0;
+        $main_product_weight = 0;
 
         
         foreach ($cart_items as $cart_item) {
@@ -602,6 +603,18 @@ class CheckoutController extends Controller
             $pots_category = 'pots & containers';
 
             foreach ($product_options as $product_option) {
+                $main_qty = (int)$cart_item['quantity'];
+                $main_option_weight = (float)$product_option->optionWeight;
+
+                // 🚨 Validate this product immediately
+                if ($main_option_weight <= 0) {
+                    return redirect()->back()->with(
+                        'error',
+                        "Product \"{$product_option->products->name}\" is missing a weight value. 
+                        Shipping cannot be exactly calculated. Please contact support to update the product details."
+                    );
+                }
+
                 if (!empty($product_option->products) && !empty($product_option->products->categories) 
                     && strtolower($product_option->products->categories->name) === $pots_category) {
 
@@ -696,6 +709,8 @@ class CheckoutController extends Controller
         // final weight for ShipStation
         $products_weight = $billable;
 
+
+        
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
         if ($enable_extra_shipping_value == true && !empty($extra_shipping_value) &&  $products_weight > 150) {
