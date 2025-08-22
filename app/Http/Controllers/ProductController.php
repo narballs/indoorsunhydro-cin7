@@ -2828,7 +2828,9 @@ class ProductController extends Controller
             ->pluck('product_options.option_id');
 
         // Fetch valid product IDs from valid options
-        $valid_product_ids = ProductOption::whereIn('option_id', $valid_option_ids)->pluck('product_id');
+        $valid_product_ids = ProductOption::whereIn('option_id', $valid_option_ids)
+        ->where('status', '!=', 'Disabled') // ✅ ensure only active options count
+        ->pluck('product_id');
 
         // Final product filtering
         $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);
