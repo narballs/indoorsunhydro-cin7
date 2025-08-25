@@ -178,7 +178,7 @@ class OrderHelper {
                 "voucherCode" => null,
                 "deliveryInstructions" => $order->memo,
                 "status" => "VOID",
-                "invoiceDate" => $dateCreated,
+                "invoiceDate" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced'  ? $dateCreated : null,
                 "invoiceNumber" => 4232,
                 "dispatchedDate" => null,
                 "logisticsCarrier" => $order->logisticsCarrier,
