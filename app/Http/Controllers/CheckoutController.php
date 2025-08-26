@@ -575,6 +575,9 @@ class CheckoutController extends Controller
         $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0;
         $main_product_weight = 0;
 
+        $allDims = []; 
+        $get_pot_category_dimensions = null;
+
         
         foreach ($cart_items as $cart_item) {
             $product = Product::where('product_id' , $cart_item['product_id'])->first();
@@ -635,27 +638,20 @@ class CheckoutController extends Controller
 
                 } else {
                     if (!empty($product_option->products)) {
-                        $qty = (int)$cart_item['quantity'];
+                        [$L, $W, $H, $Wt] = DimensionHelper::resolve($product_option, $main_qty);
 
-                        
-                        [$L, $W, $H, $Wt] = DimensionHelper::resolve($product_option);
+                        $isCompressed = (bool)($product_option->products->is_compressed ?? false);
 
-                        
-                        $isCompressed = (bool) ($product_option->products->is_compressed ?? false);
                         if ($isCompressed) {
                             ShippingHelper::accumulateCompressedItem(
-                                $qty, $L, $W, $H,
+                                $main_qty, $L, $W, $H,
                                 $comp_layer_L, $comp_layer_W, $comp_layer_H,
                                 $comp_box_L,   $comp_box_W,   $comp_box_H,
                                 30.0, 0.6, 0.25, 12
                             );
                         } else {
-                            $products_lengths[] = $L;
-                            $products_widths[]  = $W;
-                            $total_height      += $H * $qty;
+                            $allDims[] = [$L, $W, $H, $Wt];
                         }
-
-                        $products_weight += $Wt * $qty;
                     }
                 }
             }
@@ -668,9 +664,8 @@ class CheckoutController extends Controller
         );
 
         // Non-compressed footprint/height
-        $noncomp_L = !empty($products_lengths) ? max($products_lengths) : 0.0;
-        $noncomp_W = !empty($products_widths)  ? max($products_widths)  : 0.0;
-        $noncomp_H = (float)$total_height;
+        // merge non-compressed SKUs
+        [$noncomp_L, $noncomp_W, $noncomp_H, $noncomp_Wt] = DimensionHelper::mergeCarton($allDims);
 
         // Merge with pots (if any) AND compressed box
         if (!empty($pot_category_flag) && !empty($get_pot_category_dimensions)) {
@@ -682,23 +677,27 @@ class CheckoutController extends Controller
             $product_length = max($comp_box_L, $noncomp_L, $potL);
             $product_width  = max($comp_box_W, $noncomp_W, $potW);
             $product_height = $comp_box_H + $noncomp_H + $potH;
-            $actual_total   = $products_weight + $potWT;
+
+            // ✅ total physical weight always includes qty
+            $physical_weight = $noncomp_Wt + $potWT;
 
         } else {
             $product_length = max($comp_box_L, $noncomp_L);
             $product_width  = max($comp_box_W, $noncomp_W);
             $product_height = $comp_box_H + $noncomp_H;
-            $actual_total   = $products_weight;
+
+            // ✅ weight according to qty
+            $physical_weight = $noncomp_Wt;
         }
 
         // dimensional weight
-        $DIM_DIVISOR = 166;
+        $DIM_DIVISOR = 166; // use 139 for UPS/FedEx
         $dim_weight = ($product_length > 0 && $product_width > 0 && $product_height > 0)
             ? (($product_length * $product_width * $product_height) / $DIM_DIVISOR)
             : 0.0;
 
-        // billable weight
-        $billable = max($actual_total, $dim_weight);
+        // billable weight (max of actual vs dim)
+        $billable = max($physical_weight, $dim_weight);
 
         // oversize rule
         $girth = 2 * ($product_width + $product_height);
