@@ -39,6 +39,7 @@ use App\Models\ShippingMethod;
 use App\Models\ShippingQuoteSetting;
 use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderManagementController extends Controller
 {
@@ -616,7 +617,6 @@ class OrderManagementController extends Controller
 
                 if (!empty($order->is_stripe) && $order->is_stripe == 1) {
                     if (strtolower($order->payment_status) === 'paid') {
-                        // ✅ Block Stripe > 1k if disabled
                         if (!$disableStripe || $orderTotal <= 1000) {
                             $order_data = OrderHelper::get_order_data_to_process($order);
                             SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
@@ -625,7 +625,6 @@ class OrderManagementController extends Controller
                                 'status' => 'success',
                             ]);
                         } else {
-                            // Stripe order blocked
                             return response()->json([
                                 'status'  => 'failed',
                                 'message' => 'Stripe order above 1k is blocked.',
