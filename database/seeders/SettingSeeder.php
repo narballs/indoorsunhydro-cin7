@@ -663,6 +663,12 @@ class SettingSeeder extends Seeder
                 'option_value' => 'No',
             ],
 
+            [
+                'option_name' => 'disable_stripe_fullfull_over_1k',
+                'type' => 'yes/no',
+                'option_value' => 'No',
+            ],
+
         ];
 
         foreach($setting as $setting) {

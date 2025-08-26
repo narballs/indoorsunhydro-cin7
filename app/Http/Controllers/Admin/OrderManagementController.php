@@ -39,6 +39,7 @@ use App\Models\ShippingMethod;
 use App\Models\ShippingQuoteSetting;
 use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderManagementController extends Controller
 {
@@ -576,25 +577,62 @@ class OrderManagementController extends Controller
             ->with('user.contact')
             ->with('texClasses')
             ->first();
+        $disable_stripe_fullfull_over_1k = AdminSetting::where('option_name', 'disable_stripe_fullfull_over_1k')->first();
         $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
         
         if (empty($job)) {
 
             $contact = Contact::where('contact_id', $order->memberId)->first();
 
+            // if (!empty($contact) && $contact->is_test_user == 0) {
+
+            //     if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+            //         if (strtolower($order->payment_status) === 'paid') {
+            //             $order_data = OrderHelper::get_order_data_to_process($order);
+            //             SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+            //             return response()->json([
+            //                 'status' => 'success',
+            //             ]);
+            //         }
+            //     } 
+            //     else {
+            //         $order_data = OrderHelper::get_order_data_to_process($order);
+            //         SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+            //         return response()->json([
+            //             'status' => 'success',
+            //         ]);
+            //     }
+            // } else {
+            //     return response()->json([
+            //         'status' => 'failed',
+            //     ]);
+            // }
+
+            $disableStripe = strtolower($disable_stripe_fullfull_over_1k->option_value) === 'yes';
+            $orderTotal    = floatval($order->total_including_tax);
+
             if (!empty($contact) && $contact->is_test_user == 0) {
 
-                if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                if (!empty($order->is_stripe) && $order->is_stripe == 1) {
                     if (strtolower($order->payment_status) === 'paid') {
-                        $order_data = OrderHelper::get_order_data_to_process($order);
-                        SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                        if (!$disableStripe || $orderTotal <= 1000) {
+                            $order_data = OrderHelper::get_order_data_to_process($order);
+                            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
 
-                        return response()->json([
-                            'status' => 'success',
-                        ]);
+                            return response()->json([
+                                'status' => 'success',
+                            ]);
+                        } else {
+                            return response()->json([
+                                'status'  => 'failed',
+                                'message' => 'Stripe order above 1k is blocked.',
+                            ]);
+                        }
                     }
-                } 
-                else {
+                } else {
+                    // Non-Stripe / wholesale always go through
                     $order_data = OrderHelper::get_order_data_to_process($order);
                     SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
 
@@ -602,9 +640,11 @@ class OrderManagementController extends Controller
                         'status' => 'success',
                     ]);
                 }
+
             } else {
                 return response()->json([
                     'status' => 'failed',
+                    'message' => 'Invalid contact or test user.',
                 ]);
             }
             
