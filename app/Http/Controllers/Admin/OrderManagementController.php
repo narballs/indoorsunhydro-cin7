@@ -338,6 +338,12 @@ class OrderManagementController extends Controller
         $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
         $shipping_quotes = ShippingQuoteSetting::where('status' , 1)->get();
+
+        $delievery_fee_settings = AdminSetting::where('option_name', 'delievery_fee_disclaimer')->first();
+        $delievery_fee = !empty($delievery_fee_settings) ? $delievery_fee_settings->option_value : 53;
+
+        $enable_new_promo_for_retail_settings = AdminSetting::where('option_name', 'enable_new_promo_for_retail')->first();
+        $enable_promo_settings = !empty($enable_new_promo_for_retail_settings) && strtolower($enable_new_promo_for_retail_settings->option_value) === 'yes';
         
         return view('admin/order-details', compact(
             'order',
@@ -356,7 +362,10 @@ class OrderManagementController extends Controller
             'po_box_order_shipping_text',
             'po_box_carrier_code',
             'po_box_service_code',
-            'shipping_quotes'
+            'shipping_quotes',
+            'delievery_fee_settings',
+            'delievery_fee',
+            'enable_promo_settings',
 
         ));
     }

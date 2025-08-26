@@ -620,9 +620,6 @@
                                                 </div>
                                             </div>
                                         @endif
-
-
-
                                     </div>
                                     <div class="col-lg-4">
                                         <h3 class="h6 summary-head">Billing address</h3>
@@ -722,6 +719,81 @@
                                 </div>
                             </div>
                         </div>
+                        @if ($order->is_stripe == 1 && floatval($order->total_including_tax) >= 1000 && $enable_promo_settings)
+                            <div class="card my-3 shadow-sm">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-shipping-fast me-2"></i> Free Shipping Promo
+                                    </h5>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1"><i class="fas fa-map-marker-alt me-1"></i> Location Type</h6>
+                                            <p class="fs-6 mb-0 fw-semibold">{{ !empty($order->location_type) ? ucfirst($order->location_type) : '' }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1"><i class="fas fa-clock me-1"></i> Delivery Hours</h6>
+                                            <p class="fs-6 mb-0 fw-semibold">{{ $order->delivery_hours }}</p>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1"><i class="fas fa-truck-loading me-1"></i> Delivery Disclaimer</h6>
+                                            <p class="small mb-2">
+                                                If the freight delivery driver cannot reach the contact person, 
+                                                you may be charged <strong class="text-danger">${{ $delievery_fee }}</strong>.
+                                            </p>
+                                            @if ($order->delievery_fee_disclaimer == 1)
+                                                <span class="text-success fw-semibold">
+                                                    <i class="fas fa-check-circle me-1"></i> Yes
+                                                </span>
+                                            @else
+                                                <span class="text-danger fw-semibold">
+                                                    <i class="fas fa-times-circle me-1"></i> No
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1"><i class="fas fa-truck me-1"></i> Lift Gate Truck</h6>
+                                            @if ($order->request_lift_gate_truck == 'accept')
+                                                <span class="text-success fw-semibold">
+                                                    <i class="fas fa-check-circle me-1"></i> Accepted
+                                                </span>
+                                            @elseif ($order->request_lift_gate_truck == 'reject')
+                                                <span class="text-danger fw-semibold">
+                                                    <i class="fas fa-times-circle me-1"></i> Rejected
+                                                </span>
+                                            @else
+                                                <span class="text-secondary fw-semibold">
+                                                    <i class="fas fa-minus-circle me-1"></i> N/A
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row mb-3">
+                                        
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1"><i class="fas fa-user me-1"></i> Contact Person</h6>
+                                            <p class="fs-6 mb-0 fw-semibold">{{ $order->contact_person }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="mb-1"><i class="fas fa-phone me-1"></i> Phone Number</h6>
+                                            <p class="fs-6 mb-0 fw-semibold">{{ $order->contact_person_phone_number }}</p>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="col-md-3">
