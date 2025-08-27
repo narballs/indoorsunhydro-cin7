@@ -2218,56 +2218,7 @@ class UserHelper
     //     ];
     // }
 
-    // public static function calculateNestedItemDimensions(
-    //     $product_option,
-    //     $product,
-    //     $quantity,
-    //     $products_lengths,
-    //     $products_widths,
-    //     $products_heights,
-    //     $product_height,
-    //     $product_width,
-    //     $product_length,
-    //     $weight
-    // ) {
-    //     // Rotate this pot item
-    //     $pLen = (float) (!empty($product->length) ? $product->length : 0);
-    //     $pWid = (float) (!empty($product->width)  ? $product->width  : 0);
-    //     $pHei = (float) (!empty($product->height) ? $product->height : 0);
-
-    //     $dims = [$pLen, $pWid, $pHei];
-    //     rsort($dims, SORT_NUMERIC); // L >= W >= H
-    //     $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
-
-    //     // Update footprint arrays with rotated L/W
-    //     $products_lengths[] = $L;
-    //     $products_widths[]  = $W;
-
-    //     // STACK height correctly: smallest edge * qty
-    //     $stack_height = $H * (int)$quantity;
-
-    //     // If you still want your tiny per-100 spacer, keep it; else set to 0
-    //     $additional_height = 0.0;
-    //     if ($quantity > 1) {
-    //         $additional_height = floor(($quantity - 1) / 100) * 0.2;
-    //     }
-
-    //     $total_height = $stack_height + $additional_height; // not max()
-
-    //     // Weight: prefer optionWeight (group calc equals unit*qty anyway)
-    //     $unit_weight = (float) ($product_option->optionWeight ?? 0);
-    //     $group_weight     = floor($quantity / 100) * ($unit_weight * 100);
-    //     $remaining_weight = ($quantity % 100) * $unit_weight;
-    //     $total_weight     = $group_weight + $remaining_weight; // == unit_weight * qty
-
-    //     return [
-    //         'products_lengths' => max($products_lengths),
-    //         'products_widths'  => max($products_widths),
-    //         'product_height'   => $total_height,   // stacked, not max height
-    //         'products_weight'  => $total_weight
-    //     ];
-    // }
-
+    
 
     public static function calculateNestedItemDimensions(
         $product_option,
@@ -2287,25 +2238,38 @@ class UserHelper
         $pHei = (float) ($product->height ?? 0);
         $qty  = (int)   ($quantity ?? 0);
 
-        // Keep pots UPRIGHT:
-        // Normalize base so L >= W for consistency
-        if ($pWid > $pLen) { $tmp = $pLen; $pLen = $pWid; $pWid = $tmp; }
+        // Ensure base footprint is consistent (L >= W)
+        if ($pWid > $pLen) { 
+            $tmp = $pLen; 
+            $pLen = $pWid; 
+            $pWid = $tmp; 
+        }
         $L = $pLen;
         $W = $pWid;
-        $H = $pHei; // actual height
+        $H = $pHei;
 
-        // Update local footprint arrays (by value) so max() includes this item
+        // Update footprint arrays (to track max footprint across items)
         $products_lengths[] = $L;
         $products_widths[]  = $W;
 
-        // Stack height = true height * qty (no arbitrary spacers)
-        $total_height = ($qty > 0) ? $H * $qty : 0.0;
+        /**
+         * 🪆 Nesting logic:
+         * - First item = full height
+         * - Each additional item adds only a % of its height
+         */
+        $nesting_factor = 0.1; // 10% of height contributes per extra pot
+        if ($qty > 0) {
+            $extra_height = ($qty - 1) * ($H * $nesting_factor);
+            $total_height = $H + $extra_height;
+        } else {
+            $total_height = 0.0;
+        }
 
-        // Weight: unit * qty (prefer optionWeight)
-        $unit_weight   = (float) ($product_option->optionWeight ?? 0.0);
-        $total_weight  = $unit_weight * $qty;
+        // Weight: option weight × qty
+        $unit_weight  = (float) ($product_option->optionWeight ?? 0.0);
+        $total_weight = $unit_weight * $qty;
 
-        // Return scalars (max footprint across pots seen so far; stacked height)
+        // Return results
         return [
             'products_lengths' => !empty($products_lengths) ? max($products_lengths) : 0.0,
             'products_widths'  => !empty($products_widths)  ? max($products_widths)  : 0.0,
@@ -2313,6 +2277,7 @@ class UserHelper
             'products_weight'  => $total_weight,
         ];
     }
+
 
 
     public static function ApplyCustomTax($contact)
