@@ -221,7 +221,7 @@ class OrderController extends Controller
             }
         } 
         else {
-            if ($shipment_error == 1) {
+            if ($shipment_error == 1 && ($request->shipping_free_over_1000 != 1 && empty($request->shipping_free_over_1000))) {
                 return back()->with('error', 'There was an issue getting a freight quote, please try again later');
             }
 
