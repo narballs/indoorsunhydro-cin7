@@ -144,14 +144,14 @@ class OrderHelper {
                 ? $order->internal_comments . ' ' . $pick_disclaimer 
                 : $order->internal_comments,
 
-                "productTotal" => 100,
+                "productTotal" => !empty($order->productTotal) ? $order->productTotal : 100,
                 "freightTotal" => !empty($order->shipment_price) ? $order->shipment_price : 0.00,
                 "freightDescription" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? 'Pickup Order' : null,
                 "surcharge" => null,
                 "surchargeDescription" => null,
                 "discountTotal" => null,
                 "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount : ' . $buy_list_discount : null,
-                "total" => 100,
+                "total" => !empty($order->total_including_tax) ? $order->total_including_tax : 100,
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
