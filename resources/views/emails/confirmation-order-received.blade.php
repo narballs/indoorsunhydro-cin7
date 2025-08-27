@@ -387,13 +387,14 @@
                     <table width="100%" border="0">
                         <tr>
                             <td width="50%" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
-                                @php
+                                {{-- @php
                                     $taxt_rate = 0;
                                     foreach ($order_items as $order_item) {
                                         $taxt_rate = $order_item->order->texClasses->name;
                                     }
                                 @endphp
-                                Tax ({{ $taxt_rate }})
+                                Tax ({{ $taxt_rate }}) --}}
+                                Tax ({{ !empty($currentOrder->custom_tax_rate_percent) ? $currentOrder->custom_tax_rate_percent : $currentOrder->texClasses->rate }}%)
                             </td>
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
