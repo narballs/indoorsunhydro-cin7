@@ -395,7 +395,7 @@
                                 @endphp
                                 Tax ({{ $taxt_rate }}) --}}
 
-                                @php
+                                {{-- @php
                                     $tax_rate = 0;
                                     foreach ($order_items as $order_item) {
                                         $custom_tax_rate = App\Models\AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
@@ -410,7 +410,8 @@
 
                                     }
                                 @endphp
-                                Tax ({{ $tax_rate }})
+                                Tax ({{ $tax_rate }}) --}}
+                                Tax ({{ !empty($currentOrder->custom_tax_rate_percent) ? $currentOrder->custom_tax_rate_percent : $currentOrder->texClasses->rate }}%)
                             </td>
                             <td align="" style="color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
