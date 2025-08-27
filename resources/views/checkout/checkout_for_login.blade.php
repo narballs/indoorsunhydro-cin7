@@ -1138,7 +1138,9 @@ $cart_price = 0;
                                         <input type="hidden" name="zip_code_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryZip) ?  $get_user_default_shipping_address->DeliveryZip : '' }}">
                                         <input type="hidden" name="country_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryCountry) ?  $get_user_default_shipping_address->DeliveryCountry : 'United States' }}">
                                         <input type="hidden" name="phone_shipping" value="{{ !empty($get_user_default_shipping_address->DeliveryPhone) ?  $get_user_default_shipping_address->DeliveryPhone : '' }}">
-
+                                        <input type="hidden" name="productLength" id="productLength" value="{{ !empty($product_length) ?  $product_length : '' }}">
+                                        <input type="hidden" name="productWidth" id="productWidth" value="{{ !empty($product_width) ?  $product_width : '' }}">
+                                        <input type="hidden" name="productHeight" id="productHeight" value="{{ !empty($product_height) ?  $product_height : '' }}"> 
 
                                         <input type="hidden" name="incl_tax" id="incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">
                                         <input type="hidden" name="old_incl_tax" id="old_incl_tax" value="{{ number_format($total_including_tax, 2, '.', '') }}">

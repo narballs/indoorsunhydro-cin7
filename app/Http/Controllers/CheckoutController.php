@@ -713,7 +713,7 @@ class CheckoutController extends Controller
 
         $extra_shipping_value = AdminSetting::where('option_name', 'extra_shipping_value')->first();
         if ($enable_extra_shipping_value == true && !empty($extra_shipping_value) &&  $products_weight > 150) {
-            if ($sum_of_width > 40 || $product_height > 40 || $sum_of_length > 40) {
+            if ($product_width > 40 || $product_height > 40 || $product_length > 40) {
                 $extra_shipping_value = !empty($extra_shipping_value) ? floatval($extra_shipping_value->option_value) : 0;
             } else {
                 $extra_shipping_value = 0;
@@ -1375,7 +1375,10 @@ class CheckoutController extends Controller
                 'buyListdiscount_type',
                 'buy_list_discount_calculated',
                 'buy_list_id',
-                're_order_id'
+                're_order_id',
+                'product_width',
+                'product_length',
+                'product_height',
 
 
                 // 'toggle_shipment_insurance'
