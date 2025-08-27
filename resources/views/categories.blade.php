@@ -118,7 +118,7 @@
          </div>
       @endif
       @foreach ($products as $key => $product)
-      @foreach($product->options->where('status', '!=', 'Disabled') as $option)
+      @foreach($product->options as $option)
       @include('product_row')
       @endforeach
       @endforeach
@@ -253,7 +253,7 @@
          </div>
       @endif
       @foreach ($products as $key => $product)
-      @foreach($product->options->where('status', '!=', 'Disabled') as $option)
+      @foreach($product->options as $option)
       @include('product_row')
       @endforeach
       @endforeach
@@ -375,7 +375,7 @@
          </div>
       @endif
       @foreach ($products as $key => $product)
-      @foreach($product->options->where('status', '!=', 'Disabled') as $option)
+      @foreach($product->options as $option)
       @include('product_row')
       @endforeach
       @endforeach
