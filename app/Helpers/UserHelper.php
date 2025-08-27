@@ -2171,55 +2171,6 @@ class UserHelper
     }
 
 
-    // public static function calculateNestedItemDimensions(
-    //     $product_option,
-    //     $product,
-    //     $quantity,
-    //     $products_lengths,
-    //     $products_widths,
-    //     $products_heights,
-    //     $product_height,
-    //     $product_width,
-    //     $product_length,
-    //     $weight
-    // ) {
-    //     $additional_height = 0;
-    //     $total_height = 0;
-    //     $total_weight = 0;
-    
-    //     // Use base unit weight per item (optionWeight) for calculation
-    //     $unit_weight = $product_option->optionWeight;
-    
-    //     if ($quantity > 1) {
-    //         $additional_height = floor(($quantity - 1) / 100) * 0.2;
-    //     }
-    
-    //     array_push($products_lengths, !empty($product->length) ? $product->length : 0);
-    //     array_push($products_widths, !empty($product->width) ? $product->width : 0);
-    //     array_push($products_heights, !empty($product->height) ? $product->height : 0);
-    
-    //     $product_height += !empty($product->height) ? $product->height * $quantity : 0;
-    //     $product_width += !empty($product->width) ? $product->width * $quantity : 0;
-    //     $product_length += !empty($product->length) ? $product->length * $quantity : 0;
-    
-    //     $max_height = max($products_heights);
-    //     $total_height = $max_height + $additional_height;
-    
-    //     // Weight calculation per 100 items group
-    //     $group_weight = floor($quantity / 100) * ($unit_weight * 100);
-    //     $remaining_weight = ($quantity % 100) * $unit_weight;
-    //     $total_weight = $group_weight + $remaining_weight;
-    
-    //     return [
-    //         'products_lengths' => max($products_lengths),
-    //         'products_widths' => max($products_widths),
-    //         'product_height' => $total_height,
-    //         'products_weight' => $total_weight
-    //     ];
-    // }
-
-    
-
     public static function calculateNestedItemDimensions(
         $product_option,
         $product,
@@ -2232,51 +2183,100 @@ class UserHelper
         $product_length,
         $weight
     ) {
-        // Read raw dims; default to 0 if missing
-        $pLen = (float) ($product->length ?? 0);
-        $pWid = (float) ($product->width  ?? 0);
-        $pHei = (float) ($product->height ?? 0);
-        $qty  = (int)   ($quantity ?? 0);
-
-        // Ensure base footprint is consistent (L >= W)
-        if ($pWid > $pLen) { 
-            $tmp = $pLen; 
-            $pLen = $pWid; 
-            $pWid = $tmp; 
+        $additional_height = 0;
+        $total_height = 0;
+        $total_weight = 0;
+    
+        // Use base unit weight per item (optionWeight) for calculation
+        $unit_weight = $product_option->optionWeight;
+    
+        if ($quantity > 1) {
+            $additional_height = floor(($quantity - 1) / 100) * 0.2;
         }
-        $L = $pLen;
-        $W = $pWid;
-        $H = $pHei;
-
-        // Update footprint arrays (to track max footprint across items)
-        $products_lengths[] = $L;
-        $products_widths[]  = $W;
-
-        /**
-         * 🪆 Nesting logic:
-         * - First item = full height
-         * - Each additional item adds only a % of its height
-         */
-        $nesting_factor = 0.1; // 10% of height contributes per extra pot
-        if ($qty > 0) {
-            $extra_height = ($qty - 1) * ($H * $nesting_factor);
-            $total_height = $H + $extra_height;
-        } else {
-            $total_height = 0.0;
-        }
-
-        // Weight: option weight × qty
-        $unit_weight  = (float) ($product_option->optionWeight ?? 0.0);
-        $total_weight = $unit_weight * $qty;
-
-        // Return results
+    
+        array_push($products_lengths, !empty($product->length) ? $product->length : 0);
+        array_push($products_widths, !empty($product->width) ? $product->width : 0);
+        array_push($products_heights, !empty($product->height) ? $product->height : 0);
+    
+        $product_height += !empty($product->height) ? $product->height * $quantity : 0;
+        $product_width += !empty($product->width) ? $product->width * $quantity : 0;
+        $product_length += !empty($product->length) ? $product->length * $quantity : 0;
+    
+        $max_height = max($products_heights);
+        $total_height = $max_height + $additional_height;
+    
+        // Weight calculation per 100 items group
+        $group_weight = floor($quantity / 100) * ($unit_weight * 100);
+        $remaining_weight = ($quantity % 100) * $unit_weight;
+        $total_weight = $group_weight + $remaining_weight;
+    
         return [
-            'products_lengths' => !empty($products_lengths) ? max($products_lengths) : 0.0,
-            'products_widths'  => !empty($products_widths)  ? max($products_widths)  : 0.0,
-            'product_height'   => $total_height,
-            'products_weight'  => $total_weight,
+            'products_lengths' => max($products_lengths),
+            'products_widths' => max($products_widths),
+            'product_height' => $total_height,
+            'products_weight' => $total_weight
         ];
     }
+
+    
+
+    // public static function calculateNestedItemDimensions(
+    //     $product_option,
+    //     $product,
+    //     $quantity,
+    //     $products_lengths,
+    //     $products_widths,
+    //     $products_heights,
+    //     $product_height,
+    //     $product_width,
+    //     $product_length,
+    //     $weight
+    // ) {
+    //     // Read raw dims; default to 0 if missing
+    //     $pLen = (float) ($product->length ?? 0);
+    //     $pWid = (float) ($product->width  ?? 0);
+    //     $pHei = (float) ($product->height ?? 0);
+    //     $qty  = (int)   ($quantity ?? 0);
+
+    //     // Ensure base footprint is consistent (L >= W)
+    //     if ($pWid > $pLen) { 
+    //         $tmp = $pLen; 
+    //         $pLen = $pWid; 
+    //         $pWid = $tmp; 
+    //     }
+    //     $L = $pLen;
+    //     $W = $pWid;
+    //     $H = $pHei;
+
+    //     // Update footprint arrays (to track max footprint across items)
+    //     $products_lengths[] = $L;
+    //     $products_widths[]  = $W;
+
+    //     /**
+    //      * 🪆 Nesting logic:
+    //      * - First item = full height
+    //      * - Each additional item adds only a % of its height
+    //      */
+    //     $nesting_factor = 0.1; // 10% of height contributes per extra pot
+    //     if ($qty > 0) {
+    //         $extra_height = ($qty - 1) * ($H * $nesting_factor);
+    //         $total_height = $H + $extra_height;
+    //     } else {
+    //         $total_height = 0.0;
+    //     }
+
+    //     // Weight: option weight × qty
+    //     $unit_weight  = (float) ($product_option->optionWeight ?? 0.0);
+    //     $total_weight = $unit_weight * $qty;
+
+    //     // Return results
+    //     return [
+    //         'products_lengths' => !empty($products_lengths) ? max($products_lengths) : 0.0,
+    //         'products_widths'  => !empty($products_widths)  ? max($products_widths)  : 0.0,
+    //         'product_height'   => $total_height,
+    //         'products_weight'  => $total_weight,
+    //     ];
+    // }
 
 
 
