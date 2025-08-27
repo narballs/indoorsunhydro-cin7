@@ -101,7 +101,7 @@ class OrderController extends Controller
             $shipstation_shipment_value = floatval($actual_shipping_price);
         }
         elseif (!empty($buyListData) &&  $buyListData == true && $buyListShipping == 0) {
-            if ($shipment_error == 1) {
+            if ($shipment_error == 1 && ($request->shipping_free_over_1000 != 1 && empty($request->shipping_free_over_1000))) {
                 return back()->with('error', 'There was an issue getting a freight quote, please try again later');
             }
 
