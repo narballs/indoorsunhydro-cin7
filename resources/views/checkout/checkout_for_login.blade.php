@@ -1290,16 +1290,12 @@ $cart_price = 0;
                                                             <input type="hidden" name="shipping_service_code" id="" value="{{$shipping_service_code}}">
                                                             <input type="hidden" name="shipment_cost_single" id="shipment_price_heavy_weight" value="{{!empty($shipment_price) ? number_format($shipment_price , 2, '.', '')  : 0 }}">
                                                             <div class="row justify-content-center border-bottom align-items-center py-2">
-                                                                @if ($shipment_error == 1)
-                                                                    <div class="col-md-12">
-                                                                        <span class="checkout_shipping_price text-danger">
-                                                                            There was an issue getting a freight quote, please try again later
-                                                                        </span>
-                                                                    </div>
-                                                                @else
+                                                                {{-- @if ($shipment_error == 1) --}}
+                                                                @if ($shipping_free_over_1000 == 1)
+                                                                    
                                                                     <div class="col-md-9 col-8">
                                                                         <span class="checkout_shipping_heading">Shipment Price</span>
-                                                                        @if ($shipping_free_over_1000 == 1)
+                                                                        {{-- @if ($shipping_free_over_1000 == 1) --}}
                                                                             @if (!empty($enable_free_shipping_banner) && (strtolower($enable_free_shipping_banner->option_value) == 'yes'))
                                                                                 <div class="row align-items-center">
                                                                                     <div class="col-md-2 col-3">
@@ -1315,12 +1311,21 @@ $cart_price = 0;
                                                                                     </div>
                                                                                 </div>
                                                                             @endif
-                                                                        @endif
+                                                                        {{-- @endif --}}
                                                                     </div>
                                                                     <div class="col-md-3 col-4 text-right">
                                                                         <span class="checkout_shipping_price">${{!empty($shipment_price)  ? number_format($shipment_price , 2)  : 0}}</span>
                                                                     </div>
+                                                                @else
+                                                                    @if ($shipment_error == 1)
+                                                                    <div class="col-md-12">
+                                                                            <span class="checkout_shipping_price text-danger">
+                                                                                There was an issue getting a freight quote, please try again later
+                                                                            </span>
+                                                                        </div>
+                                                                    @endif
                                                                 @endif
+                                                                {{-- @endif --}}
                                                                 {{-- <div class="col-md-3 col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div> --}}
                                                             </div>
                                                         @else
