@@ -144,20 +144,20 @@ class OrderHelper {
                 ? $order->internal_comments . ' ' . $pick_disclaimer 
                 : $order->internal_comments,
 
-                "productTotal" => !empty($order->productTotal) ? $order->productTotal : 100,
+                "productTotal" => null,
                 "freightTotal" => !empty($order->shipment_price) ? $order->shipment_price : 0.00,
                 "freightDescription" => !empty($order->logisticsCarrier) && strtolower($order->logisticsCarrier) === 'pickup order' ? 'Pickup Order' : null,
                 "surcharge" => null,
                 "surchargeDescription" => null,
                 "discountTotal" => null,
                 "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount : ' . $buy_list_discount : null,
-                "total" => !empty($order->total_including_tax) ? $order->total_including_tax : 100,
+                "total" => null,
                 "currencyCode" => "USD",
                 "currencyRate" => 59.0,
                 "currencySymbol" => "$",
                 
                 "taxStatus" => 2, //(1 = Tax inclusive, 2 = Tax exclusive, 3 = Tax exempt)
-                "taxRate" => !empty($order->custom_tax_rate_percent) ? $order->custom_tax_rate_percent : $order->texClasses->rate,
+                "taxRate" => isset($order->custom_tax_rate_percent) ? $order->custom_tax_rate_percent : $order->texClasses->rate,
 
                 "source" => null,
                 "accountingAttributes" =>
