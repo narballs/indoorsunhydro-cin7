@@ -2322,7 +2322,13 @@ class UserHelper
             ->first();
 
         if (empty($get_contact)) {
-            return null;
+            return (object) [
+                'rate'         => 0.0,
+                'jurisdiction' => null,
+                'city'         => null,
+                'county'       => null,
+                'tax_code'     => 'NO_CONTACT',
+            ];
         }
 
         $address1 = trim($get_contact->address1 . ' ' . $get_contact->address2);
@@ -2377,8 +2383,6 @@ class UserHelper
                     ];
                 }
             }
-
-            return null;
         } catch (\Exception $e) {
             if ($state === 'ca' || $state === 'california') {
                 return (object) [
@@ -2389,8 +2393,16 @@ class UserHelper
                     'tax_code'     => 'CA_FALLBACK_ERROR',
                 ];
             }
-            return null;
         }
+
+        // ✅ Always return a safe object as fallback
+        return (object) [
+            'rate'         => 0.0,
+            'jurisdiction' => null,
+            'city'         => $city,
+            'county'       => null,
+            'tax_code'     => 'NO_TAX',
+        ];
     }
 
 
@@ -2419,15 +2431,15 @@ class UserHelper
                     'county'       => null,
                     'tax_code'     => 'CA_FALLBACK',
                 ];
-            } else {
-                return (object) [
-                    'rate'         => 0.0,
-                    'jurisdiction' => null,
-                    'city'         => $city,
-                    'county'       => null,
-                    'tax_code'     => 'NO_TAX_POBOX',
-                ];
             }
+
+            return (object) [
+                'rate'         => 0.0,
+                'jurisdiction' => null,
+                'city'         => $city,
+                'county'       => null,
+                'tax_code'     => 'NO_TAX_POBOX',
+            ];
         }
 
         // ✅ Otherwise call API
@@ -2445,7 +2457,7 @@ class UserHelper
 
                 if (!empty($data['taxRateInfo'][0]['rate'])) {
                     return (object) [
-                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // convert to %
+                        'rate'         => (float) $data['taxRateInfo'][0]['rate'] * 100,   // convert 0.0875 → 8.75
                         'jurisdiction' => $data['taxRateInfo'][0]['jurisdiction'] ?? null,
                         'city'         => $data['taxRateInfo'][0]['city'] ?? null,
                         'county'       => $data['taxRateInfo'][0]['county'] ?? null,
@@ -2453,8 +2465,6 @@ class UserHelper
                     ];
                 }
             }
-
-            return null;
         } catch (\Exception $e) {
             // ✅ Fallback if API fails
             if ($state === 'ca' || $state === 'california') {
@@ -2466,10 +2476,18 @@ class UserHelper
                     'tax_code'     => 'CA_FALLBACK_ERROR',
                 ];
             }
-
-            return null;
         }
+
+        // ✅ Always return a safe object as fallback
+        return (object) [
+            'rate'         => 0.0,
+            'jurisdiction' => null,
+            'city'         => $city,
+            'county'       => null,
+            'tax_code'     => 'NO_TAX',
+        ];
     }
+
 
 
 
