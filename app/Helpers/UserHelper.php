@@ -2330,8 +2330,11 @@ class UserHelper
         $zip      = $get_contact->postCode;
         $state    = strtolower(trim($get_contact->state)); // normalize
 
-        // Check if address contains PO Box
-        if (preg_match('/\b(po box|p\.o\. box|pob)\b/i', $address1)) {
+        // ✅ Normalize address to lowercase
+        $normalizedAddress = strtolower($address1);
+
+        // ✅ Improved regex for PO Box / Post Office
+        if (preg_match('/\b(po\s*box|p\.?\s*o\.?\s*box|pob|post\s*office(\s*box)?|postoffice(\s*box)?)\b/', $normalizedAddress)) {
             if ($state === 'ca' || $state === 'california') {
                 return (object) [
                     'rate'         => 8.75,   // Fixed fallback rate
@@ -2340,18 +2343,18 @@ class UserHelper
                     'county'       => null,
                     'tax_code'     => 'CA_FALLBACK',
                 ];
-            } else {
-                return (object) [
-                    'rate'         => 0.0,
-                    'jurisdiction' => null,
-                    'city'         => $city,
-                    'county'       => null,
-                    'tax_code'     => 'NO_TAX_POBOX',
-                ];
             }
+
+            return (object) [
+                'rate'         => 0.0,
+                'jurisdiction' => null,
+                'city'         => $city,
+                'county'       => null,
+                'tax_code'     => 'NO_TAX_POBOX',
+            ];
         }
 
-        // Otherwise try API
+        // ✅ Otherwise try API
         try {
             $url = env('CUSTOM_TAX_RATE_URL');
 
@@ -2403,11 +2406,14 @@ class UserHelper
         $zip   = $get_user_default_shipping_address->DeliveryZip;
         $state = strtolower(trim($get_user_default_shipping_address->DeliveryState)); // normalize
 
-        // Check for PO Box in address
-        if (preg_match('/\b(po box|p\.o\. box|pob)\b/i', $address1)) {
+        // Normalize address to lowercase for PO Box / Post Office check
+        $normalizedAddress = strtolower($address1);
+
+        // ✅ Check for PO Box or Post Office in address
+        if (preg_match('/\b(po\s*box|p\.?\s*o\.?\s*box|pob|post\s*office(\s*box)?)\b/', $normalizedAddress)) {
             if ($state === 'ca' || $state === 'california') {
                 return (object) [
-                    'rate'         => 8.75,   // Fixed fallback
+                    'rate'         => 8.75,   // Fixed fallback for CA PO Box
                     'jurisdiction' => 'California',
                     'city'         => $city,
                     'county'       => null,
@@ -2424,7 +2430,7 @@ class UserHelper
             }
         }
 
-        // Otherwise call API
+        // ✅ Otherwise call API
         try {
             $url = env('CUSTOM_TAX_RATE_URL');
 
@@ -2450,7 +2456,7 @@ class UserHelper
 
             return null;
         } catch (\Exception $e) {
-            // Optional fallback if API fails completely
+            // ✅ Fallback if API fails
             if ($state === 'ca' || $state === 'california') {
                 return (object) [
                     'rate'         => 8.75,
@@ -2464,6 +2470,7 @@ class UserHelper
             return null;
         }
     }
+
 
 
 
