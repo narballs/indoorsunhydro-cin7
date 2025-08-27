@@ -52,6 +52,8 @@ class AutoOrdersSync extends Command
             return;
         }
 
+        $disable_stripe_fullfull_over_1k = AdminSetting::where('option_name', 'disable_stripe_fullfull_over_1k')->first();
+
         $minutes = $this->option('minutes');
 
         $execution_time = date('Y-m-d H:i:s', strtotime('-' . $minutes . ' minutes'));
@@ -80,15 +82,41 @@ class AutoOrdersSync extends Command
 
             $contact = Contact::where('contact_id', $order->memberId)->first();
 
+            // if (!empty($contact) && $contact->is_test_user == 0) {
+            //     if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+            //         if (strtolower($order->payment_status) === 'paid') {
+            //             $order_data = OrderHelper::get_order_data_to_process($order);
+            //             SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+            //             sleep(20);
+            //         }
+            //     } else {
+            //         $order_data = OrderHelper::get_order_data_to_process($order);
+            //         SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+            //         sleep(20);
+            //     }
+            // }
+
+
+            $disableStripe = strtolower($disable_stripe_fullfull_over_1k->option_value) === 'yes';
+            $orderTotal    = floatval($order->total_including_tax);
+
             if (!empty($contact) && $contact->is_test_user == 0) {
                 $this->info('Order Date ' . $order->created_at);
-                if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+
+                if (!empty($order->is_stripe) && $order->is_stripe == 1) {
                     if (strtolower($order->payment_status) === 'paid') {
-                        $order_data = OrderHelper::get_order_data_to_process($order);
-                        SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
-                        sleep(20);
+                        // process only if not disabled OR under limit
+                        if (!$disableStripe || $orderTotal <= 1000) {
+                            $order_data = OrderHelper::get_order_data_to_process($order);
+                            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                            sleep(20);
+                        } else {
+                            $this->warn("Stripe order above 1k blocked: {$order->id}");
+                            continue;
+                        }
                     }
                 } else {
+                    // Non-stripe / wholesale always go through
                     $order_data = OrderHelper::get_order_data_to_process($order);
                     SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
                     sleep(20);

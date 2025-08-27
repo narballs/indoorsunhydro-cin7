@@ -496,6 +496,7 @@ class OrderController extends Controller
                     $order->payment_status = "unpaid";
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
+                    $order->custom_tax_rate_percent = $request->custom_tax_rate_percent;
                     $order->user_switch = $user_switch;
                     $order->total_including_tax = $request->incl_tax;
                     $order->po_number = $request->po_number;
@@ -691,6 +692,38 @@ class OrderController extends Controller
                 }
                 elseif ($go_to_stripe_checkout) {
 
+                    // adding validation for promo
+                    $enable_new_promo_for_retail_settings = AdminSetting::where('option_name', 'enable_new_promo_for_retail')->first();
+                    $enable_promo_settings = !empty($enable_new_promo_for_retail_settings) && strtolower($enable_new_promo_for_retail_settings->option_value) === 'yes';
+                    if (!empty($request->shipping_free_over_1000) && $request->shipping_free_over_1000 == '1' && $enable_promo_settings) {
+                        $request->validate(
+                            [
+                                'delivery_hours' => 'required',
+                                'location_type' => 'required',
+                                'delievery_fee_disclaimer' => 'accepted',
+                                'contact_person' => 'required',
+                                'contact_person_phone_number' => 'required',
+                                'request_lift_gate_truck' => 'required|in:accept,reject',
+                                'location_type' => 'required|in:residential,commercial',
+                            ],
+                            [
+                                'delivery_hours.required' => 'Please select Delivery Hours.',
+                                'location_type.required' => 'Please select Location Type.',
+                                'delievery_fee_disclaimer.accepted' => 'You must accept the Delivery Disclaimer.',
+                                'contact_person.required' => 'Please enter the name of the Contact Person.',
+                                'contact_person_phone_number.required' => 'Please enter the phone number of the Contact Person.',
+                                'request_lift_gate_truck.required' => 'Please accept or reject the Lift Gate Truck option.',
+                                'request_lift_gate_truck.in' => 'Invalid choice for Lift Gate Truck option.',
+                                'location_type.required' => 'Please select a Location Type.',
+                                'location_type.in' => 'Invalid Location Type selected.',
+                            ]
+                        );
+                    }
+ 
+                    
+                    // end 
+
+
                     if (floatval($order_total)  < floatval(0.50)) {
                         return back()->with('error', 'Order total must be greater or equal to than $0.50 to proceed with payment.');
                     }
@@ -704,6 +737,12 @@ class OrderController extends Controller
                     }
                     $dateCreated = Carbon::now();
                     $createdDate = Carbon::now();
+                    $order->delivery_hours = $request->delivery_hours;
+                    $order->location_type = $request->location_type;
+                    $order->contact_person = $request->contact_person;
+                    $order->contact_person_phone_number = $request->contact_person_phone_number;
+                    $order->request_lift_gate_truck = $request->request_lift_gate_truck;
+                    $order->delievery_fee_disclaimer = $request->delievery_fee_disclaimer ? 1 : 0;
                     $order->createdDate = $createdDate;
                     $order->modifiedDate = $createdDate;
                     $order->createdBy = 79914;
@@ -727,6 +766,7 @@ class OrderController extends Controller
                     $order->payment_status = "unpaid";
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
+                    $order->custom_tax_rate_percent = $request->custom_tax_rate_percent;
                     $order->user_switch = $user_switch;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
@@ -834,11 +874,17 @@ class OrderController extends Controller
                     $order_contact = Contact::where('contact_id', $currentOrder->memberId)->first();
                     $product_prices = [];
                     $reference = $currentOrder->reference;
-                    $get_tax_class = !empty($currentOrder->texClasses) ? $currentOrder->texClasses : null;
-                    if (!empty($get_tax_class)) {
-                        $tax_rate = $currentOrder->total * ($get_tax_class->rate / 100);
+                    
+
+                    if (!empty($order->custom_tax_rate_percent)) {
+                        $tax_rate = $currentOrder->total * (floatval($order->custom_tax_rate_percent) / 100);
                     } else {
-                        $tax_rate = 0;
+                        $get_tax_class = !empty($currentOrder->texClasses) ? $currentOrder->texClasses : null;
+                        if (!empty($get_tax_class)) {
+                            $tax_rate = $currentOrder->total * ($get_tax_class->rate / 100);
+                        } else {
+                            $tax_rate = 0;
+                        }
                     }
                     if (session()->has('cart')) {
                         UtilHelper::update_product_stock_on_local($cart_items);
@@ -897,6 +943,7 @@ class OrderController extends Controller
                     $order->stage = "New";
                     $order->logisticsCarrier = $paymentMethod;
                     $order->tax_class_id = $request->tax_class_id;
+                    $order->custom_tax_rate_percent = $request->custom_tax_rate_percent;
                     $order->user_switch = $user_switch;
                     $order->po_number = $request->po_number;
                     $order->paymentTerms = $request->paymentTerms;
@@ -1096,20 +1143,7 @@ class OrderController extends Controller
                         'count' => $count,
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
-                    //old code
                     
-                    // if (count($specific_admin_notifications) > 0) {
-                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
-                    //         if (empty($specific_admin_notification->receive_order_notifications)) {
-                    //             continue;
-                    //         }   
-                    //         $subject = 'New Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'received';
-                    //         $adminTemplate = 'emails.admin-order-received';
-                    //         $data['subject'] = $subject;
-                    //         $data['email'] = $specific_admin_notification->email;
-                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    //     }
-                    // }
                     $specific_admin_notifications = SpecificAdminNotification::all();
                     if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {

@@ -39,6 +39,7 @@ use App\Models\ShippingMethod;
 use App\Models\ShippingQuoteSetting;
 use App\Models\SpecificAdminNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderManagementController extends Controller
 {
@@ -278,7 +279,14 @@ class OrderManagementController extends Controller
         $orderitems = ApiOrderItem::with(['product.options' => function ($q) {
             $q->whereIn('option_id', $this->option_ids);
         }])->where('order_id', $id)->get();
-        $tax_class = TaxClass::where('name', $customer->contact->tax_class)->first();
+        $custom_tax_rate = AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+        if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+            $tax_class = UserHelper::ApplyCustomTaxCheckout($order);
+        }
+        else {
+
+            $tax_class = TaxClass::where('name', $customer->contact->tax_class)->first();
+        }  
         $orderComment = OrderComment::where('order_id', $id)->with('comment')->get();
         // $products  = Product::with('options', 'brand', 'categories')->where('status' , '!=' , 'Inactive')->get();
         
@@ -330,6 +338,12 @@ class OrderManagementController extends Controller
         $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         $po_box_order_shipping_text  = AdminSetting::where('option_name', 'po_box_order_shipping_text')->first();
         $shipping_quotes = ShippingQuoteSetting::where('status' , 1)->get();
+
+        $delievery_fee_settings = AdminSetting::where('option_name', 'delievery_fee_disclaimer')->first();
+        $delievery_fee = !empty($delievery_fee_settings) ? $delievery_fee_settings->option_value : 53;
+
+        $enable_new_promo_for_retail_settings = AdminSetting::where('option_name', 'enable_new_promo_for_retail')->first();
+        $enable_promo_settings = !empty($enable_new_promo_for_retail_settings) && strtolower($enable_new_promo_for_retail_settings->option_value) === 'yes';
         
         return view('admin/order-details', compact(
             'order',
@@ -348,7 +362,10 @@ class OrderManagementController extends Controller
             'po_box_order_shipping_text',
             'po_box_carrier_code',
             'po_box_service_code',
-            'shipping_quotes'
+            'shipping_quotes',
+            'delievery_fee_settings',
+            'delievery_fee',
+            'enable_promo_settings',
 
         ));
     }
@@ -569,25 +586,62 @@ class OrderManagementController extends Controller
             ->with('user.contact')
             ->with('texClasses')
             ->first();
+        $disable_stripe_fullfull_over_1k = AdminSetting::where('option_name', 'disable_stripe_fullfull_over_1k')->first();
         $job = DB::table('jobs')->where('payload', 'like', '%' . $order->reference . '%')->first();
         
         if (empty($job)) {
 
             $contact = Contact::where('contact_id', $order->memberId)->first();
 
+            // if (!empty($contact) && $contact->is_test_user == 0) {
+
+            //     if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+            //         if (strtolower($order->payment_status) === 'paid') {
+            //             $order_data = OrderHelper::get_order_data_to_process($order);
+            //             SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+            //             return response()->json([
+            //                 'status' => 'success',
+            //             ]);
+            //         }
+            //     } 
+            //     else {
+            //         $order_data = OrderHelper::get_order_data_to_process($order);
+            //         SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+
+            //         return response()->json([
+            //             'status' => 'success',
+            //         ]);
+            //     }
+            // } else {
+            //     return response()->json([
+            //         'status' => 'failed',
+            //     ]);
+            // }
+
+            $disableStripe = strtolower($disable_stripe_fullfull_over_1k->option_value) === 'yes';
+            $orderTotal    = floatval($order->total_including_tax);
+
             if (!empty($contact) && $contact->is_test_user == 0) {
 
-                if (!empty($order->is_stripe) && $order->is_stripe == 1 ) {
+                if (!empty($order->is_stripe) && $order->is_stripe == 1) {
                     if (strtolower($order->payment_status) === 'paid') {
-                        $order_data = OrderHelper::get_order_data_to_process($order);
-                        SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
+                        if (!$disableStripe || $orderTotal <= 1000) {
+                            $order_data = OrderHelper::get_order_data_to_process($order);
+                            SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
 
-                        return response()->json([
-                            'status' => 'success',
-                        ]);
+                            return response()->json([
+                                'status' => 'success',
+                            ]);
+                        } else {
+                            return response()->json([
+                                'status'  => 'failed',
+                                'message' => 'Stripe order above 1k is blocked.',
+                            ]);
+                        }
                     }
-                } 
-                else {
+                } else {
+                    // Non-Stripe / wholesale always go through
                     $order_data = OrderHelper::get_order_data_to_process($order);
                     SalesOrders::dispatch('create_order', $order_data)->onQueue(env('QUEUE_NAME'));
 
@@ -595,9 +649,11 @@ class OrderManagementController extends Controller
                         'status' => 'success',
                     ]);
                 }
+
             } else {
                 return response()->json([
                     'status' => 'failed',
+                    'message' => 'Invalid contact or test user.',
                 ]);
             }
             

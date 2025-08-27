@@ -670,9 +670,9 @@ $cart_price = 0;
                                         @php
                                             $tax=0;
                                             $discount_value_buyList = 0;
-                                            if (!empty($tax_class)) {
-                                                $tax = $cart_total * ($tax_class->rate / 100);
-                                            }
+                                            // if (!empty($tax_class)) {
+                                            //     $tax = $cart_total * ($tax_class->rate / 100);
+                                            // }
                                             
                                             $total_including_tax = $tax + $cart_total  + $shipment_price;
 
@@ -711,7 +711,7 @@ $cart_price = 0;
                                             <div class="col-md-9 col-9"><span class="checkout_subtotal_heading">Subtotal</span></div>
                                             <div class="col-md-3 col-3 text-right"><span class="checkout_subtotal_price">${{ number_format($cart_total, 2) }}</span></div>
                                         </div>
-                                        <div class="row justify-content-center border-bottom align-items-center py-2">
+                                        {{-- <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-9">
                                                 <span class="checkout_tax_rate_heading">
                                                     Tax Rate {{!empty($tax_class) ? '('.number_format($tax_class->rate  , 2).'%)' : '('. number_format(0  , 2) . ')'}}
@@ -722,7 +722,7 @@ $cart_price = 0;
                                                     ${{ number_format($tax, 2) }}
                                                 </span>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="row justify-content-center border-bottom align-items-center py-2">
                                             <div class="col-md-9 col-9"><span class="checkout_shipping_heading">Shipment Price</span></div>
                                             <div class="col-md-3  col-3 text-right"><span class="checkout_shipping_price">${{number_format($shipment_price , 2)}}</span></div>

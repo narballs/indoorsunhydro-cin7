@@ -2094,7 +2094,13 @@ class ProductController extends Controller
         if (!auth()->user()) {
             $tax_class = TaxClass::where('is_default', 1)->first();
         } else {
-            $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+            $custom_tax_rate = AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+            if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+                $tax_class = UserHelper::ApplyCustomTax($contact);
+            } else {
+                $tax_class = TaxClass::where('name', $contact->tax_class)->first();
+            }
+
         }
 
         if (!empty($cart_items)) {
@@ -2822,7 +2828,9 @@ class ProductController extends Controller
             ->pluck('product_options.option_id');
 
         // Fetch valid product IDs from valid options
-        $valid_product_ids = ProductOption::whereIn('option_id', $valid_option_ids)->pluck('product_id');
+        $valid_product_ids = ProductOption::whereIn('option_id', $valid_option_ids)
+        ->where('status', '!=', 'Disabled') // ✅ ensure only active options count
+        ->pluck('product_id');
 
         // Final product filtering
         $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);

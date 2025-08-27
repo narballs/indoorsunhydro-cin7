@@ -475,9 +475,9 @@
                         <?php
                             $tax=0;
                             $discounted_value = 0;
-                            if (!empty($tax_class)) {
-                                $tax = $cart_total * ($tax_class->rate / 100);
-                            }
+                            // if (!empty($tax_class)) {
+                            //     $tax = $cart_total * ($tax_class->rate / 100);
+                            // }
 
                             $total_including_tax = $tax + $cart_total;
 
@@ -513,11 +513,11 @@
 
 
                         ?>
-                        @if(!empty($tax_class->rate))
+                        {{-- @if(!empty($tax_class->rate))
                         <input type="hidden" value="{{$tax_class->rate}}" id="tax_rate_number">
                         @else
                         <input type="hidden" value="0" id="tax_rate_number">
-                        @endif
+                        @endif --}}
                         <table class="table mt-4">
                             <thead>
                                 <tr>
@@ -604,11 +604,10 @@
                                     </tr>
                                 @endif
                                 <input type="hidden" id="buy_list_discount_cost" value="{{ !empty($discounted_value) ? floatval($discounted_value) : 0 }}">
-                                <tr>
+                                {{-- <tr>
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <span>
-                                                {{-- <img class=" img-fluid" src="/theme/img/text-rate-icon.png"> --}}
                                                 <i class="fas fa-file-invoice-dollar"></i>
                                                 <span> <strong class="cart-total" id="tax_rate">Tax
                                                         @if(!empty($tax_class->rate))
@@ -629,7 +628,7 @@
                                             <div class="mx-2"><span><strong class="cart-total mx-3 px-3" >{{'Tax Class:' . $tax_class->name}}</strong></span></div>
                                         @endif
                                     </td>
-                                </tr>
+                                </tr> --}}
                                 <tr>
                                     <td class="ps-0" colspan="2">
                                         <div class="d-flex align-items-center justify-content-between">
