@@ -153,7 +153,7 @@ class OrderHelper {
                 "discountDescription" => !empty($order->buylist_id) && !empty($order->buylist_discount) ? 'Buylist Discount : ' . $buy_list_discount : null,
                 "total" => null,
                 "currencyCode" => "USD",
-                "currencyRate" => 59.0,
+                "currencyRate" => 1.0,
                 "currencySymbol" => "$",
                 
                 "taxStatus" => 2, //(1 = Tax inclusive, 2 = Tax exclusive, 3 = Tax exempt)
