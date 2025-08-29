@@ -56,7 +56,7 @@ class OrderHelper {
                 "barcode" => "sample string 2",
                 "sizeCodes" => "sample string 4",
                 "lineComments" => null,
-                "unitCost" => null,
+                "unitCost" => !empty($order_item->defaultPrice) && !empty($order_item->defaultPrice->costUSD) ? $order_item->defaultPrice->costUSD : null,
                 "unitPrice" => $order_item->price,
                 "discount" => null,
                 "qtyShipped" => 7,
