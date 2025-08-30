@@ -1659,6 +1659,8 @@ class CheckoutController extends Controller
         $stripeSignature = $request->header('Stripe-Signature');
         $webhookSecret = config('services.stripe.webhook_secret');
         $charge_id = null;
+        $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
+        $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         try {
             $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
@@ -1757,10 +1759,28 @@ class CheckoutController extends Controller
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
                             $shipstation_order_status = 'create_order';
+                            // if (
+                            //     (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
+                            //     (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            // )
                             if (
                                 (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
-                                (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
-                            ) 
+                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            )  
+                            {
+                                
+                                $carrier_code = $po_box_carrier_code->option_value;
+                                $service_code = $po_box_service_code->option_value;
+                                $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
+                                if ($shiping_order['statusCode'] == 200) {
+                                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                        'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                        'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                    ]);
+                                }   
+                            } 
+                            else 
                             {
                                 $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
                                 if ($shiping_order['statusCode'] == 200) {
@@ -1965,10 +1985,28 @@ class CheckoutController extends Controller
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact) && $pickup == false) {
                             $shipstation_order_status = 'create_order';
+                            // if (
+                            //     (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
+                            //     (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            // ) 
                             if (
                                 (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
-                                (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
-                            ) 
+                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            )  
+                            {
+                                
+                                $carrier_code = $po_box_carrier_code->option_value;
+                                $service_code = $po_box_service_code->option_value;
+                                $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
+                                if ($shiping_order['statusCode'] == 200) {
+                                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
+                                        'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
+                                        'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                    ]);
+                                }   
+                            } 
+                            else
                             {
                                 $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
                                 if ($shiping_order['statusCode'] == 200) {
