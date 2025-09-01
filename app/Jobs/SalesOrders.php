@@ -337,9 +337,9 @@ class SalesOrders implements ShouldQueue
                     Mail::send([], [], function ($message) use ($email_addresses, $orderID) {
                         $message->from(SettingHelper::getSetting('noreply_email_address'));
                         $message->to($email_addresses);
-                        $message->subject('Manual Processing Required (PO Box) – Order ID: ' . $orderID);
+                        $message->subject('Monitoring Required (PO Box) – Order ID: ' . $orderID);
                         $message->setBody(
-                            'Order ID: ' . $orderID . ' requires manual processing due to a PO Box specified in the delivery address. Please review and address this order at your earliest convenience.',
+                            'Order ID: ' . $orderID . ' requires monitoring due to a PO Box specified in the delivery address. Please review and address this order at your earliest convenience.',
                             'text/html'
                         );
                     });
