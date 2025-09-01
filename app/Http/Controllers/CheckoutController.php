@@ -1765,17 +1765,17 @@ class CheckoutController extends Controller
                             // )
                             if (
                                 (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
-                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) || SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
                             )  
                             {
                                 
                                 $carrier_code = $po_box_carrier_code->option_value;
                                 $service_code = $po_box_service_code->option_value;
 
-                                $order_carrier_update = ApiOrder::where('id', $order_id)->update([
-                                    'shipping_carrier_code' => $carrier_code,
-                                    'shipping_service_code' => $service_code,
-                                ]);
+                                $shipping_carrier_update = ApiOrder::where('id', $order_id)->first();
+                                $shipping_carrier_update->shipping_carrier_code = $carrier_code;
+                                $shipping_carrier_update->shipping_service_code = $service_code;
+                                $shipping_carrier_update->save();
 
 
                                 $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
@@ -1998,17 +1998,17 @@ class CheckoutController extends Controller
                             // ) 
                             if (
                                 (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
-                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) || SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
                             )  
                             {
                                 
                                 $carrier_code = $po_box_carrier_code->option_value;
                                 $service_code = $po_box_service_code->option_value;
 
-                                $order_carrier_update = ApiOrder::where('id', $order_id)->update([
-                                    'shipping_carrier_code' => $carrier_code,
-                                    'shipping_service_code' => $service_code,
-                                ]);
+                                $shipping_carrier_update = ApiOrder::where('id', $order_id)->first();
+                                $shipping_carrier_update->shipping_carrier_code = $carrier_code;
+                                $shipping_carrier_update->shipping_service_code = $service_code;
+                                $shipping_carrier_update->save();
 
 
                                 $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
