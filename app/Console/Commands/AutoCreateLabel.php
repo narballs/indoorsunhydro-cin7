@@ -99,6 +99,7 @@ class AutoCreateLabel extends Command
                 $q->where('shipping_carrier_code', 'ups_walleted')
                 ->orWhere('shipping_carrier_code', 'stamps_com');
             })
+            ->whereIn('id', [1995, 1996])
             ->get();
 
 
