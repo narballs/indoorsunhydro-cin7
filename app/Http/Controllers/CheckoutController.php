@@ -1771,6 +1771,13 @@ class CheckoutController extends Controller
                                 
                                 $carrier_code = $po_box_carrier_code->option_value;
                                 $service_code = $po_box_service_code->option_value;
+
+                                $order_carrier_update = ApiOrder::where('id', $order_id)->update([
+                                    'shipping_carrier_code' => $carrier_code,
+                                    'shipping_service_code' => $service_code,
+                                ]);
+
+
                                 $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
                                 if ($shiping_order['statusCode'] == 200) {
                                     $orderUpdate = ApiOrder::where('id', $order_id)->update([
@@ -1997,6 +2004,13 @@ class CheckoutController extends Controller
                                 
                                 $carrier_code = $po_box_carrier_code->option_value;
                                 $service_code = $po_box_service_code->option_value;
+
+                                $order_carrier_update = ApiOrder::where('id', $order_id)->update([
+                                    'shipping_carrier_code' => $carrier_code,
+                                    'shipping_service_code' => $service_code,
+                                ]);
+
+
                                 $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
                                 if ($shiping_order['statusCode'] == 200) {
                                     $orderUpdate = ApiOrder::where('id', $order_id)->update([
