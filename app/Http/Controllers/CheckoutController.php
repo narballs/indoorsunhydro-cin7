@@ -1778,12 +1778,14 @@ class CheckoutController extends Controller
                                 $shipping_carrier_update->save();
 
 
-                                $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
-                                if ($shiping_order['statusCode'] == 200) {
+                                $po_box_shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
+                                if ($po_box_shiping_order['statusCode'] == 200) {
+                                    $responseBody = $po_box_shiping_order['responseBody'];
+
                                     $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                                        'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
-                                        'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                        'shipstation_orderId'   => $responseBody['orderId'],
+                                        'shipstation_orderKey'  => $responseBody['orderKey'],
+                                        'shipstation_orderNumber' => $responseBody['orderNumber'],
                                     ]);
                                 }   
                             } 
@@ -2011,12 +2013,14 @@ class CheckoutController extends Controller
                                 $shipping_carrier_update->save();
 
 
-                                $shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
-                                if ($shiping_order['statusCode'] == 200) {
+                                $po_box_shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
+                                if ($po_box_shiping_order['statusCode'] == 200) {
+                                    $responseBody = $po_box_shiping_order['responseBody'];
+
                                     $orderUpdate = ApiOrder::where('id', $order_id)->update([
-                                        'shipstation_orderId' => $shiping_order['responseBody']->orderId,
-                                        'shipstation_orderKey' => $shiping_order['responseBody']->orderKey,
-                                        'shipstation_orderNumber' => $shiping_order['responseBody']->orderNumber,
+                                        'shipstation_orderId'   => $responseBody['orderId'],
+                                        'shipstation_orderKey'  => $responseBody['orderKey'],
+                                        'shipstation_orderNumber' => $responseBody['orderNumber'],
                                     ]);
                                 }   
                             } 
