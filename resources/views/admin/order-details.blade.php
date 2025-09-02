@@ -604,8 +604,22 @@
 
                                         {{-- add tracking url --}}
 
-                                        @if (!empty($order->tracking_number) && $order->is_shipped == 1 && $order->label_created == 1 && $order->shipstation_orderId != null && $order->shipping_carrier_code == 'ups_walleted')
+                                        {{-- @if (!empty($order->tracking_number) && $order->is_shipped == 1 && $order->label_created == 1 && $order->shipstation_orderId != null && $order->shipping_carrier_code == 'ups_walleted')
                                             <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" target="_blank" class="text-primary">Track Order</a>
+                                        @endif --}}
+
+                                        @if (!empty($order->tracking_number) && $order->is_shipped == 1 && $order->label_created == 1 && $order->shipstation_orderId != null)
+                                            @if ($order->shipping_carrier_code == 'ups_walleted')
+                                                <a href="https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum={{ $order->tracking_number }}" 
+                                                target="_blank" class="text-primary">
+                                                Track Order
+                                                </a>
+                                            @elseif ($order->shipping_carrier_code == 'stamps_com')
+                                                <a href="https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1={{ $order->tracking_number }}" 
+                                                target="_blank" class="text-primary">
+                                                Track Order
+                                                </a>
+                                            @endif
                                         @endif
 
                                         @if (!empty($order->drop_shipped) && !empty($order->drop_shipped->description))
