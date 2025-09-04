@@ -506,7 +506,7 @@ class UtilHelper
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
             $api_status = true;
-            $timeout_limit = 10;
+            $timeout_limit = 20;
         
             $start_time = microtime(true);
 
@@ -603,6 +603,12 @@ class UtilHelper
             self::saveDailyApiLog('product_detail_update_stock');
             $api_status = false;
             $stock_updated = false;
+
+            Log::error("Cin7 Stock API failed: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            
         }
 
         return [
