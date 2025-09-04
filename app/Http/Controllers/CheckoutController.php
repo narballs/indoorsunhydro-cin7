@@ -427,149 +427,7 @@ class CheckoutController extends Controller
         $pot_category_flag = false;
         $HEIGHT_CAP = 30; // 24–36" is typical; tune per your ship boxes
 
-        // Accumulators for COMPRESSED items ONLY (they will grow footprint)
-        // $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;      // final compressed footprint+height
-        // $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0; // current compressed layer 
-        // foreach ($cart_items as $cart_item) {
-        //     $product = Product::where('product_id' , $cart_item['product_id'])->first();
-        //     if (!empty($product) && !empty($product->categories) && $product->category_id != 0) {
-        //         if (strtolower($product->categories->name) === 'grow medium') {
-        //             $shipment_for_selected_category = true;
-        //         }
-        //         elseif (!empty($product->categories->parent) && !empty($product->categories->parent->name) && strtolower($product->categories->parent->name) === 'grow medium')  {
-        //             $shipment_for_selected_category = true;
-        //         } 
-        //         else {
-        //             $shipment_for_selected_category = false;
-        //         }
-        //     } else {
-        //         $shipment_for_selected_category = false;
-        //     }
-        //     $sub_total_of_cart += $cart_item['quantity'] * $cart_item['price'];
-        //     $productTotal += $cart_item['quantity'] * $cart_item['price'];
-        //     $product_options = ProductOption::with('products')->where('product_id', $cart_item['product_id'])->where('option_id' , $cart_item['option_id'])->get();
-        //     $pots_category = 'pots & containers';
-            
-        //     foreach ($product_options as $product_option) {
-
-        //         if (!empty($product_option->products) && !empty($product_option->products->categories) && strtolower($product_option->products->categories->name) === $pots_category) {
-        //             $pot_category_flag = true; // KEEP true once set
-
-        //             // keep your existing helper call; we'll fix its internals below
-        //             $get_pot_category_dimensions = UserHelper::calculateNestedItemDimensions(
-        //                 $product_option,
-        //                 $product_option->products,
-        //                 $cart_item['quantity'],
-        //                 $products_lengths,
-        //                 $products_widths,
-        //                 $products_heights,
-        //                 $product_height,
-        //                 $product_width,
-        //                 $product_length,
-        //                 $products_weight = 0
-        //             );
-
-        //         } 
-        //         else {
-        //             if (!empty($product_option->products)) {
-        //                 $qty = (int)$cart_item['quantity'];
-
-        //                 // Prefer option weight; fallback to product weight
-        //                 $unitWt = (float)($product_option->optionWeight ?? 0);
-        //                 if ($unitWt <= 0 && isset($product_option->products->weight)) {
-        //                     $unitWt = (float)$product_option->products->weight;
-        //                 }
-
-        //                 // Rotate so L ≥ W ≥ H
-        //                 $pLen = (float)($product_option->products->length ?? 0);
-        //                 $pWid = (float)($product_option->products->width  ?? 0);
-        //                 $pHei = (float)($product_option->products->height ?? 0);
-        //                 $dims = [$pLen, $pWid, $pHei];
-        //                 rsort($dims, SORT_NUMERIC);
-        //                 $L = $dims[0]; $W = $dims[1]; $H = $dims[2];
-
-        //                 // If compressed -> use compressed, else normal stack
-        //                 $isCompressed = (bool) ($product_option->products->is_compressed ?? false);
-        //                 if ($isCompressed) {
-        //                     ShippingHelper::accumulateCompressedItem(
-        //                         $qty, $L, $W, $H,
-        //                         $comp_layer_L, $comp_layer_W, $comp_layer_H,
-        //                         $comp_box_L,   $comp_box_W,   $comp_box_H,
-        //                         30.0,  // $heightCap (tune if needed)
-        //                         0.6,   // $ratio
-        //                         0.25,  // $floor
-        //                         12     // $searchCap
-        //                     );
-                            
-
-        //                 } else {
-        //                     // normal (non-compressed) stacking: stack smallest edge
-        //                     $products_lengths[] = $L;
-        //                     $products_widths[]  = $W;
-        //                     $total_height      += $H * $qty;
-        //                 }
-
-        //                 // add weight ONCE
-        //                 $products_weight += $unitWt * $qty;
-        //             }
-        //         }
-        //     }
-
-        // }
-
-        // ShippingHelper::finalizeCompressedBox(
-        //     $comp_layer_L, $comp_layer_W, $comp_layer_H,
-        //     $comp_box_L,   $comp_box_W,   $comp_box_H
-        // );
-
-       
-
-        // // Non-compressed footprint/height from your accumulators
-        // $noncomp_L = !empty($products_lengths) ? max($products_lengths) : 0.0;
-        // $noncomp_W = !empty($products_widths)  ? max($products_widths)  : 0.0;
-        // $noncomp_H = (float)$total_height;
-
-        // // Merge with pots (if any) AND compressed box
-        // if (!empty($pot_category_flag) && !empty($get_pot_category_dimensions)) {
-        //     $potL  = (float)($get_pot_category_dimensions['products_lengths'] ?? 0);
-        //     $potW  = (float)($get_pot_category_dimensions['products_widths']  ?? 0);
-        //     $potH  = (float)($get_pot_category_dimensions['product_height']   ?? 0);
-        //     $potWT = (float)($get_pot_category_dimensions['products_weight']  ?? 0);
-
-        //     // Footprint is the max across compressed, non-compressed, pots
-        //     $product_length = max($comp_box_L, $noncomp_L, $potL);
-        //     $product_width  = max($comp_box_W, $noncomp_W, $potW);
-
-        //     // Heights stack
-        //     $product_height = $comp_box_H + $noncomp_H + $potH;
-
-        //     $actual_total   = $products_weight + $potWT; // add pots' actual weight
-        // } else {
-        //     $product_length = max($comp_box_L, $noncomp_L);
-        //     $product_width  = max($comp_box_W, $noncomp_W);
-        //     $product_height = $comp_box_H + $noncomp_H;
-
-        //     $actual_total   = $products_weight; // already summed in loop
-        // }
-
-
-        // $DIM_DIVISOR = 166; // change if your carrier uses a different divisor
-        // $dim_weight = ($product_length > 0 && $product_width > 0 && $product_height > 0)
-        //     ? (($product_length * $product_width * $product_height) / $DIM_DIVISOR)
-        //     : 0.0;
-
-        // $billable = $actual_total;
-
-        // // ----- Oversize clamp (keep your policy) -----
-        // $girth = 2 * ($product_width + $product_height);
-        // if ($girth > 165 && $billable < 150) {
-        //     $billable = 151;
-        // }
-
-        // // This is the weight you should send to ShipStation
-        // $products_weight = $billable;
-
-
+        
 
         $comp_box_L = 0.0; $comp_box_W = 0.0; $comp_box_H = 0.0;
         $comp_layer_L = 0.0; $comp_layer_W = 0.0; $comp_layer_H = 0.0;
@@ -1659,6 +1517,8 @@ class CheckoutController extends Controller
         $stripeSignature = $request->header('Stripe-Signature');
         $webhookSecret = config('services.stripe.webhook_secret');
         $charge_id = null;
+        $po_box_carrier_code = AdminSetting::where('option_name', 'po_box_shipping_carrier_code')->first();
+        $po_box_service_code  = AdminSetting::where('option_name', 'po_box_shipping_service_code')->first();
         try {
             $event = Webhook::constructEvent($payload, $stripeSignature, $webhookSecret);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
@@ -1757,10 +1617,37 @@ class CheckoutController extends Controller
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact)) {
                             $shipstation_order_status = 'create_order';
+                            // if (
+                            //     (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
+                            //     (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            // )
                             if (
                                 (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
-                                (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
-                            ) 
+                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) || SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            )  
+                            {
+                                
+                                $carrier_code = $po_box_carrier_code->option_value;
+                                $service_code = $po_box_service_code->option_value;
+
+                                $shipping_carrier_update = ApiOrder::where('id', $order_id)->first();
+                                $shipping_carrier_update->shipping_carrier_code = $carrier_code;
+                                $shipping_carrier_update->shipping_service_code = $service_code;
+                                $shipping_carrier_update->save();
+
+
+                                $po_box_shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
+                                if ($po_box_shiping_order['statusCode'] == 200) {
+                                    $responseBody = $po_box_shiping_order['responseBody'];
+
+                                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                        'shipstation_orderId'   => $responseBody['orderId'],
+                                        'shipstation_orderKey'  => $responseBody['orderKey'],
+                                        'shipstation_orderNumber' => $responseBody['orderNumber'],
+                                    ]);
+                                }   
+                            } 
+                            else 
                             {
                                 $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status);
                                 if ($shiping_order['statusCode'] == 200) {
@@ -1965,10 +1852,37 @@ class CheckoutController extends Controller
                         $order_contact = Contact::where('contact_id', $currentOrder->memberId)->orWhere('parent_id' , $currentOrder->memberId)->first();
                         if (!empty($order_contact) && $pickup == false) {
                             $shipstation_order_status = 'create_order';
+                            // if (
+                            //     (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
+                            //     (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            // ) 
                             if (
                                 (!empty($currentOrder->DeliveryAddress1) || !empty($currentOrder->DeliveryAddress2)) &&
-                                (!SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) && !SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
-                            ) 
+                                (SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress1) || SettingHelper::startsWithPOBox($currentOrder->DeliveryAddress2))
+                            )  
+                            {
+                                
+                                $carrier_code = $po_box_carrier_code->option_value;
+                                $service_code = $po_box_service_code->option_value;
+
+                                $shipping_carrier_update = ApiOrder::where('id', $order_id)->first();
+                                $shipping_carrier_update->shipping_carrier_code = $carrier_code;
+                                $shipping_carrier_update->shipping_service_code = $service_code;
+                                $shipping_carrier_update->save();
+
+
+                                $po_box_shiping_order = UserHelper::wholesale_po_box_shipping_order($order_id , $currentOrder , $order_contact, $shipstation_order_status,$carrier_code , $service_code);
+                                if ($po_box_shiping_order['statusCode'] == 200) {
+                                    $responseBody = $po_box_shiping_order['responseBody'];
+
+                                    $orderUpdate = ApiOrder::where('id', $order_id)->update([
+                                        'shipstation_orderId'   => $responseBody['orderId'],
+                                        'shipstation_orderKey'  => $responseBody['orderKey'],
+                                        'shipstation_orderNumber' => $responseBody['orderNumber'],
+                                    ]);
+                                }   
+                            } 
+                            else
                             {
                                 $shiping_order = UserHelper::shipping_order($order_id , $currentOrder , $order_contact , $shipstation_order_status);
                                 if ($shiping_order['statusCode'] == 200) {

@@ -72,17 +72,35 @@ class AutoCreateLabel extends Command
             $data = [];
             $client = new \GuzzleHttp\Client();
 
+            // $all_orders = ApiOrder::where('is_shipped', 0)
+            //     ->where('label_created', 0)
+            //     ->where('is_stripe', 1)
+            //     ->where('shipment_price', '>', 0)
+            //     ->whereNotNull('shipstation_orderId')
+            //     ->where('payment_status', 'paid')
+            //     ->where('isApproved', 1)
+            //     ->whereNull('buylist_id')
+            //     ->where('created_at', '>=', '2025-01-09 12:23:51')
+            //     ->where('shipping_carrier_code', 'ups_walleted')
+            //     ->where('shipping_carrier_code', 'stamps_com')
+            //     ->get();
+
+
             $all_orders = ApiOrder::where('is_shipped', 0)
-                ->where('label_created', 0)
-                ->where('is_stripe', 1)
-                ->where('shipment_price', '>', 0)
-                ->whereNotNull('shipstation_orderId')
-                ->where('payment_status', 'paid')
-                ->where('isApproved', 1)
-                ->whereNull('buylist_id')
-                ->where('created_at', '>=', '2025-01-09 12:23:51')
-                ->where('shipping_carrier_code', 'ups_walleted')
-                ->get();
+            ->where('label_created', 0)
+            ->where('is_stripe', 1)
+            ->where('shipment_price', '>', 0)
+            ->whereNotNull('shipstation_orderId')
+            ->where('payment_status', 'paid')
+            ->where('isApproved', 1)
+            ->whereNull('buylist_id')
+            ->where('created_at', '>=', '2025-01-09 12:23:51')
+            ->where(function($q) {
+                $q->where('shipping_carrier_code', 'ups_walleted')
+                ->orWhere('shipping_carrier_code', 'stamps_com');
+            })
+            ->get();
+
 
             
 
@@ -100,11 +118,9 @@ class AutoCreateLabel extends Command
                     'Sun' => 'SU'
                 ];
             
-                // Log::info("Configured days: " . implode(',', $daysOfWeek));
             
                 foreach ($autoLabelSetting->timeRanges ?? [] as $timeRange) {
                     if (empty($timeRange) || !isset($timeRange->start_time, $timeRange->end_time)) {
-                        Log::warning('Invalid time range found.');
                         continue;
                     }
             
@@ -112,18 +128,14 @@ class AutoCreateLabel extends Command
                     $endTime = Carbon::parse($timeRange->end_time)->format('H:i');
                     $currentTime = now()->format('H:i');
             
-                    // Log::info("Checking schedule for day: " . $dayMap[$currentDay] . 
-                    //         " | Start: {$startTime} | End: {$endTime} | Current: {$currentTime}");
             
                     if (in_array(strtoupper($dayMap[$currentDay]), array_map('strtoupper', $daysOfWeek))) {
                         if ($currentTime >= $startTime && $currentTime <= $endTime) {
                             if ($all_orders->isEmpty()) {
                                 $this->info('No orders found to create label');
-                                Log::info('No orders found to process.');
                                 return;
                             }
             
-                            // Log::info('Auto create label is enabled');
             
                             foreach ($all_orders as $order) {
 
@@ -132,17 +144,14 @@ class AutoCreateLabel extends Command
                                     ->first();
 
                                 if (!empty($ship_station_log)) {
-                                    Log::info('Label already created for order: ' . $order->id);
                                     continue;
                                 }    
                                 
                                 if ($order->label_created === 1) {
-                                    Log::info('Label already created for order: ' . $order->id);
                                     continue;
                                 }
 
                                 LabelHelper::processOrder($order, $client, $currentDate, $data);
-                                Log::info('Label created for order: ' . $order->id);
                                 $this->info('Label created for order: ' . $order->id);
                             }
                         }
@@ -150,7 +159,6 @@ class AutoCreateLabel extends Command
                 }
             } else {
                 $this->info('Auto create label is disabled');
-                Log::info('Auto label setting not found.');
             }
 
         } catch (\Exception $e) {

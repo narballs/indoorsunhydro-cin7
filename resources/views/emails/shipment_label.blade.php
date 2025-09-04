@@ -90,6 +90,30 @@
                             </td>
                         </tr>
 
+                        @php
+                            $tracking_url = null;
+                            $order =  App\Models\ApiOrder::where('id', $content['order_id'])->first();
+
+                            if (!empty($order) && !empty($order->tracking_number)) {
+                                if ($order->shipping_carrier_code === 'ups_walleted') {
+                                    $tracking_url = 'https://www.ups.com/track?HTMLVersion=5.0&Requester=NES&AgreeToTermsAndConditions=yes&loc=en_US&tracknum=' . $order->tracking_number;
+                                } elseif ($order->shipping_carrier_code === 'stamps_com') {
+                                    $tracking_url = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=' . $order->tracking_number;
+                                }
+                            }
+                        @endphp
+
+                        @if ($tracking_url)
+                            <tr>
+                                <td align="center" style="padding-top: 20px; padding-bottom: 25px;">
+                                    <a href="{{ $tracking_url }}" target="_blank" 
+                                    style="background-color: #007bff; color: #fff; padding: 8px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                                    Track Your Order
+                                    </a>
+                                </td>
+                            </tr>
+                        @endif
+
                         <!-- Order Items -->
                         <tr>
                             <td style="padding: 10px 20px; color: #000;">
