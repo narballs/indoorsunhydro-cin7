@@ -506,7 +506,7 @@ class UtilHelper
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
             $api_status = true;
-            $timeout_limit = 5;
+            $timeout_limit = 8;
         
             $start_time = microtime(true);
 
