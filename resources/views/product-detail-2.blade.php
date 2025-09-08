@@ -386,11 +386,17 @@
                                         </div>
                                     </div>
                                     @if (!empty($admin_check_product_stock) && (strtolower($admin_check_product_stock->option_value) == 'no') && !$stock_updated && $productOption->stockAvailable <= 0)
-                                        <div class="col-md-12">
-                                            <p class="mb-1">
-                                                Call for Stock
-                                            </p>
-                                        </div>
+                                        @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
+                                            <div class="col-md-12">
+                                                
+                                            </div>
+                                        @else
+                                            <div class="col-md-12">
+                                                <p class="mb-1">
+                                                    Call for Stock
+                                                </p>
+                                            </div>
+                                        @endif
                                     @else
                                         <div class="col-md-12">
                                             @if ($customer_demand_inventory_number === 1)
