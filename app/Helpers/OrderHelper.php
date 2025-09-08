@@ -6,6 +6,7 @@ use App\Models\OrderStatus;
 use Carbon\Carbon;
 use App\Models\ApiOrder;
 use App\Jobs\SalesOrders;
+use App\Models\AdminSetting;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\ApiOrderItem;
@@ -123,6 +124,20 @@ class OrderHelper {
 
         $buy_list_discount = !empty($order->buylist_id) ? $order->buylist_discount : null;
 
+
+        $tax_class_name = null;
+        $tax_class_rate = null;
+        $custom_tax_rate = AdminSetting::where('option_name'  , 'custom_tax_rate')->first();
+        if (!empty($custom_tax_rate) && (strtolower($custom_tax_rate->option_value) == 'yes')) {
+            $tax_class_name = $order->custom_tax_rate_percent;
+            $tax_class_rate = $order->custom_tax_rate_percent;
+        }
+        else {
+
+            $tax_class_name = $order->texClasses->name;
+            $tax_class_rate = $order->texClasses->rate;
+        }
+
         
         $order_data = [
             [
@@ -157,7 +172,7 @@ class OrderHelper {
                 "currencySymbol" => "$",
                 
                 "taxStatus" => 2, //(1 = Tax inclusive, 2 = Tax exclusive, 3 = Tax exempt)
-                "taxRate" => isset($order->custom_tax_rate_percent) ? $order->custom_tax_rate_percent : $order->texClasses->rate,
+                "taxRate" => isset($tax_class_rate) ? $tax_class_rate : $order->texClasses->rate,
 
                 "source" => null,
                 "accountingAttributes" =>
@@ -169,7 +184,7 @@ class OrderHelper {
                 "memberCostCenter" => null,
                 "memberAlternativeTaxRate" => $order->texClasses->name,
                 "costCenter" => !empty($order->paymentTerms) && $order->paymentTerms === 'Pay in Advanced' ? 'Online Sales' : Null,
-                "alternativeTaxRate" => !empty($order->custom_tax_rate_percent) ? $order->custom_tax_rate_percent : $order->texClasses->name,
+                "alternativeTaxRate" => isset($tax_class_name) ? $tax_class_name : $order->texClasses->name,
                 "estimatedDeliveryDate" => $delivery_date,
                 "salesPersonId" => 10,
                 "salesPersonEmail" => "wqszeeshan@gmail.com",
