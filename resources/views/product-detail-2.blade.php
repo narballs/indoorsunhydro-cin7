@@ -398,10 +398,24 @@
                                             </div>
                                         @endif
                                     @else
-                                        <div class="col-md-12">
-                                            @if ($customer_demand_inventory_number === 1)
-                                                @if ($inventory_update_time_flag == true)
-                                                    @if($stock_updated)
+                                        @if (!empty($admin_check_product_stock) && (strtolower($admin_check_product_stock->option_value) == 'yes'))
+                                            <div class="col-md-12">
+                                                @if ($customer_demand_inventory_number === 1)
+                                                    @if ($inventory_update_time_flag == true)
+                                                        @if($stock_updated)
+                                                            @if (!empty($locations))
+                                                                @foreach ($locations as $location)
+                                                                    <div>
+                                                                        <p class="mb-1">
+                                                                            <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                            <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                                $location['available'] : 0 }}</span>
+                                                                        </p>
+                                                                    </div>
+                                                                @endforeach
+                                                            @endif
+                                                        @endif
+                                                    @else
                                                         @if (!empty($locations))
                                                             @foreach ($locations as $location)
                                                                 <div>
@@ -417,30 +431,18 @@
                                                 @else
                                                     @if (!empty($locations))
                                                         @foreach ($locations as $location)
-                                                            <div>
-                                                                <p class="mb-1">
-                                                                    <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                                    <span class="text-success">{{ $location['available'] >= 0 ?
-                                                                        $location['available'] : 0 }}</span>
-                                                                </p>
-                                                            </div>
+                                                        <div>
+                                                            <p class="mb-1">
+                                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                    $location['available'] : 0 }}</span>
+                                                            </p>
+                                                        </div>
                                                         @endforeach
                                                     @endif
                                                 @endif
-                                            @else
-                                                @if (!empty($locations))
-                                                    @foreach ($locations as $location)
-                                                    <div>
-                                                        <p class="mb-1">
-                                                            <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                            <span class="text-success">{{ $location['available'] >= 0 ?
-                                                                $location['available'] : 0 }}</span>
-                                                        </p>
-                                                    </div>
-                                                    @endforeach
-                                                @endif
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                     @endif
 
                                     <form id="cart" class="mb-2 px-0">
