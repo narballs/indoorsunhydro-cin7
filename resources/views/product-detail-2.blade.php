@@ -342,90 +342,100 @@
                                         <div class="my-2"> <span class="text-uppercase text-muted brand"></span>
                                             <div class="price d-flex flex-row align-items-center">
                                                 @if ($productOption->products->status != 'Inactive')
-                                                @if($stock_updated == true)
-                                                <span class="text-success" data-toggle="popover-hover"
-                                                    data-bs-container="body" data-placement="top"
-                                                    data-bs-placement="top" data-bs-content="Top popover"
-                                                    style=" cursor: pointer;"><span class="stock_number_new mr-2">
-                                                        {{$total_stock}}</span></span>
-                                                <div>
-                                                    
-                                                    <span class="instock-label-new">IN STOCK</span>
-                                                </div>
-                                                @elseif ($productOption->stockAvailable > 0)
-                                                <span class="text-success" data-toggle="popover-hover"
-                                                    data-bs-container="body" data-placement="top"
-                                                    data-bs-placement="top" data-bs-content="Top popover"
-                                                    style=" cursor: pointer;"><span class="stock_number_new mr-2">
-                                                        {{$productOption->stockAvailable}}</span></span>
-                                                <div>
-                                                    
-                                                    <span class="instock-label-new">IN STOCK</span>
-                                                </div>
+                                                    @if($stock_updated == true)
+                                                        <span class="text-success" data-toggle="popover-hover"
+                                                            data-bs-container="body" data-placement="top"
+                                                            data-bs-placement="top" data-bs-content="Top popover"
+                                                            style=" cursor: pointer;">
+                                                            <span class="stock_number_new mr-2">
+                                                                {{$total_stock}}
+                                                            </span>
+                                                        </span>
+                                                        <div>
+                                                            <span class="instock-label-new">IN STOCK</span>
+                                                        </div>
+                                                    @elseif ($productOption->stockAvailable > 0)
+                                                        <span class="text-success" data-toggle="popover-hover"
+                                                            data-bs-container="body" data-placement="top"
+                                                            data-bs-placement="top" data-bs-content="Top popover"
+                                                            style=" cursor: pointer;"><span class="stock_number_new mr-2">
+                                                                {{$productOption->stockAvailable}}</span>
+                                                        </span>
+                                                        <div>
+                                                            
+                                                            <span class="instock-label-new">IN STOCK</span>
+                                                        </div>
+                                                    @else
+                                                        <div>
+                                                            <span class="out-of-stock-label-new">
+                                                                @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
+                                                                    On Back Order
+                                                                {{-- @else
+                                                                    {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}} --}}
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    @endif
                                                 @else
-                                                <div>
-                                                    
-                                                    <span class="out-of-stock-label-new">
-                                                        @if ((empty($get_wholesale_terms) || strtolower($get_wholesale_terms) != 'pay in advanced') && auth()->user())
-                                                            On Back Order
-                                                        @else
-                                                            {{ App\Helpers\SettingHelper::getSetting('out_of_stock_label', 'OUT OF STOCK');}}
-                                                        @endif
-                                                    </span>
-                                                </div>
-                                                @endif
-                                                @else
-                                                <div>
-                                                    <span class="text-danger">NOT
-                                                        AVAILABLE FOR SALE</span>
-                                                </div>
+                                                    <div>
+                                                        <span class="text-danger">NOT
+                                                            AVAILABLE FOR SALE</span>
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
-                                        @if ($customer_demand_inventory_number === 1)
-                                        @if ($inventory_update_time_flag == true)
-                                        @if($stock_updated)
-                                        @if (!empty($locations))
-                                        @foreach ($locations as $location)
-                                        <div>
+                                    @if (!empty($admin_check_product_stock) && (strtolower($admin_check_product_stock->option_value) == 'no') && !$stock_updated && $productOption->stockAvailable <= 0)
+                                        <div class="col-md-12">
                                             <p class="mb-1">
-                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{ $location['available'] >= 0 ?
-                                                    $location['available'] : 0 }}</span>
+                                                Call for Stock
                                             </p>
                                         </div>
-                                        @endforeach
-                                        @endif
-                                        @endif
-                                        @else
-                                        @if (!empty($locations))
-                                        @foreach ($locations as $location)
-                                        <div>
-                                            <p class="mb-1">
-                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{ $location['available'] >= 0 ?
-                                                    $location['available'] : 0 }}</span>
-                                            </p>
+                                    @else
+                                        <div class="col-md-12">
+                                            @if ($customer_demand_inventory_number === 1)
+                                                @if ($inventory_update_time_flag == true)
+                                                    @if($stock_updated)
+                                                        @if (!empty($locations))
+                                                            @foreach ($locations as $location)
+                                                                <div>
+                                                                    <p class="mb-1">
+                                                                        <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                        <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                            $location['available'] : 0 }}</span>
+                                                                    </p>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    @if (!empty($locations))
+                                                        @foreach ($locations as $location)
+                                                            <div>
+                                                                <p class="mb-1">
+                                                                    <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                                    <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                        $location['available'] : 0 }}</span>
+                                                                </p>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                @endif
+                                            @else
+                                                @if (!empty($locations))
+                                                    @foreach ($locations as $location)
+                                                    <div>
+                                                        <p class="mb-1">
+                                                            <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
+                                                            <span class="text-success">{{ $location['available'] >= 0 ?
+                                                                $location['available'] : 0 }}</span>
+                                                        </p>
+                                                    </div>
+                                                    @endforeach
+                                                @endif
+                                            @endif
                                         </div>
-                                        @endforeach
-                                        @endif
-                                        @endif
-                                        @else
-                                        @if (!empty($locations))
-                                        @foreach ($locations as $location)
-                                        <div>
-                                            <p class="mb-1">
-                                                <i class="fa fa-map-marker mr-2"></i>{{$location['branch_name'] . ':'}}
-                                                <span class="text-success">{{ $location['available'] >= 0 ?
-                                                    $location['available'] : 0 }}</span>
-                                            </p>
-                                        </div>
-                                        @endforeach
-                                        @endif
-                                        @endif
-                                    </div>
+                                    @endif
 
                                     <form id="cart" class="mb-2 px-0">
                                         <input type="hidden" name="p_id" id="p_id"
@@ -488,37 +498,39 @@
                                                                         <a class="text-white">Add to cart </a>
                                                                     </button>
                                                                 @else
-                                                                    @if (auth()->user())
-                                                                        <input type="hidden" name="notify_user_email_input"
-                                                                            class="notify_user_email_input" id="auth_user_email"
-                                                                            value="{{auth()->user()->email}}">
-                                                                        <input type="hidden" name="sku" id="sku_value" class="sku_value"
-                                                                            value="{{$productOption->products->code}}">
-                                                                        <input type="hidden" name="product_id" id="product_id_value"
-                                                                            class="product_id_value"
-                                                                            value="{{$productOption->products->id}}">
-                                                                        <div class="row justify-content-between align-items-center">
-                                                                            <div class="col-md-10">
-                                                                                <button type="button"
-                                                                                    class="product-detail-notify-new w-100" type="button"
-                                                                                    id="" onclick="notify_user_about_product_stock()">
-                                                                                    <a class="text-white">Notify When in Stock </a>
-                                                                                </button>
-                                                                            </div>
-                                                                            <div class="col-md-2">
-                                                                                <div class="spinner-border text-primary stock_spinner d-none"
-                                                                                    role="status">
-                                                                                    <span class="sr-only"></span>
+                                                                    @if (!empty($admin_check_product_stock) && strtolower($admin_check_product_stock->option_value) == 'yes')
+                                                                        @if (auth()->user())
+                                                                            <input type="hidden" name="notify_user_email_input"
+                                                                                class="notify_user_email_input" id="auth_user_email"
+                                                                                value="{{auth()->user()->email}}">
+                                                                            <input type="hidden" name="sku" id="sku_value" class="sku_value"
+                                                                                value="{{$productOption->products->code}}">
+                                                                            <input type="hidden" name="product_id" id="product_id_value"
+                                                                                class="product_id_value"
+                                                                                value="{{$productOption->products->id}}">
+                                                                            <div class="row justify-content-between align-items-center">
+                                                                                <div class="col-md-10">
+                                                                                    <button type="button"
+                                                                                        class="product-detail-notify-new w-100" type="button"
+                                                                                        id="" onclick="notify_user_about_product_stock()">
+                                                                                        <a class="text-white">Notify When in Stock </a>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="spinner-border text-primary stock_spinner d-none"
+                                                                                        role="status">
+                                                                                        <span class="sr-only"></span>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    @else
-                                                                        <button type="button"
-                                                                            class="product-detail-notify-new w-100 notify_popup_modal_btn"
-                                                                            type="button" id="notify_popup_modal"
-                                                                            onclick="show_notify_popup_modal()">
-                                                                            <a class="text-white">Notify When in Stock </a>
-                                                                        </button>
+                                                                        @else
+                                                                            <button type="button"
+                                                                                class="product-detail-notify-new w-100 notify_popup_modal_btn"
+                                                                                type="button" id="notify_popup_modal"
+                                                                                onclick="show_notify_popup_modal()">
+                                                                                <a class="text-white">Notify When in Stock </a>
+                                                                            </button>
+                                                                        @endif
                                                                     @endif
                                                                 @endif
                                                             @else
@@ -550,23 +562,24 @@
                                         </div>
                                         <span class="text-uppercase text-muted brand"></span>
                                     </form>
-
-                                    <div class="col-md-12 col-xl-10 my-3">
-                                        @if (!empty($request_bulk_quantity_discount) &&
-                                        strtolower($request_bulk_quantity_discount->option_value) === 'yes')
-                                        <button type="button" href="" data-bs-toggle="modal"
-                                            data-bs-target="#bulk_quantity_modal" id="bulk_discount_href"
-                                            class="bulk_discount_href btn w-100">Buy in Bulk</button>
-                                        @endif
-                                    </div>
-                                    @if (!empty($enable_see_similar_products) && $total_stock < 1  && $productOption->stockAvailable < 1)
+                                    @if (!empty($admin_check_product_stock) && strtolower($admin_check_product_stock->option_value) == 'yes')
                                         <div class="col-md-12 col-xl-10 my-3">
-                                            <button type="button" class="see-similar-order-button-new btn w-100"
-                                                onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')"
-                                                data-bs-target="#see_similar_pop_up_detail">
-                                                See Similar
-                                            </button>
+                                            @if (!empty($request_bulk_quantity_discount) &&
+                                            strtolower($request_bulk_quantity_discount->option_value) === 'yes')
+                                            <button type="button" href="" data-bs-toggle="modal"
+                                                data-bs-target="#bulk_quantity_modal" id="bulk_discount_href"
+                                                class="bulk_discount_href btn w-100">Buy in Bulk</button>
+                                            @endif
                                         </div>
+                                        @if (!empty($enable_see_similar_products) && $total_stock < 1  && $productOption->stockAvailable < 1)
+                                            <div class="col-md-12 col-xl-10 my-3">
+                                                <button type="button" class="see-similar-order-button-new btn w-100"
+                                                    onclick="see_similar_products('{{ $productOption->products->id }}', '{{ $productOption->option_id }}')"
+                                                    data-bs-target="#see_similar_pop_up_detail">
+                                                    See Similar
+                                                </button>
+                                            </div>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
