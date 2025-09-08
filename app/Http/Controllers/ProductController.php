@@ -1053,7 +1053,8 @@ class ProductController extends Controller
             'get_wholesale_contact_id',
             'get_wholesale_terms',
             'enable_see_similar_products',
-            'enable_image_scrapping'
+            'enable_image_scrapping',
+            'admin_check_product_stock'
         ));
 
         
