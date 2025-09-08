@@ -671,7 +671,7 @@ class ProductController extends Controller
     public function showProductDetail(Request $request ,$id, $option_id)
     {
         $similar_products = null;
-
+        $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
         $product = Product::with('categories' , 'brand' , 'ai_image_generation')
         ->where('id', $id)
         ->where('status', '!=', 'Inactive')->first();
@@ -693,12 +693,18 @@ class ProductController extends Controller
         }
 
         $stock_updation_by_visiting_detail = null;
-
-        $userAgent = strtolower(request()->userAgent());
-
-        if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
-            $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+        if (!empty($admin_check_product_stock) && strtolower($admin_check_product_stock->option_value) == 'no' ) {
+            $stock_updation_by_visiting_detail = null;
         } 
+        else {
+            $userAgent = strtolower(request()->userAgent());
+
+            if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+                $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+            } 
+        }
+
+        
 
         
         if (!empty($stock_updation_by_visiting_detail)) {
@@ -714,7 +720,7 @@ class ProductController extends Controller
                 'sku' => $product->code,
             ]);
 
-            $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
+            
 
             if ($api_status == false) {
                 if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'Yes') {
