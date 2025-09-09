@@ -668,411 +668,94 @@ class ProductController extends Controller
         ));
     }
 
-    public function showProductDetail(Request $request ,$id, $option_id)
-    {
-        $similar_products = null;
-        $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
-        $product = Product::with('categories' , 'brand' , 'ai_image_generation')
-        ->where('id', $id)
-        ->where('status', '!=', 'Inactive')->first();
-        if (empty($product)) {
-            session()->flash('error', 'This product is not available! Please search another product.');
-            return redirect('/products');
-        }
-
-
-        $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
-                                        ->where('option_value', 'Yes')
-                                        ->first();
-        $ai_quantity_threshold_percentage = AdminSetting::where('option_name', 'ai_quantity_threshold_percentage')->first();
-        $ai_quantity_threshold_percentage = 0;
-
-        if (!empty($enable_selling_through_ai)) {
-            $product_option = ProductOption::where('option_id', $option_id)->first();
-            
-        }
-
-        $stock_updation_by_visiting_detail = null;
-        if (!empty($admin_check_product_stock) && strtolower($admin_check_product_stock->option_value) == 'no' ) {
-            $stock_updation_by_visiting_detail = null;
-        } 
-        else {
-            $userAgent = strtolower(request()->userAgent());
-
-            if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
-                $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
-            } 
-        }
-
-        
-
-        
-        if (!empty($stock_updation_by_visiting_detail)) {
-            $api_status = $stock_updation_by_visiting_detail['api_status'];
-            $stock_api_log = StockApiLog::create([
-                'product_id' => $id,
-                'option_id' => $option_id,
-                'request' => $stock_updation_by_visiting_detail['request'] ?? null,
-                'response' => $stock_updation_by_visiting_detail['response'] ?? null,
-                'status' => $api_status,
-                'time_taken' => $stock_updation_by_visiting_detail['elapsed_time_readable'] ?? null,
-                'product_name' => $product->name,
-                'sku' => $product->code,
-            ]);
-
-            
-
-            if ($api_status == false) {
-                if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'Yes') {
-                    $admin_check_product_stock->option_value = 'No';
-                    $admin_check_product_stock->save();
-                } else {
-                    $admin_check_product_stock->option_value = 'No';
-                    $admin_check_product_stock->save();
-                }
-            } else {
-                if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'No') {
-                    $admin_check_product_stock->option_value = 'Yes';
-                    $admin_check_product_stock->save();
-                } else {
-                    $admin_check_product_stock->option_value = 'Yes';
-                    $admin_check_product_stock->save();
-                }
-            }
-           
-        }
-        if (!empty($product->category_id) && !empty($product)) {
-            $similar_products = $this->getSimilarProducts($request , $id, $option_id);
-        }
-        $request_bulk_quantity_discount = AdminSetting::where('option_name', 'request_bulk_quantity_discount')->first();
-        $best_selling_products = null;
-        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
-            ->whereHas('product' , function($query) {
-                $query->where('status' , '!=' , 'Inactive');
-            })
-            ->select('product_id' , DB::raw('count(*) as entry_count'))
-            ->orderBy('created_at' , 'DESC')
-            ->groupBy('product_id')
-            ->take(24)
-            ->get();
-
-        $location_inventories = [];
-        $available_stock = [];
-        $stock = true;
-        $productOption = [];
-        $pname = '';
-        $pricing = '';
-        $user_buy_list_options = [];
-        $lists = '';
-        $contact_id = '';
-        $locations= null;
-        $stock_updated_helper = null;
-        $inventory_update_time_flag = false;
-        $date_difference = null;
-        $threshold_minutes = 3; // Adjust this threshold as needed
-        $stock_with_branches = null;
-        $branch_locations = null;
-
-
-        $customer_demand_inventory_number = !empty($request->latest_inventory_number) ? intval($request->latest_inventory_number) : 0;
-        // Retrieve the record for the given option_id
-        $product_option = ProductOption::where('option_id', $option_id)->first();
-
-        
-        // Fetch stock from API
-        if ($customer_demand_inventory_number === 1) {
-            // Check if a record exists
-            if (!empty($product_option)) {
-                $last_update_time = $product_option->inventory_update_time;
-
-                if ($last_update_time !== null) {
-                    $get_time_difference = now()->diffInMinutes($last_update_time);
-                    $date_difference = $get_time_difference;
-                    if ($date_difference >= $threshold_minutes) {
-                        $inventory_update_time_flag = true;
-                        $product_option->update(['inventory_update_time' => now()]);
-                    } else {
-                        $inventory_update_time_flag = false;
-                    }
-                } else {
-                    $product_option->update(['inventory_update_time' => now()]);
-                    $inventory_update_time_flag = true;
-                }
-            } else {
-                $inventory_update_time_flag = true;
-            }
-            if ($inventory_update_time_flag == true) {
-                $stock_updated_helper = $stock_updation_by_visiting_detail;
-                if ($stock_updated_helper != null) {
-                    $stock_updated = $stock_updated_helper['stock_updated'];
-                    $stock_with_branches = $stock_updated_helper['branch_with_stocks'];
-                    if (!empty($stock_with_branches)) {
-                        $product_stock = ProductStock::where('product_id' ,  $product->product_id)
-                            ->where('option_id' , $option_id)
-                            ->get();
-                        if (count($product_stock) > 0) {
-                            foreach ($stock_with_branches as $branch_stock) {
-                                $stock_found = false;
-                            
-                                foreach ($product_stock as $stock) {
-                                    if ($branch_stock['branch_id'] == $stock->branch_id) {
-                                        $stock->available_stock = $branch_stock['available'];
-                                        $stock->save();
-                                        $stock_found = true;
-                                        break; // Exit the inner loop since we found a matching stock
-                                    }
-                                }
-                            
-                                if (!$stock_found) {
-                                    // Create a new product stock if no matching stock found for the current branch
-                                    ProductStock::create([
-                                        'available_stock' => $branch_stock['available'],
-                                        'branch_id' => $branch_stock['branch_id'],
-                                        'product_id' => $product->product_id,
-                                        'branch_name' => $branch_stock['branch_name'],
-                                        'option_id' => $option_id
-                                    ]);
-                                }
-                            }
-                            
-                            // Delete any product stocks that are not in $stock_with_branches
-                            $product_stock_ids = collect($stock_with_branches)->pluck('branch_id');
-                            foreach ($product_stock as $stock) {
-                                if (!$product_stock_ids->contains($stock->branch_id)) {
-                                    $stock->delete();
-                                }
-                            }
-                        } else {
-                            foreach ($stock_with_branches as $branch_stock) {
-                                ProductStock::create([
-                                    'available_stock' => $branch_stock['available'],
-                                    'branch_id' => $branch_stock['branch_id'],
-                                    'product_id' => $product->product_id,
-                                    'branch_name' => $branch_stock['branch_name'],
-                                    'option_id' => $option_id
-                                ]);
-                            }
-                        }
-                        
-                    }
-                } else {
-                    $stock_updated = false;
-                }
-            } else {
-                $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
-                    ->where('option_id' , $option_id)
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-                if (count($get_stock_with_branches) > 0) {
-                    foreach ($get_stock_with_branches as $branch_stock) {
-                        $branch_locations[] = [
-                            'branch_id' => $branch_stock->branch_id,
-                            'branch_name' => $branch_stock->branch_name,
-                            'available' => $branch_stock->available_stock
-                        ];
-                    }
-                }
-                $stock_updated = false;
-            }
-        }
-        else {
-            $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
-                ->where('option_id' , $option_id)
-                ->orderBy('created_at', 'desc')
-                ->get();
-            if (count($get_stock_with_branches) > 0) {
-                foreach ($get_stock_with_branches as $branch_stock) {
-                    $branch_locations[] = [
-                        'branch_id' => $branch_stock->branch_id,
-                        'branch_name' => $branch_stock->branch_name,
-                        'available' => $branch_stock->available_stock
-                    ];
-                }
-            }
-            $stock_updated = false;
-        }
-        $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
-            ->where('option_id' , $option_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        if ($product) {
-            $views = $product->views;
-            $product->views = $views + 1;
-            $product->save();
-
-            // adding product views to separate table
-            $product_view = new ProductView();
-            $product_view->product_id = $product->id;
-            if (Auth::id() != null) {
-                $product_view->user_id = Auth::id();
-            }
-            $product_view->save();
-        }
-        
-        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
-        if (!empty($productOption->products) &&  !empty($productOption->products->categories)) {
-            $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
-            $parent_category = Category::where('category_id', $category->parent_id)->first();
-            $pname = '';
-            if ($parent_category) {
-                $pname =  $parent_category->name;
-            } else {
-                $category = Category::where('category_id', $category->category_id)->first();
-                $pname = $category->name;
-            }
-        } else {
-            $pname = '';
-        }
-
-        $user_id = Auth::id();
-        $contact = '';
-        if ($user_id != null) {
-            $contact = Contact::where('user_id', $user_id)->first();
-        }
-
-        if ($contact) {
-            $pricing = $contact->priceColumn;
-        } else {
-            $pricing = 'RetailUSD';
-        }
-
-        $contact_id = session()->get('contact_id');
-        $user_list = BuyList::where('user_id', $user_id)
-            ->where('contact_id', $contact_id)
-            ->first();
-        if (!empty($user_list)) {
-            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
-        }
-
-        $lists = BuyList::where('user_id', $user_id) 
-            ->where('contact_id', $contact_id)
-            ->with('list_products')
-            ->get();
-        $total_stock = 0;
-        if ($stock_updated) {
-            if (!empty($stock_updated_helper['total_stock'])) {
-                $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
-            }
-        } 
-
-        if ($customer_demand_inventory_number == 1) {
-            if ($inventory_update_time_flag == false) {
-                $locations = $branch_locations;
-            }
-            else {
-                if (!empty($stock_updated_helper['branch_with_stocks'])) {
-                    $locations = $stock_updated_helper['branch_with_stocks'];
-                }
-            }
-        } else {
-            $locations = $branch_locations;
-        } 
-        
-        $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
-        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
-        
-        if (!empty($products_to_hide)) {
-            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
-        }
-
-        $ai_questions  = AiQuestion::where('status' , 1)->orderBy('created_at' , 'Desc')->get();
-
-        $ai_setting = AdminSetting::where('option_name', 'enable_ai_prompt')->first();
-
-        $active_contact = null;
-        if (auth()->user()) {
-            $contact_id = session()->get('contact_id');
-            if (!empty($contact_id)) {
-                $active_contact = Contact::where('contact_id', $contact_id)
-                ->orWhere('secondary_id', $contact_id)
-                ->first();
-            } else {
-                $active_contact = Contact::where('user_id', auth()->id())->first();
-            }
-            
-        } else {
-            $active_contact = null;
-        }
-
-
-        $get_wholesale_contact_id = null;
-        $get_wholesale_terms = null;
-        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
-            
-        // Get wholesale_contact
-        if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
-            ->where('contact_id', $session_contact)
-            ->orWhere('secondary_id', $session_contact)
-            ->first();
-
-            if (!empty($wholesale_contact)) {
-                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
-                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
-                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
-                } else {
-                    $wholesale_contact_child = Contact::where('user_id', $user_id)
-                        ->whereNull('contact_id')
-                        ->where('is_parent', 0)
-                        ->where('secondary_id', $session_contact)
-                        ->first();
-                    
-                    // Ensure $wholesale_contact_child is not null before accessing parent_id
-                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
-                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
-                }
-            }
-        } else {
-            $wholesale_contact = null;
-        }
-
-
-        $enable_see_similar_products = AdminSetting::where('option_name', 'enable_see_similar_products')
-        ->where('option_value', 'Yes')
-        ->first();
-        $enable_image_scrapping = AdminSetting::where('option_name', 'enable_image_scrapping')
-        ->where('option_value', 'Yes')
-        ->first();
-
-        return view('product-detail-2', compact(
-            'productOption',
-            'pname',
-            'pricing',
-            'location_inventories',
-            'user_buy_list_options',
-            'lists',
-            'contact_id',
-            'stock_updated',
-            'product_stocks',
-            'notify_user_about_product_stock',
-            'request_bulk_quantity_discount',
-            'total_stock',
-            'best_selling_products',
-            'locations', 
-            'inventory_update_time_flag' , 
-            'customer_demand_inventory_number',
-            'products_to_hide',
-            'ai_questions',
-            'ai_setting',
-            'active_contact',
-            'get_wholesale_contact_id',
-            'get_wholesale_terms',
-            'enable_see_similar_products',
-            'enable_image_scrapping',
-            'admin_check_product_stock'
-        ));
-
-        
-        
-    }
-
-
     // public function showProductDetail(Request $request ,$id, $option_id)
     // {
     //     $similar_products = null;
+    //     $admin_check_product_stock = AdminSetting::where('option_name', 'check_product_stock')->first();
+    //     $product = Product::with('categories' , 'brand' , 'ai_image_generation')
+    //     ->where('id', $id)
+    //     ->where('status', '!=', 'Inactive')->first();
+    //     if (empty($product)) {
+    //         session()->flash('error', 'This product is not available! Please search another product.');
+    //         return redirect('/products');
+    //     }
 
-    //     // ✅ initialize variables
+
+    //     $enable_selling_through_ai = AdminSetting::where('option_name', 'enable_selling_through_ai')
+    //                                     ->where('option_value', 'Yes')
+    //                                     ->first();
+    //     $ai_quantity_threshold_percentage = AdminSetting::where('option_name', 'ai_quantity_threshold_percentage')->first();
+    //     $ai_quantity_threshold_percentage = 0;
+
+    //     if (!empty($enable_selling_through_ai)) {
+    //         $product_option = ProductOption::where('option_id', $option_id)->first();
+            
+    //     }
+
+    //     $stock_updation_by_visiting_detail = null;
+    //     if (!empty($admin_check_product_stock) && strtolower($admin_check_product_stock->option_value) == 'no' ) {
+    //         $stock_updation_by_visiting_detail = null;
+    //     } 
+    //     else {
+    //         $userAgent = strtolower(request()->userAgent());
+
+    //         if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+    //             $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+    //         } 
+    //     }
+
+        
+
+        
+    //     if (!empty($stock_updation_by_visiting_detail)) {
+    //         $api_status = $stock_updation_by_visiting_detail['api_status'];
+    //         $stock_api_log = StockApiLog::create([
+    //             'product_id' => $id,
+    //             'option_id' => $option_id,
+    //             'request' => $stock_updation_by_visiting_detail['request'] ?? null,
+    //             'response' => $stock_updation_by_visiting_detail['response'] ?? null,
+    //             'status' => $api_status,
+    //             'time_taken' => $stock_updation_by_visiting_detail['elapsed_time_readable'] ?? null,
+    //             'product_name' => $product->name,
+    //             'sku' => $product->code,
+    //         ]);
+
+            
+
+    //         if ($api_status == false) {
+    //             if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'Yes') {
+    //                 $admin_check_product_stock->option_value = 'No';
+    //                 $admin_check_product_stock->save();
+    //             } else {
+    //                 $admin_check_product_stock->option_value = 'No';
+    //                 $admin_check_product_stock->save();
+    //             }
+    //         } else {
+    //             if (!empty($admin_check_product_stock) && $admin_check_product_stock->option_value == 'No') {
+    //                 $admin_check_product_stock->option_value = 'Yes';
+    //                 $admin_check_product_stock->save();
+    //             } else {
+    //                 $admin_check_product_stock->option_value = 'Yes';
+    //                 $admin_check_product_stock->save();
+    //             }
+    //         }
+           
+    //     }
+    //     if (!empty($product->category_id) && !empty($product)) {
+    //         $similar_products = $this->getSimilarProducts($request , $id, $option_id);
+    //     }
+    //     $request_bulk_quantity_discount = AdminSetting::where('option_name', 'request_bulk_quantity_discount')->first();
+    //     $best_selling_products = null;
+    //     $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+    //         ->whereHas('product' , function($query) {
+    //             $query->where('status' , '!=' , 'Inactive');
+    //         })
+    //         ->select('product_id' , DB::raw('count(*) as entry_count'))
+    //         ->orderBy('created_at' , 'DESC')
+    //         ->groupBy('product_id')
+    //         ->take(24)
+    //         ->get();
+
     //     $location_inventories = [];
     //     $available_stock = [];
     //     $stock = true;
@@ -1082,275 +765,34 @@ class ProductController extends Controller
     //     $user_buy_list_options = [];
     //     $lists = '';
     //     $contact_id = '';
-    //     $locations = null;
+    //     $locations= null;
     //     $stock_updated_helper = null;
     //     $inventory_update_time_flag = false;
     //     $date_difference = null;
-    //     $threshold_minutes = 3;
+    //     $threshold_minutes = 3; // Adjust this threshold as needed
     //     $stock_with_branches = null;
     //     $branch_locations = null;
-    //     $stock_updated = false;
-    //     $total_stock = 0;
-    //     $customer_demand_inventory_number = 0;
 
-    //     $product = Product::with('categories' , 'brand' , 'ai_image_generation')
-    //         ->where('id', $id)
-    //         ->where('status', '!=', 'Inactive')->first();
-    //     if (empty($product)) {
-    //         session()->flash('error', 'This product is not available! Please search another product.');
-    //         return redirect('/products');
-    //     }
-
-    //     // ⚡ Load all needed AdminSetting records (full objects)
-    //     $admin_settings = AdminSetting::whereIn('option_name', [
-    //         'enable_selling_through_ai',
-    //         'ai_quantity_threshold_percentage',
-    //         'check_product_stock',
-    //         'request_bulk_quantity_discount',
-    //         'notify_user_about_product_stock',
-    //         'enable_ai_prompt',
-    //         'enable_see_similar_products',
-    //         'enable_image_scrapping',
-    //     ])->get()->keyBy('option_name');
-
-    //     $enable_selling_through_ai        = isset($admin_settings['enable_selling_through_ai']) ? $admin_settings['enable_selling_through_ai']->option_value : null;
-    //     $ai_quantity_threshold_percentage = isset($admin_settings['ai_quantity_threshold_percentage']) ? $admin_settings['ai_quantity_threshold_percentage']->option_value : 0;
-    //     $request_bulk_quantity_discount   = isset($admin_settings['request_bulk_quantity_discount']) ? $admin_settings['request_bulk_quantity_discount'] : null;
-    //     $notify_user_about_product_stock  = isset($admin_settings['notify_user_about_product_stock']) ? $admin_settings['notify_user_about_product_stock'] : null; // ✅ object
-    //     $ai_setting                       = isset($admin_settings['enable_ai_prompt']) ? $admin_settings['enable_ai_prompt'] : null; // ✅ object
-    //     $enable_see_similar_products      = isset($admin_settings['enable_see_similar_products']) ? $admin_settings['enable_see_similar_products'] : null; // ✅ object
-    //     $enable_image_scrapping           = isset($admin_settings['enable_image_scrapping']) ? $admin_settings['enable_image_scrapping'] : null; // ✅ object
-
-    //     if (!empty($enable_selling_through_ai)) {
-    //         $product_option = ProductOption::where('option_id', $option_id)->first();
-    //     }
-
-    //     $stock_updation_by_visiting_detail = null;
-    //     $userAgent = strtolower(request()->userAgent());
-
-    //     // ⚡ Cached stock API call (2 minutes per product/option)
-    //     if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
-    //         $cacheKey = "stock_api_{$id}_{$option_id}";
-
-    //         $stock_updation_by_visiting_detail = Cache::remember($cacheKey, 120, function () use ($product, $option_id, $id) {
-    //             $start = microtime(true);
-    //             $result = UtilHelper::updateProductStock($product, $option_id);
-    //             $elapsed = round(microtime(true) - $start, 2);
-    //             Log::info("Stock API for product {$id} option {$option_id} took {$elapsed}s");
-    //             return $result;
-    //         });
-    //     }
-
-
-    //     if (!empty($stock_updation_by_visiting_detail)) {
-    //         $api_status = $stock_updation_by_visiting_detail['api_status'];
-    //         StockApiLog::create([
-    //             'product_id'   => $id,
-    //             'option_id'    => $option_id,
-    //             'request'      => isset($stock_updation_by_visiting_detail['request']) ? $stock_updation_by_visiting_detail['request'] : null,
-    //             'response'     => isset($stock_updation_by_visiting_detail['response']) ? $stock_updation_by_visiting_detail['response'] : null,
-    //             'status'       => $api_status,
-    //             'time_taken'   => isset($stock_updation_by_visiting_detail['elapsed_time_readable']) ? $stock_updation_by_visiting_detail['elapsed_time_readable'] : null,
-    //             'product_name' => $product->name,
-    //             'sku'          => $product->code,
-    //         ]);
-
-    //         // ✅ If no record exists, create one
-    //         $admin_check_product_stock = AdminSetting::firstOrNew(['option_name' => 'check_product_stock']);
-    //         $admin_check_product_stock->option_value = $api_status ? 'Yes' : 'No';
-    //         $admin_check_product_stock->save();
-    //     }
-
-    //     if (!empty($product->category_id) && !empty($product)) {
-    //         $similar_products = $this->getSimilarProducts($request , $id, $option_id);
-    //     }
-
-    //     // ⚡ Cache heavy query for 10 minutes
-    //     $best_selling_products = Cache::remember('best_selling_products', 600, function () {
-    //         return ApiOrderItem::with(
-    //                 'product.options',
-    //                 'product.options.defaultPrice',
-    //                 'product.brand',
-    //                 'product.options.products',
-    //                 'product.categories',
-    //                 'product.apiorderItem'
-    //             )
-    //             ->whereHas('product', function($q) {
-    //                 $q->where('status', '!=', 'Inactive');
-    //             })
-    //             ->select('product_id', DB::raw('count(*) as entry_count'))
-    //             ->orderBy('created_at', 'DESC')
-    //             ->groupBy('product_id')
-    //             ->take(24)
-    //             ->get();
-    //     });
-
-    //     // ------------------------------
-    //     // Stock + Inventory handling
-    //     // ------------------------------
-    //     $stockData = $this->handleProductStock($request, $product, $option_id, $stock_updation_by_visiting_detail);
-    //     $stock_updated                      = $stockData['stock_updated'];
-    //     $locations                          = $stockData['locations'];
-    //     $inventory_update_time_flag         = $stockData['inventory_update_time_flag'];
-    //     $branch_locations                   = $stockData['branch_locations'];
-    //     $stock_updated_helper               = $stockData['stock_updated_helper'];
-    //     $customer_demand_inventory_number   = $stockData['customer_demand_inventory_number'];
-
-    //     $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
-    //         ->where('option_id' , $option_id)
-    //         ->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     if ($product) {
-    //         $product->increment('views');
-    //         $product_view = new ProductView();
-    //         $product_view->product_id = $product->id;
-    //         if (Auth::id() != null) {
-    //             $product_view->user_id = Auth::id();
-    //         }
-    //         $product_view->save();
-    //     }
-
-    //     $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
-    //     if (!empty($productOption->products) &&  !empty($productOption->products->categories)) {
-    //         $category = Category::with('parent')->where('category_id', $productOption->products->categories->category_id)->first();
-    //         $pname = !empty($category->parent) ? $category->parent->name : $category->name;
-    //     } else {
-    //         $pname = '';
-    //     }
-
-    //     $user_id = Auth::id();
-    //     $contact = '';
-    //     if ($user_id != null) {
-    //         $contact = Contact::where('user_id', $user_id)->first();
-    //     }
-    //     $pricing = $contact ? $contact->priceColumn : 'RetailUSD';
-
-    //     $contact_id = session()->get('contact_id');
-    //     $user_list = BuyList::where('user_id', $user_id)
-    //         ->where('contact_id', $contact_id)
-    //         ->first();
-    //     if (!empty($user_list)) {
-    //         $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
-    //     }
-
-    //     $lists = BuyList::where('user_id', $user_id) 
-    //         ->where('contact_id', $contact_id)
-    //         ->with('list_products')
-    //         ->get();
-
-    //     if ($stock_updated && !empty($stock_updated_helper['total_stock'])) {
-    //         $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
-    //     }
-
-    //     if ($customer_demand_inventory_number == 1) {
-    //         if ($inventory_update_time_flag == false) {
-    //             $locations = $branch_locations;
-    //         } else {
-    //             $locations = isset($stock_updated_helper['branch_with_stocks']) ? $stock_updated_helper['branch_with_stocks'] : null;
-    //         }
-    //     } else {
-    //         $locations = $branch_locations;
-    //     }
-
-    //     $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
-    //     if (!empty($products_to_hide)) {
-    //         $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
-    //     }
-
-    //     $ai_questions  = AiQuestion::where('status' , 1)->orderBy('created_at' , 'Desc')->get();
-
-    //     $active_contact = null;
-    //     if (auth()->user()) {
-    //         $contact_id = session()->get('contact_id');
-    //         if (!empty($contact_id)) {
-    //             $active_contact = Contact::where('contact_id', $contact_id)
-    //                 ->orWhere('secondary_id', $contact_id)
-    //                 ->first();
-    //         } else {
-    //             $active_contact = Contact::where('user_id', auth()->id())->first();
-    //         }
-    //     }
-
-    //     $get_wholesale_contact_id = null;
-    //     $get_wholesale_terms = null;
-    //     $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
-            
-    //     if (!empty($user_id)) {
-    //         $wholesale_contact = Contact::where('user_id', auth()->user()->id)
-    //             ->where('contact_id', $session_contact)
-    //             ->orWhere('secondary_id', $session_contact)
-    //             ->first();
-
-    //         if (!empty($wholesale_contact)) {
-    //             if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
-    //                 $get_wholesale_contact_id = $wholesale_contact->contact_id;
-    //                 $get_wholesale_terms = $wholesale_contact->paymentTerms;
-    //             } else {
-    //                 $wholesale_contact_child = Contact::where('user_id', $user_id)
-    //                     ->whereNull('contact_id')
-    //                     ->where('is_parent', 0)
-    //                     ->where('secondary_id', $session_contact)
-    //                     ->first();
-                    
-    //                 $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
-    //                 $get_wholesale_terms = $wholesale_contact_child ? $wholesale_contact_child->paymentTerms : null;
-    //             }
-    //         }
-    //     }
-
-    //     // ✅ keep original variable for view
-    //     $location_inventories = $locations;
-
-    //     return view('product-detail-2', compact(
-    //         'productOption',
-    //         'pname',
-    //         'pricing',
-    //         'location_inventories', 
-    //         'user_buy_list_options',
-    //         'lists',
-    //         'contact_id',
-    //         'stock_updated',
-    //         'product_stocks',
-    //         'notify_user_about_product_stock', // ✅ now object
-    //         'request_bulk_quantity_discount',  // ✅ now object
-    //         'total_stock',
-    //         'best_selling_products',
-    //         'locations',
-    //         'inventory_update_time_flag',
-    //         'customer_demand_inventory_number',
-    //         'products_to_hide',
-    //         'ai_questions',
-    //         'ai_setting', // ✅ now object
-    //         'active_contact',
-    //         'get_wholesale_contact_id',
-    //         'get_wholesale_terms',
-    //         'enable_see_similar_products', // ✅ now object
-    //         'enable_image_scrapping' // ✅ now object
-    //     ));
-    // }
-
-
-    // private function handleProductStock(Request $request, $product, $option_id, $stock_updation_by_visiting_detail)
-    // {
-    //     $branch_locations = null;
-    //     $stock_updated_helper = null;
-    //     $inventory_update_time_flag = false;
-    //     $stock_updated = false;
-    //     $locations = null;
-    //     $threshold_minutes = 3;
 
     //     $customer_demand_inventory_number = !empty($request->latest_inventory_number) ? intval($request->latest_inventory_number) : 0;
+    //     // Retrieve the record for the given option_id
     //     $product_option = ProductOption::where('option_id', $option_id)->first();
 
+        
+    //     // Fetch stock from API
     //     if ($customer_demand_inventory_number === 1) {
+    //         // Check if a record exists
     //         if (!empty($product_option)) {
     //             $last_update_time = $product_option->inventory_update_time;
+
     //             if ($last_update_time !== null) {
-    //                 $date_difference = now()->diffInMinutes($last_update_time);
-    //                 $inventory_update_time_flag = $date_difference >= $threshold_minutes;
-    //                 if ($inventory_update_time_flag) {
+    //                 $get_time_difference = now()->diffInMinutes($last_update_time);
+    //                 $date_difference = $get_time_difference;
+    //                 if ($date_difference >= $threshold_minutes) {
+    //                     $inventory_update_time_flag = true;
     //                     $product_option->update(['inventory_update_time' => now()]);
+    //                 } else {
+    //                     $inventory_update_time_flag = false;
     //                 }
     //             } else {
     //                 $product_option->update(['inventory_update_time' => now()]);
@@ -1359,30 +801,49 @@ class ProductController extends Controller
     //         } else {
     //             $inventory_update_time_flag = true;
     //         }
-
     //         if ($inventory_update_time_flag == true) {
     //             $stock_updated_helper = $stock_updation_by_visiting_detail;
     //             if ($stock_updated_helper != null) {
     //                 $stock_updated = $stock_updated_helper['stock_updated'];
     //                 $stock_with_branches = $stock_updated_helper['branch_with_stocks'];
-
     //                 if (!empty($stock_with_branches)) {
     //                     $product_stock = ProductStock::where('product_id' ,  $product->product_id)
     //                         ->where('option_id' , $option_id)
     //                         ->get();
-
-    //                     $product_stock_ids = collect($stock_with_branches)->pluck('branch_id');
-    //                     foreach ($stock_with_branches as $branch_stock) {
-    //                         $stock_found = false;
-    //                         foreach ($product_stock as $stock) {
-    //                             if ($branch_stock['branch_id'] == $stock->branch_id) {
-    //                                 $stock->available_stock = $branch_stock['available'];
-    //                                 $stock->save();
-    //                                 $stock_found = true;
-    //                                 break;
+    //                     if (count($product_stock) > 0) {
+    //                         foreach ($stock_with_branches as $branch_stock) {
+    //                             $stock_found = false;
+                            
+    //                             foreach ($product_stock as $stock) {
+    //                                 if ($branch_stock['branch_id'] == $stock->branch_id) {
+    //                                     $stock->available_stock = $branch_stock['available'];
+    //                                     $stock->save();
+    //                                     $stock_found = true;
+    //                                     break; // Exit the inner loop since we found a matching stock
+    //                                 }
+    //                             }
+                            
+    //                             if (!$stock_found) {
+    //                                 // Create a new product stock if no matching stock found for the current branch
+    //                                 ProductStock::create([
+    //                                     'available_stock' => $branch_stock['available'],
+    //                                     'branch_id' => $branch_stock['branch_id'],
+    //                                     'product_id' => $product->product_id,
+    //                                     'branch_name' => $branch_stock['branch_name'],
+    //                                     'option_id' => $option_id
+    //                                 ]);
     //                             }
     //                         }
-    //                         if (!$stock_found) {
+                            
+    //                         // Delete any product stocks that are not in $stock_with_branches
+    //                         $product_stock_ids = collect($stock_with_branches)->pluck('branch_id');
+    //                         foreach ($product_stock as $stock) {
+    //                             if (!$product_stock_ids->contains($stock->branch_id)) {
+    //                                 $stock->delete();
+    //                             }
+    //                         }
+    //                     } else {
+    //                         foreach ($stock_with_branches as $branch_stock) {
     //                             ProductStock::create([
     //                                 'available_stock' => $branch_stock['available'],
     //                                 'branch_id' => $branch_stock['branch_id'],
@@ -1392,12 +853,10 @@ class ProductController extends Controller
     //                             ]);
     //                         }
     //                     }
-    //                     foreach ($product_stock as $stock) {
-    //                         if (!$product_stock_ids->contains($stock->branch_id)) {
-    //                             $stock->delete();
-    //                         }
-    //                     }
+                        
     //                 }
+    //             } else {
+    //                 $stock_updated = false;
     //             }
     //         } else {
     //             $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
@@ -1413,8 +872,10 @@ class ProductController extends Controller
     //                     ];
     //                 }
     //             }
+    //             $stock_updated = false;
     //         }
-    //     } else {
+    //     }
+    //     else {
     //         $get_stock_with_branches = ProductStock::where('product_id' ,  $product->product_id)
     //             ->where('option_id' , $option_id)
     //             ->orderBy('created_at', 'desc')
@@ -1428,27 +889,511 @@ class ProductController extends Controller
     //                 ];
     //             }
     //         }
+    //         $stock_updated = false;
     //     }
+    //     $product_stocks = ProductStock::where('product_id' ,  $product->product_id)
+    //         ->where('option_id' , $option_id)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     if ($product) {
+    //         $views = $product->views;
+    //         $product->views = $views + 1;
+    //         $product->save();
+
+    //         // adding product views to separate table
+    //         $product_view = new ProductView();
+    //         $product_view->product_id = $product->id;
+    //         if (Auth::id() != null) {
+    //             $product_view->user_id = Auth::id();
+    //         }
+    //         $product_view->save();
+    //     }
+        
+    //     $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
+    //     if (!empty($productOption->products) &&  !empty($productOption->products->categories)) {
+    //         $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
+    //         $parent_category = Category::where('category_id', $category->parent_id)->first();
+    //         $pname = '';
+    //         if ($parent_category) {
+    //             $pname =  $parent_category->name;
+    //         } else {
+    //             $category = Category::where('category_id', $category->category_id)->first();
+    //             $pname = $category->name;
+    //         }
+    //     } else {
+    //         $pname = '';
+    //     }
+
+    //     $user_id = Auth::id();
+    //     $contact = '';
+    //     if ($user_id != null) {
+    //         $contact = Contact::where('user_id', $user_id)->first();
+    //     }
+
+    //     if ($contact) {
+    //         $pricing = $contact->priceColumn;
+    //     } else {
+    //         $pricing = 'RetailUSD';
+    //     }
+
+    //     $contact_id = session()->get('contact_id');
+    //     $user_list = BuyList::where('user_id', $user_id)
+    //         ->where('contact_id', $contact_id)
+    //         ->first();
+    //     if (!empty($user_list)) {
+    //         $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+    //     }
+
+    //     $lists = BuyList::where('user_id', $user_id) 
+    //         ->where('contact_id', $contact_id)
+    //         ->with('list_products')
+    //         ->get();
+    //     $total_stock = 0;
+    //     if ($stock_updated) {
+    //         if (!empty($stock_updated_helper['total_stock'])) {
+    //             $total_stock = $stock_updated_helper['total_stock'] >= 0 ? $stock_updated_helper['total_stock'] : 0;
+    //         }
+    //     } 
 
     //     if ($customer_demand_inventory_number == 1) {
     //         if ($inventory_update_time_flag == false) {
     //             $locations = $branch_locations;
-    //         } else {
-    //             $locations = isset($stock_updated_helper['branch_with_stocks']) ? $stock_updated_helper['branch_with_stocks'] : null;
+    //         }
+    //         else {
+    //             if (!empty($stock_updated_helper['branch_with_stocks'])) {
+    //                 $locations = $stock_updated_helper['branch_with_stocks'];
+    //             }
     //         }
     //     } else {
     //         $locations = $branch_locations;
+    //     } 
+        
+    //     $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+    //     $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+    //     if (!empty($products_to_hide)) {
+    //         $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
     //     }
 
-    //     return [
-    //         'stock_updated' => $stock_updated,
-    //         'locations' => $locations,
-    //         'inventory_update_time_flag' => $inventory_update_time_flag,
-    //         'branch_locations' => $branch_locations,
-    //         'stock_updated_helper' => $stock_updated_helper,
-    //         'customer_demand_inventory_number' => $customer_demand_inventory_number
-    //     ];
+    //     $ai_questions  = AiQuestion::where('status' , 1)->orderBy('created_at' , 'Desc')->get();
+
+    //     $ai_setting = AdminSetting::where('option_name', 'enable_ai_prompt')->first();
+
+    //     $active_contact = null;
+    //     if (auth()->user()) {
+    //         $contact_id = session()->get('contact_id');
+    //         if (!empty($contact_id)) {
+    //             $active_contact = Contact::where('contact_id', $contact_id)
+    //             ->orWhere('secondary_id', $contact_id)
+    //             ->first();
+    //         } else {
+    //             $active_contact = Contact::where('user_id', auth()->id())->first();
+    //         }
+            
+    //     } else {
+    //         $active_contact = null;
+    //     }
+
+
+    //     $get_wholesale_contact_id = null;
+    //     $get_wholesale_terms = null;
+    //     $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+    //     // Get wholesale_contact
+    //     if (!empty($user_id)) {
+    //         $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+    //         ->where('contact_id', $session_contact)
+    //         ->orWhere('secondary_id', $session_contact)
+    //         ->first();
+
+    //         if (!empty($wholesale_contact)) {
+    //             if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+    //                 $get_wholesale_contact_id = $wholesale_contact->contact_id;
+    //                 $get_wholesale_terms = $wholesale_contact->paymentTerms;
+    //             } else {
+    //                 $wholesale_contact_child = Contact::where('user_id', $user_id)
+    //                     ->whereNull('contact_id')
+    //                     ->where('is_parent', 0)
+    //                     ->where('secondary_id', $session_contact)
+    //                     ->first();
+                    
+    //                 // Ensure $wholesale_contact_child is not null before accessing parent_id
+    //                 $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+    //                 $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+    //             }
+    //         }
+    //     } else {
+    //         $wholesale_contact = null;
+    //     }
+
+
+    //     $enable_see_similar_products = AdminSetting::where('option_name', 'enable_see_similar_products')
+    //     ->where('option_value', 'Yes')
+    //     ->first();
+    //     $enable_image_scrapping = AdminSetting::where('option_name', 'enable_image_scrapping')
+    //     ->where('option_value', 'Yes')
+    //     ->first();
+
+    //     return view('product-detail-2', compact(
+    //         'productOption',
+    //         'pname',
+    //         'pricing',
+    //         'location_inventories',
+    //         'user_buy_list_options',
+    //         'lists',
+    //         'contact_id',
+    //         'stock_updated',
+    //         'product_stocks',
+    //         'notify_user_about_product_stock',
+    //         'request_bulk_quantity_discount',
+    //         'total_stock',
+    //         'best_selling_products',
+    //         'locations', 
+    //         'inventory_update_time_flag' , 
+    //         'customer_demand_inventory_number',
+    //         'products_to_hide',
+    //         'ai_questions',
+    //         'ai_setting',
+    //         'active_contact',
+    //         'get_wholesale_contact_id',
+    //         'get_wholesale_terms',
+    //         'enable_see_similar_products',
+    //         'enable_image_scrapping',
+    //         'admin_check_product_stock'
+    //     ));
+
+        
+        
     // }
+
+
+    public function showProductDetail(Request $request, $id, $option_id)
+    {
+        $similar_products = null;
+
+        // Fetch all admin settings in one query
+        $adminSettings = AdminSetting::whereIn('option_name', [
+            'check_product_stock',
+            'enable_selling_through_ai',
+            'ai_quantity_threshold_percentage',
+            'request_bulk_quantity_discount',
+            'notify_user_about_product_stock',
+            'enable_ai_prompt',
+            'enable_see_similar_products',
+            'enable_image_scrapping'
+        ])->get()->keyBy('option_name');
+
+        $admin_check_product_stock = isset($adminSettings['check_product_stock']) ? $adminSettings['check_product_stock'] : null;
+        $enable_selling_through_ai = (isset($adminSettings['enable_selling_through_ai']) && $adminSettings['enable_selling_through_ai']->option_value === 'Yes');
+        $ai_quantity_threshold_percentage = isset($adminSettings['ai_quantity_threshold_percentage']) ? $adminSettings['ai_quantity_threshold_percentage']->option_value : 0;
+        $request_bulk_quantity_discount = isset($adminSettings['request_bulk_quantity_discount']) ? $adminSettings['request_bulk_quantity_discount'] : null;
+        $notify_user_about_product_stock = isset($adminSettings['notify_user_about_product_stock']) ? $adminSettings['notify_user_about_product_stock'] : null;
+        $ai_setting = isset($adminSettings['enable_ai_prompt']) ? $adminSettings['enable_ai_prompt'] : null;
+        $enable_see_similar_products = isset($adminSettings['enable_see_similar_products']) ? $adminSettings['enable_see_similar_products'] : null;
+        $enable_image_scrapping = isset($adminSettings['enable_image_scrapping']) ? $adminSettings['enable_image_scrapping'] : null;
+
+        // Load product
+        $product = Product::with('categories', 'brand', 'ai_image_generation')
+            ->where('id', $id)
+            ->where('status', '!=', 'Inactive')
+            ->first();
+
+        if (empty($product)) {
+            session()->flash('error', 'This product is not available! Please search another product.');
+            return redirect('/products');
+        }
+
+        if ($enable_selling_through_ai) {
+            $product_option = ProductOption::where('option_id', $option_id)->first();
+        }
+
+        // Stock update check
+        $stock_updation_by_visiting_detail = null;
+        if (empty($admin_check_product_stock) || strtolower($admin_check_product_stock->option_value) !== 'no') {
+            $userAgent = strtolower($request->userAgent());
+            if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+                $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
+            }
+        }
+
+        // Stock API logging
+        if (!empty($stock_updation_by_visiting_detail)) {
+            $api_status = $stock_updation_by_visiting_detail['api_status'];
+            StockApiLog::create([
+                'product_id'   => $id,
+                'option_id'    => $option_id,
+                'request'      => isset($stock_updation_by_visiting_detail['request']) ? $stock_updation_by_visiting_detail['request'] : null,
+                'response'     => isset($stock_updation_by_visiting_detail['response']) ? $stock_updation_by_visiting_detail['response'] : null,
+                'status'       => $api_status,
+                'time_taken'   => isset($stock_updation_by_visiting_detail['elapsed_time_readable']) ? $stock_updation_by_visiting_detail['elapsed_time_readable'] : null,
+                'product_name' => $product->name,
+                'sku'          => $product->code,
+            ]);
+
+            if (!empty($admin_check_product_stock)) {
+                $admin_check_product_stock->option_value = $api_status ? 'Yes' : 'No';
+                $admin_check_product_stock->save();
+            }
+        }
+
+        if (!empty($product->category_id)) {
+            $similar_products = $this->getSimilarProducts($request, $id, $option_id);
+        }
+
+        // Best selling products
+        $best_selling_products = ApiOrderItem::with(
+            'product.options',
+            'product.options.defaultPrice',
+            'product.brand',
+            'product.options.products',
+            'product.categories',
+            'product.apiorderItem'
+        )
+            ->whereHas('product', function ($q) {
+                $q->where('status', '!=', 'Inactive');
+            })
+            ->select('product_id', DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at', 'DESC')
+            ->groupBy('product_id')
+            ->take(24)
+            ->get();
+
+        // Init variables
+        $location_inventories = [];
+        $available_stock = [];
+        $stock = true;
+        $productOption = [];
+        $pname = '';
+        $pricing = '';
+        $user_buy_list_options = [];
+        $lists = '';
+        $contact_id = '';
+        $locations = null;
+        $stock_updated_helper = null;
+        $inventory_update_time_flag = false;
+        $date_difference = null;
+        $threshold_minutes = 3;
+        $stock_with_branches = null;
+        $branch_locations = null;
+
+        $customer_demand_inventory_number = !empty($request->latest_inventory_number) ? intval($request->latest_inventory_number) : 0;
+        $product_option = ProductOption::where('option_id', $option_id)->first();
+
+        // Fetch stock from API if demanded
+        if ($customer_demand_inventory_number === 1) {
+            if (!empty($product_option)) {
+                $last_update_time = $product_option->inventory_update_time;
+                if ($last_update_time !== null) {
+                    $date_difference = now()->diffInMinutes($last_update_time);
+                    if ($date_difference >= $threshold_minutes) {
+                        $inventory_update_time_flag = true;
+                        $product_option->update(['inventory_update_time' => now()]);
+                    }
+                } else {
+                    $product_option->update(['inventory_update_time' => now()]);
+                    $inventory_update_time_flag = true;
+                }
+            } else {
+                $inventory_update_time_flag = true;
+            }
+
+            if ($inventory_update_time_flag && !empty($stock_updation_by_visiting_detail)) {
+                $stock_updated_helper = $stock_updation_by_visiting_detail;
+                $stock_updated = $stock_updated_helper['stock_updated'];
+                $stock_with_branches = $stock_updated_helper['branch_with_stocks'];
+
+                if (!empty($stock_with_branches)) {
+                    $product_stock = ProductStock::where('product_id', $product->product_id)
+                        ->where('option_id', $option_id)
+                        ->get();
+
+                    $branch_ids = collect($stock_with_branches)->pluck('branch_id');
+
+                    foreach ($stock_with_branches as $branch_stock) {
+                        $stock_found = false;
+                        foreach ($product_stock as $stock) {
+                            if ($branch_stock['branch_id'] == $stock->branch_id) {
+                                $stock->available_stock = $branch_stock['available'];
+                                $stock->save();
+                                $stock_found = true;
+                                break;
+                            }
+                        }
+                        if (!$stock_found) {
+                            ProductStock::create([
+                                'available_stock' => $branch_stock['available'],
+                                'branch_id'       => $branch_stock['branch_id'],
+                                'product_id'      => $product->product_id,
+                                'branch_name'     => $branch_stock['branch_name'],
+                                'option_id'       => $option_id
+                            ]);
+                        }
+                    }
+
+                    foreach ($product_stock as $stock) {
+                        if (!$branch_ids->contains($stock->branch_id)) {
+                            $stock->delete();
+                        }
+                    }
+                }
+            } else {
+                $get_stock_with_branches = ProductStock::where('product_id', $product->product_id)
+                    ->where('option_id', $option_id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                if (count($get_stock_with_branches) > 0) {
+                    foreach ($get_stock_with_branches as $branch_stock) {
+                        $branch_locations[] = [
+                            'branch_id'   => $branch_stock->branch_id,
+                            'branch_name' => $branch_stock->branch_name,
+                            'available'   => $branch_stock->available_stock
+                        ];
+                    }
+                }
+                $stock_updated = false;
+            }
+        } else {
+            $get_stock_with_branches = ProductStock::where('product_id', $product->product_id)
+                ->where('option_id', $option_id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            if (count($get_stock_with_branches) > 0) {
+                foreach ($get_stock_with_branches as $branch_stock) {
+                    $branch_locations[] = [
+                        'branch_id'   => $branch_stock->branch_id,
+                        'branch_name' => $branch_stock->branch_name,
+                        'available'   => $branch_stock->available_stock
+                    ];
+                }
+            }
+            $stock_updated = false;
+        }
+
+        $product_stocks = ProductStock::where('product_id', $product->product_id)
+            ->where('option_id', $option_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Increment views
+        if ($product) {
+            $product->increment('views');
+            $product_view = new ProductView();
+            $product_view->product_id = $product->id;
+            if (Auth::id() != null) {
+                $product_view->user_id = Auth::id();
+            }
+            $product_view->save();
+        }
+
+        // Category name resolution
+        $productOption = ProductOption::where('option_id', $option_id)->with('products.categories', 'price')->first();
+        if (!empty($productOption->products) && !empty($productOption->products->categories)) {
+            $category = Category::where('category_id', $productOption->products->categories->category_id)->first();
+            $parent_category = !empty($category) ? Category::where('category_id', $category->parent_id)->first() : null;
+            $pname = $parent_category ? $parent_category->name : (!empty($category) ? $category->name : '');
+        }
+
+        // Contact pricing
+        $user_id = Auth::id();
+        $contact = $user_id ? Contact::where('user_id', $user_id)->first() : null;
+        $pricing = $contact ? $contact->priceColumn : 'RetailUSD';
+
+        $contact_id = session()->get('contact_id');
+        $user_list = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->first();
+        if (!empty($user_list)) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+        }
+        $lists = BuyList::where('user_id', $user_id)->where('contact_id', $contact_id)->with('list_products')->get();
+
+        // Stock summary
+        $total_stock = 0;
+        if (!empty($stock_updated_helper) && !empty($stock_updated_helper['total_stock'])) {
+            $total_stock = max(0, $stock_updated_helper['total_stock']);
+        }
+
+        if ($customer_demand_inventory_number == 1) {
+            $locations = $inventory_update_time_flag ? ($stock_updated_helper['branch_with_stocks'] ?? null) : $branch_locations;
+        } else {
+            $locations = $branch_locations;
+        }
+
+        $products_to_hide = BuyList::with('list_products')->where('title', 'Products_to_hide')->first();
+        if (!empty($products_to_hide)) {
+            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+        }
+
+        $ai_questions = AiQuestion::where('status', 1)->orderBy('created_at', 'Desc')->get();
+
+        // Active contact
+        $active_contact = null;
+        if (auth()->user()) {
+            $contact_id = session()->get('contact_id');
+            $active_contact = !empty($contact_id)
+                ? Contact::where('contact_id', $contact_id)->orWhere('secondary_id', $contact_id)->first()
+                : Contact::where('user_id', auth()->id())->first();
+        }
+
+        // Wholesale contact
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms = null;
+        $session_contact = Session::get('contact_id') ?: null;
+
+        if (!empty($user_id)) {
+            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+                ->where(function ($q) use ($session_contact) {
+                    $q->where('contact_id', $session_contact)->orWhere('secondary_id', $session_contact);
+                })->first();
+
+            if (!empty($wholesale_contact)) {
+                if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+                    $get_wholesale_contact_id = $wholesale_contact->contact_id;
+                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                } else {
+                    $wholesale_contact_child = Contact::where('user_id', $user_id)
+                        ->whereNull('contact_id')
+                        ->where('is_parent', 0)
+                        ->where('secondary_id', $session_contact)
+                        ->first();
+
+                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+                    $get_wholesale_terms = $wholesale_contact_child ? $wholesale_contact_child->paymentTerms : null;
+                }
+            }
+        }
+
+        return view('product-detail-2', compact(
+            'productOption',
+            'pname',
+            'pricing',
+            'location_inventories',
+            'user_buy_list_options',
+            'lists',
+            'contact_id',
+            'stock_updated',
+            'product_stocks',
+            'notify_user_about_product_stock',
+            'request_bulk_quantity_discount',
+            'total_stock',
+            'best_selling_products',
+            'locations',
+            'inventory_update_time_flag',
+            'customer_demand_inventory_number',
+            'products_to_hide',
+            'ai_questions',
+            'ai_setting',
+            'active_contact',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms',
+            'enable_see_similar_products',
+            'enable_image_scrapping',
+            'admin_check_product_stock'
+        ));
+    }
+
+
 
     
     public function getSimilarProducts(Request $request, $id, $option_id)
