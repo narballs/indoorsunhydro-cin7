@@ -18,7 +18,7 @@
       </div>
     </div>
 </div>
-<script src="https://unpkg.com/@popperjs/core@2"></script>
+{{-- <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="{{ asset('//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('/theme/bootstrap5/js/bootstrap.js') }}"></script>
 <script src="{{ asset('//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js') }}"></script>
@@ -26,7 +26,25 @@
 <script src="https://kit.fontawesome.com/ec19ec29f3.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script id="ze-snippet" src="{{asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475')}}"></script>
+<script src="{{ asset('theme/jquery/bootstrap-tagsinput.min.js') }}"></script> --}}
+{{-- Bootstrap 5 JS (no jQuery needed) --}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+{{-- jQuery (only if your other scripts need it, e.g., bootstrap-tagsinput) --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+{{-- SweetAlert2 --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.all.min.js"></script>
+
+{{-- Feather icons --}}
+<script src="https://unpkg.com/feather-icons"></script>
+
+{{-- Zendesk --}}
+<script id="ze-snippet" src="{{ asset('zendesk.js?key=c226feaf-aefa-49d4-ae97-5b83a096f475') }}"></script>
+
+{{-- Tags input --}}
 <script src="{{ asset('theme/jquery/bootstrap-tagsinput.min.js') }}"></script>
+
 <script>
     $(document).ready(function() {
 		var order_id = parseInt($('.getorderID').html());
