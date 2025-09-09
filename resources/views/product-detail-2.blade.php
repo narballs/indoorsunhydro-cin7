@@ -472,7 +472,6 @@
                                                                 @endif
                                                             @else
                                                                 <?php 
-                                                                    // $enable_add_to_cart = App\Helpers\SettingHelper::enableAddToCart($productOption);
                                                                     $enable_add_to_cart = true;
                                                                 ?>
                                                                 @if ($enable_add_to_cart)
@@ -540,7 +539,7 @@
                                         <div class="col-md-3 col-xl-2 col-3">
                                             @if (isset($image_src['option1']))
                                             <img src="{{asset('theme/bootstrap5/images/' . $image_src['option1'] )}}"
-                                                class="img-fluid"/>
+                                                class="img-fluid" alt="option-1"/>
                                             @endif
                                         </div>
                                         <div class="col-md-9 col-xl-10 col-9">
@@ -551,7 +550,7 @@
                                         <div class="col-md-3 col-xl-2 col-3">
                                             @if (isset($image_src['option2']))
                                             <img src="{{asset('theme/bootstrap5/images/' . $image_src['option2'] )}}"
-                                                class="img-fluid"/>
+                                                class="img-fluid" alt="option-2"/>
                                             @endif
                                         </div>
                                         <div class="col-md-9 col-xl-10 col-9">
@@ -562,7 +561,7 @@
                                         <div class="col-md-3 col-xl-2 col-3">
                                             @if (isset($image_src['option3']))
                                             <img src="{{asset('theme/bootstrap5/images/' . $image_src['option3'] )}}"
-                                                class="img-fluid"/>
+                                                class="img-fluid" alt="option-3"/>
                                             @endif
                                         </div>
                                         <div class="col-md-9 col-xl-10 col-9">
