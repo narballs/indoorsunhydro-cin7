@@ -34,7 +34,6 @@
 		var orderTotal = $('.getorderTotal').val();
         var isStripe = $('.isStripe').val();
 		var send_to = 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq';
-		console.log(order_id , currency , orderTotal , send_to);
         if (parseInt(isStripe) == 1) {
             if (window.location.pathname.match('/thankyou/')) {
                 gtag('event', 'conversion', {
@@ -45,7 +44,7 @@
                 });
             }
         } else {
-            console.log('wholesale_order');
+            // console.log('wholesale_order');
         }	
 
 	});
@@ -353,7 +352,7 @@
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$' + subtotal);
-                        console.log(item.name);
+                        // console.log(item.name);
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
@@ -489,7 +488,7 @@
                 location.reload();
             },
             error: function(error) {
-                console.error("Error sending notification:", error);
+                // console.error("Error sending notification:", error);
                 Swal.fire({
                     title: "Error!",
                     text: "Failed to send notification.",
@@ -501,7 +500,7 @@
     }
 
     function update_quantity_to_original(updatedItems) {
-        console.log(updatedItems);
+        // console.log(updatedItems);
         if (!updatedItems.length)  {
             Swal.fire({
                 title: "Error!",
@@ -539,8 +538,8 @@
                 location.reload();
             },
             error: function(xhr, status, error) {
-                console.error("Error updating quantities:", error, "Status:", status);
-                console.error("Response:", xhr.responseText);
+                // console.error("Error updating quantities:", error, "Status:", status);
+                // console.error("Response:", xhr.responseText);
                 Swal.fire({
                     title: "Error!",
                     text: "Failed to update quantities.",
@@ -582,8 +581,8 @@
                 location.reload();
             },
             error: function(xhr, status, error) {
-                console.error("Error removing out of stock items:", error, "Status:", status);
-                console.error("Response:", xhr.responseText);
+                // console.error("Error removing out of stock items:", error, "Status:", status);
+                // console.error("Response:", xhr.responseText);
                 Swal.fire({
                     title: "Error!",
                     text: "Failed to remove out of stock item(s).",
@@ -669,22 +668,9 @@
             }
         });
     }
-    // function updateBodyClickEventStatus(newStatus) {
-    //   bodyClickEventActive = newStatus;
-    // }
-
+    
     $(document).ready(function() {
-        // $('body').click(function() {
-        //     if (bodyClickEventActive) {
-        //         bodyClickHandler();
-        //     }
-
-        // });
-
-        // $('body').on('click', function() {
-        //     updateBodyClickEventStatus(true);
-        // });
-
+        
         $(document).on('click', '#copyUrl', function() {
             $('#custom_loader').removeClass('d-none');
             let textValue = $(this).attr('data-id');
@@ -693,7 +679,7 @@
             temp.val(textValue).select();
             document.execCommand("copy");
             temp.remove();
-            console.timeEnd('time1');
+            // console.timeEnd('time1');
             $('#custom_loader').addClass('d-none');
         });
         $('.login-info-box').fadeOut();
@@ -792,7 +778,7 @@
             var formattedInput = formatPhoneNumber(input);
             $('.mobileFormat').html(formattedInput);
         } else {
-            console.warn('The .mobileFormat element is empty or does not exist.');
+            // console.warn('The .mobileFormat element is empty or does not exist.');
         }
 
         function formatPhoneNumber(input) {
@@ -833,8 +819,7 @@
             if (row > 0) {
                 var difference = 0;
                 var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-                console.log('difference => ' + difference);
-                console.log('sub total before update  => ' + subtotal_before_update);
+                
 
                 var retail_price = parseFloat($('#retail_price_' + product_id).html());
                 var quantity = parseFloat($('#quantity_' + product_id).val());
@@ -845,18 +830,18 @@
 
                 difference = subtotal_before_update - subtotal;
 
-                console.log('difference => ' + difference);
+                
 
                 var grand_total = $('#grand_total').html();
                 grand_total = parseFloat(grand_total);
 
-                console.log('Grand Total => ' + grand_total);
+                
 
 
                 grand_total = grand_total - difference;
                 $('#grand_total').html(grand_total);
 
-                console.log('Grand Total => ' + grand_total);
+                
 
                 $('#quantity_' + product_id).val(quantity);
                 $('#subtotal_' + product_id).html(subtotal);
@@ -873,12 +858,12 @@
                 },
                 success: function(response) {
                     $('#product_list').append(response);
-                    console.log(response);
+                    
                     var grand_total = $('#grand_total').html();
                     grand_total = parseFloat(grand_total);
 
                     var retail_price = $('#btn_' + product_id).attr('data-retail-price');
-                    console.log(retail_price);
+                    
 
                     var subtotal = retail_price * 1;
 
@@ -1564,7 +1549,7 @@ function getStars($averageRating) {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching reviews:', error);
+                // console.error('Error fetching reviews:', error);
                 reviewsList.innerHTML = '<li class="list-group-item">Error fetching reviews. Please try again later.</li>';
                 updateFloatingButton([]); // Update button with no reviews
             }

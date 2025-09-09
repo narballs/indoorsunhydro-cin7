@@ -1082,7 +1082,6 @@ p {
                 
         }, 
         error: function(response) {
-            console.log(response.responseJSON);
             var error_message = response.responseJSON;
                 Swal.fire({
                     toast: false,
@@ -1435,8 +1434,6 @@ p {
         const option_id = document.getElementById('option_id').value || '';
         const slug = document.getElementById('product_slug').value || '';
 
-        console.log(p_id, option_id, slug);
-
         const auth_user = $('.notifyEmail').val() || null;
 
         let itemsPerPage = window.innerWidth <= 767 ? 1 : 4;
@@ -1475,7 +1472,7 @@ p {
                     }
                 },
                 error: function () {
-                    console.error('Failed to load similar products.');
+                    // cnosole.error('Failed to load similar products.');
                 },
             });
         }
