@@ -1507,7 +1507,7 @@ p {
 
         // Build the HTML structure for similar products
         function buildSimilarProductsHtml(response) {
-            console.log(response);
+            // console.log(response);
             let html = `
                 <div class="row">
                     <div class="col-md-12">
