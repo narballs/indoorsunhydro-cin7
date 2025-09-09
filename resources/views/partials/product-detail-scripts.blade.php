@@ -738,61 +738,7 @@ p {
 }
 </style>
 <script>
-    // function scrape_product_image(product_id) {
-    //     var url = $('#scrape_product_image').val();
-    //     if (url == '') {
-    //         Swal.fire({
-    //             toast: false,
-    //             icon: 'error',
-    //             title: 'Please enter a valid URL',
-    //             position: 'center',
-    //             showConfirmButton: true,  // Show the confirm (OK) button
-    //             confirmButtonText: 'Confirm',
-    //             timerProgressBar: false,
-    //             allowOutsideClick: false, // Disable clicking outside to close the modal
-    //             allowEscapeKey: false, // Disable Esc key to close the modal
-    //             customClass: {
-    //                 confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                 popup: 'swal2-popup-class',  // Class for the actions container
-    //                 actions: 'my-actions-class'  // Class for the actions container
-    //             }
-    //         });
-    //         return false;
-    //     }
-    //     $('#scrape_product_image_loader').removeClass('d-none');
-    //     $.ajax({
-    //         url: '/scrape/product/image/' + product_id,
-    //         method: 'get',
-    //         data: {
-    //             "_token": "{{ csrf_token() }}",
-    //             url: url
-    //         },
-    //         success: function(response) {
-    //             $('#scrape_product_image_loader').addClass('d-none');
-    //             if (response.status == 'success') {
-    //                 // create a popup which will images and have button name as add to catalog 
-
-    //             } else {
-    //                 Swal.fire({
-    //                     toast: false,
-    //                     icon: 'error',
-    //                     title: response.message,
-    //                     position: 'center',
-    //                     showConfirmButton: true,  // Show the confirm (OK) button
-    //                     confirmButtonText: 'Confirm',
-    //                     timerProgressBar: false,
-    //                     allowOutsideClick: false, // Disable clicking outside to close the modal
-    //                     allowEscapeKey: false, // Disable Esc key to close the modal
-    //                     customClass: {
-    //                         confirmButton: 'my-confirm-button',  // Class for the confirm button
-    //                         popup: 'swal2-popup-class',  // Class for the actions container
-    //                         actions: 'my-actions-class'  // Class for the actions container
-    //                     }
-    //                 });
-    //             }
-    //         }
-    //     });
-    // }
+    
     function scrape_product_image(product_id) {
         var url = $('#scrape_product_image').val();
         if (url == '') {
@@ -821,7 +767,7 @@ p {
                     response.image_links.forEach(image => {
                         imagesHtml += `
                             <div class="col-md-2 text-center mb-2">
-                                <img src="${image}" class="img-thumbnail scrape-image" data-image="${image}" style="width: 100%; height: auto;">
+                                <img alt="image" src="${image}" class="img-thumbnail scrape-image" data-image="${image}" style="width: 100%; height: auto;">
                             </div>`;
                     });
                     imagesHtml += `</div>`;
@@ -1136,7 +1082,6 @@ p {
                 
         }, 
         error: function(response) {
-            console.log(response.responseJSON);
             var error_message = response.responseJSON;
                 Swal.fire({
                     toast: false,
@@ -1489,8 +1434,6 @@ p {
         const option_id = document.getElementById('option_id').value || '';
         const slug = document.getElementById('product_slug').value || '';
 
-        console.log(p_id, option_id, slug);
-
         const auth_user = $('.notifyEmail').val() || null;
 
         let itemsPerPage = window.innerWidth <= 767 ? 1 : 4;
@@ -1529,7 +1472,7 @@ p {
                     }
                 },
                 error: function () {
-                    console.error('Failed to load similar products.');
+                    // cnosole.error('Failed to load similar products.');
                 },
             });
         }
@@ -1564,7 +1507,7 @@ p {
 
         // Build the HTML structure for similar products
         function buildSimilarProductsHtml(response) {
-            console.log(response);
+            // console.log(response);
             let html = `
                 <div class="row">
                     <div class="col-md-12">
@@ -1703,48 +1646,7 @@ p {
                 }
             }
 
-            // Return the appropriate button HTML based on conditions
-            // return `
-            //     <div class="row justify-content-center mt-4">
-            //         <!-- Check if Add to Cart should be shown -->
-            //         ${add_to_cart ? 
-            //             (option?.stockAvailable > 0 ? `
-            //                 <div class="col-md-10">
-            //                     <button type="button" class="buy_frequent_again_btn border-0 w-100 p-2" 
-            //                         onclick="similar_product_add_to_cart('${productData.id}', '${option.option_id}')">
-            //                         Add to Cart
-            //                     </button>
-            //                 </div>` 
-            //                 : `
-            //                 <!-- If stock is 0, show Notify button based on login status -->
-            //                 <div class="col-md-10">
-            //                     ${auth_value ? `
-            //                         <button type="button" id="notify_popup_modal_${option.option_id}" 
-            //                             data-product-id="${productData.id}" 
-            //                             onclick="notify_user_about_product_stock_similar_portion('${productData.id}', '${productData.code}')" 
-            //                             class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded d-flex align-items-center justify-content-center">
-            //                             <a class="text-white">Notify</a>
-            //                             <div class="spinner-border text-white custom_stock_spinner stock_spinner_${productData.id} ml-1 d-none" role="status">
-            //                                 <span class="sr-only"></span>
-            //                             </div>
-            //                         </button>`
-            //                         : `
-            //                         <button type="button" id="notify_popup_modal_${option.option_id}" 
-            //                             onclick="show_notify_popup_modal_similar_portion('${productData.id}', '${productData.code}')" 
-            //                             class="w-100 ml-0 bg-primary h-auto product-detail-button-cards notify_stock_btn_class text-uppercase notify_popup_modal_btn rounded">
-            //                             <a class="text-white">Notify</a>
-            //                         </button>`}
-            //                 </div>`)
-            //         : `
-            //             <!-- If Add to Cart is false, show Call to Order button -->
-            //             <div class="col-md-10">
-            //                 <button type="button" class="buy_frequent_again_btn_call_to_order border-0 w-100 p-2">
-            //                     Call To Order
-            //                 </button>
-            //             </div>`}
-            //     </div>
-            // `;
-
+            
             let lowerCaseTerms = (get_wholesale_terms || "").trim().toLowerCase();
             let addToCartButton = `
                 <div class="col-md-10">

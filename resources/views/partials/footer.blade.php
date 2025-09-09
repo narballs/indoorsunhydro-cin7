@@ -34,7 +34,6 @@
 		var orderTotal = $('.getorderTotal').val();
         var isStripe = $('.isStripe').val();
 		var send_to = 'AW-11475808917/uLuQCJO2t40ZEJXli-Aq';
-		console.log(order_id , currency , orderTotal , send_to);
         if (parseInt(isStripe) == 1) {
             if (window.location.pathname.match('/thankyou/')) {
                 gtag('event', 'conversion', {
@@ -45,7 +44,7 @@
                 });
             }
         } else {
-            console.log('wholesale_order');
+            // console.log('wholesale_order');
         }	
 
 	});
@@ -353,7 +352,7 @@
                         var cart_total = cart_total + subtotal;
                         var total_cart_quantity = total_cart_quantity + quantity;
                         $('#subtotal_' + product_id).html('$' + subtotal);
-                        console.log(item.name);
+                        // console.log(item.name);
                         var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                             .val()).innerHTML;
                     }
@@ -489,7 +488,7 @@
                 location.reload();
             },
             error: function(error) {
-                console.error("Error sending notification:", error);
+                // console.error("Error sending notification:", error);
                 Swal.fire({
                     title: "Error!",
                     text: "Failed to send notification.",
@@ -501,7 +500,7 @@
     }
 
     function update_quantity_to_original(updatedItems) {
-        console.log(updatedItems);
+        // console.log(updatedItems);
         if (!updatedItems.length)  {
             Swal.fire({
                 title: "Error!",
@@ -539,8 +538,8 @@
                 location.reload();
             },
             error: function(xhr, status, error) {
-                console.error("Error updating quantities:", error, "Status:", status);
-                console.error("Response:", xhr.responseText);
+                // console.error("Error updating quantities:", error, "Status:", status);
+                // console.error("Response:", xhr.responseText);
                 Swal.fire({
                     title: "Error!",
                     text: "Failed to update quantities.",
@@ -582,8 +581,8 @@
                 location.reload();
             },
             error: function(xhr, status, error) {
-                console.error("Error removing out of stock items:", error, "Status:", status);
-                console.error("Response:", xhr.responseText);
+                // console.error("Error removing out of stock items:", error, "Status:", status);
+                // console.error("Response:", xhr.responseText);
                 Swal.fire({
                     title: "Error!",
                     text: "Failed to remove out of stock item(s).",
@@ -669,22 +668,9 @@
             }
         });
     }
-    // function updateBodyClickEventStatus(newStatus) {
-    //   bodyClickEventActive = newStatus;
-    // }
-
+    
     $(document).ready(function() {
-        // $('body').click(function() {
-        //     if (bodyClickEventActive) {
-        //         bodyClickHandler();
-        //     }
-
-        // });
-
-        // $('body').on('click', function() {
-        //     updateBodyClickEventStatus(true);
-        // });
-
+        
         $(document).on('click', '#copyUrl', function() {
             $('#custom_loader').removeClass('d-none');
             let textValue = $(this).attr('data-id');
@@ -693,7 +679,7 @@
             temp.val(textValue).select();
             document.execCommand("copy");
             temp.remove();
-            console.timeEnd('time1');
+            // console.timeEnd('time1');
             $('#custom_loader').addClass('d-none');
         });
         $('.login-info-box').fadeOut();
@@ -792,7 +778,7 @@
             var formattedInput = formatPhoneNumber(input);
             $('.mobileFormat').html(formattedInput);
         } else {
-            console.warn('The .mobileFormat element is empty or does not exist.');
+            // console.warn('The .mobileFormat element is empty or does not exist.');
         }
 
         function formatPhoneNumber(input) {
@@ -833,8 +819,7 @@
             if (row > 0) {
                 var difference = 0;
                 var subtotal_before_update = parseFloat($('#subtotal_' + product_id).html());
-                console.log('difference => ' + difference);
-                console.log('sub total before update  => ' + subtotal_before_update);
+                
 
                 var retail_price = parseFloat($('#retail_price_' + product_id).html());
                 var quantity = parseFloat($('#quantity_' + product_id).val());
@@ -845,18 +830,18 @@
 
                 difference = subtotal_before_update - subtotal;
 
-                console.log('difference => ' + difference);
+                
 
                 var grand_total = $('#grand_total').html();
                 grand_total = parseFloat(grand_total);
 
-                console.log('Grand Total => ' + grand_total);
+                
 
 
                 grand_total = grand_total - difference;
                 $('#grand_total').html(grand_total);
 
-                console.log('Grand Total => ' + grand_total);
+                
 
                 $('#quantity_' + product_id).val(quantity);
                 $('#subtotal_' + product_id).html(subtotal);
@@ -873,12 +858,12 @@
                 },
                 success: function(response) {
                     $('#product_list').append(response);
-                    console.log(response);
+                    
                     var grand_total = $('#grand_total').html();
                     grand_total = parseFloat(grand_total);
 
                     var retail_price = $('#btn_' + product_id).attr('data-retail-price');
-                    console.log(retail_price);
+                    
 
                     var subtotal = retail_price * 1;
 
@@ -1287,101 +1272,7 @@
         });
     }
 
-    // function generateProductsHtml(response , products) {
-    //     var price_column = response.price_column;
-    //     var htmlContent = `<div class="row">`;
-
-    //     products.forEach(function(product , price_column) {
-    //         var productHtml = `
-    //             <div class="col-md-6 col-xl-6 col-lg-6 d-flex align-self-stretch mt-2 product_row_mobile_responsive pt-1 h-100">
-    //                 <div class="p-2 shadow-sm w-100" style="background-color: #fff; background-clip: border-box; border: 1px solid rgba(0,0,0,.125); border-radius: 0.25rem;">
-    //         `;
-
-    //         // Add subscribe button if contact_id is present
-    //         if (response.contact_id) {
-    //             productHtml += generateSubscribeButton(product.product_id, product.option_id , response.user_buy_list_options);
-    //         }
-
-    //         // Add image or placeholder
-    //         productHtml += generateProductImage(product);
-            
-    //         var productName = product.products.name;  // Get the text of the product name
-    //         var shortenedName = productName.length > 30 ? productName.substring(0, 20) + '...' : productName;
-    //         // Add the rest of the product details
-    //         productHtml += `
-    //             <div class="card-body d-flex flex-column text-center mt-1 prd_mbl_card_bdy p-2">
-    //                 <h5 class="card-title card_product_title tooltip-product" style="font-weight: 500; font-size: 16px;" data-title="${product.products.name}" id="product_name_${product.products.id}">
-    //                     <a class="product-row-product-title" href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
-    //                         ${shortenedName}
-    //                         <div class="tooltip-product-text bg-white text-primary">
-    //                             <div class="tooltip-arrow"></div>
-    //                             <div class="tooltip-inner bg-white text-primary">
-    //                                 <span>${productName}</span>
-    //                             </div>
-    //                         </div>
-    //                     </a>
-    //                 </h5>
-    //                 <input type="hidden" name="p_id" id="p_${product.products.id}" value="${product.products.id}">
-    //             </div>
-    //         `;
-    //         if (product.show_price === true && product.default_price !== null) {
-    //             if ((product.default_price[response.price_column]  != null) || (parseFloat(product.default_price[response.price_column]) > 0)) {
-    //                 var formattedPrice = formatNumber(parseFloat(product.default_price[response.price_column]));
-    //             } else if ((product.default_price.sacramentoUSD  != null) || (parseFloat(product.default_price.sacramentoUSD) > 0)) {
-    //                 var formattedPrice = formatNumber(parseFloat(product.default_price.sacramentoUSD));
-    //             } else {
-    //                 var formattedPrice = formatNumber(parseFloat(product.default_price.retailUSD));
-    //             }
-    //             productHtml += `
-    //                 <h4 class="text-uppercase mb-0 text-center p_price_resp mt-0 mb-2">
-    //                     $${formattedPrice}
-    //                 </h4>
-    //             `;
-    //         }
-
-    //         if (product.add_to_cart == true) {
-    //             productHtml += `
-    //                 <div class="col-sm-12 mt-0 button_swap_quantity button_swap_quantity_${product.products.id} mb-2" id="button_swap_${product.products.id}">
-    //                     <div class="input-group">
-    //                         <div class="input-group-prepend custom-border qty_minus_mobile">
-    //                             <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="subtracting_quantity('${product.products.id}', '${product.option_id}')"><i class="fa fa-minus minus_qty_font qty_font"></i></button>
-    //                         </div>
-                            
-    //                         <input type="number" id="swap_qty_number_${product.products.id}" name="swap_qty_number" value="1"  class="qty_number_mobile bg-white form-control text-dark form-control-sm text-center swap_qty_number_${product.products.id}"  style="font-weight: 500" min="1" max="${product.stockAvailable}">
-    //                         <div class="input-group-prepend custom-border qty_plus_mobile">
-    //                             <button class="p-0 bg-transparent btn-sm border-0 qty_customize_btn" id="" onclick="adding_quantity('${product.products.id}', '${product.option_id}')"><i class="fa fa-plus plus_qty_font qty_font"></i></button>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //                 <button 
-    //                     class="hover_effect prd_btn_resp ajaxSubmit button-cards col w-100  mb-1 original_cart_btn   original_cart_btn_${product.products.id}" 
-    //                     type="submit" 
-    //                     style="max-height: 46px;" id="ajaxSubmit_${product.products.id}"
-    //                     onclick="updateCart('${product.products.id}', '${product.option_id}')">
-    //                     Add to cart
-    //                 </button>
-    //             `;
-    //         } else {
-    //             productHtml += `
-    //                 <div class="col-md-12">
-    //                     <button 
-    //                         class="w-100 ml-0 call-to-order-button text-uppercase" 
-    //                         style="max-height: 46px;">
-    //                         Call To Order
-    //                     </button>
-    //                 </div>
-    //             `;
-    //         }
-            
-
-    //         productHtml += `</div></div>`;
-    //         htmlContent += productHtml;
-    //     });
-
-    //     htmlContent += `</div>`;
-    //     return htmlContent;
-    // }
-
+    
     function generateProductsHtml(response, products) {
         var price_column = response.price_column;
         var htmlContent = `<div class="owl-carousel owl-theme similar-products-carousel-ai w-75">`;
@@ -1441,7 +1332,7 @@
                 <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
                     <div class="image-height-mbl" style="min-height: 130px; max-height:130px;">
                         <span class="d-flex justify-content-center align-items-center">
-                            <img src="${product.products.images}" class="img_responsive_mbl col-md-10 image-body offset-1 mt-2" style="min-height: 130px; max-height: 130px;" />
+                            <img alt="image" src="${product.products.images}" class="img_responsive_mbl col-md-10 image-body offset-1 mt-2" style="min-height: 130px; max-height: 130px;" />
                         </span>
                     </div>
                 </a>
@@ -1451,7 +1342,7 @@
                 <a href="${window.location.origin +'/product-detail/' + product.products.id + '/' + product.option_id + '/' + product.products.slug}">
                     <div class="image-height-mbl" style="min-height: 130px; max-height:130px;">
                         <span class="d-flex justify-content-center align-items-center">
-                            <img src="${imageNotAvailableUrl}" class="img_responsive_mbl_not_available col-md-10 image-body offset-1 mt-2"  style="min-height: 130px; max-height: 130px;" />
+                            <img alt="image" src="${imageNotAvailableUrl}" class="img_responsive_mbl_not_available col-md-10 image-body offset-1 mt-2"  style="min-height: 130px; max-height: 130px;" />
                         </span>
                     </div>
                 </a>
@@ -1658,7 +1549,7 @@ function getStars($averageRating) {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching reviews:', error);
+                // console.error('Error fetching reviews:', error);
                 reviewsList.innerHTML = '<li class="list-group-item">Error fetching reviews. Please try again later.</li>';
                 updateFloatingButton([]); // Update button with no reviews
             }

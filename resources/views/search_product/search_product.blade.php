@@ -233,7 +233,7 @@
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$'+subtotal);
-                            console.log(item.name);
+                            // console.log(item.name);
                             var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
                         }
                         
@@ -273,7 +273,7 @@
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$'+subtotal);
-                            console.log(item.name);
+                            // console.log(item.name);
                             var product_name = document.getElementById("product_name_"+jQuery('#p_'+id).val()).innerHTML;
                         }
                         // jQuery('.cart-total-' + id).html($('#swap_qty_number_' + id).val());
@@ -422,7 +422,7 @@
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$' + subtotal);
-                            console.log(item.name);
+                            // console.log(item.name);
                             var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                                 .val()).innerHTML;
                         }
@@ -458,7 +458,7 @@
                             var cart_total = cart_total + subtotal;
                             var total_cart_quantity = total_cart_quantity + quantity;
                             $('#subtotal_' + product_id).html('$' + subtotal);
-                            console.log(item.name);
+                            // console.log(item.name);
                             var product_name = document.getElementById("product_name_" + jQuery('#p_' + id)
                                 .val()).innerHTML;
                         }
