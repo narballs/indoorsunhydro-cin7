@@ -30,58 +30,161 @@ class HomeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function index(Request $request)
+    // {
+        
+    //     $cart_items = UserHelper::switch_price_tier($request);
+    //     $contact_id = null;
+    //     $contact_id = session()->get('contact_id');
+    //     $categories = Category::orderBy('name', 'ASC')
+    //         ->with('products')->where('is_active', 1)
+    //         ->get();
+    //     $product_views = null;
+    //     $best_selling_products = null;
+    //     $product_views_chunks = null;
+    //     $user_id = Auth::id();
+    //     $user_buy_list_options = [];
+    //     $lists = '';
+    //     $pages = Page::where('status', 1)->get();
+    //     if (auth()->user()) {
+    //         $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+    //         ->whereHas('product' , function($query) {
+    //             $query->where('status' , '!=' , 'Inactive');
+    //         })
+    //         ->select('product_id' , DB::raw('count(*) as entry_count'))
+    //         ->whereNotNull('user_id')
+    //         ->where('user_id' , $user_id)
+    //         ->orderBy('created_at' , 'DESC')
+    //         ->take(10)
+    //         ->groupBy('product_id')
+    //         ->get();
+            
+    //     } else {
+    //         $product_views = null;
+    //     }
+    //     $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+    //         ->whereHas('product' , function($query) {
+    //             $query->where('status' , '!=' , 'Inactive');
+    //         })
+    //         ->select('product_id' , DB::raw('count(*) as entry_count'))
+    //         ->orderBy('created_at' , 'DESC')
+    //         ->groupBy('product_id')
+    //         ->take(24)
+    //         ->get();
+    //     $user_list = BuyList::where('user_id', $user_id)
+    //         ->where('contact_id', $contact_id)
+    //         ->first();
+    //     if (!empty($user_list)) {
+    //         $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+    //     }
+
+    //     $lists = BuyList::where('user_id', $user_id)
+    //         ->where('contact_id', $contact_id)
+    //         ->with('list_products')
+    //         ->get();
+
+
+    //     $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
+    //     $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
+        
+    //     if (!empty($products_to_hide)) {
+    //         $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
+    //     }
+
+    //     $user_id = Auth::id();
+    //     $get_wholesale_contact_id = null;
+    //     $get_wholesale_terms = null;
+    //     $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
+            
+    //     // Get wholesale_contact
+    //     if (!empty($user_id)) {
+    //         $wholesale_contact = Contact::where('user_id', auth()->user()->id)
+    //         ->where('contact_id', $session_contact)
+    //         ->orWhere('secondary_id', $session_contact)
+    //         ->first();
+
+    //         if (!empty($wholesale_contact)) {
+    //             if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
+    //                 $get_wholesale_contact_id = $wholesale_contact->contact_id;
+    //                 $get_wholesale_terms = $wholesale_contact->paymentTerms;
+    //             } else {
+    //                 $wholesale_contact_child = Contact::where('user_id', $user_id)
+    //                     ->whereNull('contact_id')
+    //                     ->where('is_parent', 0)
+    //                     ->where('secondary_id', $session_contact)
+    //                     ->first();
+                    
+    //                 // Ensure $wholesale_contact_child is not null before accessing parent_id
+    //                 $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
+    //                 $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+    //             }
+    //         }
+    //     } else {
+    //         $wholesale_contact = null;
+    //     }
+        
+    //     return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists',
+    //     'user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide', 'get_wholesale_contact_id' , 'get_wholesale_terms'));
+    // }
+
     public function index(Request $request)
     {
-        
-       // session::forget('cart_hash');
-       //  session::forget('companies');
-       //  session::forget('cart');
-       //  $cart = session::get('cart');
-       
-       //   exit;
-       $cart_items = UserHelper::switch_price_tier($request);
-        $contact_id = null;
+        $cart_items = UserHelper::switch_price_tier($request);
         $contact_id = session()->get('contact_id');
-        $categories = Category::orderBy('name', 'ASC')
-            ->with('products')->where('is_active', 1)
+        $user_id    = Auth::id();
+
+        $categories = Category::with('products')
+            ->where('is_active', 1)
+            ->orderBy('name', 'ASC')
             ->get();
+
         $product_views = null;
-        $best_selling_products = null;
-        $product_views_chunks = null;
-        $user_id = Auth::id();
-        $user_buy_list_options = [];
-        $lists = '';
-        $pages = Page::where('status', 1)->get();
-        if (auth()->user()) {
-            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
-            ->whereHas('product' , function($query) {
-                $query->where('status' , '!=' , 'Inactive');
-            })
-            ->select('product_id' , DB::raw('count(*) as entry_count'))
-            ->whereNotNull('user_id')
-            ->where('user_id' , $user_id)
-            ->orderBy('created_at' , 'DESC')
-            ->take(10)
-            ->groupBy('product_id')
-            ->get();
-            
-        } else {
-            $product_views = null;
+        if ($user_id) {
+            $product_views = ProductView::with([
+                    'product.options',
+                    'product.options.defaultPrice',
+                    'product.brand',
+                    'product.options.products',
+                    'product.categories',
+                    'product.apiorderItem'
+                ])
+                ->whereHas('product', function ($q) {
+                    $q->where('status', '!=', 'Inactive');
+                })
+                ->select('product_id', DB::raw('count(*) as entry_count'))
+                ->where('user_id', $user_id)
+                ->orderBy('created_at', 'DESC')
+                ->take(10)
+                ->groupBy('product_id')
+                ->get();
         }
-        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
-            ->whereHas('product' , function($query) {
-                $query->where('status' , '!=' , 'Inactive');
+
+        $best_selling_products = ApiOrderItem::with([
+                'product.options',
+                'product.options.defaultPrice',
+                'product.brand',
+                'product.options.products',
+                'product.categories',
+                'product.apiorderItem'
+            ])
+            ->whereHas('product', function ($q) {
+                $q->where('status', '!=', 'Inactive');
             })
-            ->select('product_id' , DB::raw('count(*) as entry_count'))
-            ->orderBy('created_at' , 'DESC')
+            ->select('product_id', DB::raw('count(*) as entry_count'))
+            ->orderBy('created_at', 'DESC')
             ->groupBy('product_id')
             ->take(24)
             ->get();
+
+        $user_buy_list_options = [];
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
-        if (!empty($user_list)) {
-            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)->pluck('option_id', 'option_id')->toArray();
+
+        if ($user_list) {
+            $user_buy_list_options = ProductBuyList::where('list_id', $user_list->id)
+                ->pluck('option_id', 'option_id')
+                ->toArray();
         }
 
         $lists = BuyList::where('user_id', $user_id)
@@ -89,49 +192,61 @@ class HomeController extends Controller
             ->with('list_products')
             ->get();
 
-
         $notify_user_about_product_stock = AdminSetting::where('option_name', 'notify_user_about_product_stock')->first();
-        $products_to_hide = BuyList::with('list_products')->where('title' , 'Products_to_hide')->first();
-        
-        if (!empty($products_to_hide)) {
-            $products_to_hide = $products_to_hide->list_products->pluck('option_id')->toArray();
-        }
 
-        $user_id = Auth::id();
-        $get_wholesale_contact_id = null;
-        $get_wholesale_terms = null;
-        $session_contact = Session::get('contact_id') != null ? Session::get('contact_id') : null;
-            
-        // Get wholesale_contact
-        if (!empty($user_id)) {
-            $wholesale_contact = Contact::where('user_id', auth()->user()->id)
-            ->where('contact_id', $session_contact)
-            ->orWhere('secondary_id', $session_contact)
+        $products_to_hide = BuyList::with('list_products')
+            ->where('title', 'Products_to_hide')
             ->first();
+        $products_to_hide = $products_to_hide
+            ? $products_to_hide->list_products->pluck('option_id')->toArray()
+            : null;
 
-            if (!empty($wholesale_contact)) {
+        $get_wholesale_contact_id = null;
+        $get_wholesale_terms      = null;
+        $session_contact          = Session::get('contact_id') ? Session::get('contact_id') : null;
+
+        if ($user_id) {
+            $wholesale_contact = Contact::where('user_id', $user_id)
+                ->where(function ($q) use ($session_contact) {
+                    $q->where('contact_id', $session_contact)
+                    ->orWhere('secondary_id', $session_contact);
+                })
+                ->first();
+
+            if ($wholesale_contact) {
                 if ($wholesale_contact->is_parent == 1 && !empty($wholesale_contact->contact_id)) {
                     $get_wholesale_contact_id = $wholesale_contact->contact_id;
-                    $get_wholesale_terms = $wholesale_contact->paymentTerms;
+                    $get_wholesale_terms      = $wholesale_contact->paymentTerms;
                 } else {
                     $wholesale_contact_child = Contact::where('user_id', $user_id)
                         ->whereNull('contact_id')
                         ->where('is_parent', 0)
                         ->where('secondary_id', $session_contact)
                         ->first();
-                    
-                    // Ensure $wholesale_contact_child is not null before accessing parent_id
-                    $get_wholesale_contact_id = $wholesale_contact_child ? $wholesale_contact_child->parent_id : null;
-                    $get_wholesale_terms = $wholesale_contact_child->paymentTerms;
+
+                    if ($wholesale_contact_child) {
+                        $get_wholesale_contact_id = $wholesale_contact_child->parent_id;
+                        $get_wholesale_terms      = $wholesale_contact_child->paymentTerms;
+                    }
                 }
             }
-        } else {
-            $wholesale_contact = null;
         }
-        
-        return view('index', compact('categories','cart_items', 'product_views','best_selling_products','lists',
-        'user_buy_list_options' , 'contact_id' , 'notify_user_about_product_stock' , 'products_to_hide', 'get_wholesale_contact_id' , 'get_wholesale_terms'));
+
+        return view('index', compact(
+            'categories',
+            'cart_items',
+            'product_views',
+            'best_selling_products',
+            'lists',
+            'user_buy_list_options',
+            'contact_id',
+            'notify_user_about_product_stock',
+            'products_to_hide',
+            'get_wholesale_contact_id',
+            'get_wholesale_terms'
+        ));
     }
+
 
     public function show_page($slug) {
         $page = Page::where('slug' , $slug)->first();
