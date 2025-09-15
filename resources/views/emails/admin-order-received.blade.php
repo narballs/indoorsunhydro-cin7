@@ -395,7 +395,7 @@
 
                                     // }
                                 @endphp
-                                Tax ({{ !empty($currentOrder->custom_tax_rate_percent) ? $currentOrder->custom_tax_rate_percent : $currentOrder->texClasses->rate }}%)
+                                Tax ({{ !empty($currentOrder->custom_tax_rate_percent) ? number_format($currentOrder->custom_tax_rate_percent , 2 ) : number_format($currentOrder->texClasses->rate , 2) }}%)
                             </td>
                             <td align="right" style="text-align: right;color:#000000;font-color:#000000;font-size: 14px; font-weight:600;">
                                 @php
