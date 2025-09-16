@@ -3165,8 +3165,20 @@ class ProductController extends Controller
         ->where('status', '!=', 'Disabled') // ✅ ensure only active options count
         ->pluck('product_id');
 
+
+        $products = Product::with([
+            'product_views',
+            'product_image',
+            'apiorderItem',
+            'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }
+        ])
+        ->where('status', '!=', 'Inactive')
+        ->whereIn('product_id', $valid_product_ids)->paginate($per_page);
+
         // Final product filtering
-        $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);
+        // $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
