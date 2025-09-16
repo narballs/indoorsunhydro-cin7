@@ -381,9 +381,16 @@
                                                                     <div class="my-2 my-account-image-div-mbl {{($key == 4 || $key > 4) ? 'd-none' : '' }}">
                                                                         <div class="img_my_account_order p-2">
                                                                             @if (!empty($orderItem->product->images))
-                                                                                <img src="{{ $orderItem->product->images }}"
-                                                                                    alt=""
-                                                                                    class="img-fluid my_account_images">
+                                                                                @if (!empty($orderItem->product) && !empty($orderItem->product->product_image->image))
+                                                                                    <picture>
+                                                                                        <source srcset="{{ asset('theme/products/images/' . $orderItem->product->product_image->image . '.webp') }}" type="image/webp">
+                                                                                        <img src="{{ asset('theme/products/images/' . $orderItem->product->product_image->image . '.png') }}"
+                                                                                            alt="{{ $orderItem->product->name }}"
+                                                                                            class="img-fluid my_account_images" loading="lazy" />
+                                                                                    </picture>
+                                                                                @else
+                                                                                    <img src="{{ $orderItem->product->images }}" alt="" class="img-fluid my_account_images">
+                                                                                @endif
                                                                             @else
                                                                                 <img src="{{ asset('/theme/img/image_not_available.png') }}"
                                                                                     alt=""
@@ -401,9 +408,16 @@
                                                                     <div class="my-2 my-account-image-div-mbl">
                                                                         <div class="img_my_account_order p-2">
                                                                             @if (!empty($orderItem->product->images))
-                                                                                <img src="{{ $orderItem->product->images }}"
-                                                                                    alt=""
-                                                                                    class="img-fluid my_account_images">
+                                                                                @if (!empty($orderItem->product) && !empty($orderItem->product->product_image->image))
+                                                                                    <picture>
+                                                                                        <source srcset="{{ asset('theme/products/images/' . $orderItem->product->product_image->image . '.webp') }}" type="image/webp">
+                                                                                        <img src="{{ asset('theme/products/images/' . $orderItem->product->product_image->image . '.png') }}"
+                                                                                            alt="{{ $orderItem->product->name }}"
+                                                                                            class="img-fluid my_account_images" loading="lazy" />
+                                                                                    </picture>
+                                                                                @else
+                                                                                    <img src="{{ $orderItem->product->images }}" alt="" class="img-fluid my_account_images">
+                                                                                @endif
                                                                             @else
                                                                                 <img src="{{ asset('/theme/img/image_not_available.png') }}"
                                                                                     alt=""
@@ -923,7 +937,7 @@
             var rowHtml = '<div class="row mt-4 mb-3">';
             rowHtml += '    <div class="col-md-12">';
             rowHtml += '        <div class="row">';
-            rowHtml += buildImageColumn(productData.images);
+            rowHtml += buildImageColumn(productData , productData.images);
             rowHtml += buildDataColumn(productData , option ,get_wholesale_terms);
             rowHtml += '        </div>';
             rowHtml += buildButtonRow(productData , option ,get_wholesale_terms);
@@ -933,15 +947,48 @@
             return rowHtml;
         }
 
-        function buildImageColumn(imageUrl) {
-            if (imageUrl != '') {
-                imageUrl = imageUrl;
+        // function buildImageColumn(product , imageUrl) {
+        //     if (imageUrl != '') {
+        //         imageUrl = imageUrl;
+        //     } else {
+        //         imageUrl = '/theme/img/image_not_available.png';
+        //     }
+        //     return '<div class="col-md-4 col-xl-5 col-lg-4 image-div image-div-account d-flex justify-content-center">' +
+        //         '<img src="' + imageUrl  + '" alt="Product Image" class="img-fluid">' +
+        //         '</div>';
+        // }
+        const productImageBase = "{{ asset('theme/products/images') }}";
+        const placeholderImage = "{{ asset('theme/img/image_not_available.png') }}";
+
+        function buildImageColumn(product, imageUrl) {
+            if (imageUrl) {
+                if (product.product_image && product.product_image.image) {
+                    return `
+                        <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account d-flex justify-content-center">
+                            <picture>
+                                <source srcset="${productImageBase}/${product.product_image.image}.webp" type="image/webp">
+                                <img id="main-image"
+                                    alt="${product.name ?? 'Product Image'}"
+                                    src="${productImageBase}/${product.product_image.image}.png"
+                                    class="img-fluid"
+                                    loading="lazy" />
+                            </picture>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account d-flex justify-content-center">
+                            <img src="${imageUrl}" alt="Product Image" class="img-fluid">
+                        </div>
+                    `;
+                }
             } else {
-                imageUrl = '/theme/img/image_not_available.png';
+                return `
+                    <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account d-flex justify-content-center">
+                        <img src="${placeholderImage}" alt="No Image" class="img-fluid">
+                    </div>
+                `;
             }
-            return '<div class="col-md-4 col-xl-5 col-lg-4 image-div image-div-account d-flex justify-content-center">' +
-                '<img src="' + imageUrl  + '" alt="Product Image" class="img-fluid">' +
-                '</div>';
         }
 
         function buildDataColumn(productData, option ,get_wholesale_terms) {

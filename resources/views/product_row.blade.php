@@ -44,12 +44,28 @@
                         </a>
                     @endif
                     <a href="{{ url('product-detail/' . $product->id . '/' . $option->option_id . '/' . $product->slug) }}">
-                        <div class="image-height-mbl" style="min-height: 300px;max-height:300px;">
-                            <span class="d-flex justify-content-center align-items-center">
-                                <img src="{{ $product->images }}" class="img_responsive_mbl col-md-10 .image-body offset-1 mt-2"
-                                    style="max-height: 300px;" />
-                            </span>
-                        </div>
+                        @if (!empty($product->product_image) && !empty($product->product_image->image))
+                            <div class="image-height-mbl" style="min-height: 300px; max-height: 300px;">
+                                <span class="d-flex justify-content-center align-items-center">
+                                    <picture>
+                                        <source srcset="{{ asset('theme/products/images/' . $product->product_image->image . '.webp') }}" type="image/webp">
+                                        <img src="{{ asset('theme/products/images/' . $product->product_image->image . '.png') }}"
+                                            alt="{{ $product->name }}"
+                                            class="img_responsive_mbl col-md-10 image-body offset-1 mt-2"
+                                            style="max-height: 300px;" loading="lazy" />
+                                    </picture>
+                                </span>
+                            </div>
+                        @else
+                            <div class="image-height-mbl" style="min-height: 300px; max-height: 300px;">
+                                <span class="d-flex justify-content-center align-items-center">
+                                    <img src="{{ $product->images }}"
+                                        alt="{{ $product->name }}"
+                                        class="img_responsive_mbl col-md-10 image-body offset-1 mt-2"
+                                        style="max-height: 300px;" loading="lazy" />
+                                </span>
+                            </div>
+                        @endif
                     </a>
                 @else
                     @if(!empty($contact_id))

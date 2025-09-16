@@ -146,9 +146,21 @@
                                                                         <div class="my_favorite_product_img p-1"
                                                                             style="width:67px">
                                                                             @if ($product->product->images)
-                                                                                <img src="{{ $product->product->images }}"
-                                                                                    class="" height="50px"
-                                                                                    width="58px">
+                                                                                @if (!empty($product->product->product_image) && !empty($product->product->product_image->image))
+                                                                                    <picture>
+                                                                                        <source srcset="{{ asset('theme/products/images/' . $product->product->product_image->image . '.webp') }}" type="image/webp">
+                                                                                        <img id="main-image"
+                                                                                            alt="{{ $product->product->name }}"
+                                                                                            src="{{ asset('theme/products/images/' . $product->product->product_image->image . '.png') }}"
+                                                                                            height="50px"
+                                                                                            width="58px"
+                                                                                            loading="lazy" />
+                                                                                    </picture>
+                                                                                @else
+                                                                                    <img src="{{ $product->product->images }}"
+                                                                                        class="" height="50px"
+                                                                                        width="58px">
+                                                                                @endif
                                                                             @else
                                                                                 <img src=" {{ asset('theme/img/image_not_available.png') }}"
                                                                                     class="" height="50px">

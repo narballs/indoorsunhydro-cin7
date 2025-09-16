@@ -428,7 +428,18 @@
                                     <td width="20%">
                                         {{-- <img src="{{ asset($option->image) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;"> --}}
                                         @if (!empty($item['product']->images))
-                                            <img src="{{ asset($item['product']->images) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                            @if (!empty($item['product']['product_image']->image))
+                                                <picture>
+                                                    <source srcset="{{ asset('theme/products/images/' . $item['product']['product_image']->image . '.webp') }}" type="image/webp">
+                                                    <img alt="{{ $product->product->name }}"
+                                                        src="{{ asset('theme/products/images/' . $item['product']['product_image']->image . '.png') }}"
+                                                        height="49"
+                                                        width="55"
+                                                        loading="lazy" />
+                                                </picture>
+                                            @else
+                                                <img src="{{ asset($item['product']->images) }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
+                                            @endif
                                         @else
                                             <img src="{{ asset('theme/img/image_not_available.png') }}" width="55" height="49" alt="" style="border:5px solid #d9d9d9;border-radius:2px;">
                                         @endif
