@@ -52,7 +52,16 @@
                             <div class="row">
                                 <div class="col-md-4 image-div image-div-account d-flex justify-content-center">
                                     @if(!empty($product->images))
-                                        <img src="{{ $product->images }}" alt="" class="buy_again_product_image">
+                                        @if (!empty($product->product_image) && !empty($product->product_image->image))
+                                            <picture>
+                                                <source srcset="{{ asset('theme/products/images/' . $product->product_image->image . '.webp') }}" type="image/webp">
+                                                <img src="{{ asset('theme/products/images/' . $product->product_image->image . '.png') }}"
+                                                    alt="{{ $product->name }}"
+                                                    class="buy_again_product_image" loading="lazy" />
+                                            </picture>
+                                        @else
+                                            <img src="{{ $product->images }}" alt="" class="buy_again_product_image">
+                                        @endif
                                     @else
                                         <img src="{{ asset('/theme/img/image_not_available.png') }}" alt="" class="buy_again_product_image">
                                     @endif

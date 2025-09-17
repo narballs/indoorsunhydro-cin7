@@ -1608,9 +1608,16 @@ class CheckoutController extends Controller
                     // ->get();
 
                     $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
-                    $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
-                        $q->whereIn('option_id', $option_ids);
-                    }])->where('order_id', $order_id)->get();
+                    // $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
+                    //     $q->whereIn('option_id', $option_ids);
+                    // }])->where('order_id', $order_id)->get();
+                    $order_items = ApiOrderItem::with([
+                        'product',
+                        'product.product_image',
+                        'product.options' => function ($q) use ($option_ids) {
+                            $q->whereIn('option_id', $option_ids);
+                        }
+                    ])->where('order_id', $order_id)->get();
                     
                     $check_shipstation_create_order_status = AdminSetting::where('option_name', 'create_order_in_shipstation')->first();
                     if (!empty($check_shipstation_create_order_status) && strtolower($check_shipstation_create_order_status->option_value) == 'yes' && (strtolower($currentOrder->logisticsCarrier) !== 'pickup order' && empty($currentOrder->buylist_id))) {
@@ -1841,9 +1848,17 @@ class CheckoutController extends Controller
                     // ->get();
 
                     $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
-                    $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
-                        $q->whereIn('option_id', $option_ids);
-                    }])->where('order_id', $order_id)->get();
+                    // $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
+                    //     $q->whereIn('option_id', $option_ids);
+                    // }])->where('order_id', $order_id)->get();
+
+                    $order_items = ApiOrderItem::with([
+                        'product',
+                        'product.product_image',
+                        'product.options' => function ($q) use ($option_ids) {
+                            $q->whereIn('option_id', $option_ids);
+                        }
+                    ])->where('order_id', $order_id)->get();
 
                     $pickup = !empty($currentOrder->logisticsCarrier) && strtolower($currentOrder->logisticsCarrier) === 'pickup order' ? true : false;
                     
@@ -1959,16 +1974,7 @@ class CheckoutController extends Controller
                         'from' => SettingHelper::getSetting('noreply_email_address')
                     ];
 
-                    // $specific_admin_notifications = SpecificAdminNotification::all();
-                    // if (count($specific_admin_notifications) > 0) {
-                    //     foreach ($specific_admin_notifications as $specific_admin_notification) {
-                    //         $subject = 'New order received';
-                    //         $adminTemplate = 'emails.admin-order-received';
-                    //         $data['email'] = $specific_admin_notification->email;
-                    //         MailHelper::sendMailNotification('emails.admin-order-received', $data);
-                    //     }
-                    // }
-
+                    
                     $specific_admin_notifications = SpecificAdminNotification::all();
                     if ($specific_admin_notifications->isNotEmpty()) {
                         foreach ($specific_admin_notifications as $specific_admin_notification) {

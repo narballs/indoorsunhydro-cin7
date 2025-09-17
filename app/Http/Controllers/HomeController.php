@@ -144,6 +144,7 @@ class HomeController extends Controller
                     'product.options',
                     'product.options.defaultPrice',
                     'product.brand',
+                    'product.product_image',
                     'product.options.products',
                     'product.categories',
                     'product.apiorderItem'
@@ -163,6 +164,7 @@ class HomeController extends Controller
                 'product.options',
                 'product.options.defaultPrice',
                 'product.brand',
+                'product.product_image',
                 'product.options.products',
                 'product.categories',
                 'product.apiorderItem'

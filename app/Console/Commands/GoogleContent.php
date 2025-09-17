@@ -171,9 +171,9 @@ class GoogleContent extends Command
                                     $product_image = url(asset('theme/img/image_not_available.png'));
 
                                     if (!empty($product->product_image) && !empty($product->product_image->image)) {
-                                        $product_image = url(asset('theme/products/images/' . $product->product_image->image));
+                                        $product_image = asset('theme/products/images/' . $product->product_image->image . '.png');
                                     } else {
-                                        $product_image = url(asset('theme/img/image_not_available.png'));
+                                        $product_image = asset('theme/img/image_not_available.png');
                                     }
                                     
                                     $product_array[] = [

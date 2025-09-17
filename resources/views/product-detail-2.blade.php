@@ -142,7 +142,25 @@
                                     <!-- Main Image -->
                                     <div class="col-md-10 col-sm-12 text-center">
                                         @if ($productOption->products->images)
-                                            <img id="main-image" alt="{{ $productOption->products->name }}" src="{{ $productOption->products->images }}" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;" />
+                                            {{-- <img id="main-image" alt="{{ $productOption->products->name }}" src="{{ $productOption->products->images }}" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;" /> --}}
+                                            @if (!empty($productOption->products->product_image) && !empty($productOption->products->product_image->image))
+                                                <picture>
+                                                    <source srcset="{{ asset('theme/products/images/' . $productOption->products->product_image->image . '.webp') }}" type="image/webp">
+                                                    <img id="main-image"
+                                                        alt="{{ $productOption->products->name }}"
+                                                        src="{{ asset('theme/products/images/' . $productOption->products->product_image->image . '.png') }}"
+                                                        class="img-fluid"
+                                                        style="background-color: transparent !important; object-fit: contain; "
+                                                        loading="lazy" />
+                                                </picture>
+                                            @else
+                                                <img id="main-image"
+                                                    alt="{{ $productOption->products->name }}"
+                                                    src="{{ $productOption->products->images }}"
+                                                    class="img-fluid"
+                                                    style="background-color: transparent !important; object-fit: contain; "
+                                                    loading="lazy" />
+                                            @endif
                                         @else
                                             <img id="main-image" alt="Not Available" src="/theme/img/image_not_available.png" class="img-fluid rounded shadow" style="background: transparent !important; object-fit: contain;"/>
                                         @endif

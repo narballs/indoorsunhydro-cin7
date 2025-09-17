@@ -1545,7 +1545,7 @@ class UserHelper
     public static function create_label($order_id , $currentOrder , $order_contact) {
         $api_order = ApiOrder::where('id', $order_id)->first();
         $shipping_package = AdminSetting::where('option_name', 'shipping_package')->first();
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product')->where('order_id', $order_id)->get();
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product' , 'product.product_image')->where('order_id', $order_id)->get();
 
         $products_weight = 0;
         $product_width = 0;
