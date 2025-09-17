@@ -340,7 +340,7 @@
                                             @if (!empty($item['product']['product_image']->image))
                                                 <picture>
                                                     <source srcset="{{ asset('theme/products/images/' . $item['product']['product_image']->image . '.webp') }}" type="image/webp">
-                                                    <img alt="{{ $product->product->name }}"
+                                                    <img alt="{{ $item['product']->name }}"
                                                         src="{{ asset('theme/products/images/' . $item['product']['product_image']->image . '.png') }}"
                                                         height="49"
                                                         width="55"
