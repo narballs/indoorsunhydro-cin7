@@ -1056,22 +1056,25 @@
 										<td>
 											<div class="row align-items-center">
 												<div class="col-md-2 py-2 mobile_thankyou_img_div">
-													{{-- @if ($orderitem->product_option->image)
-													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product_option->image}}" alt=""
-														width="90px" style="max-height: 90px">
-													@else
-													<img src="/theme/img/image_not_available.png" alt="" width="80px">
-													@endif --}}
 													@if (!empty($orderitem->product->images))
-														<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product->images}}" alt=""
-														width="90px" style="max-height: 90px">
+														@if (!empty($orderitem->product->product_image) && !empty($orderitem->product->product_image->image))
+															<picture>
+																<source srcset="{{ asset('theme/products/images/' . $orderitem->product->product_image->image . '.webp') }}" type="image/webp">
+																<img src="{{ asset('theme/products/images/' . $orderitem->product->product_image->image . '.png') }}"
+																	alt="{{ $orderitem->product->name }}"
+																	class="img-fluid img-thumbnail m_chechout_image"
+																	width="90px" loading="lazy" />
+															</picture>
+														@else
+															<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product->images}}" alt="" width="90px" style="max-height: 90px">
+														@endif
 													@else
-													<img src="/theme/img/image_not_available.png" alt="" width="80px">
+														<img src="/theme/img/image_not_available.png" alt="" width="80px" loading="lazy">
 													@endif
 												</div>
 												<div class="col-md-5 py-2 ps-0 prod-name-img mobile_text_class" style="">
 													<a class="order-confirmation-page-product-category-name pb-3"
-														href=" {{ url('product-detail/'. $orderitem->product->id.'/'.$orderitem->product_option->option_id.'/'.$orderitem->product->slug) }}">
+														href=" {{ url('product-detail/'. $orderitem->product->id.'/'.$orderitem->product_option->option_id.'/'.$orderitem->product->slug) }}" loading="lazy">
 														{{$orderitem->product->name}}
 													</a>
 												</div>
@@ -1120,17 +1123,20 @@
 										<tr class="border_bottom_mb">
 											<td style="width: 20% !important;">
 												<div class="py-2 mobile_thankyou_img_div">
-													{{-- @if ($orderitem->product_option->image)
-													<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product_option->image}}" alt=""
-														width="90px" style="max-height: 90px">
-													@else
-													<img src="/theme/img/image_not_available.png" class="m_chechout_image" alt="" width="80px">
-													@endif --}}
 													@if (!empty($orderitem->product->images))
-														<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product->images}}" alt=""
-														width="90px" style="max-height: 90px">
+														@if (!empty($orderitem->product->product_image) && !empty($orderitem->product->product_image->image))
+															<picture>
+																<source srcset="{{ asset('theme/products/images/' . $orderitem->product->product_image->image . '.webp') }}" type="image/webp">
+																<img src="{{ asset('theme/products/images/' . $orderitem->product->product_image->image . '.png') }}"
+																	alt="{{ $orderitem->product->name }}"
+																	class="img-fluid img-thumbnail m_chechout_image"
+																	width="90px" style="max-height: 90px" loading="lazy" />
+															</picture>
+														@else
+															<img class="img-fluid img-thumbnail m_chechout_image" src="{{$orderitem->product->images}}" alt="{{ $orderitem->product->name }}" width="90px" style="max-height: 90px">
+														@endif
 													@else
-													<img src="/theme/img/image_not_available.png" alt="" width="80px">
+														<img src="/theme/img/image_not_available.png" alt="" width="80px" loading="lazy">
 													@endif
 												</div>
 											</td>
