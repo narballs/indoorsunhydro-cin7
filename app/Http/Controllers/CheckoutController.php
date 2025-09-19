@@ -1254,6 +1254,7 @@ class CheckoutController extends Controller
             ->with(
                 'user.contact',
                 'apiOrderItem.product.options',
+                'apiOrderItem.product.product_image',
                 'texClasses',
                 'discount',
                 'OrderReminder'
