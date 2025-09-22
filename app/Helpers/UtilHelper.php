@@ -16,6 +16,7 @@ use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\ApiRateLimitAlert;
 use App\Models\Cart;
+use App\Models\SpecificAdminNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -506,7 +507,7 @@ class UtilHelper
             $url = 'https://api.cin7.com/api/v1/Stock?where=productId=' . $product->product_id . '&productOptionId=' . $option_id;
             $client2 = new \GuzzleHttp\Client();
             $api_status = true;
-            $timeout_limit = 8;
+            $timeout_limit = 3;
         
             $start_time = microtime(true);
 
@@ -608,7 +609,26 @@ class UtilHelper
                 'trace' => $e->getTraceAsString()
             ]);
 
-            
+            $specific_admin_notifications = SpecificAdminNotification::all();
+
+            $subject = 'Stock Endpoint Not Working';
+            $htmlBody = 'The stock endpoint is not working and not responding. Please run the query in CIN7 reports section to remove blockage.';
+
+            if ($specific_admin_notifications->count() > 0) {
+                foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    if (!$specific_admin_notification->receive_order_notifications) {
+                        continue;
+                    }
+                    Mail::send([], [], function ($message) use ($subject, $htmlBody, $specific_admin_notification) {
+                        $from = SettingHelper::getSetting('noreply_email_address') ?? 'noreply@indoorsunhydro.com';
+                        $message->from($from)
+                            ->to($specific_admin_notification->email)
+                            ->subject($subject)
+                            ->setBody($htmlBody, 'text/html');
+                    });
+                }
+            }
+
         }
 
         return [

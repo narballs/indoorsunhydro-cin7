@@ -1071,9 +1071,17 @@ class OrderController extends Controller
                     //     ->get();
 
                     $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
-                    $order_items = ApiOrderItem::with(['product.options' => function ($q) use ($option_ids) {
-                        $q->whereIn('option_id', $option_ids);
-                    }])->where('order_id', $order_id)->get();
+                    // $order_items = ApiOrderItem::with(['product_image' , 'product.options' => function ($q) use ($option_ids) {
+                    //     $q->whereIn('option_id', $option_ids);
+                    // }])->where('order_id', $order_id)->get();
+
+                    $order_items = ApiOrderItem::with([
+                        'product',
+                        'product.product_image',
+                        'product.options' => function ($q) use ($option_ids) {
+                            $q->whereIn('option_id', $option_ids);
+                        }
+                    ])->where('order_id', $order_id)->get();
 
                     $user = User::where('id', $currentOrder->user_id)->first();
                     $all_ids = UserHelper::getAllMemberIds($user);
@@ -1648,14 +1656,22 @@ class OrderController extends Controller
 
         // $order_items = ApiOrderItem::with('order.texClasses', 'product.options')->where('order_id', $order_id)->get();
         $option_ids = ApiOrderItem::where('order_id', $order_id)->pluck('option_id')->toArray();
+        // $order_items = ApiOrderItem::with([
+        //     'product.options' => function ($q) use ($option_ids) {
+        //         $q->whereIn('option_id', $option_ids);
+        //     },
+        //     'order.texClasses'
+        // ])
+        // ->where('order_id', $order_id)
+        // ->get();
         $order_items = ApiOrderItem::with([
+            'product',
+            'product.product_image',
             'product.options' => function ($q) use ($option_ids) {
                 $q->whereIn('option_id', $option_ids);
             },
             'order.texClasses'
-        ])
-        ->where('order_id', $order_id)
-        ->get();
+        ])->where('order_id', $order_id)->get();
         $user = User::where('id', $order->user_id)->first();
         $all_ids = UserHelper::getAllMemberIds($user);
         $contact_ids = Contact::whereIn('id', $all_ids)->pluck('contact_id')->toArray();
@@ -1744,6 +1760,9 @@ class OrderController extends Controller
             $specific_admin_notifications = SpecificAdminNotification::all();
             if (count($specific_admin_notifications) > 0) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    if (!$specific_admin_notification->receive_order_notifications) {
+                        continue;
+                    }
                     $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
                     $adminTemplate = 'emails.admin-order-received';
                     $data['subject'] = $subject;
@@ -1753,22 +1772,22 @@ class OrderController extends Controller
             }
 
 
-            $email_sent_to_users = [];
-            $all_members = Contact::whereIn('id', $all_ids)->get();
-            foreach ($all_members as $member) {
-                $member_user = User::find($member->user_id);
-                if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
-                    if (isset($email_sent_to_users[$member_user->id])) {
-                        continue;
-                    }
+            // $email_sent_to_users = [];
+            // $all_members = Contact::whereIn('id', $all_ids)->get();
+            // foreach ($all_members as $member) {
+            //     $member_user = User::find($member->user_id);
+            //     if (!empty($member_user) && $member_user->hasRole(['Order Approver'])) {
+            //         if (isset($email_sent_to_users[$member_user->id])) {
+            //             continue;
+            //         }
 
-                    $email_sent_to_users[$member_user->id] = $member_user;
-                    $data['name'] = $member_user->firstName;
-                    $data['subject'] =  '#'.$currentOrder->id. ' ' .'Order status updated';
-                    $data['email'] = $member_user->email;
-                    MailHelper::sendMailNotification('emails.user-order-received', $data);
-                }
-            }
+            //         $email_sent_to_users[$member_user->id] = $member_user;
+            //         $data['name'] = $member_user->firstName;
+            //         $data['subject'] =  '#'.$currentOrder->id. ' ' .'Order status updated';
+            //         $data['email'] = $member_user->email;
+            //         MailHelper::sendMailNotification('emails.user-order-received', $data);
+            //     }
+            // }
         }
         
         return response()->json(['success' => $request_status , 'message' => $message]);
@@ -1953,7 +1972,7 @@ class OrderController extends Controller
                 $order_comment->save();
 
                 
-                $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product.product_image')
                 ->where('order_id', $order_id)
                 ->get();
                 
@@ -2099,7 +2118,7 @@ class OrderController extends Controller
                 $order_comment->save();
 
                 
-                $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+                $order_items = ApiOrderItem::with('order.texClasses', 'product.options' , 'product.product_image')
                 ->where('order_id', $order_id)
                 ->get();
                 
@@ -2929,7 +2948,7 @@ class OrderController extends Controller
 
         $name = !empty($order_contact) && $order_contact->DeliveryFirstName  ? $order_contact->DeliveryFirstName. ' ' .$order_contact->DeliveryLastName : ''; 
 
-        $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+        $order_items = ApiOrderItem::with('order.texClasses', 'product.options' , 'product.product_image')
                     ->where('order_id', $order_id)
                     ->get();
 

@@ -721,7 +721,7 @@ class OrderManagementController extends Controller
             UtilHelper::update_product_stock_on_cancellation($get_order);
         }
 
-        $order_items = ApiOrderItem::with('order.texClasses','product', 'product.options')
+        $order_items = ApiOrderItem::with('order.texClasses','product', 'product.options' , 'product.product_image')
             ->where('order_id', $get_order->id)
             ->get();
 
@@ -1149,7 +1149,7 @@ class OrderManagementController extends Controller
             if (!empty($customer_email)) {
                 $contact = Contact::where('email', $customer_email->email)->first();
             }
-            $order_items = ApiOrderItem::with('order.texClasses', 'product.options')
+            $order_items = ApiOrderItem::with('order.texClasses', 'product.options', 'product.product_image')
             ->where('order_id', $currentOrder->id)
             ->get();
 

@@ -1255,7 +1255,7 @@ class UserController extends Controller
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
                 })
-                ->with('apiOrderItem.product');
+                ->with('apiOrderItem.product' , 'apiOrderItem.product.product_image');
            
             if (!empty($request->sort_by)) {
                 $sort_by = $request->sort_by;
@@ -1352,7 +1352,7 @@ class UserController extends Controller
                 ->with('contact' , function($query) {
                     $query->orderBy('company');
                 })
-                ->with('apiOrderItem.product')
+                ->with('apiOrderItem.product' , 'apiOrderItem.product.product_image')
                 ->where('primaryId' , $submitter_filter)
                 ->orWhere('secondaryId' , $submitter_filter)
                 ->whereIn('memberId', $contact_ids)
@@ -1512,7 +1512,7 @@ class UserController extends Controller
         $active_products_ids = Product::whereIn('category_id' ,$active_category_ids)->where('status', '!=', 'Inactive')->pluck('product_id')->toArray();
         
 
-        $buy_again_query = Product::with('categories' , 'options' , 'options.defaultPrice')
+        $buy_again_query = Product::with('categories' , 'options' , 'options.defaultPrice' , 'product_image')
             ->whereIn('product_id', $active_products_ids);
         $total_products = $buy_again_query->count();
 
@@ -1550,7 +1550,7 @@ class UserController extends Controller
             ->where('title', 'My Favorites')
             ->get();
         foreach ($lists_query as $list) {
-            $favorite_list = ProductBuyList::with('buylist','product.options.price')->where('list_id', $list->id);
+            $favorite_list = ProductBuyList::with('buylist','product.options.price' , 'product.product_image')->where('list_id', $list->id);
             if ($request->get('per_page')) {
                 $per_page = $request->get('per_page');
                 $lists = $favorite_list->paginate($per_page);
@@ -1636,7 +1636,7 @@ class UserController extends Controller
 
         // Collect all matching ProductBuyList entries across those lists
         $list_ids = $lists->pluck('id');
-        $favorites = ProductBuyList::with('buylist','product.options.price')
+        $favorites = ProductBuyList::with('buylist','product.options.price' , 'product.product_image')
             ->whereIn('list_id', $list_ids)
             ->get();
 
@@ -1719,7 +1719,7 @@ class UserController extends Controller
     {
         $order_detail = ApiOrder::where('id', $id)
             ->with('contact')
-            ->with('apiOrderItem.product.options')
+            ->with('apiOrderItem.product.options' , 'apiOrderItem.product.product_image')
             ->with('texClasses')
             ->first();
         $user_id = Auth::id();

@@ -1540,7 +1540,7 @@ p {
                 <div class="row mt-4 mb-3">
                     <div class="col-md-12 py-3" style="border: 1px solid #DFDFDF59;">
                         <div class="row">
-                            ${buildImageColumn(productData.images)}
+                            ${buildImageColumn(productData,productData.images)}
                             ${buildDataColumn(productData, option , get_wholesale_terms)}
                         </div>
                         ${buildButtonRow(productData, option ,get_wholesale_terms)}
@@ -1715,14 +1715,41 @@ p {
 
 
         // Build image column
-        function buildImageColumn(imageUrl) {
-            const img = imageUrl || '/theme/img/image_not_available.png';
-            return `
-                <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account">
-                    <img src="${img}" alt="Product Image" class="img-fluid">
-                </div>
-            `;
+        const productImageBase = "{{ asset('theme/products/images') }}";
+        const placeholderImage = "{{ asset('theme/img/image_not_available.png') }}";
+
+        function buildImageColumn(product, imageUrl) {
+            if (imageUrl) {
+                if (product.product_image && product.product_image.image) {
+                    return `
+                        <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account">
+                            <picture>
+                                <source srcset="${productImageBase}/${product.product_image.image}.webp" type="image/webp">
+                                <img id="main-image"
+                                    alt="${product.name ?? 'Product Image'}"
+                                    src="${productImageBase}/${product.product_image.image}.png"
+                                    class="img-fluid"
+                                    style="background-color: transparent !important; object-fit: contain;"
+                                    loading="lazy" />
+                            </picture>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account">
+                            <img src="${imageUrl}" alt="Product Image" class="img-fluid" style="object-fit:contain; background-color:transparent;">
+                        </div>
+                    `;
+                }
+            } else {
+                return `
+                    <div class="col-md-4 col-lg-4 col-xl-5 image-div image-div-account">
+                        <img src="${placeholderImage}" alt="No Image" class="img-fluid" style="object-fit:contain; background-color:transparent;">
+                    </div>
+                `;
+            }
         }
+
 
         // Generate pagination links
         function generatePaginationLinks(totalPages, currentPage) {

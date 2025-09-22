@@ -177,7 +177,8 @@ class CancelOrder extends Command
                         'product.options' => function ($q) use ($option_ids) {
                             $q->whereIn('option_id', $option_ids);
                         },
-                        'order.texClasses'
+                        'order.texClasses',
+                        'product.product_image'
                     ])
                     ->where('order_id', $pending_order->id)
                     ->get();

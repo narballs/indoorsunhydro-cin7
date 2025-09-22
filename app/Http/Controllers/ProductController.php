@@ -100,7 +100,7 @@ class ProductController extends Controller
             $products_query = Product::where('status', '!=', 'Inactive')
                 ->whereIn('category_id', $category_ids)
                 ->with('options.price', 'brand')
-                ->with(['product_views','apiorderItem' , 'options' => function ($q) {
+                ->with(['product_views','product_image','apiorderItem' , 'options' => function ($q) {
                     $q->where('status', '!=', 'Disabled');
                 }]);
 
@@ -436,7 +436,7 @@ class ProductController extends Controller
             } else {
             }
             // $products = $products_query->with('options.defaultPrice', 'brand')->paginate($per_page);
-            $products = $products_query->with(['product_views','apiorderItem' , 'options' => function ($q) {
+            $products = $products_query->with(['product_views','product_image','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }]);
         }
@@ -596,7 +596,7 @@ class ProductController extends Controller
         $products_query  = Product::whereIn('product_id' , $products_ids)
         ->with('options', 'brand', 'categories')
         ->where('status' , '!=' , 'Inactive');
-        $products = $products_query->with('options.defaultPrice', 'brand' , 'product_views','apiorderItem')->paginate(12);
+        $products = $products_query->with('options.defaultPrice','product_image', 'brand' , 'product_views','apiorderItem')->paginate(12);
         $user_list = BuyList::where('user_id', $user_id)
             ->where('contact_id', $contact_id)
             ->first();
@@ -1146,6 +1146,7 @@ class ProductController extends Controller
             'product.options',
             'product.options.defaultPrice',
             'product.brand',
+            'product.product_image',
             'product.options.products',
             'product.categories',
             'product.apiorderItem'
@@ -1452,7 +1453,7 @@ class ProductController extends Controller
         $similar_products = null;
 
         if (!empty($product->category_id)) {
-            $similar_products_query = Product::with('options', 'options.defaultPrice', 'brand', 'categories', 'product_stock')
+            $similar_products_query = Product::with('options','product_image', 'options.defaultPrice', 'brand', 'categories', 'product_stock')
                 ->where('category_id', $product->category_id)
                 ->where('id', '!=', $product->id)
                 ->whereHas('categories', function ($query) {
@@ -1513,7 +1514,7 @@ class ProductController extends Controller
         $category_ids = Category::where('parent_id', $category->id)->pluck('id')->toArray();
         $products = [];
         if (!empty($category_ids)) {
-            $products = Product::with(['product_views','apiorderItem' , 'options' => function ($q) {
+            $products = Product::with(['product_views','product_image','apiorderItem' , 'options' => function ($q) {
                 $q->where('status', '!=', 'Disabled');
             }])
             ->whereIn('category_id', $category_ids)
@@ -1538,7 +1539,7 @@ class ProductController extends Controller
             ->get();
         $product_views = null;
         if (auth()->user()) {
-            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            $product_views = ProductView::with('product.options','product.product_image', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
             ->whereHas('product' , function($query) {
                 $query->where('status' , '!=' , 'Inactive');
             })
@@ -1555,7 +1556,7 @@ class ProductController extends Controller
         }
 
         $best_selling_products = null;
-        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+        $best_selling_products = ApiOrderItem::with('product.options','product.product_image', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
         ->whereHas('product' , function($query) {
             $query->where('status' , '!=' , 'Inactive');
         })
@@ -1625,7 +1626,7 @@ class ProductController extends Controller
 
         $search_queries = $request->all();
 
-        $products_query  = Product::with('options.price', 'brand' , 'product_views','apiorderItem')->where('brand', $name)->where('status' , '!=' , 'Inactive');
+        $products_query  = Product::with('options.price','product_image', 'brand' , 'product_views','apiorderItem')->where('brand', $name)->where('status' , '!=' , 'Inactive');
 
         $selected_category_id = $request->get('selected_category');
 
@@ -1796,7 +1797,7 @@ class ProductController extends Controller
 
         $product_views = null;
         if (auth()->user()) {
-            $product_views = ProductView::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+            $product_views = ProductView::with('product.options','product.product_image', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
             ->whereHas('product' , function($query) {
                 $query->where('status' , '!=' , 'Inactive');
             })
@@ -1813,7 +1814,7 @@ class ProductController extends Controller
         }
         
         $best_selling_products = null;
-        $best_selling_products = ApiOrderItem::with('product.options', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
+        $best_selling_products = ApiOrderItem::with('product.options','product.product_image', 'product.options.defaultPrice','product.brand', 'product.options.products','product.categories' ,'product.apiorderItem')
         ->whereHas('product' , function($query) {
             $query->where('status' , '!=' , 'Inactive');
         })
@@ -1849,7 +1850,7 @@ class ProductController extends Controller
         $get_accurate_product_ids = ProductOption::whereIn('option_id', $get_query_option_ids)->pluck('product_id');
 
         // Filter and paginate products
-        $products = $products->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
+        $products = $products->with('product_image')->whereIn('product_id', $get_accurate_product_ids)->paginate($per_page);
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
@@ -2862,7 +2863,7 @@ class ProductController extends Controller
         $search_queries = $request->all();
 
 
-        $products_query  = Product::with('options', 'brand', 'categories' , 'product_views','apiorderItem')->where('status', '!=', 'Inactive');
+        $products_query  = Product::with('options','product_image', 'brand', 'categories' , 'product_views','apiorderItem')->where('status', '!=', 'Inactive');
         $selected_category_id = $request->get('selected_category');
 
         $category_id = $selected_category_id;
@@ -3015,7 +3016,7 @@ class ProductController extends Controller
         
         $user_price_column = UserHelper::getUserPriceColumn();
 
-        $main_query = Product::with(['product_views', 'apiorderItem', 'options' => function ($q) {
+        $main_query = Product::with(['product_views','product_image', 'apiorderItem', 'options' => function ($q) {
             $q->where('status', '!=', 'Disabled');
         }])
         ->where('status', '!=', 'Inactive');
@@ -3164,8 +3165,20 @@ class ProductController extends Controller
         ->where('status', '!=', 'Disabled') // ✅ ensure only active options count
         ->pluck('product_id');
 
+
+        $products = Product::with([
+            'product_views',
+            'product_image',
+            'apiorderItem',
+            'options' => function ($q) {
+                $q->where('status', '!=', 'Disabled');
+            }
+        ])
+        ->where('status', '!=', 'Inactive')
+        ->whereIn('product_id', $valid_product_ids)->paginate($per_page);
+
         // Final product filtering
-        $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);
+        // $products = Product::whereIn('product_id', $valid_product_ids)->paginate($per_page);
 
         $get_wholesale_contact_id = null;
         $get_wholesale_terms = null;
@@ -4866,7 +4879,7 @@ class ProductController extends Controller
             ->toArray();
         }
         // Get in-stock products
-        $get_in_stock_products = ProductOption::with('products', 'products.categories', 'products.brand', 'defaultPrice')
+        $get_in_stock_products = ProductOption::with('products', 'products.product_image','products.categories', 'products.brand', 'defaultPrice')
             ->where('status', '!=', 'Disabled')
             ->where('stockAvailable', '>', 0)
             ->whereHas('defaultPrice', function ($q) use ($price_column) {
