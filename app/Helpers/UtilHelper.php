@@ -616,6 +616,9 @@ class UtilHelper
 
             if ($specific_admin_notifications->count() > 0) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    if (!$specific_admin_notification->receive_order_notifications) {
+                        continue;
+                    }
                     Mail::send([], [], function ($message) use ($subject, $htmlBody, $specific_admin_notification) {
                         $from = SettingHelper::getSetting('noreply_email_address') ?? 'noreply@indoorsunhydro.com';
                         $message->from($from)

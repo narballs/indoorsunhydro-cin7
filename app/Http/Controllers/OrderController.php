@@ -1760,6 +1760,9 @@ class OrderController extends Controller
             $specific_admin_notifications = SpecificAdminNotification::all();
             if (count($specific_admin_notifications) > 0) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
+                    if (!$specific_admin_notification->receive_order_notifications) {
+                        continue;
+                    }
                     $subject = 'Indoorsun Hydro order' .'#'.$currentOrder->id. ' ' . 'status has been updated';
                     $adminTemplate = 'emails.admin-order-received';
                     $data['subject'] = $subject;
