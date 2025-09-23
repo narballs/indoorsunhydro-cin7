@@ -83,6 +83,8 @@ class CheckoutController extends Controller
             return redirect('/')->with('error', 'Your cart for the selected company is empty! Please add some items to your cart before proceeding to checkout.');
         }
 
+       Log::info('Incoming Order IP: ' . request()->ip(), ['user' => 'danish']);
+
 
         $blockrecords = BlockRecord::where('ip_address', request()->ip())->first();
 
