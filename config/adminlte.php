@@ -364,6 +364,11 @@ return [
             'text'    => 'Admin Settings',
             'url'  => 'admin/settings/index',
         ],
+        
+        [
+            'text'    => 'Block IPs Settings',
+            'url'  => 'admin/block-records',
+        ],
         [
             'text'    => 'Sales Report',
             'url'  => 'admin/sales-report',
