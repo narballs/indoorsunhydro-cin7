@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\SettingHelper;
 use App\Helpers\UtilHelper;
 use App\Models\ApiKeys;
+use App\Models\BlockRecord;
 use App\Models\BuyListShippingAndDiscount;
 use App\Models\Cart;
 use App\Models\CustomerDiscountUses;
@@ -75,6 +76,13 @@ class OrderController extends Controller
             //     'memo.required' => 'Delivery instructions is required',
             // ]
         );
+
+
+        $blockrecords = BlockRecord::where('ip_address', request()->ip())->first();
+
+        if (!empty($blockrecords)) {
+            return redirect()->back()->with('error', 'Your IP address has been blocked. Please contact administrator.');
+        }
 
 
 

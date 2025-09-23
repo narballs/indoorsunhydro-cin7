@@ -28,6 +28,7 @@ use App\Models\UserLog;
 use Carbon\Carbon;
 use App\Models\AdminStockReportSetting;
 use App\Models\AdminStockReportInterval;
+use App\Models\BlockRecord;
 use App\Models\SalesReportSetting;
 use App\Models\StockApiLog;
 use Facade\FlareClient\Time\Time;
@@ -1095,6 +1096,37 @@ class AdminSettingsController extends Controller
         return back()->with('success', 'Admin Stock Report settings updated.');
     }
 
+
+
+
+
+    public function block_records()
+    {
+        $block_records = BlockRecord::all();
+        return view('admin.block_records.index', compact('block_records'));
+    }
+
+    // Save/update blocked IPs
+    public function update_block_records(Request $request)
+    {
+        $validated = $request->validate([
+            'ip_address' => 'required|string', // expects comma-separated IPs
+        ]);
+
+        // Clear old records
+        BlockRecord::truncate();
+
+        // Split by comma and save each IP
+        $ips = array_map('trim', explode(',', $validated['ip_address']));
+
+        foreach ($ips as $ip) {
+            if (!empty($ip)) {
+                BlockRecord::create(['ip_address' => $ip]);
+            }
+        }
+
+        return back()->with('success', 'Blocked IPs updated successfully.');
+    }
 
 
     

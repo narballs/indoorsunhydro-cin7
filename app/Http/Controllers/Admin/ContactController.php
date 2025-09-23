@@ -1011,6 +1011,8 @@ class ContactController extends Controller
             $contact->status = 1;
         }
 
+        $contact->save();
+
         $contact = Contact::where('id' , $contact->id)->first();
         $user_log = new UserLog();
         $user_log->user_id = auth()->user()->id;

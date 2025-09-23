@@ -48,6 +48,7 @@ use App\Helpers\ShippingHelper;
 use App\Helpers\UtilHelper;
 use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
+use App\Models\BlockRecord;
 use App\Models\BuyList;
 use App\Models\BuyListShippingAndDiscount;
 use App\Models\ContactsAddress;
@@ -80,6 +81,13 @@ class CheckoutController extends Controller
 
         if (empty($cart_items) || count($cart_items) == 0) {
             return redirect('/')->with('error', 'Your cart for the selected company is empty! Please add some items to your cart before proceeding to checkout.');
+        }
+
+
+        $blockrecords = BlockRecord::where('ip_address', request()->ip())->first();
+
+        if (!empty($blockrecords)) {
+            return redirect()->back()->with('error', 'Your IP address has been blocked. Please contact administrator.');
         }
 
 

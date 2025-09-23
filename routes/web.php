@@ -474,6 +474,11 @@ Route::group(['middleware' => ['auth']], function () {
         // sales report settings
         Route::get('/sales-report-settings', [AdminSettingsController::class, 'sales_report_settings'])->name('sales_report_settings');
         Route::post('/update-sales-report-settings', [AdminSettingsController::class, 'update_sales_report_settings'])->name('update_sales_report_settings');
+
+
+        // block records
+        Route::get('/block-records', [AdminSettingsController::class, 'block_records'])->name('block_records');
+        Route::post('/update-block-records', [AdminSettingsController::class, 'update_block_records'])->name('update_block_records');
         
         
         
