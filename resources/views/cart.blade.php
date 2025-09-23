@@ -168,9 +168,11 @@
                             <div class="row">
                                 <div class="col-md-12">
         
-                                    @if (Auth::check() == true && $contact->status == 0)
+                                    {{-- @if (Auth::check() == true && $contact->status == 0) --}}
+                                    @if (session('error'))
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            Checkout has been disabled.
+                                            {{-- Checkout has been disabled. --}}
+                                            {{ session('message') }}
                                         </div>
                                     @endif
                                     @if (session('message'))
