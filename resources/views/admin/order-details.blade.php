@@ -733,7 +733,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if ($order->is_stripe == 1 && floatval($order->total_including_tax) >= 1000 && $enable_promo_settings)
+                        @if ($order->is_stripe == 1 && floatval($order->total_including_tax) >= 1000 && $enable_promo_settings && (strtolower($order->DeliveryState) == 'ca'  || strtolower($order->DeliveryState) == 'california'))
                             <div class="card my-3 shadow-sm">
                                 <div class="card-header bg-primary text-white">
                                     <h5 class="mb-0">
