@@ -1110,15 +1110,28 @@ class AdminSettingsController extends Controller
     public function update_block_records(Request $request)
     {
         $validated = $request->validate([
-            'ip_address' => 'required|string', // expects comma-separated IPs
+            'ip_address' => 'required', // don’t force string, could be JSON
         ]);
 
         // Clear old records
         BlockRecord::truncate();
 
-        // Split by comma and save each IP
-        $ips = array_map('trim', explode(',', $validated['ip_address']));
+        $ips = [];
 
+        // If it’s JSON (from tags input), decode it
+        if ($this->isJson($validated['ip_address'])) {
+            $decoded = json_decode($validated['ip_address'], true);
+            foreach ($decoded as $item) {
+                if (!empty($item['value'])) {
+                    $ips[] = trim($item['value']);
+                }
+            }
+        } else {
+            // Otherwise, assume comma-separated string
+            $ips = array_map('trim', explode(',', $validated['ip_address']));
+        }
+
+        // Save each IP
         foreach ($ips as $ip) {
             if (!empty($ip)) {
                 BlockRecord::create(['ip_address' => $ip]);
@@ -1127,6 +1140,17 @@ class AdminSettingsController extends Controller
 
         return back()->with('success', 'Blocked IPs updated successfully.');
     }
+
+    /**
+     * Helper to check if a string is JSON
+     */
+    private function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
+
 
 
     
