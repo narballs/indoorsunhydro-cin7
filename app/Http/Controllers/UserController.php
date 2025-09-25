@@ -563,6 +563,27 @@ class UserController extends Controller
 
                     Session::put('companies', $companies);
                     if (!empty(session()->get('cart'))) {
+                        $companies = Contact::where('user_id', auth()->user()->id)->get();
+                        if ($companies->count() == 1) {
+                            if ($companies[0]->contact_id == null) {
+                                UserHelper::switch_company($companies[0]->secondary_id);
+                            } else {
+                                UserHelper::switch_company($companies[0]->contact_id);
+                            }
+                        }
+                        if ($companies->count() > 1) {
+                            foreach ($companies as $company) {
+                                if ($company->status == 1) {
+                                    if ($company->contact_id == null) {
+                                        UserHelper::switch_company($company->secondary_id);
+                                    } else {
+                                        UserHelper::switch_company($company->contact_id);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        Session::put('companies', $companies);
                         return redirect()->route('cart');
                     } else {
                         if ($user->is_updated == 1) {
