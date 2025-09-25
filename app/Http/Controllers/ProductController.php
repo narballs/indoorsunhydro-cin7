@@ -1109,68 +1109,36 @@ class ProductController extends Controller
         }
 
         // Stock update check
-        $api_status = false; // default
         $stock_updation_by_visiting_detail = null;
         // if (empty($admin_check_product_stock) || strtolower($admin_check_product_stock->option_value) !== 'no') {
-        //     $userAgent = strtolower($request->userAgent());
-        //     if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
-        //         $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
-        //     }
-        // }
-
-        $userAgent = strtolower($request->userAgent());
-
-        // Skip bots only
-        if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
-            $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
-
-            if (!empty($stock_updation_by_visiting_detail)) {
-                $api_status = $stock_updation_by_visiting_detail['api_status'];
+            $userAgent = strtolower($request->userAgent());
+            if (!preg_match('/bot|crawl|slurp|spider/', $userAgent)) {
+                $stock_updation_by_visiting_detail = UtilHelper::updateProductStock($product, $option_id);
             }
-        }
-
-        // Stock API logging
-        // if (!empty($stock_updation_by_visiting_detail)) {
-        //     $api_status = $stock_updation_by_visiting_detail['api_status'];
-        //     StockApiLog::create([
-        //         'product_id'   => $id,
-        //         'option_id'    => $option_id,
-        //         'request'      => isset($stock_updation_by_visiting_detail['request']) ? $stock_updation_by_visiting_detail['request'] : null,
-        //         'response'     => isset($stock_updation_by_visiting_detail['response']) ? $stock_updation_by_visiting_detail['response'] : null,
-        //         'status'       => $api_status,
-        //         'time_taken'   => isset($stock_updation_by_visiting_detail['elapsed_time_readable']) ? $stock_updation_by_visiting_detail['elapsed_time_readable'] : null,
-        //         'product_name' => $product->name,
-        //         'sku'          => $product->code,
-        //     ]);
-
-        //     if (!empty($admin_check_product_stock)) {
-        //         $admin_check_product_stock->option_value = $api_status ? 'Yes' : 'No';
-        //         $admin_check_product_stock->save();
-        //     }
-        // }
-
-        // if (!empty($product->category_id)) {
-        //     $similar_products = $this->getSimilarProducts($request, $id, $option_id);
         // }
 
         // Stock API logging
         if (!empty($stock_updation_by_visiting_detail)) {
+            $api_status = $stock_updation_by_visiting_detail['api_status'];
             StockApiLog::create([
                 'product_id'   => $id,
                 'option_id'    => $option_id,
-                'request'      => $stock_updation_by_visiting_detail['request'] ?? null,
-                'response'     => $stock_updation_by_visiting_detail['response'] ?? null,
+                'request'      => isset($stock_updation_by_visiting_detail['request']) ? $stock_updation_by_visiting_detail['request'] : null,
+                'response'     => isset($stock_updation_by_visiting_detail['response']) ? $stock_updation_by_visiting_detail['response'] : null,
                 'status'       => $api_status,
-                'time_taken'   => $stock_updation_by_visiting_detail['elapsed_time_readable'] ?? null,
+                'time_taken'   => isset($stock_updation_by_visiting_detail['elapsed_time_readable']) ? $stock_updation_by_visiting_detail['elapsed_time_readable'] : null,
                 'product_name' => $product->name,
                 'sku'          => $product->code,
             ]);
+
+            if (!empty($admin_check_product_stock)) {
+                $admin_check_product_stock->option_value = $api_status ? 'Yes' : 'No';
+                $admin_check_product_stock->save();
+            }
         }
 
-        // Always update stock check setting if record exists
-        if (!empty($admin_check_product_stock)) {
-            $admin_check_product_stock->option_value = $api_status ? 'Yes' : 'No';
-            $admin_check_product_stock->save();
+        if (!empty($product->category_id)) {
+            $similar_products = $this->getSimilarProducts($request, $id, $option_id);
         }
 
         // Best selling products
