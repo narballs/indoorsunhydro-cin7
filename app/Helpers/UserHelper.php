@@ -92,13 +92,17 @@ class UserHelper
             $companies_count = Contact::where('user_id', $user_id)->get();
             if (count($companies_count) > 0) {
                 if ($companies_count->count() == 1) {
-                    $contact = Contact::where('contact_id', $contact_id)->where('status', '!=', 0)->first();
+                    $contact = Contact::where('contact_id', $contact_id)
+                    // ->where('status', '!=', 0)
+                    ->first();
                     if (!empty($contact)) {
                         $active_contact_id = $contact->contact_id;
                         $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
                     } 
                     else {
-                        $contact = Contact::where('secondary_id', $contact_id)->where('status', '!=', 0)->first();
+                        $contact = Contact::where('secondary_id', $contact_id)
+                        // ->where('status', '!=', 0)
+                        ->first();
                         if (!empty($contact)) {
                             $active_contact_id = $contact->secondary_id;
                             $active_company = !empty($contact->company) ? $contact->company : $contact->firstName . ' ' . $contact->lastName;
