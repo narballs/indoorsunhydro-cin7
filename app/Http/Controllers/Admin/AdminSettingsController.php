@@ -28,6 +28,7 @@ use App\Models\UserLog;
 use Carbon\Carbon;
 use App\Models\AdminStockReportSetting;
 use App\Models\AdminStockReportInterval;
+use App\Models\BlockRecord;
 use App\Models\SalesReportSetting;
 use App\Models\StockApiLog;
 use Facade\FlareClient\Time\Time;
@@ -1094,6 +1095,61 @@ class AdminSettingsController extends Controller
 
         return back()->with('success', 'Admin Stock Report settings updated.');
     }
+
+
+
+
+
+    public function block_records()
+    {
+        $block_records = BlockRecord::all();
+        return view('admin.block_records.index', compact('block_records'));
+    }
+
+    // Save/update blocked IPs
+    public function update_block_records(Request $request)
+    {
+        $validated = $request->validate([
+            'ip_address' => 'required', // don’t force string, could be JSON
+        ]);
+
+        // Clear old records
+        BlockRecord::truncate();
+
+        $ips = [];
+
+        // If it’s JSON (from tags input), decode it
+        if ($this->isJson($validated['ip_address'])) {
+            $decoded = json_decode($validated['ip_address'], true);
+            foreach ($decoded as $item) {
+                if (!empty($item['value'])) {
+                    $ips[] = trim($item['value']);
+                }
+            }
+        } else {
+            // Otherwise, assume comma-separated string
+            $ips = array_map('trim', explode(',', $validated['ip_address']));
+        }
+
+        // Save each IP
+        foreach ($ips as $ip) {
+            if (!empty($ip)) {
+                BlockRecord::create(['ip_address' => $ip]);
+            }
+        }
+
+        return back()->with('success', 'Blocked IPs updated successfully.');
+    }
+
+    /**
+     * Helper to check if a string is JSON
+     */
+    private function isJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
 
 
 
