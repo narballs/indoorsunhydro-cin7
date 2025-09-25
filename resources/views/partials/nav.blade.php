@@ -187,14 +187,23 @@
                         $primary = '(secondary)';
                         }
                         if ($company->status == 0) {
-                        $disabled = 'disabled';
-                        $disable_text = '(Disabled)';
+                        // $disabled = 'disabled';
+                        // $disable_text = '(Disabled)';
                         $muted = 'text-muted';
                         } else {
-                        $disabled = '';
-                        $disable_text = '';
+                        // $disabled = '';
+                        // $disable_text = '';
                         $muted = '';
                         }
+
+                        $disabled = (count($companies) == 1 && $company->status == 0)
+                            ? ''
+                            : ($company->status == 0 ? 'disabled' : '');
+
+                        // Disable text logic
+                        $disable_text = (count($companies) == 1 && $company->status == 0)
+                                    ? ''
+                                    : (($company->status == 0) ? '(Disabled)' : '');
                         @endphp
                         @if($company->type != "Supplier")
                         <a class="mb_item" {{ $disabled }} {{ $muted }} type="button"

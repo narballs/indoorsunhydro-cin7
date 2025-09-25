@@ -1159,8 +1159,17 @@
                                             @php
                                                 $contact_id = $company->contact_id ?? $company->secondary_id;
                                                 $primary = $company->contact_id ? '(primary)' : '(secondary)';
-                                                $disabled = $company->status == 0 ? 'disabled' : '';
-                                                $disable_text = $company->status == 0 ? '(Disabled)' : '';
+                                                // $disabled = $company->status == 0 ? 'disabled' : '';
+                                                // $disable_text = $company->status == 0 ? '(Disabled)' : '';
+                                                // Disabled logic
+                                                $disabled = (count($user_companies) == 1 && $company->status == 0)
+                                                            ? ''
+                                                            : ($company->status == 0 ? 'disabled' : '');
+
+                                                // Disable text logic
+                                                $disable_text = (count($user_companies) == 1 && $company->status == 0)
+                                                            ? ''
+                                                            : (($company->status == 0) ? '(Disabled)' : '');
                                                 $muted = $company->status == 0 ? 'text-muted' : '';
                                             @endphp
                                             @if($company->type != "Supplier")
