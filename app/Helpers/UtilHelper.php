@@ -16,6 +16,7 @@ use App\Models\ApiErrorLog;
 use App\Models\ApiKeys;
 use App\Models\ApiRateLimitAlert;
 use App\Models\Cart;
+use App\Models\DailyNotification;
 use App\Models\SpecificAdminNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -600,7 +601,39 @@ class UtilHelper
 
             self::saveDailyApiLog('product_detail_update_stock');
 
-        } catch (\Exception $e) {
+        } 
+        // catch (\Exception $e) {
+        //     self::saveDailyApiLog('product_detail_update_stock');
+        //     $api_status = false;
+        //     $stock_updated = false;
+
+        //     Log::error("Cin7 Stock API failed: " . $e->getMessage(), [
+        //         'trace' => $e->getTraceAsString()
+        //     ]);
+
+        //     $specific_admin_notifications = SpecificAdminNotification::all();
+
+        //     $subject = 'Stock Endpoint Not Working';
+        //     $htmlBody = 'The stock endpoint is not working and not responding. Please run the query in CIN7 reports section to remove blockage.';
+
+        //     if ($specific_admin_notifications->count() > 0) {
+        //         foreach ($specific_admin_notifications as $specific_admin_notification) {
+        //             if (!$specific_admin_notification->receive_order_notifications) {
+        //                 continue;
+        //             }
+        //             Mail::send([], [], function ($message) use ($subject, $htmlBody, $specific_admin_notification) {
+        //                 $from = SettingHelper::getSetting('noreply_email_address') ?? 'noreply@indoorsunhydro.com';
+        //                 $message->from($from)
+        //                     ->to($specific_admin_notification->email)
+        //                     ->subject($subject)
+        //                     ->setBody($htmlBody, 'text/html');
+        //             });
+        //         }
+        //     }
+
+        // }
+
+        catch (\Exception $e) {
             self::saveDailyApiLog('product_detail_update_stock');
             $api_status = false;
             $stock_updated = false;
@@ -614,11 +647,16 @@ class UtilHelper
             $subject = 'Stock Endpoint Not Working';
             $htmlBody = 'The stock endpoint is not working and not responding. Please run the query in CIN7 reports section to remove blockage.';
 
-            if ($specific_admin_notifications->count() > 0) {
+            $alreadySent = DailyNotification::where('type', 'stock_endpoint_down')
+                ->where('date', now()->toDateString())
+                ->exists();
+
+            if (!$alreadySent && $specific_admin_notifications->count() > 0) {
                 foreach ($specific_admin_notifications as $specific_admin_notification) {
                     if (!$specific_admin_notification->receive_order_notifications) {
                         continue;
                     }
+
                     Mail::send([], [], function ($message) use ($subject, $htmlBody, $specific_admin_notification) {
                         $from = SettingHelper::getSetting('noreply_email_address') ?? 'noreply@indoorsunhydro.com';
                         $message->from($from)
@@ -627,9 +665,14 @@ class UtilHelper
                             ->setBody($htmlBody, 'text/html');
                     });
                 }
-            }
 
+                DailyNotification::create([
+                    'type' => 'stock_endpoint_down',
+                    'date' => now()->toDateString(),
+                ]);
+            }
         }
+
 
         return [
             'stock_updated' => $stock_updated,
